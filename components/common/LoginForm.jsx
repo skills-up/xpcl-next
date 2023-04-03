@@ -1,11 +1,41 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { customAPICall } from '../../api/xplorzApi';
+import { setToken } from '../../features/auth/authSlice';
+import { sendToast } from '../../utils/toastify';
 
 const LoginForm = () => {
-  // useEffect = (() => {}, []);
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const token = useSelector((state) => state.auth.value.token);
+  // Checking if already logged in
+  useEffect(() => {
+    if (token !== '') {
+      window.location = '/';
+    }
+  }, []);
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    const response = await customAPICall('auth/login', 'post', { email, password });
+    if (response?.success) {
+      if (response.data?.access_token) {
+        dispatch(setToken({ token: response.data.access_token }));
+        sendToast('success', 'Login Successful', 4000);
+        router.push('/');
+      } else sendToast('error', 'Could Not Find Access Token', 4000);
+    } else {
+      sendToast('error', 'Invalid Username/Password', 4000);
+    }
+  };
 
   return (
-    <form className='row y-gap-20'>
+    <form className='row y-gap-20' onSubmit={onSubmit}>
       <div className='col-12'>
         <h1 className='text-22 fw-500'>Welcome back</h1>
         {/* <p className='mt-10'>
@@ -19,7 +49,12 @@ const LoginForm = () => {
 
       <div className='col-12'>
         <div className='form-input '>
-          <input type='text' required />
+          <input
+            type='email'
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
           <label className='lh-1 text-14 text-light-1'>Email</label>
         </div>
       </div>
@@ -27,7 +62,12 @@ const LoginForm = () => {
 
       <div className='col-12'>
         <div className='form-input '>
-          <input type='password' required />
+          <input
+            type='password'
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
           <label className='lh-1 text-14 text-light-1'>Password</label>
         </div>
       </div>

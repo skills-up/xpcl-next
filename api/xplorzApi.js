@@ -83,7 +83,7 @@ export const customAPICall = async (
             return res.data;
           })
           .catch((err) => {
-            err.response.data;
+            throw err.response.data;
           });
         break;
       case 'post':
@@ -93,7 +93,7 @@ export const customAPICall = async (
             return res.data;
           })
           .catch((err) => {
-            err.response.data;
+            throw err.response.data;
           });
         break;
       case 'put':
@@ -103,7 +103,7 @@ export const customAPICall = async (
             return res.data;
           })
           .catch((err) => {
-            err.response.data;
+            throw err.response.data;
           });
         break;
       case 'delete':
@@ -113,7 +113,7 @@ export const customAPICall = async (
             return res.data;
           })
           .catch((err) => {
-            err.response.data;
+            throw err.response.data;
           });
         break;
       default:
