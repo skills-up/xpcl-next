@@ -3,14 +3,9 @@ import { store } from '../app/store';
 
 const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
-export const getList = async (entity, params = null) => {
+export const getList = async (entity, params = {}) => {
   // Converting params object to query params
-  if (params !== null && typeof params === 'object') {
-    let queryStr = '?';
-    queryStr += new URLSearchParams(params).toString();
-    entity += queryStr;
-  }
-  const response = await customAPICall(entity, 'get');
+  const response = await customAPICall(entity, 'get', {}, { params });
   return response;
 };
 
@@ -34,7 +29,12 @@ export const deleteItem = async (entity, id = -1) => {
   return response;
 };
 
-export const customAPICall = async (entity, requestMethod, data = {}) => {
+export const customAPICall = async (
+  entity,
+  requestMethod,
+  data = {},
+  additionConfig = {}
+) => {
   try {
     const token = await store.getState().auth.value.token;
     const ax = axios.create({
@@ -52,16 +52,16 @@ export const customAPICall = async (entity, requestMethod, data = {}) => {
     let response;
     switch (requestMethod) {
       case 'get':
-        response = await ax.get(entity);
+        response = await ax.get(entity, additionConfig);
         break;
       case 'post':
-        response = await ax.post(entity, data);
+        response = await ax.post(entity, data, additionConfig);
         break;
       case 'put':
-        response = await ax.put(entity, data);
+        response = await ax.put(entity, data, additionConfig);
         break;
       case 'delete':
-        response = await ax.delete(entity);
+        response = await ax.delete(entity, additionConfig);
         break;
       default:
         throw { message: 'Invalid Request Method' };
