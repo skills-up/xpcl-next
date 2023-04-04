@@ -8,7 +8,7 @@ import "photoswipe/dist/photoswipe.css";
 import { Gallery, Item } from "react-photoswipe-gallery";
 import toursData from "../../../data/tours";
 import Seo from "../../../components/common/Seo";
-import Header11 from "../../../components/header/header-11";
+import Header1 from "../../../components/header/header-1";
 import Overview from "../../../components/tour-single/Overview";
 import TourSnapShot from "../../../components/tour-single/TourSnapShot";
 import TopBreadCrumb from "../../../components/tour-single/TopBreadCrumb";
@@ -55,7 +55,7 @@ const TourSingleV1Dynamic = () => {
       <div className="header-margin"></div>
       {/* header top margin */}
 
-      <Header11 />
+      <Header1 />
       {/* End Header 1 */}
 
       <TopBreadCrumb />

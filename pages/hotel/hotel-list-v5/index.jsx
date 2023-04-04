@@ -1,6 +1,6 @@
 import CallToActions from "../../../components/common/CallToActions";
 import Seo from "../../../components/common/Seo";
-import Header11 from "../../../components/header/header-11";
+import Header1 from "../../../components/header/header-1";
 import DefaultFooter from "../../../components/footer/default";
 import MainFilterSearchBox from "../../../components/hotel-list/hotel-list-v5/MainFilterSearchBox";
 import Pagination from "../../../components/hotel-list/common/Pagination";
@@ -16,7 +16,7 @@ const index = () => {
       <div className="header-margin"></div>
       {/* header top margin */}
 
-      <Header11 />
+      <Header1 />
       {/* End Header 1 */}
 
       <section className="section-bg pt-40 pb-40 relative z-5">

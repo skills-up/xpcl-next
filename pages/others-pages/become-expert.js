@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 import CallToActions from "../../components/common/CallToActions";
 import Seo from "../../components/common/Seo";
-import DefaultHeader from "../../components/header/default-header";
+import Header1 from "../../components/header/header-1";
 import DefaultFooter from "../../components/footer/default";
 import Image from "next/image";
 import HowWorks from "../../components/block/HowWorks";
@@ -114,7 +114,7 @@ const BecomeExpert = () => {
       </section>
       {/* End faq section block */}
 
-      <DefaultHeader />
+      <Header1 />
       {/* End Header 1 */}
 
       <CallToActions />

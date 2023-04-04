@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 import CallToActions from "../../components/common/CallToActions";
 import Seo from "../../components/common/Seo";
-import DefaultHeader from "../../components/header/default-header";
+import Header1 from "../../components/header/header-1";
 import DefaultFooter from "../../components/footer/default";
 
 const UiElements = () => {
@@ -13,7 +13,7 @@ const UiElements = () => {
       <div className="header-margin"></div>
       {/* header top margin */}
 
-      <DefaultHeader />
+      <Header1 />
       {/* End Header 1 */}
 
       <CallToActions />
