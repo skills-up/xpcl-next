@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import "photoswipe/dist/photoswipe.css";
 import cruiseData from "../../../data/cruise";
 import Seo from "../../../components/common/Seo";
-import Header11 from "../../../components/header/header-11";
+import Header1 from "../../../components/header/header-1";
 import Overview from "../../../components/cruise-single/Overview";
 import TopBreadCrumb from "../../../components/cruise-single/TopBreadCrumb";
 import SidebarRight from "../../../components/cruise-single/SidebarRight";
@@ -38,7 +38,7 @@ const CruiseSingleV1Dynamic = () => {
       <div className="header-margin"></div>
       {/* header top margin */}
 
-      <Header11 />
+      <Header1 />
       {/* End Header 1 */}
 
       <TopBreadCrumb />

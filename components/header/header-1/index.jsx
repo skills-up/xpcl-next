@@ -8,10 +8,13 @@ import { customAPICall } from '../../../api/xplorzApi';
 import { useDispatch, useSelector } from 'react-redux';
 import { setInitialUserState } from '../../../features/auth/authSlice';
 import { sendToast } from '../../../utils/toastify';
+import { useRouter } from 'next/router';
+import { checkUser } from '../../../utils/checkTokenValidity';
 
-const Header1 = () => {
+const Header1 = ({ permaOpaque = true }) => {
   const [navbar, setNavbar] = useState(false);
   const dispatch = useDispatch();
+  const router = useRouter();
   const changeBackground = () => {
     if (window.scrollY >= 10) {
       setNavbar(true);
@@ -20,14 +23,21 @@ const Header1 = () => {
     }
   };
   const token = useSelector((state) => state.auth.value.token);
-
   useEffect(() => {
     window.addEventListener('scroll', changeBackground);
+    // Checking if user is still valid
+    if (token !== '') {
+      checkUser(router, dispatch);
+    }
   }, []);
 
   return (
     <>
-      <header className={`header ${navbar ? 'bg-dark-1 is-sticky' : ''}`}>
+      <header
+        className={`header ${
+          permaOpaque ? 'bg-dark-3 is-sticky' : navbar ? 'bg-dark-3 is-sticky' : ''
+        }`}
+      >
         <div className='header__container px-30 sm:px-20'>
           <div className='row justify-between items-center'>
             <div className='col-auto'>
@@ -79,10 +89,11 @@ const Header1 = () => {
                       if (token === '') {
                         window.location = '/login';
                       } else {
-                        const response = await customAPICall('auth/logout', 'post', {});
+                        const response = await customAPICall('auth/logout', 'post');
                         if (response?.success) {
                           dispatch(setInitialUserState());
                           sendToast('success', 'Logged Out Successfully', 4000);
+                          router.push('/');
                         } else {
                           sendToast('error', 'Error Logging Out', 4000);
                         }

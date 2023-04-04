@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { customAPICall } from '../../api/xplorzApi';
-import { setToken } from '../../features/auth/authSlice';
+import { setToken, setTokenExpireTime } from '../../features/auth/authSlice';
 import { sendToast } from '../../utils/toastify';
 
 const LoginForm = () => {
@@ -26,6 +26,10 @@ const LoginForm = () => {
     if (response?.success) {
       if (response.data?.access_token) {
         dispatch(setToken({ token: response.data.access_token }));
+        // Setting Token Expiry
+        dispatch(
+          setTokenExpireTime({ tokenExpireTime: Date.now() + response.expires_in * 1000 })
+        );
         sendToast('success', 'Login Successful', 4000);
         router.push('/');
       } else sendToast('error', 'Could Not Find Access Token', 4000);

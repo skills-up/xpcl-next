@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import CallToActions from "../../../components/common/CallToActions";
 import Seo from "../../../components/common/Seo";
-import DefaultHeader from "../../../components/header/default-header";
+import Header1 from "../../../components/header/header-1";
 import DefaultFooter from "../../../components/footer/default";
 import LocationTopBar from "../../../components/common/LocationTopBar";
 import RelatedBlog from "../../../components/blog/blog-details/RelatedBlog";
@@ -33,7 +33,7 @@ const BlogSingleDynamic = () => {
       <div className="header-margin"></div>
       {/* header top margin */}
 
-      <DefaultHeader />
+      <Header1 />
       {/* End Header 1 */}
 
       <LocationTopBar />
