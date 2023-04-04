@@ -3,130 +3,79 @@ import { store } from '../app/store';
 
 const baseURL = process.env.NEXT_PUBLIC_API_URL;
 const token = store.getState().auth.value.token;
+const ax = axios.create({
+  baseURL,
+  withCredentials: false,
+  headers: {
+    'Content-Type': 'application/json',
+    accept: 'application/json',
+    authorization: 'Bearer ' + token,
+  },
+});
 
-export const getList = async (entity) => {
-  const response = await customAPICall(entity, 'get', null, {
-    headers: {
-      'Content-Type': 'application/json',
-      accept: 'application/json',
-      authorization: 'Bearer' + token,
-    },
-  });
+export const getList = async (entity, params = null) => {
+  // Converting params object to query params
+  if (params !== null && typeof params === 'object') {
+    const keys = Object.keys(params);
+    if (keys.length > 0) {
+      let queryStr = '?';
+      for (let i = 0; i < keys.length; i++) {
+        queryStr += keys[i] + '=' + params[keys[i]];
+        if (i + 1 < keys.length) queryStr += '&';
+      }
+      entity += queryStr;
+    }
+  }
+  const response = await customAPICall(entity, 'get');
   return response;
 };
 
 export const createItem = async (entity, data) => {
-  const response = await customAPICall(entity, 'post', data, {
-    headers: {
-      'Content-Type': 'application/json',
-      accept: 'application/json',
-      authorization: 'Bearer' + token,
-    },
-  });
+  const response = await customAPICall(entity, 'post', data);
   return response;
 };
-export const getItem = async (entity) => {
-  const response = await customAPICall(entity, 'get', null, {
-    headers: {
-      'Content-Type': 'application/json',
-      accept: 'application/json',
-      authorization: 'Bearer' + token,
-    },
-  });
+export const getItem = async (entity, id = -1) => {
+  const response = await customAPICall(entity + '/' + id, 'get');
   return response;
 };
-export const updateItem = async (entity, data) => {
-  const response = await customAPICall(entity, 'put', data, {
-    headers: {
-      'Content-Type': 'application/json',
-      accept: 'application/json',
-      authorization: 'Bearer' + token,
-    },
-  });
+export const updateItem = async (entity, id = -1, data) => {
+  const response = await customAPICall(entity + '/' + id, 'put', data);
   return response;
 };
 
-export const deleteItem = async (entity) => {
-  const response = await customAPICall(entity, 'delete', null, {
-    headers: {
-      'Content-Type': 'application/json',
-      accept: 'application/json',
-      authorization: 'Bearer' + token,
-    },
-  });
+export const deleteItem = async (entity, id = -1) => {
+  const response = await customAPICall(entity + '/' + id, 'delete');
   return response;
 };
 
-export const customAPICall = async (
-  entity,
-  requestMethod,
-  data = null,
-  config = {
-    headers: {
-      'Content-Type': 'application/json',
-      accept: 'application/json',
-    },
-  }
-) => {
+export const customAPICall = async (entity, requestMethod, data = null) => {
   try {
     // Lower Case
     requestMethod = requestMethod.toLowerCase();
-    // URL
-    const url = baseURL + entity;
     // Checking for Request Method;
     let response;
     switch (requestMethod) {
       case 'get':
-        response = await axios
-          .get(url, config)
-          .then((res) => {
-            return res.data;
-          })
-          .catch((err) => {
-            throw err.response.data;
-          });
+        response = await ax.get(entity);
         break;
       case 'post':
-        response = await axios
-          .post(url, data, config)
-          .then((res) => {
-            return res.data;
-          })
-          .catch((err) => {
-            throw err.response.data;
-          });
+        response = await ax.post(entity, data);
         break;
       case 'put':
-        response = await axios
-          .put(url, data, config)
-          .then((res) => {
-            return res.data;
-          })
-          .catch((err) => {
-            throw err.response.data;
-          });
+        response = await ax.put(entity, data);
         break;
       case 'delete':
-        response = await axios
-          .delete(url, config)
-          .then((res) => {
-            return res.data;
-          })
-          .catch((err) => {
-            throw err.response.data;
-          });
+        response = await ax.delete(entity);
         break;
       default:
         throw { message: 'Invalid Request Method' };
     }
-    // If response successfull
+    // If response successful
     if (response) {
-      return { success: true, data: response };
-    } else {
-      throw { message: 'Error' };
+      return { success: true, data: response.data };
     }
   } catch (err) {
-    console.error(err?.message || err?.error || err);
-    return { success: false, data: err };
+    console.error(err?.response?.data?.message || err?.message || err?.error || err);
+    return { success: false, data: err?.response?.data || err };
   }
 };

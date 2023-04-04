@@ -79,18 +79,7 @@ const Header1 = () => {
                       if (token === '') {
                         window.location = '/login';
                       } else {
-                        const response = await customAPICall(
-                          'auth/logout',
-                          'post',
-                          {},
-                          {
-                            headers: {
-                              'Content-Type': 'application/json',
-                              accept: 'application/json',
-                              authorization: 'Bearer' + token,
-                            },
-                          }
-                        );
+                        const response = await customAPICall('auth/logout', 'post', {});
                         if (response?.success) {
                           dispatch(setInitialUserState());
                           sendToast('success', 'Logged Out Successfully', 4000);
