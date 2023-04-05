@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import {
   createItem,
   deleteItem,
@@ -5,8 +6,20 @@ import {
   getList,
   updateItem,
 } from '../../api/xplorzApi';
+import Datatable from '../../components/datatable/Datatable';
+import ActionsButton from '../../components/actions-button/ActionsButton';
 
 export default function Test() {
+  const [arr, setArr] = useState([]);
+
+  useEffect(() => {
+    let tempArr = [];
+    for (let i = 0; i < 200; i++) {
+      tempArr.push({ id: i, desc: 'I am ' + i, timestamp: Date.now() });
+    }
+    setArr(tempArr);
+  }, []);
+
   const test = async () => {
     // Get List
     let response = await getList('roles', { paginate: 20, test: 1 });
@@ -28,9 +41,56 @@ export default function Test() {
     // response = await deleteItem('roles', 2);
     // console.log('deleteItem', response);
   };
+
+  const columns = [
+    {
+      Header: 'ID',
+      accessor: 'id',
+    },
+    {
+      Header: 'Description',
+      accessor: 'desc',
+    },
+    {
+      Header: 'Timestamp',
+      accessor: 'timestamp',
+    },
+    {
+      Header: 'Actions',
+      sortable: false,
+      // cell: () => <Button variant="danger" data-tag="allowRowEvents" data-action="delete"><FontAwesomeIcon icon={faTrash} /></Button>,
+      Cell: (data) => {
+        return (
+          <div className='flex flex-start'>
+            <ActionsButton
+              options={[
+                { label: 'Homepage', onClick: () => window.location.assign('/') },
+                {
+                  label: 'Dashboard',
+                  onClick: () => window.location.assign('/dashboard/db-dashboard'),
+                },
+                {
+                  label: 'Settings',
+                  onClick: () => window.location.assign('/dashboard/db-settings'),
+                },
+                {
+                  label: 'About',
+                  onClick: () => window.location.assign('/other-pages/about'),
+                },
+              ]}
+            />
+          </div>
+        );
+      },
+    },
+  ];
+
   return (
     <div>
       <button onClick={test}>Test</button>
+      <div className='mx-5'>
+        <Datatable columns={columns} data={arr} />
+      </div>
     </div>
   );
 }

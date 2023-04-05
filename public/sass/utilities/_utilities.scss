@@ -755,6 +755,11 @@ $_displays: none, inline-block, block, flex;
   max-width: 100%;
 }
 
+.w-120 {
+  width: 120px;
+  max-width: 100%;
+}
+
 .w-180 {
   width: 180px;
   max-width: 100%;
@@ -1050,7 +1055,7 @@ $_displays: none, inline-block, block, flex;
     opacity: 0;
 
     &::after {
-      content: "";
+      content: '';
       position: absolute;
       width: 8px;
       height: 8px;
@@ -1334,7 +1339,9 @@ table.table-2 {
 }
 
 table.table-3 {
+  width: 100%;
   thead {
+    background-color: var(--color-light-2) !important;
   }
 
   th {
@@ -1575,7 +1582,7 @@ table.table-5 {
       color: var(--color-dark-1) !important;
 
       &::before {
-        content: "";
+        content: '';
         background-color: var(--color-light-2);
         position: absolute;
         top: 0;
