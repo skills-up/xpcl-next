@@ -7,6 +7,7 @@ import {
   updateItem,
 } from '../../api/xplorzApi';
 import Datatable from '../../components/datatable/Datatable';
+import ActionsButton from '../dashboard/db-booking/components/ActionsButton';
 
 export default function Test() {
   const [arr, setArr] = useState([]);
@@ -59,7 +60,27 @@ export default function Test() {
       sortable: false,
       // cell: () => <Button variant="danger" data-tag="allowRowEvents" data-action="delete"><FontAwesomeIcon icon={faTrash} /></Button>,
       Cell: (data) => {
-        return <div className='flex flex-start'></div>;
+        return (
+          <div className='flex flex-start'>
+            <ActionsButton
+              options={[
+                { label: 'Homepage', onClick: () => window.location.assign('/') },
+                {
+                  label: 'Dashboard',
+                  onClick: () => window.location.assign('/dashboard/db-dashboard'),
+                },
+                {
+                  label: 'Settings',
+                  onClick: () => window.location.assign('/dashboard/db-settings'),
+                },
+                {
+                  label: 'About',
+                  onClick: () => window.location.assign('/other-pages/about'),
+                },
+              ]}
+            />
+          </div>
+        );
       },
     },
   ];
