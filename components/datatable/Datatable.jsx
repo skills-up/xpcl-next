@@ -8,6 +8,7 @@ import {
   BsChevronDoubleLeft,
   BsChevronDoubleRight,
 } from 'react-icons/bs';
+import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 
 const IndeterminateCheckbox = forwardRef(({ indeterminate, ...rest }, ref) => {
   const defaultRef = React.useRef();
@@ -124,15 +125,15 @@ const Datatable = ({
               <tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column) => (
                   <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                    <div className='d-flex items-center justify-start'>
+                    <div className='d-flex items-center gap-2 justify-start'>
                       <span>{column.render('Header')}</span>
                       {/* Add a sort direction indicator */}
-                      <span className='ltr:ml-auto rtl:mr-auto'>
+                      <span className=''>
                         {column.isSorted ? (
                           column.isSortedDesc ? (
-                            <icon className='icon-arrow-down text-xxs' />
+                            <FaChevronDown className='text-xxs' />
                           ) : (
-                            <icon className='icon-arrow-up text-xxs' />
+                            <FaChevronUp className='text-xxs' />
                           )
                         ) : (
                           ''
