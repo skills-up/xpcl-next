@@ -7,7 +7,7 @@ import {
   updateItem,
 } from '../../api/xplorzApi';
 import Datatable from '../../components/datatable/Datatable';
-import ActionsButton from '../dashboard/db-booking/components/ActionsButton';
+import ActionsButton from '../../components/actions-button/ActionsButton';
 
 export default function Test() {
   const [arr, setArr] = useState([]);
