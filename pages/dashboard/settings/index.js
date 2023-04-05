@@ -1,10 +1,23 @@
 import Seo from '../../../components/common/Seo';
-import Sidebar from '../common/Sidebar';
+import Footer from '../../../components/footer/dashboard-footer';
 import Header from '../../../components/header/dashboard-header';
 import SettingsTabs from './components/index';
-import Footer from '../common/Footer';
+import Sidebar from '../../../components/sidebars/dashboard-sidebars';
+import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
+import { sendToast } from '../../../utils/toastify';
+import { useEffect } from 'react';
 
 const index = () => {
+  const token = useSelector((state) => state.auth.value.token);
+  const router = useRouter();
+  useEffect(() => {
+    if (token === '') {
+      sendToast('error', 'You need to login first in order to view the dashboard.', 4000);
+      router.push('/login');
+    }
+  });
+
   return (
     <>
       <Seo pageTitle='Settings' />
