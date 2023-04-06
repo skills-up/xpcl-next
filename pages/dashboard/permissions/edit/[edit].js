@@ -93,7 +93,7 @@ const EditPermission = () => {
 
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
-                  <form onSubmit={onSubmit} className='row col-9 y-gap-20'>
+                  <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
                     <div className='col-12'>
                       <div className='form-input'>
                         <input
