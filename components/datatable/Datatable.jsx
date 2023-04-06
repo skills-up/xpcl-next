@@ -124,8 +124,8 @@ const Datatable = ({
   // Render the UI for your table
   return data?.length > 0 ? (
     <div style={style}>
-      <div className='d-flex mb-2 pr-3 justify-end'>
-        <div className='col-lg-3 col-12'>
+      <div className='d-flex mb-2 mr-4 justify-end'>
+        <div className='col-lg-2 col-12'>
           <select
             className='d-block form-select text-sm'
             value={pageSize}
@@ -138,7 +138,7 @@ const Datatable = ({
           >
             {[10, 25, 50, 100].map((pageSize) => (
               <option key={pageSize} value={pageSize}>
-                Show {pageSize} Records Per Page
+                Show {pageSize} Rows
               </option>
             ))}
           </select>

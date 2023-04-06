@@ -32,12 +32,10 @@ const Permissions = () => {
     {
       Header: 'Slug',
       accessor: 'slug',
-      disableSortBy: true,
     },
     {
       Header: 'Description',
       accessor: 'description',
-      disableSortBy: true,
     },
     {
       Header: 'Last Updated At',
@@ -125,7 +123,7 @@ const Permissions = () => {
         />
       )}
       {/* Search Bar + Add New */}
-      <div className='row mb-3 justify-between'>
+      <div className='row mb-3 justify-between mr-4'>
         <div className='col-lg-10 col-7'>
           <input
             type='text'
@@ -136,12 +134,13 @@ const Permissions = () => {
           />
         </div>
         <button
-          className='btn btn-success col-lg-2 col-5'
+          className='btn btn-primary col-lg-2 col-5'
           onClick={() => window.location.assign('/dashboard/permissions/add-new')}
         >
           Add New
         </button>
       </div>
+      {/* Data Table */}
       <Datatable
         downloadCSV
         CSVName='Permissions.csv'
