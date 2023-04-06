@@ -2,8 +2,13 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { customAPICall } from '../../api/xplorzApi';
-import { setToken, setTokenExpireTime } from '../../features/auth/authSlice';
+import { customAPICall, getItem } from '../../api/xplorzApi';
+import {
+  setToken,
+  setTokenExpireTime,
+  setInitialUserState,
+  setPermissions,
+} from '../../features/auth/authSlice';
 import { sendToast } from '../../utils/toastify';
 
 const LoginForm = () => {
@@ -25,13 +30,31 @@ const LoginForm = () => {
     const response = await customAPICall('auth/login', 'post', { email, password });
     if (response?.success) {
       if (response.data?.access_token) {
+        // Call to get permissions
         dispatch(setToken({ token: response.data.access_token }));
-        // Setting Token Expiry
-        dispatch(
-          setTokenExpireTime({ tokenExpireTime: Date.now() + response.expires_in * 1000 })
-        );
-        sendToast('success', 'Login Successful', 4000);
-        router.push('/');
+        const me = await customAPICall('auth/me', 'post');
+        if (me?.success) {
+          // Getting permissions from role id
+          const permissions = await getItem('roles', me.data?.role_id);
+          if (permissions?.success && permissions?.data?.permissions_list) {
+            // Setting permissions
+            dispatch(setPermissions({ permissions: permissions.data.permissions_list }));
+            // Setting Token Expiry
+            dispatch(
+              setTokenExpireTime({
+                tokenExpireTime: Date.now() + response.expires_in * 1000,
+              })
+            );
+            sendToast('success', 'Login Successful', 4000);
+            router.push('/');
+          } else {
+            sendToast('error', 'Could Not Find User Permissions', 4000);
+            dispatch(setInitialUserState());
+          }
+        } else {
+          sendToast('error', 'Could Not Verify User', 4000);
+          dispatch(setInitialUserState());
+        }
       } else sendToast('error', 'Could Not Find Access Token', 4000);
     } else {
       sendToast('error', 'Invalid Username/Password', 4000);

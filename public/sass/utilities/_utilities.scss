@@ -1178,9 +1178,9 @@ $_displays: none, inline-block, block, flex;
   }
 
   textarea:focus ~ label,
-  textarea:valid ~ label,
+  textarea:not(:placeholder-shown) ~ label,
   input:focus ~ label,
-  input:valid ~ label {
+  input:not(:placeholder-shown) ~ label {
     transform: translateY(-10px);
   }
 }
@@ -1340,6 +1340,7 @@ table.table-2 {
 
 table.table-3 {
   width: 100%;
+  min-height: calc(40vh - 6rem);
   thead {
     background-color: var(--color-light-2) !important;
   }

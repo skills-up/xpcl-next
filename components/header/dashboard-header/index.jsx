@@ -1,12 +1,26 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { checkUser } from '../../../utils/checkTokenValidity';
 import MainMenu from '../MainMenu';
 import MobileMenu from '../MobileMenu';
 
 const HeaderDashBoard = () => {
   const [navbar, setNavbar] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const token = useSelector((state) => state.auth.value.token);
+  useEffect(() => {
+    window.addEventListener('scroll', changeBackground);
+    // Checking if user is still valid
+    if (token !== '') {
+      checkUser(router, dispatch);
+    }
+  }, []);
 
   const handleToggle = () => {
     setIsOpen(!isOpen);

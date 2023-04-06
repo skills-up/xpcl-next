@@ -3,7 +3,6 @@ import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 import PasswordInfo from './PasswordInfo';
 import LocationInfo from './LocationInfo';
 import PersonalInfo from './PersonalInfo';
-import Permissions from './Permissions';
 
 const Index = () => {
   const tabs = [
@@ -18,10 +17,6 @@ const Index = () => {
     {
       label: 'Change Password',
       content: <PasswordInfo />,
-    },
-    {
-      label: 'Permissions',
-      content: <Permissions />,
     },
   ];
 

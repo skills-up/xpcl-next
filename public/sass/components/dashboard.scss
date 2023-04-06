@@ -118,6 +118,10 @@ body.-is-sidebar-open {
   }
 }
 
+.dashboard__content {
+  min-height: calc(100vh - 5.6rem);
+}
+
 .sidebar.-dashboard {
   .sidebar {
     &__item {

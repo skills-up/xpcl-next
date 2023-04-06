@@ -20,7 +20,7 @@ const index = () => {
       sendToast('error', 'You need to login first in order to view the dashboard.', 4000);
       router.push('/login');
     }
-  });
+  }, []);
 
   return (
     <>

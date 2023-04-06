@@ -6,6 +6,7 @@ import { sendToast } from '../../../../utils/toastify';
 
 const Permissions = () => {
   const [permissions, setPermissions] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     getPermissions();
@@ -14,7 +15,6 @@ const Permissions = () => {
   const getPermissions = async () => {
     const response = await getList('permissions');
     if (response?.success) {
-      console.log(response.data);
       setPermissions(response.data);
     } else {
       sendToast(
@@ -47,7 +47,7 @@ const Permissions = () => {
                   dateStyle: 'medium',
                   timeStyle: 'short',
                 })
-              : 'NA'}
+              : ''}
           </div>
         );
       },
@@ -61,7 +61,20 @@ const Permissions = () => {
           <div className='flex flex-start'>
             <ActionsButton
               options={[
-                { label: 'Edit', onClick: () => console.log('edit') },
+                {
+                  label: 'View',
+                  onClick: () =>
+                    window.location.assign(
+                      '/dashboard/permissions/view/' + data.row.original.id
+                    ),
+                },
+                {
+                  label: 'Edit',
+                  onClick: () =>
+                    window.location.assign(
+                      '/dashboard/permissions/edit/' + data.row.original.id
+                    ),
+                },
                 { label: 'Delete', onClick: () => console.log('delete') },
               ]}
             />
@@ -73,7 +86,30 @@ const Permissions = () => {
 
   return (
     <div className='col-12'>
-      <Datatable columns={columns} data={permissions} />
+      {/* Search Bar + Add New */}
+      <div className='row mb-3 justify-between'>
+        <div className='col-lg-10 col-7'>
+          <input
+            type='text'
+            className='d-block form-control'
+            placeholder='Search'
+            onChange={(e) => setSearchQuery(e.target.value)}
+            value={searchQuery}
+          />
+        </div>
+        <button
+          className='btn btn-success col-lg-2 col-5'
+          onClick={() => window.location.assign('/dashboard/permissions/add-new')}
+        >
+          Add New
+        </button>
+      </div>
+      <Datatable
+        columns={columns}
+        data={permissions.filter((perm) =>
+          perm.slug.toLowerCase().includes(searchQuery.toLowerCase())
+        )}
+      />
     </div>
   );
 };

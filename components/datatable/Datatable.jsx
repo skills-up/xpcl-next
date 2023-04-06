@@ -35,7 +35,7 @@ const Datatable = ({
   rowClick = undefined,
   _rowCount = undefined,
   getData = undefined,
-  _pageSize = 20,
+  _pageSize = 10,
   _pageIndex = 0,
 }) => {
   const [totalItems, SetTotalItems] = useState(0);
@@ -118,6 +118,26 @@ const Datatable = ({
   // Render the UI for your table
   return data?.length > 0 ? (
     <div style={style}>
+      <div className='d-flex mb-2 pr-3 justify-end'>
+        <div className='col-lg-3 col-12'>
+          <select
+            className='d-block form-select text-sm'
+            value={pageSize}
+            onChange={(e) => {
+              setPageSize(Number(e.target.value));
+              if (getData) {
+                getData(pageIndex, pageIndex, Number(e.target.value), true);
+              }
+            }}
+          >
+            {[10, 25, 50, 100].map((pageSize) => (
+              <option key={pageSize} value={pageSize}>
+                Show {pageSize} Records Per Page
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
       <div className='overflow-scroll scroll-bar-1'>
         <table {...getTableProps()} className='table-3'>
           <thead>
