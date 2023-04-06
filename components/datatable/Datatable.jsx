@@ -201,7 +201,7 @@ const Datatable = ({
           </tbody>
         </table>
       </div>
-      <div className='row x-gap-10 y-gap-20 items-center justify-between md:justify-center my-4 border-top-light mt-30 pt-30'>
+      <div className='row x-gap-10 y-gap-20 items-center justify-between md:justify-center mt-4 mb-2 mb-lg-3 m border-top-light mt-30 pt-30'>
         <div className='col-auto md:order-1 w-120'>
           {pageIndex !== 0 && (
             <PageWithText
@@ -295,28 +295,28 @@ const Datatable = ({
             </PageWithText>
           )}
         </div>
-        {downloadCSV && (
-          <div className='col-12 d-flex justify-center md:order-4'>
-            <button
-              className='btn btn-primary d-flex items-center justify-between gap-1'
-              onClick={() => {
-                try {
-                  CSVDownloader(jsonToCSV(data), CSVName);
-                } catch (err) {
-                  sendToast(
-                    'error',
-                    err?.message || err?.error || 'Error occurred while converting',
-                    4000
-                  );
-                }
-              }}
-            >
-              <FiDownload className='text-20' />
-              Download CSV
-            </button>
-          </div>
-        )}
       </div>
+      {downloadCSV && (
+        <div className='d-flex justify-center'>
+          <button
+            className='btn btn-primary d-flex items-center justify-between gap-1'
+            onClick={() => {
+              try {
+                CSVDownloader(jsonToCSV(data), CSVName);
+              } catch (err) {
+                sendToast(
+                  'error',
+                  err?.message || err?.error || 'Error occurred while converting',
+                  4000
+                );
+              }
+            }}
+          >
+            <FiDownload className='text-20' />
+            Download CSV
+          </button>
+        </div>
+      )}
     </div>
   ) : (
     <div className='text-center'>No Records Found</div>
