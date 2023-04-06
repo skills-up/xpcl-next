@@ -25,7 +25,6 @@ const EditPermission = () => {
   const getPermission = async () => {
     if (router.query.edit) {
       const response = await getItem('permissions', router.query.edit);
-      console.log(response.data);
       if (response?.success) {
         setSlug(response.data?.slug);
         setDesc(response.data?.description);

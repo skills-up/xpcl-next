@@ -25,7 +25,6 @@ const ViewPermission = () => {
   const getPermission = async () => {
     if (router.query.view) {
       const response = await getItem('permissions', router.query.view);
-      console.log(response.data);
       if (response?.success) {
         setPermission([response.data]);
       } else {

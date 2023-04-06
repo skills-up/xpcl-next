@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react';
-import { getList } from '../../../../api/xplorzApi';
+import { deleteItem, getList } from '../../../../api/xplorzApi';
 import ActionsButton from '../../../../components/actions-button/ActionsButton';
 import Datatable from '../../../../components/datatable/Datatable';
 import { sendToast } from '../../../../utils/toastify';
+import ConfirmationModal from '../../../../components/confirm-modal';
 
 const Permissions = () => {
   const [permissions, setPermissions] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [idToDelete, setIdToDelete] = useState(-1);
 
   useEffect(() => {
     getPermissions();
@@ -75,7 +78,13 @@ const Permissions = () => {
                       '/dashboard/permissions/edit/' + data.row.original.id
                     ),
                 },
-                { label: 'Delete', onClick: () => console.log('delete') },
+                {
+                  label: 'Delete',
+                  onClick: () => {
+                    setIdToDelete(data.row.original.id);
+                    setConfirmDelete(true);
+                  },
+                },
               ]}
             />
           </div>
@@ -84,8 +93,37 @@ const Permissions = () => {
     },
   ];
 
+  const onCancel = async () => {
+    setConfirmDelete(false);
+    setIdToDelete(-1);
+  };
+  const onSubmit = async () => {
+    const response = await deleteItem('permissions', idToDelete);
+    if (response?.success) {
+      sendToast('success', 'Deleted successfully', 4000);
+      getPermissions();
+    } else {
+      sendToast(
+        'error',
+        response.data?.message ||
+          response.data?.error ||
+          'Unexpected Error Occurred While Trying to Delete this Permission',
+        4000
+      );
+    }
+    onCancel();
+  };
+
   return (
     <div className='col-12'>
+      {confirmDelete && (
+        <ConfirmationModal
+          onCancel={onCancel}
+          onSubmit={onSubmit}
+          title='Do you really want to delete this permission?'
+          content='This will permanently delete the permission. Press OK to confirm.'
+        />
+      )}
       {/* Search Bar + Add New */}
       <div className='row mb-3 justify-between'>
         <div className='col-lg-10 col-7'>
@@ -105,6 +143,8 @@ const Permissions = () => {
         </button>
       </div>
       <Datatable
+        downloadCSV
+        CSVName='Permissions.csv'
         columns={columns}
         data={permissions.filter((perm) =>
           perm.slug.toLowerCase().includes(searchQuery.toLowerCase())

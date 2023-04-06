@@ -9,6 +9,10 @@ import {
   BsChevronDoubleRight,
 } from 'react-icons/bs';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { FiDownload } from 'react-icons/fi';
+import { jsonToCSV } from 'react-papaparse';
+import { sendToast } from '../../utils/toastify';
+import { downloadCSV as CSVDownloader } from '../../utils/fileDownloader';
 
 const IndeterminateCheckbox = forwardRef(({ indeterminate, ...rest }, ref) => {
   const defaultRef = React.useRef();
@@ -30,6 +34,8 @@ const Datatable = ({
   columns,
   data,
   style,
+  downloadCSV = false,
+  CSVName = 'Reports.csv',
   selection = false,
   onCheckboxClick = undefined,
   rowClick = undefined,
@@ -289,6 +295,27 @@ const Datatable = ({
             </PageWithText>
           )}
         </div>
+        {downloadCSV && (
+          <div className='col-12 d-flex justify-center md:order-4'>
+            <button
+              className='btn btn-primary d-flex items-center justify-between gap-1'
+              onClick={() => {
+                try {
+                  CSVDownloader(jsonToCSV(data), CSVName);
+                } catch (err) {
+                  sendToast(
+                    'error',
+                    err?.message || err?.error || 'Error occurred while converting',
+                    4000
+                  );
+                }
+              }}
+            >
+              <FiDownload className='text-20' />
+              Download CSV
+            </button>
+          </div>
+        )}
       </div>
     </div>
   ) : (
