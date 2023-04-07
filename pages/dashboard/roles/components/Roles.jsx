@@ -20,7 +20,6 @@ const Roles = () => {
 
   const getRoles = async () => {
     const response = await getList('roles');
-    console.log('response', response.data);
     if (response?.success) {
       setRoles(response.data);
     } else {

@@ -3,7 +3,11 @@ import { getList } from '../../api/xplorzApi';
 import { sendToast } from '../../utils/toastify';
 import Switch from 'react-switch';
 
-const PermissionSwitch = ({ errorRedirect, setSelectedPermissions }) => {
+const PermissionSwitch = ({
+  errorRedirect,
+  setSelectedPermissions,
+  presentRoles = undefined,
+}) => {
   const standard = {};
   const additional = [];
   let selectstandard = {};
@@ -71,6 +75,31 @@ const PermissionSwitch = ({ errorRedirect, setSelectedPermissions }) => {
     );
   };
 
+  const fetch = async (st, ad) => {
+    Object.keys(st).map((key) => {
+      const perms = st[key];
+      perms
+        .filter((p) => p != null)
+        .map((perm) => {
+          var selectedPermission = presentRoles.find(
+            (permission) => permission === perm.name
+          );
+
+          if (selectedPermission) {
+            perm.selected = true;
+          }
+        });
+    });
+    ad.map((add) => {
+      var selectedPermission = presentRoles.find((permission) => permission === add.name);
+      if (selectedPermission) {
+        add.selected = true;
+      }
+    });
+    _setStandard({ ...st });
+    _setAdditional([...ad]);
+  };
+
   const getPermissions = async () => {
     const response = await getList('permissions');
     if (response?.success) {
@@ -91,12 +120,21 @@ const PermissionSwitch = ({ errorRedirect, setSelectedPermissions }) => {
             permission: permission,
             selected: false,
             id: _permission.id,
+            name: _permission.slug,
           };
         } else {
-          additional.push({ parts: parts, selected: false, id: _permission.id });
+          additional.push({
+            parts: parts,
+            selected: false,
+            id: _permission.id,
+            name: _permission.slug,
+          });
         }
         _setStandard({ ...selectstandard });
         _setAdditional([...additional]);
+        if (presentRoles) {
+          fetch({ ...selectstandard }, [...additional]);
+        }
       });
     } else {
       sendToast(
@@ -139,7 +177,7 @@ const PermissionSwitch = ({ errorRedirect, setSelectedPermissions }) => {
         </tbody>
       </table>
       <h6 className='d-inline-block mx-3'>Additional Permissions</h6>
-      <table className='table-3'>
+      <table className='table-6'>
         <tbody>
           {_additional.map((perm, i) => {
             const [entity, ...permission] = perm.parts;

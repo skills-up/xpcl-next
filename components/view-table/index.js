@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { isValidElement, useEffect } from 'react';
 
 const ViewTable = ({ data }) => {
   return (
@@ -18,9 +18,13 @@ const ViewTable = ({ data }) => {
                 <td>
                   {data[element] ? (
                     typeof data[element] === 'object' ? (
-                      <span>{JSON.stringify(data[element])}</span>
+                      isValidElement(data[element]) ? (
+                        data[element]
+                      ) : (
+                        <span>{JSON.stringify(data[element])}</span>
+                      )
                     ) : (
-                      <span>{data[element] ? data[element] : 'qwe'}</span>
+                      <span>{data[element]}</span>
                     )
                   ) : (
                     <span>N/A</span>

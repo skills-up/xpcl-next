@@ -9,8 +9,8 @@ import { useEffect, useState } from 'react';
 import { getItem } from '../../../../api/xplorzApi';
 import ViewTable from '../../../../components/view-table';
 
-const ViewPermission = () => {
-  const [permission, setPermission] = useState([]);
+const ViewRole = () => {
+  const [role, setRole] = useState([]);
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
   useEffect(() => {
@@ -18,13 +18,13 @@ const ViewPermission = () => {
       sendToast('error', 'You need to login first in order to view the dashboard.', 4000);
       router.push('/login');
     }
-    // Getting particular permission
-    getPermission();
+    // Getting particular role
+    getRole();
   }, [router.isReady]);
 
-  const getPermission = async () => {
+  const getRole = async () => {
     if (router.query.view) {
-      const response = await getItem('permissions', router.query.view);
+      const response = await getItem('roles', router.query.view);
       if (response?.success) {
         let data = response.data;
         // Converting time columns
@@ -40,22 +40,29 @@ const ViewPermission = () => {
             timeStyle: 'short',
           });
         }
-        setPermission(data);
+        data.permissions_list = (
+          <ul>
+            {data.permissions_list.map((perm, index) => (
+              <li key={index}>{perm}</li>
+            ))}
+          </ul>
+        );
+        setRole(data);
       } else {
         sendToast(
           'error',
           response.data?.message ||
             response.data?.error ||
-            'Could Not Fetch The Requested Permission.'
+            'Could Not Fetch The Requested Role.'
         );
-        router.push('/dashboard/permissions');
+        router.push('/dashboard/roles');
       }
     }
   };
 
   return (
     <>
-      <Seo pageTitle='View Permission' />
+      <Seo pageTitle='View Role' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -75,9 +82,9 @@ const ViewPermission = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>View Permission</h1>
+                  <h1 className='text-30 lh-14 fw-600'>View Role</h1>
                   <div className='text-15 text-light-1'>
-                    Get extended details of a permission.
+                    Get extended details of a role.
                   </div>
                 </div>
                 {/* End .col-12 */}
@@ -85,7 +92,7 @@ const ViewPermission = () => {
               {/* End .row */}
 
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
-                <ViewTable data={permission} />
+                <ViewTable data={role} />
               </div>
             </div>
 
@@ -100,4 +107,4 @@ const ViewPermission = () => {
   );
 };
 
-export default ViewPermission;
+export default ViewRole;
