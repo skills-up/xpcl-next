@@ -129,7 +129,7 @@ const Permissions = () => {
         />
       )}
       {/* Search Bar + Add New */}
-      <div className='row mb-3 justify-between mr-4'>
+      <div className='row mb-3 items-center justify-between mr-4'>
         <div className='col-lg-10 col-7'>
           <input
             type='text'
