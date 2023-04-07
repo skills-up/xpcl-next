@@ -4,6 +4,9 @@ import ActionsButton from '../../../../components/actions-button/ActionsButton';
 import Datatable from '../../../../components/datatable/Datatable';
 import { sendToast } from '../../../../utils/toastify';
 import ConfirmationModal from '../../../../components/confirm-modal';
+import { AiOutlineEye } from 'react-icons/ai';
+import { HiOutlinePencilAlt } from 'react-icons/hi';
+import { BsTrash3 } from 'react-icons/bs';
 
 const Permissions = () => {
   const [permissions, setPermissions] = useState([]);
@@ -68,6 +71,7 @@ const Permissions = () => {
                     window.location.assign(
                       '/dashboard/permissions/view/' + data.row.original.id
                     ),
+                  icon: <AiOutlineEye />,
                 },
                 {
                   label: 'Edit',
@@ -75,6 +79,7 @@ const Permissions = () => {
                     window.location.assign(
                       '/dashboard/permissions/edit/' + data.row.original.id
                     ),
+                  icon: <HiOutlinePencilAlt />,
                 },
                 {
                   label: 'Delete',
@@ -82,6 +87,7 @@ const Permissions = () => {
                     setIdToDelete(data.row.original.id);
                     setConfirmDelete(true);
                   },
+                  icon: <BsTrash3 />,
                 },
               ]}
             />

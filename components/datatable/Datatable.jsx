@@ -246,7 +246,26 @@ const Datatable = ({
           <span>
             Page{' '}
             <b>
-              {pageIndex + 1} of {pageOptions.length}
+              <input
+                type='number'
+                value={pageIndex + 1}
+                onChange={(e) => {
+                  gotoPage(parseInt(e.target.value) - 1);
+                }}
+                onFocus={(e) => {
+                  e.target.select();
+                }}
+                className='form-control mx-1'
+                style={{
+                  width: '30px',
+                  textAlign: 'center',
+                  fontWeight: '700',
+                  display: 'inline',
+                  padding: '0.2rem 0.3rem',
+                  outline: '1px solid black',
+                }}
+              />{' '}
+              of {pageOptions.length}
             </b>
             {' | '}
             Total Entries {' : '}

@@ -8,6 +8,7 @@ import { sendToast } from '../../../../utils/toastify';
 import { useEffect, useState } from 'react';
 import { getItem } from '../../../../api/xplorzApi';
 import Datatable from '../../../../components/datatable/Datatable';
+import ViewTable from '../../../../components/view-table';
 
 const ViewPermission = () => {
   const [permission, setPermission] = useState([]);
@@ -26,7 +27,21 @@ const ViewPermission = () => {
     if (router.query.view) {
       const response = await getItem('permissions', router.query.view);
       if (response?.success) {
-        setPermission([response.data]);
+        let data = response.data;
+        // Converting time columns
+        if (data.created_at) {
+          data.created_at = new Date(data.created_at).toLocaleString('en-IN', {
+            dateStyle: 'medium',
+            timeStyle: 'short',
+          });
+        }
+        if (data.updated_at) {
+          data.updated_at = new Date(data.updated_at).toLocaleString('en-IN', {
+            dateStyle: 'medium',
+            timeStyle: 'short',
+          });
+        }
+        setPermission(data);
       } else {
         sendToast(
           'error',
@@ -124,7 +139,7 @@ const ViewPermission = () => {
               {/* End .row */}
 
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
-                <Datatable data={permission} columns={columns} />
+                <ViewTable data={permission} />
               </div>
             </div>
 

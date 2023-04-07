@@ -1,15 +1,19 @@
+//**********************************
+// CORE
+// *********************************
 @import './abstracts/tools';
 @import './abstracts/variables';
-
 @import './animations/easings.scss';
 @import './animations/animations.scss';
 @import './animations/core.scss';
-
 @import './base/base';
 @import './base/button';
 @import './base/form';
 @import './base/typography';
 
+//**********************************
+// COMPONENTS
+// *********************************
 @import './components/404.scss';
 @import './components/sectionTitle.scss';
 @import './components/masthead.scss';
@@ -32,13 +36,18 @@
 @import './components/hotelsCard.scss';
 @import './components/confirmModal.scss';
 @import './components/preloader.scss';
+@import './components/viewTable.scss';
 
+//**********************************
+// UTILITIES
+// *********************************
 @import './utilities/spacing';
 @import './utilities/utilities';
-
 @import './vendors/icons.scss';
 
-// custom scss for all site & slick
+//**********************************
+// CUSTOM
+// *********************************
 @import './custom/custom-slick';
 @import './custom/price-range-slider';
 @import './custom/custom-next';

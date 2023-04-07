@@ -23,16 +23,23 @@ const AddNewPermission = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    const response = await createItem('/permissions', { slug, description: desc });
-    if (response?.success) {
-      sendToast('success', 'Created Permission Successfully.', 4000);
-      router.push('/dashboard/permissions');
+    // Checking if its only lower case
+    if (slug.match(/^[a-z\.\-]+$/)) {
+      const response = await createItem('/permissions', { slug, description: desc });
+      if (response?.success) {
+        sendToast('success', 'Created Permission Successfully.', 4000);
+        router.push('/dashboard/permissions');
+      } else {
+        sendToast(
+          'error',
+          response.data?.message ||
+            response.data?.error ||
+            'Failed to Create Permission.',
+          4000
+        );
+      }
     } else {
-      sendToast(
-        'error',
-        response.data?.message || response.data?.error || 'Failed to Create Permission.',
-        4000
-      );
+      sendToast('error', 'Only lowercase, hyphen (-) and dot (.) are allowed.', 8000);
     }
   };
 
