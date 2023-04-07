@@ -1461,7 +1461,7 @@ table.table-4 {
 table.table-5 {
   // padding: 0 15px;
   width: 100%;
-
+  min-height: calc(40vh - 6rem);
   thead {
   }
 
@@ -1502,6 +1502,61 @@ table.table-5 {
 
     @include media-below(xl) {
       padding: 15px 15px;
+    }
+  }
+}
+
+table.table-6 {
+  width: 100%;
+  min-height: calc(40vh - 6rem);
+  thead {
+    background-color: var(--color-light-2) !important;
+  }
+
+  th {
+    font-weight: 500;
+    padding: 20px 30px;
+    line-height: 1.2;
+    min-width: 50px;
+
+    @include media-below(xl) {
+      padding: 15px 15px;
+      min-width: 100px;
+    }
+
+    &:first-child {
+      border-radius: 8px 0 0 8px;
+    }
+    &:last-child {
+      border-radius: 0 8px 8px 0;
+    }
+  }
+
+  tbody {
+    tr {
+      vertical-align: top;
+    }
+
+    > tr + tr {
+      border-top: 1px dashed var(--color-border);
+    }
+  }
+
+  td {
+    padding: 15px 30px;
+    font-size: 15px;
+    line-height: 1.2;
+    min-width: 50px;
+
+    @include media-below(xl) {
+      padding: 15px 15px;
+    }
+  }
+
+  &.-border-bottom {
+    tbody > tr {
+      border-top: none;
+      border-bottom: 1px dashed var(--color-border);
     }
   }
 }

@@ -1,0 +1,161 @@
+import { useEffect, useState } from 'react';
+import { getList } from '../../api/xplorzApi';
+import { sendToast } from '../../utils/toastify';
+import Switch from 'react-switch';
+
+const PermissionSwitch = ({ errorRedirect, setSelectedPermissions }) => {
+  const standard = {};
+  const additional = [];
+  let selectstandard = {};
+  const [_standard, _setStandard] = useState({});
+  const [_additional, _setAdditional] = useState([]);
+
+  useEffect(() => {
+    getPermissions();
+  }, []);
+
+  // Setting selected permissions array on each change
+  useEffect(() => {
+    let _selectedPermissions = [];
+    Object.keys(_standard).map((key) => {
+      const perms = _standard[key];
+      perms.map((perm) => {
+        perm && perm.selected && _selectedPermissions.push(perm.id);
+      });
+    });
+    _additional.map((add) => {
+      add.selected && _selectedPermissions.push(add.id);
+    });
+    setSelectedPermissions(_selectedPermissions);
+  }, [_standard, _additional]);
+
+  const titelize = (slug) =>
+    slug
+      .split('-')
+      .map((w) => w.charAt(0).toUpperCase() + w.substring(1))
+      .join(' ');
+
+  const renderSwitch = (perm, key = null, index = 0) => {
+    let permissions = { ..._standard };
+    return (
+      <Switch
+        onChange={(checked) => {
+          permissions[key][index].selected = checked;
+          _setStandard({ ...permissions });
+        }}
+        checked={perm.selected}
+        handleDiameter={24}
+        boxShadow='0px 1px 5px rgba(0, 0, 0, 0.2)'
+        height={20}
+        width={48}
+        className='react-switch'
+      />
+    );
+  };
+
+  const renderSwitchAdd = (perm, i) => {
+    let permissions = [..._additional];
+    return (
+      <Switch
+        onChange={(checked) => {
+          permissions[i].selected = checked;
+          _setAdditional([...permissions]);
+        }}
+        checked={perm.selected}
+        handleDiameter={24}
+        boxShadow='0px 1px 5px rgba(0, 0, 0, 0.2)'
+        height={20}
+        width={48}
+        className='react-switch'
+      />
+    );
+  };
+
+  const getPermissions = async () => {
+    const response = await getList('permissions');
+    if (response?.success) {
+      let permissions = response.data;
+      permissions.forEach((_permission) => {
+        const element = _permission.slug;
+        const parts = element.split('.');
+        const entity = parts[0];
+        const permission = parts.slice(1).join('.');
+        const idx = ['index', 'show', 'store', 'update', 'destroy'].indexOf(permission);
+        if (idx >= 0) {
+          if (!standard[entity]) {
+            standard[entity] = [null, null, null, null, null];
+            selectstandard[entity] = [null, null, null, null, null];
+          }
+          standard[entity][idx] = permission;
+          selectstandard[entity][idx] = {
+            permission: permission,
+            selected: false,
+            id: _permission.id,
+          };
+        } else {
+          additional.push({ parts: parts, selected: false, id: _permission.id });
+        }
+        _setStandard({ ...selectstandard });
+        _setAdditional([...additional]);
+      });
+    } else {
+      sendToast(
+        'error',
+        response.data?.message || response.data?.error || 'Error getting permissions',
+        4000
+      );
+      window.location.assign(errorRedirect);
+    }
+  };
+
+  return (
+    <div className='overflow-scroll scroll-bar-1'>
+      <h6 className='my-3 d-inline-block'>Standard Permissions</h6>
+      <table className='table-6' style={{ marginBottom: '25px' }}>
+        <thead>
+          <tr>
+            <th></th>
+            <th>List</th>
+            <th>Show</th>
+            <th>Create</th>
+            <th>Update</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          {Object.keys(_standard).map((key) => {
+            const perms = _standard[key];
+            return (
+              <tr key={key}>
+                <td>{titelize(key)}</td>
+                <td>{perms[0] ? renderSwitch(perms[0], key, 0) : ''}</td>
+                <td>{perms[1] ? renderSwitch(perms[1], key, 1) : ''}</td>
+                <td>{perms[2] ? renderSwitch(perms[2], key, 2) : ''}</td>
+                <td>{perms[3] ? renderSwitch(perms[3], key, 3) : ''}</td>
+                <td>{perms[4] ? renderSwitch(perms[4], key, 4) : ''}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+      <h6 className='d-inline-block mx-3'>Additional Permissions</h6>
+      <table className='table-3'>
+        <tbody>
+          {_additional.map((perm, i) => {
+            const [entity, ...permission] = perm.parts;
+            return (
+              <tr key={perm.parts.join('.')}>
+                <td>
+                  {titelize(entity) + ' - ' + titelize(permission.reverse().join('-'))}
+                </td>
+                <td>{renderSwitchAdd(perm, i)}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+export default PermissionSwitch;
