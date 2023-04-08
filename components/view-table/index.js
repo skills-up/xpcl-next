@@ -1,6 +1,6 @@
 import { isValidElement, useEffect } from 'react';
 
-const ViewTable = ({ data }) => {
+const ViewTable = ({ data, onEdit, onDelete }) => {
   return (
     <div className='view-table'>
       <table>
@@ -35,6 +35,14 @@ const ViewTable = ({ data }) => {
           })}
         </tbody>
       </table>
+      <div className='mt-15 d-flex gap-2'>
+        <button className='btn btn-primary' type='button' onClick={onEdit}>
+          Edit
+        </button>
+        <button className='btn btn-danger' type='button' onClick={onDelete}>
+          Delete
+        </button>
+      </div>
     </div>
   );
 };

@@ -32,10 +32,10 @@ const LoginForm = () => {
       if (response.data?.access_token) {
         // Call to get permissions
         dispatch(setToken({ token: response.data.access_token }));
-        const me = await customAPICall('auth/me', 'post');
-        if (me?.success) {
+        const me = response.data.user;
+        if (me) {
           // Getting permissions from role id
-          const permissions = await getItem('roles', me.data?.role_id);
+          const permissions = await getItem('roles', me?.role_id);
           if (permissions?.success && permissions?.data?.permissions_list) {
             // Setting permissions
             dispatch(setPermissions({ permissions: permissions.data.permissions_list }));

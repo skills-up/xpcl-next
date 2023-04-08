@@ -2,15 +2,19 @@ import Seo from '../../../../components/common/Seo';
 import Footer from '../../../../components/footer/dashboard-footer';
 import Header from '../../../../components/header/dashboard-header';
 import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
+import ConfirmationModal from '../../../../components/confirm-modal';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { sendToast } from '../../../../utils/toastify';
 import { useEffect, useState } from 'react';
-import { getItem } from '../../../../api/xplorzApi';
+import { deleteItem, getItem } from '../../../../api/xplorzApi';
 import ViewTable from '../../../../components/view-table';
 
 const ViewRole = () => {
   const [role, setRole] = useState([]);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [idToDelete, setIdToDelete] = useState(-1);
+
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
   useEffect(() => {
@@ -60,6 +64,27 @@ const ViewRole = () => {
     }
   };
 
+  const onCancel = async () => {
+    setConfirmDelete(false);
+    setIdToDelete(-1);
+  };
+  const onSubmit = async () => {
+    const response = await deleteItem('roles', idToDelete);
+    if (response?.success) {
+      sendToast('success', 'Deleted successfully', 4000);
+      router.push('/dashboard/roles');
+    } else {
+      sendToast(
+        'error',
+        response.data?.message ||
+          response.data?.error ||
+          'Unexpected Error Occurred While Trying to Delete this Role',
+        4000
+      );
+    }
+    onCancel();
+  };
+
   return (
     <>
       <Seo pageTitle='View Role' />
@@ -92,7 +117,22 @@ const ViewRole = () => {
               {/* End .row */}
 
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
-                <ViewTable data={role} />
+                {confirmDelete && (
+                  <ConfirmationModal
+                    onCancel={onCancel}
+                    onSubmit={onSubmit}
+                    title='Do you really want to delete this role?'
+                    content='This will permanently delete the role. Press OK to confirm.'
+                  />
+                )}
+                <ViewTable
+                  data={role}
+                  onEdit={() => router.push('/dashboard/roles/edit/' + router.query.view)}
+                  onDelete={() => {
+                    setIdToDelete(router.query.view);
+                    setConfirmDelete(true);
+                  }}
+                />
               </div>
             </div>
 
