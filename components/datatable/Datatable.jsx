@@ -9,6 +9,10 @@ import {
   BsChevronDoubleRight,
 } from 'react-icons/bs';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { FiDownload } from 'react-icons/fi';
+import { jsonToCSV } from 'react-papaparse';
+import { sendToast } from '../../utils/toastify';
+import { downloadCSV as CSVDownloader } from '../../utils/fileDownloader';
 
 const IndeterminateCheckbox = forwardRef(({ indeterminate, ...rest }, ref) => {
   const defaultRef = React.useRef();
@@ -30,12 +34,14 @@ const Datatable = ({
   columns,
   data,
   style,
+  downloadCSV = false,
+  CSVName = 'Reports.csv',
   selection = false,
   onCheckboxClick = undefined,
   rowClick = undefined,
   _rowCount = undefined,
   getData = undefined,
-  _pageSize = 20,
+  _pageSize = 10,
   _pageIndex = 0,
 }) => {
   const [totalItems, SetTotalItems] = useState(0);
@@ -118,6 +124,26 @@ const Datatable = ({
   // Render the UI for your table
   return data?.length > 0 ? (
     <div style={style}>
+      <div className='d-flex mb-2 mr-4 justify-end'>
+        <div className='col-lg-2 col-12'>
+          <select
+            className='d-block form-select text-sm'
+            value={pageSize}
+            onChange={(e) => {
+              setPageSize(Number(e.target.value));
+              if (getData) {
+                getData(pageIndex, pageIndex, Number(e.target.value), true);
+              }
+            }}
+          >
+            {[10, 25, 50, 100].map((pageSize) => (
+              <option key={pageSize} value={pageSize}>
+                Show {pageSize} Rows
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
       <div className='overflow-scroll scroll-bar-1'>
         <table {...getTableProps()} className='table-3'>
           <thead>
@@ -175,7 +201,7 @@ const Datatable = ({
           </tbody>
         </table>
       </div>
-      <div className='row x-gap-10 y-gap-20 items-center justify-between md:justify-center my-4 border-top-light mt-30 pt-30'>
+      <div className='row x-gap-10 y-gap-20 items-center justify-between md:justify-center mt-4 mb-2 mb-lg-3 m border-top-light mt-30 pt-30'>
         <div className='col-auto md:order-1 w-120'>
           {pageIndex !== 0 && (
             <PageWithText
@@ -220,7 +246,26 @@ const Datatable = ({
           <span>
             Page{' '}
             <b>
-              {pageIndex + 1} of {pageOptions.length}
+              <input
+                type='number'
+                value={pageIndex + 1}
+                onChange={(e) => {
+                  gotoPage(parseInt(e.target.value) - 1);
+                }}
+                onFocus={(e) => {
+                  e.target.select();
+                }}
+                className='form-control mx-1'
+                style={{
+                  width: '30px',
+                  textAlign: 'center',
+                  fontWeight: '700',
+                  display: 'inline',
+                  padding: '0.2rem 0.3rem',
+                  outline: '1px solid black',
+                }}
+              />{' '}
+              of {pageOptions.length}
             </b>
             {' | '}
             Total Entries {' : '}
@@ -270,6 +315,27 @@ const Datatable = ({
           )}
         </div>
       </div>
+      {downloadCSV && (
+        <div className='d-flex justify-center'>
+          <button
+            className='btn btn-primary d-flex items-center justify-between gap-1'
+            onClick={() => {
+              try {
+                CSVDownloader(jsonToCSV(data), CSVName);
+              } catch (err) {
+                sendToast(
+                  'error',
+                  err?.message || err?.error || 'Error occurred while converting',
+                  4000
+                );
+              }
+            }}
+          >
+            <FiDownload className='text-20' />
+            Download CSV
+          </button>
+        </div>
+      )}
     </div>
   ) : (
     <div className='text-center'>No Records Found</div>

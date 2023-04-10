@@ -2,11 +2,11 @@ import { useState } from 'react';
 
 const ActionsButton = ({
   options = [
-    { label: 'All', onClick: () => window.location.assign('/') },
-    { label: 'Details', onClick: () => window.location.assign('/') },
-    { label: 'Invoice', onClick: () => window.location.assign('/') },
-    { label: 'Confirm', onClick: () => window.location.assign('/') },
-    { label: 'Cancel', onClick: () => window.location.assign('/') },
+    { label: 'All', onClick: () => window.location.assign('/'), icon: undefined },
+    { label: 'Details', onClick: () => window.location.assign('/'), icon: undefined },
+    { label: 'Invoice', onClick: () => window.location.assign('/'), icon: undefined },
+    { label: 'Confirm', onClick: () => window.location.assign('/'), icon: undefined },
+    { label: 'Cancel', onClick: () => window.location.assign('/'), icon: undefined },
   ],
 }) => {
   return (
@@ -25,8 +25,11 @@ const ActionsButton = ({
         <div className='text-14 fw-500 js-dropdown-list'>
           {options.map((option, index) => (
             <div key={index}>
-              <button className='d-block js-dropdown-link' onClick={option?.onClick}>
-                {option.label}
+              <button
+                className='d-flex items-center gap-1 js-dropdown-link'
+                onClick={option?.onClick}
+              >
+                {option?.icon} {option.label}
               </button>
             </div>
           ))}

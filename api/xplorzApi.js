@@ -71,7 +71,13 @@ export const customAPICall = async (
       return { success: true, data: response.data };
     }
   } catch (err) {
-    console.error(err?.response?.data?.message || err?.message || err?.error || err);
+    console.error(
+      err?.response?.data?.message ||
+        err?.response?.data?.error ||
+        err?.message ||
+        err?.error ||
+        err
+    );
     return { success: false, data: err?.response?.data || err };
   }
 };

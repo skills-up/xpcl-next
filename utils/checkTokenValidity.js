@@ -1,4 +1,3 @@
-import { useDispatch } from 'react-redux';
 import { customAPICall } from '../api/xplorzApi';
 import { setInitialUserState } from '../features/auth/authSlice';
 import { sendToast } from './toastify';
