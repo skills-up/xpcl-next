@@ -8,6 +8,7 @@ import {
   setTokenExpireTime,
   setInitialUserState,
   setPermissions,
+  setCurrentOrganization,
 } from '../../features/auth/authSlice';
 import { sendToast } from '../../utils/toastify';
 
@@ -32,7 +33,7 @@ const LoginForm = () => {
       if (response.data?.access_token) {
         // Call to get permissions
         dispatch(setToken({ token: response.data.access_token }));
-        const me = response.data.user;
+        const me = response.data?.user;
         if (me) {
           // Getting permissions from role id
           const permissions = await getItem('roles', me?.role_id);
@@ -45,8 +46,13 @@ const LoginForm = () => {
                 tokenExpireTime: Date.now() + response.expires_in * 1000,
               })
             );
+            // Setting current organization
+            dispatch(
+              setCurrentOrganization({ currentOrganization: me.current_organization_id })
+            );
             sendToast('success', 'Login Successful', 4000);
-            router.push('/');
+            if (me.current_organization_id === 1) router.push('/dashboard');
+            else router.push('/');
           } else {
             sendToast('error', 'Could Not Find User Permissions', 4000);
             dispatch(setInitialUserState());

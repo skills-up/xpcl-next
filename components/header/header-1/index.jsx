@@ -93,7 +93,7 @@ const Header1 = ({ permaOpaque = true }) => {
                         if (response?.success) {
                           dispatch(setInitialUserState());
                           sendToast('success', 'Logged Out Successfully', 4000);
-                          router.push('/');
+                          router.push('/login');
                         } else {
                           sendToast('error', 'Error Logging Out', 4000);
                         }

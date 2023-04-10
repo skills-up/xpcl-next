@@ -8,7 +8,7 @@ export const initialState = {
     orgId: 0,
     tokenExpireTime: 0,
     organization: [],
-    currentOrganization: {},
+    currentOrganization: 0,
     tokenGeneratedTime: '',
     userName: '',
     token: '',
