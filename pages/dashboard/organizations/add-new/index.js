@@ -6,12 +6,15 @@ import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { sendToast } from '../../../../utils/toastify';
 import { useEffect, useState } from 'react';
-import { createItem } from '../../../../api/xplorzApi';
+import { createItem, getList } from '../../../../api/xplorzApi';
 import ReactSwitch from 'react-switch';
+import Select from 'react-select';
 
 const AddNewOrganization = () => {
-  const [accountID, setAccountID] = useState(0);
-  const [calenderTemplateID, setCalenderTemplateID] = useState('');
+  const [accounts, setAccounts] = useState([]);
+  const [accountID, setAccountID] = useState(null);
+  const [calenderTemplates, setCalenderTemplates] = useState([]);
+  const [calenderTemplateID, setCalenderTemplateID] = useState(null);
   const [name, setName] = useState('');
   const [code, setCode] = useState('');
   const [contactName, setContactName] = useState('');
@@ -33,38 +36,62 @@ const AddNewOrganization = () => {
       sendToast('error', 'You need to login first in order to view the dashboard.', 4000);
       router.push('/login');
     }
+    getData();
   }, []);
+
+  const getData = async () => {
+    const accounts = await getList('accounts');
+    const calenderTemplates = await getList('calendar-templates');
+    if (accounts?.success && calenderTemplates?.success) {
+      setCalenderTemplates(
+        calenderTemplates.data.map((element) => ({
+          value: element.id,
+          label: element.name,
+        }))
+      );
+      setAccounts(
+        accounts.data.map((element) => ({ value: element.id, label: element.name }))
+      );
+    } else {
+      sendToast('error', 'Unable to fetch required data', 4000);
+      router.push('/dashboard/organizations');
+    }
+  };
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    // Checking if its only lower case
-    const response = await createItem('/organizations', {
-      account_id: accountID,
-      calender_template_id: calenderTemplateID,
-      name,
-      code,
-      contact_name: contactName,
-      contact_email: contactEmail,
-      address,
-      gstn,
-      use_gstn: useGstn,
-      is_client: isClient,
-      is_vendor: isVendor,
-      is_hotel: isHotel,
-      is_airline: isAirline,
-      faire_percent: farePercent,
-    });
-    if (response?.success) {
-      sendToast('success', 'Created Organization Successfully.', 4000);
-      router.push('/dashboard/organizations');
+    // Checking if account id is not null
+    if (accountID?.value) {
+      const response = await createItem('/organizations', {
+        account_id: accountID.value,
+        calendar_template_id: calenderTemplateID?.value || null,
+        name,
+        code,
+        contact_name: contactName,
+        contact_email: contactEmail,
+        address,
+        gstn,
+        use_gstn: useGstn,
+        is_client: isClient,
+        is_vendor: isVendor,
+        is_hotel: isHotel,
+        is_airline: isAirline,
+        fare_percent: farePercent,
+      });
+      if (response?.success) {
+        sendToast('success', 'Created Organization Successfully.', 4000);
+        router.push('/dashboard/organizations');
+      } else {
+        sendToast(
+          'error',
+          response.data?.message ||
+            response.data?.error ||
+            'Failed to Create Organization.',
+          4000
+        );
+      }
     } else {
-      sendToast(
-        'error',
-        response.data?.message ||
-          response.data?.error ||
-          'Failed to Create Organization.',
-        4000
-      );
+      sendToast('error', 'You must select an Account first.', 8000);
     }
   };
 
@@ -100,6 +127,24 @@ const AddNewOrganization = () => {
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
+                    <div>
+                      <Select
+                        options={accounts}
+                        value={accountID}
+                        placeholder='Search & Select Account (required)'
+                        onChange={(id) => setAccountID(id)}
+                      />
+                    </div>
+                    {calenderTemplates?.length > 0 && (
+                      <div>
+                        <Select
+                          options={calenderTemplates}
+                          value={calenderTemplateID}
+                          placeholder='Search & Select Calendar Template'
+                          onChange={(id) => setCalenderTemplateID(id)}
+                        />
+                      </div>
+                    )}
                     <div className='col-12'>
                       <div className='form-input'>
                         <input
@@ -142,7 +187,7 @@ const AddNewOrganization = () => {
                           onChange={(e) => setContactEmail(e.target.value)}
                           value={contactEmail}
                           placeholder=' '
-                          type='text'
+                          type='email'
                         />
                         <label className='lh-1 text-16 text-light-1'>Contact Email</label>
                       </div>

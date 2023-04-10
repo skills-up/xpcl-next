@@ -6,68 +6,140 @@ import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { sendToast } from '../../../../utils/toastify';
 import { useEffect, useState } from 'react';
-import { getItem, updateItem } from '../../../../api/xplorzApi';
-import PermissionSwitch from '../../../../components/permission-switch';
+import { createItem, getItem, getList, updateItem } from '../../../../api/xplorzApi';
+import ReactSwitch from 'react-switch';
+import Select from 'react-select';
 
-const EditRole = () => {
+const AddNewOrganization = () => {
+  const [accounts, setAccounts] = useState([]);
+  const [accountID, setAccountID] = useState(null);
+  const [calenderTemplates, setCalenderTemplates] = useState([]);
+  const [calenderTemplateID, setCalenderTemplateID] = useState(null);
   const [name, setName] = useState('');
-  const [desc, setDesc] = useState('');
-  const [selectedPermissions, setSelectedPermissions] = useState([]);
-  const [rolePermissions, setRolePermissions] = useState([]);
+  const [code, setCode] = useState('');
+  const [contactName, setContactName] = useState('');
+  const [contactEmail, setContactEmail] = useState('');
+  const [address, setAddress] = useState('');
+  const [gstn, setGstn] = useState('');
+  const [useGstn, setUseGstn] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+  const [isVendor, setIsVendor] = useState(false);
+  const [isHotel, setIsHotel] = useState(false);
+  const [isAirline, setIsAirline] = useState(false);
+  const [farePercent, setFarePercent] = useState(0);
+
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
+
   useEffect(() => {
     if (token === '') {
       sendToast('error', 'You need to login first in order to view the dashboard.', 4000);
       router.push('/login');
     }
-    // Getting particular role
-    getRoles();
+    getData();
   }, [router.isReady]);
 
-  const getRoles = async () => {
+  const getData = async () => {
     if (router.query.edit) {
-      const response = await getItem('roles', router.query.edit);
+      // Getting Previous Data
+      const response = await getItem('organizations', router.query.edit);
       if (response?.success) {
         setName(response.data?.name);
-        setDesc(response.data?.description);
-        setRolePermissions(response.data?.permissions_list);
+        setCode(response.data?.code);
+        setContactName(response.data?.contact_name);
+        setContactEmail(response.data?.contact_email);
+        setAddress(response.data?.address);
+        setGstn(response.data?.gstn);
+        setUseGstn(response.data?.use_gstn);
+        setIsClient(response.data?.is_client);
+        setIsVendor(response.data?.is_vendor);
+        setIsHotel(response.data?.is_hotel);
+        setIsAirline(response.data?.is_airline);
+        setFarePercent(response.data?.fare_percent);
+
+        // Getting Accounts
+        const accounts = await getList('accounts');
+        const calenderTemplates = await getList('calendar-templates');
+        if (accounts?.success && calenderTemplates?.success) {
+          setCalenderTemplates(
+            calenderTemplates.data.map((element) => ({
+              value: element.id,
+              label: element.name,
+            }))
+          );
+          setAccounts(
+            accounts.data.map((element) => ({ value: element.id, label: element.name }))
+          );
+          // Setting Calender + Accounts ID
+          for (let acc of accounts.data) {
+            if (acc.id === response.data.account_id) {
+              setAccountID({ value: acc.id, label: acc.name });
+            }
+          }
+          if (calenderTemplates?.length > 0) {
+            for (let calendar of calenderTemplates.data) {
+              if (calendar.id === response.data.calendar_template_id) {
+                setCalenderTemplateID({ value: calendar.id, label: calendar.name });
+              }
+            }
+          }
+        } else {
+          sendToast('error', 'Unable to fetch required data', 4000);
+          router.push('/dashboard/organizations');
+        }
       } else {
         sendToast(
           'error',
           response.data?.message ||
             response.data?.error ||
-            'Could Not Fetch The Requested Role.'
+            'Could not fetch organization information',
+          4000
         );
-        router.push('/dashboard/roles');
+        router.push('/dashboard/organizations');
       }
     }
   };
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    if (router.query.edit) {
-      const response = await updateItem('/roles', router.query.edit, {
+    // Checking if account id is not null
+    if (accountID?.value) {
+      const response = await updateItem('/organizations', router.query.edit, {
+        account_id: accountID.value,
+        calender_template_id: calenderTemplateID?.value || null,
         name,
-        description: desc,
-        permission_ids: selectedPermissions,
+        code,
+        contact_name: contactName,
+        contact_email: contactEmail,
+        address,
+        gstn,
+        use_gstn: useGstn,
+        is_client: isClient,
+        is_vendor: isVendor,
+        is_hotel: isHotel,
+        is_airline: isAirline,
+        fare_percent: farePercent,
       });
       if (response?.success) {
-        sendToast('success', 'Updated Role Successfully.', 4000);
-        router.push('/dashboard/roles');
+        sendToast('success', 'Updated Organization Successfully.', 4000);
+        router.push('/dashboard/organizations');
       } else {
         sendToast(
           'error',
-          response.data?.message || response.data?.error || 'Failed to Update Role.',
+          response.data?.message ||
+            response.data?.error ||
+            'Failed to Create Organization.',
           4000
         );
       }
+    } else {
+      sendToast('error', 'You must select an Account first.', 8000);
     }
   };
 
   return (
     <>
-      <Seo pageTitle='Edit Role' />
+      <Seo pageTitle='Add New Organization' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -87,8 +159,8 @@ const EditRole = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Edit Role</h1>
-                  <div className='text-15 text-light-1'>Edit an existing role.</div>
+                  <h1 className='text-30 lh-14 fw-600'>Add New Organization</h1>
+                  <div className='text-15 text-light-1'>Create a new organization.</div>
                 </div>
                 {/* End .col-12 */}
               </div>
@@ -97,6 +169,26 @@ const EditRole = () => {
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
+                    <div>
+                      <Select
+                        options={accounts}
+                        defaultValue={accountID}
+                        value={accountID}
+                        placeholder='Select Account'
+                        onChange={(id) => setAccountID(id.value)}
+                      />
+                    </div>
+                    {calenderTemplates?.length > 0 && (
+                      <div>
+                        <Select
+                          options={calenderTemplates}
+                          defaultInputValue={calenderTemplateID}
+                          value={calenderTemplateID}
+                          placeholder='Select Calendar Template'
+                          onChange={(id) => setCalenderTemplateID(id.value)}
+                        />
+                      </div>
+                    )}
                     <div className='col-12'>
                       <div className='form-input'>
                         <input
@@ -114,29 +206,115 @@ const EditRole = () => {
                     <div className='col-12'>
                       <div className='form-input'>
                         <input
-                          onChange={(e) => setDesc(e.target.value)}
-                          value={desc}
+                          onChange={(e) => setCode(e.target.value)}
+                          value={code}
                           placeholder=' '
                           type='text'
                         />
-                        <label className='lh-1 text-16 text-light-1'>Description</label>
+                        <label className='lh-1 text-16 text-light-1'>Code</label>
                       </div>
                     </div>
-                    {rolePermissions?.length > 0 && (
-                      <div className='col-lg-auto col-12'>
-                        <PermissionSwitch
-                          setSelectedPermissions={setSelectedPermissions}
-                          errorRedirect={'/dashboard/roles'}
-                          presentRoles={rolePermissions}
+                    <div className='col-12'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setContactName(e.target.value)}
+                          value={contactName}
+                          placeholder=' '
+                          type='text'
                         />
+                        <label className='lh-1 text-16 text-light-1'>Contact Name</label>
                       </div>
-                    )}
+                    </div>
+                    <div className='col-12'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setContactEmail(e.target.value)}
+                          value={contactEmail}
+                          placeholder=' '
+                          type='email'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>Contact Email</label>
+                      </div>
+                    </div>
+                    <div className='col-12'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setAddress(e.target.value)}
+                          value={address}
+                          placeholder=' '
+                          type='text'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>Address</label>
+                      </div>
+                    </div>
+                    <div className='col-12'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setGstn(e.target.value)}
+                          value={gstn}
+                          placeholder=' '
+                          type='text'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>GSTN</label>
+                      </div>
+                    </div>
+                    <div className='col-12'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setFarePercent(e.target.value)}
+                          value={farePercent}
+                          placeholder=' '
+                          type='number'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>Fare Percent</label>
+                      </div>
+                    </div>
+                    <div className='row'>
+                      <label className='col-lg-2 col-9'>Use GSTN</label>
+                      <ReactSwitch
+                        className='col-lg-auto col-1'
+                        onChange={() => setUseGstn((prev) => !prev)}
+                        checked={useGstn}
+                      />
+                    </div>
+                    <div className='row'>
+                      <label className='col-lg-2 col-9'>Is Client</label>
+                      <ReactSwitch
+                        className='col-lg-auto col-1'
+                        onChange={() => setIsClient((prev) => !prev)}
+                        checked={isClient}
+                      />
+                    </div>
+                    <div className='row'>
+                      <label className='col-lg-2 col-9'>Is Vendor</label>
+                      <ReactSwitch
+                        className='col-lg-auto col-1'
+                        onChange={() => setIsVendor((prev) => !prev)}
+                        checked={isVendor}
+                      />
+                    </div>
+                    <div className='row'>
+                      <label className='col-lg-2 col-9'>Is Hotel</label>
+                      <ReactSwitch
+                        className='col-lg-auto col-1'
+                        onChange={() => setIsHotel((prev) => !prev)}
+                        checked={isHotel}
+                      />
+                    </div>
+                    <div className='row'>
+                      <label className='col-lg-2 col-9'>Is Airline</label>
+                      <ReactSwitch
+                        className='col-lg-auto col-1'
+                        onChange={() => setIsAirline((prev) => !prev)}
+                        checked={isAirline}
+                      />
+                    </div>
                     <div className='d-inline-block'>
                       <button
                         type='submit'
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
                       >
-                        Update Role
+                        Add Organization
                       </button>
                     </div>
                   </form>
@@ -155,4 +333,4 @@ const EditRole = () => {
   );
 };
 
-export default EditRole;
+export default AddNewOrganization;
