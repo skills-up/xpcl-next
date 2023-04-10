@@ -9,6 +9,7 @@ import {
   setInitialUserState,
   setPermissions,
   setCurrentOrganization,
+  setOrganization,
 } from '../../features/auth/authSlice';
 import { sendToast } from '../../utils/toastify';
 
@@ -46,6 +47,8 @@ const LoginForm = () => {
                 tokenExpireTime: Date.now() + response.expires_in * 1000,
               })
             );
+            // Set user organization id
+            dispatch(setOrganization({ organization: me.organization_id }));
             // Setting current organization
             dispatch(
               setCurrentOrganization({ currentOrganization: me.current_organization_id })

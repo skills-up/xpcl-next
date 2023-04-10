@@ -18,6 +18,7 @@ const HeaderDashBoard = () => {
   const [organizationID, setOrganizationsID] = useState(null);
 
   const dispatch = useDispatch();
+  const userOrganization = useSelector((state) => state.auth.value.organization);
   const currentOrganization = useSelector(
     (state) => state.auth.value.currentOrganization
   );
@@ -111,36 +112,38 @@ const HeaderDashBoard = () => {
                   </button>
                 </div> */}
                 {/* Organization Field */}
-                <div
-                  className='row items-center md:d-none ml-30'
-                  style={{ width: '20vw' }}
-                >
-                  <Select
-                    options={organizations}
-                    defaultValue={organizationID}
-                    value={organizationID}
-                    placeholder='Select Organization'
-                    onChange={async (id) => {
-                      const response = await customAPICall('auth/switch', 'post', {
-                        organization_id: id.value,
-                      });
-                      if (response?.success) {
-                        setOrganizationsID(id);
-                        dispatch(
-                          setCurrentOrganization({ currentOrganization: id.value })
-                        );
-                      } else {
-                        sendToast(
-                          'error',
-                          response.data?.message ||
-                            response.data?.error ||
-                            'Error occured while changing organization',
-                          4000
-                        );
-                      }
-                    }}
-                  />
-                </div>
+                {userOrganization === 1 && (
+                  <div
+                    className='row items-center md:d-none ml-30'
+                    style={{ width: '20vw' }}
+                  >
+                    <Select
+                      options={organizations}
+                      defaultValue={organizationID}
+                      value={organizationID}
+                      placeholder='Select Organization'
+                      onChange={async (id) => {
+                        const response = await customAPICall('auth/switch', 'post', {
+                          organization_id: id.value,
+                        });
+                        if (response?.success) {
+                          setOrganizationsID(id);
+                          dispatch(
+                            setCurrentOrganization({ currentOrganization: id.value })
+                          );
+                        } else {
+                          sendToast(
+                            'error',
+                            response.data?.message ||
+                              response.data?.error ||
+                              'Error occured while changing organization',
+                            4000
+                          );
+                        }
+                      }}
+                    />
+                  </div>
+                )}
               </div>
             </div>
             {/* End .col-auto */}
