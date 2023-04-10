@@ -10,7 +10,7 @@ import { createItem, getItem, getList, updateItem } from '../../../../api/xplorz
 import ReactSwitch from 'react-switch';
 import Select from 'react-select';
 
-const UpdateUser = () => {
+const CloneUser = () => {
   const [roles, setRoles] = useState([]);
   const [roleID, setRoleID] = useState(null);
   const [name, setName] = useState('');
@@ -26,8 +26,8 @@ const UpdateUser = () => {
   }, [router.isReady]);
 
   const getData = async () => {
-    if (router.query.edit) {
-      const response = await getItem('users', router.query.edit);
+    if (router.query.clone) {
+      const response = await getItem('users', router.query.clone);
       if (response?.success) {
         setName(response.data?.name);
         setEmail(response.data?.email);
@@ -66,7 +66,7 @@ const UpdateUser = () => {
     // Checking if account id is not null
     if (roleID?.value) {
       if (password === confirmPassword) {
-        const response = await updateItem('/users', router.query.edit, {
+        const response = await createItem('/users', {
           role_id: roleID.value,
           name,
           email,
@@ -74,12 +74,12 @@ const UpdateUser = () => {
           password_confirmation: confirmPassword,
         });
         if (response?.success) {
-          sendToast('success', 'Updated User Successfully.', 4000);
+          sendToast('success', 'Created User Successfully.', 4000);
           router.push('/dashboard/users');
         } else {
           sendToast(
             'error',
-            response.data?.message || response.data?.error || 'Failed to Update User.',
+            response.data?.message || response.data?.error || 'Failed to Create User.',
             4000
           );
         }
@@ -93,7 +93,7 @@ const UpdateUser = () => {
 
   return (
     <>
-      <Seo pageTitle='Update User' />
+      <Seo pageTitle='Create User' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -113,8 +113,8 @@ const UpdateUser = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Update User</h1>
-                  <div className='text-15 text-light-1'>Update an existing user.</div>
+                  <h1 className='text-30 lh-14 fw-600'>Create User</h1>
+                  <div className='text-15 text-light-1'>Create an existing user.</div>
                 </div>
                 {/* End .col-12 */}
               </div>
@@ -193,7 +193,7 @@ const UpdateUser = () => {
                         type='submit'
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
                       >
-                        Update User
+                        Create User
                       </button>
                     </div>
                   </form>
@@ -212,4 +212,4 @@ const UpdateUser = () => {
   );
 };
 
-export default UpdateUser;
+export default CloneUser;

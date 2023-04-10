@@ -54,7 +54,7 @@ const LoginForm = () => {
               setCurrentOrganization({ currentOrganization: me.current_organization_id })
             );
             sendToast('success', 'Login Successful', 4000);
-            if (me.current_organization_id === 1) router.push('/dashboard');
+            if (me.organization_id === 1) router.push('/dashboard');
             else router.push('/');
           } else {
             sendToast('error', 'Could Not Find User Permissions', 4000);

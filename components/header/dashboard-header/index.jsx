@@ -32,6 +32,8 @@ const HeaderDashBoard = () => {
       checkUser(router, dispatch);
     } else {
       // If not logged in redirect to login page
+      sendToast('error', 'You need to login first in order to view the dashboard.', 8000);
+      router.push('/login');
     }
     // Getting organization list
     getOrganizations();

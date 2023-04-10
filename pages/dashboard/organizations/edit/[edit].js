@@ -32,10 +32,6 @@ const UpdateOrganization = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (token === '') {
-      sendToast('error', 'You need to login first in order to view the dashboard.', 4000);
-      router.push('/login');
-    }
     getData();
   }, [router.isReady]);
 

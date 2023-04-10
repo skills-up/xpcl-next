@@ -6,11 +6,11 @@ import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { sendToast } from '../../../../utils/toastify';
 import { useEffect, useState } from 'react';
-import { createItem, getList } from '../../../../api/xplorzApi';
+import { createItem, getItem, getList, updateItem } from '../../../../api/xplorzApi';
 import ReactSwitch from 'react-switch';
 import Select from 'react-select';
 
-const AddNewOrganization = () => {
+const DuplicateOrganization = () => {
   const [accounts, setAccounts] = useState([]);
   const [accountID, setAccountID] = useState(null);
   const [calenderTemplates, setCalenderTemplates] = useState([]);
@@ -33,24 +33,66 @@ const AddNewOrganization = () => {
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [router.isReady]);
 
   const getData = async () => {
-    const accounts = await getList('accounts');
-    const calenderTemplates = await getList('calendar-templates');
-    if (accounts?.success && calenderTemplates?.success) {
-      setCalenderTemplates(
-        calenderTemplates.data.map((element) => ({
-          value: element.id,
-          label: element.name,
-        }))
-      );
-      setAccounts(
-        accounts.data.map((element) => ({ value: element.id, label: element.name }))
-      );
-    } else {
-      sendToast('error', 'Unable to fetch required data', 4000);
-      router.push('/dashboard/organizations');
+    if (router.query.clone) {
+      // Getting Previous Data
+      const response = await getItem('organizations', router.query.clone);
+      if (response?.success) {
+        setName(response.data?.name);
+        setCode(response.data?.code);
+        setContactName(response.data?.contact_name);
+        setContactEmail(response.data?.contact_email);
+        setAddress(response.data?.address);
+        setGstn(response.data?.gstn);
+        setUseGstn(response.data?.use_gstn);
+        setIsClient(response.data?.is_client);
+        setIsVendor(response.data?.is_vendor);
+        setIsHotel(response.data?.is_hotel);
+        setIsAirline(response.data?.is_airline);
+        setFarePercent(response.data?.fare_percent);
+
+        // Getting Accounts
+        const accounts = await getList('accounts');
+        const calenderTemplates = await getList('calendar-templates');
+        if (accounts?.success && calenderTemplates?.success) {
+          setCalenderTemplates(
+            calenderTemplates.data.map((element) => ({
+              value: element.id,
+              label: element.name,
+            }))
+          );
+          setAccounts(
+            accounts.data.map((element) => ({ value: element.id, label: element.name }))
+          );
+          // Setting Calender + Accounts ID
+          for (let acc of accounts.data) {
+            if (acc.id === response.data.account_id) {
+              setAccountID({ value: acc.id, label: acc.name });
+            }
+          }
+          if (calenderTemplates?.length > 0) {
+            for (let calendar of calenderTemplates.data) {
+              if (calendar.id === response.data.calendar_template_id) {
+                setCalenderTemplateID({ value: calendar.id, label: calendar.name });
+              }
+            }
+          }
+        } else {
+          sendToast('error', 'Unable to fetch required data', 4000);
+          router.push('/dashboard/organizations');
+        }
+      } else {
+        sendToast(
+          'error',
+          response.data?.message ||
+            response.data?.error ||
+            'Could not fetch organization information',
+          4000
+        );
+        router.push('/dashboard/organizations');
+      }
     }
   };
 
@@ -60,7 +102,7 @@ const AddNewOrganization = () => {
     if (accountID?.value) {
       const response = await createItem('/organizations', {
         account_id: accountID.value,
-        calendar_template_id: calenderTemplateID?.value || null,
+        calender_template_id: calenderTemplateID?.value || null,
         name,
         code,
         contact_name: contactName,
@@ -93,7 +135,7 @@ const AddNewOrganization = () => {
 
   return (
     <>
-      <Seo pageTitle='Add New Organization' />
+      <Seo pageTitle='Create Organization' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -113,7 +155,7 @@ const AddNewOrganization = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Add New Organization</h1>
+                  <h1 className='text-30 lh-14 fw-600'>Create Organization</h1>
                   <div className='text-15 text-light-1'>Create a new organization.</div>
                 </div>
                 {/* End .col-12 */}
@@ -126,18 +168,20 @@ const AddNewOrganization = () => {
                     <div>
                       <Select
                         options={accounts}
+                        defaultValue={accountID}
                         value={accountID}
-                        placeholder='Search & Select Account (required)'
-                        onChange={(id) => setAccountID(id)}
+                        placeholder='Select Account'
+                        onChange={(id) => setAccountID(id.value)}
                       />
                     </div>
                     {calenderTemplates?.length > 0 && (
                       <div>
                         <Select
                           options={calenderTemplates}
+                          defaultInputValue={calenderTemplateID}
                           value={calenderTemplateID}
-                          placeholder='Search & Select Calendar Template'
-                          onChange={(id) => setCalenderTemplateID(id)}
+                          placeholder='Select Calendar Template'
+                          onChange={(id) => setCalenderTemplateID(id.value)}
                         />
                       </div>
                     )}
@@ -266,7 +310,7 @@ const AddNewOrganization = () => {
                         type='submit'
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
                       >
-                        Add Organization
+                        Create Organization
                       </button>
                     </div>
                   </form>
@@ -285,4 +329,4 @@ const AddNewOrganization = () => {
   );
 };
 
-export default AddNewOrganization;
+export default DuplicateOrganization;

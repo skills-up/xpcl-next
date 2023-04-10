@@ -151,7 +151,10 @@ const Sidebar = () => {
         {/* End accordion__item */}
 
         <div className='sidebar__item '>
-          <a href='#' className='sidebar__button d-flex items-center text-15 lh-1 fw-500'>
+          <a
+            href='/dashboard/organizations'
+            className='sidebar__button d-flex items-center text-15 lh-1 fw-500'
+          >
             <Image
               width={20}
               height={20}
@@ -159,7 +162,7 @@ const Sidebar = () => {
               alt='image'
               className='mr-15'
             />
-            Booking Manager
+            Organizations
           </a>
         </div>
         {/* End accordion__item */}

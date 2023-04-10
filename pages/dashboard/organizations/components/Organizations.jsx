@@ -7,6 +7,7 @@ import ConfirmationModal from '../../../../components/confirm-modal';
 import { AiOutlineEye } from 'react-icons/ai';
 import { HiOutlinePencilAlt } from 'react-icons/hi';
 import { BsTrash3 } from 'react-icons/bs';
+import { IoCopyOutline } from 'react-icons/io5';
 
 const Organizations = () => {
   const [organizations, setOrganizations] = useState([]);
@@ -97,6 +98,14 @@ const Organizations = () => {
                       '/dashboard/organizations/edit/' + data.row.original.id
                     ),
                   icon: <HiOutlinePencilAlt />,
+                },
+                {
+                  label: 'Clone',
+                  onClick: () =>
+                    window.location.assign(
+                      '/dashboard/organizations/clone/' + data.row.original.id
+                    ),
+                  icon: <IoCopyOutline />,
                 },
                 {
                   label: 'Delete',
