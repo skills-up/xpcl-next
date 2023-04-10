@@ -10,7 +10,7 @@ import { createItem, getItem, getList, updateItem } from '../../../../api/xplorz
 import ReactSwitch from 'react-switch';
 import Select from 'react-select';
 
-const AddNewOrganization = () => {
+const UpdateOrganization = () => {
   const [accounts, setAccounts] = useState([]);
   const [accountID, setAccountID] = useState(null);
   const [calenderTemplates, setCalenderTemplates] = useState([]);
@@ -139,7 +139,7 @@ const AddNewOrganization = () => {
 
   return (
     <>
-      <Seo pageTitle='Add New Organization' />
+      <Seo pageTitle='Update Organization' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -159,8 +159,10 @@ const AddNewOrganization = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Add New Organization</h1>
-                  <div className='text-15 text-light-1'>Create a new organization.</div>
+                  <h1 className='text-30 lh-14 fw-600'>Update Organization</h1>
+                  <div className='text-15 text-light-1'>
+                    Update an existing organization.
+                  </div>
                 </div>
                 {/* End .col-12 */}
               </div>
@@ -314,7 +316,7 @@ const AddNewOrganization = () => {
                         type='submit'
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
                       >
-                        Add Organization
+                        Update Organization
                       </button>
                     </div>
                   </form>
@@ -333,4 +335,4 @@ const AddNewOrganization = () => {
   );
 };
 
-export default AddNewOrganization;
+export default UpdateOrganization;
