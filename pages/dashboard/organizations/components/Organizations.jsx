@@ -9,24 +9,24 @@ import { HiOutlinePencilAlt } from 'react-icons/hi';
 import { BsTrash3 } from 'react-icons/bs';
 import { IoCopyOutline } from 'react-icons/io5';
 
-const Permissions = () => {
-  const [permissions, setPermissions] = useState([]);
+const Organizations = () => {
+  const [organizations, setOrganizations] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
 
   useEffect(() => {
-    getPermissions();
+    getOrganizations();
   }, []);
 
-  const getPermissions = async () => {
-    const response = await getList('permissions');
+  const getOrganizations = async () => {
+    const response = await getList('organizations');
     if (response?.success) {
-      setPermissions(response.data);
+      setOrganizations(response.data);
     } else {
       sendToast(
         'error',
-        response?.data?.message || response?.data?.error || 'Error getting permissions',
+        response?.data?.message || response?.data?.error || 'Error getting organizations',
         4000
       );
     }
@@ -34,13 +34,26 @@ const Permissions = () => {
 
   const columns = [
     {
-      Header: 'Slug',
-      accessor: 'slug',
+      Header: 'Name',
+      accessor: 'name',
     },
     {
-      Header: 'Description',
-      accessor: 'description',
+      Header: 'Address',
+      accessor: 'address',
     },
+    {
+      Header: 'Code',
+      accessor: 'code',
+    },
+    {
+      Header: 'Contact Name',
+      accessor: 'contact_name',
+    },
+    {
+      Header: 'Contact Email',
+      accessor: 'contact_email',
+    },
+
     {
       Header: 'Last Updated At',
       accessor: 'updated_at',
@@ -58,6 +71,10 @@ const Permissions = () => {
       },
     },
     {
+      Header: 'GSTN',
+      accessor: 'gstn',
+    },
+    {
       Header: 'Actions',
       disableSortBy: true,
       // cell: () => <Button variant="danger" data-tag="allowRowEvents" data-action="delete"><FontAwesomeIcon icon={faTrash} /></Button>,
@@ -70,7 +87,7 @@ const Permissions = () => {
                   label: 'View',
                   onClick: () =>
                     window.location.assign(
-                      '/dashboard/permissions/view/' + data.row.original.id
+                      '/dashboard/organizations/view/' + data.row.original.id
                     ),
                   icon: <AiOutlineEye />,
                 },
@@ -78,7 +95,7 @@ const Permissions = () => {
                   label: 'Edit',
                   onClick: () =>
                     window.location.assign(
-                      '/dashboard/permissions/edit/' + data.row.original.id
+                      '/dashboard/organizations/edit/' + data.row.original.id
                     ),
                   icon: <HiOutlinePencilAlt />,
                 },
@@ -86,7 +103,7 @@ const Permissions = () => {
                   label: 'Clone',
                   onClick: () =>
                     window.location.assign(
-                      '/dashboard/permissions/clone/' + data.row.original.id
+                      '/dashboard/organizations/clone/' + data.row.original.id
                     ),
                   icon: <IoCopyOutline />,
                 },
@@ -111,16 +128,16 @@ const Permissions = () => {
     setIdToDelete(-1);
   };
   const onSubmit = async () => {
-    const response = await deleteItem('permissions', idToDelete);
+    const response = await deleteItem('organizations', idToDelete);
     if (response?.success) {
       sendToast('success', 'Deleted successfully', 4000);
-      getPermissions();
+      getOrganizations();
     } else {
       sendToast(
         'error',
         response.data?.message ||
           response.data?.error ||
-          'Unexpected Error Occurred While Trying to Delete this Permission',
+          'Unexpected Error Occurred While Trying to Delete this Organization',
         4000
       );
     }
@@ -133,8 +150,8 @@ const Permissions = () => {
         <ConfirmationModal
           onCancel={onCancel}
           onSubmit={onSubmit}
-          title='Do you really want to delete this permission?'
-          content='This will permanently delete the permission. Press OK to confirm.'
+          title='Do you really want to delete this organization?'
+          content='This will permanently delete the organization. Press OK to confirm.'
         />
       )}
       {/* Search Bar + Add New */}
@@ -150,7 +167,7 @@ const Permissions = () => {
         </div>
         <button
           className='btn btn-primary col-lg-2 col-5'
-          onClick={() => window.location.assign('/dashboard/permissions/add-new')}
+          onClick={() => window.location.assign('/dashboard/organizations/add-new')}
         >
           Add New
         </button>
@@ -158,14 +175,14 @@ const Permissions = () => {
       {/* Data Table */}
       <Datatable
         downloadCSV
-        CSVName='Permissions.csv'
+        CSVName='Organizations.csv'
         columns={columns}
-        data={permissions.filter((perm) =>
-          perm.slug.toLowerCase().includes(searchQuery.toLowerCase())
+        data={organizations.filter((perm) =>
+          perm.name.toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>
   );
 };
 
-export default Permissions;
+export default Organizations;

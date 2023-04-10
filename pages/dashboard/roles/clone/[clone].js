@@ -6,19 +6,42 @@ import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { sendToast } from '../../../../utils/toastify';
 import { useEffect, useState } from 'react';
-import { createItem } from '../../../../api/xplorzApi';
+import { getItem, createItem } from '../../../../api/xplorzApi';
 import PermissionSwitch from '../../../../components/permission-switch';
 
-const AddNewRole = () => {
+const CloneRole = () => {
   const [name, setName] = useState('');
   const [desc, setDesc] = useState('');
   const [selectedPermissions, setSelectedPermissions] = useState([]);
+  const [rolePermissions, setRolePermissions] = useState([]);
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
+  useEffect(() => {
+    // Getting particular role
+    getRoles();
+  }, [router.isReady]);
+
+  const getRoles = async () => {
+    if (router.query.clone) {
+      const response = await getItem('roles', router.query.clone);
+      if (response?.success) {
+        setName(response.data?.name);
+        setDesc(response.data?.description);
+        setRolePermissions(response.data?.permissions_list);
+      } else {
+        sendToast(
+          'error',
+          response.data?.message ||
+            response.data?.error ||
+            'Could Not Fetch The Requested Role.'
+        );
+        router.push('/dashboard/roles');
+      }
+    }
+  };
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    // Checking if its only lower case
     const response = await createItem('/roles', {
       name,
       description: desc,
@@ -38,7 +61,7 @@ const AddNewRole = () => {
 
   return (
     <>
-      <Seo pageTitle='Add New Role' />
+      <Seo pageTitle='Create Role' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -58,7 +81,7 @@ const AddNewRole = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Add New Role</h1>
+                  <h1 className='text-30 lh-14 fw-600'>Create Role</h1>
                   <div className='text-15 text-light-1'>Create a new role.</div>
                 </div>
                 {/* End .col-12 */}
@@ -93,18 +116,21 @@ const AddNewRole = () => {
                         <label className='lh-1 text-16 text-light-1'>Description</label>
                       </div>
                     </div>
-                    <div className='col-lg-auto col-12'>
-                      <PermissionSwitch
-                        setSelectedPermissions={setSelectedPermissions}
-                        errorRedirect={'/dashboard/roles'}
-                      />
-                    </div>
+                    {rolePermissions?.length > 0 && (
+                      <div className='col-lg-auto col-12'>
+                        <PermissionSwitch
+                          setSelectedPermissions={setSelectedPermissions}
+                          errorRedirect={'/dashboard/roles'}
+                          presentRoles={rolePermissions}
+                        />
+                      </div>
+                    )}
                     <div className='d-inline-block'>
                       <button
                         type='submit'
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
                       >
-                        Add Role
+                        Create Role
                       </button>
                     </div>
                   </form>
@@ -123,4 +149,4 @@ const AddNewRole = () => {
   );
 };
 
-export default AddNewRole;
+export default CloneRole;

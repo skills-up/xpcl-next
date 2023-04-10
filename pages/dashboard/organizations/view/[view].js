@@ -10,21 +10,21 @@ import { useEffect, useState } from 'react';
 import { deleteItem, getItem } from '../../../../api/xplorzApi';
 import ViewTable from '../../../../components/view-table';
 
-const ViewRole = () => {
-  const [role, setRole] = useState([]);
+const ViewOrganization = () => {
+  const [organization, setOrganization] = useState([]);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
   useEffect(() => {
-    // Getting particular role
-    getRole();
+    // Getting particular organization
+    getOrganization();
   }, [router.isReady]);
 
-  const getRole = async () => {
+  const getOrganization = async () => {
     if (router.query.view) {
-      const response = await getItem('roles', router.query.view);
+      const response = await getItem('organizations', router.query.view);
       if (response?.success) {
         let data = response.data;
         // Converting time columns
@@ -40,22 +40,15 @@ const ViewRole = () => {
             timeStyle: 'short',
           });
         }
-        data.permissions_list = (
-          <ul>
-            {data.permissions_list.map((perm, index) => (
-              <li key={index}>{perm}</li>
-            ))}
-          </ul>
-        );
-        setRole(data);
+        setOrganization(data);
       } else {
         sendToast(
           'error',
           response.data?.message ||
             response.data?.error ||
-            'Could Not Fetch The Requested Role.'
+            'Could Not Fetch The Requested Organization.'
         );
-        router.push('/dashboard/roles');
+        router.push('/dashboard/organizations');
       }
     }
   };
@@ -65,16 +58,16 @@ const ViewRole = () => {
     setIdToDelete(-1);
   };
   const onSubmit = async () => {
-    const response = await deleteItem('roles', idToDelete);
+    const response = await deleteItem('organizations', idToDelete);
     if (response?.success) {
       sendToast('success', 'Deleted successfully', 4000);
-      router.push('/dashboard/roles');
+      router.push('/dashboard/organizations');
     } else {
       sendToast(
         'error',
         response.data?.message ||
           response.data?.error ||
-          'Unexpected Error Occurred While Trying to Delete this Role',
+          'Unexpected Error Occurred While Trying to Delete this Organization',
         4000
       );
     }
@@ -83,7 +76,7 @@ const ViewRole = () => {
 
   return (
     <>
-      <Seo pageTitle='View Role' />
+      <Seo pageTitle='View Organization' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -103,9 +96,9 @@ const ViewRole = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>View Role</h1>
+                  <h1 className='text-30 lh-14 fw-600'>View Organization</h1>
                   <div className='text-15 text-light-1'>
-                    Get extended details of a role.
+                    Get extended details of a organization.
                   </div>
                 </div>
                 {/* End .col-12 */}
@@ -117,13 +110,15 @@ const ViewRole = () => {
                   <ConfirmationModal
                     onCancel={onCancel}
                     onSubmit={onSubmit}
-                    title='Do you really want to delete this role?'
-                    content='This will permanently delete the role. Press OK to confirm.'
+                    title='Do you really want to delete this organization?'
+                    content='This will permanently delete the organization. Press OK to confirm.'
                   />
                 )}
                 <ViewTable
-                  data={role}
-                  onEdit={() => router.push('/dashboard/roles/edit/' + router.query.view)}
+                  data={organization}
+                  onEdit={() =>
+                    router.push('/dashboard/organizations/edit/' + router.query.view)
+                  }
                   onDelete={() => {
                     setIdToDelete(router.query.view);
                     setConfirmDelete(true);
@@ -143,4 +138,4 @@ const ViewRole = () => {
   );
 };
 
-export default ViewRole;
+export default ViewOrganization;

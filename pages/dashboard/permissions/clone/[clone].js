@@ -6,39 +6,63 @@ import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { sendToast } from '../../../../utils/toastify';
 import { useEffect, useState } from 'react';
-import { createItem } from '../../../../api/xplorzApi';
-import PermissionSwitch from '../../../../components/permission-switch';
+import { createItem, getItem, updateItem } from '../../../../api/xplorzApi';
 
-const AddNewRole = () => {
-  const [name, setName] = useState('');
+const ClonePermission = () => {
+  const [slug, setSlug] = useState('');
   const [desc, setDesc] = useState('');
-  const [selectedPermissions, setSelectedPermissions] = useState([]);
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
+  useEffect(() => {
+    // Getting particular permission
+    getPermission();
+  }, [router.isReady]);
+
+  const getPermission = async () => {
+    if (router.query.clone) {
+      const response = await getItem('permissions', router.query.clone);
+      if (response?.success) {
+        setSlug(response.data?.slug);
+        setDesc(response.data?.description);
+      } else {
+        sendToast(
+          'error',
+          response.data?.message ||
+            response.data?.error ||
+            'Could Not Fetch The Requested Permission.'
+        );
+        router.push('/dashboard/permissions');
+      }
+    }
+  };
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    // Checking if its only lower case
-    const response = await createItem('/roles', {
-      name,
-      description: desc,
-      permission_ids: selectedPermissions,
-    });
-    if (response?.success) {
-      sendToast('success', 'Created Role Successfully.', 4000);
-      router.push('/dashboard/roles');
+    if (slug.match(/^[a-z\.\-]+$/)) {
+      const response = await createItem('/permissions', {
+        slug,
+        description: desc,
+      });
+      if (response?.success) {
+        sendToast('success', 'Created Permission Successfully.', 4000);
+        router.push('/dashboard/permissions');
+      } else {
+        sendToast(
+          'error',
+          response.data?.message ||
+            response.data?.error ||
+            'Failed to Create Permission.',
+          4000
+        );
+      }
     } else {
-      sendToast(
-        'error',
-        response.data?.message || response.data?.error || 'Failed to Create Role.',
-        4000
-      );
+      sendToast('error', 'Only lowercase, hyphen (-) and dot (.) are allowed.', 8000);
     }
   };
 
   return (
     <>
-      <Seo pageTitle='Add New Role' />
+      <Seo pageTitle='Create Permission' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -58,8 +82,8 @@ const AddNewRole = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Add New Role</h1>
-                  <div className='text-15 text-light-1'>Create a new role.</div>
+                  <h1 className='text-30 lh-14 fw-600'>Create Permission</h1>
+                  <div className='text-15 text-light-1'>Create a new permission.</div>
                 </div>
                 {/* End .col-12 */}
               </div>
@@ -71,14 +95,14 @@ const AddNewRole = () => {
                     <div className='col-12'>
                       <div className='form-input'>
                         <input
-                          onChange={(e) => setName(e.target.value)}
-                          value={name}
+                          onChange={(e) => setSlug(e.target.value)}
+                          value={slug}
                           placeholder=' '
                           type='text'
                           required
                         />
                         <label className='lh-1 text-16 text-light-1'>
-                          Name<span className='text-danger'>*</span>
+                          Slug<span className='text-danger'>*</span>
                         </label>
                       </div>
                     </div>
@@ -93,18 +117,12 @@ const AddNewRole = () => {
                         <label className='lh-1 text-16 text-light-1'>Description</label>
                       </div>
                     </div>
-                    <div className='col-lg-auto col-12'>
-                      <PermissionSwitch
-                        setSelectedPermissions={setSelectedPermissions}
-                        errorRedirect={'/dashboard/roles'}
-                      />
-                    </div>
                     <div className='d-inline-block'>
                       <button
                         type='submit'
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
                       >
-                        Add Role
+                        Create Permission
                       </button>
                     </div>
                   </form>
@@ -123,4 +141,4 @@ const AddNewRole = () => {
   );
 };
 
-export default AddNewRole;
+export default ClonePermission;

@@ -9,24 +9,24 @@ import { HiOutlinePencilAlt } from 'react-icons/hi';
 import { BsTrash3 } from 'react-icons/bs';
 import { IoCopyOutline } from 'react-icons/io5';
 
-const Permissions = () => {
-  const [permissions, setPermissions] = useState([]);
+const Users = () => {
+  const [users, setUsers] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
 
   useEffect(() => {
-    getPermissions();
+    getUsers();
   }, []);
 
-  const getPermissions = async () => {
-    const response = await getList('permissions');
+  const getUsers = async () => {
+    const response = await getList('users');
     if (response?.success) {
-      setPermissions(response.data);
+      setUsers(response.data);
     } else {
       sendToast(
         'error',
-        response?.data?.message || response?.data?.error || 'Error getting permissions',
+        response?.data?.message || response?.data?.error || 'Error getting users',
         4000
       );
     }
@@ -34,12 +34,12 @@ const Permissions = () => {
 
   const columns = [
     {
-      Header: 'Slug',
-      accessor: 'slug',
+      Header: 'Name',
+      accessor: 'name',
     },
     {
-      Header: 'Description',
-      accessor: 'description',
+      Header: 'Email',
+      accessor: 'email',
     },
     {
       Header: 'Last Updated At',
@@ -70,7 +70,7 @@ const Permissions = () => {
                   label: 'View',
                   onClick: () =>
                     window.location.assign(
-                      '/dashboard/permissions/view/' + data.row.original.id
+                      '/dashboard/users/view/' + data.row.original.id
                     ),
                   icon: <AiOutlineEye />,
                 },
@@ -78,7 +78,7 @@ const Permissions = () => {
                   label: 'Edit',
                   onClick: () =>
                     window.location.assign(
-                      '/dashboard/permissions/edit/' + data.row.original.id
+                      '/dashboard/users/edit/' + data.row.original.id
                     ),
                   icon: <HiOutlinePencilAlt />,
                 },
@@ -86,7 +86,7 @@ const Permissions = () => {
                   label: 'Clone',
                   onClick: () =>
                     window.location.assign(
-                      '/dashboard/permissions/clone/' + data.row.original.id
+                      '/dashboard/users/clone/' + data.row.original.id
                     ),
                   icon: <IoCopyOutline />,
                 },
@@ -111,16 +111,16 @@ const Permissions = () => {
     setIdToDelete(-1);
   };
   const onSubmit = async () => {
-    const response = await deleteItem('permissions', idToDelete);
+    const response = await deleteItem('users', idToDelete);
     if (response?.success) {
       sendToast('success', 'Deleted successfully', 4000);
-      getPermissions();
+      getUsers();
     } else {
       sendToast(
         'error',
         response.data?.message ||
           response.data?.error ||
-          'Unexpected Error Occurred While Trying to Delete this Permission',
+          'Unexpected Error Occurred While Trying to Delete this User',
         4000
       );
     }
@@ -133,8 +133,8 @@ const Permissions = () => {
         <ConfirmationModal
           onCancel={onCancel}
           onSubmit={onSubmit}
-          title='Do you really want to delete this permission?'
-          content='This will permanently delete the permission. Press OK to confirm.'
+          title='Do you really want to delete this user?'
+          content='This will permanently delete the user. Press OK to confirm.'
         />
       )}
       {/* Search Bar + Add New */}
@@ -150,7 +150,7 @@ const Permissions = () => {
         </div>
         <button
           className='btn btn-primary col-lg-2 col-5'
-          onClick={() => window.location.assign('/dashboard/permissions/add-new')}
+          onClick={() => window.location.assign('/dashboard/users/add-new')}
         >
           Add New
         </button>
@@ -158,14 +158,14 @@ const Permissions = () => {
       {/* Data Table */}
       <Datatable
         downloadCSV
-        CSVName='Permissions.csv'
+        CSVName='Users.csv'
         columns={columns}
-        data={permissions.filter((perm) =>
-          perm.slug.toLowerCase().includes(searchQuery.toLowerCase())
+        data={users.filter((perm) =>
+          perm.name.toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>
   );
 };
 
-export default Permissions;
+export default Users;
