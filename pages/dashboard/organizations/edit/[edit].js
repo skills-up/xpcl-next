@@ -72,11 +72,9 @@ const UpdateOrganization = () => {
               setAccountID({ value: acc.id, label: acc.name });
             }
           }
-          if (calenderTemplates?.length > 0) {
-            for (let calendar of calenderTemplates.data) {
-              if (calendar.id === response.data.calendar_template_id) {
-                setCalenderTemplateID({ value: calendar.id, label: calendar.name });
-              }
+          for (let calendar of calenderTemplates.data) {
+            if (calendar.id === response.data.calendar_template_id) {
+              setCalenderTemplateID({ value: calendar.id, label: calendar.name });
             }
           }
         } else {
@@ -102,7 +100,7 @@ const UpdateOrganization = () => {
     if (accountID?.value) {
       const response = await updateItem('/organizations', router.query.edit, {
         account_id: accountID.value,
-        calender_template_id: calenderTemplateID?.value || null,
+        calendar_template_id: calenderTemplateID?.value || null,
         name,
         code,
         contact_name: contactName,
@@ -173,20 +171,18 @@ const UpdateOrganization = () => {
                         defaultValue={accountID}
                         value={accountID}
                         placeholder='Select Account'
-                        onChange={(id) => setAccountID(id.value)}
+                        onChange={(id) => setAccountID(id)}
                       />
                     </div>
-                    {calenderTemplates?.length > 0 && (
-                      <div>
-                        <Select
-                          options={calenderTemplates}
-                          defaultInputValue={calenderTemplateID}
-                          value={calenderTemplateID}
-                          placeholder='Select Calendar Template'
-                          onChange={(id) => setCalenderTemplateID(id.value)}
-                        />
-                      </div>
-                    )}
+                    <div>
+                      <Select
+                        defaultValue={calenderTemplateID}
+                        options={calenderTemplates}
+                        value={calenderTemplateID}
+                        placeholder='Select Calendar Template'
+                        onChange={(id) => setCalenderTemplateID(id)}
+                      />
+                    </div>
                     <div className='col-12'>
                       <div className='form-input'>
                         <input
