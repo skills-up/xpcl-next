@@ -6,14 +6,15 @@ import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { sendToast } from '../../../../utils/toastify';
 import { useEffect, useState } from 'react';
-import { createItem, getItem, getList } from '../../../../api/xplorzApi';
+import { createItem, getItem, getList, updateItem } from '../../../../api/xplorzApi';
 import ReactSwitch from 'react-switch';
 import Select from 'react-select';
 
-const AddNewAccountCategories = () => {
+const UpdateAccounts = () => {
   const [accountCategories, setAccountCategories] = useState([]);
   const [accountCategoryID, setAccountCategoryID] = useState(null);
   const [name, setName] = useState('');
+  const [year, setYear] = useState('');
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -23,38 +24,39 @@ const AddNewAccountCategories = () => {
   }, [router.isReady]);
 
   const getData = async () => {
-    if (router.query.clone) {
-      const response = await getItem('account-categories', router.query.clone);
+    if (router.query.edit) {
+      const response = await getItem('accounts', router.query.edit);
       if (response?.success) {
+        setName(response.data?.name);
+        setYear(response.data?.year);
+
         const accountCategories = await getList('account-categories');
         if (accountCategories?.success) {
-          setName(response.data?.name);
-
           setAccountCategories(
             accountCategories.data.map((element) => ({
               value: element.id,
               label: element.name,
             }))
           );
-          // Getting Account ID
+          // Setting Account Categories
           for (let category of accountCategories.data) {
-            if (category.id === response.data.parent_category_id) {
+            if (category.id === response.data.account_category_id) {
               setAccountCategoryID({ value: category.id, label: category.name });
             }
           }
         } else {
           sendToast('error', 'Unable to fetch required data', 4000);
-          router.push('/dashboard/account-categories');
+          router.push('/dashboard/accounts');
         }
       } else {
         sendToast(
           'error',
           response.data?.message ||
             response.data?.error ||
-            'Failed to get the required Account Category data.',
+            'Unable to fetch required data',
           4000
         );
-        router.push('/dashboard/account-categories');
+        router.push('/dashboard/accounts');
       }
     }
   };
@@ -62,31 +64,26 @@ const AddNewAccountCategories = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     // Checking if account id is not null
-    if (accountCategoryID?.value) {
-      const response = await createItem('/account-categories', {
-        name,
-        parent_category_id: accountCategoryID.value,
-      });
-      if (response?.success) {
-        sendToast('success', 'Created Account Category Successfully.', 4000);
-        router.push('/dashboard/account-categories');
-      } else {
-        sendToast(
-          'error',
-          response.data?.message ||
-            response.data?.error ||
-            'Failed to Create Account Category.',
-          4000
-        );
-      }
+    const response = await updateItem('/accounts', router.query.edit, {
+      name,
+      account_category_id: accountCategoryID?.value || null,
+      year: parseInt(year),
+    });
+    if (response?.success) {
+      sendToast('success', 'Updated Account Successfully.', 4000);
+      router.push('/dashboard/accounts');
     } else {
-      sendToast('error', 'You must select a Parent Category first.', 8000);
+      sendToast(
+        'error',
+        response.data?.message || response.data?.error || 'Failed to Update Account.',
+        4000
+      );
     }
   };
 
   return (
     <>
-      <Seo pageTitle='Add New Account Category' />
+      <Seo pageTitle='Update Account' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -106,10 +103,8 @@ const AddNewAccountCategories = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Add New Account Category</h1>
-                  <div className='text-15 text-light-1'>
-                    Create a new account category.
-                  </div>
+                  <h1 className='text-30 lh-14 fw-600'>Update Account</h1>
+                  <div className='text-15 text-light-1'>Update an existing account.</div>
                 </div>
                 {/* End .col-12 */}
               </div>
@@ -123,7 +118,7 @@ const AddNewAccountCategories = () => {
                         defaultValue={accountCategoryID}
                         options={accountCategories}
                         value={accountCategoryID}
-                        placeholder='Search & Select Parent Category (required)'
+                        placeholder='Search & Select Account Category'
                         onChange={(id) => setAccountCategoryID(id)}
                       />
                     </div>
@@ -141,12 +136,23 @@ const AddNewAccountCategories = () => {
                         </label>
                       </div>
                     </div>
+                    <div className='col-12'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setYear(e.target.value)}
+                          value={year}
+                          placeholder=' '
+                          type='number'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>Year</label>
+                      </div>
+                    </div>
                     <div className='d-inline-block'>
                       <button
                         type='submit'
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
                       >
-                        Add Account Category
+                        Update Account
                       </button>
                     </div>
                   </form>
@@ -165,4 +171,4 @@ const AddNewAccountCategories = () => {
   );
 };
 
-export default AddNewAccountCategories;
+export default UpdateAccounts;
