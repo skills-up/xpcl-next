@@ -74,7 +74,6 @@ const UpdateOrganization = () => {
           }
           for (let calendar of calenderTemplates.data) {
             if (calendar.id === response.data.calendar_template_id) {
-              console.log({ value: calendar.id, label: calendar.name });
               setCalenderTemplateID({ value: calendar.id, label: calendar.name });
             }
           }
