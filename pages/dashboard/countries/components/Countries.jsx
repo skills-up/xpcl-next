@@ -9,24 +9,24 @@ import { HiOutlinePencilAlt } from 'react-icons/hi';
 import { BsTrash3 } from 'react-icons/bs';
 import { IoCopyOutline } from 'react-icons/io5';
 
-const Accounts = () => {
-  const [accounts, setAccounts] = useState([]);
+const Countries = () => {
+  const [countries, setCountries] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
 
   useEffect(() => {
-    getAccounts();
+    getCountries();
   }, []);
 
-  const getAccounts = async () => {
-    const response = await getList('accounts');
+  const getCountries = async () => {
+    const response = await getList('countries');
     if (response?.success) {
-      setAccounts(response.data);
+      setCountries(response.data);
     } else {
       sendToast(
         'error',
-        response?.data?.message || response?.data?.error || 'Error getting accounts',
+        response?.data?.message || response?.data?.error || 'Error getting countries',
         4000
       );
     }
@@ -36,10 +36,6 @@ const Accounts = () => {
     {
       Header: 'Name',
       accessor: 'name',
-    },
-    {
-      Header: 'Year',
-      accessor: 'year',
     },
     {
       Header: 'Last Updated At',
@@ -70,7 +66,7 @@ const Accounts = () => {
                   label: 'View',
                   onClick: () =>
                     window.location.assign(
-                      '/dashboard/accounts/view/' + data.row.original.id
+                      '/dashboard/countries/view/' + data.row.original.id
                     ),
                   icon: <AiOutlineEye />,
                 },
@@ -78,7 +74,7 @@ const Accounts = () => {
                   label: 'Edit',
                   onClick: () =>
                     window.location.assign(
-                      '/dashboard/accounts/edit/' + data.row.original.id
+                      '/dashboard/countries/edit/' + data.row.original.id
                     ),
                   icon: <HiOutlinePencilAlt />,
                 },
@@ -86,7 +82,7 @@ const Accounts = () => {
                   label: 'Clone',
                   onClick: () =>
                     window.location.assign(
-                      '/dashboard/accounts/clone/' + data.row.original.id
+                      '/dashboard/countries/clone/' + data.row.original.id
                     ),
                   icon: <IoCopyOutline />,
                 },
@@ -111,16 +107,16 @@ const Accounts = () => {
     setIdToDelete(-1);
   };
   const onSubmit = async () => {
-    const response = await deleteItem('accounts', idToDelete);
+    const response = await deleteItem('countries', idToDelete);
     if (response?.success) {
       sendToast('success', 'Deleted successfully', 4000);
-      getAccounts();
+      getCountries();
     } else {
       sendToast(
         'error',
         response.data?.message ||
           response.data?.error ||
-          'Unexpected Error Occurred While Trying to Delete this Account',
+          'Unexpected Error Occurred While Trying to Delete this Country',
         4000
       );
     }
@@ -133,8 +129,8 @@ const Accounts = () => {
         <ConfirmationModal
           onCancel={onCancel}
           onSubmit={onSubmit}
-          title='Do you really want to delete this account?'
-          content='This will permanently delete the account. Press OK to confirm.'
+          title='Do you really want to delete this Country?'
+          content='This will permanently delete the country. Press OK to confirm.'
         />
       )}
       {/* Search Bar + Add New */}
@@ -150,7 +146,7 @@ const Accounts = () => {
         </div>
         <button
           className='btn btn-primary col-lg-2 col-5'
-          onClick={() => window.location.assign('/dashboard/accounts/add-new')}
+          onClick={() => window.location.assign('/dashboard/countries/add-new')}
         >
           Add New
         </button>
@@ -158,9 +154,9 @@ const Accounts = () => {
       {/* Data Table */}
       <Datatable
         downloadCSV
-        CSVName='Accounts.csv'
+        CSVName='Countries.csv'
         columns={columns}
-        data={accounts.filter((perm) =>
+        data={countries.filter((perm) =>
           perm.name.toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
@@ -168,4 +164,4 @@ const Accounts = () => {
   );
 };
 
-export default Accounts;
+export default Countries;
