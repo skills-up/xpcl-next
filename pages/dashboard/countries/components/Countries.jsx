@@ -157,7 +157,7 @@ const Countries = () => {
         CSVName='Countries.csv'
         columns={columns}
         data={countries.filter((perm) =>
-          perm.name.toLowerCase().includes(searchQuery.toLowerCase())
+          perm?.name?.toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>

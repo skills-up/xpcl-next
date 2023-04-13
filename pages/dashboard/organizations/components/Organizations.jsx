@@ -53,23 +53,6 @@ const Organizations = () => {
       Header: 'Contact Email',
       accessor: 'contact_email',
     },
-
-    {
-      Header: 'Last Updated At',
-      accessor: 'updated_at',
-      Cell: (data) => {
-        return (
-          <div>
-            {data.row.original.updated_at
-              ? new Date(data.row.original.updated_at).toLocaleString('en-IN', {
-                  dateStyle: 'medium',
-                  timeStyle: 'short',
-                })
-              : ''}
-          </div>
-        );
-      },
-    },
     {
       Header: 'GSTN',
       accessor: 'gstn',
@@ -177,8 +160,14 @@ const Organizations = () => {
         downloadCSV
         CSVName='Organizations.csv'
         columns={columns}
-        data={organizations.filter((perm) =>
-          perm.name.toLowerCase().includes(searchQuery.toLowerCase())
+        data={organizations.filter(
+          (perm) =>
+            perm?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            perm?.code?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            perm?.address?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            perm?.contact_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            perm?.contact_email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            perm?.gstn?.toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>

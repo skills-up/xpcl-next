@@ -9,24 +9,26 @@ import { HiOutlinePencilAlt } from 'react-icons/hi';
 import { BsTrash3 } from 'react-icons/bs';
 import { IoCopyOutline } from 'react-icons/io5';
 
-const Airports = () => {
-  const [airports, setAirports] = useState([]);
+const VisaRequirements = () => {
+  const [visaRequirements, setVisaRequirements] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
 
   useEffect(() => {
-    getAirports();
+    getVisaRequirements();
   }, []);
 
-  const getAirports = async () => {
-    const response = await getList('airports');
+  const getVisaRequirements = async () => {
+    const response = await getList('visa-requirements');
     if (response?.success) {
-      setAirports(response.data);
+      setVisaRequirements(response.data);
     } else {
       sendToast(
         'error',
-        response?.data?.message || response?.data?.error || 'Error getting airports',
+        response?.data?.message ||
+          response?.data?.error ||
+          'Error getting visa requirements',
         4000
       );
     }
@@ -34,25 +36,12 @@ const Airports = () => {
 
   const columns = [
     {
-      Header: 'Name',
-      accessor: 'name',
+      Header: 'Country ID',
+      accessor: 'country',
     },
     {
-      Header: 'Country',
-      accessor: 'country_name',
-    },
-
-    {
-      Header: 'City',
-      accessor: 'city',
-    },
-    {
-      Header: 'IATA Code',
-      accessor: 'iata_code',
-    },
-    {
-      Header: 'Timezone',
-      accessor: 'timezone',
+      Header: 'Additional Notes',
+      accessor: 'additional_notes',
     },
     {
       Header: 'Last Updated At',
@@ -83,7 +72,7 @@ const Airports = () => {
                   label: 'View',
                   onClick: () =>
                     window.location.assign(
-                      '/dashboard/airports/view/' + data.row.original.id
+                      '/dashboard/visa-requirements/view/' + data.row.original.id
                     ),
                   icon: <AiOutlineEye />,
                 },
@@ -91,7 +80,7 @@ const Airports = () => {
                   label: 'Edit',
                   onClick: () =>
                     window.location.assign(
-                      '/dashboard/airports/edit/' + data.row.original.id
+                      '/dashboard/visa-requirements/edit/' + data.row.original.id
                     ),
                   icon: <HiOutlinePencilAlt />,
                 },
@@ -99,7 +88,7 @@ const Airports = () => {
                   label: 'Clone',
                   onClick: () =>
                     window.location.assign(
-                      '/dashboard/airports/clone/' + data.row.original.id
+                      '/dashboard/visa-requirements/clone/' + data.row.original.id
                     ),
                   icon: <IoCopyOutline />,
                 },
@@ -124,16 +113,16 @@ const Airports = () => {
     setIdToDelete(-1);
   };
   const onSubmit = async () => {
-    const response = await deleteItem('airports', idToDelete);
+    const response = await deleteItem('visa-requirements', idToDelete);
     if (response?.success) {
       sendToast('success', 'Deleted successfully', 4000);
-      getAirports();
+      getVisaRequirements();
     } else {
       sendToast(
         'error',
         response.data?.message ||
           response.data?.error ||
-          'Unexpected Error Occurred While Trying to Delete this Airport',
+          'Unexpected Error Occurred While Trying to Delete this Visa Requirement',
         4000
       );
     }
@@ -146,8 +135,8 @@ const Airports = () => {
         <ConfirmationModal
           onCancel={onCancel}
           onSubmit={onSubmit}
-          title='Do you really want to delete this airport?'
-          content='This will permanently delete the airport. Press OK to confirm.'
+          title='Do you really want to delete this visa requirements?'
+          content='This will permanently delete the visa requirements. Press OK to confirm.'
         />
       )}
       {/* Search Bar + Add New */}
@@ -163,7 +152,7 @@ const Airports = () => {
         </div>
         <button
           className='btn btn-primary col-lg-2 col-5'
-          onClick={() => window.location.assign('/dashboard/airports/add-new')}
+          onClick={() => window.location.assign('/dashboard/visa-requirements/add-new')}
         >
           Add New
         </button>
@@ -171,19 +160,14 @@ const Airports = () => {
       {/* Data Table */}
       <Datatable
         downloadCSV
-        CSVName='Airports.csv'
+        CSVName='VisaRequirements.csv'
         columns={columns}
-        data={airports.filter(
-          (perm) =>
-            perm?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            perm?.iata_code?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            perm?.timezone?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            perm?.country_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            perm?.city?.toLowerCase().includes(searchQuery.toLowerCase())
+        data={visaRequirements.filter((perm) =>
+          perm?.country_id?.toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>
   );
 };
 
-export default Airports;
+export default VisaRequirements;

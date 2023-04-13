@@ -3,4 +3,4 @@ const nextConfig = {
   reactStrictMode: false,
 };
 
-module.exports = { transpilePackages: ['react-timezone-select'], nextConfig };
+module.exports = { transpilePackages: ['react-timezone-select', 'react-drag-drop-files'], nextConfig };

@@ -162,7 +162,7 @@ const VisaRequirementDocuments = () => {
         CSVName='VisaRequirementDocument.csv'
         columns={columns}
         data={visaRequirementDocuments.filter((perm) =>
-          perm.name.toLowerCase().includes(searchQuery.toLowerCase())
+          perm?.name?.toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>

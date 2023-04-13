@@ -262,7 +262,7 @@ const DuplicateOrganization = () => {
                       </div>
                     </div>
                     <div className='row'>
-                      <label className='col-lg-2 col-9'>Use GSTN</label>
+                      <label className='col-lg-2 col-9'>Use GSTN?</label>
                       <ReactSwitch
                         className='col-lg-auto col-1'
                         onChange={() => setUseGstn((prev) => !prev)}
@@ -270,7 +270,7 @@ const DuplicateOrganization = () => {
                       />
                     </div>
                     <div className='row'>
-                      <label className='col-lg-2 col-9'>Is Client</label>
+                      <label className='col-lg-2 col-9'>Is Client?</label>
                       <ReactSwitch
                         className='col-lg-auto col-1'
                         onChange={() => setIsClient((prev) => !prev)}
@@ -278,7 +278,7 @@ const DuplicateOrganization = () => {
                       />
                     </div>
                     <div className='row'>
-                      <label className='col-lg-2 col-9'>Is Vendor</label>
+                      <label className='col-lg-2 col-9'>Is Vendor?</label>
                       <ReactSwitch
                         className='col-lg-auto col-1'
                         onChange={() => setIsVendor((prev) => !prev)}
@@ -286,7 +286,7 @@ const DuplicateOrganization = () => {
                       />
                     </div>
                     <div className='row'>
-                      <label className='col-lg-2 col-9'>Is Hotel</label>
+                      <label className='col-lg-2 col-9'>Is Hotel?</label>
                       <ReactSwitch
                         className='col-lg-auto col-1'
                         onChange={() => setIsHotel((prev) => !prev)}
@@ -294,7 +294,7 @@ const DuplicateOrganization = () => {
                       />
                     </div>
                     <div className='row'>
-                      <label className='col-lg-2 col-9'>Is Airline</label>
+                      <label className='col-lg-2 col-9'>Is Airline?</label>
                       <ReactSwitch
                         className='col-lg-auto col-1'
                         onChange={() => setIsAirline((prev) => !prev)}

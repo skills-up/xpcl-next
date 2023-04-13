@@ -10,7 +10,7 @@ import { createItem, getItem, getList } from '../../../../api/xplorzApi';
 import ReactSwitch from 'react-switch';
 import Select from 'react-select';
 
-const AddCountry = () => {
+const AddVisaRequirementDocuments = () => {
   const [name, setName] = useState('');
 
   const token = useSelector((state) => state.auth.value.token);
@@ -22,35 +22,34 @@ const AddCountry = () => {
 
   const getData = async () => {
     if (router.query.clone) {
-      const response = await getItem('countries', router.query.clone);
+      const response = await getItem('visa-requirement-documents', router.query.clone);
       if (response?.success) {
         setName(response.data?.name);
       } else {
         sendToast(
           'error',
-          response.data?.message ||
-            response.data?.error ||
-            'Error getting requested country',
+          response.data?.message || response.data?.error || 'Failed to Fetch Data.',
           4000
         );
-        router.push('/dashboard/countries');
+        router.push('/dashboard/visa-requirement-documents', 4000);
       }
     }
   };
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    // Checking if account id is not null
-    const response = await createItem('countries', {
+    const response = await createItem('visa-requirement-documents', {
       name,
     });
     if (response?.success) {
-      sendToast('success', 'Created Country Successfully.', 4000);
-      router.push('/dashboard/countries');
+      sendToast('success', 'Created Visa Requirement Document Successfully.', 4000);
+      router.push('/dashboard/visa-requirement-documents');
     } else {
       sendToast(
         'error',
-        response.data?.message || response.data?.error || 'Failed to Create Country.',
+        response.data?.message ||
+          response.data?.error ||
+          'Failed to Create Visa Requirement Document.',
         4000
       );
     }
@@ -58,7 +57,7 @@ const AddCountry = () => {
 
   return (
     <>
-      <Seo pageTitle='Add New Country' />
+      <Seo pageTitle='Add New Visa Requirement Document' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -78,8 +77,12 @@ const AddCountry = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Add New Country</h1>
-                  <div className='text-15 text-light-1'>Create a new country.</div>
+                  <h1 className='text-30 lh-14 fw-600'>
+                    Add New Visa Requirement Document
+                  </h1>
+                  <div className='text-15 text-light-1'>
+                    Create a new visa requirement document.
+                  </div>
                 </div>
                 {/* End .col-12 */}
               </div>
@@ -107,7 +110,7 @@ const AddCountry = () => {
                         type='submit'
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
                       >
-                        Add Country
+                        Add Visa Requirement Document
                       </button>
                     </div>
                   </form>
@@ -126,4 +129,4 @@ const AddCountry = () => {
   );
 };
 
-export default AddCountry;
+export default AddVisaRequirementDocuments;

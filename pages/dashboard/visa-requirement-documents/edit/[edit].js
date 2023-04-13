@@ -7,8 +7,10 @@ import { useRouter } from 'next/router';
 import { sendToast } from '../../../../utils/toastify';
 import { useEffect, useState } from 'react';
 import { createItem, getItem, getList, updateItem } from '../../../../api/xplorzApi';
+import ReactSwitch from 'react-switch';
+import Select from 'react-select';
 
-const UpdateCountry = () => {
+const UpdateVisaRequirementDocuments = () => {
   const [name, setName] = useState('');
 
   const token = useSelector((state) => state.auth.value.token);
@@ -20,35 +22,34 @@ const UpdateCountry = () => {
 
   const getData = async () => {
     if (router.query.edit) {
-      const response = await getItem('countries', router.query.edit);
+      const response = await getItem('visa-requirement-documents', router.query.edit);
       if (response?.success) {
         setName(response.data?.name);
       } else {
         sendToast(
           'error',
-          response.data?.message ||
-            response.data?.error ||
-            'Error getting requested country',
+          response.data?.message || response.data?.error || 'Failed to Fetch Data.',
           4000
         );
-        router.push('/dashboard/countries');
+        router.push('/dashboard/visa-requirement-documents', 4000);
       }
     }
   };
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    // Checking if account id is not null
-    const response = await updateItem('countries', router.query.edit, {
+    const response = await updateItem('visa-requirement-documents', router.query.edit, {
       name,
     });
     if (response?.success) {
-      sendToast('success', 'Updated Country Successfully.', 4000);
-      router.push('/dashboard/countries');
+      sendToast('success', 'Updated Visa Requirement Document Successfully.', 4000);
+      router.push('/dashboard/visa-requirement-documents');
     } else {
       sendToast(
         'error',
-        response.data?.message || response.data?.error || 'Failed to Update Country.',
+        response.data?.message ||
+          response.data?.error ||
+          'Failed to Update Visa Requirement Document.',
         4000
       );
     }
@@ -56,7 +57,7 @@ const UpdateCountry = () => {
 
   return (
     <>
-      <Seo pageTitle='Update Country' />
+      <Seo pageTitle='Update Visa Requirement Document' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -76,8 +77,12 @@ const UpdateCountry = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Update Country</h1>
-                  <div className='text-15 text-light-1'>Update an existing country.</div>
+                  <h1 className='text-30 lh-14 fw-600'>
+                    Update Visa Requirement Document
+                  </h1>
+                  <div className='text-15 text-light-1'>
+                    Update an existing visa requirement document.
+                  </div>
                 </div>
                 {/* End .col-12 */}
               </div>
@@ -105,7 +110,7 @@ const UpdateCountry = () => {
                         type='submit'
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
                       >
-                        Update Country
+                        Update Visa Requirement Document
                       </button>
                     </div>
                   </form>
@@ -124,4 +129,4 @@ const UpdateCountry = () => {
   );
 };
 
-export default UpdateCountry;
+export default UpdateVisaRequirementDocuments;

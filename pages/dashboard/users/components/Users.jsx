@@ -42,6 +42,10 @@ const Users = () => {
       accessor: 'email',
     },
     {
+      Header: 'Role',
+      accessor: 'role_name',
+    },
+    {
       Header: 'Last Updated At',
       accessor: 'updated_at',
       Cell: (data) => {
@@ -160,8 +164,10 @@ const Users = () => {
         downloadCSV
         CSVName='Users.csv'
         columns={columns}
-        data={users.filter((perm) =>
-          perm.name.toLowerCase().includes(searchQuery.toLowerCase())
+        data={users.filter(
+          (perm) =>
+            perm?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            perm?.email?.toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>

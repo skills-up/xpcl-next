@@ -10,21 +10,21 @@ import { useEffect, useState } from 'react';
 import { deleteItem, getItem } from '../../../../api/xplorzApi';
 import ViewTable from '../../../../components/view-table';
 
-const ViewVisaRequirementDocument = () => {
-  const [visaRequirementDocument, setVisaRequirementDocument] = useState([]);
+const ViewVisaRequirements = () => {
+  const [visaRequirements, setVisaRequirements] = useState([]);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
   useEffect(() => {
-    // Getting particular visa requirement document
-    getVisaRequirementDocument();
+    // Getting particular visa requirements
+    getVisaRequirements();
   }, [router.isReady]);
 
-  const getVisaRequirementDocument = async () => {
+  const getVisaRequirements = async () => {
     if (router.query.view) {
-      const response = await getItem('visa-requirement-documents', router.query.view);
+      const response = await getItem('visa-requirements', router.query.view);
       if (response?.success) {
         let data = response.data;
         // Converting time columns
@@ -40,15 +40,15 @@ const ViewVisaRequirementDocument = () => {
             timeStyle: 'short',
           });
         }
-        setVisaRequirementDocument(data);
+        setVisaRequirements(data);
       } else {
         sendToast(
           'error',
           response.data?.message ||
             response.data?.error ||
-            'Could Not Fetch The Requested Visa Requirement Document.'
+            'Could Not Fetch The Requested Visa Requirement.'
         );
-        router.push('/dashboard/visa-requirement-documents');
+        router.push('/dashboard/visa-requirements');
       }
     }
   };
@@ -58,16 +58,16 @@ const ViewVisaRequirementDocument = () => {
     setIdToDelete(-1);
   };
   const onSubmit = async () => {
-    const response = await deleteItem('visa-requirement-documents', idToDelete);
+    const response = await deleteItem('visa-requirements', idToDelete);
     if (response?.success) {
       sendToast('success', 'Deleted successfully', 4000);
-      router.push('/dashboard/visa-requirement-documents');
+      router.push('/dashboard/visa-requirements');
     } else {
       sendToast(
         'error',
         response.data?.message ||
           response.data?.error ||
-          'Unexpected Error Occurred While Trying to Delete this Visa Requirement Document',
+          'Unexpected Error Occurred While Trying to Delete this Visa Requirement',
         4000
       );
     }
@@ -76,7 +76,7 @@ const ViewVisaRequirementDocument = () => {
 
   return (
     <>
-      <Seo pageTitle='View Visa Requirement Document' />
+      <Seo pageTitle='Visa Requirement' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -96,9 +96,9 @@ const ViewVisaRequirementDocument = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>View Visa Requirement Document</h1>
+                  <h1 className='text-30 lh-14 fw-600'>Visa Requirement</h1>
                   <div className='text-15 text-light-1'>
-                    Get extended details of a visa requirement document.
+                    Get extended details of a visa requirement.
                   </div>
                 </div>
                 {/* End .col-12 */}
@@ -110,16 +110,14 @@ const ViewVisaRequirementDocument = () => {
                   <ConfirmationModal
                     onCancel={onCancel}
                     onSubmit={onSubmit}
-                    title='Do you really want to delete this visa requirement document?'
-                    content='This will permanently delete the visa requirement document. Press OK to confirm.'
+                    title='Do you really want to delete this visa requirement?'
+                    content='This will permanently delete the visa requirement. Press OK to confirm.'
                   />
                 )}
                 <ViewTable
-                  data={visaRequirementDocument}
+                  data={ViewVisaRequirements}
                   onEdit={() =>
-                    router.push(
-                      '/dashboard/visa-requirement-documents/edit/' + router.query.view
-                    )
+                    router.push('/dashboard/visa-requirements/edit/' + router.query.view)
                   }
                   onDelete={() => {
                     setIdToDelete(router.query.view);
@@ -140,4 +138,4 @@ const ViewVisaRequirementDocument = () => {
   );
 };
 
-export default ViewVisaRequirementDocument;
+export default ViewVisaRequirements;

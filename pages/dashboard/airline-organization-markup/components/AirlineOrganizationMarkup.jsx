@@ -36,6 +36,10 @@ const AirlineOrganizationMarkup = () => {
 
   const columns = [
     {
+      Header: 'Airline Name',
+      accessor: 'airline_name',
+    },
+    {
       Header: 'Markup Percent',
       accessor: 'markup_percent',
     },
@@ -43,6 +47,7 @@ const AirlineOrganizationMarkup = () => {
       Header: 'Markup Amount',
       accessor: 'markup_amount',
     },
+
     {
       Header: 'Last Updated At',
       accessor: 'updated_at',
@@ -169,8 +174,9 @@ const AirlineOrganizationMarkup = () => {
         columns={columns}
         data={airlineOrganizationMarkup.filter(
           (perm) =>
-            perm.markup_percent.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            perm.markup_amount.toLowerCase().includes(searchQuery.toLowerCase())
+            perm?.markup_percent?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            perm?.markup_amount?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            perm?.airline_name?.toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>

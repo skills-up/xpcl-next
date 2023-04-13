@@ -118,7 +118,6 @@ const UpdateClosingBalance = () => {
                       <label>
                         Closing Date<span className='text-danger'>*</span>
                       </label>
-                      {console.log(typeof day.format())}
                       <DatePicker
                         style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
                         inputClass='custom_input-picker'

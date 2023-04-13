@@ -166,8 +166,8 @@ const FrequentFlierProgram = () => {
         columns={columns}
         data={frequentFlierPrograms.filter(
           (perm) =>
-            perm.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            perm.program.toLowerCase().includes(searchQuery.toLowerCase())
+            perm?.code?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            perm?.program?.toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>

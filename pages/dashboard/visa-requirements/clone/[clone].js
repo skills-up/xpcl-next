@@ -10,7 +10,7 @@ import { createItem, getItem, getList, updateItem } from '../../../../api/xplorz
 import ReactSwitch from 'react-switch';
 import Select from 'react-select';
 
-const UpdateOrganization = () => {
+const DuplicateOrganization = () => {
   const [accounts, setAccounts] = useState([]);
   const [accountID, setAccountID] = useState(null);
   const [calenderTemplates, setCalenderTemplates] = useState([]);
@@ -36,9 +36,9 @@ const UpdateOrganization = () => {
   }, [router.isReady]);
 
   const getData = async () => {
-    if (router.query.edit) {
+    if (router.query.clone) {
       // Getting Previous Data
-      const response = await getItem('organizations', router.query.edit);
+      const response = await getItem('organizations', router.query.clone);
       if (response?.success) {
         setName(response.data?.name);
         setCode(response.data?.code);
@@ -98,7 +98,7 @@ const UpdateOrganization = () => {
     e.preventDefault();
     // Checking if account id is not null
     if (accountID?.value) {
-      const response = await updateItem('organizations', router.query.edit, {
+      const response = await createItem('organizations', {
         account_id: accountID.value,
         calendar_template_id: calenderTemplateID?.value || null,
         name,
@@ -115,7 +115,7 @@ const UpdateOrganization = () => {
         fare_percent: farePercent,
       });
       if (response?.success) {
-        sendToast('success', 'Updated Organization Successfully.', 4000);
+        sendToast('success', 'Created Organization Successfully.', 4000);
         router.push('/dashboard/organizations');
       } else {
         sendToast(
@@ -133,7 +133,7 @@ const UpdateOrganization = () => {
 
   return (
     <>
-      <Seo pageTitle='Update Organization' />
+      <Seo pageTitle='Create Organization' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -153,10 +153,8 @@ const UpdateOrganization = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Update Organization</h1>
-                  <div className='text-15 text-light-1'>
-                    Update an existing organization.
-                  </div>
+                  <h1 className='text-30 lh-14 fw-600'>Create Organization</h1>
+                  <div className='text-15 text-light-1'>Create a new organization.</div>
                 </div>
                 {/* End .col-12 */}
               </div>
@@ -176,8 +174,8 @@ const UpdateOrganization = () => {
                     </div>
                     <div>
                       <Select
-                        defaultValue={calenderTemplateID}
                         options={calenderTemplates}
+                        defaultValue={calenderTemplateID}
                         value={calenderTemplateID}
                         placeholder='Select Calendar Template'
                         onChange={(id) => setCalenderTemplateID(id)}
@@ -264,7 +262,7 @@ const UpdateOrganization = () => {
                       </div>
                     </div>
                     <div className='row'>
-                      <label className='col-lg-2 col-9'>Use GSTN?</label>
+                      <label className='col-lg-2 col-9'>Use GSTN</label>
                       <ReactSwitch
                         className='col-lg-auto col-1'
                         onChange={() => setUseGstn((prev) => !prev)}
@@ -272,7 +270,7 @@ const UpdateOrganization = () => {
                       />
                     </div>
                     <div className='row'>
-                      <label className='col-lg-2 col-9'>Is Client?</label>
+                      <label className='col-lg-2 col-9'>Is Client</label>
                       <ReactSwitch
                         className='col-lg-auto col-1'
                         onChange={() => setIsClient((prev) => !prev)}
@@ -280,7 +278,7 @@ const UpdateOrganization = () => {
                       />
                     </div>
                     <div className='row'>
-                      <label className='col-lg-2 col-9'>Is Vendor?</label>
+                      <label className='col-lg-2 col-9'>Is Vendor</label>
                       <ReactSwitch
                         className='col-lg-auto col-1'
                         onChange={() => setIsVendor((prev) => !prev)}
@@ -288,7 +286,7 @@ const UpdateOrganization = () => {
                       />
                     </div>
                     <div className='row'>
-                      <label className='col-lg-2 col-9'>Is Hotel?</label>
+                      <label className='col-lg-2 col-9'>Is Hotel</label>
                       <ReactSwitch
                         className='col-lg-auto col-1'
                         onChange={() => setIsHotel((prev) => !prev)}
@@ -296,7 +294,7 @@ const UpdateOrganization = () => {
                       />
                     </div>
                     <div className='row'>
-                      <label className='col-lg-2 col-9'>Is Airline?</label>
+                      <label className='col-lg-2 col-9'>Is Airline</label>
                       <ReactSwitch
                         className='col-lg-auto col-1'
                         onChange={() => setIsAirline((prev) => !prev)}
@@ -308,7 +306,7 @@ const UpdateOrganization = () => {
                         type='submit'
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
                       >
-                        Update Organization
+                        Create Organization
                       </button>
                     </div>
                   </form>
@@ -327,4 +325,4 @@ const UpdateOrganization = () => {
   );
 };
 
-export default UpdateOrganization;
+export default DuplicateOrganization;

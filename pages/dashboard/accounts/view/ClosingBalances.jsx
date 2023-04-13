@@ -27,7 +27,6 @@ const ClosingBalances = () => {
         account_id: router.query.view,
       });
       if (response?.success) {
-        console.log(response.data);
         setClosingBalances(response.data);
       } else {
         sendToast(
@@ -175,7 +174,7 @@ const ClosingBalances = () => {
         CSVName='ClosingBalances.csv'
         columns={columns}
         data={closingBalances.filter((perm) =>
-          perm.amount.toLowerCase().includes(searchQuery.toLowerCase())
+          perm?.amount?.toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>
