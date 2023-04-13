@@ -66,7 +66,7 @@ const CloneUser = () => {
     // Checking if account id is not null
     if (roleID?.value) {
       if (password === confirmPassword) {
-        const response = await createItem('/users', {
+        const response = await createItem('users', {
           role_id: roleID.value,
           name,
           email,

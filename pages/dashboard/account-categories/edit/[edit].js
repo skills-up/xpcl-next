@@ -65,7 +65,7 @@ const UpdateAccountCategories = () => {
     e.preventDefault();
     // Checking if account id is not null
     if (accountCategoryID?.value) {
-      const response = await updateItem('/account-categories', router.query.edit, {
+      const response = await updateItem('account-categories', router.query.edit, {
         name,
         parent_category_id: accountCategoryID.value,
       });

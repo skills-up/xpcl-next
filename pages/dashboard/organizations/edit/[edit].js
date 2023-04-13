@@ -98,7 +98,7 @@ const UpdateOrganization = () => {
     e.preventDefault();
     // Checking if account id is not null
     if (accountID?.value) {
-      const response = await updateItem('/organizations', router.query.edit, {
+      const response = await updateItem('organizations', router.query.edit, {
         account_id: accountID.value,
         calendar_template_id: calenderTemplateID?.value || null,
         name,

@@ -64,7 +64,7 @@ const UpdateAccounts = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     // Checking if account id is not null
-    const response = await updateItem('/accounts', router.query.edit, {
+    const response = await updateItem('accounts', router.query.edit, {
       name,
       account_category_id: accountCategoryID?.value || null,
       year: parseInt(year),

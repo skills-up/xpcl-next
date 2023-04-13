@@ -64,7 +64,7 @@ const AddNewAccounts = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     // Checking if account id is not null
-    const response = await createItem('/accounts', {
+    const response = await createItem('accounts', {
       name,
       account_category_id: accountCategoryID?.value || null,
       year: parseInt(year),

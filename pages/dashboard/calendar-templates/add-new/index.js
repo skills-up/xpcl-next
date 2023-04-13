@@ -20,7 +20,7 @@ const AddCalenderTemplate = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     // Checking if account id is not null
-    const response = await createItem('/calendar-templates', {
+    const response = await createItem('calendar-templates', {
       name,
       content,
     });

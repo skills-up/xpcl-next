@@ -39,7 +39,7 @@ const ClonePermission = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     if (slug.match(/^[a-z\.\-]+$/)) {
-      const response = await createItem('/permissions', {
+      const response = await createItem('permissions', {
         slug,
         description: desc,
       });

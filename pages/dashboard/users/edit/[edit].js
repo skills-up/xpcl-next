@@ -66,7 +66,7 @@ const UpdateUser = () => {
     // Checking if account id is not null
     if (roleID?.value) {
       if (password === confirmPassword) {
-        const response = await updateItem('/users', router.query.edit, {
+        const response = await updateItem('users', router.query.edit, {
           role_id: roleID.value,
           name,
           email,

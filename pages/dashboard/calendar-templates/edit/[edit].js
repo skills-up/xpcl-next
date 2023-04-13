@@ -44,7 +44,7 @@ const UpdateCalenderTemplate = () => {
     if (router.query.edit) {
       e.preventDefault();
       // Checking if account id is not null
-      const response = await updateItem('/calendar-templates', router.query.edit, {
+      const response = await updateItem('calendar-templates', router.query.edit, {
         name,
         content,
       });

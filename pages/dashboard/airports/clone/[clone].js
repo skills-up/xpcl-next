@@ -70,7 +70,7 @@ const AddNewAirports = () => {
     e.preventDefault();
     // Checking if airport id is not null
     if (countryID?.value) {
-      const response = await createItem('/airports', {
+      const response = await createItem('airports', {
         country_id: countryID.value,
         name,
         iata_code: iataCode,

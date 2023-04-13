@@ -63,7 +63,7 @@ const AddNewAccountCategories = () => {
     e.preventDefault();
     // Checking if account id is not null
     if (accountCategoryID?.value) {
-      const response = await createItem('/account-categories', {
+      const response = await createItem('account-categories', {
         name,
         parent_category_id: accountCategoryID.value,
       });

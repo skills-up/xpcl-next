@@ -70,7 +70,7 @@ const UpdateAirports = () => {
     e.preventDefault();
     // Checking if airport id is not null
     if (countryID?.value) {
-      const response = await updateItem('/airports', router.query.edit, {
+      const response = await updateItem('airports', router.query.edit, {
         country_id: countryID.value,
         name,
         iata_code: iataCode,

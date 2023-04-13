@@ -42,7 +42,7 @@ const CloneRole = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    const response = await createItem('/roles', {
+    const response = await createItem('roles', {
       name,
       description: desc,
       permission_ids: selectedPermissions,

@@ -9,6 +9,7 @@ import { sendToast } from '../../../../utils/toastify';
 import { useEffect, useState } from 'react';
 import { deleteItem, getItem } from '../../../../api/xplorzApi';
 import ViewTable from '../../../../components/view-table';
+import ClosingBalances from './ClosingBalances';
 
 const ViewAccounts = () => {
   const [account, setAccount] = useState([]);
@@ -124,6 +125,11 @@ const ViewAccounts = () => {
                     setConfirmDelete(true);
                   }}
                 />
+                <hr className='my-4' />
+                <div>
+                  <h2 className='mb-3'>Closing Balances</h2>
+                  <ClosingBalances />
+                </div>
               </div>
             </div>
 

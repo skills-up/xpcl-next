@@ -58,7 +58,7 @@ const AddNewOrganization = () => {
     e.preventDefault();
     // Checking if account id is not null
     if (accountID?.value) {
-      const response = await createItem('/organizations', {
+      const response = await createItem('organizations', {
         account_id: accountID.value,
         calendar_template_id: calenderTemplateID?.value || null,
         name,

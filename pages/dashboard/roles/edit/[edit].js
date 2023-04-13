@@ -43,7 +43,7 @@ const EditRole = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     if (router.query.edit) {
-      const response = await updateItem('/roles', router.query.edit, {
+      const response = await updateItem('roles', router.query.edit, {
         name,
         description: desc,
         permission_ids: selectedPermissions,
