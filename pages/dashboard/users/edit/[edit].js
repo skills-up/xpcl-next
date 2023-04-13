@@ -124,6 +124,9 @@ const UpdateUser = () => {
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
                     <div>
+                      <label>
+                        Select Account<span className='text-danger'>*</span>
+                      </label>
                       <Select
                         options={roles}
                         defaultValue={roleID}

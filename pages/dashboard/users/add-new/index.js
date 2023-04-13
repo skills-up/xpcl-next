@@ -98,6 +98,9 @@ const AddNewUser = () => {
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
                     <div>
+                      <label>
+                        Select Role<span className='text-danger'>*</span>
+                      </label>
                       <Select
                         options={roles}
                         value={roleID}

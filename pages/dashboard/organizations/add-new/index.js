@@ -124,6 +124,9 @@ const AddNewOrganization = () => {
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
                     <div>
+                      <label>
+                        Select Account<span className='text-danger'>*</span>
+                      </label>
                       <Select
                         options={accounts}
                         value={accountID}
@@ -133,6 +136,7 @@ const AddNewOrganization = () => {
                     </div>
                     {calenderTemplates?.length > 0 && (
                       <div>
+                        <label>Select Calendar Template</label>
                         <Select
                           options={calenderTemplates}
                           value={calenderTemplateID}

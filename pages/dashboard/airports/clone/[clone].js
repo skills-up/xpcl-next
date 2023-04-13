@@ -125,6 +125,9 @@ const AddNewAirports = () => {
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
                     <div>
+                      <label>
+                        Select Country<span className='text-danger'>*</span>
+                      </label>
                       <Select
                         defaultValue={countryID}
                         options={countries}

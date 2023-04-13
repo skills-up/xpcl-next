@@ -91,6 +91,7 @@ const AddNewAccounts = () => {
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
                     <div>
+                      <label>Select Account Category</label>
                       <Select
                         options={accountCategories}
                         value={accountCategoryID}

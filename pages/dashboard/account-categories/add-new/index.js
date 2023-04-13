@@ -97,6 +97,9 @@ const AddNewAccountCategories = () => {
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
                     <div>
+                      <label>
+                        Select Parent Category<span className='text-danger'>*</span>
+                      </label>
                       <Select
                         options={accountCategories}
                         value={accountCategoryID}
