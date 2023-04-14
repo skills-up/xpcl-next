@@ -27,7 +27,11 @@ const EditRole = () => {
       if (response?.success) {
         setName(response.data?.name);
         setDesc(response.data?.description);
-        setRolePermissions(response.data?.permissions_list);
+        setRolePermissions(
+          Object.keys(response.data?.permissions_list).map(
+            (element) => response.data?.permissions_list[`${element}`]
+          )
+        );
       } else {
         sendToast(
           'error',

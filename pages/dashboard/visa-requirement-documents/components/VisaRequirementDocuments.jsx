@@ -38,6 +38,9 @@ const VisaRequirementDocuments = () => {
     {
       Header: 'Name',
       accessor: 'name',
+    },{
+      Header: 'Category',
+      accessor: 'category',
     },
     {
       Header: 'Last Updated At',
@@ -161,8 +164,10 @@ const VisaRequirementDocuments = () => {
         downloadCSV
         CSVName='VisaRequirementDocument.csv'
         columns={columns}
-        data={visaRequirementDocuments.filter((perm) =>
-          perm?.name?.toLowerCase().includes(searchQuery.toLowerCase())
+        data={visaRequirementDocuments.filter(
+          (perm) =>
+            perm?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            perm?.category?.toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>

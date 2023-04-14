@@ -12,9 +12,14 @@ import Select from 'react-select';
 
 const AddVisaRequirementDocuments = () => {
   const [name, setName] = useState('');
-
+  const [category, setCategory] = useState(null);
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
+  const categoryOptions = [
+    { label: 'Personal', value: 'Personal' },
+    { label: 'Financial', value: 'Financial' },
+    { label: 'Support', value: 'Support' },
+  ];
 
   useEffect(() => {
     getData();
@@ -25,6 +30,7 @@ const AddVisaRequirementDocuments = () => {
       const response = await getItem('visa-requirement-documents', router.query.clone);
       if (response?.success) {
         setName(response.data?.name);
+        setCategory({ value: response.data?.category, label: response.data?.category });
       } else {
         sendToast(
           'error',
@@ -38,20 +44,25 @@ const AddVisaRequirementDocuments = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    const response = await createItem('visa-requirement-documents', {
-      name,
-    });
-    if (response?.success) {
-      sendToast('success', 'Created Visa Requirement Document Successfully.', 4000);
-      router.push('/dashboard/visa-requirement-documents');
+    if (category?.value) {
+      const response = await createItem('visa-requirement-documents', {
+        name,
+        category: category.value,
+      });
+      if (response?.success) {
+        sendToast('success', 'Created Visa Requirement Document Successfully.', 4000);
+        router.push('/dashboard/visa-requirement-documents');
+      } else {
+        sendToast(
+          'error',
+          response.data?.message ||
+            response.data?.error ||
+            'Failed to Create Visa Requirement Document.',
+          4000
+        );
+      }
     } else {
-      sendToast(
-        'error',
-        response.data?.message ||
-          response.data?.error ||
-          'Failed to Create Visa Requirement Document.',
-        4000
-      );
+      sendToast('error', 'You must select a Category', 4000);
     }
   };
 
@@ -104,6 +115,18 @@ const AddVisaRequirementDocuments = () => {
                           Name<span className='text-danger'>*</span>
                         </label>
                       </div>
+                    </div>
+                    <div>
+                      <label>
+                        Select Category<span className='text-danger'>*</span>
+                      </label>
+                      <Select
+                        options={categoryOptions}
+                        defaultValue={category}
+                        value={category}
+                        placeholder='Search & Select Category (required)'
+                        onChange={(id) => setCategory(id)}
+                      />
                     </div>
                     <div className='d-inline-block'>
                       <button
