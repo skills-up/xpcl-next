@@ -38,7 +38,6 @@ const LoginForm = () => {
         if (me) {
           // Getting permissions from role id
           const permissions = await getItem('roles', me?.role_id);
-          console.log(permissions.data);
           if (permissions?.success && permissions?.data?.permissions_list) {
             // Setting permissions
             const keys = Object.keys(permissions.data.permissions_list);

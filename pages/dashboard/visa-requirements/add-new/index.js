@@ -9,7 +9,8 @@ import { useEffect, useState } from 'react';
 import { createItem, getList } from '../../../../api/xplorzApi';
 import ReactSwitch from 'react-switch';
 import Select from 'react-select';
-import { FileUploader } from 'react-drag-drop-files';
+import { FileUploadWithPreview } from 'file-upload-with-preview';
+import 'file-upload-with-preview/dist/style.css';
 
 const AddNewVisaRequirements = () => {
   const [countries, setCountries] = useState([]);
@@ -33,11 +34,33 @@ const AddNewVisaRequirements = () => {
   const router = useRouter();
 
   useEffect(() => {
+    setVisaFormFiles(
+      new FileUploadWithPreview('visa-requirements-add-new-visa-forms', {
+        multiple: true,
+        accept: '.jpg, .png, .jpeg, .pdf',
+        text: {
+          browse: 'Browse',
+          chooseFile: '',
+          label: 'Choose Files to Upload',
+        },
+      })
+    );
+    setPhotoSample(
+      new FileUploadWithPreview('visa-requirements-add-new-photo-sample', {
+        multiple: false,
+        accept: '.jpg, .png, .jpeg',
+        text: {
+          browse: 'Browse',
+          chooseFile: '',
+          label: 'Choose File to Upload',
+        },
+      })
+    );
     getData();
   }, []);
 
   const getData = async () => {
-    const countries = await getList('accounts');
+    const countries = await getList('countries');
     const requiredVisaDocs = await getList('visa-requirement-documents');
     if (countries?.success && requiredVisaDocs?.success) {
       setCountries(
@@ -50,6 +73,7 @@ const AddNewVisaRequirements = () => {
         requiredVisaDocs.data.map((element) => ({
           value: element.id,
           label: element.name,
+          category: element?.category,
         }))
       );
     } else {
@@ -62,31 +86,54 @@ const AddNewVisaRequirements = () => {
     e.preventDefault();
     // Checking if account id is not null
     if (countryID?.value) {
-      const response = await createItem('visa-requirements', {
-        country_id: countryID.value,
-        business_travel: businessTravel,
-        consulate_city: consulateCity,
-        photo_count: photoCount,
-        photo_dimension: photoDimension,
-        photo_specifications: photoSpecifications,
-        photo_sample: photoSample,
-        processing_time: processingTime,
-        consulate_details: consulateDetails,
-        additional_notes: additionalNotes,
-        personal_docs_reqs: personalDocsReqs,
-        financial_docs_reqs: financialDocsReqs,
-        supporting_docs_reqs: supportingDocsReqs,
-        visa_form_files: visaFormFiles,
-      });
-      if (response?.success) {
-        sendToast('success', 'Created Visa Requirement Successfully.', 4000);
-        router.push('/dashboard/visa-requirements');
+      if (visaFormFiles?.cachedFileArray?.length > 0) {
+        if (
+          personalDocsReqs.length === 0 ||
+          financialDocsReqs.length === 0 ||
+          supportingDocsReqs.length === 0
+        ) {
+          sendToast('error', 'Please select all required documents.', 8000);
+          return;
+        }
+        let visaFormData = new FormData();
+        for (let visaForm of visaFormFiles.cachedFileArray) {
+          visaFormData.append('files[]', visaForm);
+        }
+        let photoSampleData;
+        if (photoSample?.cachedFileArray?.length > 0) {
+          photoSampleData = new FormData();
+          photoSampleData.append('file', photoSample.cachedFileArray[0]);
+        }
+        const response = await createItem('visa-requirements', {
+          country_id: countryID.value,
+          business_travel: businessTravel,
+          consulate_city: consulateCity,
+          photo_count: photoCount,
+          photo_dimension: photoDimension,
+          photo_specifications: photoSpecifications,
+          photo_sample: photoSampleData,
+          processing_time: processingTime,
+          consulate_details: consulateDetails,
+          additional_notes: additionalNotes,
+          personal_docs_reqs: personalDocsReqs,
+          financial_docs_reqs: financialDocsReqs,
+          supporting_docs_reqs: supportingDocsReqs,
+          visa_form_files: visaFormData,
+        });
+        if (response?.success) {
+          sendToast('success', 'Created Visa Requirement Successfully.', 4000);
+          router.push('/dashboard/visa-requirements');
+        } else {
+          sendToast(
+            'error',
+            response.data?.message ||
+              response.data?.error ||
+              'Failed to Visa Requirement.',
+            4000
+          );
+        }
       } else {
-        sendToast(
-          'error',
-          response.data?.message || response.data?.error || 'Failed to Visa Requirement.',
-          4000
-        );
+        sendToast('error', 'At least 1 Visa Form is required', 8000);
       }
     } else {
       sendToast('error', 'You must select a Country first.', 8000);
@@ -127,13 +174,14 @@ const AddNewVisaRequirements = () => {
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
-                    <div className='col-12 row'>
-                      <label className='col-lg-2 col-9'>Is Business Travel</label>
+                    <div className='col-12 d-flex gap-3 items-center'>
+                      <label className=''>Tourist</label>
                       <ReactSwitch
-                        className='col-lg-auto col-1'
+                        className=''
                         onChange={() => setBusinessTravel((prev) => !prev)}
                         checked={businessTravel}
                       />
+                      <label className=''>Business Travel</label>
                     </div>
                     <div className='col-12'>
                       <label>
@@ -153,10 +201,9 @@ const AddNewVisaRequirements = () => {
                           value={consulateCity}
                           placeholder=' '
                           type='text'
-                          required
                         />
                         <label className='lh-1 text-16 text-light-1'>
-                          Consulate City<span className='text-danger'>*</span>
+                          Consulate City
                         </label>
                       </div>
                     </div>
@@ -167,11 +214,8 @@ const AddNewVisaRequirements = () => {
                           value={photoCount}
                           placeholder=' '
                           type='text'
-                          required
                         />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Photo Count<span className='text-danger'>*</span>
-                        </label>
+                        <label className='lh-1 text-16 text-light-1'>Photo Count</label>
                       </div>
                     </div>
                     <div className='col-12'>
@@ -181,10 +225,9 @@ const AddNewVisaRequirements = () => {
                           value={photoDimension}
                           placeholder=' '
                           type='text'
-                          required
                         />
                         <label className='lh-1 text-16 text-light-1'>
-                          Photo Dimensions<span className='text-danger'>*</span>
+                          Photo Dimensions
                         </label>
                       </div>
                     </div>
@@ -195,12 +238,19 @@ const AddNewVisaRequirements = () => {
                           value={photoSpecifications}
                           placeholder=' '
                           type='text'
-                          required
                         />
                         <label className='lh-1 text-16 text-light-1'>
-                          Photo Specifications<span className='text-danger'>*</span>
+                          Photo Specifications
                         </label>
                       </div>
+                    </div>
+                    {/* Photo Sample Upload */}
+                    <div className='col-lg-6'>
+                      <label>Photo Sample</label>
+                      <div
+                        className='custom-file-container'
+                        data-upload-id='visa-requirements-add-new-photo-sample'
+                      ></div>
                     </div>
                     <div className='col-12'>
                       <div className='form-input'>
@@ -209,10 +259,9 @@ const AddNewVisaRequirements = () => {
                           value={processingTime}
                           placeholder=' '
                           type='text'
-                          required
                         />
                         <label className='lh-1 text-16 text-light-1'>
-                          Processing Time<span className='text-danger'>*</span>
+                          Processing Time
                         </label>
                       </div>
                     </div>
@@ -223,10 +272,9 @@ const AddNewVisaRequirements = () => {
                           value={consulateDetails}
                           placeholder=' '
                           type='text'
-                          required
                         />
                         <label className='lh-1 text-16 text-light-1'>
-                          Consulate Details<span className='text-danger'>*</span>
+                          Consulate Details
                         </label>
                       </div>
                     </div>
@@ -237,10 +285,9 @@ const AddNewVisaRequirements = () => {
                           value={additionalNotes}
                           placeholder=' '
                           type='text'
-                          required
                         />
                         <label className='lh-1 text-16 text-light-1'>
-                          Additional Notes<span className='text-danger'>*</span>
+                          Additional Notes
                         </label>
                       </div>
                     </div>
@@ -250,7 +297,9 @@ const AddNewVisaRequirements = () => {
                         <span className='text-danger'>*</span>
                       </label>
                       <Select
-                        options={requiredVisaDocs}
+                        options={requiredVisaDocs.filter(
+                          (element) => element?.category === 'Personal'
+                        )}
                         isMulti
                         placeholder='Search & Select Personal Documents (required)'
                         onChange={(values) => {
@@ -264,7 +313,9 @@ const AddNewVisaRequirements = () => {
                         <span className='text-danger'>*</span>
                       </label>
                       <Select
-                        options={requiredVisaDocs}
+                        options={requiredVisaDocs.filter(
+                          (element) => element?.category === 'Financial'
+                        )}
                         isMulti
                         placeholder='Search & Select Financial Documents (required)'
                         onChange={(values) => {
@@ -278,7 +329,9 @@ const AddNewVisaRequirements = () => {
                         <span className='text-danger'>*</span>
                       </label>
                       <Select
-                        options={requiredVisaDocs}
+                        options={requiredVisaDocs.filter(
+                          (element) => element?.category === 'Support'
+                        )}
                         isMulti
                         placeholder='Search & Select Supporting Documents (required)'
                         onChange={(values) => {
@@ -286,18 +339,15 @@ const AddNewVisaRequirements = () => {
                         }}
                       />
                     </div>
-                    <div className='col-12'>
+                    {/* Visa Form Upload */}
+                    <div className='col-lg-6'>
                       <label>
                         Visa Forms<span className='text-danger'>*</span>
                       </label>
-                      <FileUploader
-                        multiple={true}
-                        handleChange={(files) => {
-                          console.log(files);
-                          // TODO
-                          // Continue from here file upload logic handler
-                        }}
-                      />
+                      <div
+                        className='custom-file-container'
+                        data-upload-id='visa-requirements-add-new-visa-forms'
+                      ></div>
                     </div>
                     <div className='d-inline-block'>
                       <button
