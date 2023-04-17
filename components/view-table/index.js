@@ -26,7 +26,7 @@ const ViewTable = ({ data, onEdit, onDelete }) => {
                         <span>{JSON.stringify(data[element])}</span>
                       )
                     ) : typeof data[element] === 'boolean' ? (
-                      data[element].toString()
+                      <span>{data[element].toString()}</span>
                     ) : (
                       <span>{data[element]}</span>
                     )

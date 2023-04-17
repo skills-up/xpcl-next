@@ -40,6 +40,46 @@ const CommissionRules = () => {
       accessor: 'name',
     },
     {
+      Header: 'IATA Basic',
+      accessor: 'iata_basic',
+      Cell: (data) => {
+        const value = data.row?.original?.iata_basic;
+        if (value !== null && value !== undefined) {
+          return <span>{value?.toString().toUpperCase()}</span>;
+        }
+      },
+    },
+    {
+      Header: 'IATA YQ',
+      accessor: 'iata_yq',
+      Cell: (data) => {
+        const value = data.row?.original?.iata_yq;
+        if (value !== null && value !== undefined) {
+          return <span>{value?.toString().toUpperCase()}</span>;
+        }
+      },
+    },
+    {
+      Header: 'PLB Basic',
+      accessor: 'plb_basic',
+      Cell: (data) => {
+        const value = data.row?.original?.plb_basic;
+        if (value !== null && value !== undefined) {
+          return <span>{value?.toString().toUpperCase()}</span>;
+        }
+      },
+    },
+    {
+      Header: 'PLB YQ',
+      accessor: 'plb_yq',
+      Cell: (data) => {
+        const value = data.row?.original?.plb_yq;
+        if (value !== null && value !== undefined) {
+          return <span>{value?.toString().toUpperCase()}</span>;
+        }
+      },
+    },
+    {
       Header: 'Last Updated At',
       accessor: 'updated_at',
       Cell: (data) => {

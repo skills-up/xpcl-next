@@ -134,28 +134,28 @@ const UpdateCommissionRule = () => {
                         onChange={() => setIataBasic((prev) => !prev)}
                         checked={iataBasic}
                       />
-                      <label>Charge IATA Commission on Basic?</label>
+                      <label>Charge IATA Commission on Basic</label>
                     </div>
                     <div className='d-flex items-center gap-3'>
                       <ReactSwitch
                         onChange={() => setIataYQ((prev) => !prev)}
                         checked={iataYQ}
                       />
-                      <label>Charge IATA Commission on YQ?</label>
+                      <label>Charge IATA Commission on YQ</label>
                     </div>
                     <div className='d-flex items-center gap-3'>
                       <ReactSwitch
                         onChange={() => setPlbBasic((prev) => !prev)}
                         checked={plbBasic}
                       />
-                      <label>Charge PLB Commission on Basic?</label>
+                      <label>Charge PLB Commission on Basic</label>
                     </div>
                     <div className='d-flex items-center gap-3'>
                       <ReactSwitch
                         onChange={() => setPlbYQ((prev) => !prev)}
                         checked={plbYQ}
                       />
-                      <label>Charge PLB Commission on YQ?</label>
+                      <label>Charge PLB Commission on YQ</label>
                     </div>
                     <div className='d-flex items-center gap-3'>
                       <ReactSwitch

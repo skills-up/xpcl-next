@@ -40,12 +40,9 @@ const LoginForm = () => {
           const permissions = await getItem('roles', me?.role_id);
           if (permissions?.success && permissions?.data?.permissions_list) {
             // Setting permissions
-            const keys = Object.keys(permissions.data.permissions_list);
             dispatch(
               setPermissions({
-                permissions: keys.map(
-                  (element) => permissions.data.permissions_list[`${element}`]
-                ),
+                permissions: Object.values(permissions.data.permissions_list),
               })
             );
             // Setting Token Expiry

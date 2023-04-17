@@ -42,8 +42,8 @@ const ViewRole = () => {
         }
         data.permissions_list = (
           <ul>
-            {Object.keys(data.permissions_list).map((perm, index) => (
-              <li key={index}>{data.permissions_list[`${perm}`]}</li>
+            {Object.values(data.permissions_list).map((perm, index) => (
+              <li key={index}>{perm}</li>
             ))}
           </ul>
         );
