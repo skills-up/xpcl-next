@@ -6,11 +6,11 @@ import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { sendToast } from '../../../../utils/toastify';
 import { useEffect, useState } from 'react';
-import { createItem, getItem, getList, updateItem } from '../../../../api/xplorzApi';
+import { createItem, getItem, getList } from '../../../../api/xplorzApi';
 import ReactSwitch from 'react-switch';
 import Select from 'react-select';
 
-const DuplicateOrganization = () => {
+const AddNewOrganization = () => {
   const [accounts, setAccounts] = useState([]);
   const [accountID, setAccountID] = useState(null);
   const [calenderTemplates, setCalenderTemplates] = useState([]);
@@ -22,12 +22,15 @@ const DuplicateOrganization = () => {
   const [address, setAddress] = useState('');
   const [gstn, setGstn] = useState('');
   const [useGstn, setUseGstn] = useState(false);
-  const [isClient, setIsClient] = useState(false);
-  const [isVendor, setIsVendor] = useState(false);
-  const [isHotel, setIsHotel] = useState(false);
-  const [isAirline, setIsAirline] = useState(false);
+  const [type, setType] = useState(null);
   const [farePercent, setFarePercent] = useState(0);
-
+  const options = [
+    { value: 'Client', label: 'Client' },
+    { value: 'Airline', label: 'Airline' },
+    { value: 'Hotel', label: 'Hotel' },
+    { value: 'Vendor', label: 'Vendor' },
+    { value: 'Miscellaneous', label: 'Miscellaneous' },
+  ];
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
 
@@ -47,10 +50,6 @@ const DuplicateOrganization = () => {
         setAddress(response.data?.address);
         setGstn(response.data?.gstn);
         setUseGstn(response.data?.use_gstn);
-        setIsClient(response.data?.is_client);
-        setIsVendor(response.data?.is_vendor);
-        setIsHotel(response.data?.is_hotel);
-        setIsAirline(response.data?.is_airline);
         setFarePercent(response.data?.fare_percent);
 
         // Getting Accounts
@@ -77,6 +76,10 @@ const DuplicateOrganization = () => {
               setCalenderTemplateID({ value: calendar.id, label: calendar.name });
             }
           }
+          // Setting types
+          for (let i of options) {
+            if (response.data?.type === i.value) setType(i);
+          }
         } else {
           sendToast('error', 'Unable to fetch required data', 4000);
           router.push('/dashboard/organizations');
@@ -98,6 +101,10 @@ const DuplicateOrganization = () => {
     e.preventDefault();
     // Checking if account id is not null
     if (accountID?.value) {
+      if (!type?.value) {
+        sendToast('error', 'Please Select Organization Type', 4000);
+        return;
+      }
       const response = await createItem('organizations', {
         account_id: accountID.value,
         calendar_template_id: calenderTemplateID?.value || null,
@@ -108,10 +115,7 @@ const DuplicateOrganization = () => {
         address,
         gstn,
         use_gstn: useGstn,
-        is_client: isClient,
-        is_vendor: isVendor,
-        is_hotel: isHotel,
-        is_airline: isAirline,
+        type: type?.value,
         fare_percent: farePercent,
       });
       if (response?.success) {
@@ -133,7 +137,7 @@ const DuplicateOrganization = () => {
 
   return (
     <>
-      <Seo pageTitle='Create Organization' />
+      <Seo pageTitle='Add New Organization' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -153,7 +157,7 @@ const DuplicateOrganization = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Create Organization</h1>
+                  <h1 className='text-30 lh-14 fw-600'>Add New Organization</h1>
                   <div className='text-15 text-light-1'>Create a new organization.</div>
                 </div>
                 {/* End .col-12 */}
@@ -169,19 +173,28 @@ const DuplicateOrganization = () => {
                       </label>
                       <Select
                         options={accounts}
-                        defaultValue={accountID}
                         value={accountID}
-                        placeholder='Select Account'
+                        placeholder='Search & Select Account (required)'
                         onChange={(id) => setAccountID(id)}
+                      />
+                    </div>
+                    <div>
+                      <label>
+                        Select Organization Type<span className='text-danger'>*</span>
+                      </label>
+                      <Select
+                        options={options}
+                        value={type}
+                        placeholder='Search & Select Organization Type (required)'
+                        onChange={(id) => setType(id)}
                       />
                     </div>
                     <div>
                       <label>Select Calendar Template</label>
                       <Select
                         options={calenderTemplates}
-                        defaultValue={calenderTemplateID}
                         value={calenderTemplateID}
-                        placeholder='Select Calendar Template'
+                        placeholder='Search & Select Calendar Template'
                         onChange={(id) => setCalenderTemplateID(id)}
                       />
                     </div>
@@ -274,40 +287,12 @@ const DuplicateOrganization = () => {
                       />
                       <label>Use GSTN?</label>
                     </div>
-                    <div className='d-flex items-center gap-3'>
-                      <ReactSwitch
-                        onChange={() => setIsClient((prev) => !prev)}
-                        checked={isClient}
-                      />
-                      <label>Is Client?</label>
-                    </div>
-                    <div className='d-flex items-center gap-3'>
-                      <ReactSwitch
-                        onChange={() => setIsVendor((prev) => !prev)}
-                        checked={isVendor}
-                      />
-                      <label>Is Vendor?</label>
-                    </div>
-                    <div className='d-flex items-center gap-3'>
-                      <ReactSwitch
-                        onChange={() => setIsHotel((prev) => !prev)}
-                        checked={isHotel}
-                      />
-                      <label>Is Hotel?</label>
-                    </div>
-                    <div className='d-flex items-center gap-3'>
-                      <ReactSwitch
-                        onChange={() => setIsAirline((prev) => !prev)}
-                        checked={isAirline}
-                      />
-                      <label>Is Airline?</label>
-                    </div>
                     <div className='d-inline-block'>
                       <button
                         type='submit'
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
                       >
-                        Create Organization
+                        Add Organization
                       </button>
                     </div>
                   </form>
@@ -326,4 +311,4 @@ const DuplicateOrganization = () => {
   );
 };
 
-export default DuplicateOrganization;
+export default AddNewOrganization;

@@ -22,29 +22,21 @@ const UpdateOrganization = () => {
   const [address, setAddress] = useState('');
   const [gstn, setGstn] = useState('');
   const [useGstn, setUseGstn] = useState(false);
-  const [isClient, setIsClient] = useState(false);
-  const [isVendor, setIsVendor] = useState(false);
-  const [isHotel, setIsHotel] = useState(false);
-  const [isAirline, setIsAirline] = useState(false);
   const [farePercent, setFarePercent] = useState(0);
-
+  const [type, setType] = useState(null);
+  const options = [
+    { value: 'Client', label: 'Client' },
+    { value: 'Airline', label: 'Airline' },
+    { value: 'Hotel', label: 'Hotel' },
+    { value: 'Vendor', label: 'Vendor' },
+    { value: 'Miscellaneous', label: 'Miscellaneous' },
+  ];
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
 
   useEffect(() => {
     getData();
   }, [router.isReady]);
-
-  useEffect(() => {
-    if (isAirline || isHotel) setIsVendor(true);
-  }, [isAirline, isHotel]);
-
-  useEffect(() => {
-    if (!isVendor) {
-      setIsAirline(false);
-      setIsHotel(false);
-    }
-  }, [isVendor]);
 
   const getData = async () => {
     if (router.query.edit) {
@@ -58,10 +50,6 @@ const UpdateOrganization = () => {
         setAddress(response.data?.address);
         setGstn(response.data?.gstn);
         setUseGstn(response.data?.use_gstn);
-        setIsClient(response.data?.is_client);
-        setIsVendor(response.data?.is_vendor);
-        setIsHotel(response.data?.is_hotel);
-        setIsAirline(response.data?.is_airline);
         setFarePercent(response.data?.fare_percent);
 
         // Getting Accounts
@@ -88,6 +76,10 @@ const UpdateOrganization = () => {
               setCalenderTemplateID({ value: calendar.id, label: calendar.name });
             }
           }
+          // Setting types
+          for (let i of options) {
+            if (response.data?.type === i.value) setType(i);
+          }
         } else {
           sendToast('error', 'Unable to fetch required data', 4000);
           router.push('/dashboard/organizations');
@@ -109,6 +101,10 @@ const UpdateOrganization = () => {
     e.preventDefault();
     // Checking if account id is not null
     if (accountID?.value) {
+      if (!type?.value) {
+        sendToast('error', 'Please Select Organization Type', 4000);
+        return;
+      }
       const response = await updateItem('organizations', router.query.edit, {
         account_id: accountID.value,
         calendar_template_id: calenderTemplateID?.value || null,
@@ -119,14 +115,11 @@ const UpdateOrganization = () => {
         address,
         gstn,
         use_gstn: useGstn,
-        is_client: isClient,
-        is_vendor: isVendor,
-        is_hotel: isHotel,
-        is_airline: isAirline,
+        type: type?.value,
         fare_percent: farePercent,
       });
       if (response?.success) {
-        sendToast('success', 'Updated Organization Successfully.', 4000);
+        sendToast('success', 'Created Organization Successfully.', 4000);
         router.push('/dashboard/organizations');
       } else {
         sendToast(
@@ -186,6 +179,17 @@ const UpdateOrganization = () => {
                         value={accountID}
                         placeholder='Select Account'
                         onChange={(id) => setAccountID(id)}
+                      />
+                    </div>
+                    <div>
+                      <label>
+                        Select Organization Type<span className='text-danger'>*</span>
+                      </label>
+                      <Select
+                        options={options}
+                        value={type}
+                        placeholder='Search & Select Organization Type (required)'
+                        onChange={(id) => setType(id)}
                       />
                     </div>
                     <div>
@@ -286,34 +290,6 @@ const UpdateOrganization = () => {
                         checked={useGstn}
                       />
                       <label>Use GSTN?</label>
-                    </div>
-                    <div className='d-flex items-center gap-3'>
-                      <ReactSwitch
-                        onChange={() => setIsClient((prev) => !prev)}
-                        checked={isClient}
-                      />
-                      <label>Is Client?</label>
-                    </div>
-                    <div className='d-flex items-center gap-3'>
-                      <ReactSwitch
-                        onChange={() => setIsVendor((prev) => !prev)}
-                        checked={isVendor}
-                      />
-                      <label>Is Vendor?</label>
-                    </div>
-                    <div className='d-flex items-center gap-3'>
-                      <ReactSwitch
-                        onChange={() => setIsHotel((prev) => !prev)}
-                        checked={isHotel}
-                      />
-                      <label>Is Hotel?</label>
-                    </div>
-                    <div className='d-flex items-center gap-3'>
-                      <ReactSwitch
-                        onChange={() => setIsAirline((prev) => !prev)}
-                        checked={isAirline}
-                      />
-                      <label>Is Airline?</label>
                     </div>
                     <div className='d-inline-block'>
                       <button
