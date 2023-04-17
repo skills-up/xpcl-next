@@ -7,7 +7,7 @@ import AirlineOrganizationMarkup from './components/AirlineOrganizationMarkup';
 const index = () => {
   return (
     <>
-      <Seo pageTitle='Airline Organization Markup' />
+      <Seo pageTitle='Airline Markup' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -27,10 +27,8 @@ const index = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Airline Organization Markup</h1>
-                  <div className='text-15 text-light-1'>
-                    Manage airline organization markup.
-                  </div>
+                  <h1 className='text-30 lh-14 fw-600'>Airline Markup</h1>
+                  <div className='text-15 text-light-1'>Manage airline markup.</div>
                 </div>
                 {/* End .col-12 */}
               </div>

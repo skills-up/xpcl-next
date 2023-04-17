@@ -76,6 +76,7 @@ const AddFrequentFlierProgram = () => {
                         <input
                           onChange={(e) => setCode(e.target.value)}
                           value={code}
+                          maxLength={2}
                           placeholder=' '
                           type='text'
                           required

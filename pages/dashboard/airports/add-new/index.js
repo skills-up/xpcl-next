@@ -154,6 +154,7 @@ const AddNewAirports = () => {
                       </div>
                     </div>
                     <div>
+                      <label>Timezone</label>
                       <TimezoneSelect
                         value={timezone}
                         onChange={setTimeZone}

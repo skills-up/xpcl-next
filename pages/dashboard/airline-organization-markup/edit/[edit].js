@@ -72,14 +72,14 @@ const UpdateAirlineOrganizations = () => {
         }
       );
       if (response?.success) {
-        sendToast('success', 'Updated Airline Organization Markup Successfully.', 4000);
+        sendToast('success', 'Updated Airline Markup Successfully.', 4000);
         router.push('/dashboard/airline-organization-markup');
       } else {
         sendToast(
           'error',
           response.data?.message ||
             response.data?.error ||
-            'Failed to Update Airline Organization Markup.',
+            'Failed to Update Airline Markup.',
           4000
         );
       }
@@ -90,7 +90,7 @@ const UpdateAirlineOrganizations = () => {
 
   return (
     <>
-      <Seo pageTitle='Update Airline Organization Markup' />
+      <Seo pageTitle='Update Airline Markup' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -110,11 +110,9 @@ const UpdateAirlineOrganizations = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>
-                    Update Airline Organization Markup
-                  </h1>
+                  <h1 className='text-30 lh-14 fw-600'>Update Airline Markup</h1>
                   <div className='text-15 text-light-1'>
-                    Update an existing airline organization markup.
+                    Update an existing airline markup.
                   </div>
                 </div>
                 {/* End .col-12 */}
@@ -169,7 +167,7 @@ const UpdateAirlineOrganizations = () => {
                         type='submit'
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
                       >
-                        Update Airline Organization Markup
+                        Update Airline Markup
                       </button>
                     </div>
                   </form>

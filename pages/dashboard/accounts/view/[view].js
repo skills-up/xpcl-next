@@ -41,6 +41,9 @@ const ViewAccounts = () => {
             timeStyle: 'short',
           });
         }
+        if (data.account_category) {
+          delete data['account_category'];
+        }
         setAccount(data);
       } else {
         sendToast(

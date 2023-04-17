@@ -262,48 +262,45 @@ const DuplicateOrganization = () => {
                           placeholder=' '
                           type='number'
                         />
-                        <label className='lh-1 text-16 text-light-1'>Fare Percent</label>
+                        <label className='lh-1 text-16 text-light-1'>
+                          Markup Percent
+                        </label>
                       </div>
                     </div>
-                    <div className='row'>
-                      <label className='col-lg-2 col-9'>Use GSTN?</label>
+                    <div className='d-flex items-center gap-3'>
                       <ReactSwitch
-                        className='col-lg-auto col-1'
                         onChange={() => setUseGstn((prev) => !prev)}
                         checked={useGstn}
                       />
+                      <label>Use GSTN?</label>
                     </div>
-                    <div className='row'>
-                      <label className='col-lg-2 col-9'>Is Client?</label>
+                    <div className='d-flex items-center gap-3'>
                       <ReactSwitch
-                        className='col-lg-auto col-1'
                         onChange={() => setIsClient((prev) => !prev)}
                         checked={isClient}
                       />
+                      <label>Is Client?</label>
                     </div>
-                    <div className='row'>
-                      <label className='col-lg-2 col-9'>Is Vendor?</label>
+                    <div className='d-flex items-center gap-3'>
                       <ReactSwitch
-                        className='col-lg-auto col-1'
                         onChange={() => setIsVendor((prev) => !prev)}
                         checked={isVendor}
                       />
+                      <label>Is Vendor?</label>
                     </div>
-                    <div className='row'>
-                      <label className='col-lg-2 col-9'>Is Hotel?</label>
+                    <div className='d-flex items-center gap-3'>
                       <ReactSwitch
-                        className='col-lg-auto col-1'
                         onChange={() => setIsHotel((prev) => !prev)}
                         checked={isHotel}
                       />
+                      <label>Is Hotel?</label>
                     </div>
-                    <div className='row'>
-                      <label className='col-lg-2 col-9'>Is Airline?</label>
+                    <div className='d-flex items-center gap-3'>
                       <ReactSwitch
-                        className='col-lg-auto col-1'
                         onChange={() => setIsAirline((prev) => !prev)}
                         checked={isAirline}
                       />
+                      <label>Is Airline?</label>
                     </div>
                     <div className='d-inline-block'>
                       <button

@@ -27,8 +27,8 @@ const AddNewVisaRequirements = () => {
   const [personalDocsReqs, setPersonalDocsReqs] = useState([]);
   const [financialDocsReqs, setFinancialDocsReqs] = useState([]);
   const [supportingDocsReqs, setSupportingDocsReqs] = useState([]);
-  const [photoSample, setPhotoSample] = useState();
-  const [visaFormFiles, setVisaFormFiles] = useState();
+  const [photoSample, setPhotoSample] = useState(null);
+  const [visaFormFiles, setVisaFormFiles] = useState(null);
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -96,30 +96,27 @@ const AddNewVisaRequirements = () => {
           return;
         }
         let visaFormData = new FormData();
-        for (let visaForm of visaFormFiles.cachedFileArray) {
-          visaFormData.append('files[]', visaForm);
-        }
-        let photoSampleData;
-        if (photoSample?.cachedFileArray?.length > 0) {
-          photoSampleData = new FormData();
-          photoSampleData.append('file', photoSample.cachedFileArray[0]);
-        }
-        const response = await createItem('visa-requirements', {
-          country_id: countryID.value,
-          business_travel: businessTravel,
-          consulate_city: consulateCity,
-          photo_count: photoCount,
-          photo_dimension: photoDimension,
-          photo_specifications: photoSpecifications,
-          photo_sample: photoSampleData,
-          processing_time: processingTime,
-          consulate_details: consulateDetails,
-          additional_notes: additionalNotes,
-          personal_docs_reqs: personalDocsReqs,
-          financial_docs_reqs: financialDocsReqs,
-          supporting_docs_reqs: supportingDocsReqs,
-          visa_form_files: visaFormData,
-        });
+        visaFormData.append('country_id', countryID.value);
+        visaFormData.append('business_travel', businessTravel ? 1 : 0);
+        visaFormData.append('consulate_city', consulateCity);
+        visaFormData.append('photo_count', photoCount);
+        visaFormData.append('photo_dimension', photoDimension);
+        visaFormData.append('photo_specifications', photoSpecifications);
+        visaFormData.append('photo_sample_file', photoSample?.cachedFileArray[0] || '');
+        visaFormData.append('processing_time', processingTime);
+        visaFormData.append('consulate_details', consulateDetails);
+        visaFormData.append('additional_notes', additionalNotes);
+        for (let personalDoc of personalDocsReqs)
+          visaFormData.append('personal_docs_reqs[]', personalDoc?.value);
+        for (let financialDoc of financialDocsReqs)
+          visaFormData.append('financial_docs_reqs[]', financialDoc?.value);
+        for (let supportingDoc of supportingDocsReqs)
+          visaFormData.append('supporting_docs_reqs[]', supportingDoc?.value);
+
+        for (let visaForm of visaFormFiles.cachedFileArray)
+          visaFormData.append('visa_form_files[]', visaForm);
+
+        const response = await createItem('visa-requirements', visaFormData);
         if (response?.success) {
           sendToast('success', 'Created Visa Requirement Successfully.', 4000);
           router.push('/dashboard/visa-requirements');
@@ -300,11 +297,10 @@ const AddNewVisaRequirements = () => {
                         options={requiredVisaDocs.filter(
                           (element) => element?.category === 'Personal'
                         )}
+                        value={personalDocsReqs}
                         isMulti
                         placeholder='Search & Select Personal Documents (required)'
-                        onChange={(values) => {
-                          setPersonalDocsReqs(values.map((element) => element.value));
-                        }}
+                        onChange={(values) => setPersonalDocsReqs(values)}
                       />
                     </div>
                     <div className='col-12'>
@@ -316,11 +312,10 @@ const AddNewVisaRequirements = () => {
                         options={requiredVisaDocs.filter(
                           (element) => element?.category === 'Financial'
                         )}
+                        value={financialDocsReqs}
                         isMulti
                         placeholder='Search & Select Financial Documents (required)'
-                        onChange={(values) => {
-                          setFinancialDocsReqs(values.map((element) => element.value));
-                        }}
+                        onChange={(values) => setFinancialDocsReqs(values)}
                       />
                     </div>
                     <div className='col-12'>
@@ -332,11 +327,10 @@ const AddNewVisaRequirements = () => {
                         options={requiredVisaDocs.filter(
                           (element) => element?.category === 'Support'
                         )}
+                        value={supportingDocsReqs}
                         isMulti
                         placeholder='Search & Select Supporting Documents (required)'
-                        onChange={(values) => {
-                          setSupportingDocsReqs(values.map((element) => element.value));
-                        }}
+                        onChange={(values) => setSupportingDocsReqs(values)}
                       />
                     </div>
                     {/* Visa Form Upload */}

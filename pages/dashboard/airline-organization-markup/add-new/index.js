@@ -47,14 +47,14 @@ const AddNewAirlineOrganizations = () => {
         markup_amount: parseFloat(markupAmount),
       });
       if (response?.success) {
-        sendToast('success', 'Created Airline Organization Markup Successfully.', 4000);
+        sendToast('success', 'Created Airline Markup Successfully.', 4000);
         router.push('/dashboard/airline-organization-markup');
       } else {
         sendToast(
           'error',
           response.data?.message ||
             response.data?.error ||
-            'Failed to Create Airline Organization Markup.',
+            'Failed to Create Airline Markup.',
           4000
         );
       }
@@ -65,7 +65,7 @@ const AddNewAirlineOrganizations = () => {
 
   return (
     <>
-      <Seo pageTitle='Add New Airline Organization Markup' />
+      <Seo pageTitle='Add New Airline Markup' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -85,12 +85,8 @@ const AddNewAirlineOrganizations = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>
-                    Add New Airline Organization Markup
-                  </h1>
-                  <div className='text-15 text-light-1'>
-                    Create a new airline organization markup.
-                  </div>
+                  <h1 className='text-30 lh-14 fw-600'>Add New Airline Markup</h1>
+                  <div className='text-15 text-light-1'>Create a new airline markup.</div>
                 </div>
                 {/* End .col-12 */}
               </div>
@@ -143,7 +139,7 @@ const AddNewAirlineOrganizations = () => {
                         type='submit'
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
                       >
-                        Add Airline Organization Markup
+                        Add Airline Markup
                       </button>
                     </div>
                   </form>

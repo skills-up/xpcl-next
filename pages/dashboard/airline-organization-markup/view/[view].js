@@ -18,7 +18,7 @@ const ViewAirlineOrganizationMarkup = () => {
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
   useEffect(() => {
-    // Getting particular airline organization markup
+    // Getting particular airline markup
     getAirlineOrganizationMarkup();
   }, [router.isReady]);
 
@@ -46,7 +46,7 @@ const ViewAirlineOrganizationMarkup = () => {
           'error',
           response.data?.message ||
             response.data?.error ||
-            'Could Not Fetch The Requested Airline Organization Markup.'
+            'Could Not Fetch The Requested Airline Markup.'
         );
         router.push('/dashboard/airline-organization-markup');
       }
@@ -67,7 +67,7 @@ const ViewAirlineOrganizationMarkup = () => {
         'error',
         response.data?.message ||
           response.data?.error ||
-          'Unexpected Error Occurred While Trying to Delete this Airline Organization Markup',
+          'Unexpected Error Occurred While Trying to Delete this Airline Markup',
         4000
       );
     }
@@ -76,7 +76,7 @@ const ViewAirlineOrganizationMarkup = () => {
 
   return (
     <>
-      <Seo pageTitle='View Airline Organization Markup' />
+      <Seo pageTitle='View Airline Markup' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -96,11 +96,9 @@ const ViewAirlineOrganizationMarkup = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>
-                    View Airline Organization Markup
-                  </h1>
+                  <h1 className='text-30 lh-14 fw-600'>View Airline Markup</h1>
                   <div className='text-15 text-light-1'>
-                    Get extended details of a airline organization markup.
+                    Get extended details of a airline markup.
                   </div>
                 </div>
                 {/* End .col-12 */}
@@ -112,8 +110,8 @@ const ViewAirlineOrganizationMarkup = () => {
                   <ConfirmationModal
                     onCancel={onCancel}
                     onSubmit={onSubmit}
-                    title='Do you really want to delete this Airline Organization Markup?'
-                    content='This will permanently delete the airline organization markup. Press OK to confirm.'
+                    title='Do you really want to delete this Airline Markup?'
+                    content='This will permanently delete the airline markup. Press OK to confirm.'
                   />
                 )}
                 <ViewTable

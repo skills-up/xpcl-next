@@ -6,90 +6,149 @@ import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { sendToast } from '../../../../utils/toastify';
 import { useEffect, useState } from 'react';
-import { createItem, getItem, getList, updateItem } from '../../../../api/xplorzApi';
+import { createItem, getItem, getList } from '../../../../api/xplorzApi';
 import ReactSwitch from 'react-switch';
 import Select from 'react-select';
+import { FileUploadWithPreview } from 'file-upload-with-preview';
+import 'file-upload-with-preview/dist/style.css';
 
-const DuplicateOrganization = () => {
-  const [accounts, setAccounts] = useState([]);
-  const [accountID, setAccountID] = useState(null);
-  const [calenderTemplates, setCalenderTemplates] = useState([]);
-  const [calenderTemplateID, setCalenderTemplateID] = useState(null);
-  const [name, setName] = useState('');
-  const [code, setCode] = useState('');
-  const [contactName, setContactName] = useState('');
-  const [contactEmail, setContactEmail] = useState('');
-  const [address, setAddress] = useState('');
-  const [gstn, setGstn] = useState('');
-  const [useGstn, setUseGstn] = useState(false);
-  const [isClient, setIsClient] = useState(false);
-  const [isVendor, setIsVendor] = useState(false);
-  const [isHotel, setIsHotel] = useState(false);
-  const [isAirline, setIsAirline] = useState(false);
-  const [farePercent, setFarePercent] = useState(0);
+const AddNewVisaRequirements = () => {
+  const [countries, setCountries] = useState([]);
+  const [countryID, setCountryID] = useState(null);
+  const [requiredVisaDocs, setRequiredVisaDocs] = useState([]);
+  const [businessTravel, setBusinessTravel] = useState(false);
+  const [consulateCity, setConsulateCity] = useState('');
+  const [photoCount, setPhotoCount] = useState('');
+  const [photoSpecifications, setPhotoSpecifications] = useState('');
+  const [photoDimension, setPhotoDimension] = useState('');
+  const [processingTime, setProcessingTime] = useState('');
+  const [consulateDetails, setConsulateDetails] = useState('');
+  const [additionalNotes, setAdditionalNotes] = useState('');
+  const [personalDocsReqs, setPersonalDocsReqs] = useState([]);
+  const [financialDocsReqs, setFinancialDocsReqs] = useState([]);
+  const [supportingDocsReqs, setSupportingDocsReqs] = useState([]);
+  const [photoSample, setPhotoSample] = useState(null);
+  const [visaFormFiles, setVisaFormFiles] = useState(null);
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
 
   useEffect(() => {
-    getData();
+    if (router.isReady) {
+      setVisaFormFiles(
+        new FileUploadWithPreview('visa-requirements-add-new-visa-forms', {
+          multiple: true,
+          accept: '.jpg, .png, .jpeg, .pdf',
+          text: {
+            browse: 'Browse',
+            chooseFile: '',
+            label: 'Choose Files to Upload',
+          },
+        })
+      );
+      setPhotoSample(
+        new FileUploadWithPreview('visa-requirements-add-new-photo-sample', {
+          multiple: false,
+          accept: '.jpg, .png, .jpeg',
+          text: {
+            browse: 'Browse',
+            chooseFile: '',
+            label: 'Choose File to Upload',
+          },
+        })
+      );
+      getData();
+    }
   }, [router.isReady]);
 
   const getData = async () => {
     if (router.query.clone) {
-      // Getting Previous Data
-      const response = await getItem('organizations', router.query.clone);
+      const response = await getItem('visa-requirements', router.query.clone);
       if (response?.success) {
-        setName(response.data?.name);
-        setCode(response.data?.code);
-        setContactName(response.data?.contact_name);
-        setContactEmail(response.data?.contact_email);
-        setAddress(response.data?.address);
-        setGstn(response.data?.gstn);
-        setUseGstn(response.data?.use_gstn);
-        setIsClient(response.data?.is_client);
-        setIsVendor(response.data?.is_vendor);
-        setIsHotel(response.data?.is_hotel);
-        setIsAirline(response.data?.is_airline);
-        setFarePercent(response.data?.fare_percent);
+        // Setting previous values
+        setConsulateCity(response.data?.consulate_city);
+        setPhotoCount(response.data?.photo_count);
+        setPhotoDimension(response.data?.photo_dimension);
+        setPhotoSpecifications(response.data?.photo_specifications);
+        setProcessingTime(response.data?.processing_time);
+        setConsulateDetails(response.data?.consulate_details);
+        setAdditionalNotes(response.data?.additional_notes);
 
-        // Getting Accounts
-        const accounts = await getList('accounts');
-        const calenderTemplates = await getList('calendar-templates');
-        if (accounts?.success && calenderTemplates?.success) {
-          setCalenderTemplates(
-            calenderTemplates.data.map((element) => ({
+        const countries = await getList('countries');
+        const requiredVisaDocs = await getList('visa-requirement-documents');
+        if (countries?.success && requiredVisaDocs?.success) {
+          setCountries(
+            countries.data.map((element) => ({
               value: element.id,
               label: element.name,
             }))
           );
-          setAccounts(
-            accounts.data.map((element) => ({ value: element.id, label: element.name }))
+          setRequiredVisaDocs(
+            requiredVisaDocs.data.map((element) => ({
+              value: element.id,
+              label: element.name,
+              category: element?.category,
+            }))
           );
-          // Setting Calender + Accounts ID
-          for (let acc of accounts.data) {
-            if (acc.id === response.data.account_id) {
-              setAccountID({ value: acc.id, label: acc.name });
-            }
+          // Setting Selected Country
+          for (let country of countries.data) {
+            if (country.id === response.data?.country_id)
+              setCountryID({ value: country.id, label: country.name });
           }
-          for (let calendar of calenderTemplates.data) {
-            if (calendar.id === response.data.calendar_template_id) {
-              setCalenderTemplateID({ value: calendar.id, label: calendar.name });
+          // Setting Selected Required Docs
+          if (
+            response.data?.personal_docs_reqs &&
+            response.data?.financial_docs_reqs &&
+            response.data?.supporting_docs_reqs
+          ) {
+            const tempArr = [
+              ...response.data.personal_docs_reqs,
+              ...response.data.financial_docs_reqs,
+              ...response.data.supporting_docs_reqs,
+            ];
+            let personalDocs = [];
+            let supportDocs = [];
+            let financialDocs = [];
+            for (let reqDoc of requiredVisaDocs.data) {
+              if (tempArr.includes(reqDoc?.id?.toString())) {
+                if (reqDoc?.category === 'Personal') {
+                  personalDocs.push({
+                    value: reqDoc?.id,
+                    label: reqDoc?.name,
+                    category: reqDoc?.category,
+                  });
+                } else if (reqDoc?.category === 'Support') {
+                  supportDocs.push({
+                    value: reqDoc?.id,
+                    label: reqDoc?.name,
+                    category: reqDoc?.category,
+                  });
+                } else if (reqDoc?.category === 'Financial') {
+                  financialDocs.push({
+                    value: reqDoc?.id,
+                    label: reqDoc?.name,
+                    category: reqDoc?.category,
+                  });
+                }
+              }
             }
+            setPersonalDocsReqs(personalDocs);
+            setFinancialDocsReqs(financialDocs);
+            setSupportingDocsReqs(supportDocs);
           }
         } else {
           sendToast('error', 'Unable to fetch required data', 4000);
-          router.push('/dashboard/organizations');
+          router.push('/dashboard/visa-requirements');
         }
       } else {
         sendToast(
           'error',
           response.data?.message ||
             response.data?.error ||
-            'Could not fetch organization information',
+            'Unable to fetch required data',
           4000
         );
-        router.push('/dashboard/organizations');
+        router.push('/dashboard/visa-requirements');
       }
     }
   };
@@ -97,43 +156,61 @@ const DuplicateOrganization = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     // Checking if account id is not null
-    if (accountID?.value) {
-      const response = await createItem('organizations', {
-        account_id: accountID.value,
-        calendar_template_id: calenderTemplateID?.value || null,
-        name,
-        code,
-        contact_name: contactName,
-        contact_email: contactEmail,
-        address,
-        gstn,
-        use_gstn: useGstn,
-        is_client: isClient,
-        is_vendor: isVendor,
-        is_hotel: isHotel,
-        is_airline: isAirline,
-        fare_percent: farePercent,
-      });
-      if (response?.success) {
-        sendToast('success', 'Created Organization Successfully.', 4000);
-        router.push('/dashboard/organizations');
+    if (countryID?.value) {
+      if (visaFormFiles?.cachedFileArray?.length > 0) {
+        if (
+          personalDocsReqs.length === 0 ||
+          financialDocsReqs.length === 0 ||
+          supportingDocsReqs.length === 0
+        ) {
+          sendToast('error', 'Please select all required documents.', 8000);
+          return;
+        }
+        let visaFormData = new FormData();
+        visaFormData.append('country_id', countryID.value);
+        visaFormData.append('business_travel', businessTravel ? 1 : 0);
+        visaFormData.append('consulate_city', consulateCity);
+        visaFormData.append('photo_count', photoCount);
+        visaFormData.append('photo_dimension', photoDimension);
+        visaFormData.append('photo_specifications', photoSpecifications);
+        visaFormData.append('photo_sample_file', photoSample?.cachedFileArray[0] || '');
+        visaFormData.append('processing_time', processingTime);
+        visaFormData.append('consulate_details', consulateDetails);
+        visaFormData.append('additional_notes', additionalNotes);
+        for (let personalDoc of personalDocsReqs)
+          visaFormData.append('personal_docs_reqs[]', personalDoc?.value);
+        for (let financialDoc of financialDocsReqs)
+          visaFormData.append('financial_docs_reqs[]', financialDoc?.value);
+        for (let supportingDoc of supportingDocsReqs)
+          visaFormData.append('supporting_docs_reqs[]', supportingDoc?.value);
+
+        for (let visaForm of visaFormFiles.cachedFileArray)
+          visaFormData.append('visa_form_files[]', visaForm);
+
+        const response = await createItem('visa-requirements', visaFormData);
+        if (response?.success) {
+          sendToast('success', 'Created Visa Requirement Successfully.', 4000);
+          router.push('/dashboard/visa-requirements');
+        } else {
+          sendToast(
+            'error',
+            response.data?.message ||
+              response.data?.error ||
+              'Failed to Visa Requirement.',
+            4000
+          );
+        }
       } else {
-        sendToast(
-          'error',
-          response.data?.message ||
-            response.data?.error ||
-            'Failed to Create Organization.',
-          4000
-        );
+        sendToast('error', 'At least 1 Visa Form is required', 8000);
       }
     } else {
-      sendToast('error', 'You must select an Account first.', 8000);
+      sendToast('error', 'You must select a Country first.', 8000);
     }
   };
 
   return (
     <>
-      <Seo pageTitle='Create Organization' />
+      <Seo pageTitle='Add New Visa Requirement' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -153,8 +230,10 @@ const DuplicateOrganization = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Create Organization</h1>
-                  <div className='text-15 text-light-1'>Create a new organization.</div>
+                  <h1 className='text-30 lh-14 fw-600'>Add New Visa Requirement</h1>
+                  <div className='text-15 text-light-1'>
+                    Create a new visa requirement.
+                  </div>
                 </div>
                 {/* End .col-12 */}
               </div>
@@ -163,150 +242,184 @@ const DuplicateOrganization = () => {
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
-                    <div>
-                      <Select
-                        options={accounts}
-                        defaultValue={accountID}
-                        value={accountID}
-                        placeholder='Select Account'
-                        onChange={(id) => setAccountID(id)}
+                    <div className='col-12 d-flex gap-3 items-center'>
+                      <label className=''>Tourist</label>
+                      <ReactSwitch
+                        className=''
+                        onChange={() => setBusinessTravel((prev) => !prev)}
+                        checked={businessTravel}
                       />
+                      <label className=''>Business Travel</label>
                     </div>
-                    <div>
+                    <div className='col-12'>
+                      <label>
+                        Country<span className='text-danger'>*</span>
+                      </label>
                       <Select
-                        options={calenderTemplates}
-                        defaultValue={calenderTemplateID}
-                        value={calenderTemplateID}
-                        placeholder='Select Calendar Template'
-                        onChange={(id) => setCalenderTemplateID(id)}
+                        options={countries}
+                        value={countryID}
+                        placeholder='Search & Select Country (required)'
+                        onChange={(id) => setCountryID(id)}
                       />
                     </div>
                     <div className='col-12'>
                       <div className='form-input'>
                         <input
-                          onChange={(e) => setName(e.target.value)}
-                          value={name}
+                          onChange={(e) => setConsulateCity(e.target.value)}
+                          value={consulateCity}
                           placeholder=' '
                           type='text'
-                          required
                         />
                         <label className='lh-1 text-16 text-light-1'>
-                          Name<span className='text-danger'>*</span>
+                          Consulate City
                         </label>
                       </div>
                     </div>
                     <div className='col-12'>
                       <div className='form-input'>
                         <input
-                          onChange={(e) => setCode(e.target.value)}
-                          value={code}
+                          onChange={(e) => setPhotoCount(e.target.value)}
+                          value={photoCount}
                           placeholder=' '
                           type='text'
                         />
-                        <label className='lh-1 text-16 text-light-1'>Code</label>
+                        <label className='lh-1 text-16 text-light-1'>Photo Count</label>
                       </div>
                     </div>
                     <div className='col-12'>
                       <div className='form-input'>
                         <input
-                          onChange={(e) => setContactName(e.target.value)}
-                          value={contactName}
+                          onChange={(e) => setPhotoDimension(e.target.value)}
+                          value={photoDimension}
                           placeholder=' '
                           type='text'
                         />
-                        <label className='lh-1 text-16 text-light-1'>Contact Name</label>
+                        <label className='lh-1 text-16 text-light-1'>
+                          Photo Dimensions
+                        </label>
                       </div>
                     </div>
                     <div className='col-12'>
                       <div className='form-input'>
                         <input
-                          onChange={(e) => setContactEmail(e.target.value)}
-                          value={contactEmail}
-                          placeholder=' '
-                          type='email'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>Contact Email</label>
-                      </div>
-                    </div>
-                    <div className='col-12'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setAddress(e.target.value)}
-                          value={address}
+                          onChange={(e) => setPhotoSpecifications(e.target.value)}
+                          value={photoSpecifications}
                           placeholder=' '
                           type='text'
                         />
-                        <label className='lh-1 text-16 text-light-1'>Address</label>
+                        <label className='lh-1 text-16 text-light-1'>
+                          Photo Specifications
+                        </label>
                       </div>
+                    </div>
+                    {/* Photo Sample Upload */}
+                    <div className='col-lg-6'>
+                      <label>Photo Sample</label>
+                      <div
+                        className='custom-file-container'
+                        data-upload-id='visa-requirements-add-new-photo-sample'
+                      ></div>
                     </div>
                     <div className='col-12'>
                       <div className='form-input'>
                         <input
-                          onChange={(e) => setGstn(e.target.value)}
-                          value={gstn}
+                          onChange={(e) => setProcessingTime(e.target.value)}
+                          value={processingTime}
                           placeholder=' '
                           type='text'
                         />
-                        <label className='lh-1 text-16 text-light-1'>GSTN</label>
+                        <label className='lh-1 text-16 text-light-1'>
+                          Processing Time
+                        </label>
                       </div>
                     </div>
                     <div className='col-12'>
                       <div className='form-input'>
                         <input
-                          onChange={(e) => setFarePercent(e.target.value)}
-                          value={farePercent}
+                          onChange={(e) => setConsulateDetails(e.target.value)}
+                          value={consulateDetails}
                           placeholder=' '
-                          type='number'
+                          type='text'
                         />
-                        <label className='lh-1 text-16 text-light-1'>Fare Percent</label>
+                        <label className='lh-1 text-16 text-light-1'>
+                          Consulate Details
+                        </label>
                       </div>
                     </div>
-                    <div className='row'>
-                      <label className='col-lg-2 col-9'>Use GSTN</label>
-                      <ReactSwitch
-                        className='col-lg-auto col-1'
-                        onChange={() => setUseGstn((prev) => !prev)}
-                        checked={useGstn}
+                    <div className='col-12'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setAdditionalNotes(e.target.value)}
+                          value={additionalNotes}
+                          placeholder=' '
+                          type='text'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Additional Notes
+                        </label>
+                      </div>
+                    </div>
+                    <div className='col-12'>
+                      <label>
+                        Personal Documents Required
+                        <span className='text-danger'>*</span>
+                      </label>
+                      <Select
+                        options={requiredVisaDocs.filter(
+                          (element) => element?.category === 'Personal'
+                        )}
+                        value={personalDocsReqs}
+                        isMulti
+                        placeholder='Search & Select Personal Documents (required)'
+                        onChange={(values) => setPersonalDocsReqs(values)}
                       />
                     </div>
-                    <div className='row'>
-                      <label className='col-lg-2 col-9'>Is Client</label>
-                      <ReactSwitch
-                        className='col-lg-auto col-1'
-                        onChange={() => setIsClient((prev) => !prev)}
-                        checked={isClient}
+                    <div className='col-12'>
+                      <label>
+                        Financial Documents Required
+                        <span className='text-danger'>*</span>
+                      </label>
+                      <Select
+                        options={requiredVisaDocs.filter(
+                          (element) => element?.category === 'Financial'
+                        )}
+                        value={financialDocsReqs}
+                        isMulti
+                        placeholder='Search & Select Financial Documents (required)'
+                        onChange={(values) => setFinancialDocsReqs(values)}
                       />
                     </div>
-                    <div className='row'>
-                      <label className='col-lg-2 col-9'>Is Vendor</label>
-                      <ReactSwitch
-                        className='col-lg-auto col-1'
-                        onChange={() => setIsVendor((prev) => !prev)}
-                        checked={isVendor}
+                    <div className='col-12'>
+                      <label>
+                        Supporting Documents Required
+                        <span className='text-danger'>*</span>
+                      </label>
+                      <Select
+                        options={requiredVisaDocs.filter(
+                          (element) => element?.category === 'Support'
+                        )}
+                        value={supportingDocsReqs}
+                        isMulti
+                        placeholder='Search & Select Supporting Documents (required)'
+                        onChange={(values) => setSupportingDocsReqs(values)}
                       />
                     </div>
-                    <div className='row'>
-                      <label className='col-lg-2 col-9'>Is Hotel</label>
-                      <ReactSwitch
-                        className='col-lg-auto col-1'
-                        onChange={() => setIsHotel((prev) => !prev)}
-                        checked={isHotel}
-                      />
-                    </div>
-                    <div className='row'>
-                      <label className='col-lg-2 col-9'>Is Airline</label>
-                      <ReactSwitch
-                        className='col-lg-auto col-1'
-                        onChange={() => setIsAirline((prev) => !prev)}
-                        checked={isAirline}
-                      />
+                    {/* Visa Form Upload */}
+                    <div className='col-lg-6'>
+                      <label>
+                        Visa Forms<span className='text-danger'>*</span>
+                      </label>
+                      <div
+                        className='custom-file-container'
+                        data-upload-id='visa-requirements-add-new-visa-forms'
+                      ></div>
                     </div>
                     <div className='d-inline-block'>
                       <button
                         type='submit'
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
                       >
-                        Create Organization
+                        Add Visa Requirement
                       </button>
                     </div>
                   </form>
@@ -325,4 +438,4 @@ const DuplicateOrganization = () => {
   );
 };
 
-export default DuplicateOrganization;
+export default AddNewVisaRequirements;

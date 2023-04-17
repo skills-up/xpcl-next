@@ -179,6 +179,7 @@ const UpdateAirports = () => {
                       </div>
                     </div>
                     <div>
+                      <label>Timezone</label>
                       <TimezoneSelect
                         defaultValue={timezone}
                         value={timezone}

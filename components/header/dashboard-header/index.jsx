@@ -40,7 +40,7 @@ const HeaderDashBoard = () => {
   }, []);
 
   const getOrganizations = async () => {
-    const response = await getList('organizations');
+    const response = await getList('organizations', { isClient: 1 });
     if (response?.success) {
       setOrganizations(
         response.data.map((element) => ({ value: element.id, label: element.name }))
@@ -133,6 +133,7 @@ const HeaderDashBoard = () => {
                           dispatch(
                             setCurrentOrganization({ currentOrganization: id.value })
                           );
+                          window.location.reload();
                         } else {
                           sendToast(
                             'error',

@@ -101,6 +101,7 @@ const UpdateFrequentFlierProgram = () => {
                           value={code}
                           placeholder=' '
                           type='text'
+                          maxLength={2}
                           required
                         />
                         <label className='lh-1 text-16 text-light-1'>

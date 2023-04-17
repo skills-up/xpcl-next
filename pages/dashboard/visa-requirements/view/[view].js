@@ -115,7 +115,7 @@ const ViewVisaRequirements = () => {
                   />
                 )}
                 <ViewTable
-                  data={ViewVisaRequirements}
+                  data={visaRequirements}
                   onEdit={() =>
                     router.push('/dashboard/visa-requirements/edit/' + router.query.view)
                   }

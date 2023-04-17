@@ -28,7 +28,7 @@ const AirlineOrganizationMarkup = () => {
         'error',
         response?.data?.message ||
           response?.data?.error ||
-          'Error getting airline organization markup',
+          'Error getting airline markup',
         4000
       );
     }
@@ -130,7 +130,7 @@ const AirlineOrganizationMarkup = () => {
         'error',
         response.data?.message ||
           response.data?.error ||
-          'Unexpected Error Occurred While Trying to Delete this Airline Organization Markup',
+          'Unexpected Error Occurred While Trying to Delete this Airline Markup',
         4000
       );
     }
@@ -143,8 +143,8 @@ const AirlineOrganizationMarkup = () => {
         <ConfirmationModal
           onCancel={onCancel}
           onSubmit={onSubmit}
-          title='Do you really want to delete this airline organization markup?'
-          content='This will permanently delete the airline organization markup. Press OK to confirm.'
+          title='Do you really want to delete this airline markup?'
+          content='This will permanently delete the airline markup. Press OK to confirm.'
         />
       )}
       {/* Search Bar + Add New */}
