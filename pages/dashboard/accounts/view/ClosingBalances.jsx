@@ -65,53 +65,6 @@ const ClosingBalances = () => {
         );
       },
     },
-    {
-      Header: 'Actions',
-      disableSortBy: true,
-      // cell: () => <Button variant="danger" data-tag="allowRowEvents" data-action="delete"><FontAwesomeIcon icon={faTrash} /></Button>,
-      Cell: (data) => {
-        return (
-          <div className='flex flex-start'>
-            <ActionsButton
-              options={[
-                {
-                  label: 'View',
-                  onClick: () =>
-                    window.location.assign(
-                      '/dashboard/accounts/closing-balances/view/' + data.row.original.id
-                    ),
-                  icon: <AiOutlineEye />,
-                },
-                {
-                  label: 'Edit',
-                  onClick: () =>
-                    window.location.assign(
-                      '/dashboard/accounts/closing-balances/edit/' + data.row.original.id
-                    ),
-                  icon: <HiOutlinePencilAlt />,
-                },
-                {
-                  label: 'Clone',
-                  onClick: () =>
-                    window.location.assign(
-                      '/dashboard/accounts/closing-balances/clone/' + data.row.original.id
-                    ),
-                  icon: <IoCopyOutline />,
-                },
-                {
-                  label: 'Delete',
-                  onClick: () => {
-                    setIdToDelete(data.row.original.id);
-                    setConfirmDelete(true);
-                  },
-                  icon: <BsTrash3 />,
-                },
-              ]}
-            />
-          </div>
-        );
-      },
-    },
   ];
 
   const onCancel = async () => {
@@ -145,29 +98,7 @@ const ClosingBalances = () => {
           content='This will permanently delete the closing balance. Press OK to confirm.'
         />
       )}
-      {/* Search Bar + Add New */}
-      <div className='row mb-3 items-center justify-between mr-4'>
-        <div className='col-lg-10 col-7'>
-          <input
-            type='text'
-            className='d-block form-control'
-            placeholder='Search'
-            onChange={(e) => setSearchQuery(e.target.value)}
-            value={searchQuery}
-          />
-        </div>
-        <button
-          className='btn btn-primary col-lg-2 col-5'
-          onClick={() =>
-            router.push({
-              pathname: '/dashboard/accounts/closing-balances/add-new',
-              query: { account_id: router.query.view },
-            })
-          }
-        >
-          Add New
-        </button>
-      </div>
+
       {/* Data Table */}
       <Datatable
         downloadCSV

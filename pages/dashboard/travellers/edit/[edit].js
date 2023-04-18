@@ -224,7 +224,7 @@ const AddNewTravellers = () => {
             'Unable to fetch required data',
           4000
         );
-        router.push('/dashboard/visa-requirements');
+        router.push('/dashboard/travellers');
       }
     }
   };
