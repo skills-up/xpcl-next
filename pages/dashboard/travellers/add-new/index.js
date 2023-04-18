@@ -541,7 +541,7 @@ const AddNewTravellers = () => {
                     </div>
                     {/* Pan Card Scan File Upload */}
                     <div className='col-lg-12'>
-                      <label>Pan Card Scan File</label>
+                      <label>PAN Card Scan File</label>
                       <div
                         className='custom-file-container col-lg-6'
                         data-upload-id='travellers-add-new-pancard'
