@@ -87,7 +87,7 @@ const AddNewTravelInsurance = () => {
     formData.append('traveller_id', parseInt(router.query.traveller_id));
     formData.append('policy_number', policyNumber);
     formData.append('issue_date', issueDate.format('YYYY-MM-DD'));
-    formData.append('expiry_date', issueDate.format('YYYY-MM-DD'));
+    formData.append('expiry_date', expiryDate.format('YYYY-MM-DD'));
     formData.append('insurance_type', insuranceType?.value || '');
     formData.append('nominee_name', nomineeName);
     for (let file of documentFiles?.cachedFileArray) {

@@ -1,34 +1,30 @@
-import Seo from '../../../../components/common/Seo';
-import Footer from '../../../../components/footer/dashboard-footer';
-import Header from '../../../../components/header/dashboard-header';
-import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
-import ConfirmationModal from '../../../../components/confirm-modal';
+import Seo from '../../../../../components/common/Seo';
+import Footer from '../../../../../components/footer/dashboard-footer';
+import Header from '../../../../../components/header/dashboard-header';
+import Sidebar from '../../../../../components/sidebars/dashboard-sidebars';
+import ConfirmationModal from '../../../../../components/confirm-modal';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { sendToast } from '../../../../utils/toastify';
+import { sendToast } from '../../../../../utils/toastify';
 import { useEffect, useState } from 'react';
-import { deleteItem, getItem } from '../../../../api/xplorzApi';
-import ViewTable from '../../../../components/view-table';
-import TravelMemberships from './TravelMembership';
-import CreditCards from './CreditCard';
-import TravelInsurances from './TravelInsurance';
-import TravelVisas from './TravelVisas';
+import { deleteItem, getItem } from '../../../../../api/xplorzApi';
+import ViewTable from '../../../../../components/view-table';
 
-const ViewTravellers = () => {
-  const [travellers, setTravellers] = useState([]);
+const ViewTravelVisas = () => {
+  const [travelVisa, setTravelVisa] = useState([]);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
   useEffect(() => {
-    // Getting particular travellers
-    getTravellers();
+    // Getting particular organization
+    getTravelVisa();
   }, [router.isReady]);
 
-  const getTravellers = async () => {
+  const getTravelVisa = async () => {
     if (router.query.view) {
-      const response = await getItem('travellers', router.query.view);
+      const response = await getItem('travel-visas', router.query.view);
       if (response?.success) {
         let data = response.data;
         // Converting time columns
@@ -44,15 +40,15 @@ const ViewTravellers = () => {
             timeStyle: 'short',
           });
         }
-        setTravellers(data);
+        setTravelVisa(data);
       } else {
         sendToast(
           'error',
           response.data?.message ||
             response.data?.error ||
-            'Could Not Fetch The Requested Traveller.'
+            'Could Not Fetch The Requested Travel Visa.'
         );
-        router.push('/dashboard/travellers');
+        router.push('/dashboard/travellers/view/' + router.query.traveller_id);
       }
     }
   };
@@ -62,16 +58,16 @@ const ViewTravellers = () => {
     setIdToDelete(-1);
   };
   const onSubmit = async () => {
-    const response = await deleteItem('travellers', idToDelete);
+    const response = await deleteItem('travel-visas', idToDelete);
     if (response?.success) {
       sendToast('success', 'Deleted successfully', 4000);
-      router.push('/dashboard/travellers');
+      router.push('/dashboard/travellers/view/' + router.query.traveller_id);
     } else {
       sendToast(
         'error',
         response.data?.message ||
           response.data?.error ||
-          'Unexpected Error Occurred While Trying to Delete this Traveller',
+          'Unexpected Error Occurred While Trying to Delete this Travel Visa',
         4000
       );
     }
@@ -80,7 +76,7 @@ const ViewTravellers = () => {
 
   return (
     <>
-      <Seo pageTitle='Traveller' />
+      <Seo pageTitle='View Travel Visa' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -100,9 +96,9 @@ const ViewTravellers = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Traveller</h1>
+                  <h1 className='text-30 lh-14 fw-600'>View Travel Visa</h1>
                   <div className='text-15 text-light-1'>
-                    Get extended details of a traveller.
+                    Get extended details of a travel visa.
                   </div>
                 </div>
                 {/* End .col-12 */}
@@ -114,40 +110,26 @@ const ViewTravellers = () => {
                   <ConfirmationModal
                     onCancel={onCancel}
                     onSubmit={onSubmit}
-                    title='Do you really want to delete this traveller?'
-                    content='This will permanently delete the traveller. Press OK to confirm.'
+                    title='Do you really want to delete this travel visa?'
+                    content='This will permanently delete the travel visa. Press OK to confirm.'
                   />
                 )}
                 <ViewTable
-                  data={travellers}
+                  data={travelVisa}
                   onEdit={() =>
-                    router.push('/dashboard/travellers/edit/' + router.query.view)
+                    router.push({
+                      pathname: '/dashboard/travellers/travel-visas/edit',
+                      query: {
+                        traveller_id: router.query.traveller_id,
+                        edit: router.query.view,
+                      },
+                    })
                   }
                   onDelete={() => {
                     setIdToDelete(router.query.view);
                     setConfirmDelete(true);
                   }}
                 />
-                <hr className='my-4' />
-                <div>
-                  <h2 className='mb-3'>Travel Visas</h2>
-                  <TravelVisas />
-                </div>
-                <hr className='my-4' />
-                <div>
-                  <h2 className='mb-3'>Travel Insurances</h2>
-                  <TravelInsurances />
-                </div>
-                <hr className='my-4' />
-                <div>
-                  <h2 className='mb-3'>Travel Memberships</h2>
-                  <TravelMemberships />
-                </div>
-                <hr className='my-4' />
-                <div>
-                  <h2 className='mb-3'>Credit Cards</h2>
-                  <CreditCards />
-                </div>
               </div>
             </div>
 
@@ -162,4 +144,4 @@ const ViewTravellers = () => {
   );
 };
 
-export default ViewTravellers;
+export default ViewTravelVisas;

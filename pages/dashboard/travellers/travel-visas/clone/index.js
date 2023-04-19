@@ -12,19 +12,20 @@ import Select from 'react-select';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 import { FileUploadWithPreview } from 'file-upload-with-preview';
 import 'file-upload-with-preview/dist/style.css';
-import PreviousUploadPictures from '../../../../../components/previous-file-uploads';
 
-const UpdateTravelInsurance = () => {
-  const [policyNumber, setPolicyNumber] = useState('');
+const AddNewTravelVisa = () => {
+  const [countries, setCountries] = useState([]);
+  const [countryID, setCountryID] = useState(null);
+  const [visaNumber, setVisaNumber] = useState('');
+  const [issuePlace, setIssuePlace] = useState('');
   const [issueDate, setIssueDate] = useState(new DateObject());
   const [expiryDate, setExpiryDate] = useState(new DateObject());
-  const [insuranceType, setInsuranceType] = useState(null);
-  const [nomineeName, setNomineeName] = useState('');
-  const [documentFiles, setDocumentFiles] = useState([]);
-  const [previousDocuments, setPreviousDocuments] = useState([]);
+  const [entries, setEntries] = useState(null);
+  const [visaFiles, setVisaFiles] = useState([]);
   const options = [
-    { value: 'Single Trip', label: 'Single Trip' },
-    { value: 'Annual Multi-Trip', label: 'Annual Multi-Trip' },
+    { value: 'Single', label: 'Single' },
+    { value: 'Double', label: 'Double' },
+    { value: 'Multiple', label: 'Multiple' },
   ];
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -34,7 +35,7 @@ const UpdateTravelInsurance = () => {
       if (!router.query.traveller_id) {
         router.push('/dashboard/travellers');
       }
-      setDocumentFiles(
+      setVisaFiles(
         new FileUploadWithPreview('travellers-add-new-documents', {
           multiple: true,
           accept: '.pdf, .png, .jpg',
@@ -50,11 +51,12 @@ const UpdateTravelInsurance = () => {
   }, [router.isReady]);
 
   const getData = async () => {
-    if (router.query.edit) {
-      const response = await getItem('travel-insurances', router.query.edit);
+    if (router.query.clone) {
+      const response = await getItem('travel-visas', router.query.clone);
       if (response?.success) {
         // Setting previous values
-        setPolicyNumber(response.data?.policy_number || '');
+        setVisaNumber(response.data?.visa_number || '');
+        setIssuePlace(response.data?.issue_place || '');
         setIssueDate(
           response.data?.issue_date
             ? new DateObject({ date: response.data?.issue_date, format: 'YYYY-MM-DD' })
@@ -65,12 +67,24 @@ const UpdateTravelInsurance = () => {
             ? new DateObject({ date: response.data?.expiry_date, format: 'YYYY-MM-DD' })
             : new DateObject()
         );
-        setNomineeName(response.data?.nominee_name || '');
-        setPreviousDocuments(response.data?.documents || []);
 
         // Setting Passport Gender
         for (let opt of options)
-          if (opt.value === response.data?.insurance_type) setInsuranceType(opt);
+          if (opt.value === response.data?.entries) setEntries(opt);
+
+        const countries = await getList('countries');
+        if (countries?.success) {
+          setCountries(
+            countries.data.map((element) => ({ value: element.id, label: element.name }))
+          );
+          // Setting Country
+          for (let country of countries.data)
+            if (country.id === response.data?.country_id)
+              setCountryID({ value: country.id, label: country.name });
+        } else {
+          sendToast('error', 'Error fetching countries', 4000);
+          router.push('/dashboard/travellers/view/' + router.query.traveller_id);
+        }
       } else {
         sendToast(
           'error',
@@ -86,38 +100,39 @@ const UpdateTravelInsurance = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append('traveller_id', parseInt(router.query.traveller_id));
-    formData.append('policy_number', policyNumber);
-    formData.append('issue_date', issueDate.format('YYYY-MM-DD'));
-    formData.append('expiry_date', expiryDate.format('YYYY-MM-DD'));
-    formData.append('insurance_type', insuranceType?.value || '');
-    formData.append('nominee_name', nomineeName);
-    for (let prev of previousDocuments) {
-      formData.append('documents[]', prev);
-    }
-    for (let file of documentFiles?.cachedFileArray) {
-      formData.append('document_files[]', file);
-    }
-    formData.append('_method', 'PUT');
-    const response = await createItem('travel-insurances/' + router.query.edit, formData);
-    if (response?.success) {
-      sendToast('success', 'Updated Travel Insurance Successfully.', 4000);
-      router.push('/dashboard/travellers/view/' + router.query.traveller_id);
+    if (countryID?.value) {
+      const formData = new FormData();
+      formData.append('traveller_id', parseInt(router.query.traveller_id));
+      formData.append('country_id', countryID.value);
+      formData.append('visa_number', visaNumber);
+      formData.append('issue_place', issuePlace);
+      formData.append('issue_date', issueDate.format('YYYY-MM-DD'));
+      formData.append('expiry_date', expiryDate.format('YYYY-MM-DD'));
+      formData.append('entries', entries?.value || '');
+      for (let file of visaFiles?.cachedFileArray) {
+        formData.append('visa_scan_files[]', file);
+      }
+      const response = await createItem('travel-visas', formData);
+      if (response?.success) {
+        sendToast('success', 'Created Travel Visa Successfully.', 4000);
+        router.push('/dashboard/travellers/view/' + router.query.traveller_id);
+      } else {
+        sendToast(
+          'error',
+          response.data?.message ||
+            response.data?.error ||
+            'Failed to Create Travel Visa.',
+          4000
+        );
+      }
     } else {
-      sendToast(
-        'error',
-        response.data?.message ||
-          response.data?.error ||
-          'Failed to Update Travel Insurance.',
-        4000
-      );
+      sendToast('error', 'Country is required', 4000);
     }
   };
 
   return (
     <>
-      <Seo pageTitle='Update Travel Insurance' />
+      <Seo pageTitle='Add New Travel Visa' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -137,10 +152,8 @@ const UpdateTravelInsurance = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Update Travel Insurance</h1>
-                  <div className='text-15 text-light-1'>
-                    Update an existing travel insurance.
-                  </div>
+                  <h1 className='text-30 lh-14 fw-600'>Add New Travel Visa</h1>
+                  <div className='text-15 text-light-1'>Create a new travel visa.</div>
                 </div>
                 {/* End .col-12 */}
               </div>
@@ -149,17 +162,42 @@ const UpdateTravelInsurance = () => {
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
+                    <div>
+                      <label>
+                        Country<span className='text-danger'>*</span>
+                      </label>
+                      <Select
+                        options={countries}
+                        value={countryID}
+                        placeholder='Search & Select Country (required)'
+                        onChange={(id) => setCountryID(id)}
+                      />
+                    </div>
                     <div className='col-12'>
                       <div className='form-input'>
                         <input
-                          onChange={(e) => setPolicyNumber(e.target.value)}
-                          value={policyNumber}
+                          onChange={(e) => setVisaNumber(e.target.value)}
+                          value={visaNumber}
                           placeholder=' '
                           type='text'
                           required
                         />
                         <label className='lh-1 text-16 text-light-1'>
-                          Policy Number<span className='text-danger'>*</span>
+                          Visa Number<span className='text-danger'>*</span>
+                        </label>
+                      </div>
+                    </div>
+                    <div className='col-12'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setIssuePlace(e.target.value)}
+                          value={issuePlace}
+                          placeholder=' '
+                          type='text'
+                          required
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Issue Place<span className='text-danger'>*</span>
                         </label>
                       </div>
                     </div>
@@ -194,43 +232,17 @@ const UpdateTravelInsurance = () => {
                       />
                     </div>
                     <div>
-                      <label>Insurance Type</label>
+                      <label>Entries</label>
                       <Select
                         options={options}
-                        value={insuranceType}
-                        placeholder='Search & Select Insurance Type'
-                        onChange={(id) => setInsuranceType(id)}
+                        value={entries}
+                        placeholder='Search & Select Entries'
+                        onChange={(id) => setEntries(id)}
                       />
                     </div>
-                    <div className='col-12'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setNomineeName(e.target.value)}
-                          value={nomineeName}
-                          placeholder=' '
-                          type='text'
-                          required
-                        />
-                        <label className='lh-1 text-16 text-light-1'>Nominee Name</label>
-                      </div>
-                    </div>
-                    {/* Document Files */}
-                    {previousDocuments?.length > 0 && (
-                      <div>
-                        <label>Previous Documents</label>
-                        <PreviousUploadPictures
-                          data={previousDocuments}
-                          onDeleteClick={() => {
-                            setPreviousDocuments((prev, index) => {
-                              prev.splice(index, 1);
-                              return [...prev];
-                            });
-                          }}
-                        />
-                      </div>
-                    )}
+                    {/* Visa Scan Files */}
                     <div className='col-lg-6'>
-                      <label>Document Files</label>
+                      <label>Visa Scan Files</label>
                       <div
                         className='custom-file-container'
                         data-upload-id='travellers-add-new-documents'
@@ -241,7 +253,7 @@ const UpdateTravelInsurance = () => {
                         type='submit'
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
                       >
-                        Update Travel Insurance
+                        Add Travel Visa
                       </button>
                     </div>
                   </form>
@@ -260,4 +272,4 @@ const UpdateTravelInsurance = () => {
   );
 };
 
-export default UpdateTravelInsurance;
+export default AddNewTravelVisa;
