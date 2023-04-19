@@ -45,7 +45,7 @@ const UpdateCreditCard = () => {
           'credit-cards',
           router.query.edit + '/show-number'
         );
-        if (original?.success) setNumber(parseInt(original.data?.number));
+        if (original?.success) setNumber(parseInt(atob(original.data?.number)));
       } else {
         sendToast(
           'error',
