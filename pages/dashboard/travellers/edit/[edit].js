@@ -181,7 +181,7 @@ const UpdateTravellers = () => {
         setPreviousVaccinationCertificate(response.data?.vaccination_certificate || '');
         setPreviousPanCardScan(response.data?.pan_card_scan || '');
         setPreviousAadhaarCardScan(response.data?.aadhaar_card_scan || '');
-        setPreviousPassportScanFiles(response.data?.passport_scans || '');
+        setPreviousPassportScanFiles(response.data?.passport_scans || []);
         // Setting Passport Gender
         for (let gender of passportGenderOptions)
           if (gender.value === response.data?.passport_gender) setPassportGender(gender);
@@ -302,12 +302,8 @@ const UpdateTravellers = () => {
       passportFormData.append('vaccination_dates[]', date.format('YYYY-MM-DD'));
     for (let file of passportScanFiles?.cachedFileArray)
       passportFormData.append('passport_scan_files[]', file);
-    if (previousPassportScanFiles === '' || !previousPassportScanFiles) {
-      passportFormData.append('passport_scans[]', null);
-    } else {
-      for (let file of previousPassportScanFiles) {
-        passportFormData.append('passport_scans[]', file);
-      }
+    for (let file of previousPassportScanFiles) {
+      passportFormData.append('passport_scans[]', file);
     }
     passportFormData.append('_method', 'PUT');
     const response = await createItem(
@@ -782,7 +778,7 @@ const UpdateTravellers = () => {
                       />
                     </div>
                     {/* Passport Scan Files Upload */}
-                    {previousPassportScanFiles && (
+                    {previousPassportScanFiles?.length > 0 && (
                       <div>
                         <label>Previous Passport Scans</label>
                         <PreviousUploadPictures
