@@ -199,9 +199,9 @@ const UpdateVisaRequirements = () => {
         for (let visaForm of visaFormFiles.cachedFileArray)
           visaFormData.append('visa_form_files[]', visaForm);
 
-        const response = await updateItem(
-          'visa-requirements',
-          router.query.edit,
+        visaFormData.append('_method', 'PUT');
+        const response = await createItem(
+          'visa-requirements/'+router.query.edit,
           visaFormData
         );
         if (response?.success) {
