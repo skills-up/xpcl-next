@@ -154,19 +154,22 @@ const AddNewTravellers = () => {
     passportFormData.append('mobile_phone', mobilePhone);
     passportFormData.append('email_address', email);
     passportFormData.append('domestic_airline_preference', domesticAirlinePreference);
-    passportFormData.append('domestic_cabin_preference', domesticCabinPreference?.value);
+    passportFormData.append(
+      'domestic_cabin_preference',
+      domesticCabinPreference?.value || ''
+    );
     passportFormData.append(
       'international_airline_preference',
       internationalAirlinePreference
     );
     passportFormData.append(
       'international_cabin_preference',
-      internationalCabinPreference?.value
+      internationalCabinPreference?.value || ''
     );
-    passportFormData.append('meal_preference', mealPreference?.value);
-    passportFormData.append('seat_preference', seatPreference?.value);
-    passportFormData.append('cabin_position', cabinPosition?.value);
-    passportFormData.append('fare_preference', farePreference?.value);
+    passportFormData.append('meal_preference', mealPreference?.value || '');
+    passportFormData.append('seat_preference', seatPreference?.value || '');
+    passportFormData.append('cabin_position', cabinPosition?.value || '');
+    passportFormData.append('fare_preference', farePreference?.value || '');
     passportFormData.append('address', address);
     passportFormData.append('meal_notes', mealNotes);
     passportFormData.append('seat_notes', seatNotes);
@@ -174,12 +177,15 @@ const AddNewTravellers = () => {
     passportFormData.append('aadhaar_number', aadhaarNumber);
     passportFormData.append(
       'vaccination_certificate_file',
-      vaccinationCertificateFile?.cachedFileArray[0]
+      vaccinationCertificateFile?.cachedFileArray[0] || ''
     );
-    passportFormData.append('pan_card_scan_file', panCardScanFile?.cachedFileArray[0]);
+    passportFormData.append(
+      'pan_card_scan_file',
+      panCardScanFile?.cachedFileArray[0] || ''
+    );
     passportFormData.append(
       'aadhaar_card_scan_file',
-      aadhaarCardScanFile?.cachedFileArray[0]
+      aadhaarCardScanFile?.cachedFileArray[0] || ''
     );
     for (let alias of aliases) passportFormData.append('aliases[]', alias?.value);
     for (let date of vaccinationDates)
