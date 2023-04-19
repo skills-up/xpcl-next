@@ -27,7 +27,7 @@ const AddNewTravellers = () => {
   const [passportIssueDate, setPassportIssueDate] = useState(new DateObject());
   const [passportExpiryDate, setPassportExpiryDate] = useState(new DateObject());
   const [passportIssuePlace, setPassportIssuePlace] = useState('');
-  const [mobilePhone, setMobilePhone] = useState(0);
+  const [mobilePhone, setMobilePhone] = useState('');
   const [email, setEmail] = useState('');
   const [domesticAirlinePreference, setDomesticAirlinePreference] = useState('');
   const [domesticCabinPreference, setDomesticCabinPreference] = useState(null);
@@ -140,7 +140,7 @@ const AddNewTravellers = () => {
     passportFormData.append('last_name', lastName);
     passportFormData.append('passport_name', passportName);
     passportFormData.append('passport_number', passportNumber);
-    passportFormData.append('passport_gender', passportGender?.value);
+    passportFormData.append('passport_gender', passportGender?.value || '');
     passportFormData.append('passport_dob', passportDOB.format('YYYY-MM-DD'));
     passportFormData.append(
       'passport_issue_date',
@@ -187,7 +187,15 @@ const AddNewTravellers = () => {
       'aadhaar_card_scan_file',
       aadhaarCardScanFile?.cachedFileArray[0] || ''
     );
-    for (let alias of aliases) passportFormData.append('aliases[]', alias?.value);
+    // Aliases
+    if (aliases.length === 1 && aliases[0].value.trim().length === 0) {
+      passportFormData.append(
+        'aliases[]',
+        `${firstName} ${middleName.trim().length > 0 ? middleName + ' ' : ''}${lastName}`
+      );
+    } else {
+      for (let alias of aliases) passportFormData.append('aliases[]', alias?.value);
+    }
     for (let date of vaccinationDates)
       passportFormData.append('vaccination_dates[]', date.format('YYYY-MM-DD'));
     for (let file of passportScanFiles?.cachedFileArray)
