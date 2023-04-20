@@ -1360,12 +1360,12 @@ table.table-3 {
 
   th {
     font-weight: 500;
-    padding: 20px 30px;
+    padding: 12px;
     line-height: 1.2;
     min-width: 130px;
 
     @include media-below(xl) {
-      padding: 15px 15px;
+      /* padding: 15px 15px; */
       min-width: 100px;
     }
 
@@ -1388,14 +1388,14 @@ table.table-3 {
   }
 
   td {
-    padding: 15px 30px;
+    padding: 6px 12px;
     font-size: 15px;
     line-height: 1.2;
     min-width: 130px;
 
-    @include media-below(xl) {
+    /* @include media-below(xl) {
       padding: 15px 15px;
-    }
+    } */
   }
 
   &.-border-bottom {
