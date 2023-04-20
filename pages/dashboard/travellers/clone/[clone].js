@@ -9,11 +9,10 @@ import { useEffect, useState } from 'react';
 import { createItem, getItem, getList } from '../../../../api/xplorzApi';
 import ReactSwitch from 'react-switch';
 import Select from 'react-select';
-import { FileUploadWithPreview } from 'file-upload-with-preview';
-import 'file-upload-with-preview/dist/style.css';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { BsTrash3 } from 'react-icons/bs';
+import NewFileUploads from '../../../../components/new-file-uploads';
 
 const AddNewTravellers = () => {
   const [prefix, setPrefix] = useState('');
@@ -48,7 +47,7 @@ const AddNewTravellers = () => {
   const [aadhaarCardScanFile, setAadhaarCardScanFile] = useState(null);
   const [aliases, setAliases] = useState([{ value: '' }]);
   const [vaccinationDates, setVaccinationDates] = useState([new DateObject()]);
-  const [passportScanFiles, setPassportScanFiles] = useState(null);
+  const [passportScanFiles, setPassportScanFiles] = useState([]);
 
   // Options
   const passportGenderOptions = [
@@ -86,50 +85,6 @@ const AddNewTravellers = () => {
 
   useEffect(() => {
     if (router.isReady) {
-      setVaccinationCertificateFile(
-        new FileUploadWithPreview('travellers-add-new-vaccination', {
-          multiple: false,
-          accept: '.pdf',
-          text: {
-            browse: 'Browse',
-            chooseFile: '',
-            label: 'Choose File to Upload',
-          },
-        })
-      );
-      setPanCardScanFile(
-        new FileUploadWithPreview('travellers-add-new-pancard', {
-          multiple: false,
-          accept: '.jpg, .png, .pdf',
-          text: {
-            browse: 'Browse',
-            chooseFile: '',
-            label: 'Choose File to Upload',
-          },
-        })
-      );
-      setAadhaarCardScanFile(
-        new FileUploadWithPreview('travellers-add-new-aadhaar', {
-          multiple: false,
-          accept: '.jpg, .png, .pdf',
-          text: {
-            browse: 'Browse',
-            chooseFile: '',
-            label: 'Choose File to Upload',
-          },
-        })
-      );
-      setPassportScanFiles(
-        new FileUploadWithPreview('travellers-add-new-passport', {
-          multiple: true,
-          accept: '.jpg, .png, .jpeg, .pdf',
-          text: {
-            browse: 'Browse',
-            chooseFile: '',
-            label: 'Choose Files to Upload',
-          },
-        })
-      );
       getData();
     }
   }, [router.isReady]);
@@ -139,12 +94,12 @@ const AddNewTravellers = () => {
       const response = await getItem('travellers', router.query.clone);
       if (response?.success) {
         // Setting previous values
-        setPrefix(response.data?.prefix || '');
-        setFirstName(response.data?.first_name || '');
-        setMiddleName(response.data?.middle_name || '');
-        setLastName(response.data?.last_name || '');
-        setPassportName(response.data?.passport_name || '');
-        setPassportNumber(response.data?.passport_number || '');
+        setPrefix(response.data?.prefix ?? '');
+        setFirstName(response.data?.first_name ?? '');
+        setMiddleName(response.data?.middle_name ?? '');
+        setLastName(response.data?.last_name ?? '');
+        setPassportName(response.data?.passport_name ?? '');
+        setPassportNumber(response.data?.passport_number ?? '');
         setPassportDOB(
           new DateObject({ date: response.data?.passport_dob, format: 'YYYY-MM-DD' })
         );
@@ -160,18 +115,18 @@ const AddNewTravellers = () => {
             format: 'YYYY-MM-DD',
           })
         );
-        setPassportIssuePlace(response.data?.passport_issue_place || '');
-        setMobilePhone(response.data?.mobile_phone || '');
-        setEmail(response.data?.email_address || '');
-        setDomesticAirlinePreference(response.data?.domestic_airline_preference || '');
+        setPassportIssuePlace(response.data?.passport_issue_place ?? '');
+        setMobilePhone(response.data?.mobile_phone ?? '');
+        setEmail(response.data?.email_address ?? '');
+        setDomesticAirlinePreference(response.data?.domestic_airline_preference ?? '');
         setInternationalAirlinePreference(
-          response?.data.international_airline_preference || ''
+          response?.data.international_airline_preference ?? ''
         );
-        setAddress(response.data?.address || '');
-        setMealNotes(response.data?.meal_notes || '');
-        setSeatNotes(response.data?.seat_notes || '');
-        setPanNumber(response.data?.pan_number || '');
-        setAadhaarNumber(response.data?.aadhaar_number || '');
+        setAddress(response.data?.address ?? '');
+        setMealNotes(response.data?.meal_notes ?? '');
+        setSeatNotes(response.data?.seat_notes ?? '');
+        setPanNumber(response.data?.pan_number ?? '');
+        setAadhaarNumber(response.data?.aadhaar_number ?? '');
         // Setting Passport Gender
         for (let gender of passportGenderOptions)
           if (gender.value === response.data?.passport_gender) setPassportGender(gender);
@@ -226,13 +181,13 @@ const AddNewTravellers = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     let passportFormData = new FormData();
-    passportFormData.append('prefix', prefix);
+    passportFormData.append('prefix', prefix ?? '');
     passportFormData.append('first_name', firstName);
-    passportFormData.append('middle_name', middleName);
+    passportFormData.append('middle_name', middleName ?? '');
     passportFormData.append('last_name', lastName);
-    passportFormData.append('passport_name', passportName);
-    passportFormData.append('passport_number', passportNumber);
-    passportFormData.append('passport_gender', passportGender?.value || '');
+    passportFormData.append('passport_name', passportName ?? '');
+    passportFormData.append('passport_number', passportNumber ?? '');
+    passportFormData.append('passport_gender', passportGender?.value ?? '');
     passportFormData.append('passport_dob', passportDOB.format('YYYY-MM-DD'));
     passportFormData.append(
       'passport_issue_date',
@@ -242,43 +197,40 @@ const AddNewTravellers = () => {
       'passport_expiry_date',
       passportExpiryDate.format('YYYY-MM-DD')
     );
-    passportFormData.append('passport_issue_place', passportIssuePlace);
-    passportFormData.append('mobile_phone', mobilePhone);
-    passportFormData.append('email_address', email);
-    passportFormData.append('domestic_airline_preference', domesticAirlinePreference);
+    passportFormData.append('passport_issue_place', passportIssuePlace ?? '');
+    passportFormData.append('mobile_phone', mobilePhone ?? '');
+    passportFormData.append('email_address', email ?? '');
+    passportFormData.append(
+      'domestic_airline_preference',
+      domesticAirlinePreference ?? ''
+    );
     passportFormData.append(
       'domestic_cabin_preference',
-      domesticCabinPreference?.value || ''
+      domesticCabinPreference?.value ?? ''
     );
     passportFormData.append(
       'international_airline_preference',
-      internationalAirlinePreference
+      internationalAirlinePreference ?? ''
     );
     passportFormData.append(
       'international_cabin_preference',
-      internationalCabinPreference?.value || ''
+      internationalCabinPreference?.value ?? ''
     );
-    passportFormData.append('meal_preference', mealPreference?.value || '');
-    passportFormData.append('seat_preference', seatPreference?.value || '');
-    passportFormData.append('cabin_position', cabinPosition?.value || '');
-    passportFormData.append('fare_preference', farePreference?.value || '');
-    passportFormData.append('address', address);
-    passportFormData.append('meal_notes', mealNotes);
-    passportFormData.append('seat_notes', seatNotes);
-    passportFormData.append('pan_number', panNumber);
-    passportFormData.append('aadhaar_number', aadhaarNumber);
+    passportFormData.append('meal_preference', mealPreference?.value ?? '');
+    passportFormData.append('seat_preference', seatPreference?.value ?? '');
+    passportFormData.append('cabin_position', cabinPosition?.value ?? '');
+    passportFormData.append('fare_preference', farePreference?.value ?? '');
+    passportFormData.append('address', address ?? '');
+    passportFormData.append('meal_notes', mealNotes ?? '');
+    passportFormData.append('seat_notes', seatNotes ?? '');
+    passportFormData.append('pan_number', panNumber ?? '');
+    passportFormData.append('aadhaar_number', aadhaarNumber ?? '');
     passportFormData.append(
       'vaccination_certificate_file',
-      vaccinationCertificateFile?.cachedFileArray[0] || ''
+      vaccinationCertificateFile ?? ''
     );
-    passportFormData.append(
-      'pan_card_scan_file',
-      panCardScanFile?.cachedFileArray[0] || ''
-    );
-    passportFormData.append(
-      'aadhaar_card_scan_file',
-      aadhaarCardScanFile?.cachedFileArray[0] || ''
-    );
+    passportFormData.append('pan_card_scan_file', panCardScanFile ?? '');
+    passportFormData.append('aadhaar_card_scan_file', aadhaarCardScanFile ?? '');
     // Aliases
     if (aliases.length === 1 && aliases[0].value.trim().length === 0) {
       passportFormData.append(
@@ -290,7 +242,7 @@ const AddNewTravellers = () => {
     }
     for (let date of vaccinationDates)
       passportFormData.append('vaccination_dates[]', date.format('YYYY-MM-DD'));
-    for (let file of passportScanFiles?.cachedFileArray)
+    for (let file of passportScanFiles)
       passportFormData.append('passport_scan_files[]', file);
 
     const response = await createItem('travellers', passportFormData);
@@ -640,26 +592,23 @@ const AddNewTravellers = () => {
                     {/* Vaccination Certificate File Upload */}
                     <div className='col-lg-12'>
                       <label>Vaccination Certificate File</label>
-                      <div
-                        className='custom-file-container col-lg-6'
-                        data-upload-id='travellers-add-new-vaccination'
-                      ></div>
+                      <NewFileUploads
+                        multiple={false}
+                        setUploads={setVaccinationCertificateFile}
+                      />
                     </div>
                     {/* Pan Card Scan File Upload */}
                     <div className='col-lg-12'>
                       <label>PAN Card Scan File</label>
-                      <div
-                        className='custom-file-container col-lg-6'
-                        data-upload-id='travellers-add-new-pancard'
-                      ></div>
+                      <NewFileUploads multiple={false} setUploads={setPanCardScanFile} />
                     </div>
                     {/* Aadhaar Card Scan File Upload */}
                     <div className='col-lg-12'>
                       <label>Aadhaar Card Scan Certificate File</label>
-                      <div
-                        className='custom-file-container col-lg-6'
-                        data-upload-id='travellers-add-new-aadhaar'
-                      ></div>
+                      <NewFileUploads
+                        multiple={false}
+                        setUploads={setAadhaarCardScanFile}
+                      />
                     </div>
                     {/* Aliases */}
                     <div>
@@ -729,10 +678,7 @@ const AddNewTravellers = () => {
                     {/* Passport Scan Files Upload */}
                     <div className='col-lg-6'>
                       <label>Passport Scan Files</label>
-                      <div
-                        className='custom-file-container'
-                        data-upload-id='travellers-add-new-passport'
-                      ></div>
+                      <NewFileUploads multiple={true} setUploads={setPassportScanFiles} />
                     </div>
                     <div className='d-inline-block'>
                       <button

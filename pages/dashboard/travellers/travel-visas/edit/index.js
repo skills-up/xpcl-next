@@ -13,6 +13,7 @@ import DatePicker, { DateObject } from 'react-multi-date-picker';
 import { FileUploadWithPreview } from 'file-upload-with-preview';
 import 'file-upload-with-preview/dist/style.css';
 import PreviousUploadPictures from '../../../../../components/previous-file-uploads';
+import NewFileUploads from '../../../../../components/new-file-uploads';
 
 const UpdateTravelVisa = () => {
   const [countries, setCountries] = useState([]);
@@ -37,17 +38,6 @@ const UpdateTravelVisa = () => {
       if (!router.query.traveller_id) {
         router.push('/dashboard/travellers');
       }
-      setVisaFiles(
-        new FileUploadWithPreview('travellers-add-new-documents', {
-          multiple: true,
-          accept: '.pdf, .png, .jpg',
-          text: {
-            browse: 'Browse',
-            chooseFile: '',
-            label: 'Choose File to Upload',
-          },
-        })
-      );
       getData();
     }
   }, [router.isReady]);
@@ -69,7 +59,7 @@ const UpdateTravelVisa = () => {
             ? new DateObject({ date: response.data?.expiry_date, format: 'YYYY-MM-DD' })
             : new DateObject()
         );
-        setPreviousVisaFiles(response.data?.visa_scans || []);
+        if (response.data?.visa_scans) setPreviousVisaFiles(response.data?.visa_scans);
 
         // Setting Passport Gender
         for (let opt of options)
@@ -115,7 +105,7 @@ const UpdateTravelVisa = () => {
       for (let prev of previousVisaFiles) {
         formData.append('visa_scans[]', prev);
       }
-      for (let file of visaFiles?.cachedFileArray) {
+      for (let file of visaFiles) {
         formData.append('visa_scan_files[]', file);
       }
       formData.append('_method', 'PUT');
@@ -250,9 +240,10 @@ const UpdateTravelVisa = () => {
                       />
                     </div>
                     {/* Visa Scan Files */}
-                    {previousVisaFiles?.length > 0 && (
-                      <div>
-                        <label>Previous Visa Scans</label>
+
+                    <div className='col-lg-6'>
+                      <label>Visa Scan Files</label>{' '}
+                      {previousVisaFiles?.length > 0 && (
                         <PreviousUploadPictures
                           data={previousVisaFiles}
                           onDeleteClick={() => {
@@ -262,14 +253,8 @@ const UpdateTravelVisa = () => {
                             });
                           }}
                         />
-                      </div>
-                    )}
-                    <div className='col-lg-6'>
-                      <label>Visa Scan Files</label>
-                      <div
-                        className='custom-file-container'
-                        data-upload-id='travellers-add-new-documents'
-                      ></div>
+                      )}
+                      <NewFileUploads multiple={true} setUploads={setVisaFiles} />
                     </div>
                     <div className='d-inline-block'>
                       <button

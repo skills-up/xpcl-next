@@ -11,13 +11,14 @@ import ReactSwitch from 'react-switch';
 import Select from 'react-select';
 import { FileUploadWithPreview } from 'file-upload-with-preview';
 import 'file-upload-with-preview/dist/style.css';
+import NewFileUploads from '../../../../components/new-file-uploads';
 
 const AddNewVisaRequirements = () => {
   const [countries, setCountries] = useState([]);
   const [countryID, setCountryID] = useState(null);
   const [requiredVisaDocs, setRequiredVisaDocs] = useState([]);
   const [businessTravel, setBusinessTravel] = useState(false);
-  const [consulateCity, setConsulateCity] = useState('');
+  const [consulateCity, setConsulateCity] = useState('Mumbai');
   const [photoCount, setPhotoCount] = useState('');
   const [photoSpecifications, setPhotoSpecifications] = useState('');
   const [photoDimension, setPhotoDimension] = useState('');
@@ -28,34 +29,12 @@ const AddNewVisaRequirements = () => {
   const [financialDocsReqs, setFinancialDocsReqs] = useState([]);
   const [supportingDocsReqs, setSupportingDocsReqs] = useState([]);
   const [photoSample, setPhotoSample] = useState(null);
-  const [visaFormFiles, setVisaFormFiles] = useState(null);
+  const [visaFormFiles, setVisaFormFiles] = useState([]);
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
 
   useEffect(() => {
-    setVisaFormFiles(
-      new FileUploadWithPreview('visa-requirements-add-new-visa-forms', {
-        multiple: true,
-        accept: '.jpg, .png, .jpeg, .pdf',
-        text: {
-          browse: 'Browse',
-          chooseFile: '',
-          label: 'Choose Files to Upload',
-        },
-      })
-    );
-    setPhotoSample(
-      new FileUploadWithPreview('visa-requirements-add-new-photo-sample', {
-        multiple: false,
-        accept: '.jpg, .png, .jpeg',
-        text: {
-          browse: 'Browse',
-          chooseFile: '',
-          label: 'Choose File to Upload',
-        },
-      })
-    );
     getData();
   }, []);
 
@@ -86,7 +65,7 @@ const AddNewVisaRequirements = () => {
     e.preventDefault();
     // Checking if account id is not null
     if (countryID?.value) {
-      if (visaFormFiles?.cachedFileArray?.length > 0) {
+      if (visaFormFiles.length > 0) {
         if (
           personalDocsReqs.length === 0 ||
           financialDocsReqs.length === 0 ||
@@ -98,14 +77,14 @@ const AddNewVisaRequirements = () => {
         let visaFormData = new FormData();
         visaFormData.append('country_id', countryID.value);
         visaFormData.append('business_travel', businessTravel ? 1 : 0);
-        visaFormData.append('consulate_city', consulateCity);
-        visaFormData.append('photo_count', photoCount);
-        visaFormData.append('photo_dimension', photoDimension);
-        visaFormData.append('photo_specifications', photoSpecifications);
-        visaFormData.append('photo_sample_file', photoSample?.cachedFileArray[0] || '');
-        visaFormData.append('processing_time', processingTime);
-        visaFormData.append('consulate_details', consulateDetails);
-        visaFormData.append('additional_notes', additionalNotes);
+        visaFormData.append('consulate_city', consulateCity ?? '');
+        visaFormData.append('photo_count', photoCount ?? '');
+        visaFormData.append('photo_dimension', photoDimension ?? '');
+        visaFormData.append('photo_specifications', photoSpecifications ?? '');
+        visaFormData.append('photo_sample_file', photoSample ?? '');
+        visaFormData.append('processing_time', processingTime ?? '');
+        visaFormData.append('consulate_details', consulateDetails ?? '');
+        visaFormData.append('additional_notes', additionalNotes ?? '');
         for (let personalDoc of personalDocsReqs)
           visaFormData.append('personal_docs_reqs[]', personalDoc?.value);
         for (let financialDoc of financialDocsReqs)
@@ -113,7 +92,7 @@ const AddNewVisaRequirements = () => {
         for (let supportingDoc of supportingDocsReqs)
           visaFormData.append('supporting_docs_reqs[]', supportingDoc?.value);
 
-        for (let visaForm of visaFormFiles.cachedFileArray)
+        for (let visaForm of visaFormFiles)
           visaFormData.append('visa_form_files[]', visaForm);
 
         const response = await createItem('visa-requirements', visaFormData);
@@ -244,10 +223,7 @@ const AddNewVisaRequirements = () => {
                     {/* Photo Sample Upload */}
                     <div className='col-lg-6'>
                       <label>Photo Sample</label>
-                      <div
-                        className='custom-file-container'
-                        data-upload-id='visa-requirements-add-new-photo-sample'
-                      ></div>
+                      <NewFileUploads setUploads={setPhotoSample} />
                     </div>
                     <div className='col-12'>
                       <div className='form-input'>
@@ -338,10 +314,7 @@ const AddNewVisaRequirements = () => {
                       <label>
                         Visa Forms<span className='text-danger'>*</span>
                       </label>
-                      <div
-                        className='custom-file-container'
-                        data-upload-id='visa-requirements-add-new-visa-forms'
-                      ></div>
+                      <NewFileUploads multiple setUploads={setVisaFormFiles} />
                     </div>
                     <div className='d-inline-block'>
                       <button

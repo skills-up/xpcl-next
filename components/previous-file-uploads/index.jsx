@@ -6,13 +6,17 @@ const PreviousUploadPictures = ({ onDeleteClick, data }) => {
         .filter((element) => element !== null && element !== undefined)
         .map((element, index) => {
           const imageName = element.split('/').at(-1);
+          const imageExt = imageName.split('.').pop().toLowerCase();
           return (
-            <div key={`img-${index}`} className='px-3 py-10 my-2 col-12 justify-between d-flex gap-2 align-items-center border border-2'>
+            <div
+              key={`img-${index}`}
+              className='px-3 py-10 my-2 col-12 justify-between d-flex gap-2 align-items-center border border-2'
+            >
               <div>
                 <img
-                  src={element}
+                  src={imageExt === 'pdf' ? '' : element}
                   className='col-3 col-sm-2 col-md-1 img-responsive me-1'
-                  alt={imageName}
+                  alt=''
                 />
                 <small className='text-break'>{imageName}</small>
               </div>

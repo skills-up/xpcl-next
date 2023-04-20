@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 import { FileUploader } from 'react-drag-drop-files';
 import PreviousUploadPictures from '../previous-file-uploads';
-const NewFileUploads = ({multiple, setUploads}) => {
-  const fileTypes = ["JPG", "PNG", "PDF", "JPEG"];
+const NewFileUploads = ({ multiple = false, setUploads }) => {
+  const fileTypes = ['JPG', 'PNG', 'PDF', 'JPEG'];
   const [newUrls, setNewUrls] = useState([]);
   const handleUpload = (file) => {
     const uploads = [];
@@ -14,21 +14,22 @@ const NewFileUploads = ({multiple, setUploads}) => {
       uploads.push(file);
     }
     setNewUrls((prev) => {
-      const urls = uploads.map(file => URL.createObjectURL(file));
+      const urls = uploads.map((file) => URL.createObjectURL(file));
       return multiple ? [...prev, ...urls] : urls;
     });
     setUploads((prev) => {
       return multiple ? [...prev, ...uploads] : file;
     });
-  }
+  };
 
   useEffect(() => {
-    newUrls.forEach(url => URL.revokeObjectURL(url));
+    newUrls.forEach((url) => URL.revokeObjectURL(url));
   }, [newUrls]);
 
   return (
     <div>
-      <PreviousUploadPictures data={newUrls}
+      <PreviousUploadPictures
+        data={newUrls}
         onDeleteClick={(element, index) => {
           setNewUrls((prev) => {
             prev.splice(index, 1);
@@ -37,12 +38,13 @@ const NewFileUploads = ({multiple, setUploads}) => {
           setUploads((prev) => {
             if (multiple) {
               prev.splice(index, 1);
-              return [...prev];  
+              return [...prev];
             }
             return null;
           });
-        }}/>
-        <FileUploader multiple={multiple} types={fileTypes} handleChange={handleUpload}/>
+        }}
+      />
+      <FileUploader multiple={multiple} types={fileTypes} handleChange={handleUpload} />
     </div>
   );
 };

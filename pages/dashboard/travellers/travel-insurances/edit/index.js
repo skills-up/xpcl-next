@@ -13,6 +13,7 @@ import DatePicker, { DateObject } from 'react-multi-date-picker';
 import { FileUploadWithPreview } from 'file-upload-with-preview';
 import 'file-upload-with-preview/dist/style.css';
 import PreviousUploadPictures from '../../../../../components/previous-file-uploads';
+import NewFileUploads from '../../../../../components/new-file-uploads';
 
 const UpdateTravelInsurance = () => {
   const [policyNumber, setPolicyNumber] = useState('');
@@ -34,17 +35,6 @@ const UpdateTravelInsurance = () => {
       if (!router.query.traveller_id) {
         router.push('/dashboard/travellers');
       }
-      setDocumentFiles(
-        new FileUploadWithPreview('travellers-add-new-documents', {
-          multiple: true,
-          accept: '.pdf, .png, .jpg',
-          text: {
-            browse: 'Browse',
-            chooseFile: '',
-            label: 'Choose File to Upload',
-          },
-        })
-      );
       getData();
     }
   }, [router.isReady]);
@@ -66,7 +56,7 @@ const UpdateTravelInsurance = () => {
             : new DateObject()
         );
         setNomineeName(response.data?.nominee_name || '');
-        setPreviousDocuments(response.data?.documents || []);
+        if (response.data?.documents) setPreviousDocuments(response.data?.documents);
 
         // Setting Passport Gender
         for (let opt of options)
@@ -91,12 +81,12 @@ const UpdateTravelInsurance = () => {
     formData.append('policy_number', policyNumber);
     formData.append('issue_date', issueDate.format('YYYY-MM-DD'));
     formData.append('expiry_date', expiryDate.format('YYYY-MM-DD'));
-    formData.append('insurance_type', insuranceType?.value || '');
-    formData.append('nominee_name', nomineeName);
+    formData.append('insurance_type', insuranceType?.value ?? '');
+    formData.append('nominee_name', nomineeName ?? '');
     for (let prev of previousDocuments) {
       formData.append('documents[]', prev);
     }
-    for (let file of documentFiles?.cachedFileArray) {
+    for (let file of documentFiles) {
       formData.append('document_files[]', file);
     }
     formData.append('_method', 'PUT');
@@ -215,9 +205,9 @@ const UpdateTravelInsurance = () => {
                       </div>
                     </div>
                     {/* Document Files */}
-                    {previousDocuments?.length > 0 && (
-                      <div>
-                        <label>Previous Documents</label>
+                    <div className='col-lg-6'>
+                      <label>Document Files</label>{' '}
+                      {previousDocuments?.length > 0 && (
                         <PreviousUploadPictures
                           data={previousDocuments}
                           onDeleteClick={() => {
@@ -227,14 +217,8 @@ const UpdateTravelInsurance = () => {
                             });
                           }}
                         />
-                      </div>
-                    )}
-                    <div className='col-lg-6'>
-                      <label>Document Files</label>
-                      <div
-                        className='custom-file-container'
-                        data-upload-id='travellers-add-new-documents'
-                      ></div>
+                      )}
+                      <NewFileUploads multiple={true} setUploads={setDocumentFiles} />
                     </div>
                     <div className='d-inline-block'>
                       <button

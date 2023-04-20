@@ -12,6 +12,7 @@ import Select from 'react-select';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 import { FileUploadWithPreview } from 'file-upload-with-preview';
 import 'file-upload-with-preview/dist/style.css';
+import NewFileUploads from '../../../../../components/new-file-uploads';
 
 const AddNewTravelInsurance = () => {
   const [policyNumber, setPolicyNumber] = useState('');
@@ -32,17 +33,6 @@ const AddNewTravelInsurance = () => {
       if (!router.query.traveller_id) {
         router.push('/dashboard/travellers');
       }
-      setDocumentFiles(
-        new FileUploadWithPreview('travellers-add-new-documents', {
-          multiple: true,
-          accept: '.pdf, .png, .jpg',
-          text: {
-            browse: 'Browse',
-            chooseFile: '',
-            label: 'Choose File to Upload',
-          },
-        })
-      );
       getData();
     }
   }, [router.isReady]);
@@ -88,9 +78,9 @@ const AddNewTravelInsurance = () => {
     formData.append('policy_number', policyNumber);
     formData.append('issue_date', issueDate.format('YYYY-MM-DD'));
     formData.append('expiry_date', expiryDate.format('YYYY-MM-DD'));
-    formData.append('insurance_type', insuranceType?.value || '');
-    formData.append('nominee_name', nomineeName);
-    for (let file of documentFiles?.cachedFileArray) {
+    formData.append('insurance_type', insuranceType?.value ?? '');
+    formData.append('nominee_name', nomineeName ?? '');
+    for (let file of documentFiles) {
       formData.append('document_files[]', file);
     }
     const response = await createItem('travel-insurances', formData);
@@ -210,10 +200,7 @@ const AddNewTravelInsurance = () => {
                     {/* Document Files */}
                     <div className='col-lg-6'>
                       <label>Document Files</label>
-                      <div
-                        className='custom-file-container'
-                        data-upload-id='travellers-add-new-documents'
-                      ></div>
+                      <NewFileUploads multiple={true} setUploads={setDocumentFiles} />
                     </div>
                     <div className='d-inline-block'>
                       <button

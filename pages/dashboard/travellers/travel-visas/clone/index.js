@@ -12,6 +12,7 @@ import Select from 'react-select';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 import { FileUploadWithPreview } from 'file-upload-with-preview';
 import 'file-upload-with-preview/dist/style.css';
+import NewFileUploads from '../../../../../components/new-file-uploads';
 
 const AddNewTravelVisa = () => {
   const [countries, setCountries] = useState([]);
@@ -35,17 +36,6 @@ const AddNewTravelVisa = () => {
       if (!router.query.traveller_id) {
         router.push('/dashboard/travellers');
       }
-      setVisaFiles(
-        new FileUploadWithPreview('travellers-add-new-documents', {
-          multiple: true,
-          accept: '.pdf, .png, .jpg',
-          text: {
-            browse: 'Browse',
-            chooseFile: '',
-            label: 'Choose File to Upload',
-          },
-        })
-      );
       getData();
     }
   }, [router.isReady]);
@@ -108,8 +98,8 @@ const AddNewTravelVisa = () => {
       formData.append('issue_place', issuePlace);
       formData.append('issue_date', issueDate.format('YYYY-MM-DD'));
       formData.append('expiry_date', expiryDate.format('YYYY-MM-DD'));
-      formData.append('entries', entries?.value || '');
-      for (let file of visaFiles?.cachedFileArray) {
+      formData.append('entries', entries?.value ?? '');
+      for (let file of visaFiles) {
         formData.append('visa_scan_files[]', file);
       }
       const response = await createItem('travel-visas', formData);
@@ -243,10 +233,7 @@ const AddNewTravelVisa = () => {
                     {/* Visa Scan Files */}
                     <div className='col-lg-6'>
                       <label>Visa Scan Files</label>
-                      <div
-                        className='custom-file-container'
-                        data-upload-id='travellers-add-new-documents'
-                      ></div>
+                      <NewFileUploads multiple={true} setUploads={setVisaFiles} />
                     </div>
                     <div className='d-inline-block'>
                       <button
