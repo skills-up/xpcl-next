@@ -69,6 +69,7 @@ const UpdateVisaRequirements = () => {
       const response = await getItem('visa-requirements', router.query.edit);
       if (response?.success) {
         // Setting previous values
+        setBusinessTravel(response.data?.business_travel);
         setConsulateCity(response.data?.consulate_city);
         setPhotoCount(response.data?.photo_count);
         setPhotoDimension(response.data?.photo_dimension);
@@ -201,7 +202,7 @@ const UpdateVisaRequirements = () => {
 
         visaFormData.append('_method', 'PUT');
         const response = await createItem(
-          'visa-requirements/'+router.query.edit,
+          'visa-requirements/' + router.query.edit,
           visaFormData
         );
         if (response?.success) {

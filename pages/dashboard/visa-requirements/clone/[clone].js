@@ -66,6 +66,7 @@ const AddNewVisaRequirements = () => {
       const response = await getItem('visa-requirements', router.query.clone);
       if (response?.success) {
         // Setting previous values
+        setBusinessTravel(response.data?.business_travel);
         setConsulateCity(response.data?.consulate_city);
         setPhotoCount(response.data?.photo_count);
         setPhotoDimension(response.data?.photo_dimension);
