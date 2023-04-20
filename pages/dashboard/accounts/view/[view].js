@@ -13,6 +13,7 @@ import ClosingBalances from './ClosingBalances';
 
 const ViewAccounts = () => {
   const [account, setAccount] = useState([]);
+  const [accountClosingBalances, setAccountClosingBalances] = useState([]);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
 
@@ -45,6 +46,7 @@ const ViewAccounts = () => {
           delete data['account_category'];
         }
         setAccount(data);
+        setAccountClosingBalances(data.closing_balances)
       } else {
         sendToast(
           'error',
@@ -131,7 +133,7 @@ const ViewAccounts = () => {
                 <hr className='my-4' />
                 <div>
                   <h2 className='mb-3'>Closing Balances</h2>
-                  <ClosingBalances />
+                  <ClosingBalances accountClosingBalances={accountClosingBalances}/>
                 </div>
               </div>
             </div>
