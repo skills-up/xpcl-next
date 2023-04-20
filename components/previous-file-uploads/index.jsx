@@ -1,5 +1,5 @@
 import { BsTrash3 } from 'react-icons/bs';
-const PreviousUploadPictures = ({ onDeleteClick, data }) => {
+const PreviousUploadPictures = ({ onDeleteClick, data, readonly = false }) => {
   return (
     <div className='row mx-1'>
       {data
@@ -20,7 +20,7 @@ const PreviousUploadPictures = ({ onDeleteClick, data }) => {
                 />
                 <small className='text-break'>{imageName}</small>
               </div>
-              <span
+              {readonly || <span
                 style={{ cursor: 'pointer' }}
                 onClick={() => onDeleteClick(element, index)}
               >
@@ -28,7 +28,7 @@ const PreviousUploadPictures = ({ onDeleteClick, data }) => {
                   style={{ fontSize: '1.3rem', marginBottom: '0.3rem' }}
                   className='text-danger'
                 />
-              </span>
+              </span>}
             </div>
           );
         })}
