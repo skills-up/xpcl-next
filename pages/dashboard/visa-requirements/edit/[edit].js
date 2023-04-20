@@ -9,9 +9,8 @@ import { useEffect, useState } from 'react';
 import { createItem, getItem, getList, updateItem } from '../../../../api/xplorzApi';
 import ReactSwitch from 'react-switch';
 import Select from 'react-select';
-import { FileUploadWithPreview } from 'file-upload-with-preview';
-import 'file-upload-with-preview/dist/style.css';
 import PreviousUploadPictures from '../../../../components/previous-file-uploads';
+import NewFileUploads from '../../../../components/new-file-uploads';
 
 const UpdateVisaRequirements = () => {
   const [countries, setCountries] = useState([]);
@@ -29,7 +28,7 @@ const UpdateVisaRequirements = () => {
   const [financialDocsReqs, setFinancialDocsReqs] = useState([]);
   const [supportingDocsReqs, setSupportingDocsReqs] = useState([]);
   const [photoSample, setPhotoSample] = useState(null);
-  const [visaFormFiles, setVisaFormFiles] = useState(null);
+  const [visaFormFiles, setVisaFormFiles] = useState([]);
   const [previousVisaFormFiles, setPreviousVisaFormFiles] = useState([]);
   const [previousPhotoSample, setPreviousPhotoSample] = useState('');
 
@@ -38,7 +37,7 @@ const UpdateVisaRequirements = () => {
 
   useEffect(() => {
     if (router.isReady) {
-      setVisaFormFiles(
+      /* setVisaFormFiles(
         new FileUploadWithPreview('visa-requirements-add-new-visa-forms', {
           multiple: true,
           accept: '.jpg, .png, .jpeg, .pdf',
@@ -59,7 +58,7 @@ const UpdateVisaRequirements = () => {
             label: 'Choose File to Upload',
           },
         })
-      );
+      ); */
       getData();
     }
   }, [router.isReady]);
@@ -69,6 +68,7 @@ const UpdateVisaRequirements = () => {
       const response = await getItem('visa-requirements', router.query.edit);
       if (response?.success) {
         // Setting previous values
+        setBusinessTravel(response.data?.business_travel);
         setConsulateCity(response.data?.consulate_city);
         setPhotoCount(response.data?.photo_count);
         setPhotoDimension(response.data?.photo_dimension);
@@ -163,7 +163,7 @@ const UpdateVisaRequirements = () => {
     // Checking if account id is not null
     if (countryID?.value) {
       if (
-        visaFormFiles?.cachedFileArray?.length > 0 ||
+        visaFormFiles.length > 0 ||
         previousVisaFormFiles.length > 0
       ) {
         if (
@@ -182,7 +182,7 @@ const UpdateVisaRequirements = () => {
         visaFormData.append('photo_dimension', photoDimension);
         visaFormData.append('photo_specifications', photoSpecifications);
         visaFormData.append('photo_sample', previousPhotoSample);
-        visaFormData.append('photo_sample_file', photoSample?.cachedFileArray[0] || '');
+        visaFormData.append('photo_sample_file', photoSample || "");
         visaFormData.append('processing_time', processingTime);
         visaFormData.append('consulate_details', consulateDetails);
         visaFormData.append('additional_notes', additionalNotes);
@@ -196,7 +196,7 @@ const UpdateVisaRequirements = () => {
         for (let supportingDoc of supportingDocsReqs)
           visaFormData.append('supporting_docs_reqs[]', supportingDoc?.value);
 
-        for (let visaForm of visaFormFiles.cachedFileArray)
+        for (let visaForm of visaFormFiles)
           visaFormData.append('visa_form_files[]', visaForm);
 
         visaFormData.append('_method', 'PUT');
@@ -328,25 +328,28 @@ const UpdateVisaRequirements = () => {
                         </label>
                       </div>
                     </div>
-                    {/* Photo Sample Upload */}
-                    {previousPhotoSample && (
-                      <div>
-                        <label>Previous Photo Sample</label>
+                    <div className='col-12'>
+                      <label className='lh-1 text-16 text-light-1'>
+                        Photo Sample
+                      </label>
+                      {/* Photo Sample Upload */}
+                      {previousPhotoSample && (
                         <PreviousUploadPictures
                           data={[previousPhotoSample]}
                           onDeleteClick={() => {
                             setPreviousPhotoSample('');
                           }}
                         />
-                      </div>
-                    )}
-                    <div className='col-lg-6'>
+                      )}
+                      <NewFileUploads multiple={false} setUploads={setPhotoSample}/>
+                    </div>
+                    {/* <div className='col-lg-6'>
                       <label>Photo Sample</label>
                       <div
                         className='custom-file-container'
                         data-upload-id='visa-requirements-add-new-photo-sample'
                       ></div>
-                    </div>
+                    </div> */}
                     <div className='col-12'>
                       <div className='form-input'>
                         <input
@@ -437,23 +440,17 @@ const UpdateVisaRequirements = () => {
                         Visa Forms<span className='text-danger'>*</span>
                       </label>
                       {previousVisaFormFiles && (
-                        <div>
-                          <label>Previous Visa Files</label>
-                          <PreviousUploadPictures
-                            data={previousVisaFormFiles}
-                            onDeleteClick={(element, index) => {
-                              setPreviousVisaFormFiles((prev) => {
-                                prev.splice(index, 1);
-                                return [...prev];
-                              });
-                            }}
-                          />
-                        </div>
+                        <PreviousUploadPictures
+                          data={previousVisaFormFiles}
+                          onDeleteClick={(element, index) => {
+                            setPreviousVisaFormFiles((prev) => {
+                              prev.splice(index, 1);
+                              return [...prev];
+                            });
+                          }}
+                        />
                       )}
-                      <div
-                        className='custom-file-container col-lg-6'
-                        data-upload-id='visa-requirements-add-new-visa-forms'
-                      ></div>
+                      <NewFileUploads multiple={true} setUploads={setVisaFormFiles}/>
                     </div>
                     <div className='d-inline-block'>
                       <button

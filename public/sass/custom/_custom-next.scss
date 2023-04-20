@@ -437,3 +437,15 @@
 .rmdp-range {
     background-color: var(--color-blue-1) !important;
 }
+
+img:before {
+    content: ' ';
+    display: inline-block;
+    position: relative;
+    height: 65px;
+    width: 53px;
+    background-image: url("/img/icons/PDF_file_icon.svg");
+    background-size: contain;
+    vertical-align: middle;
+    font-size: 0;
+}
