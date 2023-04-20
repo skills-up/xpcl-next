@@ -36,12 +36,17 @@ const VisaRequirements = () => {
 
   const columns = [
     {
-      Header: 'Country ID',
-      accessor: 'country_id',
+      Header: 'Country',
+      accessor: 'country_name',
     },
     {
-      Header: 'Additional Notes',
-      accessor: 'additional_notes',
+      Header: 'Purpose',
+      accessor: 'business_travel',
+      Cell: (data) => (data.row.original.business_travel ? 'Business' : Tourist)
+    },
+    {
+      Header: 'Consulate City',
+      accessor: 'consulate_city',
     },
     {
       Header: 'Last Updated At',

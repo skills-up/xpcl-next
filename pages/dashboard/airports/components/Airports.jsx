@@ -34,21 +34,20 @@ const Airports = () => {
 
   const columns = [
     {
-      Header: 'Name',
-      accessor: 'name',
+      Header: 'IATA Code',
+      accessor: 'iata_code',
     },
     {
       Header: 'Country',
       accessor: 'country_name',
     },
-
     {
       Header: 'City',
       accessor: 'city',
     },
     {
-      Header: 'IATA Code',
-      accessor: 'iata_code',
+      Header: 'Name',
+      accessor: 'name',
     },
     {
       Header: 'Timezone',

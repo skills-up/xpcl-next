@@ -42,6 +42,10 @@ const TravelVisas = () => {
 
   const columns = [
     {
+      Header: 'Country',
+      accessor: 'country_name',
+    },
+    {
       Header: 'Visa Number',
       accessor: 'visa_number',
     },
@@ -52,10 +56,20 @@ const TravelVisas = () => {
     {
       Header: 'Issue Date',
       accessor: 'issue_date',
+      Cell: (data) => new Date(data.row.original.issue_date).toLocaleString('en-IN', {
+        dateStyle: 'medium',
+     }),
     },
     {
       Header: 'Expiry Date',
       accessor: 'expiry_date',
+      Cell: (data) => new Date(data.row.original.expiry_date).toLocaleString('en-IN', {
+        dateStyle: 'medium',
+     }),
+    },
+    {
+      Header: 'Entries',
+      accessor: 'entries',
     },
     {
       Header: 'Actions',

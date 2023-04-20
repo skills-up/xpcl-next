@@ -46,6 +46,18 @@ const CreditCards = () => {
       accessor: 'name_on_card',
     },
     {
+      Header: 'Card Number',
+      accessor: 'masked_number',
+    },
+    {
+      Header: 'Expiry Date',
+      accessor: 'expiry_date',
+      Cell: (data) => new Date(data.row.original.expiry_date).toLocaleString('en-IN', {
+         month: '2-digit',
+         year: '2-digit',
+      }),
+    },
+    {
       Header: 'Actions',
       disableSortBy: true,
       // cell: () => <Button variant="danger" data-tag="allowRowEvents" data-action="delete"><FontAwesomeIcon icon={faTrash} /></Button>,

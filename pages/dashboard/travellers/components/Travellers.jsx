@@ -42,8 +42,8 @@ const Travellers = () => {
       accessor: 'last_name',
     },
     {
-      Header: 'Address',
-      accessor: 'address',
+      Header: 'Passport Name',
+      accessor: 'passport_name',
     },
     {
       Header: 'Last Updated At',

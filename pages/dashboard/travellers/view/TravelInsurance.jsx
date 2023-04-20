@@ -42,16 +42,26 @@ const TravelInsurances = () => {
 
   const columns = [
     {
+      Header: 'Insurance Type',
+      accessor: 'insurance_type',
+    },
+    {
       Header: 'Policy Number',
       accessor: 'policy_number',
     },
     {
       Header: 'Issue Date',
       accessor: 'issue_date',
-    },
+      Cell: (data) => new Date(data.row.original.issue_date).toLocaleString('en-IN', {
+        dateStyle: 'medium',
+     }),
+   },
     {
       Header: 'Expiry Date',
       accessor: 'expiry_date',
+      Cell: (data) => new Date(data.row.original.expiry_date).toLocaleString('en-IN', {
+        dateStyle: 'medium',
+     }),
     },
     {
       Header: 'Actions',
