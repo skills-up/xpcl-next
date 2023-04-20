@@ -201,7 +201,7 @@ const UpdateVisaRequirements = () => {
 
         visaFormData.append('_method', 'PUT');
         const response = await createItem(
-          'visa-requirements/'+router.query.edit,
+          'visa-requirements/' + router.query.edit,
           visaFormData
         );
         if (response?.success) {
