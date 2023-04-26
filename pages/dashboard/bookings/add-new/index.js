@@ -10,6 +10,7 @@ import { createItem, getList } from '../../../../api/xplorzApi';
 import ReactSwitch from 'react-switch';
 import Select from 'react-select';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
+import { BiPlusMedical } from 'react-icons/bi';
 
 const AddNewBooking = () => {
   const [ticketNumber, setTicketNumber] = useState('');
@@ -33,6 +34,7 @@ const AddNewBooking = () => {
   const [clientServiceCharges, setClientServicesCharges] = useState('');
   const [clientTotal, setClientTotal] = useState('');
   const [reissuePenalty, setReissuePenalty] = useState('');
+  const [sector, setSector] = useState('');
   const [bookingSectors, setBookingSectors] = useState([]);
 
   // Dates
@@ -69,6 +71,7 @@ const AddNewBooking = () => {
   const [paymentAccounts, setPaymentAccounts] = useState([]);
   const [clients, setClients] = useState([]);
   const [clientTravellers, setClientTravellers] = useState([]);
+  const [airports, setAirports] = useState([]);
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -78,6 +81,7 @@ const AddNewBooking = () => {
   }, []);
 
   const getData = async () => {
+    const airports = await getList('airports');
     const vendors = await getList('organizations', { is_vendor: 1 });
     const commissionRules = await getList('commission-rules');
     const airlines = await getList('organizations', { is_airline: 1 });
@@ -88,10 +92,12 @@ const AddNewBooking = () => {
       vendors?.success &&
       commissionRules?.success &&
       airlines?.success &&
-      // paymentAccounts?.success &&
-      // clients?.success &&
-      clientTravellers?.success
+      paymentAccounts?.success &&
+      clients?.success &&
+      clientTravellers?.success &&
+      airports?.success
     ) {
+      setAirports(airports.data);
       setVendors(
         vendors.data.map((element) => ({
           value: element.id,
@@ -136,7 +142,7 @@ const AddNewBooking = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    // Checking if account id is not null
+    // Checking if required values arent null
     if (!bookingType?.value) {
       sendToast('error', 'Please Select Booking Type', 4000);
       return;
@@ -145,6 +151,23 @@ const AddNewBooking = () => {
       sendToast('error', 'Please Select a Vendor', 4000);
       return;
     }
+    // Manipulating booking sectors
+    let newBookingSectors = bookingSectors;
+    for (let i = 0; i < newBookingSectors.length; i++) {
+      if (
+        newBookingSectors[i]['from_airport_id']?.value &&
+        newBookingSectors[i]['to_airport_id']?.value
+      ) {
+        newBookingSectors[i]['from_airport_id'] =
+          newBookingSectors[i]['from_airport_id']?.value;
+        newBookingSectors[i]['to_airport_id'] =
+          newBookingSectors[i]['to_airport_id']?.value;
+      }
+      if (typeof newBookingSectors[i]['travel_date'] !== 'string')
+        newBookingSectors[i]['travel_date'] =
+          newBookingSectors[i]['travel_date']?.format('YYYY-MM-DD');
+    }
+    // Adding response
     const response = await createItem('bookings', {
       booking_type: bookingType.value,
       booking_date: bookingDate.format('YYYY-MM-DD'),
@@ -178,6 +201,8 @@ const AddNewBooking = () => {
         clientTravellerIDS?.length > 0
           ? clientTravellerIDS.map((element) => element.value)
           : clientTravellerIDS,
+      booking_sectors: newBookingSectors,
+      sector,
     });
     if (response?.success) {
       sendToast('success', 'Created Booking Successfully.', 4000);
@@ -576,7 +601,9 @@ const AddNewBooking = () => {
                       </div>
                     </div>
                     <div>
-                      <label>Client Travellers</label>
+                      <label>
+                        Client Travellers<span className='text-danger'>*</span>
+                      </label>
                       <Select
                         isMulti
                         options={clientTravellers}
@@ -585,9 +612,135 @@ const AddNewBooking = () => {
                         onChange={(id) => setClientTravellerIDS(id)}
                       />
                     </div>
+                    <div className='col-12'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setSector(e.target.value)}
+                          value={sector}
+                          placeholder=' '
+                          type='text'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>Sector</label>
+                      </div>
+                    </div>
                     {/* Booking Sectors */}
                     <div>
-                      <label>Add Booking Sectors</label>
+                      <label className='d-block'>Add Booking Sectors</label>
+                      <button
+                        className='btn btn-success my-2 d-flex items-center gap-2'
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setBookingSectors((prev) => [
+                            ...prev,
+                            {
+                              from_airport_id: null,
+                              to_airport_id: null,
+                              travel_date: new DateObject(),
+                              travel_time: '',
+                              details: '',
+                            },
+                          ]);
+                        }}
+                      >
+                        <BiPlusMedical /> Add Booking Sector
+                      </button>
+                      <div>
+                        {bookingSectors.map((element, index) => {
+                          return (
+                            <div className='row items-center my-2'>
+                              <div className='col-3'>
+                                <label>
+                                  From<span className='text-danger'>*</span>
+                                </label>
+                                <Select
+                                  options={airports.map((airport) => ({
+                                    value: airport.id,
+                                    label: `${airport.name} - ${airport.iata_code}`,
+                                  }))}
+                                  value={element['from_airport_id']}
+                                  onChange={(id) =>
+                                    setBookingSectors((prev) => {
+                                      prev[index]['from_airport_id'] = id;
+                                      return [...prev];
+                                    })
+                                  }
+                                />
+                              </div>
+                              <div className='col-3'>
+                                <label>
+                                  To<span className='text-danger'>*</span>
+                                </label>
+                                <Select
+                                  options={airports.map((airport) => ({
+                                    value: airport.id,
+                                    label: `${airport.name} - ${airport.iata_code}`,
+                                  }))}
+                                  value={element['to_airport_id']}
+                                  onChange={(id) =>
+                                    setBookingSectors((prev) => {
+                                      prev[index]['to_airport_id'] = id;
+                                      return [...prev];
+                                    })
+                                  }
+                                />
+                              </div>
+                              <div className='col-2'>
+                                <label>
+                                  Date<span className='text-danger'>*</span>
+                                </label>
+                                <DatePicker
+                                  style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
+                                  inputClass='custom_input-picker'
+                                  containerClassName='custom_container-picker'
+                                  value={bookingDate}
+                                  onChange={setBookingDate}
+                                  numberOfMonths={1}
+                                  offsetY={10}
+                                  format='DD MMMM YYYY'
+                                />
+                              </div>
+                              <div className='col-2'>
+                                <div className='form-input'>
+                                  <input
+                                    onChange={(e) =>
+                                      setBookingSectors((prev) => {
+                                        prev[index]['travel_time'] = e.target.value;
+                                        return [...prev];
+                                      })
+                                    }
+                                    value={element['travel_time']}
+                                    placeholder=' '
+                                    type='text'
+                                    required
+                                  />
+                                  <label className='lh-1 text-16 text-light-1'>
+                                    Travel Time
+                                  </label>
+                                </div>
+                              </div>
+                              <div className='col-2'>
+                                <div className='form-input'>
+                                  <input
+                                    onChange={(e) =>
+                                      setBookingSectors((prev) => {
+                                        prev[index]['details'] = e.target.value;
+                                        return [...prev];
+                                      })
+                                    }
+                                    value={element['details']}
+                                    placeholder=' '
+                                    type='text'
+                                    required
+                                  />
+                                  <label className='lh-1 text-16 text-light-1'>
+                                    Details
+                                  </label>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
                     <div className='d-inline-block'>
                       <button
