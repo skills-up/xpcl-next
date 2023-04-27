@@ -37,6 +37,7 @@ const AddNewBooking = () => {
   const [reissuePenalty, setReissuePenalty] = useState('');
   const [sector, setSector] = useState('');
   const [bookingSectors, setBookingSectors] = useState([]);
+  const [grossCommission, setGrossCommission] = useState(0);
 
   // Percentages
   const [vendorServiceChargePercent, setVendorServiceChargePercent] = useState(18);
@@ -80,6 +81,8 @@ const AddNewBooking = () => {
   const [airports, setAirports] = useState([]);
 
   const [xplorzGSTFocused, setXplorzGSTFocused] = useState(false);
+  const [vendorGSTFocused, setVendorGSTFocused] = useState(false);
+  const [vendorTDSPercentFocused, setVendorTDSPercentFocused] = useState(false);
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -118,6 +121,10 @@ const AddNewBooking = () => {
         commissionRules.data.map((element) => ({
           value: element.id,
           label: element.name,
+          iata_basic: element.iata_basic,
+          iata_yq: element.iata_yq,
+          plb_basic: element.plb_basic,
+          plb_yq: element.plb_yq,
         }))
       );
       setAirlines(
@@ -242,6 +249,16 @@ const AddNewBooking = () => {
   }, [bookingType]);
 
   // Vendor Calculations
+  useEffect(
+    () => updateVendorTotal(),
+    [
+      vendorBaseAmount,
+      vendorYQAmount,
+      vendorTaxAmount,
+      vendorGSTAmount,
+      vendorMiscCharges,
+    ]
+  );
 
   // Vendor Total
   const updateVendorTotal = () => {
@@ -254,6 +271,89 @@ const AddNewBooking = () => {
           +vendorMiscCharges
       )
     );
+  };
+
+  // Vendor Commission Receivable
+  useEffect(() => {
+    if (vendorTDSPercentFocused) {
+      setVendorTDS(
+        Number(
+          ((parseFloat(grossCommission) - +vendorServiceCharges) * +vendorTDSPercent) /
+            100
+        ).toFixed(4)
+      );
+      updateVendorCommission();
+    }
+  }, [vendorTDSPercent]);
+
+  useEffect(() => {
+    if (!vendorTDSPercentFocused) {
+      setVendorTDSPercent(
+        Number(
+          (100 * vendorTDS) / (parseFloat(grossCommission) - +vendorServiceCharges)
+        ).toFixed(4)
+      );
+      updateVendorCommission();
+    }
+  }, [vendorTDS]);
+
+  useEffect(() => {
+    if (vendorGSTFocused) {
+      setVendorServiceCharges(
+        Number((parseFloat(grossCommission) * +vendorServiceChargePercent) / 100).toFixed(
+          4
+        )
+      );
+      updateVendorCommission();
+    }
+  }, [vendorServiceChargePercent]);
+
+  useEffect(() => {
+    if (!vendorGSTFocused) {
+      setVendorServiceChargePercent(
+        Number((100 * +vendorServiceCharges) / parseFloat(grossCommission)).toFixed(4)
+      );
+      updateVendorCommission();
+    }
+  }, [vendorServiceCharges]);
+
+  useEffect(
+    () => calculateGrossCommission(),
+    [IATACommissionPercent, plbCommissionPercent, vendorBaseAmount, vendorYQAmount]
+  );
+
+  useEffect(() => calculateGrossCommission(), [commissionRuleID]);
+
+  useEffect(() => {
+    if (paymentAccountID) {
+      setPaymentAmount(Number(+vendorTotal - +vendorMiscCharges));
+    }
+  }, [paymentAccountID]);
+
+  // Vendor Commission Receivable Total
+  const updateVendorCommission = () => {
+    setCommissionReceivable(
+      Math.round(grossCommission - +vendorTDS - +vendorServiceCharges)
+    );
+  };
+
+  const calculateGrossCommission = () => {
+    if (commissionRuleID) {
+      const iata_comm = Number(
+        (+IATACommissionPercent *
+          (+commissionRuleID.iata_basic * +vendorBaseAmount +
+            +commissionRuleID.iata_yq * +vendorYQAmount)) /
+          100
+      ).toFixed(4);
+      const plb_comm = Number(
+        (+plbCommissionPercent *
+          (+commissionRuleID.plb_basic * +vendorBaseAmount +
+            +commissionRuleID.plb_yq * +vendorYQAmount -
+            iata_comm)) /
+          100
+      ).toFixed(4);
+      setGrossCommission(Number(+plb_comm + +iata_comm));
+    }
   };
 
   // Client Calculations
@@ -273,7 +373,7 @@ const AddNewBooking = () => {
       setClientServiceChargePercent(
         Number(
           (100 * +clientServiceCharges) / (+clientBaseAmount + +clientReferralFee)
-        ).toFixed(2)
+        ).toFixed(4)
       );
       updateClientTotal();
     }
@@ -492,11 +592,33 @@ const AddNewBooking = () => {
                           value={vendorTotal}
                           placeholder=' '
                           type='number'
-                          // disabled
+                          disabled
                           required
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Vendor Total<span className='text-danger'>*</span>
+                        </label>
+                      </div>
+                    </div>
+                    <div>
+                      <label>Payment Account</label>
+                      <Select
+                        options={paymentAccounts}
+                        value={paymentAccountID}
+                        placeholder='Search & Select Miscellaneous Type'
+                        onChange={(id) => setPaymentAccountID(id)}
+                      />
+                    </div>
+                    <div className='col-12'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setPaymentAmount(e.target.value)}
+                          value={paymentAmount}
+                          placeholder=' '
+                          type='number'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Payment Amount
                         </label>
                       </div>
                     </div>
@@ -542,6 +664,7 @@ const AddNewBooking = () => {
                           value={vendorServiceChargePercent}
                           placeholder=' '
                           type='number'
+                          onFocus={() => setVendorGSTFocused(true)}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Vendor Service Charge Percent
@@ -554,6 +677,7 @@ const AddNewBooking = () => {
                           value={vendorServiceCharges}
                           placeholder=' '
                           type='number'
+                          onFocus={() => setVendorGSTFocused(false)}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Vendor Service Charges
@@ -567,6 +691,7 @@ const AddNewBooking = () => {
                           value={vendorTDSPercent}
                           placeholder=' '
                           type='number'
+                          onFocus={() => setVendorTDSPercentFocused(true)}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Vendor TDS Percent
@@ -579,6 +704,7 @@ const AddNewBooking = () => {
                           value={vendorTDS}
                           placeholder=' '
                           type='number'
+                          onFocus={() => setVendorTDSPercentFocused(false)}
                         />
                         <label className='lh-1 text-16 text-light-1'>Vendor TDS</label>
                       </div>
@@ -590,6 +716,7 @@ const AddNewBooking = () => {
                           value={commissionReceivable}
                           placeholder=' '
                           type='number'
+                          disabled
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Commission Receivable
@@ -613,28 +740,6 @@ const AddNewBooking = () => {
                         placeholder='Search & Select Miscellaneous Type'
                         onChange={(id) => setMiscellaneousType(id)}
                       />
-                    </div>
-                    <div>
-                      <label>Payment Account</label>
-                      <Select
-                        options={paymentAccounts}
-                        value={paymentAccountID}
-                        placeholder='Search & Select Miscellaneous Type'
-                        onChange={(id) => setPaymentAccountID(id)}
-                      />
-                    </div>
-                    <div className='col-12'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setPaymentAmount(e.target.value)}
-                          value={paymentAmount}
-                          placeholder=' '
-                          type='number'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Payment Amount
-                        </label>
-                      </div>
                     </div>
                     <div>
                       <label>Client Referrer</label>
