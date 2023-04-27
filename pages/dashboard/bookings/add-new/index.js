@@ -37,6 +37,11 @@ const AddNewBooking = () => {
   const [sector, setSector] = useState('');
   const [bookingSectors, setBookingSectors] = useState([]);
 
+  // Percentages
+  const [vendorServiceChargePercent, setVendorServiceChargePercent] = useState(18);
+  const [vendorTDSPercent, setVendorTDSPercent] = useState(5);
+  const [clientServiceChargePercent, setClientServiceChargePercent] = useState(0);
+
   // Dates
   const [bookingDate, setBookingDate] = useState(new DateObject());
   // Dropdowns
@@ -72,6 +77,8 @@ const AddNewBooking = () => {
   const [clients, setClients] = useState([]);
   const [clientTravellers, setClientTravellers] = useState([]);
   const [airports, setAirports] = useState([]);
+
+  const [xplorzGSTFocused, setXplorzGSTFocused] = useState(false);
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -223,6 +230,63 @@ const AddNewBooking = () => {
         if (vendorID.value === airline.value) setAirlineID(vendorID);
   }, [vendorID]);
 
+  // Booking Type Changes
+  useEffect(() => {
+    // Client Service Charge Percent
+    if (bookingType?.value === 'Domestic Flight Ticket') setClientServiceChargePercent(9);
+    else setClientServiceChargePercent(18);
+  }, [bookingType]);
+
+  // Client Service Charges
+  useEffect(() => {
+    if (xplorzGSTFocused) {
+      const tempClientBaseAmount = clientBaseAmount;
+      const tempClientReferralFee = clientReferralFee;
+      const tempClientServiceChargePercent = clientServiceChargePercent;
+      setClientServicesCharges(
+        Number(
+          ((+tempClientBaseAmount + +tempClientReferralFee) *
+            +tempClientServiceChargePercent) /
+            100
+        ).toFixed(0)
+      );
+      updateClientTotal();
+    }
+  }, [clientServiceChargePercent, clientReferralFee, clientBaseAmount]);
+
+  useEffect(() => {
+    if (!xplorzGSTFocused) {
+      const tempClientBaseAmount = clientBaseAmount;
+      const tempClientReferralFee = clientReferralFee;
+      setClientServiceChargePercent(
+        Number(
+          (100 * +clientServiceCharges) / (+tempClientBaseAmount + +tempClientReferralFee)
+        ).toFixed(2)
+      );
+      updateClientTotal();
+    }
+  }, [clientServiceCharges]);
+
+  useEffect(() => updateClientTotal(), [clientServiceCharges]);
+
+  // Client Total
+  const updateClientTotal = () => {
+    const tempClientBaseAmount = clientBaseAmount;
+    const tempClientTaxAmount = clientTaxAmount;
+    const tempClientGSTAmount = clientGSTAmount;
+    const tempClientServiceCharges = clientServiceCharges;
+    const tempClientReferralFee = clientReferralFee;
+    setClientTotal(
+      Number(
+        +tempClientBaseAmount +
+          +tempClientGSTAmount +
+          +tempClientTaxAmount +
+          +tempClientServiceCharges +
+          +tempClientReferralFee
+      )
+    );
+  };
+
   return (
     <>
       <Seo pageTitle='Add New Booking' />
@@ -289,7 +353,26 @@ const AddNewBooking = () => {
                           placeholder=' '
                           type='text'
                         />
-                        <label className='lh-1 text-16 text-light-1'>Ticket Number</label>
+                        <label className='lh-1 text-16 text-light-1'>
+                          {bookingType?.value !== 'Miscellaneous'
+                            ? 'Ticket Number'
+                            : 'Narration Line 1'}
+                        </label>
+                      </div>
+                    </div>
+                    <div className='col-12'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setSector(e.target.value)}
+                          value={sector}
+                          placeholder=' '
+                          type='text'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          {bookingType?.value !== 'Miscellaneous'
+                            ? 'Sector'
+                            : 'Narration Line 2'}
+                        </label>
                       </div>
                     </div>
                     <div className='col-12'>
@@ -300,7 +383,11 @@ const AddNewBooking = () => {
                           placeholder=' '
                           type='text'
                         />
-                        <label className='lh-1 text-16 text-light-1'>PNR</label>
+                        <label className='lh-1 text-16 text-light-1'>
+                          {bookingType?.value !== 'Miscellaneous'
+                            ? 'PNR'
+                            : 'Narration Line 3'}
+                        </label>
                       </div>
                     </div>
                     <div>
@@ -372,6 +459,30 @@ const AddNewBooking = () => {
                     <div className='col-12'>
                       <div className='form-input'>
                         <input
+                          onChange={(e) => setVendorServiceCharges(e.target.value)}
+                          value={vendorServiceCharges}
+                          placeholder=' '
+                          type='number'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Vendor Service Charges
+                        </label>
+                      </div>
+                    </div>
+                    <div className='col-12'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setVendorTDS(e.target.value)}
+                          value={vendorTDS}
+                          placeholder=' '
+                          type='number'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>Vendor TDS</label>
+                      </div>
+                    </div>
+                    <div className='col-12'>
+                      <div className='form-input'>
+                        <input
                           onChange={(e) => setVendorMiscChargers(e.target.value)}
                           value={vendorMiscCharges}
                           placeholder=' '
@@ -429,30 +540,6 @@ const AddNewBooking = () => {
                         <label className='lh-1 text-16 text-light-1'>
                           PLB Commission Percent
                         </label>
-                      </div>
-                    </div>
-                    <div className='col-12'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setVendorServiceCharges(e.target.value)}
-                          value={vendorServiceCharges}
-                          placeholder=' '
-                          type='number'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Vendor Service Charges
-                        </label>
-                      </div>
-                    </div>
-                    <div className='col-12'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setVendorTDS(e.target.value)}
-                          value={vendorTDS}
-                          placeholder=' '
-                          type='number'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>Vendor TDS</label>
                       </div>
                     </div>
                     <div className='col-12'>
@@ -572,14 +659,29 @@ const AddNewBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12'>
-                      <div className='form-input'>
+                    <div className='col-12 row pr-0 items-center'>
+                      <div className='form-input col-4'>
+                        <input
+                          onChange={(e) => setClientServiceChargePercent(e.target.value)}
+                          value={clientServiceChargePercent}
+                          placeholder=' '
+                          onFocus={() => setXplorzGSTFocused(true)}
+                          type='number'
+                          required
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Xplorz GST Percent<span className='text-danger'>*</span>
+                        </label>
+                        <span className='d-flex items-center ml-30'>%</span>
+                      </div>
+                      <div className='form-input col-8 pr-0'>
                         <input
                           onChange={(e) => setClientServicesCharges(e.target.value)}
                           value={clientServiceCharges}
                           placeholder=' '
                           type='number'
                           required
+                          onFocus={() => setXplorzGSTFocused(false)}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Client Services Charges<span className='text-danger'>*</span>
@@ -594,6 +696,7 @@ const AddNewBooking = () => {
                           placeholder=' '
                           type='number'
                           required
+                          disabled
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Client Total<span className='text-danger'>*</span>
@@ -612,136 +715,125 @@ const AddNewBooking = () => {
                         onChange={(id) => setClientTravellerIDS(id)}
                       />
                     </div>
-                    <div className='col-12'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setSector(e.target.value)}
-                          value={sector}
-                          placeholder=' '
-                          type='text'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>Sector</label>
-                      </div>
-                    </div>
                     {/* Booking Sectors */}
-                    <div>
-                      <label className='d-block'>Add Booking Sectors</label>
-                      <button
-                        className='btn btn-success my-2 d-flex items-center gap-2'
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setBookingSectors((prev) => [
-                            ...prev,
-                            {
-                              from_airport_id: null,
-                              to_airport_id: null,
-                              travel_date: new DateObject(),
-                              travel_time: '',
-                              details: '',
-                            },
-                          ]);
-                        }}
-                      >
-                        <BiPlusMedical /> Add Booking Sector
-                      </button>
+                    {bookingType?.value !== 'Miscellaneous' && (
                       <div>
-                        {bookingSectors.map((element, index) => {
-                          return (
-                            <div className='row items-center my-2'>
-                              <div className='col-3'>
-                                <label>
-                                  From<span className='text-danger'>*</span>
-                                </label>
-                                <Select
-                                  options={airports.map((airport) => ({
-                                    value: airport.id,
-                                    label: `${airport.name} - ${airport.iata_code}`,
-                                  }))}
-                                  value={element['from_airport_id']}
-                                  onChange={(id) =>
-                                    setBookingSectors((prev) => {
-                                      prev[index]['from_airport_id'] = id;
-                                      return [...prev];
-                                    })
-                                  }
-                                />
-                              </div>
-                              <div className='col-3'>
-                                <label>
-                                  To<span className='text-danger'>*</span>
-                                </label>
-                                <Select
-                                  options={airports.map((airport) => ({
-                                    value: airport.id,
-                                    label: `${airport.name} - ${airport.iata_code}`,
-                                  }))}
-                                  value={element['to_airport_id']}
-                                  onChange={(id) =>
-                                    setBookingSectors((prev) => {
-                                      prev[index]['to_airport_id'] = id;
-                                      return [...prev];
-                                    })
-                                  }
-                                />
-                              </div>
-                              <div className='col-2'>
-                                <label>
-                                  Date<span className='text-danger'>*</span>
-                                </label>
-                                <DatePicker
-                                  style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
-                                  inputClass='custom_input-picker'
-                                  containerClassName='custom_container-picker'
-                                  value={bookingDate}
-                                  onChange={setBookingDate}
-                                  numberOfMonths={1}
-                                  offsetY={10}
-                                  format='DD MMMM YYYY'
-                                />
-                              </div>
-                              <div className='col-2'>
-                                <div className='form-input'>
-                                  <input
-                                    onChange={(e) =>
+                        <label className='d-block'>Add Booking Sectors</label>
+                        <button
+                          className='btn btn-success my-2 d-flex items-center gap-2'
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setBookingSectors((prev) => [
+                              ...prev,
+                              {
+                                from_airport_id: null,
+                                to_airport_id: null,
+                                travel_date: new DateObject(),
+                                travel_time: '',
+                                details: '',
+                              },
+                            ]);
+                          }}
+                        >
+                          <BiPlusMedical /> Add Booking Sector
+                        </button>
+                        <div>
+                          {bookingSectors.map((element, index) => {
+                            return (
+                              <div className='row items-center my-2'>
+                                <div className='col-3'>
+                                  <label>
+                                    From<span className='text-danger'>*</span>
+                                  </label>
+                                  <Select
+                                    options={airports.map((airport) => ({
+                                      value: airport.id,
+                                      label: `${airport.name} - ${airport.iata_code}`,
+                                    }))}
+                                    value={element['from_airport_id']}
+                                    onChange={(id) =>
                                       setBookingSectors((prev) => {
-                                        prev[index]['travel_time'] = e.target.value;
+                                        prev[index]['from_airport_id'] = id;
                                         return [...prev];
                                       })
                                     }
-                                    value={element['travel_time']}
-                                    placeholder=' '
-                                    type='text'
-                                    required
                                   />
-                                  <label className='lh-1 text-16 text-light-1'>
-                                    Travel Time
-                                  </label>
                                 </div>
-                              </div>
-                              <div className='col-2'>
-                                <div className='form-input'>
-                                  <input
-                                    onChange={(e) =>
+                                <div className='col-3'>
+                                  <label>
+                                    To<span className='text-danger'>*</span>
+                                  </label>
+                                  <Select
+                                    options={airports.map((airport) => ({
+                                      value: airport.id,
+                                      label: `${airport.name} - ${airport.iata_code}`,
+                                    }))}
+                                    value={element['to_airport_id']}
+                                    onChange={(id) =>
                                       setBookingSectors((prev) => {
-                                        prev[index]['details'] = e.target.value;
+                                        prev[index]['to_airport_id'] = id;
                                         return [...prev];
                                       })
                                     }
-                                    value={element['details']}
-                                    placeholder=' '
-                                    type='text'
-                                    required
                                   />
-                                  <label className='lh-1 text-16 text-light-1'>
-                                    Details
+                                </div>
+                                <div className='col-2'>
+                                  <label>
+                                    Date<span className='text-danger'>*</span>
                                   </label>
+                                  <DatePicker
+                                    style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
+                                    inputClass='custom_input-picker'
+                                    containerClassName='custom_container-picker'
+                                    value={bookingDate}
+                                    onChange={setBookingDate}
+                                    numberOfMonths={1}
+                                    offsetY={10}
+                                    format='DD MMMM YYYY'
+                                  />
+                                </div>
+                                <div className='col-2'>
+                                  <div className='form-input'>
+                                    <input
+                                      onChange={(e) =>
+                                        setBookingSectors((prev) => {
+                                          prev[index]['travel_time'] = e.target.value;
+                                          return [...prev];
+                                        })
+                                      }
+                                      value={element['travel_time']}
+                                      placeholder=' '
+                                      type='text'
+                                    />
+                                    <label className='lh-1 text-16 text-light-1'>
+                                      Travel Time
+                                    </label>
+                                  </div>
+                                </div>
+                                <div className='col-2'>
+                                  <div className='form-input'>
+                                    <input
+                                      onChange={(e) =>
+                                        setBookingSectors((prev) => {
+                                          prev[index]['details'] = e.target.value;
+                                          return [...prev];
+                                        })
+                                      }
+                                      value={element['details']}
+                                      placeholder=' '
+                                      type='text'
+                                    />
+                                    <label className='lh-1 text-16 text-light-1'>
+                                      Details
+                                    </label>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          );
-                        })}
+                            );
+                          })}
+                        </div>
                       </div>
-                    </div>
+                    )}
                     <div className='d-inline-block'>
                       <button
                         type='submit'
