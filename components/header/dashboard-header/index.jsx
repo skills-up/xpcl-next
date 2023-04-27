@@ -40,7 +40,7 @@ const HeaderDashBoard = () => {
   }, []);
 
   const getOrganizations = async () => {
-    const response = await getList('organizations', { isClient: 1 });
+    const response = await getList('organizations', { is_client: 1 });
     if (response?.success) {
       setOrganizations(
         response.data.map((element) => ({ value: element.id, label: element.name }))

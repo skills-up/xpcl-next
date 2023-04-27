@@ -11,6 +11,7 @@ import ReactSwitch from 'react-switch';
 import Select from 'react-select';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 import { BiPlusMedical } from 'react-icons/bi';
+import { store } from '../../../../app/store';
 
 const AddNewBooking = () => {
   const [ticketNumber, setTicketNumber] = useState('');
@@ -94,7 +95,9 @@ const AddNewBooking = () => {
     const airlines = await getList('organizations', { is_airline: 1 });
     const paymentAccounts = await getList('accounts', { category: 'Credit Cards' });
     const clients = await getList('accounts', { category: 'Client Referrers' });
-    const clientTravellers = await getList('organizations', { is_client: 1 });
+    const clientTravellers = await getList('client-travellers', {
+      client_id: store.getState().auth.value.currentOrganization,
+    });
     if (
       vendors?.success &&
       commissionRules?.success &&
@@ -138,7 +141,7 @@ const AddNewBooking = () => {
       setClientTravellers(
         clientTravellers.data.map((element) => ({
           value: element.id,
-          label: element.name,
+          label: element.traveller_id,
         }))
       );
     } else {
@@ -237,17 +240,27 @@ const AddNewBooking = () => {
     else setClientServiceChargePercent(18);
   }, [bookingType]);
 
-  // Client Service Charges
+  // Vendor Calculations
+
+  // Vendor Total
+  const updateVendorTotal = () => {
+    setVendorTotal(
+      Number(
+        +clientBaseAmount +
+          +clientGSTAmount +
+          +clientTaxAmount +
+          +clientServiceCharges +
+          +clientReferralFee
+      )
+    );
+  };
+
+  // Client Calculations
   useEffect(() => {
     if (xplorzGSTFocused) {
-      const tempClientBaseAmount = clientBaseAmount;
-      const tempClientReferralFee = clientReferralFee;
-      const tempClientServiceChargePercent = clientServiceChargePercent;
       setClientServicesCharges(
         Number(
-          ((+tempClientBaseAmount + +tempClientReferralFee) *
-            +tempClientServiceChargePercent) /
-            100
+          ((+clientBaseAmount + +clientReferralFee) * +clientServiceChargePercent) / 100
         ).toFixed(0)
       );
       updateClientTotal();
@@ -256,33 +269,35 @@ const AddNewBooking = () => {
 
   useEffect(() => {
     if (!xplorzGSTFocused) {
-      const tempClientBaseAmount = clientBaseAmount;
-      const tempClientReferralFee = clientReferralFee;
       setClientServiceChargePercent(
         Number(
-          (100 * +clientServiceCharges) / (+tempClientBaseAmount + +tempClientReferralFee)
+          (100 * +clientServiceCharges) / (+clientBaseAmount + +clientReferralFee)
         ).toFixed(2)
       );
       updateClientTotal();
     }
   }, [clientServiceCharges]);
 
-  useEffect(() => updateClientTotal(), [clientServiceCharges]);
+  useEffect(
+    () => updateClientTotal(),
+    [
+      clientServiceCharges,
+      clientTaxAmount,
+      clientGSTAmount,
+      clientReferralFee,
+      clientBaseAmount,
+    ]
+  );
 
   // Client Total
   const updateClientTotal = () => {
-    const tempClientBaseAmount = clientBaseAmount;
-    const tempClientTaxAmount = clientTaxAmount;
-    const tempClientGSTAmount = clientGSTAmount;
-    const tempClientServiceCharges = clientServiceCharges;
-    const tempClientReferralFee = clientReferralFee;
     setClientTotal(
       Number(
-        +tempClientBaseAmount +
-          +tempClientGSTAmount +
-          +tempClientTaxAmount +
-          +tempClientServiceCharges +
-          +tempClientReferralFee
+        +clientBaseAmount +
+          +clientGSTAmount +
+          +clientTaxAmount +
+          +clientServiceCharges +
+          +clientReferralFee
       )
     );
   };
