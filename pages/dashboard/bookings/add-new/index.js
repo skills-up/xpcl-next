@@ -161,21 +161,16 @@ const AddNewBooking = () => {
       sendToast('error', 'Please Select a Vendor', 4000);
       return;
     }
-    // Manipulating booking sectors
-    let newBookingSectors = bookingSectors;
-    for (let i = 0; i < newBookingSectors.length; i++) {
+    // Checking if all data in booking sectors is filled
+    for (let bookingSec of bookingSectors) {
       if (
-        newBookingSectors[i]['from_airport_id']?.value &&
-        newBookingSectors[i]['to_airport_id']?.value
+        !bookingSec?.from_airport_id?.value ||
+        !bookingSec?.to_airport_id?.value ||
+        !bookingSec?.travel_date
       ) {
-        newBookingSectors[i]['from_airport_id'] =
-          newBookingSectors[i]['from_airport_id']?.value;
-        newBookingSectors[i]['to_airport_id'] =
-          newBookingSectors[i]['to_airport_id']?.value;
+        sendToast('error', 'Please fill all required details in Booking Sectors', 4000);
+        return;
       }
-      if (typeof newBookingSectors[i]['travel_date'] !== 'string')
-        newBookingSectors[i]['travel_date'] =
-          newBookingSectors[i]['travel_date']?.format('YYYY-MM-DD');
     }
     // Adding response
     const response = await createItem('bookings', {
@@ -211,7 +206,13 @@ const AddNewBooking = () => {
         clientTravellerIDS?.length > 0
           ? clientTravellerIDS.map((element) => element.value)
           : clientTravellerIDS,
-      booking_sectors: newBookingSectors,
+      booking_sectors: bookingSectors.map((element) => ({
+        from_airport_id: element['from_airport_id']?.value,
+        to_airport_id: element['to_airport_id']?.value,
+        travel_date: element['travel_date']?.format('YYYY-MM-DD'),
+        travel_time: element['travel_time'],
+        details: element['details'],
+      })),
       sector,
     });
     if (response?.success) {
@@ -246,11 +247,11 @@ const AddNewBooking = () => {
   const updateVendorTotal = () => {
     setVendorTotal(
       Number(
-        +clientBaseAmount +
-          +clientGSTAmount +
-          +clientTaxAmount +
-          +clientServiceCharges +
-          +clientReferralFee
+        +vendorBaseAmount +
+          +vendorYQAmount +
+          +vendorTaxAmount +
+          +vendorGSTAmount +
+          +vendorMiscCharges
       )
     );
   };
@@ -474,30 +475,6 @@ const AddNewBooking = () => {
                     <div className='col-12'>
                       <div className='form-input'>
                         <input
-                          onChange={(e) => setVendorServiceCharges(e.target.value)}
-                          value={vendorServiceCharges}
-                          placeholder=' '
-                          type='number'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Vendor Service Charges
-                        </label>
-                      </div>
-                    </div>
-                    <div className='col-12'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setVendorTDS(e.target.value)}
-                          value={vendorTDS}
-                          placeholder=' '
-                          type='number'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>Vendor TDS</label>
-                      </div>
-                    </div>
-                    <div className='col-12'>
-                      <div className='form-input'>
-                        <input
                           onChange={(e) => setVendorMiscChargers(e.target.value)}
                           value={vendorMiscCharges}
                           placeholder=' '
@@ -515,6 +492,7 @@ const AddNewBooking = () => {
                           value={vendorTotal}
                           placeholder=' '
                           type='number'
+                          // disabled
                           required
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -555,6 +533,54 @@ const AddNewBooking = () => {
                         <label className='lh-1 text-16 text-light-1'>
                           PLB Commission Percent
                         </label>
+                      </div>
+                    </div>
+                    <div className='col-12 row pr-0'>
+                      <div className='form-input col-4'>
+                        <input
+                          onChange={(e) => setVendorServiceChargePercent(e.target.value)}
+                          value={vendorServiceChargePercent}
+                          placeholder=' '
+                          type='number'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Vendor Service Charge Percent
+                        </label>
+                        <div className='d-flex items-center ml-30'>%</div>
+                      </div>
+                      <div className='form-input col-8 pr-0'>
+                        <input
+                          onChange={(e) => setVendorServiceCharges(e.target.value)}
+                          value={vendorServiceCharges}
+                          placeholder=' '
+                          type='number'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Vendor Service Charges
+                        </label>
+                      </div>
+                    </div>
+                    <div className='col-12 row pr-0'>
+                      <div className='form-input col-4'>
+                        <input
+                          onChange={(e) => setVendorTDSPercent(e.target.value)}
+                          value={vendorTDSPercent}
+                          placeholder=' '
+                          type='number'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Vendor TDS Percent
+                        </label>
+                        <div className='d-flex items-center ml-30'>%</div>
+                      </div>
+                      <div className='form-input col-8 pr-0'>
+                        <input
+                          onChange={(e) => setVendorTDS(e.target.value)}
+                          value={vendorTDS}
+                          placeholder=' '
+                          type='number'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>Vendor TDS</label>
                       </div>
                     </div>
                     <div className='col-12'>
