@@ -148,7 +148,7 @@ const AddNewBooking = () => {
       setClientTravellers(
         clientTravellers.data.map((element) => ({
           value: element.id,
-          label: element.traveller_id,
+          label: element.traveller_name,
         }))
       );
     } else {
@@ -246,6 +246,10 @@ const AddNewBooking = () => {
     // Client Service Charge Percent
     if (bookingType?.value === 'Domestic Flight Ticket') setClientServiceChargePercent(9);
     else setClientServiceChargePercent(18);
+    // If misc remove booking sectors
+    // If not remove misc type
+    if (bookingType?.value === 'Miscellaneous') setBookingSectors([]);
+    else setMiscellaneousType(null);
   }, [bookingType]);
 
   // Vendor Calculations
@@ -600,7 +604,7 @@ const AddNewBooking = () => {
                       <Select
                         options={paymentAccounts}
                         value={paymentAccountID}
-                        placeholder='Search & Select Miscellaneous Type'
+                        placeholder='Search & Select Payment Account'
                         onChange={(id) => setPaymentAccountID(id)}
                       />
                     </div>
@@ -727,15 +731,17 @@ const AddNewBooking = () => {
                         onChange={(id) => setAirlineID(id)}
                       />
                     </div>
-                    <div>
-                      <label>Miscellaneous Type</label>
-                      <Select
-                        options={miscellaneousOptions}
-                        value={miscellaneousType}
-                        placeholder='Search & Select Miscellaneous Type'
-                        onChange={(id) => setMiscellaneousType(id)}
-                      />
-                    </div>
+                    {bookingType?.value === 'Miscellaneous' && (
+                      <div>
+                        <label>Miscellaneous Type</label>
+                        <Select
+                          options={miscellaneousOptions}
+                          value={miscellaneousType}
+                          placeholder='Search & Select Miscellaneous Type'
+                          onChange={(id) => setMiscellaneousType(id)}
+                        />
+                      </div>
+                    )}
                     <div>
                       <label>Client Referrer</label>
                       <Select

@@ -10,21 +10,21 @@ import { useEffect, useState } from 'react';
 import { deleteItem, getItem } from '../../../../api/xplorzApi';
 import ViewTable from '../../../../components/view-table';
 
-const ViewOrganization = () => {
-  const [organization, setOrganization] = useState([]);
+const ViewBooking = () => {
+  const [booking, setBooking] = useState([]);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
   useEffect(() => {
-    // Getting particular organization
-    getOrganization();
+    // Getting particular booking
+    getBooking();
   }, [router.isReady]);
 
-  const getOrganization = async () => {
+  const getBooking = async () => {
     if (router.query.view) {
-      const response = await getItem('organizations', router.query.view);
+      const response = await getItem('bookings', router.query.view);
       if (response?.success) {
         let data = response.data;
         // Converting time columns
@@ -40,15 +40,15 @@ const ViewOrganization = () => {
             timeStyle: 'short',
           });
         }
-        setOrganization(data);
+        setBooking(data);
       } else {
         sendToast(
           'error',
           response.data?.message ||
             response.data?.error ||
-            'Could Not Fetch The Requested Organization.'
+            'Could Not Fetch The Requested Booking.'
         );
-        router.push('/dashboard/organizations');
+        router.push('/dashboard/bookings');
       }
     }
   };
@@ -58,16 +58,16 @@ const ViewOrganization = () => {
     setIdToDelete(-1);
   };
   const onSubmit = async () => {
-    const response = await deleteItem('organizations', idToDelete);
+    const response = await deleteItem('bookings', idToDelete);
     if (response?.success) {
       sendToast('success', 'Deleted successfully', 4000);
-      router.push('/dashboard/organizations');
+      router.push('/dashboard/bookings');
     } else {
       sendToast(
         'error',
         response.data?.message ||
           response.data?.error ||
-          'Unexpected Error Occurred While Trying to Delete this Organization',
+          'Unexpected Error Occurred While Trying to Delete this Booking',
         4000
       );
     }
@@ -76,7 +76,7 @@ const ViewOrganization = () => {
 
   return (
     <>
-      <Seo pageTitle='View Organization' />
+      <Seo pageTitle='View Booking' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -96,9 +96,9 @@ const ViewOrganization = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>View Organization</h1>
+                  <h1 className='text-30 lh-14 fw-600'>View Booking</h1>
                   <div className='text-15 text-light-1'>
-                    Get extended details of a organization.
+                    Get extended details of a booking.
                   </div>
                 </div>
                 {/* End .col-12 */}
@@ -110,14 +110,14 @@ const ViewOrganization = () => {
                   <ConfirmationModal
                     onCancel={onCancel}
                     onSubmit={onSubmit}
-                    title='Do you really want to delete this organization?'
-                    content='This will permanently delete the organization. Press OK to confirm.'
+                    title='Do you really want to delete this booking?'
+                    content='This will permanently delete the booking. Press OK to confirm.'
                   />
                 )}
                 <ViewTable
-                  data={organization}
+                  data={booking}
                   onEdit={() =>
-                    router.push('/dashboard/organizations/edit/' + router.query.view)
+                    router.push('/dashboard/bookings/edit/' + router.query.view)
                   }
                   onDelete={() => {
                     setIdToDelete(router.query.view);
@@ -138,4 +138,4 @@ const ViewOrganization = () => {
   );
 };
 
-export default ViewOrganization;
+export default ViewBooking;
