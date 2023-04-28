@@ -11,8 +11,6 @@ import ReactSwitch from 'react-switch';
 import Select from 'react-select';
 
 const AddNewOrganization = () => {
-  const [accounts, setAccounts] = useState([]);
-  const [accountID, setAccountID] = useState(null);
   const [calenderTemplates, setCalenderTemplates] = useState([]);
   const [calenderTemplateID, setCalenderTemplateID] = useState(null);
   const [name, setName] = useState('');
@@ -52,25 +50,14 @@ const AddNewOrganization = () => {
         setUseGstn(response.data?.use_gstn);
         setFarePercent(response.data?.fare_percent);
 
-        // Getting Accounts
-        const accounts = await getList('accounts');
         const calenderTemplates = await getList('calendar-templates');
-        if (accounts?.success && calenderTemplates?.success) {
+        if (calenderTemplates?.success) {
           setCalenderTemplates(
             calenderTemplates.data.map((element) => ({
               value: element.id,
               label: element.name,
             }))
           );
-          setAccounts(
-            accounts.data.map((element) => ({ value: element.id, label: element.name }))
-          );
-          // Setting Calender + Accounts ID
-          for (let acc of accounts.data) {
-            if (acc.id === response.data.account_id) {
-              setAccountID({ value: acc.id, label: acc.name });
-            }
-          }
           for (let calendar of calenderTemplates.data) {
             if (calendar.id === response.data.calendar_template_id) {
               setCalenderTemplateID({ value: calendar.id, label: calendar.name });
@@ -100,38 +87,33 @@ const AddNewOrganization = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     // Checking if account id is not null
-    if (accountID?.value) {
-      if (!type?.value) {
-        sendToast('error', 'Please Select Organization Type', 4000);
-        return;
-      }
-      const response = await createItem('organizations', {
-        account_id: accountID.value,
-        calendar_template_id: calenderTemplateID?.value || null,
-        name,
-        code,
-        contact_name: contactName,
-        contact_email: contactEmail,
-        address,
-        gstn,
-        use_gstn: useGstn,
-        type: type?.value,
-        fare_percent: farePercent,
-      });
-      if (response?.success) {
-        sendToast('success', 'Created Organization Successfully.', 4000);
-        router.push('/dashboard/organizations');
-      } else {
-        sendToast(
-          'error',
-          response.data?.message ||
-            response.data?.error ||
-            'Failed to Create Organization.',
-          4000
-        );
-      }
+    if (!type?.value) {
+      sendToast('error', 'Please Select Organization Type', 4000);
+      return;
+    }
+    const response = await createItem('organizations', {
+      calendar_template_id: calenderTemplateID?.value || null,
+      name,
+      code,
+      contact_name: contactName,
+      contact_email: contactEmail,
+      address,
+      gstn,
+      use_gstn: useGstn,
+      type: type?.value,
+      fare_percent: farePercent,
+    });
+    if (response?.success) {
+      sendToast('success', 'Created Organization Successfully.', 4000);
+      router.push('/dashboard/organizations');
     } else {
-      sendToast('error', 'You must select an Account first.', 8000);
+      sendToast(
+        'error',
+        response.data?.message ||
+          response.data?.error ||
+          'Failed to Create Organization.',
+        4000
+      );
     }
   };
 
@@ -167,17 +149,6 @@ const AddNewOrganization = () => {
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
-                    <div>
-                      <label>
-                        Select Account<span className='text-danger'>*</span>
-                      </label>
-                      <Select
-                        options={accounts}
-                        value={accountID}
-                        placeholder='Search & Select Account (required)'
-                        onChange={(id) => setAccountID(id)}
-                      />
-                    </div>
                     <div>
                       <label>
                         Select Organization Type<span className='text-danger'>*</span>

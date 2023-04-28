@@ -278,8 +278,7 @@ const AddNewBooking = () => {
     if (vendorTDSPercentFocused) {
       setVendorTDS(
         Number(
-          ((parseFloat(grossCommission) - +vendorServiceCharges) * +vendorTDSPercent) /
-            100
+          ((+grossCommission - +vendorServiceCharges) * +vendorTDSPercent) / 100
         ).toFixed(4)
       );
       updateVendorCommission();
@@ -289,9 +288,7 @@ const AddNewBooking = () => {
   useEffect(() => {
     if (!vendorTDSPercentFocused) {
       setVendorTDSPercent(
-        Number(
-          (100 * vendorTDS) / (parseFloat(grossCommission) - +vendorServiceCharges)
-        ).toFixed(4)
+        Number((100 * vendorTDS) / (+grossCommission - +vendorServiceCharges)).toFixed(4)
       );
       updateVendorCommission();
     }
@@ -300,9 +297,7 @@ const AddNewBooking = () => {
   useEffect(() => {
     if (vendorGSTFocused) {
       setVendorServiceCharges(
-        Number((parseFloat(grossCommission) * +vendorServiceChargePercent) / 100).toFixed(
-          4
-        )
+        Number((+grossCommission * +vendorServiceChargePercent) / 100).toFixed(4)
       );
       updateVendorCommission();
     }
@@ -311,7 +306,7 @@ const AddNewBooking = () => {
   useEffect(() => {
     if (!vendorGSTFocused) {
       setVendorServiceChargePercent(
-        Number((100 * +vendorServiceCharges) / parseFloat(grossCommission)).toFixed(4)
+        Number((100 * +vendorServiceCharges) / +grossCommission).toFixed(4)
       );
       updateVendorCommission();
     }
@@ -333,7 +328,7 @@ const AddNewBooking = () => {
   // Vendor Commission Receivable Total
   const updateVendorCommission = () => {
     setCommissionReceivable(
-      Math.round(grossCommission - +vendorTDS - +vendorServiceCharges)
+      Math.round(+grossCommission - +vendorTDS - +vendorServiceCharges)
     );
   };
 
