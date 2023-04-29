@@ -244,8 +244,11 @@ const AddNewBooking = () => {
   // Booking Type Changes
   useEffect(() => {
     // Client Service Charge Percent
-    if (bookingType?.value === 'Domestic Flight Ticket') setClientServiceChargePercent(9);
-    else setClientServiceChargePercent(18);
+    if (clientServiceCharges.trim().length === 0) {
+      if (bookingType?.value === 'Domestic Flight Ticket')
+        setClientServiceChargePercent(9);
+      else setClientServiceChargePercent(18);
+    }
     // If misc remove booking sectors
     // If not remove misc type
     if (bookingType?.value === 'Miscellaneous') setBookingSectors([]);
@@ -285,49 +288,50 @@ const AddNewBooking = () => {
           ((+grossCommission - +vendorServiceCharges) * +vendorTDSPercent) / 100
         ).toFixed(4)
       );
-      updateVendorCommission();
     }
-  }, [vendorTDSPercent]);
+  }, [vendorTDSPercent, grossCommission]);
 
   useEffect(() => {
     if (!vendorTDSPercentFocused) {
       setVendorTDSPercent(
         Number((100 * vendorTDS) / (+grossCommission - +vendorServiceCharges)).toFixed(4)
       );
-      updateVendorCommission();
     }
-  }, [vendorTDS]);
+  }, [vendorTDS, grossCommission]);
 
   useEffect(() => {
     if (vendorGSTFocused) {
       setVendorServiceCharges(
         Number((+grossCommission * +vendorServiceChargePercent) / 100).toFixed(4)
       );
-      updateVendorCommission();
     }
-  }, [vendorServiceChargePercent]);
+  }, [vendorServiceChargePercent, grossCommission]);
 
   useEffect(() => {
     if (!vendorGSTFocused) {
       setVendorServiceChargePercent(
         Number((100 * +vendorServiceCharges) / +grossCommission).toFixed(4)
       );
-      updateVendorCommission();
     }
-  }, [vendorServiceCharges]);
-
-  useEffect(
-    () => calculateGrossCommission(),
-    [IATACommissionPercent, plbCommissionPercent, vendorBaseAmount, vendorYQAmount]
-  );
-
-  useEffect(() => calculateGrossCommission(), [commissionRuleID]);
+  }, [vendorServiceCharges, grossCommission]);
 
   useEffect(() => {
-    if (paymentAccountID) {
-      setPaymentAmount(Number(+vendorTotal - +vendorMiscCharges));
-    }
-  }, [paymentAccountID]);
+    calculateGrossCommission();
+  }, [
+    commissionRuleID,
+    IATACommissionPercent,
+    plbCommissionPercent,
+    vendorBaseAmount,
+    vendorYQAmount,
+  ]);
+
+  useEffect(() => {
+    updateVendorCommission();
+  }, [grossCommission, vendorServiceCharges, vendorTDS]);
+
+  useEffect(() => {
+    setPaymentAmount(Number(+vendorTotal - +vendorMiscCharges));
+  }, [paymentAccountID, vendorTotal, vendorMiscCharges]);
 
   // Vendor Commission Receivable Total
   const updateVendorCommission = () => {
@@ -363,7 +367,6 @@ const AddNewBooking = () => {
           ((+clientBaseAmount + +clientReferralFee) * +clientServiceChargePercent) / 100
         ).toFixed(0)
       );
-      updateClientTotal();
     }
   }, [clientServiceChargePercent, clientReferralFee, clientBaseAmount]);
 
@@ -374,20 +377,18 @@ const AddNewBooking = () => {
           (100 * +clientServiceCharges) / (+clientBaseAmount + +clientReferralFee)
         ).toFixed(4)
       );
-      updateClientTotal();
     }
   }, [clientServiceCharges]);
 
-  useEffect(
-    () => updateClientTotal(),
-    [
-      clientServiceCharges,
-      clientTaxAmount,
-      clientGSTAmount,
-      clientReferralFee,
-      clientBaseAmount,
-    ]
-  );
+  useEffect(() => {
+    updateClientTotal();
+  }, [
+    clientServiceCharges,
+    clientTaxAmount,
+    clientGSTAmount,
+    clientReferralFee,
+    clientBaseAmount,
+  ]);
 
   // Client Total
   const updateClientTotal = () => {
@@ -932,8 +933,13 @@ const AddNewBooking = () => {
                                     style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
                                     inputClass='custom_input-picker'
                                     containerClassName='custom_container-picker'
-                                    value={bookingDate}
-                                    onChange={setBookingDate}
+                                    value={element['travel_date']}
+                                    onChange={(date) => {
+                                      setBookingSectors((prev) => {
+                                        prev[index]['travel_date'] = date;
+                                        return [...prev];
+                                      });
+                                    }}
                                     numberOfMonths={1}
                                     offsetY={10}
                                     format='DD MMMM YYYY'

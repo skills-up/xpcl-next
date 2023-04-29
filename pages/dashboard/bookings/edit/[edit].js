@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { sendToast } from '../../../../utils/toastify';
 import { useEffect, useState } from 'react';
-import { createItem, getItem, getList } from '../../../../api/xplorzApi';
+import { createItem, getItem, getList, updateItem } from '../../../../api/xplorzApi';
 import ReactSwitch from 'react-switch';
 import Select from 'react-select';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
@@ -189,7 +189,14 @@ const UpdateBooking = () => {
           // Setting Commission ID
           for (let comm of commissionRules.data)
             if (comm.id === response.data.commission_rule_id)
-              setCommissionRuleID({ value: comm.id, label: comm.name });
+              setCommissionRuleID({
+                value: comm.id,
+                label: comm.name,
+                iata_basic: comm.iata_basic,
+                iata_yq: comm.iata_yq,
+                plb_basic: comm.plb_basic,
+                plb_yq: comm.plb_yq,
+              });
           // Set Airline ID
           for (let airline of airlines.data)
             if (airline.id === response.data.airline_id)
@@ -217,12 +224,6 @@ const UpdateBooking = () => {
                 });
             }
           }
-          console.log(
-            'client traveller',
-            tempClientTravellersArr,
-            clientTravellers.data,
-            response.data.client_travellers
-          );
           setClientTravellerIDS(tempClientTravellersArr);
           // Client Booking Sectors
           const tempBookingSectors = [];
@@ -288,7 +289,7 @@ const UpdateBooking = () => {
       }
     }
     // Adding response
-    const response = await createItem('bookings', {
+    const response = await updateItem('bookings', router.query.edit, {
       booking_type: bookingType.value,
       booking_date: bookingDate.format('YYYY-MM-DD'),
       ticket_number: ticketNumber,
@@ -331,12 +332,12 @@ const UpdateBooking = () => {
       sector,
     });
     if (response?.success) {
-      sendToast('success', 'Created Booking Successfully.', 4000);
+      sendToast('success', 'Updated Booking Successfully.', 4000);
       router.push('/dashboard/bookings');
     } else {
       sendToast(
         'error',
-        response.data?.message || response.data?.error || 'Failed to Create Booking.',
+        response.data?.message || response.data?.error || 'Failed to Update Booking.',
         4000
       );
     }
@@ -352,8 +353,11 @@ const UpdateBooking = () => {
   // Booking Type Changes
   useEffect(() => {
     // Client Service Charge Percent
-    if (bookingType?.value === 'Domestic Flight Ticket') setClientServiceChargePercent(9);
-    else setClientServiceChargePercent(18);
+    if (clientServiceCharges.trim().length === 0) {
+      if (bookingType?.value === 'Domestic Flight Ticket')
+        setClientServiceChargePercent(9);
+      else setClientServiceChargePercent(18);
+    }
     // If misc remove booking sectors
     // If not remove misc type
     if (bookingType?.value === 'Miscellaneous') setBookingSectors([]);
@@ -393,49 +397,50 @@ const UpdateBooking = () => {
           ((+grossCommission - +vendorServiceCharges) * +vendorTDSPercent) / 100
         ).toFixed(4)
       );
-      updateVendorCommission();
     }
-  }, [vendorTDSPercent]);
+  }, [vendorTDSPercent, grossCommission]);
 
   useEffect(() => {
     if (!vendorTDSPercentFocused) {
       setVendorTDSPercent(
         Number((100 * vendorTDS) / (+grossCommission - +vendorServiceCharges)).toFixed(4)
       );
-      updateVendorCommission();
     }
-  }, [vendorTDS]);
+  }, [vendorTDS, grossCommission]);
 
   useEffect(() => {
     if (vendorGSTFocused) {
       setVendorServiceCharges(
         Number((+grossCommission * +vendorServiceChargePercent) / 100).toFixed(4)
       );
-      updateVendorCommission();
     }
-  }, [vendorServiceChargePercent]);
+  }, [vendorServiceChargePercent, grossCommission]);
 
   useEffect(() => {
     if (!vendorGSTFocused) {
       setVendorServiceChargePercent(
         Number((100 * +vendorServiceCharges) / +grossCommission).toFixed(4)
       );
-      updateVendorCommission();
     }
-  }, [vendorServiceCharges]);
-
-  useEffect(
-    () => calculateGrossCommission(),
-    [IATACommissionPercent, plbCommissionPercent, vendorBaseAmount, vendorYQAmount]
-  );
-
-  useEffect(() => calculateGrossCommission(), [commissionRuleID]);
+  }, [vendorServiceCharges, grossCommission]);
 
   useEffect(() => {
-    if (paymentAccountID) {
-      setPaymentAmount(Number(+vendorTotal - +vendorMiscCharges));
-    }
-  }, [paymentAccountID]);
+    calculateGrossCommission();
+  }, [
+    commissionRuleID,
+    IATACommissionPercent,
+    plbCommissionPercent,
+    vendorBaseAmount,
+    vendorYQAmount,
+  ]);
+
+  useEffect(() => {
+    updateVendorCommission();
+  }, [grossCommission, vendorServiceCharges, vendorTDS]);
+
+  useEffect(() => {
+    setPaymentAmount(Number(+vendorTotal - +vendorMiscCharges));
+  }, [paymentAccountID, vendorTotal, vendorMiscCharges]);
 
   // Vendor Commission Receivable Total
   const updateVendorCommission = () => {
@@ -471,7 +476,6 @@ const UpdateBooking = () => {
           ((+clientBaseAmount + +clientReferralFee) * +clientServiceChargePercent) / 100
         ).toFixed(0)
       );
-      updateClientTotal();
     }
   }, [clientServiceChargePercent, clientReferralFee, clientBaseAmount]);
 
@@ -482,20 +486,18 @@ const UpdateBooking = () => {
           (100 * +clientServiceCharges) / (+clientBaseAmount + +clientReferralFee)
         ).toFixed(4)
       );
-      updateClientTotal();
     }
   }, [clientServiceCharges]);
 
-  useEffect(
-    () => updateClientTotal(),
-    [
-      clientServiceCharges,
-      clientTaxAmount,
-      clientGSTAmount,
-      clientReferralFee,
-      clientBaseAmount,
-    ]
-  );
+  useEffect(() => {
+    updateClientTotal();
+  }, [
+    clientServiceCharges,
+    clientTaxAmount,
+    clientGSTAmount,
+    clientReferralFee,
+    clientBaseAmount,
+  ]);
 
   // Client Total
   const updateClientTotal = () => {
@@ -1040,8 +1042,13 @@ const UpdateBooking = () => {
                                     style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
                                     inputClass='custom_input-picker'
                                     containerClassName='custom_container-picker'
-                                    value={bookingDate}
-                                    onChange={setBookingDate}
+                                    value={element['travel_date']}
+                                    onChange={(date) => {
+                                      setBookingSectors((prev) => {
+                                        prev[index]['travel_date'] = date;
+                                        return [...prev];
+                                      });
+                                    }}
                                     numberOfMonths={1}
                                     offsetY={10}
                                     format='DD MMMM YYYY'
