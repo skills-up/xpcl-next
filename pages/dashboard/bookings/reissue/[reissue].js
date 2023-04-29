@@ -6,14 +6,14 @@ import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { sendToast } from '../../../../utils/toastify';
 import { useEffect, useState } from 'react';
-import { createItem, getItem, getList, updateItem } from '../../../../api/xplorzApi';
+import { createItem, getItem, getList } from '../../../../api/xplorzApi';
 import ReactSwitch from 'react-switch';
 import Select from 'react-select';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 import { BiPlusMedical } from 'react-icons/bi';
 import { store } from '../../../../app/store';
 
-const UpdateBooking = () => {
+const ReissueBooking = () => {
   const [ticketNumber, setTicketNumber] = useState('');
   const [pnr, setPNR] = useState('');
   const [vendorBaseAmount, setVendorBaseAmount] = useState('');
@@ -38,7 +38,6 @@ const UpdateBooking = () => {
   const [sector, setSector] = useState('');
   const [bookingSectors, setBookingSectors] = useState([]);
   const [grossCommission, setGrossCommission] = useState(0);
-  const [originalBookingID, setOriginalBookingID] = useState(null);
 
   // Percentages
   const [vendorServiceChargePercent, setVendorServiceChargePercent] = useState(18);
@@ -55,6 +54,7 @@ const UpdateBooking = () => {
   const [airlineID, setAirlineID] = useState(null);
   const [paymentAccountID, setPaymentAccountID] = useState(null);
   const [clientReferrerID, setClientReferrerID] = useState(null);
+  const [originalBookingID, setOriginalBookingID] = useState(null);
   const [clientTravellerIDS, setClientTravellerIDS] = useState([]);
 
   // Dropdown Options
@@ -92,8 +92,8 @@ const UpdateBooking = () => {
   }, [router.isReady]);
 
   const getData = async () => {
-    if (router.query.edit) {
-      const response = await getItem('bookings', router.query.edit);
+    if (router.query.reissue) {
+      const response = await getItem('bookings', router.query.reissue);
       if (response?.success) {
         setTicketNumber(response.data.ticket_number);
         setPNR(response.data.pnr);
@@ -116,8 +116,6 @@ const UpdateBooking = () => {
         setClientServicesCharges(response.data.client_service_charges);
         setClientTotal(response.data.client_total);
         setSector(response.data.sector);
-        setOriginalBookingID(response.data?.original_booking_id);
-        setReissuePenalty(response.data?.reissue_penalty);
         setBookingDate(
           new DateObject({ date: response.data.booking_date, format: 'YYYY-MM-DD' })
         );
@@ -291,7 +289,7 @@ const UpdateBooking = () => {
       }
     }
     // Adding response
-    const editData = {
+    const response = await createItem('bookings/' + router.query.reissue + '/reissue', {
       booking_type: bookingType.value,
       booking_date: bookingDate.format('YYYY-MM-DD'),
       ticket_number: ticketNumber,
@@ -320,6 +318,8 @@ const UpdateBooking = () => {
       client_gst_amount: clientGSTAmount,
       client_service_charges: clientServiceCharges,
       client_total: clientTotal,
+      original_booking_id: router.query.reissue,
+      reissue_penalty: reissuePenalty,
       client_traveller_ids:
         clientTravellerIDS?.length > 0
           ? clientTravellerIDS.map((element) => element.value)
@@ -332,19 +332,14 @@ const UpdateBooking = () => {
         details: element['details'],
       })),
       sector,
-    };
-    if (originalBookingID) {
-      editData['original_booking_id'] = originalBookingID;
-      editData['reissue_penalty'] = reissuePenalty;
-    }
-    const response = await updateItem('bookings', router.query.edit, editData);
+    });
     if (response?.success) {
-      sendToast('success', 'Updated Booking Successfully.', 4000);
+      sendToast('success', 'Reissued Booking Successfully.', 4000);
       router.push('/dashboard/bookings');
     } else {
       sendToast(
         'error',
-        response.data?.message || response.data?.error || 'Failed to Update Booking.',
+        response.data?.message || response.data?.error || 'Failed to Reissue Booking.',
         4000
       );
     }
@@ -375,6 +370,7 @@ const UpdateBooking = () => {
   useEffect(
     () => updateVendorTotal(),
     [
+      reissuePenalty,
       vendorBaseAmount,
       vendorYQAmount,
       vendorTaxAmount,
@@ -522,7 +518,7 @@ const UpdateBooking = () => {
 
   return (
     <>
-      <Seo pageTitle='Add New Booking' />
+      <Seo pageTitle='Reissue Booking' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -542,8 +538,8 @@ const UpdateBooking = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Update Booking</h1>
-                  <div className='text-15 text-light-1'>Update an existing booking.</div>
+                  <h1 className='text-30 lh-14 fw-600'>Reissue Booking</h1>
+                  <div className='text-15 text-light-1'>Reissue an existing booking.</div>
                 </div>
                 {/* End .col-12 */}
               </div>
@@ -702,21 +698,19 @@ const UpdateBooking = () => {
                         </label>
                       </div>
                     </div>
-                    {originalBookingID && (
-                      <div className='col-12'>
-                        <div className='form-input'>
-                          <input
-                            onChange={(e) => setReissuePenalty(e.target.value)}
-                            value={reissuePenalty}
-                            placeholder=' '
-                            type='number'
-                          />
-                          <label className='lh-1 text-16 text-light-1'>
-                            Reissue Penalty
-                          </label>
-                        </div>
+                    <div className='col-12'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setReissuePenalty(e.target.value)}
+                          value={reissuePenalty}
+                          placeholder=' '
+                          type='number'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Reissue Penalty
+                        </label>
                       </div>
-                    )}
+                    </div>
                     <div className='col-12'>
                       <div className='form-input'>
                         <input
@@ -1124,7 +1118,7 @@ const UpdateBooking = () => {
                         type='submit'
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
                       >
-                        Update Booking
+                        Reissue Booking
                       </button>
                     </div>
                   </form>
@@ -1143,4 +1137,4 @@ const UpdateBooking = () => {
   );
 };
 
-export default UpdateBooking;
+export default ReissueBooking;

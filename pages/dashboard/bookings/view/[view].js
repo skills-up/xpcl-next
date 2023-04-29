@@ -9,6 +9,7 @@ import { sendToast } from '../../../../utils/toastify';
 import { useEffect, useState } from 'react';
 import { deleteItem, getItem } from '../../../../api/xplorzApi';
 import ViewTable from '../../../../components/view-table';
+import { HiRefresh } from 'react-icons/hi';
 
 const ViewBooking = () => {
   const [booking, setBooking] = useState([]);
@@ -124,6 +125,18 @@ const ViewBooking = () => {
                     setConfirmDelete(true);
                   }}
                 />
+                <hr className='my-4' />
+                <div className='mt-15 d-flex gap-2'>
+                  <button
+                    className='btn btn-success d-flex items-center gap-1'
+                    type='button'
+                    onClick={() =>
+                      router.push('/dashboard/bookings/reissue/' + router.query.view)
+                    }
+                  >
+                    <HiRefresh /> Reissue
+                  </button>
+                </div>
               </div>
             </div>
 
