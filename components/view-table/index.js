@@ -2,7 +2,7 @@ import { isValidElement, useEffect } from 'react';
 import { BsTrash3 } from 'react-icons/bs';
 import { HiOutlinePencilAlt } from 'react-icons/hi';
 
-const ViewTable = ({ data, onEdit, onDelete }) => {
+const ViewTable = ({ data, onEdit, onDelete, extraButtons = undefined }) => {
   return (
     <div className='view-table'>
       <table>
@@ -56,6 +56,18 @@ const ViewTable = ({ data, onEdit, onDelete }) => {
         >
           <BsTrash3 /> Delete
         </button>
+        {extraButtons &&
+          extraButtons.map((element, index) => {
+            return (
+              <button
+                key={index}
+                onClick={element?.onClick}
+                className={`${element?.classNames} btn d-flex items-center gap-1`}
+              >
+                {element?.icon} {element?.text}
+              </button>
+            );
+          })}
       </div>
     </div>
   );
