@@ -6,12 +6,12 @@ import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { sendToast } from '../../../../utils/toastify';
 import { useEffect, useState } from 'react';
-import { createItem, getList, updateItem } from '../../../../api/xplorzApi';
+import { createItem, getItem, getList } from '../../../../api/xplorzApi';
 import ReactSwitch from 'react-switch';
 import Select from 'react-select';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 
-const UpdatePartialRefund = () => {
+const AddNewPartialRefund = () => {
   const [vendorBaseAmount, setVendorBaseAmount] = useState('');
   const [vendorYQAmount, setVendorYQAmount] = useState('');
   const [vendorTaxAmount, setVendorTaxAmount] = useState('');
@@ -68,8 +68,8 @@ const UpdatePartialRefund = () => {
   }, [router.isReady]);
 
   const getData = async () => {
-    if (router.query.edit) {
-      const response = await getItem('partial-refunds', router.query.edit);
+    if (router.query.clone) {
+      const response = await getItem('partial-refunds', router.query.clone);
 
       if (response?.success) {
         setVendorBaseAmount(response.data.vendor_base_amount);
@@ -188,11 +188,16 @@ const UpdatePartialRefund = () => {
       sendToast('error', 'You must select an Account', 4000);
       return;
     }
+    if (!bookingID?.value) {
+      sendToast('error', 'You must select a Booking to Refund', 4000);
+      return;
+    }
     if (!vendorID?.value) {
       sendToast('error', 'You must select a Vendor', 4000);
       return;
     }
-    const response = await updateItem('partial-refunds', router.query.edit, {
+    const response = await createItem('partial-refunds', {
+      booking_id: bookingID.value,
       refund_date: refundDate.format('YYYY-MM-DD'),
       vendor_id: vendorID.value,
       vendor_base_amount: vendorBaseAmount,
@@ -368,7 +373,7 @@ const UpdatePartialRefund = () => {
 
   return (
     <>
-      <Seo pageTitle='Update Partial Refund' />
+      <Seo pageTitle='Add New Partial Refund' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -388,10 +393,8 @@ const UpdatePartialRefund = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Update Partial Refund</h1>
-                  <div className='text-15 text-light-1'>
-                    Update an existing partial refund.
-                  </div>
+                  <h1 className='text-30 lh-14 fw-600'>Add New Partial Refund</h1>
+                  <div className='text-15 text-light-1'>Create a new partial refund.</div>
                 </div>
                 {/* End .col-12 */}
               </div>
@@ -400,6 +403,17 @@ const UpdatePartialRefund = () => {
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
+                    <div>
+                      <label>
+                        Booking to Refund<span className='text-danger'>*</span>
+                      </label>
+                      <Select
+                        options={bookings}
+                        value={bookingID}
+                        placeholder='Search & Select Booking (required)'
+                        onChange={(id) => setBookingID(id)}
+                      />
+                    </div>
                     <div className='d-block ml-4'>
                       <label>
                         Refund Date<span className='text-danger'>*</span>
@@ -768,7 +782,7 @@ const UpdatePartialRefund = () => {
                         type='submit'
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
                       >
-                        Update Partial Refund
+                        Add Partial Refund
                       </button>
                     </div>
                   </form>
@@ -787,4 +801,4 @@ const UpdatePartialRefund = () => {
   );
 };
 
-export default UpdatePartialRefund;
+export default AddNewPartialRefund;
