@@ -1,17 +1,19 @@
-import Seo from '../../../../../components/common/Seo';
-import Footer from '../../../../../components/footer/dashboard-footer';
-import Header from '../../../../../components/header/dashboard-header';
-import Sidebar from '../../../../../components/sidebars/dashboard-sidebars';
+import Seo from '../../../../components/common/Seo';
+import Footer from '../../../../components/footer/dashboard-footer';
+import Header from '../../../../components/header/dashboard-header';
+import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { sendToast } from '../../../../../utils/toastify';
+import { sendToast } from '../../../../utils/toastify';
 import { useEffect, useState } from 'react';
-import { createItem, getList } from '../../../../../api/xplorzApi';
+import { createItem, getItem, getList } from '../../../../api/xplorzApi';
 import ReactSwitch from 'react-switch';
 import Select from 'react-select';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 
 const AddNewRefund = () => {
+  const [bookings, setBookings] = useState([]);
+  const [bookingID, setBookingID] = useState(null);
   const [refundDate, setRefundDate] = useState(new DateObject());
   const [accounts, setAccounts] = useState([]);
   const [accountID, setAccountID] = useState(null);
@@ -26,22 +28,54 @@ const AddNewRefund = () => {
 
   useEffect(() => {
     if (router.isReady) {
-      if (!router.query.booking_id) {
-        router.push('/dashboard/bookings');
-      }
       getData();
     }
   }, [router.isReady]);
 
   const getData = async () => {
-    const accounts = await getList('accounts');
-    if (accounts?.success) {
-      setAccounts(
-        accounts.data.map((element) => ({ value: element.id, label: element.name }))
-      );
-    } else {
-      sendToast('error', 'Unable to fetch required data', 4000);
-      router.push('/dashboard/bookings/view/' + router.query.booking_id);
+    if (router.query.clone) {
+      const response = await getItem('refunds', router.query.clone);
+      if (response?.success) {
+        // Setting values
+        setRefundDate(
+          new DateObject({ date: response.data.refund_date, format: 'YYYY-MM-DD' })
+        );
+        setAirlineCancellationCharges(response.data.airline_cancellation_charges);
+        setVendorServiceFee(response.data.vendor_service_fee);
+        setClientCancellationCharges(response.data.client_cancellation_charges);
+        setRefundAmount(response.data.refund_amount);
+        setReason(response.data?.reason);
+
+        const accounts = await getList('accounts');
+        const bookings = await getList('bookings');
+        if (accounts?.success && bookings?.success) {
+          setAccounts(
+            accounts.data.map((element) => ({ value: element.id, label: element.name }))
+          );
+          setBookings(
+            bookings.data.map((element) => ({
+              value: element.id,
+              label: element.booking_type,
+            }))
+          );
+          // Setting Account ID
+          for (let account of accounts.data)
+            if (account.id === response.data.account_id)
+              setAccountID({ value: account.id, label: account.name });
+        } else {
+          sendToast('error', 'Unable to fetch required data', 4000);
+          router.push('/dashboard/refunds');
+        }
+      } else {
+        sendToast(
+          'error',
+          response.data?.message ||
+            response.data?.error ||
+            'Unable to fetch required data',
+          4000
+        );
+        router.push('/dashboard/refunds');
+      }
     }
   };
 
@@ -51,8 +85,12 @@ const AddNewRefund = () => {
       sendToast('error', 'You must select an Account', 4000);
       return;
     }
+    if (!bookingID?.value) {
+      sendToast('error', 'You must select a Booking to Refund', 4000);
+      return;
+    }
     const response = await createItem('refunds', {
-      booking_id: router.query.booking_id,
+      booking_id: bookingID.value,
       refund_date: refundDate.format('YYYY-MM-DD'),
       account_id: accountID.value,
       airline_cancellation_charges: airlineCancellationCharges,
@@ -63,7 +101,7 @@ const AddNewRefund = () => {
     });
     if (response?.success) {
       sendToast('success', 'Created Refund Successfully.', 4000);
-      router.push('/dashboard/bookings/view/' + router.query.booking_id);
+      router.push('/dashboard/refunds');
     } else {
       sendToast(
         'error',
@@ -105,6 +143,17 @@ const AddNewRefund = () => {
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
+                    <div>
+                      <label>
+                        Booking to Refund<span className='text-danger'>*</span>
+                      </label>
+                      <Select
+                        options={bookings}
+                        value={bookingID}
+                        placeholder='Search & Select Booking (required)'
+                        onChange={(id) => setBookingID(id)}
+                      />
+                    </div>
                     <div className='d-block ml-4'>
                       <label>
                         Refund Date<span className='text-danger'>*</span>
@@ -189,7 +238,6 @@ const AddNewRefund = () => {
                         </label>
                       </div>
                     </div>
-
                     <div className='col-12'>
                       <div className='form-input'>
                         <input

@@ -1,17 +1,19 @@
-import Seo from '../../../../../components/common/Seo';
-import Footer from '../../../../../components/footer/dashboard-footer';
-import Header from '../../../../../components/header/dashboard-header';
-import Sidebar from '../../../../../components/sidebars/dashboard-sidebars';
+import Seo from '../../../../components/common/Seo';
+import Footer from '../../../../components/footer/dashboard-footer';
+import Header from '../../../../components/header/dashboard-header';
+import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { sendToast } from '../../../../../utils/toastify';
+import { sendToast } from '../../../../utils/toastify';
 import { useEffect, useState } from 'react';
-import { createItem, getItem, getList, updateItem } from '../../../../../api/xplorzApi';
+import { createItem, getItem, getList, updateItem } from '../../../../api/xplorzApi';
 import ReactSwitch from 'react-switch';
 import Select from 'react-select';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 
 const UpdateRefund = () => {
+  const [bookings, setBookings] = useState([]);
+  const [bookingID, setBookingID] = useState(null);
   const [refundDate, setRefundDate] = useState(new DateObject());
   const [accounts, setAccounts] = useState([]);
   const [accountID, setAccountID] = useState(null);
@@ -26,9 +28,6 @@ const UpdateRefund = () => {
 
   useEffect(() => {
     if (router.isReady) {
-      if (!router.query.booking_id) {
-        router.push('/dashboard/bookings');
-      }
       getData();
     }
   }, [router.isReady]);
@@ -48,17 +47,28 @@ const UpdateRefund = () => {
         setReason(response.data?.reason);
 
         const accounts = await getList('accounts');
-        if (accounts?.success) {
+        const bookings = await getList('bookings');
+        if (accounts?.success && bookings?.success) {
           setAccounts(
             accounts.data.map((element) => ({ value: element.id, label: element.name }))
+          );
+          setBookings(
+            bookings.data.map((element) => ({
+              value: element.id,
+              label: element.booking_type,
+            }))
           );
           // Setting Account ID
           for (let account of accounts.data)
             if (account.id === response.data.account_id)
               setAccountID({ value: account.id, label: account.name });
+          // Setting Booking ID
+          for (let booking of bookings.data)
+            if (booking.id === response.data.booking_id)
+              setBookingID({ value: booking.id, label: booking.booking_type });
         } else {
           sendToast('error', 'Unable to fetch required data', 4000);
-          router.push('/dashboard/bookings/view/' + router.query.booking_id);
+          router.push('/dashboard/refunds');
         }
       } else {
         sendToast(
@@ -68,7 +78,7 @@ const UpdateRefund = () => {
             'Unable to fetch required data',
           4000
         );
-        router.push('/dashboard/bookings/view/' + router.query.booking_id);
+        router.push('/dashboard/refunds');
       }
     }
   };
@@ -80,7 +90,6 @@ const UpdateRefund = () => {
       return;
     }
     const response = await updateItem('refunds', router.query.edit, {
-      booking_id: router.query.booking_id,
       refund_date: refundDate.format('YYYY-MM-DD'),
       account_id: accountID.value,
       airline_cancellation_charges: airlineCancellationCharges,
@@ -91,7 +100,7 @@ const UpdateRefund = () => {
     });
     if (response?.success) {
       sendToast('success', 'Updated Refund Successfully.', 4000);
-      router.push('/dashboard/bookings/view/' + router.query.booking_id);
+      router.push('/dashboard/refunds');
     } else {
       sendToast(
         'error',

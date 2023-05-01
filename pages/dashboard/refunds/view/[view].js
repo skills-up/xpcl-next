@@ -9,23 +9,22 @@ import { sendToast } from '../../../../utils/toastify';
 import { useEffect, useState } from 'react';
 import { deleteItem, getItem } from '../../../../api/xplorzApi';
 import ViewTable from '../../../../components/view-table';
-import { HiRefresh } from 'react-icons/hi';
 
-const ViewBooking = () => {
-  const [booking, setBooking] = useState([]);
+const ViewRefunds = () => {
+  const [refund, setRefund] = useState([]);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
   useEffect(() => {
-    // Getting particular booking
-    getBooking();
+    // Getting particular organization
+    getRefund();
   }, [router.isReady]);
 
-  const getBooking = async () => {
+  const getRefund = async () => {
     if (router.query.view) {
-      const response = await getItem('bookings', router.query.view);
+      const response = await getItem('refunds', router.query.view);
       if (response?.success) {
         let data = response.data;
         // Converting time columns
@@ -41,18 +40,15 @@ const ViewBooking = () => {
             timeStyle: 'short',
           });
         }
-        if (data?.reissued_booking) {
-          delete data['reissued_booking'];
-        }
-        setBooking(data);
+        setRefund(data);
       } else {
         sendToast(
           'error',
           response.data?.message ||
             response.data?.error ||
-            'Could Not Fetch The Requested Booking.'
+            'Could Not Fetch The Requested Refund.'
         );
-        router.push('/dashboard/bookings');
+        router.push('/dashboard/refunds');
       }
     }
   };
@@ -62,16 +58,16 @@ const ViewBooking = () => {
     setIdToDelete(-1);
   };
   const onSubmit = async () => {
-    const response = await deleteItem('bookings', idToDelete);
+    const response = await deleteItem('refunds', idToDelete);
     if (response?.success) {
       sendToast('success', 'Deleted successfully', 4000);
-      router.push('/dashboard/bookings');
+      router.push('/dashboard/refunds');
     } else {
       sendToast(
         'error',
         response.data?.message ||
           response.data?.error ||
-          'Unexpected Error Occurred While Trying to Delete this Booking',
+          'Unexpected Error Occurred While Trying to Delete this Refund',
         4000
       );
     }
@@ -80,7 +76,7 @@ const ViewBooking = () => {
 
   return (
     <>
-      <Seo pageTitle='View Booking' />
+      <Seo pageTitle='View Refund' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -100,9 +96,9 @@ const ViewBooking = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>View Booking</h1>
+                  <h1 className='text-30 lh-14 fw-600'>View Refund</h1>
                   <div className='text-15 text-light-1'>
-                    Get extended details of a booking.
+                    Get extended details of a refund.
                   </div>
                 </div>
                 {/* End .col-12 */}
@@ -114,28 +110,19 @@ const ViewBooking = () => {
                   <ConfirmationModal
                     onCancel={onCancel}
                     onSubmit={onSubmit}
-                    title='Do you really want to delete this booking?'
-                    content='This will permanently delete the booking. Press OK to confirm.'
+                    title='Do you really want to delete this refund?'
+                    content='This will permanently delete the refund. Press OK to confirm.'
                   />
                 )}
                 <ViewTable
-                  data={booking}
+                  data={refund}
                   onEdit={() =>
-                    router.push('/dashboard/bookings/edit/' + router.query.view)
+                    router.push('/dashboard/refunds/edit/' + router.query.view)
                   }
                   onDelete={() => {
                     setIdToDelete(router.query.view);
                     setConfirmDelete(true);
                   }}
-                  extraButtons={[
-                    {
-                      icon: <HiRefresh />,
-                      text: 'Reissue',
-                      onClick: () =>
-                        router.push('/dashboard/bookings/reissue/' + router.query.view),
-                      classNames: 'btn-success',
-                    },
-                  ]}
                 />
               </div>
             </div>
@@ -151,4 +138,4 @@ const ViewBooking = () => {
   );
 };
 
-export default ViewBooking;
+export default ViewRefunds;

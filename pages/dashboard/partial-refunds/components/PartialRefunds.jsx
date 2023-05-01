@@ -10,38 +10,36 @@ import { BsTrash3 } from 'react-icons/bs';
 import { IoCopyOutline } from 'react-icons/io5';
 import { useRouter } from 'next/router';
 
-const Refunds = () => {
-  const [refunds, setRefunds] = useState([]);
+const PartialRefunds = () => {
+  const [partialRefunds, setPartialRefunds] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
 
   const router = useRouter();
   useEffect(() => {
-    if (router.isReady) getRefunds();
-  }, [router.isReady]);
+    if (router.isReady) getPartialRefunds();
+  }, []);
 
-  const getRefunds = async () => {
-    if (router.query.view) {
-      const response = await getList('refunds');
-      if (response?.success) {
-        setRefunds(
-          response.data.filter((element) => +element.booking_id === +router.query.view)
-        );
-      } else {
-        sendToast(
-          'error',
-          response?.data?.message || response?.data?.error || 'Error getting refunds',
-          4000
-        );
-      }
+  const getPartialRefunds = async () => {
+    const response = await getList('partial-refunds');
+    if (response?.success) {
+      setPartialRefunds(response.data);
+    } else {
+      sendToast(
+        'error',
+        response?.data?.message ||
+          response?.data?.error ||
+          'Error getting partial refunds',
+        4000
+      );
     }
   };
 
   const columns = [
     {
-      Header: 'Booking ID',
-      accessor: 'booking_id',
+      Header: 'Number',
+      accessor: 'number',
     },
     {
       Header: 'Refund Date',
@@ -59,37 +57,25 @@ const Refunds = () => {
                 {
                   label: 'View',
                   onClick: () =>
-                    router.push({
-                      pathname: '/dashboard/bookings/refunds/view/',
-                      query: {
-                        booking_id: router.query.view,
-                        view: data.row.original.id,
-                      },
-                    }),
+                    router.push(
+                      '/dashboard/partial-refunds/view/' + data.row.original.id
+                    ),
                   icon: <AiOutlineEye />,
                 },
                 {
                   label: 'Edit',
                   onClick: () =>
-                    router.push({
-                      pathname: '/dashboard/bookings/refunds/edit/',
-                      query: {
-                        booking_id: router.query.view,
-                        edit: data.row.original.id,
-                      },
-                    }),
+                    router.push(
+                      '/dashboard/partial-refunds/edit/' + data.row.original.id
+                    ),
                   icon: <HiOutlinePencilAlt />,
                 },
                 {
                   label: 'Clone',
                   onClick: () =>
-                    router.push({
-                      pathname: '/dashboard/bookings/refunds/clone/',
-                      query: {
-                        booking_id: router.query.view,
-                        clone: data.row.original.id,
-                      },
-                    }),
+                    router.push(
+                      '/dashboard/partial-refunds/clone/' + data.row.original.id
+                    ),
                   icon: <IoCopyOutline />,
                 },
                 {
@@ -113,16 +99,16 @@ const Refunds = () => {
     setIdToDelete(-1);
   };
   const onSubmit = async () => {
-    const response = await deleteItem('refunds', idToDelete);
+    const response = await deleteItem('partial-refunds', idToDelete);
     if (response?.success) {
       sendToast('success', 'Deleted successfully', 4000);
-      getRefunds();
+      getPartialRefunds();
     } else {
       sendToast(
         'error',
         response.data?.message ||
           response.data?.error ||
-          'Unexpected Error Occurred While Trying to Delete this Refund',
+          'Unexpected Error Occurred While Trying to Delete this Partial Refund',
         4000
       );
     }
@@ -135,8 +121,8 @@ const Refunds = () => {
         <ConfirmationModal
           onCancel={onCancel}
           onSubmit={onSubmit}
-          title='Do you really want to delete this refund?'
-          content='This will permanently delete the refund. Press OK to confirm.'
+          title='Do you really want to delete this partial refund?'
+          content='This will permanently delete the partial refund. Press OK to confirm.'
         />
       )}
       {/* Search Bar + Add New */}
@@ -152,12 +138,7 @@ const Refunds = () => {
         </div>
         <button
           className='btn btn-primary col-lg-2 col-5'
-          onClick={() =>
-            router.push({
-              pathname: '/dashboard/bookings/refunds/add-new',
-              query: { booking_id: router.query.view },
-            })
-          }
+          onClick={() => router.push('/dashboard/partial-refunds/add-new')}
         >
           Add New
         </button>
@@ -165,14 +146,14 @@ const Refunds = () => {
       {/* Data Table */}
       <Datatable
         downloadCSV
-        CSVName='Refunds.csv'
+        CSVName='PartialRefunds.csv'
         columns={columns}
-        data={refunds.filter((perm) =>
-          perm?.booking_id?.toString()?.toLowerCase().includes(searchQuery.toLowerCase())
+        data={partialRefunds.filter((perm) =>
+          perm?.number?.toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>
   );
 };
 
-export default Refunds;
+export default PartialRefunds;
