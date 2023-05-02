@@ -91,6 +91,15 @@ const AddNewPaymentReceipt = () => {
     }
   };
 
+  // Auto Assigning Credit Acc
+  useEffect(() => {
+    if (organizationID && accounts.length > 0) {
+      for (let acc of accounts) {
+        if (acc.label === organizationID.label) setCrAccountID(acc);
+      }
+    }
+  }, [organizationID]);
+
   return (
     <>
       <Seo pageTitle='Add New Payment Receipt' />

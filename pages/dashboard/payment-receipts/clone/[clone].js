@@ -21,6 +21,7 @@ const AddNewPaymentReceipt = () => {
   const [narration, setNarration] = useState('');
   const [accounts, setAccounts] = useState([]);
   const [organizations, setOrganizations] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const [typeOptions, setTypeOptions] = useState([
     { label: 'Payment', value: 'Payment' },
@@ -84,6 +85,18 @@ const AddNewPaymentReceipt = () => {
       }
     }
   };
+
+  // Auto Assigning Credit Card
+  useEffect(() => {
+    if (organizationID && accounts.length > 0) {
+      if (loading) setLoading(false);
+      else {
+        for (let acc of accounts) {
+          if (acc.label === organizationID.label) setCrAccountID(acc);
+        }
+      }
+    }
+  }, [organizationID]);
 
   const onSubmit = async (e) => {
     e.preventDefault();
