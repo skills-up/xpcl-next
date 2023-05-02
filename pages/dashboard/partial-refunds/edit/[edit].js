@@ -48,13 +48,11 @@ const UpdatePartialRefund = () => {
   const [commissionRuleID, setCommissionRuleID] = useState(null);
   const [clientReferrerID, setClientReferrerID] = useState(null);
   const [accountID, setAccountID] = useState(null);
-  const [bookingID, setBookingID] = useState(null);
 
   const [vendors, setVendors] = useState([]);
   const [commissionRules, setCommissionRules] = useState([]);
   const [clients, setClients] = useState([]);
   const [accounts, setAccounts] = useState([]);
-  const [bookings, setBookings] = useState([]);
 
   const [xplorzGSTFocused, setXplorzGSTFocused] = useState(false);
   const [vendorGSTFocused, setVendorGSTFocused] = useState(false);
@@ -89,7 +87,7 @@ const UpdatePartialRefund = () => {
         setClientServicesCharges(response.data.client_service_charges);
         setClientTotal(response.data.client_total);
         setRefundDate(
-          new DateObject({ date: response.data.booking_date, format: 'YYYY-MM-DD' })
+          new DateObject({ date: response.data.refund_date, format: 'YYYY-MM-DD' })
         );
         setAirlineCancellationCharges(response.data.airline_cancellation_charges);
         setVendorServiceFee(response.data.vendor_service_fee);
@@ -101,14 +99,12 @@ const UpdatePartialRefund = () => {
         const vendors = await getList('organizations', { is_vendor: 1 });
         const commissionRules = await getList('commission-rules');
         const clients = await getList('accounts', { category: 'Client Referrers' });
-        const bookings = await getList('bookings');
 
         if (
           accounts?.success &&
           vendors?.success &&
           commissionRules?.success &&
-          clients?.success &&
-          bookings?.success
+          clients?.success
         ) {
           setAccounts(
             accounts.data.map((element) => ({ value: element.id, label: element.name }))
@@ -133,12 +129,6 @@ const UpdatePartialRefund = () => {
             clients.data.map((element) => ({
               value: element.id,
               label: element.name,
-            }))
-          );
-          setBookings(
-            bookings.data.map((element) => ({
-              value: element.id,
-              label: element.booking_type,
             }))
           );
 

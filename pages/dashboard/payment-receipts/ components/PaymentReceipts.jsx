@@ -9,6 +9,7 @@ import { HiOutlinePencilAlt } from 'react-icons/hi';
 import { BsTrash3 } from 'react-icons/bs';
 import { IoCopyOutline } from 'react-icons/io5';
 import { useRouter } from 'next/router';
+import { DateObject } from 'react-multi-date-picker';
 
 const PaymentReceipts = () => {
   const [paymentReceipts, setPaymentReceipts] = useState([]);
@@ -38,8 +39,29 @@ const PaymentReceipts = () => {
 
   const columns = [
     {
+      Header: 'Date',
+      accessor: 'date',
+      Cell: (data) => {
+        return (
+          <span>
+            {new Date(data.row.original.date).toLocaleString('en-IN', {
+              dateStyle: 'medium',
+            })}
+          </span>
+        );
+      },
+    },
+    {
       Header: 'Type',
       accessor: 'type',
+    },
+    {
+      Header: 'Debit From',
+      accessor: 'dr_account_name',
+    },
+    {
+      Header: 'Credit To',
+      accessor: 'cr_account_name',
     },
     {
       Header: 'Amount',
@@ -148,10 +170,8 @@ const PaymentReceipts = () => {
         downloadCSV
         CSVName='PaymentReceipts.csv'
         columns={columns}
-        data={paymentReceipts.filter(
-          (perm) =>
-            perm?.amount?.toString()?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            perm?.type?.toLowerCase().includes(searchQuery.toLowerCase())
+        data={paymentReceipts.filter((perm) =>
+          perm?.type?.toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>

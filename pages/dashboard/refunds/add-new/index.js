@@ -6,14 +6,12 @@ import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { sendToast } from '../../../../utils/toastify';
 import { useEffect, useState } from 'react';
-import { createItem, getList } from '../../../../api/xplorzApi';
+import { createItem, getItem, getList } from '../../../../api/xplorzApi';
 import ReactSwitch from 'react-switch';
 import Select from 'react-select';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 
 const AddNewRefund = () => {
-  const [bookings, setBookings] = useState([]);
-  const [bookingID, setBookingID] = useState(null);
   const [refundDate, setRefundDate] = useState(new DateObject());
   const [accounts, setAccounts] = useState([]);
   const [accountID, setAccountID] = useState(null);
@@ -22,27 +20,28 @@ const AddNewRefund = () => {
   const [clientCancellationCharges, setClientCancellationCharges] = useState('');
   const [refundAmount, setRefundAmount] = useState('');
   const [reason, setReason] = useState('');
+  const [bookingData, setBookingData] = useState(null);
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
 
   useEffect(() => {
-    getData();
-  }, []);
+    if (router.isReady) {
+      if (!router.query.booking_id) {
+        router.push('/dashboard/bookings');
+      }
+      getData();
+    }
+  }, [router.isReady]);
 
   const getData = async () => {
     const accounts = await getList('accounts');
-    const bookings = await getList('bookings');
-    if (accounts?.success && bookings?.success) {
+    const bookingData = await getItem('bookings', router.query.booking_id);
+    if (accounts?.success && bookingData?.success) {
       setAccounts(
         accounts.data.map((element) => ({ value: element.id, label: element.name }))
       );
-      setBookings(
-        bookings.data.map((element) => ({
-          value: element.id,
-          label: element.booking_type,
-        }))
-      );
+      setBookingData(bookingData.data);
     } else {
       sendToast('error', 'Unable to fetch required data', 4000);
       router.push('/dashboard/refunds');
@@ -55,12 +54,8 @@ const AddNewRefund = () => {
       sendToast('error', 'You must select an Account', 4000);
       return;
     }
-    if (!bookingID?.value) {
-      sendToast('error', 'You must select a Booking to Refund', 4000);
-      return;
-    }
     const response = await createItem('refunds', {
-      booking_id: bookingID.value,
+      booking_id: router.query.booking_id,
       refund_date: refundDate.format('YYYY-MM-DD'),
       account_id: accountID.value,
       airline_cancellation_charges: airlineCancellationCharges,
@@ -80,6 +75,14 @@ const AddNewRefund = () => {
       );
     }
   };
+
+  // Calculation
+  useEffect(() => {
+    if (bookingData) {
+      const payment = +bookingData?.vendor_total || bookingData?.payment_amount;
+      setRefundAmount(+payment - +airlineCancellationCharges);
+    }
+  }, [bookingData, airlineCancellationCharges]);
 
   return (
     <>
@@ -113,17 +116,6 @@ const AddNewRefund = () => {
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
-                    <div>
-                      <label>
-                        Booking to Refund<span className='text-danger'>*</span>
-                      </label>
-                      <Select
-                        options={bookings}
-                        value={bookingID}
-                        placeholder='Search & Select Booking (required)'
-                        onChange={(id) => setBookingID(id)}
-                      />
-                    </div>
                     <div className='d-block ml-4'>
                       <label>
                         Refund Date<span className='text-danger'>*</span>

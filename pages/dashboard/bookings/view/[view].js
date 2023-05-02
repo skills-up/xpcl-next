@@ -10,6 +10,8 @@ import { useEffect, useState } from 'react';
 import { deleteItem, getItem } from '../../../../api/xplorzApi';
 import ViewTable from '../../../../components/view-table';
 import { HiRefresh } from 'react-icons/hi';
+import { RiRefund2Fill } from 'react-icons/ri';
+import { ImPagebreak } from 'react-icons/im';
 
 const ViewBooking = () => {
   const [booking, setBooking] = useState([]);
@@ -43,6 +45,9 @@ const ViewBooking = () => {
         }
         if (data?.reissued_booking) {
           delete data['reissued_booking'];
+        }
+        if (data?.partial_refund) {
+          delete data['partial_refund'];
         }
         setBooking(data);
       } else {
@@ -134,6 +139,26 @@ const ViewBooking = () => {
                       onClick: () =>
                         router.push('/dashboard/bookings/reissue/' + router.query.view),
                       classNames: 'btn-success',
+                    },
+                    {
+                      icon: <RiRefund2Fill />,
+                      text: 'Refund',
+                      onClick: () =>
+                        router.push({
+                          pathname: '/dashboard/refunds/add-new',
+                          query: { booking_id: router.query.view },
+                        }),
+                      style: { backgroundColor: 'brown', color: 'white' },
+                    },
+                    {
+                      icon: <ImPagebreak />,
+                      text: 'Partial Refund',
+                      onClick: () =>
+                        router.push({
+                          pathname: '/dashboard/partial-refunds/add-new',
+                          query: { booking_id: router.query.view },
+                        }),
+                      style: { backgroundColor: 'orange' },
                     },
                   ]}
                 />

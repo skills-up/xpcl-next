@@ -63,6 +63,7 @@ const ViewTable = ({ data, onEdit, onDelete, extraButtons = undefined }) => {
                 key={index}
                 onClick={element?.onClick}
                 className={`${element?.classNames} btn d-flex items-center gap-1`}
+                style={element?.style}
               >
                 {element?.icon} {element?.text}
               </button>

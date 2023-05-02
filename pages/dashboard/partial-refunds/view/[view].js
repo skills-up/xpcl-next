@@ -1,14 +1,14 @@
-import Seo from '../../../../../components/common/Seo';
-import Footer from '../../../../../components/footer/dashboard-footer';
-import Header from '../../../../../components/header/dashboard-header';
-import Sidebar from '../../../../../components/sidebars/dashboard-sidebars';
-import ConfirmationModal from '../../../../../components/confirm-modal';
+import Seo from '../../../../components/common/Seo';
+import Footer from '../../../../components/footer/dashboard-footer';
+import Header from '../../../../components/header/dashboard-header';
+import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
+import ConfirmationModal from '../../../../components/confirm-modal';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { sendToast } from '../../../../../utils/toastify';
+import { sendToast } from '../../../../utils/toastify';
 import { useEffect, useState } from 'react';
-import { deleteItem, getItem } from '../../../../../api/xplorzApi';
-import ViewTable from '../../../../../components/view-table';
+import { deleteItem, getItem } from '../../../../api/xplorzApi';
+import ViewTable from '../../../../components/view-table';
 
 const ViewRefunds = () => {
   const [refund, setRefund] = useState([]);
@@ -24,7 +24,7 @@ const ViewRefunds = () => {
 
   const getRefund = async () => {
     if (router.query.view) {
-      const response = await getItem('refunds', router.query.view);
+      const response = await getItem('partial-refunds', router.query.view);
       if (response?.success) {
         let data = response.data;
         // Converting time columns

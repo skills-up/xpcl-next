@@ -71,14 +71,6 @@ const PartialRefunds = () => {
                   icon: <HiOutlinePencilAlt />,
                 },
                 {
-                  label: 'Clone',
-                  onClick: () =>
-                    router.push(
-                      '/dashboard/partial-refunds/clone/' + data.row.original.id
-                    ),
-                  icon: <IoCopyOutline />,
-                },
-                {
                   label: 'Delete',
                   onClick: () => {
                     setIdToDelete(data.row.original.id);
@@ -127,7 +119,7 @@ const PartialRefunds = () => {
       )}
       {/* Search Bar + Add New */}
       <div className='row mb-3 items-center justify-between mr-4'>
-        <div className='col-lg-10 col-7'>
+        <div className='col-12'>
           <input
             type='text'
             className='d-block form-control'
@@ -136,12 +128,6 @@ const PartialRefunds = () => {
             value={searchQuery}
           />
         </div>
-        <button
-          className='btn btn-primary col-lg-2 col-5'
-          onClick={() => router.push('/dashboard/partial-refunds/add-new')}
-        >
-          Add New
-        </button>
       </div>
       {/* Data Table */}
       <Datatable

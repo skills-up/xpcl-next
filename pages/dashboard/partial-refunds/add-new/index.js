@@ -48,13 +48,11 @@ const AddNewPartialRefund = () => {
   const [commissionRuleID, setCommissionRuleID] = useState(null);
   const [clientReferrerID, setClientReferrerID] = useState(null);
   const [accountID, setAccountID] = useState(null);
-  const [bookingID, setBookingID] = useState(null);
 
   const [vendors, setVendors] = useState([]);
   const [commissionRules, setCommissionRules] = useState([]);
   const [clients, setClients] = useState([]);
   const [accounts, setAccounts] = useState([]);
-  const [bookings, setBookings] = useState([]);
 
   const [xplorzGSTFocused, setXplorzGSTFocused] = useState(false);
   const [vendorGSTFocused, setVendorGSTFocused] = useState(false);
@@ -64,7 +62,12 @@ const AddNewPartialRefund = () => {
   const router = useRouter();
 
   useEffect(() => {
-    getData();
+    if (router.isReady) {
+      if (!router.query.booking_id) {
+        router.push('/dashboard/bookings');
+      }
+      getData();
+    }
   }, []);
 
   const getData = async () => {
@@ -72,14 +75,12 @@ const AddNewPartialRefund = () => {
     const vendors = await getList('organizations', { is_vendor: 1 });
     const commissionRules = await getList('commission-rules');
     const clients = await getList('accounts', { category: 'Client Referrers' });
-    const bookings = await getList('bookings');
 
     if (
       accounts?.success &&
       vendors?.success &&
       commissionRules?.success &&
-      clients?.success &&
-      bookings?.success
+      clients?.success
     ) {
       setAccounts(
         accounts.data.map((element) => ({ value: element.id, label: element.name }))
@@ -106,12 +107,6 @@ const AddNewPartialRefund = () => {
           label: element.name,
         }))
       );
-      setBookings(
-        bookings.data.map((element) => ({
-          value: element.id,
-          label: element.booking_type,
-        }))
-      );
     } else {
       sendToast('error', 'Unable to fetch required data', 4000);
       router.push('/dashboard/partial-refunds');
@@ -124,16 +119,12 @@ const AddNewPartialRefund = () => {
       sendToast('error', 'You must select an Account', 4000);
       return;
     }
-    if (!bookingID?.value) {
-      sendToast('error', 'You must select a Booking to Refund', 4000);
-      return;
-    }
     if (!vendorID?.value) {
       sendToast('error', 'You must select a Vendor', 4000);
       return;
     }
     const response = await createItem('partial-refunds', {
-      booking_id: bookingID.value,
+      booking_id: router.query.booking_id,
       refund_date: refundDate.format('YYYY-MM-DD'),
       vendor_id: vendorID.value,
       vendor_base_amount: vendorBaseAmount,
@@ -339,17 +330,6 @@ const AddNewPartialRefund = () => {
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
-                    <div>
-                      <label>
-                        Booking to Refund<span className='text-danger'>*</span>
-                      </label>
-                      <Select
-                        options={bookings}
-                        value={bookingID}
-                        placeholder='Search & Select Booking (required)'
-                        onChange={(id) => setBookingID(id)}
-                      />
-                    </div>
                     <div className='d-block ml-4'>
                       <label>
                         Refund Date<span className='text-danger'>*</span>

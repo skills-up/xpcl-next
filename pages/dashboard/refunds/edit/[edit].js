@@ -12,8 +12,6 @@ import Select from 'react-select';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 
 const UpdateRefund = () => {
-  const [bookings, setBookings] = useState([]);
-  const [bookingID, setBookingID] = useState(null);
   const [refundDate, setRefundDate] = useState(new DateObject());
   const [accounts, setAccounts] = useState([]);
   const [accountID, setAccountID] = useState(null);
@@ -22,6 +20,7 @@ const UpdateRefund = () => {
   const [clientCancellationCharges, setClientCancellationCharges] = useState('');
   const [refundAmount, setRefundAmount] = useState('');
   const [reason, setReason] = useState('');
+  const [bookingData, setBookingData] = useState(null);
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -46,26 +45,17 @@ const UpdateRefund = () => {
         setRefundAmount(response.data.refund_amount);
         setReason(response.data?.reason);
 
+        const bookingData = await getItem('bookings', response.data?.booking_id);
         const accounts = await getList('accounts');
-        const bookings = await getList('bookings');
-        if (accounts?.success && bookings?.success) {
+        if (accounts?.success && bookingData?.success) {
           setAccounts(
             accounts.data.map((element) => ({ value: element.id, label: element.name }))
           );
-          setBookings(
-            bookings.data.map((element) => ({
-              value: element.id,
-              label: element.booking_type,
-            }))
-          );
+          setBookingData(bookingData.data);
           // Setting Account ID
           for (let account of accounts.data)
             if (account.id === response.data.account_id)
               setAccountID({ value: account.id, label: account.name });
-          // Setting Booking ID
-          for (let booking of bookings.data)
-            if (booking.id === response.data.booking_id)
-              setBookingID({ value: booking.id, label: booking.booking_type });
         } else {
           sendToast('error', 'Unable to fetch required data', 4000);
           router.push('/dashboard/refunds');
@@ -109,6 +99,14 @@ const UpdateRefund = () => {
       );
     }
   };
+
+  // Calculation
+  useEffect(() => {
+    if (bookingData) {
+      const payment = +bookingData?.vendor_total || bookingData?.payment_amount;
+      setRefundAmount(+payment - +airlineCancellationCharges);
+    }
+  }, [bookingData, airlineCancellationCharges]);
 
   return (
     <>
