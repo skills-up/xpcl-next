@@ -9,6 +9,7 @@ import { sendToast } from '../../../../utils/toastify';
 import { useEffect, useState } from 'react';
 import { deleteItem, getItem } from '../../../../api/xplorzApi';
 import ViewTable from '../../../../components/view-table';
+import Audit from './Audit';
 
 const ViewRefunds = () => {
   const [refund, setRefund] = useState([]);
@@ -124,6 +125,11 @@ const ViewRefunds = () => {
                     setConfirmDelete(true);
                   }}
                 />
+                <hr className='my-4' />
+                <div>
+                  <h2 className='mb-3'>Audit Log</h2>
+                  <Audit />
+                </div>
               </div>
             </div>
 

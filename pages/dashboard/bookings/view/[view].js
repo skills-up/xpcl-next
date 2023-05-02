@@ -12,6 +12,7 @@ import ViewTable from '../../../../components/view-table';
 import { HiRefresh } from 'react-icons/hi';
 import { RiRefund2Fill } from 'react-icons/ri';
 import { ImPagebreak } from 'react-icons/im';
+import Audit from './Audit';
 
 const ViewBooking = () => {
   const [booking, setBooking] = useState([]);
@@ -162,6 +163,11 @@ const ViewBooking = () => {
                     },
                   ]}
                 />
+                <hr className='my-4' />
+                <div>
+                  <h2 className='mb-3'>Audit Log</h2>
+                  <Audit />
+                </div>
               </div>
             </div>
 
