@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { sendToast } from '../../../../utils/toastify';
 import { useEffect, useState } from 'react';
-import { createItem, getList } from '../../../../api/xplorzApi';
+import { createItem, getItem, getList } from '../../../../api/xplorzApi';
 import ReactSwitch from 'react-switch';
 import Select from 'react-select';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
@@ -34,6 +34,7 @@ const AddNewPartialRefund = () => {
   const [refundAmount, setRefundAmount] = useState('');
   const [reason, setReason] = useState('');
   const [grossCommission, setGrossCommission] = useState(0);
+  const [bookingData, setBookingData] = useState(null);
 
   // Percentages
   const [vendorServiceChargePercent, setVendorServiceChargePercent] = useState(18);
@@ -68,19 +69,21 @@ const AddNewPartialRefund = () => {
       }
       getData();
     }
-  }, []);
+  }, [router.isReady]);
 
   const getData = async () => {
     const accounts = await getList('accounts');
     const vendors = await getList('organizations', { is_vendor: 1 });
     const commissionRules = await getList('commission-rules');
     const clients = await getList('accounts', { category: 'Client Referrers' });
+    const bookingData = await getItem('bookings', router.query.booking_id);
 
     if (
       accounts?.success &&
       vendors?.success &&
       commissionRules?.success &&
-      clients?.success
+      clients?.success &&
+      bookingData?.success
     ) {
       setAccounts(
         accounts.data.map((element) => ({ value: element.id, label: element.name }))
@@ -107,6 +110,37 @@ const AddNewPartialRefund = () => {
           label: element.name,
         }))
       );
+      setBookingData(bookingData.data);
+      // Prefilling
+      setVendorBaseAmount(bookingData.data.vendor_base_amount);
+      setVendorYQAmount(bookingData.data.vendor_yq_amount);
+      setVendorTaxAmount(bookingData.data.vendor_tax_amount);
+      setVendorGSTAmount(bookingData.data.vendor_gst_amount);
+      setIATACommissionPercent(bookingData.data.iata_commission_percent);
+      setPLBCommissionPercent(bookingData.data.plb_commission_percent);
+      setVendorServiceCharges(bookingData.data.vendor_service_charges);
+      setVendorTDS(bookingData.data.vendor_tds);
+      setClientReferralFee(bookingData.data.client_referral_fee);
+      setClientBaseAmount(bookingData.data.client_base_amount);
+      setClientTaxAmount(bookingData.data.client_tax_amount);
+      setClientGSTAmount(bookingData.data.client_gst_amount);
+      setClientServicesCharges(bookingData.data.client_service_charges);
+      for (let vendor of vendors.data)
+        if (vendor.id === bookingData.data.vendor_id)
+          setVendorID({ value: vendor.id, label: vendor.name });
+      for (let cr of commissionRules.data)
+        if (cr.id === bookingData.data.commission_rule_id)
+          setCommissionRuleID({
+            value: cr.id,
+            label: cr.name,
+            iata_basic: cr.iata_basic,
+            iata_yq: cr.iata_yq,
+            plb_basic: cr.plb_basic,
+            plb_yq: cr.plb_yq,
+          });
+      for (let ref of clients.data)
+        if (ref.id === bookingData.data.client_referrer_id)
+          setClientReferrerID({ value: ref.id, label: ref.name });
     } else {
       sendToast('error', 'Unable to fetch required data', 4000);
       router.push('/dashboard/partial-refunds');
@@ -692,6 +726,28 @@ const AddNewPartialRefund = () => {
                         />
                         <label className='lh-1 text-16 text-light-1'>Reason</label>
                       </div>
+                    </div>
+                    <div>
+                      <p>
+                        <strong>Vendor Base Amount:</strong>{' '}
+                        {bookingData?.vendor_base_amount || 0}
+                      </p>
+                      <p>
+                        <strong>Vendor YQ Amount:</strong>{' '}
+                        {bookingData?.vendor_yq_amount || 0}
+                      </p>
+                      <p>
+                        <strong>Vendor Tax Amount:</strong>{' '}
+                        {bookingData?.vendor_tax_amount || 0}
+                      </p>
+                      <p>
+                        <strong>Vendor Misc. Amount:</strong>{' '}
+                        {bookingData?.vendor_misc_charges || 0}
+                      </p>
+                      <p>
+                        <strong>Reissue Penalty:</strong>{' '}
+                        {bookingData?.reissue_penalty || 0}
+                      </p>
                     </div>
                     <div className='d-inline-block'>
                       <button
