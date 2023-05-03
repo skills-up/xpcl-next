@@ -113,8 +113,71 @@ const Audit = () => {
       {audits.map((element, index) => {
         return (
           <div>
-            <h5>{element?.narration}</h5>
-            <Datatable columns={columns} data={element?.journal_entries} />
+            <h5 className='mb-20'>
+              {
+                <span>
+                  [
+                  {new Date(element?.date).toLocaleString('en-IN', {
+                    dateStyle: 'medium',
+                  })}
+                  ]
+                </span>
+              }{' '}
+              - {element?.narration}
+            </h5>
+            <Datatable
+              dataFiltering
+              columns={[
+                // {
+                //   Header: 'Date',
+                //   accessor: 'date',
+                //   Cell: (data) => {
+                //     return (
+                //       <span>
+                //         {new Date(data.row.original.date).toLocaleString('en-IN', {
+                //           dateStyle: 'medium',
+                //         })}
+                //       </span>
+                //     );
+                //   },
+                // },
+                {
+                  Header: 'Narration',
+                  accessor: 'narration',
+                },
+                {
+                  Header: 'Debit From',
+                  accessor: 'dr_account_name',
+                },
+                {
+                  Header: 'Credit To',
+                  accessor: 'cr_account_name',
+                },
+                {
+                  Header: 'Amount',
+                  accessor: 'amount',
+                },
+                {
+                  Header: 'Status',
+                  accessor: 'deleted_at',
+                  Cell: (data) => {
+                    if (element?.deleted_at)
+                      return (
+                        <span className='rounded-100 d-inline-block mt-1 py-4 px-10 text-center text-14 fw-500 bg-red-3 text-red-2'>
+                          Deleted
+                        </span>
+                      );
+                    else
+                      return (
+                        <span className='rounded-100 d-inline-block mt-1 py-4 px-10 text-center text-14 fw-500 bg-blue-1-05 text-blue-1'>
+                          Current
+                        </span>
+                      );
+                  },
+                },
+              ]}
+              data={element?.journal_entries}
+            />
           </div>
         );
       })}

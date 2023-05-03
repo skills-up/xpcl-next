@@ -36,13 +36,17 @@ const AddNewBooking = () => {
   const [clientTotal, setClientTotal] = useState('');
   const [reissuePenalty, setReissuePenalty] = useState('');
   const [sector, setSector] = useState('');
+  const [originalBookingID, setOriginalBookingID] = useState(null);
   const [bookingSectors, setBookingSectors] = useState([]);
   const [grossCommission, setGrossCommission] = useState(0);
+  const [isOffshore, setIsOffshore] = useState(false);
+  const [clientQuotedAmount, setClientQuotedAmount] = useState('');
 
   // Percentages
   const [vendorServiceChargePercent, setVendorServiceChargePercent] = useState(18);
   const [vendorTDSPercent, setVendorTDSPercent] = useState(5);
   const [clientServiceChargePercent, setClientServiceChargePercent] = useState(0);
+  const [clientGSTPercent, setClientGSTPercent] = useState(null);
 
   // Dates
   const [bookingDate, setBookingDate] = useState(new DateObject());
@@ -54,7 +58,6 @@ const AddNewBooking = () => {
   const [airlineID, setAirlineID] = useState(null);
   const [paymentAccountID, setPaymentAccountID] = useState(null);
   const [clientReferrerID, setClientReferrerID] = useState(null);
-  const [originalBookingID, setOriginalBookingID] = useState(null);
   const [clientTravellerIDS, setClientTravellerIDS] = useState([]);
 
   // Dropdown Options
@@ -72,6 +75,12 @@ const AddNewBooking = () => {
     { value: 'Miscellaneous', label: 'Miscellaneous' },
     { value: 'Visa Application', label: 'Visa Application' },
   ];
+  const clientGSTOptions = [
+    { value: 'None', label: 'None' },
+    { value: 'Vendor GST', label: 'Vendor GST' },
+    { value: '5% of Base', label: '5% of Base' },
+    { value: '12% of Base', label: '12% of Base' },
+  ];
   const [vendors, setVendors] = useState([]);
   const [commissionRules, setCommissionRules] = useState([]);
   const [airlines, setAirlines] = useState([]);
@@ -83,6 +92,7 @@ const AddNewBooking = () => {
   const [xplorzGSTFocused, setXplorzGSTFocused] = useState(false);
   const [vendorGSTFocused, setVendorGSTFocused] = useState(false);
   const [vendorTDSPercentFocused, setVendorTDSPercentFocused] = useState(false);
+  const [clientBaseAmountFocused, setClientBaseAmountFocused] = useState(false);
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -116,9 +126,40 @@ const AddNewBooking = () => {
         setClientServicesCharges(response.data.client_service_charges);
         setClientTotal(response.data.client_total);
         setSector(response.data.sector);
+        setOriginalBookingID(response.data?.original_booking_id);
+        setReissuePenalty(response.data?.reissue_penalty);
         setBookingDate(
           new DateObject({ date: response.data.booking_date, format: 'YYYY-MM-DD' })
         );
+        setIsOffshore(response.data?.is_offshore);
+        setClientQuotedAmount(
+          +response.data.client_base_amount +
+            +response.data.client_tax_amount +
+            +response.data.client_gst_amount
+        );
+        // Client GST Percent
+        if (
+          Number(
+            (
+              (+response.data.client_gst_amount * 100) /
+              +response.data.client_base_amount
+            ).toFixed(0)
+          ) === 5
+        )
+          setClientGSTPercent({ value: '5% of Base', label: '5% of Base' });
+        else if (
+          Number(
+            (
+              (+response.data.client_gst_amount * 100) /
+              +response.data.client_base_amount
+            ).toFixed(0)
+          ) === 12
+        )
+          setClientGSTPercent({ value: '12% of Base', label: '12% of Base' });
+        else if (response.data.client_gst_amount === 0)
+          setClientGSTPercent({ value: 'None', label: 'None' });
+        else if (response.data.client_gst_amount === response.data.vendor_gst_amount)
+          setClientGSTAmount({ value: 'Vendor GST', label: 'Vendor GST' });
 
         const airports = await getList('airports');
         const vendors = await getList('organizations', { is_vendor: 1 });
@@ -316,7 +357,7 @@ const AddNewBooking = () => {
       client_base_amount: clientBaseAmount,
       client_tax_amount: clientTaxAmount,
       client_gst_amount: clientGSTAmount,
-      client_service_charges: clientServiceCharges,
+      client_service_charges: isOffshore ? 0 : clientServiceCharges,
       client_total: clientTotal,
       client_traveller_ids:
         clientTravellerIDS?.length > 0
@@ -329,6 +370,7 @@ const AddNewBooking = () => {
         travel_time: element['travel_time'],
         details: element['details'],
       })),
+      is_offshore: isOffshore,
       sector,
     });
     if (response?.success) {
@@ -355,8 +397,8 @@ const AddNewBooking = () => {
     // Client Service Charge Percent
     if (clientServiceCharges.trim().length === 0) {
       if (bookingType?.value === 'Domestic Flight Ticket')
-        setClientServiceChargePercent(9);
-      else setClientServiceChargePercent(18);
+        setClientServiceChargePercent(0.9);
+      else setClientServiceChargePercent(1.8);
     }
     // If misc remove booking sectors
     // If not remove misc type
@@ -499,7 +541,33 @@ const AddNewBooking = () => {
     clientBaseAmount,
   ]);
 
+  useEffect(() => {
+    if (clientGSTPercent?.value !== null && clientGSTPercent?.value !== undefined) {
+      if (clientGSTPercent.label === 'None') setClientGSTAmount(0);
+      else if (clientGSTPercent.label === 'Vendor GST')
+        setClientGSTAmount(+vendorGSTAmount);
+      else if (clientGSTPercent.label === '5% of Base')
+        setClientGSTAmount(Number((+clientBaseAmount * (5 / 100)).toFixed(4)));
+      else if (clientGSTPercent.label === '12% of Base')
+        setClientGSTAmount(Number((+clientBaseAmount * (12 / 100)).toFixed(4)));
+    }
+  }, [clientGSTPercent]);
+
+  useEffect(() => {
+    if (clientBaseAmountFocused)
+      setClientQuotedAmount(+clientBaseAmount + +clientTaxAmount + +clientGSTAmount);
+  }, [clientBaseAmount]);
+
+  useEffect(() => {
+    if (!clientBaseAmountFocused) updateClientBase();
+  }, [clientTaxAmount, clientGSTAmount, clientQuotedAmount]);
+
   // Client Total
+  const updateClientBase = () => {
+    if (+clientQuotedAmount > 0)
+      setClientBaseAmount(+clientQuotedAmount - +clientTaxAmount - +clientGSTAmount);
+  };
+
   const updateClientTotal = () => {
     setClientTotal(
       Number(
@@ -877,11 +945,26 @@ const AddNewBooking = () => {
                     <div className='col-12'>
                       <div className='form-input'>
                         <input
+                          onChange={(e) => setClientQuotedAmount(e.target.value)}
+                          value={clientQuotedAmount}
+                          placeholder=' '
+                          type='number'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Client Quoted Amount
+                        </label>
+                      </div>
+                    </div>
+                    <div className='col-12'>
+                      <div className='form-input'>
+                        <input
                           onChange={(e) => setClientBaseAmount(e.target.value)}
                           value={clientBaseAmount}
                           placeholder=' '
                           type='number'
                           required
+                          onFocus={() => setClientBaseAmountFocused(true)}
+                          onBlur={() => setClientBaseAmountFocused(false)}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Client Base Amount<span className='text-danger'>*</span>
@@ -902,49 +985,71 @@ const AddNewBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12'>
-                      <div className='form-input'>
+                    <div className='col-12 row pr-0 items-center'>
+                      <div className='col-4'>
+                        <label>Client GST Percent</label>
+                        <Select
+                          defaultValue={{ value: 0, label: 'None' }}
+                          options={clientGSTOptions}
+                          value={clientGSTPercent}
+                          placeholder='Select Client GST Percent'
+                          onChange={(id) => setClientGSTPercent(id)}
+                        />
+                      </div>
+                      <div className='form-input col-8 pr-0'>
                         <input
                           onChange={(e) => setClientGSTAmount(e.target.value)}
                           value={clientGSTAmount}
                           placeholder=' '
                           type='number'
                           required
+                          disabled
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Client GST Amount<span className='text-danger'>*</span>
                         </label>
                       </div>
                     </div>
-                    <div className='col-12 row pr-0 items-center'>
-                      <div className='form-input col-4'>
-                        <input
-                          onChange={(e) => setClientServiceChargePercent(e.target.value)}
-                          value={clientServiceChargePercent}
-                          placeholder=' '
-                          onFocus={() => setXplorzGSTFocused(true)}
-                          type='number'
-                          required
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Xplorz GST Percent<span className='text-danger'>*</span>
-                        </label>
-                        <span className='d-flex items-center ml-30'>%</span>
-                      </div>
-                      <div className='form-input col-8 pr-0'>
-                        <input
-                          onChange={(e) => setClientServicesCharges(e.target.value)}
-                          value={clientServiceCharges}
-                          placeholder=' '
-                          type='number'
-                          required
-                          onFocus={() => setXplorzGSTFocused(false)}
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Client Services Charges<span className='text-danger'>*</span>
-                        </label>
-                      </div>
+                    <div className='d-flex items-center gap-3'>
+                      <ReactSwitch
+                        onChange={() => setIsOffshore((prev) => !prev)}
+                        checked={isOffshore}
+                      />
+                      <label>Is Offshore</label>
                     </div>
+                    {!isOffshore && (
+                      <div className='col-12 row pr-0 items-center'>
+                        <div className='form-input col-4'>
+                          <input
+                            onChange={(e) =>
+                              setClientServiceChargePercent(e.target.value)
+                            }
+                            value={clientServiceChargePercent}
+                            placeholder=' '
+                            onFocus={() => setXplorzGSTFocused(true)}
+                            type='number'
+                            required
+                          />
+                          <label className='lh-1 text-16 text-light-1'>
+                            Xplorz GST Percent<span className='text-danger'>*</span>
+                          </label>
+                          <span className='d-flex items-center ml-30'>%</span>
+                        </div>
+                        <div className='form-input col-8 pr-0'>
+                          <input
+                            onChange={(e) => setClientServicesCharges(e.target.value)}
+                            value={clientServiceCharges}
+                            placeholder=' '
+                            type='number'
+                            required
+                            onFocus={() => setXplorzGSTFocused(false)}
+                          />
+                          <label className='lh-1 text-16 text-light-1'>
+                            Client Services Charges<span className='text-danger'>*</span>
+                          </label>
+                        </div>
+                      </div>
+                    )}
                     <div className='col-12'>
                       <div className='form-input'>
                         <input

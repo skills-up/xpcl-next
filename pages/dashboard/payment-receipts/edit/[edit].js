@@ -21,7 +21,23 @@ const UpdatePaymentReceipt = () => {
   const [narration, setNarration] = useState('');
   const [accounts, setAccounts] = useState([]);
   const [organizations, setOrganizations] = useState([]);
+  const [tdsAccounts, setTDSAccounts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [itc, setItc] = useState(false);
+  const [itcObj, setItcObj] = useState({
+    name: '',
+    gstn: '',
+    igst: '',
+    cgst: '',
+    sgst: '',
+  });
+  const [tds, setTds] = useState(false);
+  const [tdsObj, setTdsObj] = useState({
+    name: '',
+    pan: '',
+    account_id: null,
+    amount: '',
+  });
 
   const [typeOptions, setTypeOptions] = useState([
     { label: 'Payment', value: 'Payment' },
@@ -46,12 +62,19 @@ const UpdatePaymentReceipt = () => {
 
         const organizations = await getList('organizations');
         const accounts = await getList('accounts');
-        if (accounts?.success && organizations?.success) {
+        const tdsAccounts = await getList('accounts', { category: 'TDS Deductions' });
+        if (accounts?.success && organizations?.success && tdsAccounts.success) {
           setAccounts(
             accounts.data.map((element) => ({ value: element.id, label: element.name }))
           );
           setOrganizations(
             organizations.data.map((element) => ({
+              value: element.id,
+              label: element.name,
+            }))
+          );
+          setTDSAccounts(
+            tdsAccounts.data.map((element) => ({
               value: element.id,
               label: element.name,
             }))
@@ -71,6 +94,19 @@ const UpdatePaymentReceipt = () => {
           for (let account of accounts.data)
             if (account.id === response.data.cr_account_id)
               setCrAccountID({ value: account.id, label: account.name });
+          // Setting TDS
+          if (response.data.type === 'Payment') {
+            setTds(response.data?.payment_tds ? true : false);
+            setItc(response.data?.payment_itc ? true : false);
+            setItcObj(response.data?.payment_itc);
+            let tempTDSObj = response.data?.payment_tds;
+            if (tempTDSObj) {
+              for (let account of tdsAccounts.data)
+                if (account.id === response.data?.payment_tds?.account_id)
+                  tempTDSObj['account_id'] = { value: account.id, label: account.name };
+            }
+            setTdsObj(tempTDSObj);
+          }
         } else {
           sendToast('error', 'Unable to fetch required data', 4000);
           router.push('/dashboard/payment-receipts');
@@ -100,6 +136,9 @@ const UpdatePaymentReceipt = () => {
       sendToast('error', 'You must select a Debit Account', 4000);
       return;
     }
+    const tempTDSObj = tdsObj;
+    if (tempTDSObj['account_id']?.value)
+      tempTDSObj['account_id'] = tempTDSObj['account_id']?.value;
     const response = await updateItem('payment-receipts', router.query.edit, {
       type: type.value,
       organization_id: organizationID?.value,
@@ -108,6 +147,8 @@ const UpdatePaymentReceipt = () => {
       date: date.format('YYYY-MM-DD'),
       amount,
       narration,
+      itc: type.value === 'Payment' ? (itc ? itcObj : null) : null,
+      tds: type.value === 'Payment' ? (tempTDSObj ? tdsObj : null) : null,
     });
     if (response?.success) {
       sendToast('success', 'Updated Payment Receipt Successfully.', 4000);
@@ -254,6 +295,157 @@ const UpdatePaymentReceipt = () => {
                         </label>
                       </div>
                     </div>
+                    {/* ITC */}
+                    {type?.value === 'Payment' && (
+                      <div className='d-flex items-center gap-3'>
+                        <ReactSwitch
+                          onChange={() => setItc((prev) => !prev)}
+                          checked={itc}
+                        />
+                        <label>ITC</label>
+                      </div>
+                    )}
+                    {itc && type?.value === 'Payment' && (
+                      <div className='row pr-0'>
+                        <div className='col-3 pr-0'>
+                          <div className='form-input'>
+                            <input
+                              onChange={(e) =>
+                                setItcObj((prev) => ({ ...prev, name: e.target.value }))
+                              }
+                              value={itcObj.name}
+                              placeholder=' '
+                              type='text'
+                              required
+                            />
+                            <label className='lh-1 text-16 text-light-1'>Name</label>
+                          </div>
+                        </div>
+                        <div className='col-3 pr-0'>
+                          <div className='form-input'>
+                            <input
+                              onChange={(e) =>
+                                setItcObj((prev) => ({ ...prev, gstn: e.target.value }))
+                              }
+                              value={itcObj.gstn}
+                              placeholder=' '
+                              type='text'
+                              required
+                            />
+                            <label className='lh-1 text-16 text-light-1'>GSTN</label>
+                          </div>
+                        </div>
+                        <div className='col-2 pr-0'>
+                          <div className='form-input'>
+                            <input
+                              onChange={(e) =>
+                                setItcObj((prev) => ({ ...prev, igst: e.target.value }))
+                              }
+                              value={itcObj.igst}
+                              placeholder=' '
+                              type='number'
+                              required
+                            />
+                            <label className='lh-1 text-16 text-light-1'>IGST</label>
+                          </div>
+                        </div>
+                        <div className='col-2 pr-0'>
+                          <div className='form-input'>
+                            <input
+                              onChange={(e) =>
+                                setItcObj((prev) => ({ ...prev, cgst: e.target.value }))
+                              }
+                              value={itcObj.cgst}
+                              placeholder=' '
+                              type='number'
+                              required
+                            />
+                            <label className='lh-1 text-16 text-light-1'>CGST</label>
+                          </div>
+                        </div>
+                        <div className='col-2 pr-0'>
+                          <div className='form-input'>
+                            <input
+                              onChange={(e) =>
+                                setItcObj((prev) => ({ ...prev, sgst: e.target.value }))
+                              }
+                              value={itcObj.sgst}
+                              placeholder=' '
+                              type='number'
+                              required
+                            />
+                            <label className='lh-1 text-16 text-light-1'>SGST</label>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    {/* TDS */}
+                    {type?.value === 'Payment' && (
+                      <div className='d-flex items-center gap-3'>
+                        <ReactSwitch
+                          onChange={() => setTds((prev) => !prev)}
+                          checked={tds}
+                        />
+                        <label>TDS</label>
+                      </div>
+                    )}
+                    {tds && type?.value === 'Payment' && (
+                      <div className='row pr-0 items-center'>
+                        <div className='col-3 pr-0'>
+                          <div className='form-input'>
+                            <input
+                              onChange={(e) =>
+                                setTdsObj((prev) => ({ ...prev, name: e.target.value }))
+                              }
+                              value={tdsObj.name}
+                              placeholder=' '
+                              type='text'
+                              required
+                            />
+                            <label className='lh-1 text-16 text-light-1'>Name</label>
+                          </div>
+                        </div>
+                        <div className='col-3 pr-0'>
+                          <div className='form-input'>
+                            <input
+                              onChange={(e) =>
+                                setTdsObj((prev) => ({ ...prev, pan: e.target.value }))
+                              }
+                              value={tdsObj.pan}
+                              placeholder=' '
+                              type='text'
+                              required
+                            />
+                            <label className='lh-1 text-16 text-light-1'>PAN</label>
+                          </div>
+                        </div>
+                        <div className='col-3 pr-0 pb-1'>
+                          <label>Account</label>
+                          <Select
+                            options={tdsAccounts}
+                            value={tdsObj.account_id}
+                            placeholder='Search & Select Account'
+                            onChange={(id) =>
+                              setTdsObj((prev) => ({ ...prev, account_id: id }))
+                            }
+                          />
+                        </div>
+                        <div className='col-2 pr-0'>
+                          <div className='form-input'>
+                            <input
+                              onChange={(e) =>
+                                setTdsObj((prev) => ({ ...prev, amount: e.target.value }))
+                              }
+                              value={tdsObj.amount}
+                              placeholder=' '
+                              type='number'
+                              required
+                            />
+                            <label className='lh-1 text-16 text-light-1'>Amount</label>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                     <div className='d-inline-block'>
                       <button
                         type='submit'
