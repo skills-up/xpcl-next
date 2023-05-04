@@ -38,20 +38,19 @@ const AddNewPaymentReceipt = () => {
     amount: '',
   });
 
-  const [typeOptions, setTypeOptions] = useState([
-    { label: 'Payment', value: 'Payment' },
-    { label: 'Receipt', value: 'Receipt' },
-    { label: 'Voucher', value: 'Voucher' },
-  ]);
-
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
 
   useEffect(() => {
-    getData();
-  }, []);
+    if (router.isReady) getData();
+  }, [router.isReady]);
+
+  useEffect(() => {
+    console.log(type);
+  }, [type]);
 
   const getData = async () => {
+    setType({ value: router.query.type });
     const organizations = await getList('organizations');
     const accounts = await getList('accounts');
     const tdsAccounts = await getList('accounts', { category: 'TDS Deductions' });
@@ -76,10 +75,6 @@ const AddNewPaymentReceipt = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    if (!type?.value) {
-      sendToast('error', 'You must select a Receipt Type', 4000);
-      return;
-    }
     if (!crAccountID?.value) {
       sendToast('error', 'You must select a Credit Account', 4000);
       return;
@@ -105,14 +100,14 @@ const AddNewPaymentReceipt = () => {
       tds: type.value === 'Payment' ? (tds ? tempTDSObj : null) : null,
     });
     if (response?.success) {
-      sendToast('success', 'Created Payment Receipt Successfully.', 4000);
+      sendToast('success', 'Created ' + router.query.type + ' Successfully.', 4000);
       router.push('/dashboard/payment-receipts');
     } else {
       sendToast(
         'error',
         response.data?.message ||
           response.data?.error ||
-          'Failed to Create Payment Receipt.',
+          'Failed to Create ' + router.query.type,
         4000
       );
     }
@@ -122,14 +117,17 @@ const AddNewPaymentReceipt = () => {
   useEffect(() => {
     if (organizationID && accounts.length > 0) {
       for (let acc of accounts) {
-        if (acc.label === organizationID.label) setCrAccountID(acc);
+        if (acc.label === organizationID.label) {
+          if (type?.value === 'Payment') setCrAccountID(acc);
+          else if (type?.value === 'Receipt') setDrAccountID(acc);
+        }
       }
     }
   }, [organizationID]);
 
   return (
     <>
-      <Seo pageTitle='Add New Payment Receipt' />
+      <Seo pageTitle={'Add New ' + (router.query?.type || '')} />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -149,9 +147,9 @@ const AddNewPaymentReceipt = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Add New Payment Receipt</h1>
+                  <h1 className='text-30 lh-14 fw-600'>Add New {router.query?.type}</h1>
                   <div className='text-15 text-light-1'>
-                    Create a new payment receipt.
+                    Create a new {router.query?.type?.toLowerCase()}.
                   </div>
                 </div>
                 {/* End .col-12 */}
@@ -161,24 +159,26 @@ const AddNewPaymentReceipt = () => {
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
+                    {type?.value !== 'Voucher' && (
+                      <div>
+                        <label>Organization</label>
+                        <Select
+                          options={organizations}
+                          value={organizationID}
+                          placeholder='Search & Select Organization'
+                          onChange={(id) => setOrganizationID(id)}
+                        />
+                      </div>
+                    )}
                     <div>
                       <label>
-                        Receipt Type<span className='text-danger'>*</span>
+                        Debit Account<span className='text-danger'>*</span>
                       </label>
                       <Select
-                        options={typeOptions}
-                        value={type}
-                        placeholder='Search & Select Type (required)'
-                        onChange={(id) => setType(id)}
-                      />
-                    </div>
-                    <div>
-                      <label>Organization</label>
-                      <Select
-                        options={organizations}
-                        value={organizationID}
-                        placeholder='Search & Select Organization'
-                        onChange={(id) => setOrganizationID(id)}
+                        options={accounts}
+                        value={drAccountID}
+                        placeholder='Search & Select Debit Account (required)'
+                        onChange={(id) => setDrAccountID(id)}
                       />
                     </div>
                     <div>
@@ -190,17 +190,6 @@ const AddNewPaymentReceipt = () => {
                         value={crAccountID}
                         placeholder='Search & Select Credit Account (required)'
                         onChange={(id) => setCrAccountID(id)}
-                      />
-                    </div>
-                    <div>
-                      <label>
-                        Debit Account<span className='text-danger'>*</span>
-                      </label>
-                      <Select
-                        options={accounts}
-                        value={drAccountID}
-                        placeholder='Search & Select Debit Account (required)'
-                        onChange={(id) => setDrAccountID(id)}
                       />
                     </div>
                     <div className='d-block ml-4'>
@@ -394,7 +383,7 @@ const AddNewPaymentReceipt = () => {
                         type='submit'
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
                       >
-                        Add Payment Receipt
+                        Add {router.query?.type}
                       </button>
                     </div>
                   </form>

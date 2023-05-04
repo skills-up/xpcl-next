@@ -41,6 +41,7 @@ const UpdateBooking = () => {
   const [originalBookingID, setOriginalBookingID] = useState(null);
   const [isOffshore, setIsOffshore] = useState(false);
   const [clientQuotedAmount, setClientQuotedAmount] = useState('');
+  const [number, setNumber] = useState('');
 
   // Percentages
   const [vendorServiceChargePercent, setVendorServiceChargePercent] = useState(18);
@@ -137,6 +138,8 @@ const UpdateBooking = () => {
             +response.data.client_tax_amount +
             +response.data.client_gst_amount
         );
+        setNumber(response.data.number);
+
         // Client GST Percent
         if (
           Number(
@@ -607,7 +610,7 @@ const UpdateBooking = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Update Booking</h1>
+                  <h1 className='text-30 lh-14 fw-600'>Update Booking - {number}</h1>
                   <div className='text-15 text-light-1'>Update an existing booking.</div>
                 </div>
                 {/* End .col-12 */}

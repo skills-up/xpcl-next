@@ -12,7 +12,7 @@ import ViewTable from '../../../../components/view-table';
 import { HiRefresh } from 'react-icons/hi';
 import { RiRefund2Fill } from 'react-icons/ri';
 import { ImPagebreak } from 'react-icons/im';
-import Audit from './Audit';
+import Audit from '../../../../components/audits';
 
 const ViewBooking = () => {
   const [booking, setBooking] = useState([]);
@@ -106,7 +106,9 @@ const ViewBooking = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>View Booking</h1>
+                  <h1 className='text-30 lh-14 fw-600'>
+                    View Booking - {booking?.number}
+                  </h1>
                   <div className='text-15 text-light-1'>
                     Get extended details of a booking.
                   </div>
@@ -166,7 +168,7 @@ const ViewBooking = () => {
                 <hr className='my-4' />
                 <div>
                   <h2 className='mb-3'>Audit Log</h2>
-                  <Audit />
+                  <Audit url={'bookings/' + router.query.view + '/audit-trail'} />
                 </div>
               </div>
             </div>

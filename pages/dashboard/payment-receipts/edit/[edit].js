@@ -24,6 +24,7 @@ const UpdatePaymentReceipt = () => {
   const [tdsAccounts, setTDSAccounts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [itc, setItc] = useState(false);
+  const [number, setNumber] = useState('');
   const [itcObj, setItcObj] = useState({
     name: '',
     gstn: '',
@@ -59,6 +60,7 @@ const UpdatePaymentReceipt = () => {
         setNarration(response.data.narration);
         setAmount(response.data.amount);
         setDate(new DateObject({ date: response.data.date, format: 'YYYY-MM-DD' }));
+        setNumber(response.data.number);
 
         const organizations = await getList('organizations');
         const accounts = await getList('accounts');
@@ -124,10 +126,6 @@ const UpdatePaymentReceipt = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    if (!type?.value) {
-      sendToast('error', 'You must select a Receipt Type', 4000);
-      return;
-    }
     if (!crAccountID?.value) {
       sendToast('error', 'You must select a Credit Account', 4000);
       return;
@@ -150,14 +148,14 @@ const UpdatePaymentReceipt = () => {
       tds: type.value === 'Payment' ? (tds ? tempTDSObj : null) : null,
     });
     if (response?.success) {
-      sendToast('success', 'Updated Payment Receipt Successfully.', 4000);
+      sendToast('success', 'Updated ' + type?.value + ' Successfully.', 4000);
       router.push('/dashboard/payment-receipts');
     } else {
       sendToast(
         'error',
         response.data?.message ||
           response.data?.error ||
-          'Failed to Update Payment Receipt.',
+          'Failed to Create ' + type?.value,
         4000
       );
     }
@@ -169,7 +167,10 @@ const UpdatePaymentReceipt = () => {
       if (loading) setLoading(false);
       else {
         for (let acc of accounts) {
-          if (acc.label === organizationID.label) setCrAccountID(acc);
+          if (acc.label === organizationID.label) {
+            if (type?.value === 'Payment') setCrAccountID(acc);
+            else if (type?.value === 'Receipt') setDrAccountID(acc);
+          }
         }
       }
     }
@@ -177,7 +178,7 @@ const UpdatePaymentReceipt = () => {
 
   return (
     <>
-      <Seo pageTitle='Update Payment Receipt' />
+      <Seo pageTitle={'Update ' + (type?.value || '')} />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -197,9 +198,11 @@ const UpdatePaymentReceipt = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Update Payment Receipt</h1>
+                  <h1 className='text-30 lh-14 fw-600'>
+                    Update {type?.value} - {number}
+                  </h1>
                   <div className='text-15 text-light-1'>
-                    Update an existing payment receipt.
+                    Update an existing {type?.value?.toLowerCase()}.
                   </div>
                 </div>
                 {/* End .col-12 */}
@@ -209,15 +212,17 @@ const UpdatePaymentReceipt = () => {
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
-                    <div>
-                      <label>Organization</label>
-                      <Select
-                        options={organizations}
-                        value={organizationID}
-                        placeholder='Search & Select Organization'
-                        onChange={(id) => setOrganizationID(id)}
-                      />
-                    </div>
+                    {type !== 'Voucher' && (
+                      <div>
+                        <label>Organization</label>
+                        <Select
+                          options={organizations}
+                          value={organizationID}
+                          placeholder='Search & Select Organization'
+                          onChange={(id) => setOrganizationID(id)}
+                        />
+                      </div>
+                    )}
                     <div>
                       <label>
                         Credit Account<span className='text-danger'>*</span>
@@ -431,7 +436,7 @@ const UpdatePaymentReceipt = () => {
                         type='submit'
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
                       >
-                        Update Payment Receipt
+                        Update {type?.value}
                       </button>
                     </div>
                   </form>

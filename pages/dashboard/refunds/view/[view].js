@@ -9,7 +9,7 @@ import { sendToast } from '../../../../utils/toastify';
 import { useEffect, useState } from 'react';
 import { deleteItem, getItem } from '../../../../api/xplorzApi';
 import ViewTable from '../../../../components/view-table';
-import Audit from './Audit';
+import Audit from '../../../../components/audits';
 
 const ViewRefunds = () => {
   const [refund, setRefund] = useState([]);
@@ -97,7 +97,7 @@ const ViewRefunds = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>View Refund</h1>
+                  <h1 className='text-30 lh-14 fw-600'>View Refund - {refund?.number}</h1>
                   <div className='text-15 text-light-1'>
                     Get extended details of a refund.
                   </div>
@@ -128,7 +128,7 @@ const ViewRefunds = () => {
                 <hr className='my-4' />
                 <div>
                   <h2 className='mb-3'>Audit Log</h2>
-                  <Audit />
+                  <Audit url={'refunds/' + router.query.view + '/audit-trail'} />
                 </div>
               </div>
             </div>

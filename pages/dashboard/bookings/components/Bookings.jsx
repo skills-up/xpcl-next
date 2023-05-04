@@ -34,6 +34,10 @@ const Bookings = () => {
 
   const columns = [
     {
+      Header: 'Number',
+      accessor: 'number',
+    },
+    {
       Header: 'Booking Type',
       accessor: 'booking_type',
     },
@@ -152,7 +156,10 @@ const Bookings = () => {
           (perm) =>
             perm?.booking_type?.toLowerCase().includes(searchQuery.toLowerCase()) ||
             perm?.status?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            perm?.payment_account_name?.toLowerCase().includes(searchQuery.toLowerCase())
+            perm?.payment_account_name
+              ?.toLowerCase()
+              .includes(searchQuery.toLowerCase()) ||
+            perm?.number?.toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>

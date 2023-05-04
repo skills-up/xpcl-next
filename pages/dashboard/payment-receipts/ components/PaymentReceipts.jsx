@@ -52,6 +52,10 @@ const PaymentReceipts = () => {
       },
     },
     {
+      Header: 'Number',
+      accessor: 'number',
+    },
+    {
       Header: 'Type',
       accessor: 'type',
     },
@@ -130,7 +134,7 @@ const PaymentReceipts = () => {
         'error',
         response.data?.message ||
           response.data?.error ||
-          'Unexpected Error Occurred While Trying to Delete this Payment Receipt',
+          'Unexpected Error Occurred While Trying to Delete this Payment/Receipt/Voucher',
         4000
       );
     }
@@ -143,13 +147,13 @@ const PaymentReceipts = () => {
         <ConfirmationModal
           onCancel={onCancel}
           onSubmit={onSubmit}
-          title='Do you really want to delete this payment receipt?'
-          content='This will permanently delete the payment receipt. Press OK to confirm.'
+          title='Do you really want to delete this payment/receipt/voucher?'
+          content='This will permanently delete this payment/receipt/voucher. Press OK to confirm.'
         />
       )}
       {/* Search Bar + Add New */}
       <div className='row mb-3 items-center justify-between mr-4'>
-        <div className='col-lg-10 col-7'>
+        <div className='col-lg-5 col-7'>
           <input
             type='text'
             className='d-block form-control'
@@ -159,10 +163,37 @@ const PaymentReceipts = () => {
           />
         </div>
         <button
-          className='btn btn-primary col-lg-2 col-5'
-          onClick={() => router.push('/dashboard/payment-receipts/add-new')}
+          className='btn btn-primary col-lg-2 col-12 my-2'
+          onClick={() =>
+            router.push({
+              pathname: '/dashboard/payment-receipts/add-new',
+              query: { type: 'Payment' },
+            })
+          }
         >
-          Add New
+          Add New Payment
+        </button>
+        <button
+          className='btn btn-primary col-lg-2 col-12 my-2'
+          onClick={() =>
+            router.push({
+              pathname: '/dashboard/payment-receipts/add-new',
+              query: { type: 'Receipt' },
+            })
+          }
+        >
+          Add New Receipt
+        </button>
+        <button
+          className='btn btn-primary col-lg-2 col-12 my-2'
+          onClick={() =>
+            router.push({
+              pathname: '/dashboard/payment-receipts/add-new',
+              query: { type: 'Voucher' },
+            })
+          }
+        >
+          Add New Voucher
         </button>
       </div>
       {/* Data Table */}
@@ -170,8 +201,10 @@ const PaymentReceipts = () => {
         downloadCSV
         CSVName='PaymentReceipts.csv'
         columns={columns}
-        data={paymentReceipts.filter((perm) =>
-          perm?.type?.toLowerCase().includes(searchQuery.toLowerCase())
+        data={paymentReceipts.filter(
+          (perm) =>
+            perm?.type?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            perm?.number?.toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>

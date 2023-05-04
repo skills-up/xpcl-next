@@ -36,6 +36,10 @@ const Refunds = () => {
 
   const columns = [
     {
+      Header: 'Number',
+      accessor: 'number',
+    },
+    {
       Header: 'Booking ID',
       accessor: 'booking_id',
     },
@@ -128,8 +132,13 @@ const Refunds = () => {
         downloadCSV
         CSVName='Refunds.csv'
         columns={columns}
-        data={refunds.filter((perm) =>
-          perm?.booking_id?.toString()?.toLowerCase().includes(searchQuery.toLowerCase())
+        data={refunds.filter(
+          (perm) =>
+            perm?.booking_id
+              ?.toString()
+              ?.toLowerCase()
+              .includes(searchQuery.toLowerCase()) ||
+            perm?.number?.toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>

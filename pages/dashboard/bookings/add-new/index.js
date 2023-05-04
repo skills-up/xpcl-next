@@ -222,13 +222,16 @@ const AddNewBooking = () => {
         clientTravellerIDS?.length > 0
           ? clientTravellerIDS.map((element) => element.value)
           : clientTravellerIDS,
-      booking_sectors: bookingSectors.map((element) => ({
-        from_airport_id: element['from_airport_id']?.value,
-        to_airport_id: element['to_airport_id']?.value,
-        travel_date: element['travel_date']?.format('YYYY-MM-DD'),
-        travel_time: element['travel_time'],
-        details: element['details'],
-      })),
+      booking_sectors:
+        bookingType.value === 'Miscellaneous'
+          ? null
+          : bookingSectors.map((element) => ({
+              from_airport_id: element['from_airport_id']?.value,
+              to_airport_id: element['to_airport_id']?.value,
+              travel_date: element['travel_date']?.format('YYYY-MM-DD'),
+              travel_time: element['travel_time'],
+              details: element['details'],
+            })),
       is_offshore: isOffshore,
       sector,
     });

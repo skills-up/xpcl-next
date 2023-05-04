@@ -21,6 +21,7 @@ const UpdateRefund = () => {
   const [refundAmount, setRefundAmount] = useState('');
   const [reason, setReason] = useState('');
   const [bookingData, setBookingData] = useState(null);
+  const [number, setNumber] = useState('');
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -44,6 +45,7 @@ const UpdateRefund = () => {
         setClientCancellationCharges(response.data.client_cancellation_charges);
         setRefundAmount(response.data.refund_amount);
         setReason(response.data?.reason);
+        setNumber(response.data.number);
 
         const bookingData = await getItem('bookings', response.data?.booking_id);
         const accounts = await getList('accounts');
@@ -130,7 +132,7 @@ const UpdateRefund = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Update Refund</h1>
+                  <h1 className='text-30 lh-14 fw-600'>Update Refund - {number}</h1>
                   <div className='text-15 text-light-1'>Create a new refund.</div>
                 </div>
                 {/* End .col-12 */}

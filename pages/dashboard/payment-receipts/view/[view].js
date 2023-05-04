@@ -9,7 +9,7 @@ import { sendToast } from '../../../../utils/toastify';
 import { useEffect, useState } from 'react';
 import { deleteItem, getItem } from '../../../../api/xplorzApi';
 import ViewTable from '../../../../components/view-table';
-import Audit from './Audit';
+import Audit from '../../../../components/audits';
 
 const ViewPaymentReceipts = () => {
   const [paymentReceipt, setPaymentReceipt] = useState([]);
@@ -68,7 +68,7 @@ const ViewPaymentReceipts = () => {
         'error',
         response.data?.message ||
           response.data?.error ||
-          'Unexpected Error Occurred While Trying to Delete this Payment Receipt',
+          'Unexpected Error Occurred While Trying to Delete this ' + paymentReceipt?.type,
         4000
       );
     }
@@ -77,7 +77,7 @@ const ViewPaymentReceipts = () => {
 
   return (
     <>
-      <Seo pageTitle='View Payment Receipt' />
+      <Seo pageTitle={'View ' + (paymentReceipt?.type || '')} />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -97,9 +97,11 @@ const ViewPaymentReceipts = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>View Payment Receipt</h1>
+                  <h1 className='text-30 lh-14 fw-600'>
+                    View {paymentReceipt?.type} - {paymentReceipt?.number}
+                  </h1>
                   <div className='text-15 text-light-1'>
-                    Get extended details of a payment receipt.
+                    Get extended details of a {paymentReceipt?.type?.toLowerCase()}.
                   </div>
                 </div>
                 {/* End .col-12 */}
@@ -111,8 +113,14 @@ const ViewPaymentReceipts = () => {
                   <ConfirmationModal
                     onCancel={onCancel}
                     onSubmit={onSubmit}
-                    title='Do you really want to delete this payment receipt?'
-                    content='This will permanently delete the payment receipt. Press OK to confirm.'
+                    title={
+                      'Do you really want to delete this ' + paymentReceipt?.type + '?'
+                    }
+                    content={
+                      'This will permanently delete the ' +
+                      paymentReceipt?.type?.toLowerCase() +
+                      '. Press OK to confirm.'
+                    }
                   />
                 )}
                 <ViewTable
@@ -128,7 +136,7 @@ const ViewPaymentReceipts = () => {
                 <hr className='my-4' />
                 <div>
                   <h2 className='mb-3'>Audit Log</h2>
-                  <Audit />
+                  <Audit url={'payment-receipts/' + router.query.view + '/audit-trail'} />
                 </div>
               </div>
             </div>

@@ -153,14 +153,14 @@ const AddNewPaymentReceipt = () => {
       tds: type.value === 'Payment' ? (tds ? tempTDSObj : null) : null,
     });
     if (response?.success) {
-      sendToast('success', 'Created Payment Receipt Successfully.', 4000);
+      sendToast('success', 'Created ' + type?.value + ' Successfully.', 4000);
       router.push('/dashboard/payment-receipts');
     } else {
       sendToast(
         'error',
         response.data?.message ||
           response.data?.error ||
-          'Failed to Create Payment Receipt.',
+          'Failed to Create ' + type?.value,
         4000
       );
     }
@@ -172,7 +172,10 @@ const AddNewPaymentReceipt = () => {
       if (loading) setLoading(false);
       else {
         for (let acc of accounts) {
-          if (acc.label === organizationID.label) setCrAccountID(acc);
+          if (acc.label === organizationID.label) {
+            if (type?.value === 'Payment') setCrAccountID(acc);
+            else if (type?.value === 'Receipt') setDrAccountID(acc);
+          }
         }
       }
     }
@@ -180,7 +183,7 @@ const AddNewPaymentReceipt = () => {
 
   return (
     <>
-      <Seo pageTitle='Add New Payment Receipt' />
+      <Seo pageTitle={'Add New ' + (type?.value || '')} />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -200,9 +203,9 @@ const AddNewPaymentReceipt = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Add New Payment Receipt</h1>
+                  <h1 className='text-30 lh-14 fw-600'>Add New {type?.value}</h1>
                   <div className='text-15 text-light-1'>
-                    Create a new payment receipt.
+                    Create a new {type?.value?.toLowerCase()}
                   </div>
                 </div>
                 {/* End .col-12 */}
@@ -212,17 +215,6 @@ const AddNewPaymentReceipt = () => {
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
-                    <div>
-                      <label>
-                        Receipt Type<span className='text-danger'>*</span>
-                      </label>
-                      <Select
-                        options={typeOptions}
-                        value={type}
-                        placeholder='Search & Select Type (required)'
-                        onChange={(id) => setType(id)}
-                      />
-                    </div>
                     <div>
                       <label>Organization</label>
                       <Select
@@ -445,7 +437,7 @@ const AddNewPaymentReceipt = () => {
                         type='submit'
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
                       >
-                        Add Payment Receipt
+                        Add {type?.value}
                       </button>
                     </div>
                   </form>
