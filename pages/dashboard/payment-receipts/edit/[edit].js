@@ -98,14 +98,14 @@ const UpdatePaymentReceipt = () => {
           if (response.data.type === 'Payment') {
             setTds(response.data?.payment_tds ? true : false);
             setItc(response.data?.payment_itc ? true : false);
-            setItcObj(response.data?.payment_itc);
+            if (response.data?.payment_itc) setItcObj(response.data.payment_itc);
             let tempTDSObj = response.data?.payment_tds;
             if (tempTDSObj) {
               for (let account of tdsAccounts.data)
                 if (account.id === response.data?.payment_tds?.account_id)
                   tempTDSObj['account_id'] = { value: account.id, label: account.name };
+              setTdsObj(tempTDSObj);
             }
-            setTdsObj(tempTDSObj);
           }
         } else {
           sendToast('error', 'Unable to fetch required data', 4000);
@@ -140,7 +140,6 @@ const UpdatePaymentReceipt = () => {
     if (tempTDSObj['account_id']?.value)
       tempTDSObj['account_id'] = tempTDSObj['account_id']?.value;
     const response = await updateItem('payment-receipts', router.query.edit, {
-      type: type.value,
       organization_id: organizationID?.value,
       dr_account_id: drAccountID.value,
       cr_account_id: crAccountID.value,
@@ -148,7 +147,7 @@ const UpdatePaymentReceipt = () => {
       amount,
       narration,
       itc: type.value === 'Payment' ? (itc ? itcObj : null) : null,
-      tds: type.value === 'Payment' ? (tempTDSObj ? tdsObj : null) : null,
+      tds: type.value === 'Payment' ? (tds ? tempTDSObj : null) : null,
     });
     if (response?.success) {
       sendToast('success', 'Updated Payment Receipt Successfully.', 4000);
@@ -210,17 +209,6 @@ const UpdatePaymentReceipt = () => {
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
-                    <div>
-                      <label>
-                        Receipt Type<span className='text-danger'>*</span>
-                      </label>
-                      <Select
-                        options={typeOptions}
-                        value={type}
-                        placeholder='Search & Select Type (required)'
-                        onChange={(id) => setType(id)}
-                      />
-                    </div>
                     <div>
                       <label>Organization</label>
                       <Select
@@ -316,7 +304,6 @@ const UpdatePaymentReceipt = () => {
                               value={itcObj.name}
                               placeholder=' '
                               type='text'
-                              required
                             />
                             <label className='lh-1 text-16 text-light-1'>Name</label>
                           </div>
@@ -330,7 +317,6 @@ const UpdatePaymentReceipt = () => {
                               value={itcObj.gstn}
                               placeholder=' '
                               type='text'
-                              required
                             />
                             <label className='lh-1 text-16 text-light-1'>GSTN</label>
                           </div>
@@ -344,7 +330,6 @@ const UpdatePaymentReceipt = () => {
                               value={itcObj.igst}
                               placeholder=' '
                               type='number'
-                              required
                             />
                             <label className='lh-1 text-16 text-light-1'>IGST</label>
                           </div>
@@ -358,7 +343,6 @@ const UpdatePaymentReceipt = () => {
                               value={itcObj.cgst}
                               placeholder=' '
                               type='number'
-                              required
                             />
                             <label className='lh-1 text-16 text-light-1'>CGST</label>
                           </div>
@@ -372,7 +356,6 @@ const UpdatePaymentReceipt = () => {
                               value={itcObj.sgst}
                               placeholder=' '
                               type='number'
-                              required
                             />
                             <label className='lh-1 text-16 text-light-1'>SGST</label>
                           </div>
@@ -400,7 +383,6 @@ const UpdatePaymentReceipt = () => {
                               value={tdsObj.name}
                               placeholder=' '
                               type='text'
-                              required
                             />
                             <label className='lh-1 text-16 text-light-1'>Name</label>
                           </div>
@@ -414,7 +396,6 @@ const UpdatePaymentReceipt = () => {
                               value={tdsObj.pan}
                               placeholder=' '
                               type='text'
-                              required
                             />
                             <label className='lh-1 text-16 text-light-1'>PAN</label>
                           </div>
@@ -439,7 +420,6 @@ const UpdatePaymentReceipt = () => {
                               value={tdsObj.amount}
                               placeholder=' '
                               type='number'
-                              required
                             />
                             <label className='lh-1 text-16 text-light-1'>Amount</label>
                           </div>

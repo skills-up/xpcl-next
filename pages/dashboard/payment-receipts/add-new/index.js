@@ -102,7 +102,7 @@ const AddNewPaymentReceipt = () => {
       amount,
       narration,
       itc: type.value === 'Payment' ? (itc ? itcObj : null) : null,
-      tds: type.value === 'Payment' ? (tempTDSObj ? tdsObj : null) : null,
+      tds: type.value === 'Payment' ? (tds ? tempTDSObj : null) : null,
     });
     if (response?.success) {
       sendToast('success', 'Created Payment Receipt Successfully.', 4000);
@@ -267,7 +267,6 @@ const AddNewPaymentReceipt = () => {
                               value={itcObj.name}
                               placeholder=' '
                               type='text'
-                              required
                             />
                             <label className='lh-1 text-16 text-light-1'>Name</label>
                           </div>
@@ -281,7 +280,6 @@ const AddNewPaymentReceipt = () => {
                               value={itcObj.gstn}
                               placeholder=' '
                               type='text'
-                              required
                             />
                             <label className='lh-1 text-16 text-light-1'>GSTN</label>
                           </div>
@@ -295,7 +293,6 @@ const AddNewPaymentReceipt = () => {
                               value={itcObj.igst}
                               placeholder=' '
                               type='number'
-                              required
                             />
                             <label className='lh-1 text-16 text-light-1'>IGST</label>
                           </div>
@@ -309,7 +306,6 @@ const AddNewPaymentReceipt = () => {
                               value={itcObj.cgst}
                               placeholder=' '
                               type='number'
-                              required
                             />
                             <label className='lh-1 text-16 text-light-1'>CGST</label>
                           </div>
@@ -323,7 +319,6 @@ const AddNewPaymentReceipt = () => {
                               value={itcObj.sgst}
                               placeholder=' '
                               type='number'
-                              required
                             />
                             <label className='lh-1 text-16 text-light-1'>SGST</label>
                           </div>
@@ -351,7 +346,6 @@ const AddNewPaymentReceipt = () => {
                               value={tdsObj.name}
                               placeholder=' '
                               type='text'
-                              required
                             />
                             <label className='lh-1 text-16 text-light-1'>Name</label>
                           </div>
@@ -365,7 +359,6 @@ const AddNewPaymentReceipt = () => {
                               value={tdsObj.pan}
                               placeholder=' '
                               type='text'
-                              required
                             />
                             <label className='lh-1 text-16 text-light-1'>PAN</label>
                           </div>
@@ -390,7 +383,6 @@ const AddNewPaymentReceipt = () => {
                               value={tdsObj.amount}
                               placeholder=' '
                               type='number'
-                              required
                             />
                             <label className='lh-1 text-16 text-light-1'>Amount</label>
                           </div>
