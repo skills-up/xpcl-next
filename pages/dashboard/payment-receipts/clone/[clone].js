@@ -215,15 +215,17 @@ const AddNewPaymentReceipt = () => {
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
-                    <div>
-                      <label>Organization</label>
-                      <Select
-                        options={organizations}
-                        value={organizationID}
-                        placeholder='Search & Select Organization'
-                        onChange={(id) => setOrganizationID(id)}
-                      />
-                    </div>
+                    {type?.value !== 'Voucher' && (
+                      <div>
+                        <label>Organization</label>
+                        <Select
+                          options={organizations}
+                          value={organizationID}
+                          placeholder='Search & Select Organization'
+                          onChange={(id) => setOrganizationID(id)}
+                        />
+                      </div>
+                    )}
                     <div>
                       <label>
                         Credit Account<span className='text-danger'>*</span>

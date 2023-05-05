@@ -13,6 +13,7 @@ import { HiRefresh } from 'react-icons/hi';
 import { RiRefund2Fill } from 'react-icons/ri';
 import { ImPagebreak } from 'react-icons/im';
 import Audit from '../../../../components/audits';
+import { AiOutlinePrinter } from 'react-icons/ai';
 
 const ViewBooking = () => {
   const [booking, setBooking] = useState([]);
@@ -162,6 +163,18 @@ const ViewBooking = () => {
                           query: { booking_id: router.query.view },
                         }),
                       style: { backgroundColor: 'orange' },
+                    },
+                    {
+                      icon: <AiOutlinePrinter />,
+                      text: 'Print',
+                      onClick: async () => {
+                        const response = await getItem(
+                          'bookings',
+                          router.query.view + '/pdf'
+                        );
+                        console.log(response);
+                      },
+                      classNames: 'btn-info text-white',
                     },
                   ]}
                 />
