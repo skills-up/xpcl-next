@@ -12,7 +12,7 @@ const Journals = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const [dates, setDates] = useState([
-    new DateObject({ date: '2023-01-01', format: 'YYYY-MM-DD' }),
+    new DateObject().setMonth('4').setDay('1'),
     new DateObject(),
   ]);
   const [modalOpen, setModalOpen] = useState(false);
@@ -144,9 +144,22 @@ const Journals = () => {
                 {
                   Header: 'Amount',
                   accessor: 'amount',
+                  Cell: (data) => (
+                    <span>
+                      {(+data.row.original.amount).toLocaleString('en-IN', {
+                        maximumFractionDigits: 2,
+                        style: 'currency',
+                        currency: 'INR',
+                      })}
+                    </span>
+                  ),
                 },
               ]}
-              data={journalView?.journal_entries || []}
+              data={
+                journalView?.journal_entries?.filter(
+                  (element) => +element?.amount !== 0
+                ) || []
+              }
             />
           </div>
         </CustomDataModal>

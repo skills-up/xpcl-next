@@ -7,12 +7,13 @@ import ActionsButton from '../../../../components/actions-button/ActionsButton';
 import CustomDataModal from '../../../../components/customDataModal';
 import Datatable from '../../../../components/datatable/Datatable';
 import { sendToast } from '../../../../utils/toastify';
+import LedgerTable from '../../../../components/ledger-table';
 
 const Ledger = () => {
-  const [ledger, setLedger] = useState([]);
+  const [ledger, setLedger] = useState(null);
 
   const [dates, setDates] = useState([
-    new DateObject({ date: '2023-01-01', format: 'YYYY-MM-DD' }),
+    new DateObject().setMonth('4').setDay('1'),
     new DateObject(),
   ]);
   const [modalOpen, setModalOpen] = useState(false);
@@ -45,7 +46,7 @@ const Ledger = () => {
       to_date: dates[1].format('YYYY-MM-DD'),
     });
     if (response?.success) {
-      setLedger([response.data]);
+      setLedger(response.data);
     } else {
       sendToast(
         'error',
@@ -130,9 +131,10 @@ const Ledger = () => {
                 {
                   Header: 'Amount',
                   accessor: 'amount',
+                  Cell: (data) => <span>{(+data.row.original.amount).toFixed(2)}</span>,
                 },
               ]}
-              data={ledger[0]?.entries || []}
+              data={ledger?.entries?.filter((element) => +element?.amount !== 0) || []}
             />
           </div>
         </CustomDataModal>
@@ -166,7 +168,8 @@ const Ledger = () => {
       </div>
 
       {/* Data Table */}
-      <Datatable downloadCSV CSVName='Ledger.csv' columns={columns} data={ledger} />
+      {/* <Datatable downloadCSV CSVName='Ledger.csv' columns={columns} data={ledger} /> */}
+      <LedgerTable data={ledger} accountID={accountID?.value} />
     </div>
   );
 };

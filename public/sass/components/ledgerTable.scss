@@ -1,0 +1,21 @@
+.ledger-table {
+  table {
+    width: 100%;
+    th {
+      vertical-align: top;
+    }
+    tbody {
+      td {
+        font-size: 1rem !important;
+        padding: 10px 12px;
+        &.narration {
+          max-width: 300px;
+        }
+      }
+    }
+  }
+  .no-records {
+    display: block;
+    text-align: center;
+  }
+}

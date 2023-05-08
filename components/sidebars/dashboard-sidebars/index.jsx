@@ -14,6 +14,15 @@ const Sidebar = () => {
       ],
     },
     {
+      icon: '/img/dashboard/sidebar/booking.svg',
+      title: 'Journal',
+      permissions: [],
+      links: [
+        { title: 'Journals', href: '/dashboard/journals' },
+        { title: 'Ledger', href: '/dashboard/journals/ledger' },
+      ],
+    },
+    {
       icon: '/img/dashboard/sidebar/map.svg',
       title: 'Manage Tour',
       permissions: [],

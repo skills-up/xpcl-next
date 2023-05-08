@@ -1354,7 +1354,8 @@ table.table-2 {
 table.table-3 {
   width: 100%;
   min-height: calc(40vh - 6rem);
-  thead {
+  thead,
+  tfoot {
     background-color: var(--color-light-2) !important;
   }
 

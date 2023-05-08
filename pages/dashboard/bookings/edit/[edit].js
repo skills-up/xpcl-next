@@ -12,7 +12,7 @@ import Select from 'react-select';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 import { BiPlusMedical } from 'react-icons/bi';
 import { store } from '../../../../app/store';
-import { AiOutlineCloseCircle } from 'react-icons/ai';
+import { BsTrash3 } from 'react-icons/bs';
 
 const UpdateBooking = () => {
   const [ticketNumber, setTicketNumber] = useState('');
@@ -1149,7 +1149,7 @@ const UpdateBooking = () => {
                                       })
                                     }
                                   >
-                                    <AiOutlineCloseCircle
+                                    <BsTrash3
                                       className='text-danger'
                                       style={{ fontSize: '1.5rem', cursor: 'pointer' }}
                                     />
