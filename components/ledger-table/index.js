@@ -25,13 +25,19 @@ function LedgerTable({ data, accountID }) {
           <thead>
             <tr>
               <th>Date</th>
-              <th>
-                <span className='mb-40 d-block'>Narration</span>Opening Balance
-              </th>
-              <th>Dr</th>
-              <th>Cr</th>
-              <th>
-                <span className='mb-40 d-block'>Balance</span>
+              <th>Narration</th>
+              <th className='number-col'>Dr</th>
+              <th className='number-col'>Cr</th>
+              <th className='number-col'>Balance</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr className='balance-display-row'>
+              <th></th>
+              <th>Opening Balance</th>
+              <th className='number-col'></th>
+              <th className='number-col'></th>
+              <th className='number-col'>
                 {(+newData?.opening_balance).toLocaleString('en-IN', {
                   maximumFractionDigits: 2,
                   style: 'currency',
@@ -40,8 +46,6 @@ function LedgerTable({ data, accountID }) {
                 {newData?.opening_balance >= 0 ? 'Dr' : 'Cr'}
               </th>
             </tr>
-          </thead>
-          <tbody>
             {data?.entries
               ?.filter((element) => +element?.amount !== 0)
               .map((element, index) => {
@@ -54,7 +58,7 @@ function LedgerTable({ data, accountID }) {
                       })}
                     </td>
                     <td className='narration'>{element?.narration}</td>
-                    <td>
+                    <td className='number-col'>
                       {accountID === element.dr_account_id &&
                         `${(+element.amount).toLocaleString('en-IN', {
                           maximumFractionDigits: 2,
@@ -62,7 +66,7 @@ function LedgerTable({ data, accountID }) {
                           currency: 'INR',
                         })}`}
                     </td>
-                    <td>
+                    <td className='number-col'>
                       {accountID === element.cr_account_id &&
                         `${(+element.amount).toLocaleString('en-IN', {
                           maximumFractionDigits: 2,
@@ -70,7 +74,7 @@ function LedgerTable({ data, accountID }) {
                           currency: 'INR',
                         })}`}
                     </td>
-                    <td>
+                    <td className='number-col'>
                       {Math.abs(element?.total).toLocaleString('en-IN', {
                         maximumFractionDigits: 2,
                         style: 'currency',
@@ -81,14 +85,12 @@ function LedgerTable({ data, accountID }) {
                   </tr>
                 );
               })}
-          </tbody>
-          <tfoot>
-            <tr>
+            <tr className='balance-display-row'>
               <th></th>
               <th>Closing Balance</th>
               <th></th>
               <th></th>
-              <th>
+              <th className='number-col'>
                 {Math.abs(newData?.total).toLocaleString('en-IN', {
                   maximumFractionDigits: 2,
                   style: 'currency',
@@ -97,7 +99,7 @@ function LedgerTable({ data, accountID }) {
                 {newData?.total >= 0 ? 'Dr' : 'Cr'}
               </th>
             </tr>
-          </tfoot>
+          </tbody>
         </table>
       ) : (
         <span className='no-records'>No Records</span>

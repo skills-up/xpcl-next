@@ -1,10 +1,16 @@
 .ledger-table {
   table {
     width: 100%;
+    .number-col {
+      text-align: right;
+    }
     th {
       vertical-align: top;
     }
     tbody {
+      .balance-display-row {
+        background-color: rgb(251, 251, 251);
+      }
       td {
         font-size: 1rem !important;
         padding: 10px 12px;
