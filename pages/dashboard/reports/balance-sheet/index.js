@@ -4,7 +4,7 @@ import Seo from '../../../../components/common/Seo';
 import Footer from '../../../../components/footer/dashboard-footer';
 import Header from '../../../../components/header/dashboard-header';
 import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
-import Ledger from './Ledger';
+import BalanceSheet from './BalanceSheet';
 
 const index = () => {
   const token = useSelector((state) => state.auth.value.token);
@@ -12,7 +12,7 @@ const index = () => {
 
   return (
     <>
-      <Seo pageTitle='Ledger' />
+      <Seo pageTitle='Balance Sheet' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -32,15 +32,17 @@ const index = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Ledger</h1>
-                  <div className='text-15 text-light-1'>Check ledger of an account.</div>
+                  <h1 className='text-30 lh-14 fw-600'>Balance Sheet</h1>
+                  <div className='text-15 text-light-1'>
+                    Check balance sheet of as on a date.
+                  </div>
                 </div>
                 {/* End .col-12 */}
               </div>
               {/* End .row */}
 
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
-                <Ledger />
+                <BalanceSheet />
               </div>
             </div>
 

@@ -6,6 +6,11 @@ function LedgerTable({ data, accountID }) {
     if (data) {
       let balance = +data?.opening_balance;
       if (balance !== undefined && balance !== null && data?.entries?.length > 0) {
+        // Sorting By Date
+        data.entries.sort((a, b) => {
+          return new Date(a.date).getTime() - new Date(b.date).getTime();
+        });
+        // Balance
         for (let i = 0; i < data.entries.length; i++) {
           let amount = +data.entries[i].amount;
           if (data.entries[i].dr_account_id === accountID) balance += amount;
