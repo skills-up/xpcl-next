@@ -70,19 +70,29 @@ const Audit = ({ data = undefined, url }) => {
       {/* Data Table */}
       {audits.map((element, index) => {
         return (
-          <div>
-            <h5 className='mb-20'>
-              {
-                <span>
-                  [
-                  {new Date(element?.date).toLocaleString('en-IN', {
+          <div className='mb-20'>
+            <div className='d-flex justify-between mr-10'>
+              <h5 className='mb-20'>
+                {
+                  <span>
+                    [
+                    {new Date(element?.date).toLocaleString('en-IN', {
+                      dateStyle: 'medium',
+                    })}
+                    ]
+                  </span>
+                }{' '}
+                - {element?.narration}
+              </h5>
+              <span>
+                <em>
+                  {new Date(element?.created_at).toLocaleString('en-IN', {
                     dateStyle: 'medium',
+                    timeStyle: 'short',
                   })}
-                  ]
-                </span>
-              }{' '}
-              - {element?.narration}
-            </h5>
+                </em>
+              </span>
+            </div>
             <Datatable
               dataFiltering
               columns={[
@@ -114,6 +124,18 @@ const Audit = ({ data = undefined, url }) => {
                 {
                   Header: 'Amount',
                   accessor: 'amount',
+                  alignRight: true,
+                  Cell: (data) => {
+                    return (
+                      <div className='text-right'>
+                        {(+data.row.original.amount).toLocaleString('en-IN', {
+                          maximumFractionDigits: 2,
+                          style: 'currency',
+                          currency: 'INR',
+                        })}
+                      </div>
+                    );
+                  },
                 },
                 {
                   Header: 'Status',
@@ -134,7 +156,7 @@ const Audit = ({ data = undefined, url }) => {
                   },
                 },
               ]}
-              data={element?.journal_entries}
+              data={element?.entries}
             />
           </div>
         );

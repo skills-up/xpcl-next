@@ -64,8 +64,8 @@ const AddNewCommissionRule = () => {
       iata_yq: iataYQ,
       plb_basic: plbBasic,
       plb_yq: plbYQ,
-      start_date: allowDates ? dates[0]?.format('YYYY-MM-DD') : null,
-      end_date: allowDates ? dates[1]?.format('YYYY-MM-DD') : null,
+      start_date: allowDates ? dates[0]?.format('YYYY-MM-DD') : undefined,
+      end_date: allowDates ? dates[1]?.format('YYYY-MM-DD') : undefined,
     });
     if (response?.success) {
       sendToast('success', 'Created Commission Rule Successfully.', 4000);

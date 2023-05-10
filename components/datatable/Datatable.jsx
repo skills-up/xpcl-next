@@ -158,7 +158,11 @@ const Datatable = ({
               <tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column) => (
                   <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                    <div className='d-flex items-center gap-2 justify-start'>
+                    <div
+                      className={`d-flex items-center gap-2 ${
+                        column.alignRight ? 'justify-end' : 'justify-start'
+                      }`}
+                    >
                       <span>{column.render('Header')}</span>
                       {/* Add a sort direction indicator */}
                       <span className=''>

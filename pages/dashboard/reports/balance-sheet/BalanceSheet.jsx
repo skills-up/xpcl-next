@@ -7,7 +7,6 @@ import { sendToast } from '../../../../utils/toastify';
 
 const Journals = () => {
   const [balanceSheet, setBalanceSheet] = useState(null);
-
   const [dates, setDates] = useState(new DateObject());
 
   const getBalanceSheet = async () => {
@@ -15,6 +14,10 @@ const Journals = () => {
       date: dates.format('YYYY-MM-DD'),
     });
     if (response?.success) {
+      let data = response.data;
+      // Calculating Totals
+      console.log(await recurseThroughout(data));
+      setBalanceSheet(data);
     } else {
       sendToast(
         'error',
@@ -24,64 +27,84 @@ const Journals = () => {
     }
   };
 
+  // Recursing on each object
+  const recurseThroughout = async (data) => {
+    if (data) {
+      // 1) If data is obj then set a total first, and set its total
+      data['_'] = await getRecursiveCalc(data);
+      // 2) Recurse search for objects as a child,
+      for (let obj of Object.keys(data)) {
+        if (typeof data[obj] === 'object') {
+          if (!Array.isArray(data[obj])) {
+            data[obj] = await recurseThroughout(data[obj]);
+          }
+        }
+      }
+      return data;
+    }
+  };
+
+  // Recursive Total of the data
+  const getRecursiveCalc = async (data, total = 0) => {
+    if (data) {
+      for (let obj of Object.values(data)) {
+        if (typeof obj !== 'object') {
+          total += +obj;
+        } else {
+          if (!Array.isArray(obj)) {
+            total = await getRecursiveCalc(obj, total);
+          }
+        }
+      }
+      return total;
+    } else {
+      return 0;
+    }
+  };
+
   useEffect(() => {
-    if (dates && dates?.length === 2) getJournals();
+    if (dates) getBalanceSheet();
   }, [dates]);
 
-  const columns = [
-    {
-      Header: 'Reference',
-      accessor: 'reference',
-    },
-    {
-      Header: 'Narration',
-      accessor: 'narration',
-    },
-    {
-      Header: 'Date',
-      accessor: 'date',
-      Cell: (data) => {
-        return (
+  const RecursiveComponent = ({ data, level }) => {
+    if (data) {
+      return (
+        <div>
           <div>
-            {data.row.original.updated_at
-              ? new Date(data.row.original.updated_at).toLocaleString('en-IN', {
-                  dateStyle: 'medium',
-                  timeStyle: 'short',
-                })
-              : ''}
+            {Object.keys(data).map((element, index) => (
+              <>
+                {typeof data[element] === 'object' ? (
+                  !Array.isArray(data[element]) ? (
+                    <div key={index}>
+                      <div
+                        style={{ paddingLeft: `${level}rem` }}
+                        className='d-flex justify-between'
+                      >
+                        <span>{element}</span> :{' '}
+                        <span>{Math.abs(+data[element]['_'])}</span>
+                      </div>
+                      <RecursiveComponent data={data[element]} level={level + 1} />
+                    </div>
+                  ) : (
+                    <></>
+                  )
+                ) : (
+                  element !== '_' && (
+                    <div
+                      className='d-flex justify-between'
+                      style={{ paddingLeft: `${level}rem` }}
+                    >
+                      <span>{element}</span> <span>{data[element]}</span>
+                    </div>
+                  )
+                )}
+              </>
+            ))}
           </div>
-        );
-      },
-    },
-    {
-      Header: 'Actions',
-      disableSortBy: true,
-      // cell: () => <Button variant="danger" data-tag="allowRowEvents" data-action="delete"><FontAwesomeIcon icon={faTrash} /></Button>,
-      Cell: (data) => {
-        return (
-          <div className='flex flex-start'>
-            <ActionsButton
-              options={[
-                {
-                  label: 'View',
-                  onClick: async () => {
-                    const response = await getItem('journals', data.row.original.id);
-                    if (response?.success) {
-                      setJournalView(response.data);
-                      setModalOpen(true);
-                    } else {
-                      sendToast('error', 'Error fetching this Journal', 4000);
-                    }
-                  },
-                  icon: <AiOutlineEye />,
-                },
-              ]}
-            />
-          </div>
-        );
-      },
-    },
-  ];
+        </div>
+      );
+    }
+  };
 
   return (
     <div className='col-12'>
@@ -102,7 +125,28 @@ const Journals = () => {
         </div>
       </div>
       {/* Generated Balance Sheet */}
-      <div></div>
+      <div className='balance-sheet'>
+        <div className='liabilities'>
+          <div className='title'>Liabilities</div>
+          <div className='records'>
+            {balanceSheet && (
+              <RecursiveComponent data={balanceSheet?.Liabilities} level={1} />
+            )}
+          </div>
+          <div className='total'>
+            <span>Total</span>
+            <span>X Cr</span>
+          </div>
+        </div>
+        <div className='assets'>
+          <div className='title'>Assets</div>
+          <div className='records'></div>
+          <div className='total'>
+            <span>Total</span>
+            <span>X Dr</span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

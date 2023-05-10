@@ -101,7 +101,7 @@ const UpdatePartialRefund = () => {
         const accounts = await getList('accounts');
         const vendors = await getList('organizations', { is_vendor: 1 });
         const commissionRules = await getList('commission-rules');
-        const clients = await getList('accounts', { category: 'Client Referrers' });
+        const clients = await getList('accounts', { category: 'Referrers' });
         const bookingData = await getItem('bookings', response.data.booking_id);
 
         if (

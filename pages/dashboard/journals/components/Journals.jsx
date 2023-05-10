@@ -44,6 +44,21 @@ const Journals = () => {
 
   const columns = [
     {
+      Header: 'Date',
+      accessor: 'date',
+      Cell: (data) => {
+        return (
+          <div>
+            {data.row.original.date
+              ? new Date(data.row.original.date).toLocaleString('en-IN', {
+                  dateStyle: 'medium',
+                })
+              : ''}
+          </div>
+        );
+      },
+    },
+    {
       Header: 'Reference',
       accessor: 'reference',
     },
@@ -51,22 +66,7 @@ const Journals = () => {
       Header: 'Narration',
       accessor: 'narration',
     },
-    {
-      Header: 'Date',
-      accessor: 'date',
-      Cell: (data) => {
-        return (
-          <div>
-            {data.row.original.updated_at
-              ? new Date(data.row.original.updated_at).toLocaleString('en-IN', {
-                  dateStyle: 'medium',
-                  timeStyle: 'short',
-                })
-              : ''}
-          </div>
-        );
-      },
-    },
+
     {
       Header: 'Actions',
       disableSortBy: true,

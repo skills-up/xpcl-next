@@ -55,7 +55,7 @@ const ReissueBooking = () => {
   const [paymentAccountID, setPaymentAccountID] = useState(null);
   const [clientReferrerID, setClientReferrerID] = useState(null);
   const [originalBookingID, setOriginalBookingID] = useState(null);
-  const [clientTravellerIDS, setClientTravellerIDS] = useState([]);
+  const [clientTravellerID, setClientTravellerID] = useState(null);
 
   // Dropdown Options
   const bookingOptions = [
@@ -125,7 +125,7 @@ const ReissueBooking = () => {
         const commissionRules = await getList('commission-rules');
         const airlines = await getList('organizations', { is_airline: 1 });
         const paymentAccounts = await getList('accounts', { category: 'Credit Cards' });
-        const clients = await getList('accounts', { category: 'Client Referrers' });
+        const clients = await getList('accounts', { category: 'Referrers' });
         const clientTravellers = await getList('client-travellers', {
           client_id: store.getState().auth.value.currentOrganization,
         });
@@ -214,17 +214,13 @@ const ReissueBooking = () => {
             if (client.id === response.data.client_referrer_id)
               setClientReferrerID({ value: client.id, label: client.name });
           // Client Traveller IDS
-          const tempClientTravellersArr = [];
           for (let client of clientTravellers.data) {
-            for (let clientTravs of response.data.client_travellers) {
-              if (client.id === clientTravs.id)
-                tempClientTravellersArr.push({
-                  value: client.id,
-                  label: client.traveller_name,
-                });
-            }
+            if (client.id === response.data.client_traveller_id)
+              setClientTravellerID({
+                value: client.id,
+                label: client.traveller_name,
+              });
           }
-          setClientTravellerIDS(tempClientTravellersArr);
           // Client Booking Sectors
           const tempBookingSectors = [];
           for (let bookSec of response.data.booking_sectors) {
@@ -277,6 +273,10 @@ const ReissueBooking = () => {
       sendToast('error', 'Please Select a Vendor', 4000);
       return;
     }
+    if (!clientTravellerID?.value) {
+      sendToast('error', 'Please Select a Client Traveller', 4000);
+      return;
+    }
     // Checking if all data in booking sectors is filled
     for (let bookingSec of bookingSectors) {
       if (
@@ -320,10 +320,7 @@ const ReissueBooking = () => {
       client_total: clientTotal,
       original_booking_id: router.query.reissue,
       reissue_penalty: reissuePenalty,
-      client_traveller_ids:
-        clientTravellerIDS?.length > 0
-          ? clientTravellerIDS.map((element) => element.value)
-          : clientTravellerIDS,
+      client_traveller_id: clientTravellerID?.value,
       booking_sectors: bookingSectors.map((element) => ({
         from_airport_id: element['from_airport_id']?.value,
         to_airport_id: element['to_airport_id']?.value,
@@ -979,14 +976,13 @@ const ReissueBooking = () => {
                     </div>
                     <div>
                       <label>
-                        Client Travellers<span className='text-danger'>*</span>
+                        Client Traveller<span className='text-danger'>*</span>
                       </label>
                       <Select
-                        isMulti
                         options={clientTravellers}
-                        value={clientTravellerIDS}
-                        placeholder='Search & Select Client Referrer'
-                        onChange={(id) => setClientTravellerIDS(id)}
+                        value={clientTravellerID}
+                        placeholder='Search & Select Client Traveller'
+                        onChange={(id) => setClientTravellerID(id)}
                       />
                     </div>
                     {/* Booking Sectors */}

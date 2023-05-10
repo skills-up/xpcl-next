@@ -137,7 +137,7 @@ const ViewVendorCommissionInvoices = () => {
                   <h2 className='mb-3'>Audit Log</h2>
                   <Audit
                     url={
-                      'vendor-commision-invoices/' + router.query.view + '/audit-trail'
+                      'vendor-commission-invoices/' + router.query.view + '/audit-trail'
                     }
                   />
                 </div>
