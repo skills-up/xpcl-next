@@ -2229,17 +2229,34 @@ table.table-6 {
 }
 
 .balance-sheet {
+  height: 100%;
+  display: flex;
+  @include media-below(lg) {
+    flex-direction: column;
+  }
   .assets,
   .liabilities {
+    min-height: 100%;
     width: 50%;
-    height: 100%;
     position: relative;
-    display: flex;
+    padding-bottom: 3rem;
+    @include media-below(lg) {
+      width: 100%;
+    }
+    .title {
+      border: 1px solid lightgray;
+    }
+    .records {
+      border: 1px solid lightgray;
+      min-height: 100%;
+    }
     .total {
+      border: 1px solid lightgray;
       position: absolute;
       left: 0;
+      width: 100%;
       bottom: 0;
     }
   }
-  border: 1px solid gray;
+  border: 1px solid lightgray;
 }

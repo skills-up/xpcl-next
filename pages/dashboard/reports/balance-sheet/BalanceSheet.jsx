@@ -76,7 +76,7 @@ const Journals = () => {
       5: '(200,200,200)',
       6: '(225,225,225)',
     };
-
+    const [expand, setExpand] = useState([]);
     if (data) {
       return (
         <div>
@@ -92,7 +92,17 @@ const Journals = () => {
                           paddingLeft: `${level}rem`,
                           color: `rgb${colorLevels[level]}`,
                         }}
-                        className='d-flex justify-between'
+                        onClick={() =>
+                          setExpand((prev) => {
+                            if (prev.includes(element)) {
+                              prev = prev.filter((e) => e !== element);
+                            } else {
+                              prev.push(element);
+                            }
+                            return [...prev];
+                          })
+                        }
+                        className='d-flex justify-between cursor-pointer'
                       >
                         <span>{element}</span>
                         <span>
@@ -104,7 +114,9 @@ const Journals = () => {
                           {data[element]['_'] >= 0 ? 'Dr' : 'Cr'}
                         </span>
                       </div>
-                      <RecursiveComponent data={data[element]} level={level + 1} />
+                      {!expand.includes(element) && (
+                        <RecursiveComponent data={data[element]} level={level + 1} />
+                      )}
                     </div>
                   ) : (
                     <></>
@@ -154,10 +166,10 @@ const Journals = () => {
         </div>
       </div>
       {/* Generated Balance Sheet */}
-      <div className='balance-sheet d-flex'>
+      <div className='balance-sheet'>
         <div className='liabilities'>
           <div
-            className='title p-3'
+            className='title px-3 py-2'
             style={{
               fontWeight: '700',
             }}
@@ -168,13 +180,40 @@ const Journals = () => {
             {balanceSheet && (
               <RecursiveComponent data={balanceSheet?.Liabilities} level={0} />
             )}
+            {balanceSheet ? (
+              balanceSheet?._ >= 0 && (
+                <div
+                  style={{ fontWeight: '700' }}
+                  className='d-flex mt-20 justify-between'
+                >
+                  <span>Profit</span>
+                  <span>
+                    {Math.abs(+balanceSheet?._).toLocaleString('en-IN', {
+                      maximumFractionDigits: 2,
+                      style: 'currency',
+                      currency: 'INR',
+                    })}{' '}
+                    Cr
+                  </span>
+                </div>
+              )
+            ) : (
+              <></>
+            )}
           </div>
-          <div className='total d-flex justify-between p-3' style={{ fontWeight: '700' }}>
+          <div
+            className='total d-flex justify-between px-3 py-2'
+            style={{ fontWeight: '700' }}
+          >
             <span>Total</span>
             <span>
               {balanceSheet ? (
                 <>
-                  {Math.abs(+balanceSheet?.Liabilities?._).toLocaleString('en-IN', {
+                  {(Math.abs(+balanceSheet?.Assets?._) >
+                  Math.abs(+balanceSheet?.Liabilities?._)
+                    ? Math.abs(+balanceSheet?.Assets?._)
+                    : Math.abs(+balanceSheet?.Liabilities?._)
+                  ).toLocaleString('en-IN', {
                     maximumFractionDigits: 2,
                     style: 'currency',
                     currency: 'INR',
@@ -189,7 +228,7 @@ const Journals = () => {
         </div>
         <div className='assets'>
           <div
-            className='title p-3'
+            className='title px-3 py-2'
             style={{
               fontWeight: '700',
             }}
@@ -198,16 +237,40 @@ const Journals = () => {
           </div>
           <div className='records p-3'>
             {balanceSheet && <RecursiveComponent data={balanceSheet?.Assets} level={0} />}
+            {balanceSheet ? (
+              balanceSheet?._ < 0 && (
+                <div
+                  style={{ fontWeight: '700' }}
+                  className='d-flex mt-20 justify-between'
+                >
+                  <span>Loss</span>
+                  <span>
+                    {Math.abs(+balanceSheet?._).toLocaleString('en-IN', {
+                      maximumFractionDigits: 2,
+                      style: 'currency',
+                      currency: 'INR',
+                    })}{' '}
+                    Dr
+                  </span>
+                </div>
+              )
+            ) : (
+              <></>
+            )}
           </div>
           <div
-            className='total  p-3 d-flex justify-between'
+            className='total px-3 py-2 d-flex justify-between'
             style={{ fontWeight: '700' }}
           >
             <span>Total</span>
             <span>
               {balanceSheet ? (
                 <>
-                  {Math.abs(+balanceSheet?.Assets?._).toLocaleString('en-IN', {
+                  {(Math.abs(+balanceSheet?.Assets?._) >
+                  Math.abs(+balanceSheet?.Liabilities?._)
+                    ? Math.abs(+balanceSheet?.Assets?._)
+                    : Math.abs(+balanceSheet?.Liabilities?._)
+                  ).toLocaleString('en-IN', {
                     maximumFractionDigits: 2,
                     style: 'currency',
                     currency: 'INR',
