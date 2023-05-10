@@ -16,7 +16,8 @@ const Journals = () => {
     if (response?.success) {
       let data = response.data;
       // Calculating Totals
-      console.log(await recurseThroughout(data));
+      data = await recurseThroughout(data);
+      console.log(data);
       setBalanceSheet(data);
     } else {
       sendToast(
@@ -67,6 +68,15 @@ const Journals = () => {
   }, [dates]);
 
   const RecursiveComponent = ({ data, level }) => {
+    const colorLevels = {
+      1: '(0,0,0)',
+      2: '(75,75,75)',
+      3: '(100,100,100)',
+      4: '(150,150,150)',
+      5: '(200,200,200)',
+      6: '(225,225,225)',
+    };
+
     if (data) {
       return (
         <div>
@@ -77,11 +87,22 @@ const Journals = () => {
                   !Array.isArray(data[element]) ? (
                     <div key={index}>
                       <div
-                        style={{ paddingLeft: `${level}rem` }}
+                        style={{
+                          fontWeight: '700',
+                          paddingLeft: `${level}rem`,
+                          color: `rgb${colorLevels[level]}`,
+                        }}
                         className='d-flex justify-between'
                       >
-                        <span>{element}</span> :{' '}
-                        <span>{Math.abs(+data[element]['_'])}</span>
+                        <span>{element}</span>
+                        <span>
+                          {Math.abs(+data[element]['_']).toLocaleString('en-IN', {
+                            maximumFractionDigits: 2,
+                            style: 'currency',
+                            currency: 'INR',
+                          })}{' '}
+                          {data[element]['_'] >= 0 ? 'Dr' : 'Cr'}
+                        </span>
                       </div>
                       <RecursiveComponent data={data[element]} level={level + 1} />
                     </div>
@@ -92,9 +113,17 @@ const Journals = () => {
                   element !== '_' && (
                     <div
                       className='d-flex justify-between'
-                      style={{ paddingLeft: `${level}rem` }}
+                      style={{ paddingLeft: `${level}rem`, color: 'blue', gap: '6rem' }}
                     >
-                      <span>{element}</span> <span>{data[element]}</span>
+                      <span>{element}</span>
+                      <span className='mr-70'>
+                        {Math.abs(+data[element]).toLocaleString('en-IN', {
+                          maximumFractionDigits: 2,
+                          style: 'currency',
+                          currency: 'INR',
+                        })}{' '}
+                        {data[element] >= 0 ? 'Dr' : 'Cr'}
+                      </span>
                     </div>
                   )
                 )}
@@ -125,25 +154,70 @@ const Journals = () => {
         </div>
       </div>
       {/* Generated Balance Sheet */}
-      <div className='balance-sheet'>
+      <div className='balance-sheet d-flex'>
         <div className='liabilities'>
-          <div className='title'>Liabilities</div>
-          <div className='records'>
+          <div
+            className='title p-3'
+            style={{
+              fontWeight: '700',
+            }}
+          >
+            Liabilities
+          </div>
+          <div className='records p-3'>
             {balanceSheet && (
-              <RecursiveComponent data={balanceSheet?.Liabilities} level={1} />
+              <RecursiveComponent data={balanceSheet?.Liabilities} level={0} />
             )}
           </div>
-          <div className='total'>
+          <div className='total d-flex justify-between p-3' style={{ fontWeight: '700' }}>
             <span>Total</span>
-            <span>X Cr</span>
+            <span>
+              {balanceSheet ? (
+                <>
+                  {Math.abs(+balanceSheet?.Liabilities?._).toLocaleString('en-IN', {
+                    maximumFractionDigits: 2,
+                    style: 'currency',
+                    currency: 'INR',
+                  })}{' '}
+                  Cr
+                </>
+              ) : (
+                '0 Cr'
+              )}
+            </span>
           </div>
         </div>
         <div className='assets'>
-          <div className='title'>Assets</div>
-          <div className='records'></div>
-          <div className='total'>
+          <div
+            className='title p-3'
+            style={{
+              fontWeight: '700',
+            }}
+          >
+            Assets
+          </div>
+          <div className='records p-3'>
+            {balanceSheet && <RecursiveComponent data={balanceSheet?.Assets} level={0} />}
+          </div>
+          <div
+            className='total  p-3 d-flex justify-between'
+            style={{ fontWeight: '700' }}
+          >
             <span>Total</span>
-            <span>X Dr</span>
+            <span>
+              {balanceSheet ? (
+                <>
+                  {Math.abs(+balanceSheet?.Assets?._).toLocaleString('en-IN', {
+                    maximumFractionDigits: 2,
+                    style: 'currency',
+                    currency: 'INR',
+                  })}{' '}
+                  Dr
+                </>
+              ) : (
+                '0 Dr'
+              )}
+            </span>
           </div>
         </div>
       </div>

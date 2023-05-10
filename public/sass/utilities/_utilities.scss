@@ -2229,4 +2229,17 @@ table.table-6 {
 }
 
 .balance-sheet {
+  .assets,
+  .liabilities {
+    width: 50%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    .total {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+    }
+  }
+  border: 1px solid gray;
 }
