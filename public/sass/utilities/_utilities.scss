@@ -2260,3 +2260,72 @@ table.table-6 {
   }
   border: 1px solid lightgray;
 }
+
+.income-statement {
+  height: 100%;
+  display: flex;
+  @include media-below(lg) {
+    flex-direction: column;
+  }
+  .assets,
+  .liabilities {
+    min-height: 100%;
+    width: 50%;
+    position: relative;
+    padding-bottom: 3rem;
+    @include media-below(lg) {
+      width: 100%;
+    }
+    .title {
+      border: 1px solid lightgray;
+    }
+    .records {
+      border: 1px solid lightgray;
+      min-height: 100%;
+    }
+    .total {
+      border: 1px solid lightgray;
+      position: absolute;
+      left: 0;
+      width: 100%;
+      bottom: 0;
+      min-height: 3rem;
+      display: flex;
+      align-items: center;
+    }
+  }
+  border: 1px solid lightgray;
+}
+
+.working-capital-statement {
+  table {
+    width: 100%;
+    tbody {
+      tr {
+        td {
+          padding: 0.3rem 1rem;
+          border: 1px solid lightgray;
+          &.one {
+            width: 50%;
+          }
+          &.two {
+            text-align: right;
+          }
+        }
+        &.top {
+          font-weight: 700;
+          cursor: pointer;
+          background-color: rgb(39, 53, 211);
+          color: white;
+        }
+        &.member {
+          background-color: rgb(230, 230, 230);
+        }
+        &.net-cash {
+          background-color: rgb(245, 245, 245);
+          font-weight: 700;
+        }
+      }
+    }
+  }
+}

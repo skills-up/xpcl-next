@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { AiOutlineEye } from 'react-icons/ai';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
@@ -8,13 +7,15 @@ import { sendToast } from '../../../../utils/toastify';
 
 const Journals = () => {
   const [balanceSheet, setBalanceSheet] = useState(null);
-  const [dates, setDates] = useState(new DateObject());
-
-  const router = useRouter();
+  const [dates, setDates] = useState([
+    new DateObject().setMonth('4').setDay('1'),
+    new DateObject(),
+  ]);
 
   const getBalanceSheet = async () => {
-    const response = await getList('reports/balance-sheet', {
-      date: dates.format('YYYY-MM-DD'),
+    const response = await getList('reports/income-statement', {
+      from_date: dates[0].format('YYYY-MM-DD'),
+      to_date: dates[1].format('YYYY-MM-DD'),
     });
     if (response?.success) {
       let data = response.data;
@@ -25,7 +26,9 @@ const Journals = () => {
     } else {
       sendToast(
         'error',
-        response?.data?.message || response?.data?.error || 'Error getting balance sheet',
+        response?.data?.message ||
+          response?.data?.error ||
+          'Error getting income statement',
         4000
       );
     }
@@ -67,17 +70,17 @@ const Journals = () => {
   };
 
   useEffect(() => {
-    if (dates) getBalanceSheet();
+    if (dates && dates.length === 2) getBalanceSheet();
   }, [dates]);
 
   const RecursiveComponent = ({ data, level }) => {
     const colorLevels = {
-      0: '(0,0,0)',
-      1: '(75,75,75)',
-      2: '(100,100,100)',
-      3: '(150,150,150)',
-      4: '(200,200,200)',
-      5: '(225,225,225)',
+      1: '(0,0,0)',
+      2: '(75,75,75)',
+      3: '(100,100,100)',
+      4: '(150,150,150)',
+      5: '(200,200,200)',
+      6: '(225,225,225)',
     };
     const [expand, setExpand] = useState([]);
     if (data) {
@@ -126,15 +129,11 @@ const Journals = () => {
                   )
                 ) : (
                   element !== '_' && (
-                    <a
-                      className='d-flex justify-between cursor-pointer'
+                    <div
+                      className='d-flex justify-between'
                       style={{ paddingLeft: `${level}rem`, color: 'blue' }}
-                      href={
-                        '/dashboard/journals/ledger?account_id=' + element.split('|')[0]
-                      }
-                      target='_blank'
                     >
-                      <span>{element.split('|')[1]}</span>
+                      <span>{element}</span>
                       <span>
                         {Math.abs(+data[element]).toLocaleString('en-IN', {
                           maximumFractionDigits: 2,
@@ -143,7 +142,7 @@ const Journals = () => {
                         })}{' '}
                         {data[element] >= 0 ? 'Dr' : 'Cr'}
                       </span>
-                    </a>
+                    </div>
                   )
                 )}
               </>
@@ -159,21 +158,23 @@ const Journals = () => {
       {/* Date Picker */}
       <div className='row mb-3 items-center justify-between mr-4'>
         <div className='col-lg-4 col-12 d-block ml-4'>
-          <label style={{ fontWeight: '700' }}>Select Date</label>
+          <label style={{ fontWeight: '700' }}>Select Start & End Dates</label>
           <DatePicker
             style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
             inputClass='custom_input-picker'
             containerClassName='custom_container-picker'
             value={dates}
             onChange={setDates}
-            numberOfMonths={1}
+            numberOfMonths={2}
             offsetY={10}
+            range
+            rangeHover
             format='DD MMMM YYYY'
           />
         </div>
       </div>
       {/* Generated Balance Sheet */}
-      <div className='balance-sheet'>
+      <div className='income-statement'>
         <div className='liabilities'>
           <div
             className='title px-3 py-2'
@@ -181,17 +182,19 @@ const Journals = () => {
               fontWeight: '700',
             }}
           >
-            Liabilities
+            Expenses
           </div>
           <div className='records p-3'>
             {balanceSheet && (
-              <RecursiveComponent data={balanceSheet?.Liabilities} level={0} />
+              <RecursiveComponent data={balanceSheet?.Expenses} level={0} />
             )}
+          </div>
+          <div className='total px-3'>
             {balanceSheet ? (
-              balanceSheet?._ >= 0 && (
+              balanceSheet?._ < 0 && (
                 <div
-                  style={{ fontWeight: '700' }}
-                  className='d-flex mt-20 justify-between'
+                  className='d-flex justify-between items-center'
+                  style={{ fontWeight: '700', width: '100%' }}
                 >
                   <span>Profit</span>
                   <span>
@@ -208,30 +211,6 @@ const Journals = () => {
               <></>
             )}
           </div>
-          <div
-            className='total d-flex justify-between px-3 py-2'
-            style={{ fontWeight: '700' }}
-          >
-            <span>Total</span>
-            <span>
-              {balanceSheet ? (
-                <>
-                  {(Math.abs(+balanceSheet?.Assets?._) >
-                  Math.abs(+balanceSheet?.Liabilities?._)
-                    ? Math.abs(+balanceSheet?.Assets?._)
-                    : Math.abs(+balanceSheet?.Liabilities?._)
-                  ).toLocaleString('en-IN', {
-                    maximumFractionDigits: 2,
-                    style: 'currency',
-                    currency: 'INR',
-                  })}{' '}
-                  Cr
-                </>
-              ) : (
-                '0 Cr'
-              )}
-            </span>
-          </div>
         </div>
         <div className='assets'>
           <div
@@ -240,15 +219,19 @@ const Journals = () => {
               fontWeight: '700',
             }}
           >
-            Assets
+            Incomes
           </div>
           <div className='records p-3'>
-            {balanceSheet && <RecursiveComponent data={balanceSheet?.Assets} level={0} />}
+            {balanceSheet && (
+              <RecursiveComponent data={balanceSheet?.Incomes} level={0} />
+            )}
+          </div>
+          <div className='total px-3'>
             {balanceSheet ? (
-              balanceSheet?._ < 0 && (
+              balanceSheet?._ >= 0 && (
                 <div
-                  style={{ fontWeight: '700' }}
-                  className='d-flex mt-20 justify-between'
+                  className='d-flex justify-between items-center'
+                  style={{ fontWeight: '700', width: '100%' }}
                 >
                   <span>Loss</span>
                   <span>
@@ -264,30 +247,6 @@ const Journals = () => {
             ) : (
               <></>
             )}
-          </div>
-          <div
-            className='total px-3 py-2 d-flex justify-between'
-            style={{ fontWeight: '700' }}
-          >
-            <span>Total</span>
-            <span>
-              {balanceSheet ? (
-                <>
-                  {(Math.abs(+balanceSheet?.Assets?._) >
-                  Math.abs(+balanceSheet?.Liabilities?._)
-                    ? Math.abs(+balanceSheet?.Assets?._)
-                    : Math.abs(+balanceSheet?.Liabilities?._)
-                  ).toLocaleString('en-IN', {
-                    maximumFractionDigits: 2,
-                    style: 'currency',
-                    currency: 'INR',
-                  })}{' '}
-                  Dr
-                </>
-              ) : (
-                '0 Dr'
-              )}
-            </span>
           </div>
         </div>
       </div>

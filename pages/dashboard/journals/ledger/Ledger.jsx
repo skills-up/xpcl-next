@@ -8,6 +8,7 @@ import CustomDataModal from '../../../../components/customDataModal';
 import Datatable from '../../../../components/datatable/Datatable';
 import { sendToast } from '../../../../utils/toastify';
 import LedgerTable from '../../../../components/ledger-table';
+import { useRouter } from 'next/router';
 
 const Ledger = () => {
   const [ledger, setLedger] = useState(null);
@@ -20,16 +21,25 @@ const Ledger = () => {
   const [accounts, setAccounts] = useState([]);
   const [accountID, setAccountID] = useState(null);
 
+  const router = useRouter();
+
   useEffect(() => {
-    getData();
-  }, []);
+    if (router.isReady) getData();
+  }, [router.isReady]);
 
   const getData = async () => {
+    // Getting accounts
     const response = await getList('accounts');
     if (response?.success) {
       setAccounts(
         response.data.map((element) => ({ value: element.id, label: element.name }))
       );
+      // Checking for query param
+      if (router.query?.account_id) {
+        for (let acc of response.data)
+          if (acc.id === +router.query.account_id)
+            setAccountID({ value: acc.id, label: acc.name });
+      }
     } else {
       sendToast(
         'error',
