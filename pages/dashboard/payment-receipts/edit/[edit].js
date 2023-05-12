@@ -213,7 +213,7 @@ const UpdatePaymentReceipt = () => {
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
                     {type?.value !== 'Voucher' && (
-                      <div>
+                      <div className='form-input-select'>
                         <label>Organization</label>
                         <Select
                           options={organizations}
@@ -223,7 +223,7 @@ const UpdatePaymentReceipt = () => {
                         />
                       </div>
                     )}
-                    <div>
+                    <div className='form-input-select'>
                       <label>
                         Credit Account<span className='text-danger'>*</span>
                       </label>
@@ -234,7 +234,7 @@ const UpdatePaymentReceipt = () => {
                         onChange={(id) => setCrAccountID(id)}
                       />
                     </div>
-                    <div>
+                    <div className='form-input-select'>
                       <label>
                         Debit Account<span className='text-danger'>*</span>
                       </label>
@@ -245,7 +245,7 @@ const UpdatePaymentReceipt = () => {
                         onChange={(id) => setDrAccountID(id)}
                       />
                     </div>
-                    <div className='d-block ml-4'>
+                    <div className='d-block ml-3 form-datepicker'>
                       <label>
                         Date<span className='text-danger'>*</span>
                       </label>
@@ -405,7 +405,7 @@ const UpdatePaymentReceipt = () => {
                             <label className='lh-1 text-16 text-light-1'>PAN</label>
                           </div>
                         </div>
-                        <div className='col-3 pr-0 pb-1'>
+                        <div className='col-3 pr-0 pb-1 form-input-select'>
                           <label>Account</label>
                           <Select
                             options={tdsAccounts}

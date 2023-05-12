@@ -116,7 +116,7 @@ const AddVisaRequirementDocuments = () => {
                         </label>
                       </div>
                     </div>
-                    <div>
+                    <div className='form-input-select'>
                       <label>
                         Select Category<span className='text-danger'>*</span>
                       </label>

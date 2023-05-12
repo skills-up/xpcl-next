@@ -114,7 +114,7 @@ const AddNewClosingBalance = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='d-block ml-4'>
+                    <div className='d-block ml-3 form-datepicker'>
                       <label>
                         Closing Date<span className='text-danger'>*</span>
                       </label>

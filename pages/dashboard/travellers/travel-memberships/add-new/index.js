@@ -124,7 +124,7 @@ const AddNewTravelMembership = () => {
                         </label>
                       </div>
                     </div>
-                    <div>
+                    <div className='form-input-select'>
                       <label>
                         Membership Type<span className='text-danger'>*</span>
                       </label>

@@ -151,8 +151,8 @@ const Ledger = () => {
       )}
       {/* Search Bar + Add New */}
       <div className='row mb-3 pr-0 items-center justify-between mr-4'>
-        <div className='col-lg-5 col-12 d-block ml-4'>
-          <label style={{ fontWeight: '700' }}>Select Start & End Dates</label>
+        <div className='col-lg-5 col-12 d-block ml-3 form-datepicker'>
+          <label>Select Start & End Dates</label>
           <DatePicker
             style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
             inputClass='custom_input-picker'
@@ -166,7 +166,7 @@ const Ledger = () => {
             format='DD MMMM YYYY'
           />
         </div>
-        <div className='col-lg-6 col-12 pr-0'>
+        <div className='col-lg-6 col-12 pr-0 form-input-select'>
           <label>Select Account</label>
           <Select
             options={accounts}

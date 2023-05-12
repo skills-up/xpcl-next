@@ -175,8 +175,8 @@ const Journals = () => {
             value={searchQuery}
           />
         </div>
-        <div className='col-lg-4 col-12 d-block ml-4'>
-          <label style={{ fontWeight: '700' }}>Select Start & End Dates</label>
+        <div className='col-lg-4 col-12 d-block ml-3 form-datepicker'>
+          <label>Select Start & End Dates</label>
           <DatePicker
             style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
             inputClass='custom_input-picker'

@@ -149,7 +149,7 @@ const AddNewOrganization = () => {
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
-                    <div>
+                    <div className='form-input-select'>
                       <label>
                         Select Organization Type<span className='text-danger'>*</span>
                       </label>
@@ -160,7 +160,7 @@ const AddNewOrganization = () => {
                         onChange={(id) => setType(id)}
                       />
                     </div>
-                    <div>
+                    <div className='form-input-select'>
                       <label>Select Calendar Template</label>
                       <Select
                         options={calenderTemplates}

@@ -161,7 +161,7 @@ const UpdateTravelVisa = () => {
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
-                    <div>
+                    <div className='form-input-select'>
                       <label>
                         Country<span className='text-danger'>*</span>
                       </label>
@@ -200,7 +200,7 @@ const UpdateTravelVisa = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='d-block ml-4'>
+                    <div className='d-block ml-3 form-datepicker'>
                       <label>
                         Issue Date<span className='text-danger'>*</span>
                       </label>
@@ -215,7 +215,7 @@ const UpdateTravelVisa = () => {
                         format='DD MMMM YYYY'
                       />
                     </div>
-                    <div className='d-block ml-4'>
+                    <div className='d-block ml-3 form-datepicker'>
                       <label>
                         Expiry Date<span className='text-danger'>*</span>
                       </label>
@@ -230,7 +230,7 @@ const UpdateTravelVisa = () => {
                         format='DD MMMM YYYY'
                       />
                     </div>
-                    <div>
+                    <div className='form-input-select'>
                       <label>Entries</label>
                       <Select
                         options={options}

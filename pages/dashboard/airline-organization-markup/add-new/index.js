@@ -95,7 +95,7 @@ const AddNewAirlineOrganizations = () => {
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
-                    <div>
+                    <div className='form-input-select'>
                       <label>
                         Select an Airline Organization
                         <span className='text-danger'>*</span>

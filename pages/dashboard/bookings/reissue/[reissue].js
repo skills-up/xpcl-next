@@ -545,7 +545,7 @@ const ReissueBooking = () => {
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
-                    <div>
+                    <div className='form-input-select'>
                       <label>
                         Booking Type<span className='text-danger'>*</span>
                       </label>
@@ -556,7 +556,7 @@ const ReissueBooking = () => {
                         onChange={(id) => setBookingType(id)}
                       />
                     </div>
-                    <div className='d-block ml-4'>
+                    <div className='d-block ml-3 form-datepicker'>
                       <label>
                         Booking Date<span className='text-danger'>*</span>
                       </label>
@@ -616,7 +616,7 @@ const ReissueBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div>
+                    <div className='form-input-select'>
                       <label>
                         Vendor<span className='text-danger'>*</span>
                       </label>
@@ -723,7 +723,7 @@ const ReissueBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div>
+                    <div className='form-input-select'>
                       <label>Payment Account</label>
                       <Select
                         options={paymentAccounts}
@@ -745,7 +745,7 @@ const ReissueBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div>
+                    <div className='form-input-select'>
                       <label>Commission Rule</label>
                       <Select
                         options={commissionRules}
@@ -846,7 +846,7 @@ const ReissueBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div>
+                    <div className='form-input-select'>
                       <label>Airline</label>
                       <Select
                         options={airlines}
@@ -856,7 +856,7 @@ const ReissueBooking = () => {
                       />
                     </div>
                     {bookingType?.value === 'Miscellaneous' && (
-                      <div>
+                      <div className='form-input-select'>
                         <label>Miscellaneous Type</label>
                         <Select
                           options={miscellaneousOptions}
@@ -866,7 +866,7 @@ const ReissueBooking = () => {
                         />
                       </div>
                     )}
-                    <div>
+                    <div className='form-input-select'>
                       <label>Client Referrer</label>
                       <Select
                         options={clients}
@@ -974,7 +974,7 @@ const ReissueBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div>
+                    <div className='form-input-select'>
                       <label>
                         Client Traveller<span className='text-danger'>*</span>
                       </label>
@@ -1011,7 +1011,7 @@ const ReissueBooking = () => {
                           {bookingSectors.map((element, index) => {
                             return (
                               <div className='row items-center my-2'>
-                                <div className='col-3'>
+                                <div className='col-3 from-input-select'>
                                   <label>
                                     From<span className='text-danger'>*</span>
                                   </label>
@@ -1029,7 +1029,7 @@ const ReissueBooking = () => {
                                     }
                                   />
                                 </div>
-                                <div className='col-3'>
+                                <div className='col-3 form-input-select'>
                                   <label>
                                     To<span className='text-danger'>*</span>
                                   </label>
@@ -1047,7 +1047,7 @@ const ReissueBooking = () => {
                                     }
                                   />
                                 </div>
-                                <div className='col-2'>
+                                <div className='col-2 form-datepicker'>
                                   <label>
                                     Date<span className='text-danger'>*</span>
                                   </label>

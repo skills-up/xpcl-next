@@ -116,7 +116,7 @@ const AddNewRefund = () => {
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
-                    <div className='d-block ml-4'>
+                    <div className='d-block ml-3 form-datepicker'>
                       <label>
                         Refund Date<span className='text-danger'>*</span>
                       </label>
@@ -131,7 +131,7 @@ const AddNewRefund = () => {
                         format='DD MMMM YYYY'
                       />
                     </div>
-                    <div>
+                    <div className='form-input-select'>
                       <label>
                         Account<span className='text-danger'>*</span>
                       </label>

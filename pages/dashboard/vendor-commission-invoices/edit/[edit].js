@@ -144,7 +144,7 @@ const UpdateVendorCommissionInvoice = () => {
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
-                    <div className='d-block ml-4'>
+                    <div className='d-block ml-3 form-datepicker'>
                       <label>
                         Date<span className='text-danger'>*</span>
                       </label>
@@ -166,7 +166,7 @@ const UpdateVendorCommissionInvoice = () => {
                       />
                       <label>Previous Financial Year</label>
                     </div>
-                    <div>
+                    <div className='form-input-select'>
                       <label>
                         Vendor<span className='text-danger'>*</span>
                       </label>

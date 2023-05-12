@@ -1198,6 +1198,61 @@ $_displays: none, inline-block, block, flex;
   }
 }
 
+.form-input-select {
+  position: relative;
+  label {
+    position: absolute;
+    z-index: 2;
+    padding: 7px 10px 0;
+    color: var(--color-light-1);
+    font-size: var(--text-16) !important;
+  }
+
+  .css-1jqq78o-placeholder,
+  .css-qbdosj-Input,
+  .css-166bipr-Input,
+  .css-1dimb5e-singleValue {
+    padding-top: 2rem;
+  }
+
+  .css-3w2yfm-ValueContainer {
+    padding-top: 2rem;
+    .css-qbdosj-Input,
+    .css-166bipr-Input {
+      padding-top: 0;
+    }
+  }
+
+  .css-13cymwt-control,
+  .css-t3ipsp-control {
+    min-height: 70px;
+    position: relative;
+  }
+
+  .css-1nmdiq5-menu {
+    z-index: 3;
+  }
+}
+
+.form-datepicker {
+  position: relative;
+  .custom_container-picker {
+    border: 1px solid lightgray;
+    min-height: 70px;
+    padding-top: 2rem;
+    border-radius: 5px;
+    .custom_input-picker {
+      color: black !important;
+    }
+  }
+  label {
+    position: absolute;
+    padding: 7px 10px 0;
+    color: var(--color-light-1);
+    font-size: var(--text-16) !important;
+  }
+}
+
 .sidebar.-blog {
   > * + * {
     padding-top: 30px;

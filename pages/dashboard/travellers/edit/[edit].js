@@ -391,7 +391,7 @@ const UpdateTravellers = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <div className='col-12 form-input-select'>
                       <label>Passport Gender</label>
                       <Select
                         options={passportGenderOptions}
@@ -400,7 +400,7 @@ const UpdateTravellers = () => {
                         onChange={(id) => setPassportGender(id)}
                       />
                     </div>
-                    <div className='d-block ml-4'>
+                    <div className='d-block ml-3 form-datepicker'>
                       <label>Passport Date Of Birth</label>
                       <DatePicker
                         style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
@@ -413,7 +413,7 @@ const UpdateTravellers = () => {
                         format='DD MMMM YYYY'
                       />
                     </div>
-                    <div className='d-block ml-4'>
+                    <div className='d-block ml-3 form-datepicker'>
                       <label>Passport Issue Date</label>
                       <DatePicker
                         style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
@@ -426,7 +426,7 @@ const UpdateTravellers = () => {
                         format='DD MMMM YYYY'
                       />
                     </div>
-                    <div className='d-block ml-4'>
+                    <div className='d-block ml-3 form-datepicker'>
                       <label>Passport Expiry Date</label>
                       <DatePicker
                         style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
@@ -487,7 +487,7 @@ const UpdateTravellers = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <div className='col-12 form-input-select'>
                       <label>Domestic Cabin Preference</label>
                       <Select
                         options={cabinPreferenceOptions}
@@ -511,7 +511,7 @@ const UpdateTravellers = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <div className='col-12 form-input-select'>
                       <label>International Cabin Preference</label>
                       <Select
                         options={cabinPreferenceOptions}
@@ -520,7 +520,7 @@ const UpdateTravellers = () => {
                         onChange={(id) => setInternationalCabinPreference(id)}
                       />
                     </div>
-                    <div className='col-12'>
+                    <div className='col-12 form-input-select'>
                       <label>Meal Preference</label>
                       <Select
                         options={mealPreferenceOptions}
@@ -529,7 +529,7 @@ const UpdateTravellers = () => {
                         onChange={(id) => setMealPreference(id)}
                       />
                     </div>
-                    <div className='col-12'>
+                    <div className='col-12 form-input-select'>
                       <label>Seat Preference</label>
                       <Select
                         options={seatPreferenceOptions}
@@ -538,7 +538,7 @@ const UpdateTravellers = () => {
                         onChange={(id) => setSeatPreference(id)}
                       />
                     </div>
-                    <div className='col-12'>
+                    <div className='col-12 form-input-select'>
                       <label>Cabin Position</label>
                       <Select
                         options={cabinPositionOptions}
@@ -547,7 +547,7 @@ const UpdateTravellers = () => {
                         onChange={(id) => setCabinPosition(id)}
                       />
                     </div>
-                    <div className='col-12'>
+                    <div className='col-12 form-input-select'>
                       <label>Fare Preference</label>
                       <Select
                         options={farePreferenceOptions}
@@ -709,7 +709,7 @@ const UpdateTravellers = () => {
                       </div>
                     </div>
                     {/* Vaccination Dates */}
-                    <div className='d-block ml-4'>
+                    <div className='d-block ml-3 form-datepicker'>
                       <label>Vaccination Dates</label>
                       <DatePicker
                         multiple

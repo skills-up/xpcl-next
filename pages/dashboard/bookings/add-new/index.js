@@ -484,7 +484,7 @@ const AddNewBooking = () => {
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
-                    <div>
+                    <div className='form-input-select'>
                       <label>
                         Booking Type<span className='text-danger'>*</span>
                       </label>
@@ -495,7 +495,7 @@ const AddNewBooking = () => {
                         onChange={(id) => setBookingType(id)}
                       />
                     </div>
-                    <div className='d-block ml-4'>
+                    <div className='d-block ml-3 form-datepicker'>
                       <label>
                         Booking Date<span className='text-danger'>*</span>
                       </label>
@@ -555,7 +555,7 @@ const AddNewBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div>
+                    <div className='form-input-select'>
                       <label>
                         Vendor<span className='text-danger'>*</span>
                       </label>
@@ -649,7 +649,7 @@ const AddNewBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div>
+                    <div className='form-input-select'>
                       <label>Payment Account</label>
                       <Select
                         options={paymentAccounts}
@@ -671,7 +671,7 @@ const AddNewBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div>
+                    <div className='form-input-select'>
                       <label>Commission Rule</label>
                       <Select
                         options={commissionRules}
@@ -772,7 +772,7 @@ const AddNewBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div>
+                    <div className='form-input-select'>
                       <label>Airline</label>
                       <Select
                         options={airlines}
@@ -782,7 +782,7 @@ const AddNewBooking = () => {
                       />
                     </div>
                     {bookingType?.value === 'Miscellaneous' && (
-                      <div>
+                      <div className='form-input-select'>
                         <label>Miscellaneous Type</label>
                         <Select
                           options={miscellaneousOptions}
@@ -792,7 +792,7 @@ const AddNewBooking = () => {
                         />
                       </div>
                     )}
-                    <div>
+                    <div className='form-input-select'>
                       <label>Client Referrer</label>
                       <Select
                         options={clients}
@@ -858,7 +858,7 @@ const AddNewBooking = () => {
                       </div>
                     </div>
                     <div className='col-12 row pr-0 items-center'>
-                      <div className='col-4'>
+                      <div className='form-input-select col-4'>
                         <label>Client GST Percent</label>
                         <Select
                           defaultValue={{ value: 0, label: 'None' }}
@@ -937,7 +937,7 @@ const AddNewBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div>
+                    <div className='form-input-select'>
                       <label>
                         Client Traveller<span className='text-danger'>*</span>
                       </label>
@@ -994,7 +994,7 @@ const AddNewBooking = () => {
                                 <div className='d-flex items-center justify-between gap-5'>
                                   <div>{index + 1}.</div>
                                   <div className='row col-11 y-gap-20 items-center'>
-                                    <div className='col-lg-4'>
+                                    <div className='form-input-select col-lg-4'>
                                       <label>
                                         From<span className='text-danger'>*</span>
                                       </label>
@@ -1012,7 +1012,7 @@ const AddNewBooking = () => {
                                         }
                                       />
                                     </div>
-                                    <div className='col-lg-4'>
+                                    <div className='form-input-select col-lg-4'>
                                       <label>
                                         To<span className='text-danger'>*</span>
                                       </label>
@@ -1030,7 +1030,7 @@ const AddNewBooking = () => {
                                         }
                                       />
                                     </div>
-                                    <div className='col-lg-4'>
+                                    <div className='col-lg-4 form-datepicker'>
                                       <label>
                                         Date<span className='text-danger'>*</span>
                                       </label>
@@ -1086,7 +1086,7 @@ const AddNewBooking = () => {
                                         </label>
                                       </div>
                                     </div>
-                                    <div className='col-lg-4 pb-3'>
+                                    <div className='col-lg-4 pb-3 from-input-select'>
                                       <label>
                                         Booking Class
                                         <span className='text-danger'>*</span>

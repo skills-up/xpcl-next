@@ -165,7 +165,7 @@ const AddNewCommissionRule = () => {
                       <label>Select Dates?</label>
                     </div>
                     {allowDates && (
-                      <div className='d-block ml-4'>
+                      <div className='d-block ml-3 form-datepicker'>
                         <label>Select Start & End Dates</label>
                         <DatePicker
                           style={{ marginLeft: '0.5rem', fontSize: '1rem' }}

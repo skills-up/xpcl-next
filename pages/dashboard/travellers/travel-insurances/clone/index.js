@@ -146,7 +146,7 @@ const AddNewTravelInsurance = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='d-block ml-4'>
+                    <div className='d-block ml-3 form-datepicker'>
                       <label>
                         Issue Date<span className='text-danger'>*</span>
                       </label>
@@ -161,7 +161,7 @@ const AddNewTravelInsurance = () => {
                         format='DD MMMM YYYY'
                       />
                     </div>
-                    <div className='d-block ml-4'>
+                    <div className='d-block ml-3 form-datepicker'>
                       <label>
                         Expiry Date<span className='text-danger'>*</span>
                       </label>
@@ -176,7 +176,7 @@ const AddNewTravelInsurance = () => {
                         format='DD MMMM YYYY'
                       />
                     </div>
-                    <div>
+                    <div className='form-input-select'>
                       <label>Insurance Type</label>
                       <Select
                         options={options}

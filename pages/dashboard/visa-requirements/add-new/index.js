@@ -159,7 +159,7 @@ const AddNewVisaRequirements = () => {
                       />
                       <label className=''>Business Travel</label>
                     </div>
-                    <div className='col-12'>
+                    <div className='col-12 form-input-select'>
                       <label>
                         Country<span className='text-danger'>*</span>
                       </label>
@@ -264,7 +264,7 @@ const AddNewVisaRequirements = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <div className='col-12 form-input-select'>
                       <label>
                         Personal Documents Required
                         <span className='text-danger'>*</span>
@@ -279,7 +279,7 @@ const AddNewVisaRequirements = () => {
                         onChange={(values) => setPersonalDocsReqs(values)}
                       />
                     </div>
-                    <div className='col-12'>
+                    <div className='col-12 form-input-select'>
                       <label>
                         Financial Documents Required
                         <span className='text-danger'>*</span>
@@ -294,7 +294,7 @@ const AddNewVisaRequirements = () => {
                         onChange={(values) => setFinancialDocsReqs(values)}
                       />
                     </div>
-                    <div className='col-12'>
+                    <div className='col-12 form-input-select'>
                       <label>
                         Supporting Documents Required
                         <span className='text-danger'>*</span>
