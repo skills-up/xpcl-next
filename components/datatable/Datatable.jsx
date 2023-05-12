@@ -43,6 +43,7 @@ const Datatable = ({
   getData = undefined,
   _pageSize = 10,
   _pageIndex = 0,
+  dataFiltering = false,
 }) => {
   const [totalItems, SetTotalItems] = useState(0);
   let {
@@ -121,29 +122,35 @@ const Datatable = ({
     }
   }, [_rowCount, data]);
 
+  useEffect(() => {
+    if (dataFiltering) setPageSize(1000);
+  }, []);
+
   // Render the UI for your table
   return data?.length > 0 ? (
     <div style={style}>
-      <div className='d-flex mb-2 mr-4 justify-end'>
-        <div className='col-lg-2 col-12'>
-          <select
-            className='d-block form-select text-sm'
-            value={pageSize}
-            onChange={(e) => {
-              setPageSize(Number(e.target.value));
-              if (getData) {
-                getData(pageIndex, pageIndex, Number(e.target.value), true);
-              }
-            }}
-          >
-            {[10, 25, 50, 100].map((pageSize) => (
-              <option key={pageSize} value={pageSize}>
-                Show {pageSize} Rows
-              </option>
-            ))}
-          </select>
+      {!dataFiltering && (
+        <div className='d-flex mb-2 mr-4 justify-end'>
+          <div className='col-lg-2 col-12'>
+            <select
+              className='d-block form-select text-sm'
+              value={pageSize}
+              onChange={(e) => {
+                setPageSize(Number(e.target.value));
+                if (getData) {
+                  getData(pageIndex, pageIndex, Number(e.target.value), true);
+                }
+              }}
+            >
+              {[10, 25, 50, 100].map((pageSize) => (
+                <option key={pageSize} value={pageSize}>
+                  Show {pageSize} Rows
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
-      </div>
+      )}
       <div className='overflow-scroll scroll-bar-1'>
         <table {...getTableProps()} className='table-3'>
           <thead>
@@ -151,7 +158,11 @@ const Datatable = ({
               <tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column) => (
                   <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                    <div className='d-flex items-center gap-2 justify-start'>
+                    <div
+                      className={`d-flex items-center gap-2 ${
+                        column.alignRight ? 'justify-end' : 'justify-start'
+                      }`}
+                    >
                       <span>{column.render('Header')}</span>
                       {/* Add a sort direction indicator */}
                       <span className=''>
@@ -201,120 +212,122 @@ const Datatable = ({
           </tbody>
         </table>
       </div>
-      <div className='row x-gap-10 y-gap-20 items-center justify-between md:justify-center mt-4 mb-2 mb-lg-3 m border-top-light mt-30 pt-30'>
-        <div className='col-auto md:order-1 w-120'>
-          {pageIndex !== 0 && (
-            <PageWithText
-              onClick={() => {
-                if (getData) {
-                  getData(0, 0, pageSize);
-                }
-                gotoPage(0);
-              }}
-              color='text-default'
-            >
-              <div className='mx-1'>
-                <button className='button -blue-1 size-40 rounded-full border-light'>
-                  <BsChevronDoubleLeft className='text-lg' />
-                </button>
-              </div>
-            </PageWithText>
-          )}
-          {canPreviousPage && (
-            <PageWithText
-              onClick={() => {
-                {
+      {!dataFiltering && (
+        <div className='row x-gap-10 y-gap-20 items-center justify-between md:justify-center mt-4 mb-2 mb-lg-3 m border-top-light mt-30 pt-30'>
+          <div className='col-auto md:order-1 w-120'>
+            {pageIndex !== 0 && (
+              <PageWithText
+                onClick={() => {
                   if (getData) {
-                    getData(pageIndex - 1, pageIndex - 1, pageSize);
-                    gotoPage(pageIndex - 1);
-                  } else {
-                    previousPage();
+                    getData(0, 0, pageSize);
                   }
-                }
-              }}
-              color='text-default'
-            >
-              <div className='col-auto md:order-1 mx-1'>
-                <button className='button -blue-1 size-40 rounded-full border-light'>
-                  <BsChevronLeft className='text-lg' />
-                </button>
-              </div>
-            </PageWithText>
-          )}
-        </div>
-        <div className='col-md-auto md:order-3 text-center'>
-          <span>
-            Page{' '}
-            <b>
-              <input
-                type='number'
-                value={pageIndex + 1}
-                onChange={(e) => {
-                  gotoPage(parseInt(e.target.value) - 1);
+                  gotoPage(0);
                 }}
-                onFocus={(e) => {
-                  e.target.select();
+                color='text-default'
+              >
+                <div className='mx-1'>
+                  <button className='button -blue-1 size-40 rounded-full border-light'>
+                    <BsChevronDoubleLeft className='text-lg' />
+                  </button>
+                </div>
+              </PageWithText>
+            )}
+            {canPreviousPage && (
+              <PageWithText
+                onClick={() => {
+                  {
+                    if (getData) {
+                      getData(pageIndex - 1, pageIndex - 1, pageSize);
+                      gotoPage(pageIndex - 1);
+                    } else {
+                      previousPage();
+                    }
+                  }
                 }}
-                className='form-control mx-1'
-                style={{
-                  width: '30px',
-                  textAlign: 'center',
-                  fontWeight: '700',
-                  display: 'inline',
-                  padding: '0.2rem 0.3rem',
-                  outline: '1px solid black',
+                color='text-default'
+              >
+                <div className='col-auto md:order-1 mx-1'>
+                  <button className='button -blue-1 size-40 rounded-full border-light'>
+                    <BsChevronLeft className='text-lg' />
+                  </button>
+                </div>
+              </PageWithText>
+            )}
+          </div>
+          <div className='col-md-auto md:order-3 text-center'>
+            <span>
+              Page{' '}
+              <b>
+                <input
+                  type='number'
+                  value={pageIndex + 1}
+                  onChange={(e) => {
+                    gotoPage(parseInt(e.target.value) - 1);
+                  }}
+                  onFocus={(e) => {
+                    e.target.select();
+                  }}
+                  className='form-control mx-1'
+                  style={{
+                    width: '30px',
+                    textAlign: 'center',
+                    fontWeight: '700',
+                    display: 'inline',
+                    padding: '0.2rem 0.3rem',
+                    outline: '1px solid black',
+                  }}
+                />{' '}
+                of {pageOptions.length}
+              </b>
+              {' | '}
+              Total Entries {' : '}
+              <b>{totalItems}</b>
+            </span>
+          </div>
+          <div className='col-auto md:order-2 w-120'>
+            {canNextPage && (
+              <PageWithText
+                onClick={() => {
+                  {
+                    if (getData) {
+                      getData(pageIndex + 1, pageIndex + 1, pageSize);
+                      gotoPage(pageIndex + 1);
+                    } else {
+                      nextPage();
+                    }
+                  }
                 }}
-              />{' '}
-              of {pageOptions.length}
-            </b>
-            {' | '}
-            Total Entries {' : '}
-            <b>{totalItems}</b>
-          </span>
-        </div>
-        <div className='col-auto md:order-2 w-120'>
-          {canNextPage && (
-            <PageWithText
-              onClick={() => {
-                {
+                disabled={!canNextPage}
+                color='text-default'
+              >
+                <div className='col-auto md:order-1 mx-1'>
+                  <button className='button -blue-1 size-40 rounded-full border-light'>
+                    <BsChevronRight className='text-lg' />
+                  </button>
+                </div>
+              </PageWithText>
+            )}
+            {pageIndex !== pageCount - 1 && (
+              <PageWithText
+                onClick={() => {
                   if (getData) {
-                    getData(pageIndex + 1, pageIndex + 1, pageSize);
-                    gotoPage(pageIndex + 1);
-                  } else {
-                    nextPage();
+                    getData(pageCount - 1, pageCount - 1, pageSize);
                   }
-                }
-              }}
-              disabled={!canNextPage}
-              color='text-default'
-            >
-              <div className='col-auto md:order-1 mx-1'>
-                <button className='button -blue-1 size-40 rounded-full border-light'>
-                  <BsChevronRight className='text-lg' />
-                </button>
-              </div>
-            </PageWithText>
-          )}
-          {pageIndex !== pageCount - 1 && (
-            <PageWithText
-              onClick={() => {
-                if (getData) {
-                  getData(pageCount - 1, pageCount - 1, pageSize);
-                }
-                gotoPage(pageCount - 1);
-              }}
-              disabled={!canNextPage}
-              color='text-default'
-            >
-              <div className='col-auto md:order-1 mx-1'>
-                <button className='button -blue-1 size-40 rounded-full border-light'>
-                  <BsChevronDoubleRight className='text-lg' />
-                </button>
-              </div>
-            </PageWithText>
-          )}
+                  gotoPage(pageCount - 1);
+                }}
+                disabled={!canNextPage}
+                color='text-default'
+              >
+                <div className='col-auto md:order-1 mx-1'>
+                  <button className='button -blue-1 size-40 rounded-full border-light'>
+                    <BsChevronDoubleRight className='text-lg' />
+                  </button>
+                </div>
+              </PageWithText>
+            )}
+          </div>
         </div>
-      </div>
+      )}
       {downloadCSV && (
         <div className='d-flex justify-center'>
           <button

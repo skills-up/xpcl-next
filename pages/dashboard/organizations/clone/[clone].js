@@ -6,13 +6,11 @@ import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { sendToast } from '../../../../utils/toastify';
 import { useEffect, useState } from 'react';
-import { createItem, getItem, getList, updateItem } from '../../../../api/xplorzApi';
+import { createItem, getItem, getList } from '../../../../api/xplorzApi';
 import ReactSwitch from 'react-switch';
 import Select from 'react-select';
 
-const DuplicateOrganization = () => {
-  const [accounts, setAccounts] = useState([]);
-  const [accountID, setAccountID] = useState(null);
+const AddNewOrganization = () => {
   const [calenderTemplates, setCalenderTemplates] = useState([]);
   const [calenderTemplateID, setCalenderTemplateID] = useState(null);
   const [name, setName] = useState('');
@@ -22,12 +20,15 @@ const DuplicateOrganization = () => {
   const [address, setAddress] = useState('');
   const [gstn, setGstn] = useState('');
   const [useGstn, setUseGstn] = useState(false);
-  const [isClient, setIsClient] = useState(false);
-  const [isVendor, setIsVendor] = useState(false);
-  const [isHotel, setIsHotel] = useState(false);
-  const [isAirline, setIsAirline] = useState(false);
+  const [type, setType] = useState(null);
   const [farePercent, setFarePercent] = useState(0);
-
+  const options = [
+    { value: 'Client', label: 'Client' },
+    { value: 'Airline', label: 'Airline' },
+    { value: 'Hotel', label: 'Hotel' },
+    { value: 'Vendor', label: 'Vendor' },
+    { value: 'Miscellaneous', label: 'Miscellaneous' },
+  ];
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
 
@@ -47,35 +48,24 @@ const DuplicateOrganization = () => {
         setAddress(response.data?.address);
         setGstn(response.data?.gstn);
         setUseGstn(response.data?.use_gstn);
-        setIsClient(response.data?.is_client);
-        setIsVendor(response.data?.is_vendor);
-        setIsHotel(response.data?.is_hotel);
-        setIsAirline(response.data?.is_airline);
         setFarePercent(response.data?.fare_percent);
 
-        // Getting Accounts
-        const accounts = await getList('accounts');
         const calenderTemplates = await getList('calendar-templates');
-        if (accounts?.success && calenderTemplates?.success) {
+        if (calenderTemplates?.success) {
           setCalenderTemplates(
             calenderTemplates.data.map((element) => ({
               value: element.id,
               label: element.name,
             }))
           );
-          setAccounts(
-            accounts.data.map((element) => ({ value: element.id, label: element.name }))
-          );
-          // Setting Calender + Accounts ID
-          for (let acc of accounts.data) {
-            if (acc.id === response.data.account_id) {
-              setAccountID({ value: acc.id, label: acc.name });
-            }
-          }
           for (let calendar of calenderTemplates.data) {
             if (calendar.id === response.data.calendar_template_id) {
               setCalenderTemplateID({ value: calendar.id, label: calendar.name });
             }
+          }
+          // Setting types
+          for (let i of options) {
+            if (response.data?.type === i.value) setType(i);
           }
         } else {
           sendToast('error', 'Unable to fetch required data', 4000);
@@ -97,43 +87,39 @@ const DuplicateOrganization = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     // Checking if account id is not null
-    if (accountID?.value) {
-      const response = await createItem('/organizations', {
-        account_id: accountID.value,
-        calendar_template_id: calenderTemplateID?.value || null,
-        name,
-        code,
-        contact_name: contactName,
-        contact_email: contactEmail,
-        address,
-        gstn,
-        use_gstn: useGstn,
-        is_client: isClient,
-        is_vendor: isVendor,
-        is_hotel: isHotel,
-        is_airline: isAirline,
-        fare_percent: farePercent,
-      });
-      if (response?.success) {
-        sendToast('success', 'Created Organization Successfully.', 4000);
-        router.push('/dashboard/organizations');
-      } else {
-        sendToast(
-          'error',
-          response.data?.message ||
-            response.data?.error ||
-            'Failed to Create Organization.',
-          4000
-        );
-      }
+    if (!type?.value) {
+      sendToast('error', 'Please Select Organization Type', 4000);
+      return;
+    }
+    const response = await createItem('organizations', {
+      calendar_template_id: calenderTemplateID?.value || null,
+      name,
+      code,
+      contact_name: contactName,
+      contact_email: contactEmail,
+      address,
+      gstn,
+      use_gstn: useGstn,
+      type: type?.value,
+      fare_percent: farePercent,
+    });
+    if (response?.success) {
+      sendToast('success', 'Created Organization Successfully.', 4000);
+      router.push('/dashboard/organizations');
     } else {
-      sendToast('error', 'You must select an Account first.', 8000);
+      sendToast(
+        'error',
+        response.data?.message ||
+          response.data?.error ||
+          'Failed to Create Organization.',
+        4000
+      );
     }
   };
 
   return (
     <>
-      <Seo pageTitle='Create Organization' />
+      <Seo pageTitle='Add New Organization' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -153,7 +139,7 @@ const DuplicateOrganization = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Create Organization</h1>
+                  <h1 className='text-30 lh-14 fw-600'>Add New Organization</h1>
                   <div className='text-15 text-light-1'>Create a new organization.</div>
                 </div>
                 {/* End .col-12 */}
@@ -163,21 +149,23 @@ const DuplicateOrganization = () => {
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
-                    <div>
+                    <div className='form-input-select'>
+                      <label>
+                        Select Organization Type<span className='text-danger'>*</span>
+                      </label>
                       <Select
-                        options={accounts}
-                        defaultValue={accountID}
-                        value={accountID}
-                        placeholder='Select Account'
-                        onChange={(id) => setAccountID(id)}
+                        options={options}
+                        value={type}
+                        placeholder='Search & Select Organization Type (required)'
+                        onChange={(id) => setType(id)}
                       />
                     </div>
-                    <div>
+                    <div className='form-input-select'>
+                      <label>Select Calendar Template</label>
                       <Select
                         options={calenderTemplates}
-                        defaultValue={calenderTemplateID}
                         value={calenderTemplateID}
-                        placeholder='Select Calendar Template'
+                        placeholder='Search & Select Calendar Template'
                         onChange={(id) => setCalenderTemplateID(id)}
                       />
                     </div>
@@ -258,55 +246,24 @@ const DuplicateOrganization = () => {
                           placeholder=' '
                           type='number'
                         />
-                        <label className='lh-1 text-16 text-light-1'>Fare Percent</label>
+                        <label className='lh-1 text-16 text-light-1'>
+                          Markup Percent
+                        </label>
                       </div>
                     </div>
-                    <div className='row'>
-                      <label className='col-lg-2 col-9'>Use GSTN</label>
+                    <div className='d-flex items-center gap-3'>
                       <ReactSwitch
-                        className='col-lg-auto col-1'
                         onChange={() => setUseGstn((prev) => !prev)}
                         checked={useGstn}
                       />
-                    </div>
-                    <div className='row'>
-                      <label className='col-lg-2 col-9'>Is Client</label>
-                      <ReactSwitch
-                        className='col-lg-auto col-1'
-                        onChange={() => setIsClient((prev) => !prev)}
-                        checked={isClient}
-                      />
-                    </div>
-                    <div className='row'>
-                      <label className='col-lg-2 col-9'>Is Vendor</label>
-                      <ReactSwitch
-                        className='col-lg-auto col-1'
-                        onChange={() => setIsVendor((prev) => !prev)}
-                        checked={isVendor}
-                      />
-                    </div>
-                    <div className='row'>
-                      <label className='col-lg-2 col-9'>Is Hotel</label>
-                      <ReactSwitch
-                        className='col-lg-auto col-1'
-                        onChange={() => setIsHotel((prev) => !prev)}
-                        checked={isHotel}
-                      />
-                    </div>
-                    <div className='row'>
-                      <label className='col-lg-2 col-9'>Is Airline</label>
-                      <ReactSwitch
-                        className='col-lg-auto col-1'
-                        onChange={() => setIsAirline((prev) => !prev)}
-                        checked={isAirline}
-                      />
+                      <label>Use GSTN?</label>
                     </div>
                     <div className='d-inline-block'>
                       <button
                         type='submit'
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
                       >
-                        Create Organization
+                        Add Organization
                       </button>
                     </div>
                   </form>
@@ -325,4 +282,4 @@ const DuplicateOrganization = () => {
   );
 };
 
-export default DuplicateOrganization;
+export default AddNewOrganization;

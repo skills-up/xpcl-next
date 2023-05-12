@@ -70,7 +70,7 @@ const UpdateAirports = () => {
     e.preventDefault();
     // Checking if airport id is not null
     if (countryID?.value) {
-      const response = await updateItem('/airports', router.query.edit, {
+      const response = await updateItem('airports', router.query.edit, {
         country_id: countryID.value,
         name,
         iata_code: iataCode,
@@ -124,7 +124,10 @@ const UpdateAirports = () => {
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
-                    <div>
+                    <div className='form-input-select'>
+                      <label>
+                        Select Country<span className='text-danger'>*</span>
+                      </label>
                       <Select
                         options={countries}
                         defaultValue={countryID}
@@ -176,6 +179,7 @@ const UpdateAirports = () => {
                       </div>
                     </div>
                     <div>
+                      <label>Timezone</label>
                       <TimezoneSelect
                         defaultValue={timezone}
                         value={timezone}

@@ -19,7 +19,7 @@ const AddNewRole = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     // Checking if its only lower case
-    const response = await createItem('/roles', {
+    const response = await createItem('roles', {
       name,
       description: desc,
       permission_ids: selectedPermissions,

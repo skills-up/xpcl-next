@@ -40,6 +40,10 @@ const AccountCategories = () => {
       accessor: 'name',
     },
     {
+      Header: 'Parent Category',
+      accessor: 'parent_category_name',
+    },
+    {
       Header: 'Last Updated At',
       accessor: 'updated_at',
       Cell: (data) => {
@@ -158,8 +162,10 @@ const AccountCategories = () => {
         downloadCSV
         CSVName='AccountCategories.csv'
         columns={columns}
-        data={accountCategories.filter((perm) =>
-          perm.name.toLowerCase().includes(searchQuery.toLowerCase())
+        data={accountCategories.filter(
+          (perm) =>
+            perm?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            perm?.parent_category_name?.toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>

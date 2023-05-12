@@ -41,7 +41,7 @@ const AddCountry = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     // Checking if account id is not null
-    const response = await createItem('/countries', {
+    const response = await createItem('countries', {
       name,
     });
     if (response?.success) {

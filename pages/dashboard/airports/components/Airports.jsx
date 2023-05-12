@@ -34,12 +34,20 @@ const Airports = () => {
 
   const columns = [
     {
-      Header: 'Name',
-      accessor: 'name',
+      Header: 'IATA Code',
+      accessor: 'iata_code',
+    },
+    {
+      Header: 'Country',
+      accessor: 'country_name',
     },
     {
       Header: 'City',
       accessor: 'city',
+    },
+    {
+      Header: 'Name',
+      accessor: 'name',
     },
     {
       Header: 'Timezone',
@@ -164,8 +172,13 @@ const Airports = () => {
         downloadCSV
         CSVName='Airports.csv'
         columns={columns}
-        data={airports.filter((perm) =>
-          perm.name.toLowerCase().includes(searchQuery.toLowerCase())
+        data={airports.filter(
+          (perm) =>
+            perm?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            perm?.iata_code?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            perm?.timezone?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            perm?.country_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            perm?.city?.toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>

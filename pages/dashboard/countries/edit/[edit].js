@@ -39,7 +39,7 @@ const UpdateCountry = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     // Checking if account id is not null
-    const response = await updateItem('/countries', router.query.edit, {
+    const response = await updateItem('countries', router.query.edit, {
       name,
     });
     if (response?.success) {

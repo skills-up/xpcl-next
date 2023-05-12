@@ -41,7 +41,7 @@ const AddNewAccounts = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     // Checking if account id is not null
-    const response = await createItem('/accounts', {
+    const response = await createItem('accounts', {
       name,
       account_category_id: accountCategoryID?.value || null,
       year: parseInt(year),
@@ -90,7 +90,8 @@ const AddNewAccounts = () => {
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
-                    <div>
+                    <div className='form-input-select'>
+                      <label>Select Account Category</label>
                       <Select
                         options={accountCategories}
                         value={accountCategoryID}

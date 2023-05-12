@@ -40,8 +40,12 @@ const CalendarTemplates = () => {
       accessor: 'name',
     },
     {
-      Header: 'Content',
-      accessor: 'content',
+      Header: 'Location',
+      accessor: 'location',
+    },
+    {
+      Header: 'Summary',
+      accessor: 'summary',
     },
     {
       Header: 'Last Updated At',
@@ -163,7 +167,7 @@ const CalendarTemplates = () => {
         CSVName='CalendarTemplates.csv'
         columns={columns}
         data={calendarTemplates.filter((perm) =>
-          perm.name.toLowerCase().includes(searchQuery.toLowerCase())
+          perm?.name?.toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>

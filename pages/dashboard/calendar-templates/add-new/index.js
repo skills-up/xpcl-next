@@ -12,7 +12,9 @@ import Select from 'react-select';
 
 const AddCalenderTemplate = () => {
   const [name, setName] = useState('');
-  const [content, setContent] = useState('');
+  const [location, setLocation] = useState('');
+  const [description, setDescription] = useState('');
+  const [summary, setSummary] = useState('');
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -20,7 +22,7 @@ const AddCalenderTemplate = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     // Checking if account id is not null
-    const response = await createItem('/calendar-templates', {
+    const response = await createItem('calendar-templates', {
       name,
       content,
     });
@@ -87,14 +89,39 @@ const AddCalenderTemplate = () => {
                     <div className='col-12'>
                       <div className='form-input'>
                         <input
-                          onChange={(e) => setContent(e.target.value)}
-                          value={content}
+                          onChange={(e) => setLocation(e.target.value)}
+                          value={location}
                           placeholder=' '
                           type='text'
-                          required
                         />
                         <label className='lh-1 text-16 text-light-1'>
-                          Content<span className='text-danger'>*</span>
+                          Location
+                        </label>
+                      </div>
+                    </div>
+                    <div className='col-12'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setDescription(e.target.value)}
+                          value={description}
+                          placeholder=' '
+                          type='text'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Description
+                        </label>
+                      </div>
+                    </div>
+                    <div className='col-12'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setSummary(e.target.value)}
+                          value={summary}
+                          placeholder=' '
+                          type='text'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Summary
                         </label>
                       </div>
                     </div>

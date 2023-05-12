@@ -40,7 +40,7 @@ const EditPermission = () => {
     e.preventDefault();
     if (router.query.edit) {
       if (slug.match(/^[a-z\.\-]+$/)) {
-        const response = await updateItem('/permissions', router.query.edit, {
+        const response = await updateItem('permissions', router.query.edit, {
           slug,
           description: desc,
         });

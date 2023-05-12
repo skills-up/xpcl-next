@@ -27,7 +27,7 @@ const CloneRole = () => {
       if (response?.success) {
         setName(response.data?.name);
         setDesc(response.data?.description);
-        setRolePermissions(response.data?.permissions_list);
+        setRolePermissions(Object.values(response.data?.permissions_list));
       } else {
         sendToast(
           'error',
@@ -42,7 +42,7 @@ const CloneRole = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    const response = await createItem('/roles', {
+    const response = await createItem('roles', {
       name,
       description: desc,
       permission_ids: selectedPermissions,

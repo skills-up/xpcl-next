@@ -12,7 +12,9 @@ import Select from 'react-select';
 
 const UpdateCalenderTemplate = () => {
   const [name, setName] = useState('');
-  const [content, setContent] = useState('');
+  const [location, setLocation] = useState('');
+  const [description, setDescription] = useState('');
+  const [summary, setSummary] = useState('');
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -26,7 +28,9 @@ const UpdateCalenderTemplate = () => {
       const response = await getItem('calendar-templates', router.query.edit);
       if (response?.success) {
         setName(response.data?.name);
-        setContent(response.data?.content);
+        setLocation(response.data?.location);
+        setDescription(response.data?.description);
+        setSummary(response.data?.summary);
       } else {
         sendToast(
           'error',
@@ -44,7 +48,7 @@ const UpdateCalenderTemplate = () => {
     if (router.query.edit) {
       e.preventDefault();
       // Checking if account id is not null
-      const response = await updateItem('/calendar-templates', router.query.edit, {
+      const response = await updateItem('calendar-templates', router.query.edit, {
         name,
         content,
       });
@@ -114,14 +118,39 @@ const UpdateCalenderTemplate = () => {
                     <div className='col-12'>
                       <div className='form-input'>
                         <input
-                          onChange={(e) => setContent(e.target.value)}
-                          value={content}
+                          onChange={(e) => setLocation(e.target.value)}
+                          value={location}
                           placeholder=' '
                           type='text'
-                          required
                         />
                         <label className='lh-1 text-16 text-light-1'>
-                          Content<span className='text-danger'>*</span>
+                          Location
+                        </label>
+                      </div>
+                    </div>
+                    <div className='col-12'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setDescription(e.target.value)}
+                          value={description}
+                          placeholder=' '
+                          type='text'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Description
+                        </label>
+                      </div>
+                    </div>
+                    <div className='col-12'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setSummary(e.target.value)}
+                          value={summary}
+                          placeholder=' '
+                          type='text'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Summary
                         </label>
                       </div>
                     </div>

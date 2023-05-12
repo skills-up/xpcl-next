@@ -40,7 +40,11 @@ const LoginForm = () => {
           const permissions = await getItem('roles', me?.role_id);
           if (permissions?.success && permissions?.data?.permissions_list) {
             // Setting permissions
-            dispatch(setPermissions({ permissions: permissions.data.permissions_list }));
+            dispatch(
+              setPermissions({
+                permissions: Object.values(permissions.data.permissions_list),
+              })
+            );
             // Setting Token Expiry
             dispatch(
               setTokenExpireTime({
@@ -88,6 +92,7 @@ const LoginForm = () => {
           <input
             type='email'
             required
+            placeholder=' '
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -101,6 +106,7 @@ const LoginForm = () => {
           <input
             type='password'
             required
+            placeholder=' '
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />

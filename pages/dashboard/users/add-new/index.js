@@ -40,7 +40,7 @@ const AddNewUser = () => {
     // Checking if account id is not null
     if (roleID?.value) {
       if (password === confirmPassword) {
-        const response = await createItem('/users', {
+        const response = await createItem('users', {
           role_id: roleID.value,
           name,
           email,
@@ -97,7 +97,10 @@ const AddNewUser = () => {
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
-                    <div>
+                    <div className='form-input-select'>
+                      <label>
+                        Select Role<span className='text-danger'>*</span>
+                      </label>
                       <Select
                         options={roles}
                         value={roleID}

@@ -19,7 +19,7 @@ const AddNewPermission = () => {
     e.preventDefault();
     // Checking if its only lower case
     if (slug.match(/^[a-z\.\-]+$/)) {
-      const response = await createItem('/permissions', { slug, description: desc });
+      const response = await createItem('permissions', { slug, description: desc });
       if (response?.success) {
         sendToast('success', 'Created Permission Successfully.', 4000);
         router.push('/dashboard/permissions');

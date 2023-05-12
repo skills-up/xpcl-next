@@ -42,6 +42,10 @@ const Accounts = () => {
       accessor: 'year',
     },
     {
+      Header: 'Account Category',
+      accessor: 'account_category_name',
+    },
+    {
       Header: 'Last Updated At',
       accessor: 'updated_at',
       Cell: (data) => {
@@ -160,8 +164,11 @@ const Accounts = () => {
         downloadCSV
         CSVName='Accounts.csv'
         columns={columns}
-        data={accounts.filter((perm) =>
-          perm.name.toLowerCase().includes(searchQuery.toLowerCase())
+        data={accounts.filter(
+          (perm) =>
+            perm?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            perm?.year?.toString().toLowerCase().includes(searchQuery.toLowerCase()) ||
+            perm?.account_category_name?.toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>
