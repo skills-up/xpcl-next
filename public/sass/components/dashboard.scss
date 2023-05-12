@@ -23,7 +23,7 @@
     transition: all 0.5s $easeOutCubic;
 
     &::after {
-      content: "";
+      content: '';
       display: none;
       position: fixed;
       z-index: 50;
@@ -72,7 +72,10 @@
     width: var(--dashboard-width);
     height: calc(100% - 90px);
     padding: 30px;
-    padding-top: 60px;
+    padding-top: 50px;
+    @include media-below(lg) {
+      padding-top: 30px;
+    }
     padding-bottom: 40px;
     will-change: transform;
     transition: all 0.5s $easeOutCubic;
@@ -277,7 +280,7 @@ body.-is-sidebar-open {
   transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 .tabs.-underline-2 .tabs__controls .tabs__button:after {
-  content: "";
+  content: '';
   position: absolute;
   left: 0;
   bottom: 0;

@@ -1,7 +1,46 @@
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getList } from '../../../api/xplorzApi';
 import { store } from '../../../app/store';
+import Select from 'react-select';
 
 const Sidebar = () => {
+  const [organizations, setOrganizations] = useState([]);
+  const [organizationID, setOrganizationsID] = useState(null);
+
+  const dispatch = useDispatch();
+  const userOrganization = useSelector((state) => state.auth.value.organization);
+  const currentOrganization = useSelector(
+    (state) => state.auth.value.currentOrganization
+  );
+
+  useEffect(() => {
+    getOrganizations();
+  });
+
+  const getOrganizations = async () => {
+    const response = await getList('organizations', { is_client: 1 });
+    if (response?.success) {
+      setOrganizations(
+        response.data.map((element) => ({ value: element.id, label: element.name }))
+      );
+      // Setting organization ID
+      for (let org of response.data) {
+        if (org.id === currentOrganization) {
+          setOrganizationsID({ value: org.id, label: org.name });
+        }
+      }
+    } else {
+      sendToast(
+        'error',
+        response.data?.message || response.data?.error || 'Unable to fetch organizations',
+        4000
+      );
+      router.push('/');
+    }
+  };
+
   const sidebarData = [
     {
       icon: '/img/dashboard/sidebar/booking.svg',
@@ -142,6 +181,34 @@ const Sidebar = () => {
   return (
     <>
       <div className='sidebar -dashboard' id='vendorSidebarMenu'>
+        {userOrganization === 1 && (
+          <div className='row items-center mb-20'>
+            <Select
+              options={organizations}
+              defaultValue={organizationID}
+              value={organizationID}
+              placeholder='Select Organization'
+              onChange={async (id) => {
+                const response = await customAPICall('auth/switch', 'post', {
+                  organization_id: id.value,
+                });
+                if (response?.success) {
+                  setOrganizationsID(id);
+                  dispatch(setCurrentOrganization({ currentOrganization: id.value }));
+                  window.location.reload();
+                } else {
+                  sendToast(
+                    'error',
+                    response.data?.message ||
+                      response.data?.error ||
+                      'Error occured while changing organization',
+                    4000
+                  );
+                }
+              }}
+            />
+          </div>
+        )}
         <div className='sidebar__item '>
           <a
             href='/dashboard'
