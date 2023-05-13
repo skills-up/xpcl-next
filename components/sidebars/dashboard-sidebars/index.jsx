@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getList } from '../../../api/xplorzApi';
 import { store } from '../../../app/store';
 import Select from 'react-select';
+import { setCurrentOrganization } from '../../../features/auth/authSlice';
 
 const Sidebar = () => {
   const [organizations, setOrganizations] = useState([]);
