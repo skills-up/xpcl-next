@@ -9,11 +9,14 @@ import { sendToast } from '../../../../utils/toastify';
 import { useEffect, useState } from 'react';
 import { deleteItem, getItem } from '../../../../api/xplorzApi';
 import ViewTable from '../../../../components/view-table';
+import PermissionSwitch from '../../../../components/permission-switch';
 
 const ViewRole = () => {
   const [role, setRole] = useState([]);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
+  const [rolePermissions, setRolePermissions] = useState([]);
+  const [selectedPermissions, setSelectedPermissions] = useState([]);
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -26,27 +29,59 @@ const ViewRole = () => {
     if (router.query.view) {
       const response = await getItem('roles', router.query.view);
       if (response?.success) {
+        setRolePermissions(Object.values(response.data?.permissions_list));
         let data = response.data;
         // Converting time columns
-        if (data.created_at) {
-          data.created_at = new Date(data.created_at).toLocaleString('en-IN', {
-            dateStyle: 'medium',
-            timeStyle: 'short',
-          });
+        delete data['id'];
+        if (data.created_by) {
+          data.created_by = (
+            <a
+              className='text-15 cursor-pointer'
+              href={'/dashboard/users/view/' + data.created_by}
+            >
+              <strong>User #{data.created_by} </strong>[
+              {new Date(data.created_at).toLocaleString('en-IN', {
+                dateStyle: 'medium',
+                timeStyle: 'short',
+              })}
+              ]
+            </a>
+          );
         }
-        if (data.updated_at) {
-          data.updated_at = new Date(data.updated_at).toLocaleString('en-IN', {
-            dateStyle: 'medium',
-            timeStyle: 'short',
-          });
+        if (data.updated_by) {
+          data.updated_by = (
+            <a
+              className='text-15 cursor-pointer'
+              href={'/dashboard/users/view/' + data.updated_by}
+            >
+              <strong>User #{data.updated_by} </strong>[
+              {new Date(data.updated_at).toLocaleString('en-IN', {
+                dateStyle: 'medium',
+                timeStyle: 'short',
+              })}
+              ]
+            </a>
+          );
         }
-        data.permissions_list = (
-          <ul>
-            {Object.values(data.permissions_list).map((perm, index) => (
-              <li key={index}>{perm}</li>
-            ))}
-          </ul>
-        );
+        delete data['created_at'];
+        delete data['updated_at'];
+        if (data.user_names) {
+          data.user_names = (
+            <ul className='ml-20'>
+              {Object.keys(data.user_names).map((user, index) => (
+                <li style={{ listStyleType: 'disc' }} key={index}>
+                  <a
+                    className='text-15 cursor-pointer'
+                    href={'/dashboard/users/view/' + user}
+                  >
+                    {data.user_names[user]}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          );
+        }
+        delete data['permissions_list'];
         setRole(data);
       } else {
         sendToast(
@@ -129,6 +164,14 @@ const ViewRole = () => {
                     setConfirmDelete(true);
                   }}
                 />
+                {rolePermissions?.length && (
+                  <PermissionSwitch
+                    setSelectedPermissions={setSelectedPermissions}
+                    errorRedirect={'/dashboard/roles'}
+                    presentRoles={rolePermissions}
+                    readOnly
+                  />
+                )}
               </div>
             </div>
 

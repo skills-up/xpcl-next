@@ -50,7 +50,9 @@ const UpdateCalenderTemplate = () => {
       // Checking if account id is not null
       const response = await updateItem('calendar-templates', router.query.edit, {
         name,
-        content,
+        location,
+        description,
+        summary,
       });
       if (response?.success) {
         sendToast('success', 'Updated Calendar Template Successfully.', 4000);
@@ -117,41 +119,38 @@ const UpdateCalenderTemplate = () => {
                     </div>
                     <div className='col-12'>
                       <div className='form-input'>
-                        <input
+                        <textarea
+                          rows={2}
                           onChange={(e) => setLocation(e.target.value)}
                           value={location}
                           placeholder=' '
                           type='text'
                         />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Location
-                        </label>
+                        <label className='lh-1 text-16 text-light-1'>Location</label>
                       </div>
                     </div>
                     <div className='col-12'>
                       <div className='form-input'>
-                        <input
+                        <textarea
+                          rows={3}
                           onChange={(e) => setDescription(e.target.value)}
                           value={description}
                           placeholder=' '
                           type='text'
                         />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Description
-                        </label>
+                        <label className='lh-1 text-16 text-light-1'>Description</label>
                       </div>
                     </div>
                     <div className='col-12'>
                       <div className='form-input'>
-                        <input
+                        <textarea
+                          rows={3}
                           onChange={(e) => setSummary(e.target.value)}
                           value={summary}
                           placeholder=' '
                           type='text'
                         />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Summary
-                        </label>
+                        <label className='lh-1 text-16 text-light-1'>Summary</label>
                       </div>
                     </div>
                     <div className='d-inline-block'>

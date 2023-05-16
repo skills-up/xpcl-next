@@ -3,6 +3,23 @@ import { BsTrash3 } from 'react-icons/bs';
 import { HiOutlinePencilAlt } from 'react-icons/hi';
 
 const ViewTable = ({ data, onEdit, onDelete, extraButtons = undefined }) => {
+  const wordsToUpperCase = [
+    'GST',
+    'YQ',
+    'IATA',
+    'PLB',
+    'TDS',
+    'ITC',
+    'PAN',
+    'ID',
+    'CGST',
+    'SGST',
+    'IGST',
+    'GSTN',
+    'PDF',
+    'HSN',
+  ];
+
   return (
     <div className='view-table'>
       <table>
@@ -13,7 +30,9 @@ const ViewTable = ({ data, onEdit, onDelete, extraButtons = undefined }) => {
                 <td>
                   {element.split('_').map((str, index) => (
                     <span style={{ fontWeight: '700' }} key={index}>
-                      {str.charAt(0).toUpperCase() + str.slice(1)}{' '}
+                      {wordsToUpperCase.includes(str.toUpperCase())
+                        ? str.toUpperCase()
+                        : str.charAt(0).toUpperCase() + str.slice(1)}{' '}
                     </span>
                   ))}
                 </td>

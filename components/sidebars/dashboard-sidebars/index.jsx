@@ -5,12 +5,15 @@ import { getList } from '../../../api/xplorzApi';
 import { store } from '../../../app/store';
 import Select from 'react-select';
 import { setCurrentOrganization } from '../../../features/auth/authSlice';
+import { sendToast } from '../../../utils/toastify';
 
 const Sidebar = () => {
   const [organizations, setOrganizations] = useState([]);
   const [organizationID, setOrganizationsID] = useState(null);
 
   const dispatch = useDispatch();
+
+  const permissions = useSelector((state) => state.auth.value.permissions);
   const userOrganization = useSelector((state) => state.auth.value.organization);
   const currentOrganization = useSelector(
     (state) => state.auth.value.currentOrganization
@@ -18,7 +21,7 @@ const Sidebar = () => {
 
   useEffect(() => {
     getOrganizations();
-  });
+  }, []);
 
   const getOrganizations = async () => {
     const response = await getList('organizations', { is_client: 1 });
@@ -45,12 +48,26 @@ const Sidebar = () => {
   const sidebarData = [
     {
       icon: '/img/dashboard/sidebar/booking.svg',
-      title: 'Manage Hotel',
+      title: 'Refund Management',
       permissions: [],
       links: [
-        { title: 'All Hotel', href: '#' },
-        { title: 'Add Hotel', href: '#' },
-        { title: 'Recovery', href: '#' },
+        { title: 'Refunds', href: '/dashboard/refunds' },
+        { title: 'Partial Refunds', href: '/dashboard/partial-refunds' },
+      ],
+    },
+    {
+      icon: '/img/dashboard/sidebar/gear.svg',
+      title: 'Visa Management',
+      permissions: [],
+      links: [
+        {
+          title: 'Visa Requirement Documents',
+          href: '/dashboard/visa-requirement-documents',
+        },
+        {
+          title: 'Visa Requirements',
+          href: '/dashboard/visa-requirements',
+        },
       ],
     },
     {
@@ -64,100 +81,112 @@ const Sidebar = () => {
     },
     {
       icon: '/img/dashboard/sidebar/map.svg',
-      title: 'Manage Tour',
+      title: 'Reports',
       permissions: [],
       links: [
-        { title: 'All Tour', href: '#' },
-        { title: 'Add Tour', href: '#' },
-        { title: 'Recovery', href: '#' },
-      ],
-    },
-    {
-      icon: '/img/dashboard/sidebar/sneakers.svg',
-      title: 'Manage Activity',
-      permissions: [],
-      links: [
-        { title: 'All Activity', href: '#' },
-        { title: 'Add Activity', href: '#' },
-        { title: 'Recovery', href: '#' },
-      ],
-    },
-    {
-      icon: '/img/dashboard/sidebar/house.svg',
-      title: 'Manage Holiday Rental',
-      permissions: [],
-      links: [
+        { title: 'Balance Sheet', href: '/dashboard/reports/balance-sheet' },
+        { title: 'Income Statement', href: '/dashboard/reports/income-statement' },
         {
-          title: 'All Holiday Rental',
-          href: '#',
-        },
-        {
-          title: 'Add Holiday Rental',
-          href: '#',
-        },
-        {
-          title: 'Recovery',
-          href: '#',
+          title: 'Working Capital Statement',
+          href: '/dashboard/reports/working-capital-statement',
         },
       ],
     },
     {
-      icon: '/img/dashboard/sidebar/taxi.svg',
-      title: 'Manage Car',
+      icon: '/img/dashboard/sidebar/map.svg',
+      title: 'Account Management',
       permissions: [],
       links: [
-        {
-          title: 'All Car',
-          href: '#',
-        },
-        {
-          title: 'Add Car',
-          href: '#',
-        },
-        {
-          title: 'Recovery',
-          href: '#',
-        },
+        { title: 'Account Categories', href: '/dashboard/account-categories' },
+        { title: 'Accounts', href: '/dashboard/accounts' },
       ],
     },
-    {
-      icon: '/img/dashboard/sidebar/canoe.svg',
-      title: 'Manage Cruise',
-      permissions: [],
-      links: [
-        {
-          title: 'All Cruise',
-          href: '#',
-        },
-        {
-          title: 'Add Cruise',
-          href: '#',
-        },
-        {
-          title: 'Recovery',
-          href: '#',
-        },
-      ],
-    },
-    {
-      icon: '/img/dashboard/sidebar/airplane.svg',
-      title: 'Manage Flights',
-      permissions: [],
-      links: [
-        {
-          title: 'All Flights',
-          href: '#',
-        },
-        {
-          title: 'Add Flights',
-          href: '#',
-        },
-        {
-          title: 'Recovery',
-          href: '#',
-        },
-      ],
-    },
+    // {
+    //   icon: '/img/dashboard/sidebar/sneakers.svg',
+    //   title: 'Manage Activity',
+    //   permissions: [],
+    //   links: [
+    //     { title: 'All Activity', href: '#' },
+    //     { title: 'Add Activity', href: '#' },
+    //     { title: 'Recovery', href: '#' },
+    //   ],
+    // },
+    // {
+    //   icon: '/img/dashboard/sidebar/house.svg',
+    //   title: 'Manage Holiday Rental',
+    //   permissions: [],
+    //   links: [
+    //     {
+    //       title: 'All Holiday Rental',
+    //       href: '#',
+    //     },
+    //     {
+    //       title: 'Add Holiday Rental',
+    //       href: '#',
+    //     },
+    //     {
+    //       title: 'Recovery',
+    //       href: '#',
+    //     },
+    //   ],
+    // },
+    // {
+    //   icon: '/img/dashboard/sidebar/taxi.svg',
+    //   title: 'Manage Car',
+    //   permissions: [],
+    //   links: [
+    //     {
+    //       title: 'All Car',
+    //       href: '#',
+    //     },
+    //     {
+    //       title: 'Add Car',
+    //       href: '#',
+    //     },
+    //     {
+    //       title: 'Recovery',
+    //       href: '#',
+    //     },
+    //   ],
+    // },
+    // {
+    //   icon: '/img/dashboard/sidebar/canoe.svg',
+    //   title: 'Manage Cruise',
+    //   permissions: [],
+    //   links: [
+    //     {
+    //       title: 'All Cruise',
+    //       href: '#',
+    //     },
+    //     {
+    //       title: 'Add Cruise',
+    //       href: '#',
+    //     },
+    //     {
+    //       title: 'Recovery',
+    //       href: '#',
+    //     },
+    //   ],
+    // },
+    // {
+    //   icon: '/img/dashboard/sidebar/airplane.svg',
+    //   title: 'Manage Flights',
+    //   permissions: [],
+    //   links: [
+    //     {
+    //       title: 'All Flights',
+    //       href: '#',
+    //     },
+    //     {
+    //       title: 'Add Flights',
+    //       href: '#',
+    //     },
+    //     {
+    //       title: 'Recovery',
+    //       href: '#',
+    //     },
+    //   ],
+    // },
     {
       icon: '/img/dashboard/sidebar/gear.svg',
       title: 'User Management',
@@ -244,8 +273,177 @@ const Sidebar = () => {
         </div>
         {/* End accordion__item */}
 
+        <div className='sidebar__item '>
+          <a
+            href='/dashboard/calendar-templates'
+            className='sidebar__button d-flex items-center text-15 lh-1 fw-500'
+          >
+            <Image
+              width={20}
+              height={20}
+              src='/img/dashboard/sidebar/booking.svg'
+              alt='image'
+              className='mr-15'
+            />
+            Calendar Templates
+          </a>
+        </div>
+        {/* End accordion__item */}
+
+        <div className='sidebar__item '>
+          <a
+            href='/dashboard/payment-receipts'
+            className='sidebar__button d-flex items-center text-15 lh-1 fw-500'
+          >
+            <Image
+              width={20}
+              height={20}
+              src='/img/dashboard/sidebar/booking.svg'
+              alt='image'
+              className='mr-15'
+            />
+            Payment Receipts
+          </a>
+        </div>
+        {/* End accordion__item */}
+
+        <div className='sidebar__item '>
+          <a
+            href='/dashboard/vendor-commission-invoices'
+            className='sidebar__button d-flex items-center text-15 lh-1 fw-500'
+          >
+            <Image
+              width={20}
+              height={20}
+              src='/img/dashboard/sidebar/booking.svg'
+              alt='image'
+              className='mr-15'
+            />
+            Vendor Commission Invoices
+          </a>
+        </div>
+        {/* End accordion__item */}
+
+        <div className='sidebar__item '>
+          <a
+            href='/dashboard/frequent-flier-programs'
+            className='sidebar__button d-flex items-center text-15 lh-1 fw-500'
+          >
+            <Image
+              width={20}
+              height={20}
+              src='/img/dashboard/sidebar/booking.svg'
+              alt='image'
+              className='mr-15'
+            />
+            Frequent Flier Program
+          </a>
+        </div>
+        {/* End accordion__item */}
+
+        <div className='sidebar__item '>
+          <a
+            href='/dashboard/airline-organization-markup'
+            className='sidebar__button d-flex items-center text-15 lh-1 fw-500'
+          >
+            <Image
+              width={20}
+              height={20}
+              src='/img/dashboard/sidebar/booking.svg'
+              alt='image'
+              className='mr-15'
+            />
+            Airline Organization Markup
+          </a>
+        </div>
+        {/* End accordion__item */}
+
+        <div className='sidebar__item '>
+          <a
+            href='/dashboard/countries'
+            className='sidebar__button d-flex items-center text-15 lh-1 fw-500'
+          >
+            <Image
+              width={20}
+              height={20}
+              src='/img/dashboard/sidebar/booking.svg'
+              alt='image'
+              className='mr-15'
+            />
+            Country Management
+          </a>
+        </div>
+        {/* End accordion__item */}
+
+        <div className='sidebar__item '>
+          <a
+            href='/dashboard/bookings'
+            className='sidebar__button d-flex items-center text-15 lh-1 fw-500'
+          >
+            <Image
+              width={20}
+              height={20}
+              src='/img/dashboard/sidebar/booking.svg'
+              alt='image'
+              className='mr-15'
+            />
+            Bookings
+          </a>
+        </div>
+        {/* End accordion__item */}
+
+        <div className='sidebar__item '>
+          <a
+            href='/dashboard/airports'
+            className='sidebar__button d-flex items-center text-15 lh-1 fw-500'
+          >
+            <Image
+              width={20}
+              height={20}
+              src='/img/dashboard/sidebar/booking.svg'
+              alt='image'
+              className='mr-15'
+            />
+            Airports
+          </a>
+        </div>
+        {/* End accordion__item */}
+
+        <div className='sidebar__item '>
+          <a
+            href='/dashboard/commission-rules'
+            className='sidebar__button d-flex items-center text-15 lh-1 fw-500'
+          >
+            <Image
+              width={20}
+              height={20}
+              src='/img/dashboard/sidebar/booking.svg'
+              alt='image'
+              className='mr-15'
+            />
+            Commission Rules
+          </a>
+        </div>
+        {/* End accordion__item */}
+
+        <div className='sidebar__item '>
+          <a
+            href='/dashboard/travellers'
+            className='sidebar__button d-flex items-center text-15 lh-1 fw-500'
+          >
+            <Image
+              width={20}
+              height={20}
+              src='/img/dashboard/sidebar/booking.svg'
+              alt='image'
+              className='mr-15'
+            />
+            Travellers
+          </a>
+        </div>
+        {/* End accordion__item */}
+
         {sidebarData.map((item, index) => {
-          const permissions = store.getState().auth.value.permissions;
           const render = (
             <div className='sidebar__item' key={index}>
               <div className='accordion -db-sidebar js-accordion'>

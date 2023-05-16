@@ -7,6 +7,7 @@ const PermissionSwitch = ({
   errorRedirect,
   setSelectedPermissions,
   presentRoles = undefined,
+  readOnly = false,
 }) => {
   const standard = {};
   const additional = [];
@@ -44,8 +45,10 @@ const PermissionSwitch = ({
     return (
       <Switch
         onChange={(checked) => {
-          permissions[key][index].selected = checked;
-          _setStandard({ ...permissions });
+          if (!readOnly) {
+            permissions[key][index].selected = checked;
+            _setStandard({ ...permissions });
+          }
         }}
         checked={perm.selected}
         handleDiameter={24}
@@ -62,8 +65,10 @@ const PermissionSwitch = ({
     return (
       <Switch
         onChange={(checked) => {
-          permissions[i].selected = checked;
-          _setAdditional([...permissions]);
+          if (!readOnly) {
+            permissions[i].selected = checked;
+            _setAdditional([...permissions]);
+          }
         }}
         checked={perm.selected}
         handleDiameter={24}
@@ -123,11 +128,13 @@ const PermissionSwitch = ({
             name: _permission.slug,
           };
         } else {
+          console.log(_permission);
           additional.push({
             parts: parts,
             selected: false,
             id: _permission.id,
             name: _permission.slug,
+            desc: _permission.description,
           });
         }
         _setStandard({ ...selectstandard });
@@ -179,12 +186,16 @@ const PermissionSwitch = ({
       <h6 className='d-inline-block mx-3'>Additional Permissions</h6>
       <table className='table-6'>
         <tbody>
+          {console.log('additional', _additional)}
           {_additional.map((perm, i) => {
             const [entity, ...permission] = perm.parts;
             return (
               <tr key={perm.parts.join('.')}>
                 <td>
-                  {titelize(entity) + ' - ' + titelize(permission.reverse().join('-'))}
+                  <span className='d-block'>
+                    {titelize(entity) + ' - ' + titelize(permission.reverse().join('-'))}
+                  </span>
+                  <span className='d-block text-secondary'>{perm.desc}</span>
                 </td>
                 <td>{renderSwitchAdd(perm, i)}</td>
               </tr>

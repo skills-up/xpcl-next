@@ -33,24 +33,79 @@ const ViewBooking = () => {
       if (response?.success) {
         let data = response.data;
         // Converting time columns
-        if (data.created_at) {
-          data.created_at = new Date(data.created_at).toLocaleString('en-IN', {
-            dateStyle: 'medium',
-            timeStyle: 'short',
-          });
+        delete data['id'];
+        if (data.created_by) {
+          data.created_by = (
+            <a
+              className='text-15 cursor-pointer'
+              href={'/dashboard/users/view/' + data.created_by}
+            >
+              <strong>User #{data.created_by} </strong>[
+              {new Date(data.created_at).toLocaleString('en-IN', {
+                dateStyle: 'medium',
+                timeStyle: 'short',
+              })}
+              ]
+            </a>
+          );
         }
-        if (data.updated_at) {
-          data.updated_at = new Date(data.updated_at).toLocaleString('en-IN', {
-            dateStyle: 'medium',
-            timeStyle: 'short',
-          });
+        if (data.updated_by) {
+          data.updated_by = (
+            <a
+              className='text-15 cursor-pointer'
+              href={'/dashboard/users/view/' + data.updated_by}
+            >
+              <strong>User #{data.updated_by} </strong>[
+              {new Date(data.updated_at).toLocaleString('en-IN', {
+                dateStyle: 'medium',
+                timeStyle: 'short',
+              })}
+              ]
+            </a>
+          );
         }
+        delete data['created_at'];
+        delete data['updated_at'];
+        let bookingSetting;
         if (data?.reissued_booking) {
-          delete data['reissued_booking'];
+          const id = data.reissued_booking.id;
+          data.status = (
+            <span
+              className='rounded-100 cursor-pointer d-inline-block mt-1 py-4 px-10 text-center text-14 fw-500 bg-blue-1-05 text-blue-1'
+              onClick={() => window.location.assign('/dashboard/bookings/view/' + id)}
+            >
+              Reissued Booking
+            </span>
+          );
         }
         if (data?.partial_refund) {
-          delete data['partial_refund'];
+          const id = data.partial_refund.id;
+          data.status = (
+            <span
+              className='rounded-100 cursor-pointer d-inline-block mt-1 py-4 px-10 text-center text-14 fw-500'
+              style={{ backgroundColor: 'orange', color: 'white' }}
+              onClick={() =>
+                window.location.assign('/dashboard/partial-refunds/view/' + id)
+              }
+            >
+              Partially Refunded
+            </span>
+          );
         }
+        if (data?.refund) {
+          const id = data.refund.id;
+          data.status = (
+            <span
+              className='rounded-100 cursor-pointer d-inline-block mt-1 py-4 px-10 text-center text-14 fw-500 bg-red-3 text-red-2'
+              onClick={() => window.location.assign('/dashboard/refunds/view/' + id)}
+            >
+              Refunded
+            </span>
+          );
+        }
+        delete data['reissued_booking'];
+        delete data['partial_refund'];
+        delete data['refund'];
         setBooking(data);
       } else {
         sendToast(
