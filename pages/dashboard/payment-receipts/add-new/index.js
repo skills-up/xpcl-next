@@ -45,10 +45,6 @@ const AddNewPaymentReceipt = () => {
     if (router.isReady) getData();
   }, [router.isReady]);
 
-  useEffect(() => {
-    console.log(type);
-  }, [type]);
-
   const getData = async () => {
     setType({ value: router.query.type });
     const organizations = await getList('organizations');

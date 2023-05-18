@@ -133,7 +133,6 @@ const Journals = () => {
     data['transaction_fees_total'] = transactionFeeTotal;
     data['itc_total'] = itcTotal;
     data['services_total'] = servicesTotal;
-    console.log(data);
     setGSTMIS({ ...data });
   };
 

@@ -227,7 +227,6 @@ const ViewBooking = () => {
                           'bookings',
                           router.query.view + '/pdf'
                         );
-                        console.log(response);
                       },
                       classNames: 'btn-info text-white',
                     },

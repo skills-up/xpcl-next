@@ -128,7 +128,6 @@ const PermissionSwitch = ({
             name: _permission.slug,
           };
         } else {
-          console.log(_permission);
           additional.push({
             parts: parts,
             selected: false,
@@ -186,7 +185,6 @@ const PermissionSwitch = ({
       <h6 className='d-inline-block mx-3'>Additional Permissions</h6>
       <table className='table-6'>
         <tbody>
-          {console.log('additional', _additional)}
           {_additional.map((perm, i) => {
             const [entity, ...permission] = perm.parts;
             return (
