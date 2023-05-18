@@ -6,13 +6,14 @@ import { store } from '../../../app/store';
 import Select from 'react-select';
 import { setCurrentOrganization } from '../../../features/auth/authSlice';
 import { sendToast } from '../../../utils/toastify';
+import { useRouter } from 'next/router';
 
 const Sidebar = () => {
   const [organizations, setOrganizations] = useState([]);
   const [organizationID, setOrganizationsID] = useState(null);
 
   const dispatch = useDispatch();
-
+  const router = useRouter();
   const permissions = useSelector((state) => state.auth.value.permissions);
   const userOrganization = useSelector((state) => state.auth.value.organization);
   const currentOrganization = useSelector(
@@ -41,7 +42,6 @@ const Sidebar = () => {
         response.data?.message || response.data?.error || 'Unable to fetch organizations',
         4000
       );
-      router.push('/');
     }
   };
 
@@ -90,6 +90,7 @@ const Sidebar = () => {
           title: 'Working Capital Statement',
           href: '/dashboard/reports/working-capital-statement',
         },
+        { title: 'GST MIS Report', href: '/dashboard/reports/gst-mis' },
       ],
     },
     {
