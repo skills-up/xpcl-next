@@ -69,6 +69,19 @@ const ViewTravelInsurances = () => {
           );
         }
         delete data['traveller_id'];
+        if (data?.documents) {
+          data.documents = (
+            <ul className='list-disc'>
+              {Object.values(data?.documents).map((element, index) => (
+                <li key={index}>
+                  <a href={element} target='_blank'>
+                    {element.split('/').at(-1)}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          );
+        }
         setTravelInsurance(data);
       } else {
         sendToast(

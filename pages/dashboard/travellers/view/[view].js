@@ -66,6 +66,40 @@ const ViewTravellers = () => {
         }
         delete data['created_at'];
         delete data['updated_at'];
+        if (data?.passport_scans) {
+          data.passport_scans = (
+            <ul className='list-disc'>
+              {Object.values(data?.passport_scans).map((element, index) => (
+                <li key={index}>
+                  <a href={element} target='_blank'>
+                    {element.split('/').at(-1)}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          );
+        }
+        if (data?.vaccination_certificate) {
+          data.vaccination_certificate = (
+            <a href={data.vaccination_certificate} target='_blank'>
+              {data.vaccination_certificate.split('/').at(-1)}
+            </a>
+          );
+        }
+        if (data?.aadhaar_card_scan) {
+          data.aadhaar_card_scan = (
+            <a href={data.aadhaar_card_scan} target='_blank'>
+              {data.aadhaar_card_scan.split('/').at(-1)}
+            </a>
+          );
+        }
+        if (data?.pan_card_scan) {
+          data.pan_card_scan = (
+            <a href={data.pan_card_scan} target='_blank'>
+              {data.pan_card_scan.split('/').at(-1)}
+            </a>
+          );
+        }
         if (data.passport_dob) {
           data.passport_dob = new Date(data.passport_dob).toLocaleString('en-IN', {
             dateStyle: 'medium',

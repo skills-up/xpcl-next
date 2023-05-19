@@ -77,6 +77,19 @@ const ViewTravelVisas = () => {
           );
         }
         delete data['country_id'];
+        if (data?.visa_scans) {
+          data.visa_scans = (
+            <ul className='list-disc'>
+              {Object.values(data?.visa_scans).map((element, index) => (
+                <li key={index}>
+                  <a href={element} target='_blank'>
+                    {element.split('/').at(-1)}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          );
+        }
         setTravelVisa(data);
       } else {
         sendToast(

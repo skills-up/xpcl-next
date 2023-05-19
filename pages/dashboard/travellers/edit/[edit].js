@@ -625,6 +625,7 @@ const UpdateTravellers = () => {
                         />
                       )}
                       <NewFileUploads
+                        fileTypes={['PDF']}
                         multiple={false}
                         setUploads={setVaccinationCertificateFile}
                       />
@@ -654,7 +655,6 @@ const UpdateTravellers = () => {
                     <div className='col-lg-12'>
                       <label>Aadhaar Card Scan Certificate File</label>
                       <NewFileUploads
-                        multiple={true}
                         setUploads={setAadhaarCardScanFile}
                       />
                     </div>
