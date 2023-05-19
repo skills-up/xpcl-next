@@ -14,11 +14,13 @@ import { RiRefund2Fill } from 'react-icons/ri';
 import { ImPagebreak } from 'react-icons/im';
 import Audit from '../../../../components/audits';
 import { AiOutlinePrinter } from 'react-icons/ai';
+import Datatable from '../../../../components/datatable/Datatable';
 
 const ViewBooking = () => {
   const [booking, setBooking] = useState([]);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
+  const [bookingSectors, setBookingSectors] = useState(null);
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -162,6 +164,10 @@ const ViewBooking = () => {
             </span>
           );
         }
+        if (data?.booking_sectors)
+          if (data?.booking_sectors.length > 0)
+            setBookingSectors(data.booking_sectors.slice(0));
+        // delete data['booking_sectors'];
         delete data['reissued_booking'];
         delete data['partial_refund'];
         delete data['refund'];
@@ -177,6 +183,40 @@ const ViewBooking = () => {
       }
     }
   };
+
+  const columns = [
+    {
+      Header: 'From',
+      accessor: 'from_airport_name',
+    },
+    {
+      Header: 'To',
+      accessor: 'to_airport_name',
+    },
+    {
+      Header: 'Travel Date',
+      accessor: 'travel_date',
+      Cell: (data) => {
+        return (
+          <div>
+            {data.row.original.travel_date
+              ? new Date(data.row.original.travel_date).toLocaleString('en-IN', {
+                  dateStyle: 'medium',
+                })
+              : ''}
+          </div>
+        );
+      },
+    },
+    {
+      Header: 'Travel Time',
+      accessor: 'travel_time',
+    },
+    {
+      Header: 'Booking Class',
+      accessor: 'booking_class',
+    },
+  ];
 
   const onCancel = async () => {
     setConfirmDelete(false);
@@ -291,6 +331,15 @@ const ViewBooking = () => {
                     },
                   ]}
                 />
+                {bookingSectors && (
+                  <>
+                    <hr className='my-4' />
+                    <div>
+                      <h2 className='mb-3'>Booking Sectors</h2>
+                      <Datatable columns={columns} data={bookingSectors} />
+                    </div>
+                  </>
+                )}
                 <hr className='my-4' />
                 <div>
                   <h2 className='mb-3'>Audit Log</h2>

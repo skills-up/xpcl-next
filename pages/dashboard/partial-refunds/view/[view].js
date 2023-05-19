@@ -102,6 +102,14 @@ const ViewRefunds = () => {
           );
         }
         delete data['vendor_id'];
+        if (data?.number && data?.booking_id) {
+          data['booking'] = (
+            <a href={'/dashboard/bookings/view/' + data.booking_id}>
+              {data.number.charAt(0) + 'S' + data.number.slice(2)}
+            </a>
+          );
+        }
+        delete data['booking_id'];
         setRefund(data);
       } else {
         sendToast(
