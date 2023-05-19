@@ -1,8 +1,9 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
-import { createItem, getList } from '../../../../api/xplorzApi';
+import { createItem, deleteItem, getList } from '../../../../api/xplorzApi';
 import { sendToast } from '../../../../utils/toastify';
+import { BsTrash3 } from 'react-icons/bs';
 
 const Journals = () => {
   const [gSTMIS, setGSTMIS] = useState(null);
@@ -209,6 +210,7 @@ const Journals = () => {
                   <th className='text-right'>CGST</th>
                   <th className='text-right'>SGST</th>
                   <th>PDF</th>
+                  <th>Delete</th>
                 </tr>
               </thead>
               <tbody>
@@ -284,7 +286,12 @@ const Journals = () => {
                                   // Setting GST
                                   await prev.gst_invoices.push(response.data);
                                   // Setting State
-                                  manipulateData(prev);
+                                  await manipulateData(prev);
+                                  sendToast(
+                                    'success',
+                                    'Created GST Invoice Successfully',
+                                    4000
+                                  );
                                 } else {
                                   sendToast(
                                     'error',
@@ -296,6 +303,50 @@ const Journals = () => {
                             >
                               Create
                             </span>
+                          )}
+                        </td>
+                        <td>
+                          {element?.pdf_path && (
+                            <BsTrash3
+                              className='cursor-pointer text-danger'
+                              onClick={async () => {
+                                const response = await deleteItem(
+                                  'reports',
+                                  element.id + '/delete'
+                                );
+                                if (response?.success) {
+                                  let prev = gSTMIS;
+                                  // Adding the new Commission
+                                  prev.commissions[element.organization_id] = {
+                                    amount: +element.commission,
+                                    cgst: +element.cgst,
+                                    sgst: +element.sgst,
+                                    id: +element.organization_id,
+                                    name: element.organization_name,
+                                    gstn: element?.gstn,
+                                  };
+                                  // Removing the GSTN
+                                  for (let i = 0; i < prev.gst_invoices.length; i++) {
+                                    if (prev.gst_invoices[i].id === element.id) {
+                                      prev.gst_invoices.splice(i, 1);
+                                      break;
+                                    }
+                                  }
+                                  await manipulateData(prev);
+                                  sendToast(
+                                    'success',
+                                    'Deleted GST Invoice Successfully',
+                                    4000
+                                  );
+                                } else {
+                                  sendToast(
+                                    'error',
+                                    'Error deleting the GST Invoice',
+                                    4000
+                                  );
+                                }
+                              }}
+                            />
                           )}
                         </td>
                       </tr>
