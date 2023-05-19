@@ -61,6 +61,14 @@ const ViewTravelMemberships = () => {
         }
         delete data['created_at'];
         delete data['updated_at'];
+        if (data?.traveller_name && data?.traveller_id) {
+          data.traveller_name = (
+            <a href={'/dashboard/travellers/view/' + data.traveller_id}>
+              {data.traveller_name}
+            </a>
+          );
+        }
+        delete data['traveller_id'];
         setTravelMembership(data);
       } else {
         sendToast(

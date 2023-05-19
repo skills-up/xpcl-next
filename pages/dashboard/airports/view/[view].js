@@ -61,6 +61,14 @@ const ViewAirports = () => {
         }
         delete data['created_at'];
         delete data['updated_at'];
+        if (data?.country_name && data?.country_id) {
+          data.country_name = (
+            <a href={'/dashboard/countries/view/' + data.country_id}>
+              {data.country_name}
+            </a>
+          );
+        }
+        delete data['country_id'];
         setAirport(data);
       } else {
         sendToast(

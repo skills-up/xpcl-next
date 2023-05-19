@@ -138,7 +138,7 @@ const UpdateTravellers = () => {
         setPreviousVaccinationCertificate(response.data?.vaccination_certificate);
         setPreviousPanCardScan(response.data?.pan_card_scan);
         setPreviousAadhaarCardScan(response.data?.aadhaar_card_scan);
-        if (response.data?.passportScanFiles)
+        if (response.data?.passport_scans)
           setPreviousPassportScanFiles(response.data?.passport_scans);
         // Setting Passport Gender
         for (let gender of passportGenderOptions)
@@ -726,7 +726,7 @@ const UpdateTravellers = () => {
                     {/* Passport Scan Files Upload */}
 
                     <div className='col-lg-6'>
-                      <label>Passport Scan Files</label>{' '}
+                      <label>Passport Scan Files</label>
                       {previousPassportScanFiles?.length > 0 && (
                         <PreviousUploadPictures
                           data={previousPassportScanFiles}

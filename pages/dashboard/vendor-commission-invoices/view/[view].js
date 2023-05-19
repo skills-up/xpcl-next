@@ -62,6 +62,14 @@ const ViewVendorCommissionInvoices = () => {
         }
         delete data['created_at'];
         delete data['updated_at'];
+        if (data?.vendor_name && data?.vendor_id) {
+          data.vendor_name = (
+            <a href={'/dashboard/organizations/view/' + data.vendor_id}>
+              {data.vendor_name}
+            </a>
+          );
+        }
+        delete data['vendor_id'];
         if (data.audit_trail) {
           delete data['audit_trail'];
         }

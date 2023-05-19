@@ -62,6 +62,30 @@ const ViewPaymentReceipts = () => {
         }
         delete data['created_at'];
         delete data['updated_at'];
+        if (data?.organization_name && data?.organization_id) {
+          data.organization_name = (
+            <a href={'/dashboard/organizations/view/' + data.organization_id}>
+              {data.organization_name}
+            </a>
+          );
+        }
+        delete data['organization_id'];
+        if (data?.dr_account_name && data?.dr_account_id) {
+          data.dr_account_name = (
+            <a href={'/dashboard/accounts/view/' + data.dr_account_id}>
+              {data.dr_account_name}
+            </a>
+          );
+        }
+        delete data['dr_account_id'];
+        if (data?.cr_account_name && data?.cr_account_id) {
+          data.cr_account_name = (
+            <a href={'/dashboard/accounts/view/' + data.cr_account_id}>
+              {data.cr_account_name}
+            </a>
+          );
+        }
+        delete data['cr_account_id'];
         setPaymentReceipt(data);
       } else {
         sendToast(

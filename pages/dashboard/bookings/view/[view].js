@@ -66,7 +66,66 @@ const ViewBooking = () => {
         }
         delete data['created_at'];
         delete data['updated_at'];
-        let bookingSetting;
+        if (data?.client_name && data?.client_id) {
+          data.client_name = (
+            <a href={'/dashboard/organizations/view/' + data.client_id}>
+              {data.client_name}
+            </a>
+          );
+        }
+        delete data['client_id'];
+        if (
+          data?.client_traveller_name &&
+          data?.client_traveller_id &&
+          data?.client_traveller
+        ) {
+          data.client_traveller_name = (
+            <a
+              href={
+                '/dashboard/travellers/client-travellers/view?traveller_id=' +
+                data.client_traveller.traveller_id +
+                '&view=' +
+                data.client_traveller_id
+              }
+            >
+              {data.client_traveller_name}
+            </a>
+          );
+        }
+        delete data['client_traveller'];
+        delete data['client_traveller_id'];
+        if (data?.vendor_name && data?.vendor_id) {
+          data.vendor_name = (
+            <a href={'/dashboard/organizations/view/' + data.vendor_id}>
+              {data.vendor_name}
+            </a>
+          );
+        }
+        delete data['vendor_id'];
+        if (data?.airline_name && data?.airline_id) {
+          data.airline_name = (
+            <a href={'/dashboard/organizations/view/' + data.airline_id}>
+              {data.airline_name}
+            </a>
+          );
+        }
+        delete data['airline_id'];
+        if (data?.payment_account_name && data?.payment_account_id) {
+          data.payment_account_name = (
+            <a href={'/dashboard/accounts/view/' + data.payment_account_id}>
+              {data.payment_account_name}
+            </a>
+          );
+        }
+        delete data['payment_account_id'];
+        if (data?.client_referrer_name && data?.client_referrer_id) {
+          data.client_referrer_name = (
+            <a href={'/dashboard/accounts/view/' + data.client_referrer_id}>
+              {data.client_referrer_name}
+            </a>
+          );
+        }
+        delete data['client_referrer_id'];
         if (data?.reissued_booking) {
           const id = data.reissued_booking.id;
           data.status = (

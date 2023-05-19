@@ -61,6 +61,22 @@ const ViewAirlineOrganizationMarkup = () => {
         }
         delete data['created_at'];
         delete data['updated_at'];
+        if (data?.airline_name && data?.airline_id) {
+          data.airline_name = (
+            <a href={'/dashboard/organizations/view/' + data.airline_id}>
+              {data.airline_name}
+            </a>
+          );
+        }
+        delete data['airline_id'];
+        if (data?.organization_name && data?.organization_id) {
+          data.organization_name = (
+            <a href={'/dashboard/organizations/view/' + data.organization_id}>
+              {data.organization_name}
+            </a>
+          );
+        }
+        delete data['organization_id'];
         setAirlineOrganizationMarkup(data);
       } else {
         sendToast(

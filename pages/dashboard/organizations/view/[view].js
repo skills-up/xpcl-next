@@ -61,6 +61,20 @@ const ViewOrganization = () => {
         }
         delete data['created_at'];
         delete data['updated_at'];
+        if (data?.account_id) {
+          data.account_name = (
+            <a href={'/dashboard/accounts/view/' + data.account_id}>{data.name}</a>
+          );
+        }
+        delete data['account_id'];
+        if (data?.calendar_template_name && data?.calendar_template_id) {
+          data.calendar_template_name = (
+            <a href={'/dashboard/calendar_templates/view/' + data.calendar_template_id}>
+              {data.calendar_template_name}
+            </a>
+          );
+        }
+        delete data['calendar_template_id'];
         setOrganization(data);
       } else {
         sendToast(

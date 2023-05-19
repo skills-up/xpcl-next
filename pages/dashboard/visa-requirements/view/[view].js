@@ -64,6 +64,14 @@ const ViewVisaRequirements = () => {
         }
         delete data['created_at'];
         delete data['updated_at'];
+        if (data?.country_name && data?.country_id) {
+          data.country_name = (
+            <a href={'/dashboard/countries/view/' + data.country_id}>
+              {data.country_name}
+            </a>
+          );
+        }
+        delete data['country_id'];
         data.docs_requirements = (
           <>
             {Object.keys(data.docs_requirements).map((element, index) => (

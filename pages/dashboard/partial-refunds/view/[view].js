@@ -62,6 +62,46 @@ const ViewRefunds = () => {
         }
         delete data['created_at'];
         delete data['updated_at'];
+        if (data?.client_name && data?.client_id) {
+          data.client_name = (
+            <a href={'/dashboard/organizations/view/' + data.client_id}>
+              {data.client_name}
+            </a>
+          );
+        }
+        delete data['client_id'];
+        if (data?.account_name && data?.account_id) {
+          data.account_name = (
+            <a href={'/dashboard/accounts/view/' + data.account_id}>
+              {data.account_name}
+            </a>
+          );
+        }
+        delete data['account_id'];
+        if (data?.commission_rule_name && data?.commission_rule_id) {
+          data.commission_rule_name = (
+            <a href={'/dashboard/commission-rules/view/' + data.commission_rule_id}>
+              {data.commission_rule_name}
+            </a>
+          );
+        }
+        delete data['commission_rule_id'];
+        if (data?.client_referrer_name && data?.client_referrer_id) {
+          data.client_referrer_name = (
+            <a href={'/dashboard/accounts/view/' + data.client_referrer_id}>
+              {data.client_referrer_name}
+            </a>
+          );
+        }
+        delete data['client_referrer_id'];
+        if (data?.vendor_name && data?.vendor_id) {
+          data.vendor_name = (
+            <a href={'/dashboard/organizations/view/' + data.vendor_id}>
+              {data.vendor_name}
+            </a>
+          );
+        }
+        delete data['vendor_id'];
         setRefund(data);
       } else {
         sendToast(

@@ -61,6 +61,28 @@ const ViewUser = () => {
         }
         delete data['created_at'];
         delete data['updated_at'];
+        if (data?.organization_name && data?.organization_id) {
+          data.organization_name = (
+            <a href={'/dashboard/organizations/view/' + data.organization_id}>
+              {data.organization_name}
+            </a>
+          );
+        }
+        delete data['organization_id'];
+        if (data?.current_organization_name && data?.current_organization_id) {
+          data.current_organization_name = (
+            <a href={'/dashboard/organizations/view/' + data.current_organization_id}>
+              {data.current_organization_name}
+            </a>
+          );
+        }
+        delete data['current_organization_id'];
+        if (data?.role_name && data?.role_id) {
+          data.role_name = (
+            <a href={'/dashboard/roles/view/' + data.role_id}>{data.role_name}</a>
+          );
+        }
+        delete data['role_id'];
         setUser(data);
       } else {
         sendToast(

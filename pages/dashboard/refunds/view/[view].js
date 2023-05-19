@@ -62,6 +62,22 @@ const ViewRefunds = () => {
         }
         delete data['created_at'];
         delete data['updated_at'];
+        if (data?.client_name && data?.client_id) {
+          data.client_name = (
+            <a href={'/dashboard/organizations/view/' + data.client_id}>
+              {data.client_name}
+            </a>
+          );
+        }
+        delete data['client_id'];
+        if (data?.account_name && data?.account_id) {
+          data.account_name = (
+            <a href={'/dashboard/accounts/view/' + data.account_id}>
+              {data.account_name}
+            </a>
+          );
+        }
+        delete data['account_id'];
         setRefund(data);
       } else {
         sendToast(

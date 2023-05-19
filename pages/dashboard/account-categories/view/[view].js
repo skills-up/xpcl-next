@@ -61,6 +61,14 @@ const ViewAccountCategories = () => {
         }
         delete data['created_at'];
         delete data['updated_at'];
+        if (data?.parent_category_name && data?.parent_category_id) {
+          data.parent_category_name = (
+            <a href={'/dashboard/account-categories/view/' + data.parent_category_id}>
+              {data.parent_category_name}
+            </a>
+          );
+        }
+        delete data['parent_category_id'];
         data.child_categories = (
           <ul className='ml-20'>
             {Object.values(data.child_categories).map((cat, index) => (

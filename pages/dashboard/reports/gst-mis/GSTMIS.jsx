@@ -315,24 +315,7 @@ const Journals = () => {
                                   element.id + '/delete'
                                 );
                                 if (response?.success) {
-                                  let prev = gSTMIS;
-                                  // Adding the new Commission
-                                  prev.commissions[element.organization_id] = {
-                                    amount: +element.commission,
-                                    cgst: +element.cgst,
-                                    sgst: +element.sgst,
-                                    id: +element.organization_id,
-                                    name: element.organization_name,
-                                    gstn: element?.gstn,
-                                  };
-                                  // Removing the GSTN
-                                  for (let i = 0; i < prev.gst_invoices.length; i++) {
-                                    if (prev.gst_invoices[i].id === element.id) {
-                                      prev.gst_invoices.splice(i, 1);
-                                      break;
-                                    }
-                                  }
-                                  await manipulateData(prev);
+                                  await getGSTMIS();
                                   sendToast(
                                     'success',
                                     'Deleted GST Invoice Successfully',
