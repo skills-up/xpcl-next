@@ -1224,10 +1224,7 @@ const AddNewBooking = () => {
                                       </div>
                                     </div>
                                     <div className='col-lg-4 pb-3 form-input-select'>
-                                      <label>
-                                        Booking Class
-                                        <span className='text-danger'>*</span>
-                                      </label>
+                                      <label>Booking Class</label>
                                       <Select
                                         options={bookingClassOptions}
                                         value={element['booking_class']}
