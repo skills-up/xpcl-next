@@ -164,10 +164,9 @@ const ViewBooking = () => {
             </span>
           );
         }
-        if (data?.booking_sectors)
-          if (data?.booking_sectors.length > 0)
-            setBookingSectors(data.booking_sectors.slice(0));
-        // delete data['booking_sectors'];
+        if (data?.sectors)
+          if (data?.sectors.length > 0) setBookingSectors(data.sectors.slice(0));
+        delete data['sectors'];
         delete data['reissued_booking'];
         delete data['partial_refund'];
         delete data['refund'];
@@ -187,11 +186,11 @@ const ViewBooking = () => {
   const columns = [
     {
       Header: 'From',
-      accessor: 'from_airport_name',
+      accessor: 'from_airport.name',
     },
     {
       Header: 'To',
-      accessor: 'to_airport_name',
+      accessor: 'to_airport.name',
     },
     {
       Header: 'Travel Date',

@@ -272,7 +272,7 @@ const AddNewBooking = () => {
           }
           // Client Booking Sectors
           const tempBookingSectors = [];
-          for (let bookSec of response.data.booking_sectors) {
+          for (let bookSec of response.data.sectors) {
             let tempFromAirportID, tempToAirportID, tempBookingClass;
             for (let airport of airports.data) {
               if (airport.id === bookSec.from_airport_id) {
