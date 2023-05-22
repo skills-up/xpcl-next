@@ -20,15 +20,17 @@ const PreviousUploadPictures = ({ onDeleteClick, data, readonly = false }) => {
                 />
                 <small className='text-break'>{imageName}</small>
               </div>
-              {readonly || <span
-                style={{ cursor: 'pointer' }}
-                onClick={() => onDeleteClick(element, index)}
-              >
-                <BsTrash3
-                  style={{ fontSize: '1.3rem', marginBottom: '0.3rem' }}
-                  className='text-danger'
-                />
-              </span>}
+              {readonly || (
+                <span
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => onDeleteClick(element, index)}
+                >
+                  <BsTrash3
+                    style={{ fontSize: '1.3rem', marginBottom: '0.3rem' }}
+                    className='text-danger'
+                  />
+                </span>
+              )}
             </div>
           );
         })}

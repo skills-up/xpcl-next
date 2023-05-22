@@ -65,8 +65,8 @@ const Journals = () => {
     {
       Header: 'Narration',
       accessor: 'narration',
+      removeMaxWidth: true,
     },
-
     {
       Header: 'Actions',
       disableSortBy: true,
@@ -132,6 +132,7 @@ const Journals = () => {
                 {
                   Header: 'Narration',
                   accessor: 'narration',
+                  removeMaxWidth: true,
                 },
                 {
                   Header: 'Debit From',
@@ -144,15 +145,18 @@ const Journals = () => {
                 {
                   Header: 'Amount',
                   accessor: 'amount',
-                  Cell: (data) => (
-                    <span>
-                      {(+data.row.original.amount).toLocaleString('en-IN', {
-                        maximumFractionDigits: 2,
-                        style: 'currency',
-                        currency: 'INR',
-                      })}
-                    </span>
-                  ),
+                  alignRight: true,
+                  Cell: (data) => {
+                    return (
+                      <span className='text-right d-block'>
+                        {(+data.row.original.amount).toLocaleString('en-IN', {
+                          maximumFractionDigits: 2,
+                          style: 'currency',
+                          currency: 'INR',
+                        })}
+                      </span>
+                    );
+                  },
                 },
               ]}
               data={

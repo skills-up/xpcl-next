@@ -1,27 +1,17 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { checkUser } from '../../../utils/checkTokenValidity';
+import { sendToast } from '../../../utils/toastify';
 import MainMenu from '../MainMenu';
 import MobileMenu from '../MobileMenu';
-import Select from 'react-select';
-import { sendToast } from '../../../utils/toastify';
-import { setCurrentOrganization } from '../../../features/auth/authSlice';
-import { customAPICall, getList } from '../../../api/xplorzApi';
 
 const HeaderDashBoard = () => {
   const [navbar, setNavbar] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [organizations, setOrganizations] = useState([]);
-  const [organizationID, setOrganizationsID] = useState(null);
 
   const dispatch = useDispatch();
-  const userOrganization = useSelector((state) => state.auth.value.organization);
-  const currentOrganization = useSelector(
-    (state) => state.auth.value.currentOrganization
-  );
   const router = useRouter();
   const token = useSelector((state) => state.auth.value.token);
 
@@ -35,31 +25,7 @@ const HeaderDashBoard = () => {
       sendToast('error', 'You need to login first in order to view the dashboard.', 8000);
       router.push('/login');
     }
-    // Getting organization list
-    getOrganizations();
   }, []);
-
-  const getOrganizations = async () => {
-    const response = await getList('organizations', { is_client: 1 });
-    if (response?.success) {
-      setOrganizations(
-        response.data.map((element) => ({ value: element.id, label: element.name }))
-      );
-      // Setting organization ID
-      for (let org of response.data) {
-        if (org.id === currentOrganization) {
-          setOrganizationsID({ value: org.id, label: org.name });
-        }
-      }
-    } else {
-      sendToast(
-        'error',
-        response.data?.message || response.data?.error || 'Unable to fetch organizations',
-        4000
-      );
-      router.push('/');
-    }
-  };
 
   const handleToggle = () => {
     setIsOpen(!isOpen);
@@ -114,39 +80,6 @@ const HeaderDashBoard = () => {
                   </button>
                 </div> */}
                 {/* Organization Field */}
-                {userOrganization === 1 && (
-                  <div
-                    className='row items-center md:d-none ml-30'
-                    style={{ width: '20vw' }}
-                  >
-                    <Select
-                      options={organizations}
-                      defaultValue={organizationID}
-                      value={organizationID}
-                      placeholder='Select Organization'
-                      onChange={async (id) => {
-                        const response = await customAPICall('auth/switch', 'post', {
-                          organization_id: id.value,
-                        });
-                        if (response?.success) {
-                          setOrganizationsID(id);
-                          dispatch(
-                            setCurrentOrganization({ currentOrganization: id.value })
-                          );
-                          window.location.reload();
-                        } else {
-                          sendToast(
-                            'error',
-                            response.data?.message ||
-                              response.data?.error ||
-                              'Error occured while changing organization',
-                            4000
-                          );
-                        }
-                      }}
-                    />
-                  </div>
-                )}
               </div>
             </div>
             {/* End .col-auto */}

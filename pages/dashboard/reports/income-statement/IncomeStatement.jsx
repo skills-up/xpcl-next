@@ -21,7 +21,6 @@ const Journals = () => {
       let data = response.data;
       // Calculating Totals
       data = await recurseThroughout(data);
-      console.log(data);
       setBalanceSheet(data);
     } else {
       sendToast(

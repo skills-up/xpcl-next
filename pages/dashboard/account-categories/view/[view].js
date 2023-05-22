@@ -28,18 +28,75 @@ const ViewAccountCategories = () => {
       if (response?.success) {
         let data = response.data;
         // Converting time columns
-        if (data.created_at) {
-          data.created_at = new Date(data.created_at).toLocaleString('en-IN', {
-            dateStyle: 'medium',
-            timeStyle: 'short',
-          });
+        delete data['id'];
+        if (data.created_by) {
+          data.created_by = (
+            <a
+              className='text-15 cursor-pointer'
+              href={'/dashboard/users/view/' + data.created_by}
+            >
+              <strong>User #{data.created_by} </strong>[
+              {new Date(data.created_at).toLocaleString('en-IN', {
+                dateStyle: 'medium',
+                timeStyle: 'short',
+              })}
+              ]
+            </a>
+          );
         }
-        if (data.updated_at) {
-          data.updated_at = new Date(data.updated_at).toLocaleString('en-IN', {
-            dateStyle: 'medium',
-            timeStyle: 'short',
-          });
+        if (data.updated_by) {
+          data.updated_by = (
+            <a
+              className='text-15 cursor-pointer'
+              href={'/dashboard/users/view/' + data.updated_by}
+            >
+              <strong>User #{data.updated_by} </strong>[
+              {new Date(data.updated_at).toLocaleString('en-IN', {
+                dateStyle: 'medium',
+                timeStyle: 'short',
+              })}
+              ]
+            </a>
+          );
         }
+        delete data['created_at'];
+        delete data['updated_at'];
+        if (data?.parent_category_name && data?.parent_category_id) {
+          data.parent_category_name = (
+            <a href={'/dashboard/account-categories/view/' + data.parent_category_id}>
+              {data.parent_category_name}
+            </a>
+          );
+        }
+        delete data['parent_category_id'];
+        data.child_categories = (
+          <ul className='ml-20'>
+            {Object.values(data.child_categories).map((cat, index) => (
+              <li style={{ listStyleType: 'disc' }} key={index}>
+                <a
+                  href={`/dashboard/account-categories/view/${cat.id}`}
+                  className='text-15 cursor-pointer'
+                >
+                  {cat?.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+        );
+        data.accounts = (
+          <ul className='ml-20'>
+            {Object.values(data.accounts).map((acc, index) => (
+              <li style={{ listStyleType: 'disc' }} key={index}>
+                <a
+                  href={`/dashboard/accounts/view/${acc.id}`}
+                  className='text-15 cursor-pointer'
+                >
+                  {acc?.name} {acc?.year ? '- ' + acc.year : ''}
+                </a>
+              </li>
+            ))}
+          </ul>
+        );
         setAccountCategory(data);
       } else {
         sendToast(

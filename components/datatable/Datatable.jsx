@@ -196,10 +196,14 @@ const Datatable = ({
                           }
                         }}
                         {...cell.getCellProps()}
-                        style={{
-                          maxWidth: '12rem',
-                          verticalAlign: 'top',
-                        }}
+                        style={
+                          cell.column.removeMaxWidth
+                            ? { verticalAlign: 'top', maxWidth: 'unset' }
+                            : {
+                                maxWidth: '12rem',
+                                verticalAlign: 'top',
+                              }
+                        }
                         className={'max-w-xs break-all text-xs'}
                       >
                         {cell.render('Cell')}

@@ -33,18 +33,126 @@ const ViewTravellers = () => {
       if (response?.success) {
         let data = response.data;
         // Converting time columns
-        if (data.created_at) {
-          data.created_at = new Date(data.created_at).toLocaleString('en-IN', {
+        delete data['id'];
+        if (data.created_by) {
+          data.created_by = (
+            <a
+              className='text-15 cursor-pointer'
+              href={'/dashboard/users/view/' + data.created_by}
+            >
+              <strong>User #{data.created_by} </strong>[
+              {new Date(data.created_at).toLocaleString('en-IN', {
+                dateStyle: 'medium',
+                timeStyle: 'short',
+              })}
+              ]
+            </a>
+          );
+        }
+        if (data.updated_by) {
+          data.updated_by = (
+            <a
+              className='text-15 cursor-pointer'
+              href={'/dashboard/users/view/' + data.updated_by}
+            >
+              <strong>User #{data.updated_by} </strong>[
+              {new Date(data.updated_at).toLocaleString('en-IN', {
+                dateStyle: 'medium',
+                timeStyle: 'short',
+              })}
+              ]
+            </a>
+          );
+        }
+        delete data['created_at'];
+        delete data['updated_at'];
+        if (data?.passport_scans) {
+          data.passport_scans = (
+            <ul className='list-disc'>
+              {Object.values(data?.passport_scans).map((element, index) => (
+                <li key={index}>
+                  <a href={element} target='_blank'>
+                    {element.split('/').at(-1)}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          );
+        }
+        if (data?.vaccination_certificate) {
+          data.vaccination_certificate = (
+            <a href={data.vaccination_certificate} target='_blank'>
+              {data.vaccination_certificate.split('/').at(-1)}
+            </a>
+          );
+        }
+        if (data?.aadhaar_card_scan) {
+          data.aadhaar_card_scan = (
+            <a href={data.aadhaar_card_scan} target='_blank'>
+              {data.aadhaar_card_scan.split('/').at(-1)}
+            </a>
+          );
+        }
+        if (data?.pan_card_scan) {
+          data.pan_card_scan = (
+            <a href={data.pan_card_scan} target='_blank'>
+              {data.pan_card_scan.split('/').at(-1)}
+            </a>
+          );
+        }
+        if (data.passport_dob) {
+          data.passport_dob = new Date(data.passport_dob).toLocaleString('en-IN', {
             dateStyle: 'medium',
-            timeStyle: 'short',
           });
         }
-        if (data.updated_at) {
-          data.updated_at = new Date(data.updated_at).toLocaleString('en-IN', {
-            dateStyle: 'medium',
-            timeStyle: 'short',
-          });
+        if (data.passport_issue_date) {
+          data.passport_issue_date = new Date(data.passport_issue_date).toLocaleString(
+            'en-IN',
+            {
+              dateStyle: 'medium',
+            }
+          );
         }
+        if (data.passport_expiry_date) {
+          data.passport_expiry_date = new Date(data.passport_expiry_date).toLocaleString(
+            'en-IN',
+            {
+              dateStyle: 'medium',
+            }
+          );
+        }
+        if (data.vaccination_dates) {
+          data.vaccination_dates = (
+            <ul className='ml-20'>
+              {Object.values(data.vaccination_dates).map((date, index) => (
+                <li style={{ listStyleType: 'disc' }} key={index}>
+                  {new Date(date).toLocaleString('en-IN', { dateStyle: 'medium' })}
+                </li>
+              ))}
+            </ul>
+          );
+        }
+        if (data.aliases) {
+          data.aliases = (
+            <ul className='ml-20'>
+              {Object.values(data.aliases).map((alias, index) => (
+                <li style={{ listStyleType: 'disc' }} key={index}>
+                  {alias}
+                </li>
+              ))}
+            </ul>
+          );
+        }
+        if (data.client_travellers) {
+          delete data['client_travellers'];
+        }
+        // if (data.aadhaar_card_scan) {
+        //   data.aadhaar_card_scan = (
+        //     <a className='ml20 text-15' href={data.aadhaar_card_scan} target='_blank'>
+        //       {data.aadhaar_card_scan.split('/').at(-1)}
+        //     </a>
+        //   );
+        // }
         setTravellers(data);
       } else {
         sendToast(

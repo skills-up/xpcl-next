@@ -29,18 +29,87 @@ const ViewRefunds = () => {
       if (response?.success) {
         let data = response.data;
         // Converting time columns
-        if (data.created_at) {
-          data.created_at = new Date(data.created_at).toLocaleString('en-IN', {
-            dateStyle: 'medium',
-            timeStyle: 'short',
-          });
+        delete data['id'];
+        if (data.created_by) {
+          data.created_by = (
+            <a
+              className='text-15 cursor-pointer'
+              href={'/dashboard/users/view/' + data.created_by}
+            >
+              <strong>User #{data.created_by} </strong>[
+              {new Date(data.created_at).toLocaleString('en-IN', {
+                dateStyle: 'medium',
+                timeStyle: 'short',
+              })}
+              ]
+            </a>
+          );
         }
-        if (data.updated_at) {
-          data.updated_at = new Date(data.updated_at).toLocaleString('en-IN', {
-            dateStyle: 'medium',
-            timeStyle: 'short',
-          });
+        if (data.updated_by) {
+          data.updated_by = (
+            <a
+              className='text-15 cursor-pointer'
+              href={'/dashboard/users/view/' + data.updated_by}
+            >
+              <strong>User #{data.updated_by} </strong>[
+              {new Date(data.updated_at).toLocaleString('en-IN', {
+                dateStyle: 'medium',
+                timeStyle: 'short',
+              })}
+              ]
+            </a>
+          );
         }
+        delete data['created_at'];
+        delete data['updated_at'];
+        if (data?.client_name && data?.client_id) {
+          data.client_name = (
+            <a href={'/dashboard/organizations/view/' + data.client_id}>
+              {data.client_name}
+            </a>
+          );
+        }
+        delete data['client_id'];
+        if (data?.account_name && data?.account_id) {
+          data.account_name = (
+            <a href={'/dashboard/accounts/view/' + data.account_id}>
+              {data.account_name}
+            </a>
+          );
+        }
+        delete data['account_id'];
+        if (data?.commission_rule_name && data?.commission_rule_id) {
+          data.commission_rule_name = (
+            <a href={'/dashboard/commission-rules/view/' + data.commission_rule_id}>
+              {data.commission_rule_name}
+            </a>
+          );
+        }
+        delete data['commission_rule_id'];
+        if (data?.client_referrer_name && data?.client_referrer_id) {
+          data.client_referrer_name = (
+            <a href={'/dashboard/accounts/view/' + data.client_referrer_id}>
+              {data.client_referrer_name}
+            </a>
+          );
+        }
+        delete data['client_referrer_id'];
+        if (data?.vendor_name && data?.vendor_id) {
+          data.vendor_name = (
+            <a href={'/dashboard/organizations/view/' + data.vendor_id}>
+              {data.vendor_name}
+            </a>
+          );
+        }
+        delete data['vendor_id'];
+        if (data?.number && data?.booking_id) {
+          data['booking'] = (
+            <a href={'/dashboard/bookings/view/' + data.booking_id}>
+              {data.number.charAt(0) + 'S' + data.number.slice(2)}
+            </a>
+          );
+        }
+        delete data['booking_id'];
         setRefund(data);
       } else {
         sendToast(

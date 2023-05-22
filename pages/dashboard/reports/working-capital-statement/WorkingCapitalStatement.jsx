@@ -26,7 +26,6 @@ const Journals = () => {
           net += total;
         }
       }
-      console.log(data, net);
       setNetCash(net);
       setWorkingCapitalStatement(data);
     } else {

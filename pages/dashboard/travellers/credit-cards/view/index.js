@@ -9,18 +9,32 @@ import { sendToast } from '../../../../../utils/toastify';
 import { useEffect, useState } from 'react';
 import { deleteItem, getItem } from '../../../../../api/xplorzApi';
 import ViewTable from '../../../../../components/view-table';
+import { BsEye } from 'react-icons/bs';
 
 const ViewCreditCards = () => {
   const [creditCard, setCreditCard] = useState([]);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
-
+  const [isMasked, setIsMasked] = useState(true);
+  const [originalCCNumber, setOriginalCCNumber] = useState('');
+  const permissions = useSelector((state) => state.auth.value.permissions);
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
+
   useEffect(() => {
     // Getting particular organization
     getCreditCard();
+    getOriginalCCNumber();
   }, [router.isReady]);
+
+  useEffect(() => {
+    getCreditCard();
+  }, [isMasked]);
+
+  const getOriginalCCNumber = async () => {
+    const originalCC = await getItem('credit-cards', router.query.view + '/show-number');
+    if (originalCC?.success) setOriginalCCNumber(parseInt(atob(originalCC.data?.number)));
+  };
 
   const getCreditCard = async () => {
     if (router.query.view) {
@@ -28,16 +42,64 @@ const ViewCreditCards = () => {
       if (response?.success) {
         let data = response.data;
         // Converting time columns
-        if (data.created_at) {
-          data.created_at = new Date(data.created_at).toLocaleString('en-IN', {
-            dateStyle: 'medium',
-            timeStyle: 'short',
-          });
+        delete data['id'];
+        if (data.masked_number) {
+          data.masked_number = (
+            <span className='d-flex items-center gap-2'>
+              {isMasked ? data.masked_number : originalCCNumber}{' '}
+              {permissions.includes('credit-cards.show-number') && (
+                <BsEye
+                  className='text-danger cursor-pointer'
+                  style={{ fontSize: '1.2rem' }}
+                  onClick={() => setIsMasked((prev) => !prev)}
+                />
+              )}
+            </span>
+          );
         }
-        if (data.updated_at) {
-          data.updated_at = new Date(data.updated_at).toLocaleString('en-IN', {
+        if (data.created_by) {
+          data.created_by = (
+            <a
+              className='text-15 cursor-pointer'
+              href={'/dashboard/users/view/' + data.created_by}
+            >
+              <strong>User #{data.created_by} </strong>[
+              {new Date(data.created_at).toLocaleString('en-IN', {
+                dateStyle: 'medium',
+                timeStyle: 'short',
+              })}
+              ]
+            </a>
+          );
+        }
+        if (data.updated_by) {
+          data.updated_by = (
+            <a
+              className='text-15 cursor-pointer'
+              href={'/dashboard/users/view/' + data.updated_by}
+            >
+              <strong>User #{data.updated_by} </strong>[
+              {new Date(data.updated_at).toLocaleString('en-IN', {
+                dateStyle: 'medium',
+                timeStyle: 'short',
+              })}
+              ]
+            </a>
+          );
+        }
+        delete data['created_at'];
+        delete data['updated_at'];
+        if (data?.traveller_name && data?.traveller_id) {
+          data.traveller_name = (
+            <a href={'/dashboard/travellers/view/' + data.traveller_id}>
+              {data.traveller_name}
+            </a>
+          );
+        }
+        delete data['traveller_id'];
+        if (data.expiry_date) {
+          data.expiry_date = new Date(data.expiry_date).toLocaleString('en-IN', {
             dateStyle: 'medium',
-            timeStyle: 'short',
           });
         }
         setCreditCard(data);

@@ -1,9 +1,14 @@
 import { useState, useEffect } from 'react';
 import { FileUploader } from 'react-drag-drop-files';
 import PreviousUploadPictures from '../previous-file-uploads';
-const NewFileUploads = ({ multiple = false, setUploads }) => {
-  const fileTypes = ['JPG', 'PNG', 'PDF', 'JPEG'];
+
+const NewFileUploads = ({
+  multiple = false,
+  setUploads,
+  fileTypes = ['JPG', 'PNG', 'PDF', 'JPEG'],
+}) => {
   const [newUrls, setNewUrls] = useState([]);
+
   const handleUpload = (file) => {
     const uploads = [];
     if (multiple) {
@@ -21,6 +26,8 @@ const NewFileUploads = ({ multiple = false, setUploads }) => {
       return multiple ? [...prev, ...uploads] : file;
     });
   };
+
+  useEffect(() => console.log(newUrls), [newUrls]);
 
   useEffect(() => {
     newUrls.forEach((url) => URL.revokeObjectURL(url));

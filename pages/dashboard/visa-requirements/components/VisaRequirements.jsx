@@ -42,7 +42,7 @@ const VisaRequirements = () => {
     {
       Header: 'Purpose',
       accessor: 'business_travel',
-      Cell: (data) => (data.row.original.business_travel ? 'Business' : Tourist)
+      Cell: (data) => (data.row.original.business_travel ? 'Business' : 'Tourist'),
     },
     {
       Header: 'Consulate City',

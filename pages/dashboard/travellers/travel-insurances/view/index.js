@@ -28,17 +28,59 @@ const ViewTravelInsurances = () => {
       if (response?.success) {
         let data = response.data;
         // Converting time columns
-        if (data.created_at) {
-          data.created_at = new Date(data.created_at).toLocaleString('en-IN', {
-            dateStyle: 'medium',
-            timeStyle: 'short',
-          });
+        delete data['id'];
+        if (data.created_by) {
+          data.created_by = (
+            <a
+              className='text-15 cursor-pointer'
+              href={'/dashboard/users/view/' + data.created_by}
+            >
+              <strong>User #{data.created_by} </strong>[
+              {new Date(data.created_at).toLocaleString('en-IN', {
+                dateStyle: 'medium',
+                timeStyle: 'short',
+              })}
+              ]
+            </a>
+          );
         }
-        if (data.updated_at) {
-          data.updated_at = new Date(data.updated_at).toLocaleString('en-IN', {
-            dateStyle: 'medium',
-            timeStyle: 'short',
-          });
+        if (data.updated_by) {
+          data.updated_by = (
+            <a
+              className='text-15 cursor-pointer'
+              href={'/dashboard/users/view/' + data.updated_by}
+            >
+              <strong>User #{data.updated_by} </strong>[
+              {new Date(data.updated_at).toLocaleString('en-IN', {
+                dateStyle: 'medium',
+                timeStyle: 'short',
+              })}
+              ]
+            </a>
+          );
+        }
+        delete data['created_at'];
+        delete data['updated_at'];
+        if (data?.traveller_name && data?.traveller_id) {
+          data.traveller_name = (
+            <a href={'/dashboard/travellers/view/' + data.traveller_id}>
+              {data.traveller_name}
+            </a>
+          );
+        }
+        delete data['traveller_id'];
+        if (data?.documents) {
+          data.documents = (
+            <ul className='list-disc'>
+              {Object.values(data?.documents).map((element, index) => (
+                <li key={index}>
+                  <a href={element} target='_blank'>
+                    {element.split('/').at(-1)}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          );
         }
         setTravelInsurance(data);
       } else {

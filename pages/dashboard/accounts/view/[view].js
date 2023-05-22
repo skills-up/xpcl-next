@@ -28,25 +28,55 @@ const ViewAccounts = () => {
     if (router.query.view) {
       const response = await getItem('accounts', router.query.view);
       if (response?.success) {
+        setAccountClosingBalances(response.data?.closing_balances);
         let data = response.data;
         // Converting time columns
-        if (data.created_at) {
-          data.created_at = new Date(data.created_at).toLocaleString('en-IN', {
-            dateStyle: 'medium',
-            timeStyle: 'short',
-          });
+        delete data['id'];
+        if (data.created_by) {
+          data.created_by = (
+            <a
+              className='text-15 cursor-pointer'
+              href={'/dashboard/users/view/' + data.created_by}
+            >
+              <strong>User #{data.created_by} </strong>[
+              {new Date(data.created_at).toLocaleString('en-IN', {
+                dateStyle: 'medium',
+                timeStyle: 'short',
+              })}
+              ]
+            </a>
+          );
         }
-        if (data.updated_at) {
-          data.updated_at = new Date(data.updated_at).toLocaleString('en-IN', {
-            dateStyle: 'medium',
-            timeStyle: 'short',
-          });
+        if (data.updated_by) {
+          data.updated_by = (
+            <a
+              className='text-15 cursor-pointer'
+              href={'/dashboard/users/view/' + data.updated_by}
+            >
+              <strong>User #{data.updated_by} </strong>[
+              {new Date(data.updated_at).toLocaleString('en-IN', {
+                dateStyle: 'medium',
+                timeStyle: 'short',
+              })}
+              ]
+            </a>
+          );
         }
+        delete data['created_at'];
+        delete data['updated_at'];
+        if (data?.account_category_name && data?.account_category_id) {
+          data.account_category_name = (
+            <a href={'/dashboard/account-categories/view/' + data.account_category_id}>
+              {data.account_category_name}
+            </a>
+          );
+        }
+        delete data['account_category_id'];
         if (data.account_category) {
           delete data['account_category'];
         }
+        if (data.closing_balances) delete data['closing_balances'];
         setAccount(data);
-        setAccountClosingBalances(data.closing_balances)
       } else {
         sendToast(
           'error',
@@ -133,7 +163,7 @@ const ViewAccounts = () => {
                 <hr className='my-4' />
                 <div>
                   <h2 className='mb-3'>Closing Balances</h2>
-                  <ClosingBalances accountClosingBalances={accountClosingBalances}/>
+                  <ClosingBalances accountClosingBalances={accountClosingBalances} />
                 </div>
               </div>
             </div>

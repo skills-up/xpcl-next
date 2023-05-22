@@ -28,18 +28,61 @@ const ViewUser = () => {
       if (response?.success) {
         let data = response.data;
         // Converting time columns
-        if (data.created_at) {
-          data.created_at = new Date(data.created_at).toLocaleString('en-IN', {
-            dateStyle: 'medium',
-            timeStyle: 'short',
-          });
+        delete data['id'];
+        if (data.created_by) {
+          data.created_by = (
+            <a
+              className='text-15 cursor-pointer'
+              href={'/dashboard/users/view/' + data.created_by}
+            >
+              <strong>User #{data.created_by} </strong>[
+              {new Date(data.created_at).toLocaleString('en-IN', {
+                dateStyle: 'medium',
+                timeStyle: 'short',
+              })}
+              ]
+            </a>
+          );
         }
-        if (data.updated_at) {
-          data.updated_at = new Date(data.updated_at).toLocaleString('en-IN', {
-            dateStyle: 'medium',
-            timeStyle: 'short',
-          });
+        if (data.updated_by) {
+          data.updated_by = (
+            <a
+              className='text-15 cursor-pointer'
+              href={'/dashboard/users/view/' + data.updated_by}
+            >
+              <strong>User #{data.updated_by} </strong>[
+              {new Date(data.updated_at).toLocaleString('en-IN', {
+                dateStyle: 'medium',
+                timeStyle: 'short',
+              })}
+              ]
+            </a>
+          );
         }
+        delete data['created_at'];
+        delete data['updated_at'];
+        if (data?.organization_name && data?.organization_id) {
+          data.organization_name = (
+            <a href={'/dashboard/organizations/view/' + data.organization_id}>
+              {data.organization_name}
+            </a>
+          );
+        }
+        delete data['organization_id'];
+        if (data?.current_organization_name && data?.current_organization_id) {
+          data.current_organization_name = (
+            <a href={'/dashboard/organizations/view/' + data.current_organization_id}>
+              {data.current_organization_name}
+            </a>
+          );
+        }
+        delete data['current_organization_id'];
+        if (data?.role_name && data?.role_id) {
+          data.role_name = (
+            <a href={'/dashboard/roles/view/' + data.role_id}>{data.role_name}</a>
+          );
+        }
+        delete data['role_id'];
         setUser(data);
       } else {
         sendToast(

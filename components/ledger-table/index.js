@@ -54,7 +54,6 @@ function LedgerTable({ data, accountID }) {
             {data?.entries
               ?.filter((element) => +element?.amount !== 0)
               .map((element, index) => {
-                console.log(element);
                 return (
                   <tr>
                     <td>

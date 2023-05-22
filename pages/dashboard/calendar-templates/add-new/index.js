@@ -24,7 +24,9 @@ const AddCalenderTemplate = () => {
     // Checking if account id is not null
     const response = await createItem('calendar-templates', {
       name,
-      content,
+      location,
+      description,
+      summary,
     });
     if (response?.success) {
       sendToast('success', 'Created Calendar Template Successfully.', 4000);
@@ -63,7 +65,9 @@ const AddCalenderTemplate = () => {
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
                   <h1 className='text-30 lh-14 fw-600'>Add New Calendar Template</h1>
-                  <div className='text-15 text-light-1'>Create a new calendar template.</div>
+                  <div className='text-15 text-light-1'>
+                    Create a new calendar template.
+                  </div>
                 </div>
                 {/* End .col-12 */}
               </div>
@@ -88,41 +92,38 @@ const AddCalenderTemplate = () => {
                     </div>
                     <div className='col-12'>
                       <div className='form-input'>
-                        <input
+                        <textarea
+                          rows={2}
                           onChange={(e) => setLocation(e.target.value)}
                           value={location}
                           placeholder=' '
                           type='text'
                         />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Location
-                        </label>
+                        <label className='lh-1 text-16 text-light-1'>Location</label>
                       </div>
                     </div>
                     <div className='col-12'>
                       <div className='form-input'>
-                        <input
+                        <textarea
+                          rows={3}
                           onChange={(e) => setDescription(e.target.value)}
                           value={description}
                           placeholder=' '
                           type='text'
                         />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Description
-                        </label>
+                        <label className='lh-1 text-16 text-light-1'>Description</label>
                       </div>
                     </div>
                     <div className='col-12'>
                       <div className='form-input'>
-                        <input
+                        <textarea
+                          rows={3}
                           onChange={(e) => setSummary(e.target.value)}
                           value={summary}
                           placeholder=' '
                           type='text'
                         />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Summary
-                        </label>
+                        <label className='lh-1 text-16 text-light-1'>Summary</label>
                       </div>
                     </div>
                     <div className='d-inline-block'>

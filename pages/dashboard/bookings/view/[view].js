@@ -14,11 +14,13 @@ import { RiRefund2Fill } from 'react-icons/ri';
 import { ImPagebreak } from 'react-icons/im';
 import Audit from '../../../../components/audits';
 import { AiOutlinePrinter } from 'react-icons/ai';
+import Datatable from '../../../../components/datatable/Datatable';
 
 const ViewBooking = () => {
   const [booking, setBooking] = useState([]);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
+  const [bookingSectors, setBookingSectors] = useState(null);
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -33,24 +35,141 @@ const ViewBooking = () => {
       if (response?.success) {
         let data = response.data;
         // Converting time columns
-        if (data.created_at) {
-          data.created_at = new Date(data.created_at).toLocaleString('en-IN', {
-            dateStyle: 'medium',
-            timeStyle: 'short',
-          });
+        delete data['id'];
+        if (data.created_by) {
+          data.created_by = (
+            <a
+              className='text-15 cursor-pointer'
+              href={'/dashboard/users/view/' + data.created_by}
+            >
+              <strong>User #{data.created_by} </strong>[
+              {new Date(data.created_at).toLocaleString('en-IN', {
+                dateStyle: 'medium',
+                timeStyle: 'short',
+              })}
+              ]
+            </a>
+          );
         }
-        if (data.updated_at) {
-          data.updated_at = new Date(data.updated_at).toLocaleString('en-IN', {
-            dateStyle: 'medium',
-            timeStyle: 'short',
-          });
+        if (data.updated_by) {
+          data.updated_by = (
+            <a
+              className='text-15 cursor-pointer'
+              href={'/dashboard/users/view/' + data.updated_by}
+            >
+              <strong>User #{data.updated_by} </strong>[
+              {new Date(data.updated_at).toLocaleString('en-IN', {
+                dateStyle: 'medium',
+                timeStyle: 'short',
+              })}
+              ]
+            </a>
+          );
         }
+        delete data['created_at'];
+        delete data['updated_at'];
+        if (data?.client_name && data?.client_id) {
+          data.client_name = (
+            <a href={'/dashboard/organizations/view/' + data.client_id}>
+              {data.client_name}
+            </a>
+          );
+        }
+        delete data['client_id'];
+        if (
+          data?.client_traveller_name &&
+          data?.client_traveller_id &&
+          data?.client_traveller
+        ) {
+          data.client_traveller_name = (
+            <a
+              href={
+                '/dashboard/travellers/client-travellers/view?traveller_id=' +
+                data.client_traveller.traveller_id +
+                '&view=' +
+                data.client_traveller_id
+              }
+            >
+              {data.client_traveller_name}
+            </a>
+          );
+        }
+        delete data['client_traveller'];
+        delete data['client_traveller_id'];
+        if (data?.vendor_name && data?.vendor_id) {
+          data.vendor_name = (
+            <a href={'/dashboard/organizations/view/' + data.vendor_id}>
+              {data.vendor_name}
+            </a>
+          );
+        }
+        delete data['vendor_id'];
+        if (data?.airline_name && data?.airline_id) {
+          data.airline_name = (
+            <a href={'/dashboard/organizations/view/' + data.airline_id}>
+              {data.airline_name}
+            </a>
+          );
+        }
+        delete data['airline_id'];
+        if (data?.payment_account_name && data?.payment_account_id) {
+          data.payment_account_name = (
+            <a href={'/dashboard/accounts/view/' + data.payment_account_id}>
+              {data.payment_account_name}
+            </a>
+          );
+        }
+        delete data['payment_account_id'];
+        if (data?.client_referrer_name && data?.client_referrer_id) {
+          data.client_referrer_name = (
+            <a href={'/dashboard/accounts/view/' + data.client_referrer_id}>
+              {data.client_referrer_name}
+            </a>
+          );
+        }
+        delete data['client_referrer_id'];
         if (data?.reissued_booking) {
-          delete data['reissued_booking'];
+          const id = data.reissued_booking.id;
+          data.status = (
+            <span
+              className='rounded-100 cursor-pointer d-inline-block mt-1 py-4 px-10 text-center text-14 fw-500 bg-blue-1-05 text-blue-1'
+              onClick={() => window.location.assign('/dashboard/bookings/view/' + id)}
+            >
+              Reissued Booking
+            </span>
+          );
         }
         if (data?.partial_refund) {
-          delete data['partial_refund'];
+          const id = data.partial_refund.id;
+          data.status = (
+            <span
+              className='rounded-100 cursor-pointer d-inline-block mt-1 py-4 px-10 text-center text-14 fw-500'
+              style={{ backgroundColor: 'orange', color: 'white' }}
+              onClick={() =>
+                window.location.assign('/dashboard/partial-refunds/view/' + id)
+              }
+            >
+              Partially Refunded
+            </span>
+          );
         }
+        if (data?.refund) {
+          const id = data.refund.id;
+          data.status = (
+            <span
+              className='rounded-100 cursor-pointer d-inline-block mt-1 py-4 px-10 text-center text-14 fw-500 bg-red-3 text-red-2'
+              onClick={() => window.location.assign('/dashboard/refunds/view/' + id)}
+            >
+              Refunded
+            </span>
+          );
+        }
+        if (data?.sectors)
+          if (data?.sectors.length > 0) setBookingSectors(data.sectors.slice(0));
+        delete data['sectors'];
+        delete data['reissued_booking'];
+        delete data['partial_refund'];
+        delete data['refund'];
         setBooking(data);
       } else {
         sendToast(
@@ -63,6 +182,40 @@ const ViewBooking = () => {
       }
     }
   };
+
+  const columns = [
+    {
+      Header: 'From',
+      accessor: 'from_airport.name',
+    },
+    {
+      Header: 'To',
+      accessor: 'to_airport.name',
+    },
+    {
+      Header: 'Travel Date',
+      accessor: 'travel_date',
+      Cell: (data) => {
+        return (
+          <div>
+            {data.row.original.travel_date
+              ? new Date(data.row.original.travel_date).toLocaleString('en-IN', {
+                  dateStyle: 'medium',
+                })
+              : ''}
+          </div>
+        );
+      },
+    },
+    {
+      Header: 'Travel Time',
+      accessor: 'travel_time',
+    },
+    {
+      Header: 'Booking Class',
+      accessor: 'booking_class',
+    },
+  ];
 
   const onCancel = async () => {
     setConfirmDelete(false);
@@ -172,12 +325,20 @@ const ViewBooking = () => {
                           'bookings',
                           router.query.view + '/pdf'
                         );
-                        console.log(response);
                       },
                       classNames: 'btn-info text-white',
                     },
                   ]}
                 />
+                {bookingSectors && (
+                  <>
+                    <hr className='my-4' />
+                    <div>
+                      <h2 className='mb-3'>Booking Sectors</h2>
+                      <Datatable columns={columns} data={bookingSectors} />
+                    </div>
+                  </>
+                )}
                 <hr className='my-4' />
                 <div>
                   <h2 className='mb-3'>Audit Log</h2>

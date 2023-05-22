@@ -498,6 +498,7 @@ const AddNewTravellers = () => {
                     <div className='col-lg-12'>
                       <label>Vaccination Certificate File</label>
                       <NewFileUploads
+                        fileTypes={['PDF']}
                         multiple={false}
                         setUploads={setVaccinationCertificateFile}
                       />

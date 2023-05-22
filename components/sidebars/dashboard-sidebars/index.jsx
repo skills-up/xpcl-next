@@ -1,120 +1,132 @@
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { customAPICall, getList } from '../../../api/xplorzApi';
 import { store } from '../../../app/store';
+import Select from 'react-select';
+import { setCurrentOrganization } from '../../../features/auth/authSlice';
+import { sendToast } from '../../../utils/toastify';
+import { useRouter } from 'next/router';
 
 const Sidebar = () => {
+  const [organizations, setOrganizations] = useState([]);
+  const [organizationID, setOrganizationsID] = useState(null);
+
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const permissions = useSelector((state) => state.auth.value.permissions);
+  const userOrganization = useSelector((state) => state.auth.value.organization);
+  const currentOrganization = useSelector(
+    (state) => state.auth.value.currentOrganization
+  );
+
+  useEffect(() => {
+    getOrganizations();
+  }, []);
+
+  const getOrganizations = async () => {
+    const response = await getList('organizations', { is_client: 1 });
+    if (response?.success) {
+      setOrganizations(
+        response.data.map((element) => ({ value: element.id, label: element.name }))
+      );
+      // Setting organization ID
+      for (let org of response.data) {
+        if (org.id === currentOrganization) {
+          setOrganizationsID({ value: org.id, label: org.name });
+        }
+      }
+    } else {
+      sendToast(
+        'error',
+        response.data?.message || response.data?.error || 'Unable to fetch organizations',
+        4000
+      );
+    }
+  };
+
   const sidebarData = [
     {
       icon: '/img/dashboard/sidebar/booking.svg',
-      title: 'Manage Hotel',
+      title: 'Travel',
       permissions: [],
       links: [
-        { title: 'All Hotel', href: '#' },
-        { title: 'Add Hotel', href: '#' },
-        { title: 'Recovery', href: '#' },
+        { title: 'Bookings', href: '/dashboard/bookings' },
+        { title: 'Refunds', href: '/dashboard/refunds' },
+        { title: 'Partial Refunds', href: '/dashboard/partial-refunds' },
+        { title: 'Traveller Profiles', href: '/dashboard/travellers' },
+        {
+          title: 'Visa Requirements',
+          href: '/dashboard/visa-requirements',
+        },
       ],
     },
     {
       icon: '/img/dashboard/sidebar/booking.svg',
-      title: 'Journal',
-      permissions: [],
-      links: [
-        { title: 'Journals', href: '/dashboard/journals' },
-        { title: 'Ledger', href: '/dashboard/journals/ledger' },
-      ],
-    },
-    {
-      icon: '/img/dashboard/sidebar/map.svg',
-      title: 'Manage Tour',
-      permissions: [],
-      links: [
-        { title: 'All Tour', href: '#' },
-        { title: 'Add Tour', href: '#' },
-        { title: 'Recovery', href: '#' },
-      ],
-    },
-    {
-      icon: '/img/dashboard/sidebar/sneakers.svg',
-      title: 'Manage Activity',
-      permissions: [],
-      links: [
-        { title: 'All Activity', href: '#' },
-        { title: 'Add Activity', href: '#' },
-        { title: 'Recovery', href: '#' },
-      ],
-    },
-    {
-      icon: '/img/dashboard/sidebar/house.svg',
-      title: 'Manage Holiday Rental',
+      title: 'Accounting',
       permissions: [],
       links: [
         {
-          title: 'All Holiday Rental',
-          href: '#',
+          title: 'Transactions (Payments / Receipts / Vouchers)',
+          href: '/dashboard/payment-receipts',
         },
         {
-          title: 'Add Holiday Rental',
-          href: '#',
+          title: 'Vendor Commission Invoices',
+          href: '/dashboard/vendor-commission-invoices',
         },
         {
-          title: 'Recovery',
-          href: '#',
+          title: 'Account Categories',
+          href: '/dashboard/account-categories',
+        },
+        {
+          title: 'Accounts',
+          href: '/dashboard/accounts',
         },
       ],
     },
     {
-      icon: '/img/dashboard/sidebar/taxi.svg',
-      title: 'Manage Car',
+      icon: '/img/dashboard/sidebar/booking.svg',
+      title: 'MIS/Reports',
       permissions: [],
       links: [
         {
-          title: 'All Car',
-          href: '#',
+          title: 'Journals',
+          href: '/dashboard/journals',
         },
         {
-          title: 'Add Car',
-          href: '#',
+          title: 'Ledgers',
+          href: '/dashboard/journals/ledger',
         },
         {
-          title: 'Recovery',
-          href: '#',
+          title: 'Balance Sheet',
+          href: '/dashboard/reports/balance-sheet',
+        },
+        {
+          title: 'Income Statement',
+          href: '/dashboard/reports/income-statement',
+        },
+        {
+          title: 'Working Capital Statement',
+          href: '/dashboard/reports/working-capital-statement',
+        },
+        {
+          title: 'GST MIS',
+          href: '/dashboard/reports/gst-mis',
         },
       ],
     },
     {
-      icon: '/img/dashboard/sidebar/canoe.svg',
-      title: 'Manage Cruise',
+      icon: '/img/dashboard/sidebar/booking.svg',
+      title: 'Organizations',
       permissions: [],
       links: [
         {
-          title: 'All Cruise',
-          href: '#',
+          title: 'Organizations',
+          href: '/dashboard/organizations',
         },
         {
-          title: 'Add Cruise',
-          href: '#',
-        },
-        {
-          title: 'Recovery',
-          href: '#',
-        },
-      ],
-    },
-    {
-      icon: '/img/dashboard/sidebar/airplane.svg',
-      title: 'Manage Flights',
-      permissions: [],
-      links: [
-        {
-          title: 'All Flights',
-          href: '#',
-        },
-        {
-          title: 'Add Flights',
-          href: '#',
-        },
-        {
-          title: 'Recovery',
-          href: '#',
+          title: 'Airline Organization Markup',
+          href: '/dashboard/airline-organization-markup',
         },
       ],
     },
@@ -137,11 +149,156 @@ const Sidebar = () => {
         },
       ],
     },
+    {
+      icon: '/img/dashboard/sidebar/booking.svg',
+      title: 'Miscellaneous',
+      permissions: [],
+      links: [
+        {
+          title: 'Countries',
+          href: '/dashboard/countries',
+        },
+        {
+          title: 'Airports',
+          href: '/dashboard/airports',
+        },
+        {
+          title: 'Commission Rules',
+          href: '/dashboard/commission-rules',
+        },
+        {
+          title: 'Calendar Templates',
+          href: '/dashboard/calendar-templates',
+        },
+        {
+          title: 'Frequent Flier Programs',
+          href: '/dashboard/frequent-flier-programs',
+        },
+        {
+          title: 'Visa Requirement Docs',
+          href: '/dashboard/visa-requirement-documents',
+        },
+      ],
+    },
+    // {
+    //   icon: '/img/dashboard/sidebar/sneakers.svg',
+    //   title: 'Manage Activity',
+    //   permissions: [],
+    //   links: [
+    //     { title: 'All Activity', href: '#' },
+    //     { title: 'Add Activity', href: '#' },
+    //     { title: 'Recovery', href: '#' },
+    //   ],
+    // },
+    // {
+    //   icon: '/img/dashboard/sidebar/house.svg',
+    //   title: 'Manage Holiday Rental',
+    //   permissions: [],
+    //   links: [
+    //     {
+    //       title: 'All Holiday Rental',
+    //       href: '#',
+    //     },
+    //     {
+    //       title: 'Add Holiday Rental',
+    //       href: '#',
+    //     },
+    //     {
+    //       title: 'Recovery',
+    //       href: '#',
+    //     },
+    //   ],
+    // },
+    // {
+    //   icon: '/img/dashboard/sidebar/taxi.svg',
+    //   title: 'Manage Car',
+    //   permissions: [],
+    //   links: [
+    //     {
+    //       title: 'All Car',
+    //       href: '#',
+    //     },
+    //     {
+    //       title: 'Add Car',
+    //       href: '#',
+    //     },
+    //     {
+    //       title: 'Recovery',
+    //       href: '#',
+    //     },
+    //   ],
+    // },
+    // {
+    //   icon: '/img/dashboard/sidebar/canoe.svg',
+    //   title: 'Manage Cruise',
+    //   permissions: [],
+    //   links: [
+    //     {
+    //       title: 'All Cruise',
+    //       href: '#',
+    //     },
+    //     {
+    //       title: 'Add Cruise',
+    //       href: '#',
+    //     },
+    //     {
+    //       title: 'Recovery',
+    //       href: '#',
+    //     },
+    //   ],
+    // },
+    // {
+    //   icon: '/img/dashboard/sidebar/airplane.svg',
+    //   title: 'Manage Flights',
+    //   permissions: [],
+    //   links: [
+    //     {
+    //       title: 'All Flights',
+    //       href: '#',
+    //     },
+    //     {
+    //       title: 'Add Flights',
+    //       href: '#',
+    //     },
+    //     {
+    //       title: 'Recovery',
+    //       href: '#',
+    //     },
+    //   ],
+    // },
   ];
 
   return (
     <>
       <div className='sidebar -dashboard' id='vendorSidebarMenu'>
+        {userOrganization === 1 && (
+          <div className='row items-center mb-20'>
+            <Select
+              options={organizations}
+              defaultValue={organizationID}
+              value={organizationID}
+              placeholder='Select Organization'
+              onChange={async (id) => {
+                const response = await customAPICall('auth/switch', 'post', {
+                  organization_id: id.value,
+                });
+                if (response?.success) {
+                  setOrganizationsID(id);
+                  dispatch(setCurrentOrganization({ currentOrganization: id.value }));
+                  window.location.reload();
+                } else {
+                  sendToast(
+                    'error',
+                    response.data?.message ||
+                      response.data?.error ||
+                      'Error occured while changing organization',
+                    4000
+                  );
+                }
+              }}
+            />
+          </div>
+        )}
         <div className='sidebar__item '>
           <a
             href='/dashboard'
@@ -159,25 +316,7 @@ const Sidebar = () => {
         </div>
         {/* End accordion__item */}
 
-        <div className='sidebar__item '>
-          <a
-            href='/dashboard/organizations'
-            className='sidebar__button d-flex items-center text-15 lh-1 fw-500'
-          >
-            <Image
-              width={20}
-              height={20}
-              src='/img/dashboard/sidebar/booking.svg'
-              alt='image'
-              className='mr-15'
-            />
-            Organizations
-          </a>
-        </div>
-        {/* End accordion__item */}
-
         {sidebarData.map((item, index) => {
-          const permissions = store.getState().auth.value.permissions;
           const render = (
             <div className='sidebar__item' key={index}>
               <div className='accordion -db-sidebar js-accordion'>

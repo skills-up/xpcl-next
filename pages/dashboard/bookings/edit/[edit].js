@@ -275,7 +275,7 @@ const UpdateBooking = () => {
           }
           // Client Booking Sectors
           const tempBookingSectors = [];
-          for (let bookSec of response.data.booking_sectors) {
+          for (let bookSec of response.data.sectors) {
             let tempFromAirportID, tempToAirportID, tempBookingClass;
             for (let airport of airports.data) {
               if (airport.id === bookSec.from_airport_id) {
@@ -1247,10 +1247,7 @@ const UpdateBooking = () => {
                                       </div>
                                     </div>
                                     <div className='col-lg-4 pb-3 form-input-select'>
-                                      <label>
-                                        Booking Class
-                                        <span className='text-danger'>*</span>
-                                      </label>
+                                      <label>Booking Class</label>
                                       <Select
                                         options={bookingClassOptions}
                                         value={element['booking_class']}
