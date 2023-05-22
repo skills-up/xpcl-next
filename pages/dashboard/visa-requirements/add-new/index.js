@@ -75,7 +75,7 @@ const AddNewVisaRequirements = () => {
           return;
         }
         let visaFormData = new FormData();
-        visaFormData.append('country_id', countryID.value);
+        visaFormData.append('country_name', countryID.label);
         visaFormData.append('business_travel', businessTravel ? 1 : 0);
         visaFormData.append('consulate_city', consulateCity ?? '');
         visaFormData.append('photo_count', photoCount ?? '');

@@ -7,6 +7,9 @@ const nextConfig = {
   sassOptions: {
     fiber: false,
   },
+  images: {
+    unoptimized: true,
+  },
 };
 
 module.exports = nextConfig;

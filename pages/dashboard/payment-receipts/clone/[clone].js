@@ -228,17 +228,6 @@ const AddNewPaymentReceipt = () => {
                     )}
                     <div className='form-input-select'>
                       <label>
-                        Credit Account<span className='text-danger'>*</span>
-                      </label>
-                      <Select
-                        options={accounts}
-                        value={crAccountID}
-                        placeholder='Search & Select Credit Account (required)'
-                        onChange={(id) => setCrAccountID(id)}
-                      />
-                    </div>
-                    <div className='form-input-select'>
-                      <label>
                         Debit Account<span className='text-danger'>*</span>
                       </label>
                       <Select
@@ -246,6 +235,17 @@ const AddNewPaymentReceipt = () => {
                         value={drAccountID}
                         placeholder='Search & Select Debit Account (required)'
                         onChange={(id) => setDrAccountID(id)}
+                      />
+                    </div>
+                    <div className='form-input-select'>
+                      <label>
+                        Credit Account<span className='text-danger'>*</span>
+                      </label>
+                      <Select
+                        options={accounts}
+                        value={crAccountID}
+                        placeholder='Search & Select Credit Account (required)'
+                        onChange={(id) => setCrAccountID(id)}
                       />
                     </div>
                     <div className='d-block ml-3 form-datepicker'>
