@@ -555,10 +555,15 @@ const AddNewBooking = () => {
       if (clientGSTPercent.label === 'None') setClientGSTAmount(0);
       else if (clientGSTPercent.label === 'Vendor GST')
         setClientGSTAmount(+vendorGSTAmount);
-      else if (clientGSTPercent.label === '5% of Base')
-        setClientGSTAmount(Number((+clientBaseAmount * (5 / 100)).toFixed(4)));
-      else if (clientGSTPercent.label === '12% of Base')
-        setClientGSTAmount(Number((+clientBaseAmount * (12 / 100)).toFixed(4)));
+      else if (clientGSTPercent.label === '5% of Base') {
+        setClientGSTAmount(
+          Number(((+clientQuotedAmount - +clientTaxAmount) * (5 / 100)).toFixed(4))
+        );
+      } else if (clientGSTPercent.label === '12% of Base') {
+        setClientGSTAmount(
+          Number(((+clientQuotedAmount - +clientTaxAmount) * (12 / 100)).toFixed(4))
+        );
+      }
     }
   }, [clientGSTPercent]);
 
