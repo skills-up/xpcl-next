@@ -13,6 +13,7 @@ import DatePicker, { DateObject } from 'react-multi-date-picker';
 import { BiPlusMedical } from 'react-icons/bi';
 import { store } from '../../../../app/store';
 import { BsTrash3 } from 'react-icons/bs';
+import WindowedSelect from 'react-windowed-select';
 
 const AddNewBooking = () => {
   const [ticketNumber, setTicketNumber] = useState('');
@@ -235,13 +236,13 @@ const AddNewBooking = () => {
         bookingType.value === 'Miscellaneous'
           ? null
           : bookingSectors.map((element) => ({
-              from_airport_id: element['from_airport_id']?.value,
-              to_airport_id: element['to_airport_id']?.value,
-              travel_date: element['travel_date']?.format('YYYY-MM-DD'),
-              travel_time: element['travel_time'],
-              details: element['details'],
-              booking_class: element['booking_class']?.value,
-            })),
+            from_airport_id: element['from_airport_id']?.value,
+            to_airport_id: element['to_airport_id']?.value,
+            travel_date: element['travel_date']?.format('YYYY-MM-DD'),
+            travel_time: element['travel_time'],
+            details: element['details'],
+            booking_class: element['booking_class']?.value,
+          })),
       is_offshore: isOffshore,
       sector,
     });
@@ -295,10 +296,10 @@ const AddNewBooking = () => {
     setVendorTotal(
       Number(
         +vendorBaseAmount +
-          +vendorYQAmount +
-          +vendorTaxAmount +
-          +vendorGSTAmount +
-          +vendorMiscCharges
+        +vendorYQAmount +
+        +vendorTaxAmount +
+        +vendorGSTAmount +
+        +vendorMiscCharges
       )
     );
   };
@@ -369,14 +370,14 @@ const AddNewBooking = () => {
         (+IATACommissionPercent *
           (+commissionRuleID.iata_basic * +vendorBaseAmount +
             +commissionRuleID.iata_yq * +vendorYQAmount)) /
-          100
+        100
       ).toFixed(4);
       const plb_comm = Number(
         (+plbCommissionPercent *
           (+commissionRuleID.plb_basic * +vendorBaseAmount +
             +commissionRuleID.plb_yq * +vendorYQAmount -
             iata_comm)) /
-          100
+        100
       ).toFixed(4);
       setGrossCommission(Number(+plb_comm + +iata_comm));
     }
@@ -449,10 +450,10 @@ const AddNewBooking = () => {
     setClientTotal(
       Number(
         +clientBaseAmount +
-          +clientGSTAmount +
-          +clientTaxAmount +
-          +clientServiceCharges +
-          +clientReferralFee
+        +clientGSTAmount +
+        +clientTaxAmount +
+        +clientServiceCharges +
+        +clientReferralFee
       )
     );
   };
@@ -979,7 +980,7 @@ const AddNewBooking = () => {
                         <div>
                           {bookingSectors.map((element, index) => {
                             return (
-                              <div className='d-flex flex-column mx-1 bg-light my-4 py-20 pb-40 px-30'>
+                              <div className='d-flex flex-column mx-1 bg-light my-4 py-20 pb-40 px-30' key={index}>
                                 <div className='d-flex justify-end mr-10'>
                                   <span
                                     className='pb-10'
@@ -996,41 +997,39 @@ const AddNewBooking = () => {
                                     />
                                   </span>
                                 </div>
-                                <div className='d-flex items-center justify-between gap-5'>
+                                <div className='d-flex items-center justify-between gap-3'>
                                   <div>{index + 1}.</div>
-                                  <div className='row col-11 y-gap-20 items-center'>
+                                  <div className='row y-gap-20 items-center'>
                                     <div className='form-input-select col-lg-4'>
                                       <label>
                                         From<span className='text-danger'>*</span>
                                       </label>
-                                      <Select
+                                      <WindowedSelect
                                         options={airports.map((airport) => ({
                                           value: airport.id,
-                                          label: (
-                                            <div>
-                                              <div
-                                                className='d-flex justify-between'
-                                                style={{ fontSize: '1rem' }}
-                                              >
-                                                <span>
-                                                  {airport.city} (
-                                                  <strong>{airport.iata_code}</strong>)
-                                                </span>
-                                                <span>
-                                                  <em>
-                                                    <strong>
-                                                      {airport.country_name}
-                                                    </strong>
-                                                  </em>
-                                                </span>
-                                              </div>
-                                              <div style={{ fontSize: '0.9rem' }}>
-                                                {airport.name}
+                                          label: `${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`
+                                        }))}
+                                        formatOptionLabel={(opt) => {
+                                          const [iata_code, city, name, country_name] = opt.label.split('|');
+                                          return <div key={iata_code}>
+                                            <div
+                                              className='d-flex justify-between align-items-center'
+                                              style={{ fontSize: '1rem' }}
+                                            >
+                                              <span>
+                                                {city} (
+                                                <strong>{iata_code}</strong>)
+                                              </span>
+                                              <div style={{fontSize: 'small', fontStyle: 'italic'}}>
+                                                {country_name}
                                               </div>
                                             </div>
-                                          ),
-                                        }))}
-                                        value={element['from_airport_id']}
+                                            <small>
+                                              {name}
+                                            </small>
+                                          </div>;
+                                        }}
+                                        value={element['from_airport_id'] || (index ? bookingSectors[index-1]['to_airport_id'] : null)}
                                         onChange={(id) =>
                                           setBookingSectors((prev) => {
                                             prev[index]['from_airport_id'] = id;
@@ -1043,33 +1042,31 @@ const AddNewBooking = () => {
                                       <label>
                                         To<span className='text-danger'>*</span>
                                       </label>
-                                      <Select
+                                      <WindowedSelect
                                         options={airports.map((airport) => ({
                                           value: airport.id,
-                                          label: (
-                                            <div>
-                                              <div
-                                                className='d-flex justify-between'
-                                                style={{ fontSize: '1rem' }}
-                                              >
-                                                <span>
-                                                  {airport.city} (
-                                                  <strong>{airport.iata_code}</strong>)
-                                                </span>
-                                                <span>
-                                                  <em>
-                                                    <strong>
-                                                      {airport.country_name}
-                                                    </strong>
-                                                  </em>
-                                                </span>
-                                              </div>
-                                              <div style={{ fontSize: '0.9rem' }}>
-                                                {airport.name}
+                                          label: `${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`
+                                        }))}
+                                        formatOptionLabel={(opt) => {
+                                          const [iata_code, city, name, country_name] = opt.label.split('|');
+                                          return <div key={iata_code}>
+                                            <div
+                                              className='d-flex justify-between align-items-center'
+                                              style={{ fontSize: '1rem' }}
+                                            >
+                                              <span>
+                                                {city} (
+                                                <strong>{iata_code}</strong>)
+                                              </span>
+                                              <div style={{fontSize: 'small', fontStyle: 'italic'}}>
+                                                {country_name}
                                               </div>
                                             </div>
-                                          ),
-                                        }))}
+                                            <small>
+                                              {name}
+                                            </small>
+                                          </div>;
+                                        }}
                                         value={element['to_airport_id']}
                                         onChange={(id) =>
                                           setBookingSectors((prev) => {
