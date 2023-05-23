@@ -3,18 +3,19 @@ import Footer from '../../../../components/footer/dashboard-footer';
 import Header from '../../../../components/header/dashboard-header';
 import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
 import ConfirmationModal from '../../../../components/confirm-modal';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { sendToast } from '../../../../utils/toastify';
 import { useEffect, useState } from 'react';
 import { deleteItem, getItem } from '../../../../api/xplorzApi';
 import ViewTable from '../../../../components/view-table';
+import { setInitialApisState } from '../../../../features/apis/apisSlice';
 
 const ViewAirports = () => {
   const [airport, setAirport] = useState([]);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
-
+  const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
   useEffect(() => {
@@ -90,6 +91,8 @@ const ViewAirports = () => {
     const response = await deleteItem('airports', idToDelete);
     if (response?.success) {
       sendToast('success', 'Deleted successfully', 4000);
+      sessionStorage.removeItem('airports-checked');
+      dispatch(setInitialApisState());
       router.push('/dashboard/airports');
     } else {
       sendToast(

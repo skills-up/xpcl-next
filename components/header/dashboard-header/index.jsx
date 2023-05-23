@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { getItem, getList } from '../../../api/xplorzApi';
+import { setAirports, setLastAirportCache } from '../../../features/apis/apisSlice';
 import { checkUser } from '../../../utils/checkTokenValidity';
 import { sendToast } from '../../../utils/toastify';
 import MainMenu from '../MainMenu';
@@ -14,6 +16,9 @@ const HeaderDashBoard = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const token = useSelector((state) => state.auth.value.token);
+  const airports = useSelector((state) => state.apis.value.airports);
+  const lastAirportCache = useSelector((state) => state.apis.value.lastAirportCache);
+  console.log('airports', lastAirportCache);
 
   useEffect(() => {
     window.addEventListener('scroll', changeBackground);
@@ -26,6 +31,60 @@ const HeaderDashBoard = () => {
       router.push('/login');
     }
   }, []);
+
+  useEffect(() => {
+    if (router.isReady) {
+      if (!sessionStorage.getItem('airports-checked')) checkAirportCache();
+    }
+  }, [router.isReady]);
+
+  const checkAirportCache = async () => {
+    console.log('checking');
+    // Checking if the route is a booking or airport route, to add airport
+    const route = router.pathname.split('/').at(2);
+    if (route === 'bookings' || route === 'airports') {
+      const lastCache = await getItem('cache', 'airports/last-modfied');
+      if (lastCache?.success) {
+        // Checking if there is an airport already in redux that exists
+        if (airports.length > 0 && lastAirportCache !== '') {
+          // Checking for last cache
+          if (lastAirportCache !== lastCache.data) {
+            await updateAirportCache(lastCache);
+          }
+        } else {
+          // Setting Airport Cache + Getting Airport List
+          await updateAirportCache(lastCache);
+        }
+        // Adding Session Storage
+        sessionStorage.setItem('airports-checked', Date.now());
+      } else {
+        sendToast(
+          'error',
+          lastCache.data?.message ||
+            lastCache.data?.error ||
+            'Error with fetching cache for airports',
+          4000
+        );
+        return;
+      }
+    }
+  };
+
+  const updateAirportCache = async (lastCache) => {
+    const airportsResponse = await getList('airports');
+    if (airportsResponse?.success) {
+      dispatch(setAirports({ airports: airportsResponse.data }));
+      dispatch(setLastAirportCache({ lastAirportCache: lastCache.data.datetime }));
+    } else {
+      sendToast(
+        'error',
+        airportsResponse.data?.message ||
+          airportsResponse.data?.error ||
+          'Error while fetching airports',
+        4000
+      );
+    }
+  };
 
   const handleToggle = () => {
     setIsOpen(!isOpen);

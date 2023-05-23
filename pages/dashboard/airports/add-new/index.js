@@ -2,13 +2,14 @@ import Seo from '../../../../components/common/Seo';
 import Footer from '../../../../components/footer/dashboard-footer';
 import Header from '../../../../components/header/dashboard-header';
 import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { sendToast } from '../../../../utils/toastify';
 import { useEffect, useState } from 'react';
 import { createItem, getList } from '../../../../api/xplorzApi';
 import Select from 'react-select';
 import TimezoneSelect from 'react-timezone-select';
+import { setInitialApisState } from '../../../../features/apis/apisSlice';
 
 const AddNewAirports = () => {
   const [countries, setCountries] = useState([]);
@@ -19,7 +20,7 @@ const AddNewAirports = () => {
   const [timezone, setTimeZone] = useState(
     Intl.DateTimeFormat().resolvedOptions().timeZone
   );
-
+  const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
 
@@ -55,6 +56,8 @@ const AddNewAirports = () => {
       });
       if (response?.success) {
         sendToast('success', 'Created Airport Successfully.', 4000);
+        sessionStorage.removeItem('airports-checked');
+        dispatch(setInitialApisState());
         router.push('/dashboard/airports');
       } else {
         sendToast(

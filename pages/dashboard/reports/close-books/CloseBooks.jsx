@@ -11,6 +11,7 @@ const Journals = () => {
   const [dates, setDates] = useState(new DateObject());
   const [state, setState] = useState(true);
   const [closingDate, setClosingDate] = useState(new DateObject());
+  const [totalTaxExpenses, setTotalTaxExpenses] = useState('');
 
   const router = useRouter();
 
@@ -24,11 +25,62 @@ const Journals = () => {
         setClosingDate(
           new DateObject({ date: response.data.closing_date, format: 'YYYY-MM-DD' })
         );
+        let tempDepr = [];
+        for (let obj of Object.values(response.data.balances)) {
+          if (typeof obj === 'object' && !Array.isArray(obj)) {
+            for (let key of Object.keys(obj)) {
+              tempDepr.push({
+                id: key.split('|')[0],
+                name: key.split('|')[1],
+                amount: '',
+                value: obj[key],
+              });
+            }
+          }
+        }
+        console.log(tempDepr);
+        setDepreciations(tempDepr);
         setState(false);
       } else {
         sendToast(
           'error',
           response.data?.message || response.data?.error || 'Error getting depreciations',
+          4000
+        );
+      }
+    }
+  };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    let tempDepr = depreciations.slice(0);
+    if (tempDepr) {
+      for (let i = tempDepr.length - 1; i >= 0; i--) {
+        if (tempDepr[i].amount.trim().length === 0) {
+          tempDepr.splice(i, 1);
+        }
+      }
+      console.log(tempDepr, +totalTaxExpenses);
+      // Sending Close Accounts API Call
+      let data = {
+        year: +dates.format('YYYY'),
+        depreciation: tempDepr.map((el) => ({
+          account_id: +el.id,
+          amount: +el.amount,
+        })),
+      };
+      if (totalTaxExpenses.trim().length !== 0) {
+        data['tax_expenses'] = +totalTaxExpenses;
+      }
+      console.log('data', data);
+      const response = await createItem('reports/close-books', data);
+      if (response?.success) {
+        router.push('/dashboard');
+        sendToast('success', 'Accounts Closed Successfully!', 4000);
+      } else {
+        sendToast(
+          'error',
+          response.data?.message || response.data?.error || 'Error Closing Accounts',
           4000
         );
       }
@@ -61,9 +113,53 @@ const Journals = () => {
       )}
       {/* Generated Closing Account */}
       {!state && (
-        <div className='close-books'>
+        <form className='close-books' onSubmit={onSubmit}>
           <h1> Closing Accounts on {closingDate.format('DD-MMMM-YYYY')}</h1>
-        </div>
+          <div className='col-7 my-4'>
+            <div className='form-input'>
+              <input
+                onChange={(e) => setTotalTaxExpenses(e.target.value)}
+                value={totalTaxExpenses}
+                placeholder=' '
+                type='number'
+              />
+              <label className='lh-1 text-16 text-light-1'>Tax Expenses</label>
+            </div>
+          </div>
+          <h2>Depreciation</h2>
+          <div className='row mt-20'>
+            {depreciations &&
+              depreciations.map((element, index) => (
+                <div className='col-lg-6 col-12 my-2' key={index}>
+                  <div className='form-input'>
+                    <input
+                      onChange={(e) =>
+                        setDepreciations((prev) => {
+                          prev[index].amount = e.target.value;
+                          return [...prev];
+                        })
+                      }
+                      value={element.amount}
+                      placeholder=' '
+                      type='number'
+                    />
+                    <label className='lh-1 text-16 text-light-1'>
+                      {element.name} (Value:{' '}
+                      {(+element.value).toLocaleString('en-IN', {
+                        maximumFractionDigits: 2,
+                        style: 'currency',
+                        currency: 'INR',
+                      })}
+                      )
+                    </label>
+                  </div>
+                </div>
+              ))}
+          </div>
+          <button className='btn btn-success mt-20' type='submit'>
+            Close Accounts
+          </button>
+        </form>
       )}
     </div>
   );
