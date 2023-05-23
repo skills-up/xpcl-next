@@ -1006,7 +1006,29 @@ const AddNewBooking = () => {
                                       <Select
                                         options={airports.map((airport) => ({
                                           value: airport.id,
-                                          label: `${airport.name} - ${airport.iata_code}`,
+                                          label: (
+                                            <div>
+                                              <div
+                                                className='d-flex justify-between'
+                                                style={{ fontSize: '1rem' }}
+                                              >
+                                                <span>
+                                                  {airport.city} (
+                                                  <strong>{airport.iata_code}</strong>)
+                                                </span>
+                                                <span>
+                                                  <em>
+                                                    <strong>
+                                                      {airport.country_name}
+                                                    </strong>
+                                                  </em>
+                                                </span>
+                                              </div>
+                                              <div style={{ fontSize: '0.9rem' }}>
+                                                {airport.name}
+                                              </div>
+                                            </div>
+                                          ),
                                         }))}
                                         value={element['from_airport_id']}
                                         onChange={(id) =>
@@ -1024,7 +1046,29 @@ const AddNewBooking = () => {
                                       <Select
                                         options={airports.map((airport) => ({
                                           value: airport.id,
-                                          label: `${airport.name} - ${airport.iata_code}`,
+                                          label: (
+                                            <div>
+                                              <div
+                                                className='d-flex justify-between'
+                                                style={{ fontSize: '1rem' }}
+                                              >
+                                                <span>
+                                                  {airport.city} (
+                                                  <strong>{airport.iata_code}</strong>)
+                                                </span>
+                                                <span>
+                                                  <em>
+                                                    <strong>
+                                                      {airport.country_name}
+                                                    </strong>
+                                                  </em>
+                                                </span>
+                                              </div>
+                                              <div style={{ fontSize: '0.9rem' }}>
+                                                {airport.name}
+                                              </div>
+                                            </div>
+                                          ),
                                         }))}
                                         value={element['to_airport_id']}
                                         onChange={(id) =>

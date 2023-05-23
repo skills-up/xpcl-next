@@ -72,7 +72,7 @@ const AddNewVisaRequirements = () => {
           );
           // Setting Selected Country
           for (let country of countries.data) {
-            if (country.id === response.data?.country_id)
+            if (country.name === response.data?.country_name)
               setCountryID({ value: country.id, label: country.name });
           }
           // Setting Selected Required Docs
@@ -147,7 +147,7 @@ const AddNewVisaRequirements = () => {
           return;
         }
         let visaFormData = new FormData();
-        visaFormData.append('country_id', countryID.value);
+        visaFormData.append('country_name', countryID.value);
         visaFormData.append('business_travel', businessTravel ? 1 : 0);
         visaFormData.append('consulate_city', consulateCity ?? '');
         visaFormData.append('photo_count', photoCount ?? '');

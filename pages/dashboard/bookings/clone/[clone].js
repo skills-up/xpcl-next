@@ -276,10 +276,50 @@ const AddNewBooking = () => {
             let tempFromAirportID, tempToAirportID, tempBookingClass;
             for (let airport of airports.data) {
               if (airport.id === bookSec.from_airport_id) {
-                tempFromAirportID = { value: airport.id, label: airport.name };
+                tempFromAirportID = {
+                  value: airport.id,
+                  label: (
+                    <div>
+                      <div
+                        className='d-flex justify-between'
+                        style={{ fontSize: '1rem' }}
+                      >
+                        <span>
+                          {airport.city} (<strong>{airport.iata_code}</strong>)
+                        </span>
+                        <span>
+                          <em>
+                            <strong>{airport.country_name}</strong>
+                          </em>
+                        </span>
+                      </div>
+                      <div style={{ fontSize: '0.9rem' }}>{airport.name}</div>
+                    </div>
+                  ),
+                };
               }
               if (airport.id === bookSec.to_airport_id) {
-                tempToAirportID = { value: airport.id, label: airport.name };
+                tempToAirportID = {
+                  value: airport.id,
+                  label: (
+                    <div>
+                      <div
+                        className='d-flex justify-between'
+                        style={{ fontSize: '1rem' }}
+                      >
+                        <span>
+                          {airport.city} (<strong>{airport.iata_code}</strong>)
+                        </span>
+                        <span>
+                          <em>
+                            <strong>{airport.country_name}</strong>
+                          </em>
+                        </span>
+                      </div>
+                      <div style={{ fontSize: '0.9rem' }}>{airport.name}</div>
+                    </div>
+                  ),
+                };
               }
             }
             for (let opt of bookingClassOptions)
@@ -1136,14 +1176,36 @@ const AddNewBooking = () => {
                                 <div className='d-flex items-center justify-between gap-5'>
                                   <div>{index + 1}.</div>
                                   <div className='row col-11 y-gap-20 items-center'>
-                                    <div className='col-lg-4 form-input-select'>
+                                    <div className='form-input-select col-lg-4'>
                                       <label>
                                         From<span className='text-danger'>*</span>
                                       </label>
                                       <Select
                                         options={airports.map((airport) => ({
                                           value: airport.id,
-                                          label: `${airport.name} - ${airport.iata_code}`,
+                                          label: (
+                                            <div>
+                                              <div
+                                                className='d-flex justify-between'
+                                                style={{ fontSize: '1rem' }}
+                                              >
+                                                <span>
+                                                  {airport.city} (
+                                                  <strong>{airport.iata_code}</strong>)
+                                                </span>
+                                                <span>
+                                                  <em>
+                                                    <strong>
+                                                      {airport.country_name}
+                                                    </strong>
+                                                  </em>
+                                                </span>
+                                              </div>
+                                              <div style={{ fontSize: '0.9rem' }}>
+                                                {airport.name}
+                                              </div>
+                                            </div>
+                                          ),
                                         }))}
                                         value={element['from_airport_id']}
                                         onChange={(id) =>
@@ -1154,14 +1216,36 @@ const AddNewBooking = () => {
                                         }
                                       />
                                     </div>
-                                    <div className='col-lg-4 form-input-select'>
+                                    <div className='form-input-select col-lg-4'>
                                       <label>
                                         To<span className='text-danger'>*</span>
                                       </label>
                                       <Select
                                         options={airports.map((airport) => ({
                                           value: airport.id,
-                                          label: `${airport.name} - ${airport.iata_code}`,
+                                          label: (
+                                            <div>
+                                              <div
+                                                className='d-flex justify-between'
+                                                style={{ fontSize: '1rem' }}
+                                              >
+                                                <span>
+                                                  {airport.city} (
+                                                  <strong>{airport.iata_code}</strong>)
+                                                </span>
+                                                <span>
+                                                  <em>
+                                                    <strong>
+                                                      {airport.country_name}
+                                                    </strong>
+                                                  </em>
+                                                </span>
+                                              </div>
+                                              <div style={{ fontSize: '0.9rem' }}>
+                                                {airport.name}
+                                              </div>
+                                            </div>
+                                          ),
                                         }))}
                                         value={element['to_airport_id']}
                                         onChange={(id) =>

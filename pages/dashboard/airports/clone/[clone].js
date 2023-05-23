@@ -45,7 +45,7 @@ const AddNewAirports = () => {
           );
           // Setting country
           for (let country of countries.data) {
-            if (country.id === response.data?.country_id) {
+            if (country.name === response.data?.country_name) {
               setCountryID({ value: country.id, label: country.name });
             }
           }
@@ -71,7 +71,7 @@ const AddNewAirports = () => {
     // Checking if airport id is not null
     if (countryID?.value) {
       const response = await createItem('airports', {
-        country_id: countryID.value,
+        country_name: countryID.label,
         name,
         iata_code: iataCode,
         city,

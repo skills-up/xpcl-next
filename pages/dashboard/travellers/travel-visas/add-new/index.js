@@ -57,7 +57,7 @@ const AddNewTravelVisa = () => {
     if (countryID?.value) {
       const formData = new FormData();
       formData.append('traveller_id', parseInt(router.query.traveller_id));
-      formData.append('country_id', countryID.value);
+      formData.append('country_name', countryID.label);
       formData.append('visa_number', visaNumber);
       formData.append('issue_place', issuePlace);
       formData.append('issue_date', issueDate.format('YYYY-MM-DD'));

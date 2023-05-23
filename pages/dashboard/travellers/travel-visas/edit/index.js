@@ -72,7 +72,7 @@ const UpdateTravelVisa = () => {
           );
           // Setting Country
           for (let country of countries.data)
-            if (country.id === response.data?.country_id)
+            if (country.name === response.data?.country_name)
               setCountryID({ value: country.id, label: country.name });
         } else {
           sendToast('error', 'Error fetching countries', 4000);
@@ -96,7 +96,7 @@ const UpdateTravelVisa = () => {
     if (countryID?.value) {
       const formData = new FormData();
       formData.append('traveller_id', parseInt(router.query.traveller_id));
-      formData.append('country_id', countryID.value);
+      formData.append('country_name', countryID.label);
       formData.append('visa_number', visaNumber);
       formData.append('issue_place', issuePlace);
       formData.append('issue_date', issueDate.format('YYYY-MM-DD'));

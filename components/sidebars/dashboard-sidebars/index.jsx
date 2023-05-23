@@ -4,7 +4,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { customAPICall, getList } from '../../../api/xplorzApi';
 import { store } from '../../../app/store';
 import Select from 'react-select';
-import { setCurrentOrganization } from '../../../features/auth/authSlice';
+import {
+  setCurrentOrganization,
+  setInitialUserState,
+} from '../../../features/auth/authSlice';
 import { sendToast } from '../../../utils/toastify';
 import { useRouter } from 'next/router';
 
@@ -12,6 +15,7 @@ const Sidebar = () => {
   const [organizations, setOrganizations] = useState([]);
   const [organizationID, setOrganizationsID] = useState(null);
 
+  const token = useSelector((state) => state.auth.value.token);
   const dispatch = useDispatch();
   const router = useRouter();
   const permissions = useSelector((state) => state.auth.value.permissions);
@@ -375,7 +379,23 @@ const Sidebar = () => {
         })}
 
         <div className='sidebar__item '>
-          <a href='#' className='sidebar__button d-flex items-center text-15 lh-1 fw-500'>
+          <a
+            onClick={async () => {
+              if (token === '') {
+                window.location = '/login';
+              } else {
+                const response = await customAPICall('auth/logout', 'post');
+                if (response?.success) {
+                  dispatch(setInitialUserState());
+                  sendToast('success', 'Logged Out Successfully', 4000);
+                  router.push('/login');
+                } else {
+                  sendToast('error', 'Error Logging Out', 4000);
+                }
+              }
+            }}
+            className='cursor-pointer sidebar__button d-flex items-center text-15 lh-1 fw-500'
+          >
             <Image
               width={20}
               height={20}
