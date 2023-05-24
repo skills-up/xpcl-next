@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 import { createItem, getItem, getList } from '../../../../api/xplorzApi';
 import Select from 'react-select';
 import TimezoneSelect from 'react-timezone-select';
-import { setInitialApisState } from '../../../../features/apis/apisSlice';
+import { setInitialAirportsState } from '../../../../features/apis/apisSlice';
 
 const AddNewAirports = () => {
   const [countries, setCountries] = useState([]);
@@ -81,7 +81,7 @@ const AddNewAirports = () => {
       if (response?.success) {
         sendToast('success', 'Created Airport Successfully.', 4000);
         sessionStorage.removeItem('airports-checked');
-        dispatch(setInitialApisState());
+        dispatch(setInitialAirportsState());
         router.push('/dashboard/airports');
       } else {
         sendToast(

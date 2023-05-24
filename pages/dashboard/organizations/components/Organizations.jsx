@@ -8,6 +8,7 @@ import { AiOutlineEye } from 'react-icons/ai';
 import { HiOutlinePencilAlt } from 'react-icons/hi';
 import { BsTrash3 } from 'react-icons/bs';
 import { IoCopyOutline } from 'react-icons/io5';
+import { Router, useRouter } from 'next/router';
 
 const Organizations = () => {
   const [organizations, setOrganizations] = useState([]);
@@ -18,6 +19,8 @@ const Organizations = () => {
   useEffect(() => {
     getOrganizations();
   }, []);
+
+  const router = useRouter();
 
   const getOrganizations = async () => {
     const response = await getList('organizations');
@@ -114,7 +117,8 @@ const Organizations = () => {
     const response = await deleteItem('organizations', idToDelete);
     if (response?.success) {
       sendToast('success', 'Deleted successfully', 4000);
-      getOrganizations();
+      sessionStorage.removeItem('client-organizations-checked');
+      router.reload();
     } else {
       sendToast(
         'error',

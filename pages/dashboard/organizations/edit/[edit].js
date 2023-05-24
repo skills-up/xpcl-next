@@ -104,6 +104,7 @@ const UpdateOrganization = () => {
     });
     if (response?.success) {
       sendToast('success', 'Created Organization Successfully.', 4000);
+      sessionStorage.removeItem('client-organizations-checked');
       router.push('/dashboard/organizations');
     } else {
       sendToast(

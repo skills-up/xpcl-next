@@ -96,6 +96,7 @@ const ViewOrganization = () => {
     const response = await deleteItem('organizations', idToDelete);
     if (response?.success) {
       sendToast('success', 'Deleted successfully', 4000);
+      sessionStorage.removeItem('client-organizations-checked');
       router.push('/dashboard/organizations');
     } else {
       sendToast(

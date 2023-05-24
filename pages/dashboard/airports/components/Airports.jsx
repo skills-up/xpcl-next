@@ -10,7 +10,7 @@ import { BsTrash3 } from 'react-icons/bs';
 import { IoCopyOutline } from 'react-icons/io5';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { setInitialApisState } from '../../../../features/apis/apisSlice';
+import { setInitialAirportsState } from '../../../../features/apis/apisSlice';
 
 const Airports = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -116,7 +116,7 @@ const Airports = () => {
     if (response?.success) {
       sendToast('success', 'Deleted successfully', 4000);
       sessionStorage.removeItem('airports-checked');
-      dispatch(setInitialApisState());
+      dispatch(setInitialAirportsState());
       router.reload();
     } else {
       sendToast(
