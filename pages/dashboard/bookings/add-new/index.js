@@ -485,9 +485,9 @@ const AddNewBooking = () => {
               </div>
               {/* End .row */}
 
-              <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
+              <div className='py-30 px-30 lg:px-10 rounded-4 bg-white shadow-3'>
                 <div>
-                  <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
+                  <form onSubmit={onSubmit} className='col-12 y-gap-20'>
                     <div className='form-input-select'>
                       <label>
                         Booking Type<span className='text-danger'>*</span>
@@ -710,8 +710,8 @@ const AddNewBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12 row pr-0'>
-                      <div className='form-input col-4'>
+                    <div className='col-12 row y-gap-20 pr-0'>
+                      <div className='form-input col-lg-4'>
                         <input
                           onChange={(e) => setVendorServiceChargePercent(e.target.value)}
                           value={vendorServiceChargePercent}
@@ -724,7 +724,7 @@ const AddNewBooking = () => {
                         </label>
                         <div className='d-flex items-center ml-30'>%</div>
                       </div>
-                      <div className='form-input col-8 pr-0'>
+                      <div className='form-input col-lg-8 pr-0'>
                         <input
                           onChange={(e) => setVendorServiceCharges(e.target.value)}
                           value={vendorServiceCharges}
@@ -737,8 +737,8 @@ const AddNewBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12 row pr-0'>
-                      <div className='form-input col-4'>
+                    <div className='col-12 row y-gap-20 pr-0'>
+                      <div className='form-input col-lg-4'>
                         <input
                           onChange={(e) => setVendorTDSPercent(e.target.value)}
                           value={vendorTDSPercent}
@@ -751,7 +751,7 @@ const AddNewBooking = () => {
                         </label>
                         <div className='d-flex items-center ml-30'>%</div>
                       </div>
-                      <div className='form-input col-8 pr-0'>
+                      <div className='form-input col-lg-8 pr-0'>
                         <input
                           onChange={(e) => setVendorTDS(e.target.value)}
                           value={vendorTDS}
@@ -861,8 +861,8 @@ const AddNewBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12 row pr-0 items-center'>
-                      <div className='form-input-select col-4'>
+                    <div className='col-12 row pr-0 y-gap-20 items-center'>
+                      <div className='form-input-select col-lg-4 lg:pr-0'>
                         <label>Client GST Percent</label>
                         <Select
                           defaultValue={{ value: 0, label: 'None' }}
@@ -872,7 +872,7 @@ const AddNewBooking = () => {
                           onChange={(id) => setClientGSTPercent(id)}
                         />
                       </div>
-                      <div className='form-input col-8 pr-0'>
+                      <div className='form-input col-lg-8 pr-0'>
                         <input
                           onChange={(e) => setClientGSTAmount(e.target.value)}
                           value={clientGSTAmount}
@@ -894,8 +894,8 @@ const AddNewBooking = () => {
                       <label>Is Offshore</label>
                     </div>
                     {!isOffshore && (
-                      <div className='col-12 row pr-0 items-center'>
-                        <div className='form-input col-4'>
+                      <div className='col-12 row pr-0 y-gap-20 items-center'>
+                        <div className='form-input col-lg-4'>
                           <input
                             onChange={(e) =>
                               setClientServiceChargePercent(e.target.value)
@@ -911,7 +911,7 @@ const AddNewBooking = () => {
                           </label>
                           <span className='d-flex items-center ml-30'>%</span>
                         </div>
-                        <div className='form-input col-8 pr-0'>
+                        <div className='form-input col-lg-8 pr-0'>
                           <input
                             onChange={(e) => setClientServicesCharges(e.target.value)}
                             value={clientServiceCharges}
@@ -956,32 +956,6 @@ const AddNewBooking = () => {
                     {bookingType?.value !== 'Miscellaneous' && (
                       <div>
                         <label className='d-block'>Add Booking Sectors</label>
-                        <button
-                          className='btn btn-success my-2 d-flex items-center gap-2'
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setBookingSectors((prev) => {
-                              let fromAirportID = null;
-                              if (prev.length > 0) {
-                                if (prev.at(-1)?.to_airport_id)
-                                  fromAirportID = prev.at(-1)?.to_airport_id;
-                              }
-                              return [
-                                ...prev,
-                                {
-                                  from_airport_id: fromAirportID,
-                                  to_airport_id: null,
-                                  travel_date: new DateObject(),
-                                  travel_time: '',
-                                  details: '',
-                                  booking_class: null,
-                                },
-                              ];
-                            });
-                          }}
-                        >
-                          <BiPlusMedical /> Add Booking Sector
-                        </button>
                         <div>
                           {bookingSectors.map((element, index) => {
                             return (
@@ -1005,10 +979,10 @@ const AddNewBooking = () => {
                                     />
                                   </span>
                                 </div>
-                                <div className='d-flex items-center justify-between gap-3'>
+                                <div className='d-flex md:flex-column items-center justify-between gap-3'>
                                   <div>{index + 1}.</div>
                                   <div className='row y-gap-20 items-center'>
-                                    <div className='form-input-select col-lg-4'>
+                                    <div className='form-input-select col-md-6'>
                                       <label>
                                         From<span className='text-danger'>*</span>
                                       </label>
@@ -1051,7 +1025,7 @@ const AddNewBooking = () => {
                                         }
                                       />
                                     </div>
-                                    <div className='form-input-select col-lg-4'>
+                                    <div className='form-input-select col-md-6'>
                                       <label>
                                         To<span className='text-danger'>*</span>
                                       </label>
@@ -1094,7 +1068,7 @@ const AddNewBooking = () => {
                                         }
                                       />
                                     </div>
-                                    <div className='col-lg-4 form-datepicker'>
+                                    <div className='col-md-6 col-lg-3 form-datepicker'>
                                       <label>
                                         Date<span className='text-danger'>*</span>
                                       </label>
@@ -1114,7 +1088,7 @@ const AddNewBooking = () => {
                                         format='DD MMMM YYYY'
                                       />
                                     </div>
-                                    <div className='col-lg-4'>
+                                    <div className='col-md-6 col-lg-3'>
                                       <div className='form-input bg-white'>
                                         <input
                                           onChange={(e) =>
@@ -1132,7 +1106,7 @@ const AddNewBooking = () => {
                                         </label>
                                       </div>
                                     </div>
-                                    <div className='col-lg-4'>
+                                    <div className='col-md-6 col-lg-3'>
                                       <div className='form-input bg-white'>
                                         <input
                                           onChange={(e) =>
@@ -1150,7 +1124,7 @@ const AddNewBooking = () => {
                                         </label>
                                       </div>
                                     </div>
-                                    <div className='col-lg-4 pb-3 from-input-select'>
+                                    <div className='col-md-6 col-lg-3 pb-3 from-input-select'>
                                       <label>Booking Class</label>
                                       <Select
                                         options={bookingClassOptions}
@@ -1169,6 +1143,32 @@ const AddNewBooking = () => {
                             );
                           })}
                         </div>
+                        <button
+                          className='btn btn-success my-2 d-flex items-center gap-2'
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setBookingSectors((prev) => {
+                              let fromAirportID = null;
+                              if (prev.length > 0) {
+                                if (prev.at(-1)?.to_airport_id)
+                                  fromAirportID = prev.at(-1)?.to_airport_id;
+                              }
+                              return [
+                                ...prev,
+                                {
+                                  from_airport_id: fromAirportID,
+                                  to_airport_id: null,
+                                  travel_date: new DateObject(),
+                                  travel_time: '',
+                                  details: '',
+                                  booking_class: null,
+                                },
+                              ];
+                            });
+                          }}
+                        >
+                          <BiPlusMedical /> Add Booking Sector
+                        </button>
                       </div>
                     )}
                     <div className='d-inline-block'>

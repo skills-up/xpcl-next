@@ -117,6 +117,10 @@ const Sidebar = () => {
           title: 'GST MIS',
           href: '/dashboard/reports/gst-mis',
         },
+        {
+          title: 'Close Accounts',
+          href: '/dashboard/reports/close-books',
+        },
       ],
     },
     {

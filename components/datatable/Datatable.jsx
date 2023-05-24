@@ -44,6 +44,7 @@ const Datatable = ({
   _pageSize = 10,
   _pageIndex = 0,
   dataFiltering = false,
+  serverSide = false,
 }) => {
   const [totalItems, SetTotalItems] = useState(0);
   let {
