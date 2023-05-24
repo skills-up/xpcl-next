@@ -21,7 +21,6 @@ const Journals = () => {
         year: +dates.format('YYYY'),
       });
       if (response?.success) {
-        console.log(response.data);
         setClosingDate(
           new DateObject({ date: response.data.closing_date, format: 'YYYY-MM-DD' })
         );
@@ -38,7 +37,6 @@ const Journals = () => {
             }
           }
         }
-        console.log(tempDepr);
         setDepreciations(tempDepr);
         setState(false);
       } else {
@@ -60,7 +58,6 @@ const Journals = () => {
           tempDepr.splice(i, 1);
         }
       }
-      console.log(tempDepr, +totalTaxExpenses);
       // Sending Close Accounts API Call
       let data = {
         year: +dates.format('YYYY'),
@@ -72,7 +69,6 @@ const Journals = () => {
       if (totalTaxExpenses.trim().length !== 0) {
         data['tax_expenses'] = +totalTaxExpenses;
       }
-      console.log('data', data);
       const response = await createItem('reports/close-books', data);
       if (response?.success) {
         router.push('/dashboard');

@@ -44,6 +44,9 @@ const Datatable = ({
   _pageSize = 10,
   _pageIndex = 0,
   dataFiltering = false,
+  onPageSizeChange,
+  fullData,
+  onPaginate,
 }) => {
   const [totalItems, SetTotalItems] = useState(0);
   let {
@@ -137,6 +140,7 @@ const Datatable = ({
               value={pageSize}
               onChange={(e) => {
                 setPageSize(Number(e.target.value));
+                onPageSizeChange(Number(e.target.value));
                 if (getData) {
                   getData(pageIndex, pageIndex, Number(e.target.value), true);
                 }
@@ -219,13 +223,12 @@ const Datatable = ({
       {!dataFiltering && (
         <div className='row x-gap-10 y-gap-20 items-center justify-between md:justify-center mt-4 mb-2 mb-lg-3 m border-top-light mt-30 pt-30'>
           <div className='col-auto md:order-1 w-120'>
-            {pageIndex !== 0 && (
+            {fullData?.current_page !== 1 && (
               <PageWithText
-                onClick={() => {
-                  if (getData) {
-                    getData(0, 0, pageSize);
+                onClick={async () => {
+                  {
+                    await onPaginate(true, 1);
                   }
-                  gotoPage(0);
                 }}
                 color='text-default'
               >
@@ -236,16 +239,11 @@ const Datatable = ({
                 </div>
               </PageWithText>
             )}
-            {canPreviousPage && (
+            {fullData?.prev_page_url && (
               <PageWithText
-                onClick={() => {
+                onClick={async () => {
                   {
-                    if (getData) {
-                      getData(pageIndex - 1, pageIndex - 1, pageSize);
-                      gotoPage(pageIndex - 1);
-                    } else {
-                      previousPage();
-                    }
+                    await onPaginate(true, fullData?.current_page - 1);
                   }
                 }}
                 color='text-default'
@@ -264,9 +262,12 @@ const Datatable = ({
               <b>
                 <input
                   type='number'
-                  value={pageIndex + 1}
-                  onChange={(e) => {
-                    gotoPage(parseInt(e.target.value) - 1);
+                  value={fullData?.current_page}
+                  onChange={async (e) => {
+                    const value = +e.target.value;
+                    if (value >= 1 && value <= fullData?.last_page) {
+                      await onPaginate(true, value);
+                    }
                   }}
                   onFocus={(e) => {
                     e.target.select();
@@ -281,27 +282,21 @@ const Datatable = ({
                     outline: '1px solid black',
                   }}
                 />{' '}
-                of {pageOptions.length}
+                of {fullData?.last_page}
               </b>
               {' | '}
               Total Entries {' : '}
-              <b>{totalItems}</b>
+              <b>{fullData?.total}</b>
             </span>
           </div>
           <div className='col-auto md:order-2 w-120'>
-            {canNextPage && (
+            {fullData?.next_page_url && (
               <PageWithText
-                onClick={() => {
+                onClick={async () => {
                   {
-                    if (getData) {
-                      getData(pageIndex + 1, pageIndex + 1, pageSize);
-                      gotoPage(pageIndex + 1);
-                    } else {
-                      nextPage();
-                    }
+                    await onPaginate(true, fullData?.current_page + 1);
                   }
                 }}
-                disabled={!canNextPage}
                 color='text-default'
               >
                 <div className='col-auto md:order-1 mx-1'>
@@ -311,15 +306,13 @@ const Datatable = ({
                 </div>
               </PageWithText>
             )}
-            {pageIndex !== pageCount - 1 && (
+            {fullData?.current_page !== fullData?.last_page && (
               <PageWithText
-                onClick={() => {
-                  if (getData) {
-                    getData(pageCount - 1, pageCount - 1, pageSize);
+                onClick={async () => {
+                  {
+                    await onPaginate(true, fullData?.last_page);
                   }
-                  gotoPage(pageCount - 1);
                 }}
-                disabled={!canNextPage}
                 color='text-default'
               >
                 <div className='col-auto md:order-1 mx-1'>

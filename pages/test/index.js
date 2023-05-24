@@ -23,7 +23,7 @@ export default function Test() {
   const test = async () => {
     // Get List
     let response = await getList('roles', { paginate: 20, test: 1 });
-    console.log('getList', response);
+    // console.log('getList', response);
     // // Create List
     // response = await createItem('roles', { name: 'test1', description: 'test123' });
     // console.log('createList', response);

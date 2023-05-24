@@ -18,7 +18,6 @@ const HeaderDashBoard = () => {
   const token = useSelector((state) => state.auth.value.token);
   const airports = useSelector((state) => state.apis.value.airports);
   const lastAirportCache = useSelector((state) => state.apis.value.lastAirportCache);
-  console.log('airports', lastAirportCache);
 
   useEffect(() => {
     window.addEventListener('scroll', changeBackground);
@@ -39,7 +38,6 @@ const HeaderDashBoard = () => {
   }, [router.isReady]);
 
   const checkAirportCache = async () => {
-    console.log('checking');
     // Checking if the route is a booking or airport route, to add airport
     const route = router.pathname.split('/').at(2);
     if (route === 'bookings' || route === 'airports') {

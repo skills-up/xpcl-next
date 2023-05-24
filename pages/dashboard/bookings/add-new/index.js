@@ -194,7 +194,6 @@ const AddNewBooking = () => {
         !bookingSec?.to_airport_id?.value ||
         !bookingSec?.travel_date
       ) {
-        console.log(bookingSectors);
         sendToast('error', 'Please fill all required details in Booking Sectors', 4000);
         return;
       }
