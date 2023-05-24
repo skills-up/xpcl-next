@@ -20,16 +20,15 @@ const Journals = () => {
   const [journalView, setJournalView] = useState([]);
 
   const getJournals = async (paginate = false, pageNumber) => {
-    let response;
-    if (!paginate) {
-      response = await getList('journals', {
-        from_date: dates[0].format('YYYY-MM-DD'),
-        to_date: dates[1].format('YYYY-MM-DD'),
-        paginate: pageSize,
-      });
-    } else {
-      response = await getList('journals', { page: pageNumber });
+    let data = {
+      from_date: dates[0].format('YYYY-MM-DD'),
+      to_date: dates[1].format('YYYY-MM-DD'),
+      paginate: pageSize,
+    };
+    if (paginate) {
+      data['page'] = pageNumber;
     }
+    let response = await getList('journals', data);
     if (response?.success) {
       setJournals(response.data);
     } else {
