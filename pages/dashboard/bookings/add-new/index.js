@@ -1091,13 +1091,14 @@ const AddNewBooking = () => {
                                       <input
                                         onChange={(e) =>
                                           setBookingSectors((prev) => {
-                                            prev[index]['travel_time'] = e.target.value + ":00";
+                                            prev[index]['travel_time'] = e.target.value;
                                             return [...prev];
                                           })
                                         }
                                         value={element['travel_time']}
                                         placeholder=' '
                                         type='time'
+                                        step={30}
                                       />
                                       <label className='lh-1 text-16 text-light-1'>
                                         Travel Time
