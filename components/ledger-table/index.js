@@ -8,7 +8,7 @@ import ReactToPdf from 'react-to-pdf';
 import { createRef } from 'react';
 import { AiOutlinePrinter } from 'react-icons/ai';
 
-function LedgerTable({ data, accountID }) {
+function LedgerTable({ data, accountID, accountName, dates }) {
   const [newData, setNewData] = useState(null);
   const pdfRef = createRef();
 
@@ -38,97 +38,108 @@ function LedgerTable({ data, accountID }) {
   }, [data]);
 
   return (
-    <div className='overflow-scroll scroll-bar-1 ledger-table mt-50'>
-      {newData ? (
-        <table className='table-3' id='ledger-table' ref={pdfRef}>
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Narration</th>
-              <th className='number-col'>Dr</th>
-              <th className='number-col'>Cr</th>
-              <th className='number-col'>Balance</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className='balance-display-row'>
-              <th></th>
-              <th>Opening Balance</th>
-              <th className='number-col'></th>
-              <th className='number-col'></th>
-              <th className='number-col'>
-                {(+newData?.opening_balance).toLocaleString('en-IN', {
-                  maximumFractionDigits: 2,
-                  style: 'currency',
-                  currency: 'INR',
-                })}{' '}
-                {newData?.opening_balance >= 0 ? 'Dr' : 'Cr'}
-              </th>
-            </tr>
-            {data?.entries
-              ?.filter((element) => +element?.amount !== 0)
-              .map((element, index) => {
-                return (
-                  <tr key={index}>
-                    <td>
-                      {new Date(element?.date).toLocaleString('en-IN', {
-                        dateStyle: 'medium',
-                      })}
-                    </td>
-                    <td className='narration'>{element?.narration}</td>
-                    <td className='number-col'>
-                      {accountID === element.dr_account_id &&
-                        `${(+element.amount).toLocaleString('en-IN', {
-                          maximumFractionDigits: 2,
-                          style: 'currency',
-                          currency: 'INR',
-                        })}`}
-                    </td>
-                    <td className='number-col'>
-                      {accountID === element.cr_account_id &&
-                        `${(+element.amount).toLocaleString('en-IN', {
-                          maximumFractionDigits: 2,
-                          style: 'currency',
-                          currency: 'INR',
-                        })}`}
-                    </td>
-                    <td className='number-col'>
-                      {Math.abs(element?.total).toLocaleString('en-IN', {
-                        maximumFractionDigits: 2,
-                        style: 'currency',
-                        currency: 'INR',
-                      })}{' '}
-                      {element?.total >= 0 ? 'Dr' : 'Cr'}
-                    </td>
-                  </tr>
-                );
-              })}
-            <tr className='balance-display-row'>
-              <th></th>
-              <th>Closing Balance</th>
-              <th></th>
-              <th></th>
-              <th className='number-col'>
-                {Math.abs(newData?.total).toLocaleString('en-IN', {
-                  maximumFractionDigits: 2,
-                  style: 'currency',
-                  currency: 'INR',
-                })}{' '}
-                {newData?.total >= 0 ? 'Dr' : 'Cr'}
-              </th>
-            </tr>
-          </tbody>
-        </table>
-      ) : (
-        <span className='no-records'>No Records</span>
-      )}
+    <div className='ledger-table mt-50'>
+      <div ref={pdfRef}>
+        {accountName && <h1>{accountName}</h1>}
+        {dates && dates?.length === 2 ? (
+          <h2>
+            From {dates[0].format('DD-MMMM-YYYY')} To {dates[1].format('DD-MMMM-YYYY')}
+          </h2>
+        ) : (
+          <></>
+        )}
+        {newData ? (
+          <div className='overflow-scroll scroll-bar-1 '>
+            <table className='table-3'>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Narration</th>
+                  <th className='number-col'>Dr</th>
+                  <th className='number-col'>Cr</th>
+                  <th className='number-col'>Balance</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className='balance-display-row'>
+                  <th></th>
+                  <th>Opening Balance</th>
+                  <th className='number-col'></th>
+                  <th className='number-col'></th>
+                  <th className='number-col'>
+                    {(+newData?.opening_balance).toLocaleString('en-IN', {
+                      maximumFractionDigits: 2,
+                      style: 'currency',
+                      currency: 'INR',
+                    })}{' '}
+                    {newData?.opening_balance >= 0 ? 'Dr' : 'Cr'}
+                  </th>
+                </tr>
+                {data?.entries
+                  ?.filter((element) => +element?.amount !== 0)
+                  .map((element, index) => {
+                    return (
+                      <tr key={index}>
+                        <td>
+                          {new Date(element?.date).toLocaleString('en-IN', {
+                            dateStyle: 'medium',
+                          })}
+                        </td>
+                        <td className='narration'>{element?.narration}</td>
+                        <td className='number-col'>
+                          {accountID === element.dr_account_id &&
+                            `${(+element.amount).toLocaleString('en-IN', {
+                              maximumFractionDigits: 2,
+                              style: 'currency',
+                              currency: 'INR',
+                            })}`}
+                        </td>
+                        <td className='number-col'>
+                          {accountID === element.cr_account_id &&
+                            `${(+element.amount).toLocaleString('en-IN', {
+                              maximumFractionDigits: 2,
+                              style: 'currency',
+                              currency: 'INR',
+                            })}`}
+                        </td>
+                        <td className='number-col'>
+                          {Math.abs(element?.total).toLocaleString('en-IN', {
+                            maximumFractionDigits: 2,
+                            style: 'currency',
+                            currency: 'INR',
+                          })}{' '}
+                          {element?.total >= 0 ? 'Dr' : 'Cr'}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                <tr className='balance-display-row'>
+                  <th></th>
+                  <th>Closing Balance</th>
+                  <th></th>
+                  <th></th>
+                  <th className='number-col'>
+                    {Math.abs(newData?.total).toLocaleString('en-IN', {
+                      maximumFractionDigits: 2,
+                      style: 'currency',
+                      currency: 'INR',
+                    })}{' '}
+                    {newData?.total >= 0 ? 'Dr' : 'Cr'}
+                  </th>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <span className='no-records'>No Records</span>
+        )}
+      </div>
       {newData && (
         <div className='my-4 d-flex justify-center'>
           <button
             className='btn btn-primary d-flex items-center justify-between gap-1'
             onClick={() => {
               try {
-                console.log(newData);
                 let temp = [];
                 // Manipulating Array
                 // Adding Opening Balance
@@ -174,8 +185,6 @@ function LedgerTable({ data, accountID }) {
                   cr: '',
                   balance: newData?.total,
                 });
-
-                console.log(temp);
                 CSVDownloader(jsonToCSV(temp), 'Ledger.csv');
               } catch (err) {
                 sendToast(
