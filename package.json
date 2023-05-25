@@ -39,6 +39,7 @@
     "react-table": "^7.8.0",
     "react-tabs": "^6.0.0",
     "react-timezone-select": "^2.1.0",
+    "react-to-pdf": "^0.0.14",
     "react-toastify": "^9.1.2",
     "react-windowed-select": "^5.1.0",
     "redux-persist": "^6.0.0",

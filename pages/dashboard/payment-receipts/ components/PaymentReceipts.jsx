@@ -10,14 +10,23 @@ import { BsTrash3 } from 'react-icons/bs';
 import { IoCopyOutline } from 'react-icons/io5';
 import { useRouter } from 'next/router';
 import { DateObject } from 'react-multi-date-picker';
+import Select from 'react-select';
 
 const PaymentReceipts = () => {
   const [paymentReceipts, setPaymentReceipts] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
+  const [typeID, setTypeID] = useState({ label: 'All', value: 'all' });
 
   const router = useRouter();
+  const typeOptions = [
+    { label: 'All', value: 'All' },
+    { label: 'Voucher', value: 'Voucher' },
+    { label: 'Receipt', value: 'Receipt' },
+    { label: 'Payment', value: 'Payment' },
+  ];
+
   useEffect(() => {
     getPaymentReceipts();
   }, []);
@@ -197,16 +206,41 @@ const PaymentReceipts = () => {
           Add New Voucher
         </button>
       </div>
+      <div className='my-3 col-12 pr-0'>
+        <div className='form-input-select'>
+          <label>Filter Type</label>
+          <Select
+            options={typeOptions}
+            value={typeID}
+            placeholder='Search..'
+            onChange={(id) => setTypeID(id)}
+          />
+        </div>
+      </div>
       {/* Data Table */}
       <Datatable
         downloadCSV
         CSVName='PaymentReceipts.csv'
         columns={columns}
-        data={paymentReceipts.filter(
-          (perm) =>
-            perm?.type?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            perm?.number?.toLowerCase().includes(searchQuery.toLowerCase())
-        )}
+        data={paymentReceipts
+          .filter((perm) => {
+            if (typeID?.value) {
+              if (typeID.label !== 'All') {
+                if (perm.type === typeID.label) {
+                  return perm;
+                }
+              } else {
+                return perm;
+              }
+            } else {
+              return perm;
+            }
+          })
+          .filter(
+            (perm) =>
+              perm?.type?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              perm?.number?.toLowerCase().includes(searchQuery.toLowerCase())
+          )}
       />
     </div>
   );
