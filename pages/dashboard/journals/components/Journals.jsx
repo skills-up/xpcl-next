@@ -4,12 +4,13 @@ import DatePicker, { DateObject } from 'react-multi-date-picker';
 import { getItem, getList } from '../../../../api/xplorzApi';
 import ActionsButton from '../../../../components/actions-button/ActionsButton';
 import CustomDataModal from '../../../../components/customDataModal';
-import Datatable from '../../../../components/datatable/Datatable';
+import Datatable from '../../../../components/datatable/ServerDatatable';
 import { sendToast } from '../../../../utils/toastify';
 
 const Journals = () => {
   const [journals, setJournals] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [pageSize, setPageSize] = useState(10);
 
   const [dates, setDates] = useState([
     new DateObject().setMonth('4').setDay('1'),
@@ -18,15 +19,16 @@ const Journals = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [journalView, setJournalView] = useState([]);
 
-  useEffect(() => {
-    getJournals();
-  }, []);
-
-  const getJournals = async () => {
-    const response = await getList('journals', {
+  const getJournals = async (paginate = false, pageNumber) => {
+    let data = {
       from_date: dates[0].format('YYYY-MM-DD'),
       to_date: dates[1].format('YYYY-MM-DD'),
-    });
+      paginate: pageSize,
+    };
+    if (paginate) {
+      data['page'] = pageNumber;
+    }
+    let response = await getList('journals', data);
     if (response?.success) {
       setJournals(response.data);
     } else {
@@ -37,10 +39,9 @@ const Journals = () => {
       );
     }
   };
-
   useEffect(() => {
-    if (dates && dates?.length === 2) getJournals();
-  }, [dates]);
+    if (dates && dates?.length === 2 && pageSize) getJournals();
+  }, [dates, pageSize]);
 
   const columns = [
     {
@@ -179,7 +180,7 @@ const Journals = () => {
             value={searchQuery}
           />
         </div>
-        <div className='col-lg-4 col-12 d-block ml-3 form-datepicker'>
+        <div className='col-lg-4 col-12 d-block ml-3 form-datepicker pr-0'>
           <label>Select Start & End Dates</label>
           <DatePicker
             style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
@@ -197,14 +198,21 @@ const Journals = () => {
       </div>
       {/* Data Table */}
       <Datatable
+        onPageSizeChange={(size) => setPageSize(size)}
         downloadCSV
         CSVName='Journals.csv'
         columns={columns}
-        data={journals.filter(
-          (perm) =>
-            perm?.reference?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            perm?.narration?.toLowerCase().includes(searchQuery.toLowerCase())
-        )}
+        onPaginate={getJournals}
+        fullData={journals}
+        data={
+          journals.data
+            ? journals.data.filter(
+                (perm) =>
+                  perm?.reference?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                  perm?.narration?.toLowerCase().includes(searchQuery.toLowerCase())
+              )
+            : []
+        }
       />
     </div>
   );

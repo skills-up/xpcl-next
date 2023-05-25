@@ -13,6 +13,7 @@ import DatePicker, { DateObject } from 'react-multi-date-picker';
 import { BiPlusMedical } from 'react-icons/bi';
 import { store } from '../../../../app/store';
 import { BsTrash3 } from 'react-icons/bs';
+import WindowedSelect from 'react-windowed-select';
 
 const UpdateBooking = () => {
   const [ticketNumber, setTicketNumber] = useState('');
@@ -96,13 +97,13 @@ const UpdateBooking = () => {
   const [paymentAccounts, setPaymentAccounts] = useState([]);
   const [clients, setClients] = useState([]);
   const [clientTravellers, setClientTravellers] = useState([]);
-  const [airports, setAirports] = useState([]);
 
   const [xplorzGSTFocused, setXplorzGSTFocused] = useState(false);
   const [vendorGSTFocused, setVendorGSTFocused] = useState(false);
   const [vendorTDSPercentFocused, setVendorTDSPercentFocused] = useState(false);
   const [clientBaseAmountFocused, setClientBaseAmountFocused] = useState(false);
 
+  const airports = useSelector((state) => state.apis.value.airports);
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
 
@@ -172,7 +173,6 @@ const UpdateBooking = () => {
         else if (response.data.client_gst_amount === response.data.vendor_gst_amount)
           setClientGSTAmount({ value: 'Vendor GST', label: 'Vendor GST' });
 
-        const airports = await getList('airports');
         const vendors = await getList('organizations', { is_vendor: 1 });
         const commissionRules = await getList('commission-rules');
         const airlines = await getList('organizations', { is_airline: 1 });
@@ -187,10 +187,8 @@ const UpdateBooking = () => {
           airlines?.success &&
           paymentAccounts?.success &&
           clients?.success &&
-          clientTravellers?.success &&
-          airports?.success
+          clientTravellers?.success
         ) {
-          setAirports(airports.data);
           setVendors(
             vendors.data.map((element) => ({
               value: element.id,
@@ -277,51 +275,17 @@ const UpdateBooking = () => {
           const tempBookingSectors = [];
           for (let bookSec of response.data.sectors) {
             let tempFromAirportID, tempToAirportID, tempBookingClass;
-            for (let airport of airports.data) {
+            for (let airport of airports) {
               if (airport.id === bookSec.from_airport_id) {
                 tempFromAirportID = {
                   value: airport.id,
-                  label: (
-                    <div>
-                      <div
-                        className='d-flex justify-between'
-                        style={{ fontSize: '1rem' }}
-                      >
-                        <span>
-                          {airport.city} (<strong>{airport.iata_code}</strong>)
-                        </span>
-                        <span>
-                          <em>
-                            <strong>{airport.country_name}</strong>
-                          </em>
-                        </span>
-                      </div>
-                      <div style={{ fontSize: '0.9rem' }}>{airport.name}</div>
-                    </div>
-                  ),
+                  label: `${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
                 };
               }
               if (airport.id === bookSec.to_airport_id) {
                 tempToAirportID = {
                   value: airport.id,
-                  label: (
-                    <div>
-                      <div
-                        className='d-flex justify-between'
-                        style={{ fontSize: '1rem' }}
-                      >
-                        <span>
-                          {airport.city} (<strong>{airport.iata_code}</strong>)
-                        </span>
-                        <span>
-                          <em>
-                            <strong>{airport.country_name}</strong>
-                          </em>
-                        </span>
-                      </div>
-                      <div style={{ fontSize: '0.9rem' }}>{airport.name}</div>
-                    </div>
-                  ),
+                  label: `${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
                 };
               }
             }
@@ -671,9 +635,9 @@ const UpdateBooking = () => {
               </div>
               {/* End .row */}
 
-              <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
+              <div className='py-30 px-30 lg:px-10 rounded-4 bg-white shadow-3'>
                 <div>
-                  <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
+                  <form onSubmit={onSubmit} className='col-12 y-gap-20'>
                     <div className='form-input-select'>
                       <label>
                         Booking Type<span className='text-danger'>*</span>
@@ -911,8 +875,8 @@ const UpdateBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12 row pr-0'>
-                      <div className='form-input col-4'>
+                    <div className='col-12 row y-gap-20 pr-0'>
+                      <div className='form-input col-lg-4'>
                         <input
                           onChange={(e) => setVendorServiceChargePercent(e.target.value)}
                           value={vendorServiceChargePercent}
@@ -925,7 +889,7 @@ const UpdateBooking = () => {
                         </label>
                         <div className='d-flex items-center ml-30'>%</div>
                       </div>
-                      <div className='form-input col-8 pr-0'>
+                      <div className='form-input col-lg-8 pr-0'>
                         <input
                           onChange={(e) => setVendorServiceCharges(e.target.value)}
                           value={vendorServiceCharges}
@@ -938,8 +902,8 @@ const UpdateBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12 row pr-0'>
-                      <div className='form-input col-4'>
+                    <div className='col-12 row y-gap-20 pr-0'>
+                      <div className='form-input col-lg-4'>
                         <input
                           onChange={(e) => setVendorTDSPercent(e.target.value)}
                           value={vendorTDSPercent}
@@ -952,7 +916,7 @@ const UpdateBooking = () => {
                         </label>
                         <div className='d-flex items-center ml-30'>%</div>
                       </div>
-                      <div className='form-input col-8 pr-0'>
+                      <div className='form-input col-lg-8 pr-0'>
                         <input
                           onChange={(e) => setVendorTDS(e.target.value)}
                           value={vendorTDS}
@@ -1062,8 +1026,8 @@ const UpdateBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12 row pr-0 items-center'>
-                      <div className='col-4 form-input-select'>
+                    <div className='col-12 row pr-0 y-gap-20 items-center'>
+                      <div className='form-input-select col-lg-4 pr-0'>
                         <label>Client GST Percent</label>
                         <Select
                           defaultValue={{ value: 0, label: 'None' }}
@@ -1073,7 +1037,7 @@ const UpdateBooking = () => {
                           onChange={(id) => setClientGSTPercent(id)}
                         />
                       </div>
-                      <div className='form-input col-8 pr-0'>
+                      <div className='form-input col-lg-8 pr-0'>
                         <input
                           onChange={(e) => setClientGSTAmount(e.target.value)}
                           value={clientGSTAmount}
@@ -1095,8 +1059,8 @@ const UpdateBooking = () => {
                       <label>Is Offshore</label>
                     </div>
                     {!isOffshore && (
-                      <div className='col-12 row pr-0 items-center'>
-                        <div className='form-input col-4'>
+                      <div className='col-12 row pr-0 y-gap-20 items-center'>
+                        <div className='form-input col-lg-4'>
                           <input
                             onChange={(e) =>
                               setClientServiceChargePercent(e.target.value)
@@ -1112,7 +1076,7 @@ const UpdateBooking = () => {
                           </label>
                           <span className='d-flex items-center ml-30'>%</span>
                         </div>
-                        <div className='form-input col-8 pr-0'>
+                        <div className='form-input col-lg-8 pr-0'>
                           <input
                             onChange={(e) => setClientServicesCharges(e.target.value)}
                             value={clientServiceCharges}
@@ -1157,29 +1121,13 @@ const UpdateBooking = () => {
                     {bookingType?.value !== 'Miscellaneous' && (
                       <div>
                         <label className='d-block'>Add Booking Sectors</label>
-                        <button
-                          className='btn btn-success my-2 d-flex items-center gap-2'
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setBookingSectors((prev) => [
-                              ...prev,
-                              {
-                                from_airport_id: null,
-                                to_airport_id: null,
-                                travel_date: new DateObject(),
-                                travel_time: '',
-                                details: '',
-                                booking_class: null,
-                              },
-                            ]);
-                          }}
-                        >
-                          <BiPlusMedical /> Add Booking Sector
-                        </button>
                         <div>
                           {bookingSectors.map((element, index) => {
                             return (
-                              <div className='d-flex flex-column mx-1 bg-light my-4 py-20 pb-40 px-30'>
+                              <div
+                                className='d-flex flex-column mx-1 bg-light my-4 py-20 pb-40 px-30'
+                                key={index}
+                              >
                                 <div className='d-flex justify-end mr-10'>
                                   <span
                                     className='pb-10'
@@ -1196,40 +1144,43 @@ const UpdateBooking = () => {
                                     />
                                   </span>
                                 </div>
-                                <div className='d-flex items-center justify-between gap-5'>
+                                <div className='d-flex md:flex-column items-center justify-between gap-3'>
                                   <div>{index + 1}.</div>
-                                  <div className='row col-11 y-gap-20 items-center'>
-                                    <div className='form-input-select col-lg-4'>
+                                  <div className='row y-gap-20 items-center'>
+                                    <div className='form-input-select col-md-6'>
                                       <label>
                                         From<span className='text-danger'>*</span>
                                       </label>
-                                      <Select
+                                      <WindowedSelect
                                         options={airports.map((airport) => ({
                                           value: airport.id,
-                                          label: (
-                                            <div>
+                                          label: `${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
+                                        }))}
+                                        formatOptionLabel={(opt) => {
+                                          const [iata_code, city, name, country_name] =
+                                            opt.label.split('|');
+                                          return (
+                                            <div key={iata_code}>
                                               <div
-                                                className='d-flex justify-between'
+                                                className='d-flex justify-between align-items-center'
                                                 style={{ fontSize: '1rem' }}
                                               >
                                                 <span>
-                                                  {airport.city} (
-                                                  <strong>{airport.iata_code}</strong>)
+                                                  {city} (<strong>{iata_code}</strong>)
                                                 </span>
-                                                <span>
-                                                  <em>
-                                                    <strong>
-                                                      {airport.country_name}
-                                                    </strong>
-                                                  </em>
-                                                </span>
+                                                <div
+                                                  style={{
+                                                    fontSize: 'small',
+                                                    fontStyle: 'italic',
+                                                  }}
+                                                >
+                                                  {country_name}
+                                                </div>
                                               </div>
-                                              <div style={{ fontSize: '0.9rem' }}>
-                                                {airport.name}
-                                              </div>
+                                              <small>{name}</small>
                                             </div>
-                                          ),
-                                        }))}
+                                          );
+                                        }}
                                         value={element['from_airport_id']}
                                         onChange={(id) =>
                                           setBookingSectors((prev) => {
@@ -1239,37 +1190,40 @@ const UpdateBooking = () => {
                                         }
                                       />
                                     </div>
-                                    <div className='form-input-select col-lg-4'>
+                                    <div className='form-input-select col-md-6'>
                                       <label>
                                         To<span className='text-danger'>*</span>
                                       </label>
-                                      <Select
+                                      <WindowedSelect
                                         options={airports.map((airport) => ({
                                           value: airport.id,
-                                          label: (
-                                            <div>
+                                          label: `${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
+                                        }))}
+                                        formatOptionLabel={(opt) => {
+                                          const [iata_code, city, name, country_name] =
+                                            opt.label.split('|');
+                                          return (
+                                            <div key={iata_code}>
                                               <div
-                                                className='d-flex justify-between'
+                                                className='d-flex justify-between align-items-center'
                                                 style={{ fontSize: '1rem' }}
                                               >
                                                 <span>
-                                                  {airport.city} (
-                                                  <strong>{airport.iata_code}</strong>)
+                                                  {city} (<strong>{iata_code}</strong>)
                                                 </span>
-                                                <span>
-                                                  <em>
-                                                    <strong>
-                                                      {airport.country_name}
-                                                    </strong>
-                                                  </em>
-                                                </span>
+                                                <div
+                                                  style={{
+                                                    fontSize: 'small',
+                                                    fontStyle: 'italic',
+                                                  }}
+                                                >
+                                                  {country_name}
+                                                </div>
                                               </div>
-                                              <div style={{ fontSize: '0.9rem' }}>
-                                                {airport.name}
-                                              </div>
+                                              <small>{name}</small>
                                             </div>
-                                          ),
-                                        }))}
+                                          );
+                                        }}
                                         value={element['to_airport_id']}
                                         onChange={(id) =>
                                           setBookingSectors((prev) => {
@@ -1279,7 +1233,7 @@ const UpdateBooking = () => {
                                         }
                                       />
                                     </div>
-                                    <div className='col-lg-4 form-datepicker'>
+                                    <div className='col-md-6 col-lg-3 form-datepicker'>
                                       <label>
                                         Date<span className='text-danger'>*</span>
                                       </label>
@@ -1299,7 +1253,7 @@ const UpdateBooking = () => {
                                         format='DD MMMM YYYY'
                                       />
                                     </div>
-                                    <div className='col-lg-4'>
+                                    <div className='col-md-6 col-lg-3'>
                                       <div className='form-input bg-white'>
                                         <input
                                           onChange={(e) =>
@@ -1317,7 +1271,7 @@ const UpdateBooking = () => {
                                         </label>
                                       </div>
                                     </div>
-                                    <div className='col-lg-4'>
+                                    <div className='col-md-6 col-lg-3'>
                                       <div className='form-input bg-white'>
                                         <input
                                           onChange={(e) =>
@@ -1335,7 +1289,7 @@ const UpdateBooking = () => {
                                         </label>
                                       </div>
                                     </div>
-                                    <div className='col-lg-4 pb-3 form-input-select'>
+                                    <div className='col-md-6 col-lg-3 pb-3 from-input-select'>
                                       <label>Booking Class</label>
                                       <Select
                                         options={bookingClassOptions}
@@ -1354,6 +1308,32 @@ const UpdateBooking = () => {
                             );
                           })}
                         </div>
+                        <button
+                          className='btn btn-success my-2 d-flex items-center gap-2'
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setBookingSectors((prev) => {
+                              let fromAirportID = null;
+                              if (prev.length > 0) {
+                                if (prev.at(-1)?.to_airport_id)
+                                  fromAirportID = prev.at(-1)?.to_airport_id;
+                              }
+                              return [
+                                ...prev,
+                                {
+                                  from_airport_id: fromAirportID,
+                                  to_airport_id: null,
+                                  travel_date: new DateObject(),
+                                  travel_time: '',
+                                  details: '',
+                                  booking_class: null,
+                                },
+                              ];
+                            });
+                          }}
+                        >
+                          <BiPlusMedical /> Add Booking Sector
+                        </button>
                       </div>
                     )}
                     <div className='d-inline-block'>

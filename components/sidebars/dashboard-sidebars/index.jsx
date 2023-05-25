@@ -10,11 +10,12 @@ import {
 } from '../../../features/auth/authSlice';
 import { sendToast } from '../../../utils/toastify';
 import { useRouter } from 'next/router';
+import { setClientOrganizations } from '../../../features/apis/apisSlice';
 
 const Sidebar = () => {
-  const [organizations, setOrganizations] = useState([]);
   const [organizationID, setOrganizationsID] = useState(null);
 
+  const organizations = useSelector((state) => state.apis.value.clientOrganizations);
   const token = useSelector((state) => state.auth.value.token);
   const dispatch = useDispatch();
   const router = useRouter();
@@ -29,23 +30,44 @@ const Sidebar = () => {
   }, []);
 
   const getOrganizations = async () => {
-    const response = await getList('organizations', { is_client: 1 });
-    if (response?.success) {
-      setOrganizations(
-        response.data.map((element) => ({ value: element.id, label: element.name }))
-      );
-      // Setting organization ID
-      for (let org of response.data) {
-        if (org.id === currentOrganization) {
-          setOrganizationsID({ value: org.id, label: org.name });
-        }
+    // If no session storage -> session not checked so checking session
+    // If session storage -> client organization would exist so fetching that
+    if (!sessionStorage.getItem('client-organizations-checked')) {
+      const response = await getList('organizations', { is_client: 1 });
+      if (response?.success) {
+        // Setting organization ID
+        await setOrg(response.data);
+        dispatch(
+          setClientOrganizations({
+            clientOrganizations: await response.data.map((element) => ({
+              value: element.id,
+              label: element.name,
+            })),
+          })
+        );
+        sessionStorage.setItem('client-organizations-checked', Date.now());
+      } else {
+        sendToast(
+          'error',
+          response.data?.message ||
+            response.data?.error ||
+            'Unable to fetch organizations',
+          4000
+        );
       }
     } else {
-      sendToast(
-        'error',
-        response.data?.message || response.data?.error || 'Unable to fetch organizations',
-        4000
+      // Converting {label, value} -> {id,  name}
+      await setOrg(
+        organizations.map((element) => ({ id: element.value, name: element.label }))
       );
+    }
+  };
+
+  const setOrg = async (data) => {
+    for (let org of data) {
+      if (org.id === currentOrganization) {
+        setOrganizationsID({ value: org.id, label: org.name });
+      }
     }
   };
 
@@ -116,6 +138,10 @@ const Sidebar = () => {
         {
           title: 'GST MIS',
           href: '/dashboard/reports/gst-mis',
+        },
+        {
+          title: 'Close Accounts',
+          href: '/dashboard/reports/close-books',
         },
       ],
     },
@@ -388,6 +414,7 @@ const Sidebar = () => {
                 if (response?.success) {
                   dispatch(setInitialUserState());
                   sendToast('success', 'Logged Out Successfully', 4000);
+                  sessionStorage.removeItem('checking-user');
                   router.push('/login');
                 } else {
                   sendToast('error', 'Error Logging Out', 4000);

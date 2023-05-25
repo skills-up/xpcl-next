@@ -8,29 +8,18 @@ import { AiOutlineEye } from 'react-icons/ai';
 import { HiOutlinePencilAlt } from 'react-icons/hi';
 import { BsTrash3 } from 'react-icons/bs';
 import { IoCopyOutline } from 'react-icons/io5';
+import { useDispatch, useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
+import { setInitialAirportsState } from '../../../../features/apis/apisSlice';
 
 const Airports = () => {
-  const [airports, setAirports] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
 
-  useEffect(() => {
-    getAirports();
-  }, []);
-
-  const getAirports = async () => {
-    const response = await getList('airports');
-    if (response?.success) {
-      setAirports(response.data);
-    } else {
-      sendToast(
-        'error',
-        response?.data?.message || response?.data?.error || 'Error getting airports',
-        4000
-      );
-    }
-  };
+  const dispatch = useDispatch();
+  const airports = useSelector((state) => state.apis.value.airports);
+  const router = useRouter();
 
   const columns = [
     {
@@ -126,7 +115,9 @@ const Airports = () => {
     const response = await deleteItem('airports', idToDelete);
     if (response?.success) {
       sendToast('success', 'Deleted successfully', 4000);
-      getAirports();
+      sessionStorage.removeItem('airports-checked');
+      dispatch(setInitialAirportsState());
+      router.reload();
     } else {
       sendToast(
         'error',

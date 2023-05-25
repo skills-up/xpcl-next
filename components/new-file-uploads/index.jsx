@@ -27,8 +27,6 @@ const NewFileUploads = ({
     });
   };
 
-  useEffect(() => console.log(newUrls), [newUrls]);
-
   useEffect(() => {
     newUrls.forEach((url) => URL.revokeObjectURL(url));
   }, [newUrls]);

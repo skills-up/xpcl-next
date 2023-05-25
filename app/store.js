@@ -1,6 +1,7 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import findPlaceSlice from '../features/hero/findPlaceSlice';
 import { authReducer } from '../features/auth/authSlice';
+import { apisReducer } from '../features/apis/apisSlice';
 import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { encryptTransform } from 'redux-persist-transform-encrypt';
@@ -11,7 +12,7 @@ const secretKey = process?.env?.NEXT_PUBLIC_REDUX_PERSIST_SECRET_KEY;
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['auth'],
+  whitelist: ['auth', 'apis'],
   transforms: [
     encryptTransform({
       secretKey,
@@ -23,6 +24,7 @@ const persistConfig = {
 };
 
 const rootReducer = combineReducers({
+  apis: apisReducer,
   hero: findPlaceSlice,
   auth: authReducer,
 });
