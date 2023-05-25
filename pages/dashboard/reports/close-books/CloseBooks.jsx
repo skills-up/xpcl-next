@@ -89,7 +89,7 @@ const Journals = () => {
       {state && (
         <div className='row mb-3 items-center justify-between mr-4'>
           <div className='col-lg-7 col-12 d-block ml-3 form-datepicker'>
-            <label>Select Date</label>
+            <label>Select Year</label>
             <DatePicker
               onlyYearPicker
               style={{ marginLeft: '0.5rem', fontSize: '1rem' }}

@@ -128,11 +128,15 @@ const Journals = () => {
                   )
                 ) : (
                   element !== '_' && (
-                    <div
-                      className='d-flex justify-between'
+                    <a
+                      className='d-flex justify-between cursor-pointer'
                       style={{ paddingLeft: `${level}rem`, color: 'blue' }}
+                      href={
+                        '/dashboard/journals/ledger?account_id=' + element.split('|')[0]
+                      }
+                      target='_blank'
                     >
-                      <span>{element}</span>
+                      <span>{element.split('|')[1]}</span>
                       <span>
                         {Math.abs(+data[element]).toLocaleString('en-IN', {
                           maximumFractionDigits: 2,
@@ -141,7 +145,7 @@ const Journals = () => {
                         })}{' '}
                         {data[element] >= 0 ? 'Dr' : 'Cr'}
                       </span>
-                    </div>
+                    </a>
                   )
                 )}
               </>
