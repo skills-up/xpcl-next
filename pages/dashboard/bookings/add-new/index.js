@@ -1122,7 +1122,7 @@ const AddNewBooking = () => {
                                       </label>
                                     </div>
                                   </div>
-                                  <div className='col-md-6 col-lg-3 pb-3 from-input-select'>
+                                  <div className='col-md-6 col-lg-3 pb-3 form-input-select'>
                                     <label>Booking Class</label>
                                     <Select
                                       options={bookingClassOptions}
