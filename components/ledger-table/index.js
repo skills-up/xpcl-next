@@ -148,7 +148,7 @@ function LedgerTable({ data, accountID }) {
                     }).format('DD-MMMM-YYYY'),
                     narration: 'Opening Balance',
                     dr:
-                      +entry?.amount >= 0
+                      +entry?.dr_account_id === +accountID
                         ? Math.abs(entry?.amount).toLocaleString('en-IN', {
                             maximumFractionDigits: 2,
                             style: 'currency',
@@ -156,8 +156,8 @@ function LedgerTable({ data, accountID }) {
                           })
                         : '',
                     cr:
-                      +entry?.amount < 0
-                        ? Math.abs(newData?.amount).toLocaleString('en-IN', {
+                      +entry?.cr_account_id === +accountID
+                        ? Math.abs(entry?.amount).toLocaleString('en-IN', {
                             maximumFractionDigits: 2,
                             style: 'currency',
                             currency: 'INR',
