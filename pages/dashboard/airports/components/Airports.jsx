@@ -61,10 +61,11 @@ const Airports = () => {
     {
       Header: 'Actions',
       disableSortBy: true,
+      alignRight: true,
       // cell: () => <Button variant="danger" data-tag="allowRowEvents" data-action="delete"><FontAwesomeIcon icon={faTrash} /></Button>,
       Cell: (data) => {
         return (
-          <div className='flex flex-start'>
+          <div className='d-flex justify-end'>
             <ActionsButton
               options={[
                 {

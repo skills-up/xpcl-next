@@ -1,3 +1,5 @@
+import { customAPICall } from '../api/xplorzApi';
+
 export const downloadCSV = (file, name) => {
   var hiddenElement = document.createElement('a');
   hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(file);
@@ -22,4 +24,25 @@ export const downloadTextFile = (text, name) => {
   element.click();
 
   document.body.removeChild(element);
+};
+
+export const downloadApiPDF = async (url, name) => {
+  const response = await customAPICall(
+    url,
+    'get',
+    {},
+    {
+      responseType: 'arraybuffer',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/pdf',
+      },
+    }
+  );
+  var blob = new Blob([response.data], { type: 'application/pdf' });
+  var link = document.createElement('a');
+  link.target = '_blank';
+  link.href = window.URL.createObjectURL(blob);
+  link.download = name;
+  link.click();
 };

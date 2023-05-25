@@ -959,10 +959,11 @@ const AddNewBooking = () => {
                           {bookingSectors.map((element, index) => {
                             return (
                               <div
-                                className='d-flex flex-column mx-1 bg-light my-4 py-20 pb-40 px-30'
+                                className='d-flex flex-column mx-1 bg-light my-4 py-20 pb-40 px-30 md:px-10 md:py-10'
                                 key={index}
                               >
-                                <div className='d-flex justify-end mr-10'>
+                                <div className='d-flex justify-between'>
+                                  <div>{index + 1}.</div>
                                   <span
                                     className='pb-10'
                                     onClick={() =>
@@ -978,164 +979,162 @@ const AddNewBooking = () => {
                                     />
                                   </span>
                                 </div>
-                                <div className='d-flex md:flex-column items-center justify-between gap-3'>
-                                  <div>{index + 1}.</div>
-                                  <div className='row y-gap-20 items-center'>
-                                    <div className='form-input-select col-md-6'>
-                                      <label>
-                                        From<span className='text-danger'>*</span>
-                                      </label>
-                                      <WindowedSelect
-                                        options={airports.map((airport) => ({
-                                          value: airport.id,
-                                          label: `${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
-                                        }))}
-                                        formatOptionLabel={(opt) => {
-                                          const [iata_code, city, name, country_name] =
-                                            opt.label.split('|');
-                                          return (
-                                            <div key={iata_code}>
+                                <div className='d-flex row y-gap-20 md:flex-column items-center justify-between'>
+                                  <div className='form-input-select col-md-6'>
+                                    <label>
+                                      From<span className='text-danger'>*</span>
+                                    </label>
+                                    <WindowedSelect
+                                      options={airports.map((airport) => ({
+                                        value: airport.id,
+                                        label: `${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
+                                      }))}
+                                      formatOptionLabel={(opt) => {
+                                        const [iata_code, city, name, country_name] =
+                                          opt.label.split('|');
+                                        return (
+                                          <div key={iata_code}>
+                                            <div
+                                              className='d-flex justify-between align-items-center'
+                                              style={{ fontSize: '1rem' }}
+                                            >
+                                              <span>
+                                                {city} (<strong>{iata_code}</strong>)
+                                              </span>
                                               <div
-                                                className='d-flex justify-between align-items-center'
-                                                style={{ fontSize: '1rem' }}
+                                                style={{
+                                                  fontSize: 'small',
+                                                  fontStyle: 'italic',
+                                                }}
                                               >
-                                                <span>
-                                                  {city} (<strong>{iata_code}</strong>)
-                                                </span>
-                                                <div
-                                                  style={{
-                                                    fontSize: 'small',
-                                                    fontStyle: 'italic',
-                                                  }}
-                                                >
-                                                  {country_name}
-                                                </div>
+                                                {country_name}
                                               </div>
-                                              <small>{name}</small>
                                             </div>
-                                          );
-                                        }}
-                                        value={element['from_airport_id']}
-                                        onChange={(id) =>
-                                          setBookingSectors((prev) => {
-                                            prev[index]['from_airport_id'] = id;
-                                            return [...prev];
-                                          })
-                                        }
-                                      />
-                                    </div>
-                                    <div className='form-input-select col-md-6'>
-                                      <label>
-                                        To<span className='text-danger'>*</span>
-                                      </label>
-                                      <WindowedSelect
-                                        options={airports.map((airport) => ({
-                                          value: airport.id,
-                                          label: `${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
-                                        }))}
-                                        formatOptionLabel={(opt) => {
-                                          const [iata_code, city, name, country_name] =
-                                            opt.label.split('|');
-                                          return (
-                                            <div key={iata_code}>
+                                            <small>{name}</small>
+                                          </div>
+                                        );
+                                      }}
+                                      value={element['from_airport_id']}
+                                      onChange={(id) =>
+                                        setBookingSectors((prev) => {
+                                          prev[index]['from_airport_id'] = id;
+                                          return [...prev];
+                                        })
+                                      }
+                                    />
+                                  </div>
+                                  <div className='form-input-select col-md-6'>
+                                    <label>
+                                      To<span className='text-danger'>*</span>
+                                    </label>
+                                    <WindowedSelect
+                                      options={airports.map((airport) => ({
+                                        value: airport.id,
+                                        label: `${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
+                                      }))}
+                                      formatOptionLabel={(opt) => {
+                                        const [iata_code, city, name, country_name] =
+                                          opt.label.split('|');
+                                        return (
+                                          <div key={iata_code}>
+                                            <div
+                                              className='d-flex justify-between align-items-center'
+                                              style={{ fontSize: '1rem' }}
+                                            >
+                                              <span>
+                                                {city} (<strong>{iata_code}</strong>)
+                                              </span>
                                               <div
-                                                className='d-flex justify-between align-items-center'
-                                                style={{ fontSize: '1rem' }}
+                                                style={{
+                                                  fontSize: 'small',
+                                                  fontStyle: 'italic',
+                                                }}
                                               >
-                                                <span>
-                                                  {city} (<strong>{iata_code}</strong>)
-                                                </span>
-                                                <div
-                                                  style={{
-                                                    fontSize: 'small',
-                                                    fontStyle: 'italic',
-                                                  }}
-                                                >
-                                                  {country_name}
-                                                </div>
+                                                {country_name}
                                               </div>
-                                              <small>{name}</small>
                                             </div>
-                                          );
-                                        }}
-                                        value={element['to_airport_id']}
-                                        onChange={(id) =>
+                                            <small>{name}</small>
+                                          </div>
+                                        );
+                                      }}
+                                      value={element['to_airport_id']}
+                                      onChange={(id) =>
+                                        setBookingSectors((prev) => {
+                                          prev[index]['to_airport_id'] = id;
+                                          return [...prev];
+                                        })
+                                      }
+                                    />
+                                  </div>
+                                  <div className='col-md-6 col-lg-3 form-datepicker'>
+                                    <label>
+                                      Date<span className='text-danger'>*</span>
+                                    </label>
+                                    <DatePicker
+                                      style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
+                                      inputClass='custom_input-picker'
+                                      containerClassName='custom_container-picker'
+                                      value={element['travel_date']}
+                                      onChange={(date) => {
+                                        setBookingSectors((prev) => {
+                                          prev[index]['travel_date'] = date;
+                                          return [...prev];
+                                        });
+                                      }}
+                                      numberOfMonths={1}
+                                      offsetY={10}
+                                      format='DD MMMM YYYY'
+                                    />
+                                  </div>
+                                  <div className='col-md-6 col-lg-3'>
+                                    <div className='form-input bg-white'>
+                                      <input
+                                        onChange={(e) =>
                                           setBookingSectors((prev) => {
-                                            prev[index]['to_airport_id'] = id;
+                                            prev[index]['travel_time'] = e.target.value;
                                             return [...prev];
                                           })
                                         }
+                                        value={element['travel_time']}
+                                        placeholder=' '
+                                        type='time'
+                                        step={30}
                                       />
-                                    </div>
-                                    <div className='col-md-6 col-lg-3 form-datepicker'>
-                                      <label>
-                                        Date<span className='text-danger'>*</span>
+                                      <label className='lh-1 text-16 text-light-1'>
+                                        Travel Time
                                       </label>
-                                      <DatePicker
-                                        style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
-                                        inputClass='custom_input-picker'
-                                        containerClassName='custom_container-picker'
-                                        value={element['travel_date']}
-                                        onChange={(date) => {
+                                    </div>
+                                  </div>
+                                  <div className='col-md-6 col-lg-3'>
+                                    <div className='form-input bg-white'>
+                                      <input
+                                        onChange={(e) =>
                                           setBookingSectors((prev) => {
-                                            prev[index]['travel_date'] = date;
-                                            return [...prev];
-                                          });
-                                        }}
-                                        numberOfMonths={1}
-                                        offsetY={10}
-                                        format='DD MMMM YYYY'
-                                      />
-                                    </div>
-                                    <div className='col-md-6 col-lg-3'>
-                                      <div className='form-input bg-white'>
-                                        <input
-                                          onChange={(e) =>
-                                            setBookingSectors((prev) => {
-                                              prev[index]['travel_time'] = e.target.value;
-                                              return [...prev];
-                                            })
-                                          }
-                                          value={element['travel_time']}
-                                          placeholder=' '
-                                          type='text'
-                                        />
-                                        <label className='lh-1 text-16 text-light-1'>
-                                          Travel Time
-                                        </label>
-                                      </div>
-                                    </div>
-                                    <div className='col-md-6 col-lg-3'>
-                                      <div className='form-input bg-white'>
-                                        <input
-                                          onChange={(e) =>
-                                            setBookingSectors((prev) => {
-                                              prev[index]['details'] = e.target.value;
-                                              return [...prev];
-                                            })
-                                          }
-                                          value={element['details']}
-                                          placeholder=' '
-                                          type='text'
-                                        />
-                                        <label className='lh-1 text-16 text-light-1'>
-                                          Details
-                                        </label>
-                                      </div>
-                                    </div>
-                                    <div className='col-md-6 col-lg-3 pb-3 from-input-select'>
-                                      <label>Booking Class</label>
-                                      <Select
-                                        options={bookingClassOptions}
-                                        value={element['booking_class']}
-                                        onChange={(id) =>
-                                          setBookingSectors((prev) => {
-                                            prev[index]['booking_class'] = id;
+                                            prev[index]['details'] = e.target.value;
                                             return [...prev];
                                           })
                                         }
+                                        value={element['details']}
+                                        placeholder=' '
+                                        type='text'
                                       />
+                                      <label className='lh-1 text-16 text-light-1'>
+                                        Details
+                                      </label>
                                     </div>
+                                  </div>
+                                  <div className='col-md-6 col-lg-3 pb-3 form-input-select'>
+                                    <label>Booking Class</label>
+                                    <Select
+                                      options={bookingClassOptions}
+                                      value={element['booking_class']}
+                                      onChange={(id) =>
+                                        setBookingSectors((prev) => {
+                                          prev[index]['booking_class'] = id;
+                                          return [...prev];
+                                        })
+                                      }
+                                    />
                                   </div>
                                 </div>
                               </div>

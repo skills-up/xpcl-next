@@ -78,10 +78,11 @@ const Ledger = () => {
     {
       Header: 'Actions',
       disableSortBy: true,
+      alignRight: true,
       // cell: () => <Button variant="danger" data-tag="allowRowEvents" data-action="delete"><FontAwesomeIcon icon={faTrash} /></Button>,
       Cell: (data) => {
         return (
-          <div className='flex flex-start'>
+          <div className='d-flex justify-end'>
             <ActionsButton
               options={[
                 {
@@ -176,7 +177,14 @@ const Ledger = () => {
           />
         </div>
       </div>
-
+      {accountID?.label && <h1>{accountID.label}</h1>}
+      {dates && dates?.length === 2 ? (
+        <h2>
+          From {dates[0].format('DD-MMMM-YYYY')} To {dates[1].format('DD-MMMM-YYYY')}
+        </h2>
+      ) : (
+        <></>
+      )}
       {/* Data Table */}
       {/* <Datatable downloadCSV CSVName='Ledger.csv' columns={columns} data={ledger} /> */}
       <LedgerTable data={ledger} accountID={accountID?.value} />

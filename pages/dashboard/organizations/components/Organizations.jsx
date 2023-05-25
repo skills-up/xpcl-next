@@ -9,21 +9,31 @@ import { HiOutlinePencilAlt } from 'react-icons/hi';
 import { BsTrash3 } from 'react-icons/bs';
 import { IoCopyOutline } from 'react-icons/io5';
 import { Router, useRouter } from 'next/router';
+import Select from 'react-select';
 
 const Organizations = () => {
   const [organizations, setOrganizations] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
+  const [organizationID, setOrganizationID] = useState({ label: 'All', value: 'all' });
 
   useEffect(() => {
     getOrganizations();
   }, []);
 
   const router = useRouter();
+  const organizationOptions = [
+    { label: 'All', value: 'All' },
+    { label: 'Airline', value: 'Airline' },
+    { label: 'Client', value: 'Client' },
+    { label: 'Hotel', value: 'Hotel' },
+    { label: 'Vendor', value: 'Vendor' },
+  ];
 
   const getOrganizations = async () => {
-    const response = await getList('organizations');
+    let data = {};
+    const response = await getList('organizations', data);
     if (response?.success) {
       setOrganizations(response.data);
     } else {
@@ -63,10 +73,11 @@ const Organizations = () => {
     {
       Header: 'Actions',
       disableSortBy: true,
+      alignRight: true,
       // cell: () => <Button variant="danger" data-tag="allowRowEvents" data-action="delete"><FontAwesomeIcon icon={faTrash} /></Button>,
       Cell: (data) => {
         return (
-          <div className='flex flex-start'>
+          <div className='d-flex justify-end'>
             <ActionsButton
               options={[
                 {
@@ -142,8 +153,8 @@ const Organizations = () => {
         />
       )}
       {/* Search Bar + Add New */}
-      <div className='row mb-3 items-center justify-between mr-4'>
-        <div className='col-lg-10 col-7'>
+      <div className='row y-gap-20 mb-3 items-center justify-between mr-4'>
+        <div className='col-lg-6 col-7'>
           <input
             type='text'
             className='d-block form-control'
@@ -158,21 +169,47 @@ const Organizations = () => {
         >
           Add New
         </button>
+        <div className='col-lg-4 pr-0'>
+          <div className='form-input-select'>
+            <label>Filter Organization Type</label>
+            <Select
+              options={organizationOptions}
+              value={organizationID}
+              placeholder='Search..'
+              onChange={(id) => setOrganizationID(id)}
+            />
+          </div>
+        </div>
       </div>
+
       {/* Data Table */}
       <Datatable
         downloadCSV
         CSVName='Organizations.csv'
         columns={columns}
-        data={organizations.filter(
-          (perm) =>
-            perm?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            perm?.code?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            perm?.address?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            perm?.contact_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            perm?.contact_email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            perm?.gstn?.toLowerCase().includes(searchQuery.toLowerCase())
-        )}
+        data={organizations
+          .filter((perm) => {
+            if (organizationID?.value) {
+              if (organizationID.label !== 'All') {
+                if (perm.type === organizationID.label) {
+                  return perm;
+                }
+              } else {
+                return perm;
+              }
+            } else {
+              return perm;
+            }
+          })
+          .filter(
+            (perm) =>
+              perm?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              perm?.code?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              perm?.address?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              perm?.contact_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              perm?.contact_email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              perm?.gstn?.toLowerCase().includes(searchQuery.toLowerCase())
+          )}
       />
     </div>
   );
