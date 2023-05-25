@@ -36,6 +36,10 @@ const AirlineOrganizationMarkup = () => {
 
   const columns = [
     {
+      Header: 'Organization Name',
+      accessor: 'organization_name',
+    },
+    {
       Header: 'Airline Name',
       accessor: 'airline_name',
     },
@@ -47,7 +51,6 @@ const AirlineOrganizationMarkup = () => {
       Header: 'Markup Amount',
       accessor: 'markup_amount',
     },
-
     {
       Header: 'Last Updated At',
       accessor: 'updated_at',
@@ -67,10 +70,11 @@ const AirlineOrganizationMarkup = () => {
     {
       Header: 'Actions',
       disableSortBy: true,
+      alignRight: true,
       // cell: () => <Button variant="danger" data-tag="allowRowEvents" data-action="delete"><FontAwesomeIcon icon={faTrash} /></Button>,
       Cell: (data) => {
         return (
-          <div className='flex flex-start'>
+          <div className='d-flex justify-end'>
             <ActionsButton
               options={[
                 {

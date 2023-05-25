@@ -10,6 +10,8 @@ import { useEffect, useState } from 'react';
 import { deleteItem, getItem } from '../../../../api/xplorzApi';
 import ViewTable from '../../../../components/view-table';
 import Audit from '../../../../components/audits';
+import { AiOutlinePrinter } from 'react-icons/ai';
+import { downloadApiPDF } from '../../../../utils/fileDownloader';
 
 const ViewRefunds = () => {
   const [refund, setRefund] = useState([]);
@@ -201,6 +203,19 @@ const ViewRefunds = () => {
                     setIdToDelete(router.query.view);
                     setConfirmDelete(true);
                   }}
+                  extraButtons={[
+                    {
+                      icon: <AiOutlinePrinter />,
+                      text: 'Print',
+                      onClick: async () => {
+                        downloadApiPDF(
+                          'partial-refunds/' + router.query.view + '/pdf',
+                          `${refund?.number ?? 'Unkown'}.pdf`
+                        );
+                      },
+                      classNames: 'btn-info text-white',
+                    },
+                  ]}
                 />
                 <hr className='my-4' />
                 <div>

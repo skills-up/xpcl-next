@@ -15,6 +15,7 @@ import { ImPagebreak } from 'react-icons/im';
 import Audit from '../../../../components/audits';
 import { AiOutlinePrinter } from 'react-icons/ai';
 import Datatable from '../../../../components/datatable/Datatable';
+import { downloadApiPDF } from '../../../../utils/fileDownloader';
 
 const ViewBooking = () => {
   const [booking, setBooking] = useState([]);
@@ -166,6 +167,26 @@ const ViewBooking = () => {
         }
         if (data?.sectors)
           if (data?.sectors.length > 0) setBookingSectors(data.sectors.slice(0));
+        if (data?.original_booking_id && data?.original_booking_number) {
+          data['reissued_for'] = (
+            <a
+              className='text-15 cursor-pointer'
+              href={'/dashboard/bookings/view/' + data.original_booking_id}
+            >
+              {data.original_booking_number}
+            </a>
+          );
+        }
+        if (data?.commission_rule_name && data?.commission_rule_id) {
+          data.commission_rule_name = (
+            <a href={'/dashboard/commission-rules/view/' + data.commission_rule_id}>
+              {data.commission_rule_name}
+            </a>
+          );
+        }
+        delete data['commission_rule_id'];
+        delete data['original_booking_number'];
+        delete data['original_booking_id'];
         delete data['sectors'];
         delete data['reissued_booking'];
         delete data['partial_refund'];
@@ -321,9 +342,9 @@ const ViewBooking = () => {
                       icon: <AiOutlinePrinter />,
                       text: 'Print',
                       onClick: async () => {
-                        const response = await getItem(
-                          'bookings',
-                          router.query.view + '/pdf'
+                        downloadApiPDF(
+                          'bookings/' + router.query.view + '/pdf',
+                          `${booking?.number ?? 'Unkown'}.pdf`
                         );
                       },
                       classNames: 'btn-info text-white',
