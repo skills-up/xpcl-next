@@ -2,6 +2,7 @@ import axios from 'axios';
 import { store } from '../app/store';
 
 const baseURL = process.env.NEXT_PUBLIC_API_URL;
+const travelURL = process.env.NEXT_PUBLIC_TRAVEL_URL;
 
 export const getList = async (entity, params = {}) => {
   // Converting params object to query params
@@ -33,12 +34,13 @@ export const customAPICall = async (
   entity,
   requestMethod,
   data = {},
-  additionConfig = {}
+  additionConfig = {},
+  airplaneCalls = false
 ) => {
   try {
     const token = await store.getState().auth.value.token;
     const ax = axios.create({
-      baseURL,
+      baseURL: airplaneCalls ? travelURL : baseURL,
       withCredentials: false,
       headers: {
         'Content-Type': 'application/json',

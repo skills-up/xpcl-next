@@ -778,6 +778,16 @@ $_displays: none, inline-block, block, flex;
   max-width: 100%;
 }
 
+.w-350 {
+  width: 350px;
+  max-width: 100%;
+}
+
+.w-300 {
+  width: 300px;
+  max-width: 100%;
+}
+
 .halfMap {
   display: flex;
   width: 100%;
