@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import checkAirportCache from '../../../utils/airplaneCacheValidity';
+import checkAirportCache from '../../../utils/airportCacheValidity';
 import { checkUser } from '../../../utils/checkTokenValidity';
 import { sendToast } from '../../../utils/toastify';
 import MainMenu from '../MainMenu';

@@ -3,7 +3,15 @@ import { setInitialUserState } from '../features/auth/authSlice';
 import { sendToast } from './toastify';
 
 export const checkUser = async (router, dispatch) => {
-  if (!sessionStorage.getItem('checking-user')) {
+  let checkingUser = sessionStorage.getItem('checking-user');
+  // // Checking user every 15 mins
+  // if (checkingUser) {
+  //   if (Date.now() - +checkingUser > 900000) {
+  //     sessionStorage.removeItem('checking-user');
+  //     checkingUser = null;
+  //   }
+  // }
+  if (!checkingUser) {
     if (router) {
       const response = await customAPICall('/auth/me', 'post');
       if (!response?.success) {
