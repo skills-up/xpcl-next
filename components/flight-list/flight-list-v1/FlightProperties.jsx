@@ -12,32 +12,17 @@ const FlightProperties = () => {
       let temp = [];
       let counter = 1;
       for (let [key, value] of Object.entries(searchData)) {
-        // [aa, data], [tj, data]
-        if (value?.to && value?.to?.length > 0) {
-          for (let to of value.to) {
-            temp.push({
-              ...to,
-              ...{ provider: key, selectId: `collapse_${counter}`, type: 'to' },
-            });
-            counter += 1;
-          }
-        }
-        if (value?.from && value?.from?.length > 0) {
-          for (let from of value.from) {
-            temp.push({
-              ...from,
-              ...{ provider: key, selectId: `collapse_${counter}`, type: 'from' },
-            });
-            counter += 1;
-          }
-        }
-        if (value?.combined && value?.combined?.length > 0) {
-          for (let combined of value.combined) {
-            temp.push({
-              ...combined,
-              ...{ provider: key, selectId: `collapse_${counter}`, type: 'combined' },
-            });
-            counter += 1;
+        if (value) {
+          for (let [secondKey, secondValue] of Object.entries(value)) {
+            if (secondValue && secondValue?.length > 0) {
+              for (let val of secondValue) {
+                temp.push({
+                  ...val,
+                  ...{ provider: key, selectId: `collapse_${counter}`, type: secondKey },
+                });
+                counter += 1;
+              }
+            }
           }
         }
       }
