@@ -10,14 +10,17 @@ import FilterSelect from '../flight-list-v1/FilterSelect';
 import Select from 'react-select';
 import { customAPICall, getList } from '../../../api/xplorzApi';
 import { checkUser } from '../../../utils/checkTokenValidity';
+import {
+  setReturnFlight,
+  setSearchData,
+  setTravellers,
+} from '../../../features/flightSearch/flightSearchSlice';
 
 const MainFilterSearchBox = () => {
-  const [returnFlight, setReturnFlight] = useState(true);
   const [directFlight, setDirectFlight] = useState(true);
   const [from, setFrom] = useState(null);
   const [to, setTo] = useState(null);
   const [preferredCabin, setPrefferedCabin] = useState(null);
-  const [travellers, setTravellers] = useState([]);
   const [preferredAirlines, setPreferredAirlines] = useState([]);
   const [departDate, setDepartDate] = useState(new DateObject());
   const [returnDate, setReturnDate] = useState(new DateObject());
@@ -31,6 +34,8 @@ const MainFilterSearchBox = () => {
   const token = useSelector((state) => state.auth.value.token);
   const airports = useSelector((state) => state.apis.value.airports);
   const client_id = useSelector((state) => state.auth.value.currentOrganization);
+  const returnFlight = useSelector((state) => state.flightSearch.value.returnFlight);
+  const travellers = useSelector((state) => state.flightSearch.value.travellers);
 
   useEffect(() => {
     if (token !== '') {
@@ -122,7 +127,11 @@ const MainFilterSearchBox = () => {
     // Formulating Request
     let request = {
       pax,
-      cabinType: preferredCabin?.value?.toUpperCase(),
+      cabinType: preferredCabin?.value
+        ? preferredCabin.value === 'Premium Economy'
+          ? 'PREMIUM_ECONOMY'
+          : preferredCabin?.value?.toUpperCase()
+        : null,
       directOnly: directFlight,
       preferredCarriers: preferredAirlines.map((el) => el?.code).filter((el) => el),
       sectors: [
@@ -141,14 +150,21 @@ const MainFilterSearchBox = () => {
       });
     }
     console.log(request);
-    // // Akasa;
-    // customAPICall('aa/v1/search', 'post', request, {}, true)
-    //   .then((res) => console.log(res))
-    //   .catch((err) => console.error(err));
-    // // Tripjack
-    // customAPICall('tj/v1/search', 'post', request, {}, true)
-    //   .then((res) => console.log(res))
-    //   .catch((err) => console.error(err));
+
+    // Akasa
+    customAPICall('aa/v1/search', 'post', request, {}, true)
+      .then((res) => {
+        console.log(res.data);
+        if (res?.success) dispatch(setSearchData({ aa: res.data }));
+      })
+      .catch((err) => console.error(err));
+    // Tripjack
+    customAPICall('tj/v1/search', 'post', request, {}, true)
+      .then((res) => {
+        console.log('dat', res.data);
+        if (res?.success) dispatch(setSearchData({ tj: res.data }));
+      })
+      .catch((err) => console.error(err));
   };
 
   return (
@@ -164,7 +180,9 @@ const MainFilterSearchBox = () => {
             <div className='d-flex items-center gap-2'>
               <label>One Way</label>
               <ReactSwitch
-                onChange={() => setReturnFlight((prev) => !prev)}
+                onChange={() =>
+                  dispatch(setReturnFlight({ returnFlight: !returnFlight }))
+                }
                 checked={returnFlight}
               />
               <label>Return Trip</label>
@@ -188,7 +206,7 @@ const MainFilterSearchBox = () => {
               value={travellers}
               isMulti
               placeholder='Search..'
-              onChange={(values) => setTravellers(values)}
+              onChange={(values) => dispatch(setTravellers({ travellers: values }))}
             />
           </div>
           <div className='searchMenu-date pl-30 lg:py-20 lg:pl-0 lg:pr-0 js-form-dd js-calendar w-300'>

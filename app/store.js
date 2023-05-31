@@ -3,6 +3,7 @@ import findPlaceSlice from '../features/hero/findPlaceSlice';
 import { authReducer } from '../features/auth/authSlice';
 import { apisReducer } from '../features/apis/apisSlice';
 import { persistReducer, persistStore } from 'redux-persist';
+import { flightSearchReducer } from '../features/flightSearch/flightSearchSlice';
 import storage from 'redux-persist/lib/storage';
 import { encryptTransform } from 'redux-persist-transform-encrypt';
 import thunk from 'redux-thunk';
@@ -24,6 +25,7 @@ const persistConfig = {
 };
 
 const rootReducer = combineReducers({
+  flightSearch: flightSearchReducer,
   apis: apisReducer,
   hero: findPlaceSlice,
   auth: authReducer,
