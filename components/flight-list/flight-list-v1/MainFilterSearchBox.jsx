@@ -11,9 +11,13 @@ import Select from 'react-select';
 import { customAPICall, getList } from '../../../api/xplorzApi';
 import { checkUser } from '../../../utils/checkTokenValidity';
 import {
+  setAirlineOrgs,
   setReturnFlight,
   setSearchData,
+  setTravellerDOBS,
   setTravellers,
+  setPreferredCabin as setPreferredCabinRedux,
+  setInitialSearchData,
 } from '../../../features/flightSearch/flightSearchSlice';
 
 const MainFilterSearchBox = () => {
@@ -21,6 +25,7 @@ const MainFilterSearchBox = () => {
   const [from, setFrom] = useState(null);
   const [to, setTo] = useState(null);
   const [preferredCabin, setPrefferedCabin] = useState(null);
+  const [travellers, setTravellers] = useState([]);
   const [preferredAirlines, setPreferredAirlines] = useState([]);
   const [departDate, setDepartDate] = useState(new DateObject());
   const [returnDate, setReturnDate] = useState(new DateObject());
@@ -35,7 +40,6 @@ const MainFilterSearchBox = () => {
   const airports = useSelector((state) => state.apis.value.airports);
   const client_id = useSelector((state) => state.auth.value.currentOrganization);
   const returnFlight = useSelector((state) => state.flightSearch.value.returnFlight);
-  const travellers = useSelector((state) => state.flightSearch.value.travellers);
 
   useEffect(() => {
     if (token !== '') {
@@ -54,6 +58,7 @@ const MainFilterSearchBox = () => {
     });
     const airlines = await getList('organizations', { is_airline: 1 });
     if (clientTravellers?.success && airlines?.success) {
+      dispatch(setAirlineOrgs({ airlineOrgs: airlines.data }));
       setClientTravellers(
         clientTravellers.data.map((element) => ({
           value: element.id,
@@ -87,6 +92,8 @@ const MainFilterSearchBox = () => {
       sendToast('error', 'Please select travellers', 4000);
       return;
     }
+    // Redux Calls
+    dispatch(setInitialSearchData());
     // Getting Traveller DOBS
     let pax = {};
     const traveller_ids = travellers.map((el) => el.traveller_id);
@@ -121,6 +128,7 @@ const MainFilterSearchBox = () => {
       if (ADT > 0) pax['ADT'] = ADT;
       if (CHD > 0) pax['CHD'] = CHD;
       if (INF > 0) pax['INF'] = INF;
+      dispatch(setTravellerDOBS({ ADT, CHD, INF }));
     } else {
       sendToast('error', 'Error getting traveller details', 4000);
     }
@@ -155,14 +163,24 @@ const MainFilterSearchBox = () => {
     customAPICall('aa/v1/search', 'post', request, {}, true)
       .then((res) => {
         console.log(res.data);
-        if (res?.success) dispatch(setSearchData({ aa: res.data }));
+        if (res?.success) {
+          dispatch(setSearchData({ aa: res.data }));
+          // if (preferredCabin?.value)
+          // dispatch(setPreferredCabinRedux(preferredCabin.value));
+          dispatch(setTravellers({ travellers: values }));
+        }
       })
       .catch((err) => console.error(err));
     // Tripjack
     customAPICall('tj/v1/search', 'post', request, {}, true)
       .then((res) => {
         console.log('dat', res.data);
-        if (res?.success) dispatch(setSearchData({ tj: res.data }));
+        if (res?.success) {
+          dispatch(setSearchData({ tj: res.data }));
+          // if (preferredCabin?.value)
+          // dispatch(setPreferredCabinRedux(preferredCabin.value));
+          dispatch(setTravellers({ travellers: values }));
+        }
       })
       .catch((err) => console.error(err));
   };
@@ -206,7 +224,7 @@ const MainFilterSearchBox = () => {
               value={travellers}
               isMulti
               placeholder='Search..'
-              onChange={(values) => dispatch(setTravellers({ travellers: values }))}
+              onChange={(values) => setTravellers(values)}
             />
           </div>
           <div className='searchMenu-date pl-30 lg:py-20 lg:pl-0 lg:pr-0 js-form-dd js-calendar w-300'>
