@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { FaChevronCircleDown, FaRegClock } from 'react-icons/fa';
 
 const FlightProperties = () => {
   const searchData = useSelector((state) => state.flightSearch.value.searchData);
@@ -7,6 +8,8 @@ const FlightProperties = () => {
   const [currentTab, setCurrentTab] = useState('To');
   const airports = useSelector((state) => state.apis.value.airports);
   const travellerDOBS = useSelector((state) => state.flightSearch.value.travellerDOBS);
+  const airlineOrgs = useSelector((state) => state.flightSearch.value.airlineOrgs);
+  const [expand, setExpand] = useState([]);
 
   /* TODO
   - TABS + Display according to tabs
@@ -24,9 +27,46 @@ const FlightProperties = () => {
           for (let [secondKey, secondValue] of Object.entries(value)) {
             if (secondValue && secondValue?.length > 0) {
               for (let val of secondValue) {
+                // Pricing
+                let total = 0;
+                let infantPrice = 0;
+                let childPrice = 0;
+                let adultPrice = 0;
+                if (key === 'aa') {
+                  infantPrice = val.prices.prices?.CHD?.fare * travellerDOBS.INF;
+                  childPrice = val.prices.prices?.CHD?.fare * travellerDOBS.CHD;
+                  adultPrice = val.prices.prices?.ADT?.fare * travellerDOBS.ADT;
+                  total =
+                    (infantPrice > 0 ? infantPrice : 0) +
+                    (childPrice > 0 ? adultPrice : 0) +
+                    (adultPrice > 0 ? adultPrice : 0);
+                } else if (key === 'tj') {
+                  infantPrice = val.prices.prices?.INFANT?.fare * travellerDOBS.INF;
+                  childPrice = val.prices.prices?.CHILD?.fare * travellerDOBS.CHD;
+                  adultPrice = val.prices.prices?.ADULT?.fare * travellerDOBS.ADT;
+                  total =
+                    (infantPrice > 0 ? infantPrice : 0) +
+                    (childPrice > 0 ? adultPrice : 0) +
+                    (adultPrice > 0 ? adultPrice : 0);
+                }
+                // Overall Duration
+                let totalDuration =
+                  (new Date(val.segments.at(-1).arrival.time).getTime() -
+                    new Date(val.segments[0].departure.time).getTime()) /
+                  60000;
+                // Pushing
                 temp.push({
                   ...val,
-                  ...{ provider: key, selectId: `collapse_${counter}`, type: secondKey },
+                  ...{
+                    provider: key,
+                    selectId: `collapse_${counter}`,
+                    type: secondKey,
+                    total,
+                    childPrice,
+                    infantPrice,
+                    adultPrice,
+                    totalDuration,
+                  },
                 });
                 counter += 1;
               }
@@ -44,93 +84,68 @@ const FlightProperties = () => {
       {manip &&
         manip.length > 0 &&
         manip.map((element, index) => {
-          // Pricing
-          let total = 0;
-          let infantPrice = 0;
-          let childPrice = 0;
-          let adultPrice = 0;
-          if (element.provider === 'aa') {
-            infantPrice = element.prices.prices?.CHD?.fare * travellerDOBS.INF;
-            childPrice = element.prices.prices?.CHD?.fare * travellerDOBS.CHD;
-            adultPrice = element.prices.prices?.ADT?.fare * travellerDOBS.ADT;
-            total = infantPrice + childPrice + adultPrice;
-          } else if (element.provider === 'tj') {
-            infantPrice = element.prices.prices?.INFANT?.fare * travellerDOBS.INF;
-            childPrice = element.prices.prices?.CHILD?.fare * travellerDOBS.CHD;
-            adultPrice = element.prices.prices?.ADULT?.fare * travellerDOBS.ADT;
-            total = infantPrice + childPrice + adultPrice;
-          }
           return (
             <div className='js-accordion' key={index}>
               <div className='py-30 px-30 bg-white rounded-4 base-tr mt-30'>
                 <div className='row y-gap-30 justify-between'>
-                  <div className='col'>
-                    {element.segments.map((segment) => {
-                      let duration;
-                      if (segment.journey) {
-                        duration = segment.journey.duration;
-                      } else {
-                        duration =
-                          (new Date(segment.arrival.time).getTime() -
-                            new Date(segment.departure.time).getTime()) /
-                          60000;
-                      }
-                      let hours = Math.floor(duration / 60);
-                      let minutes = duration % 60;
-                      return (
-                        <div className='row y-gap-10 items-center'>
-                          <div className='col-sm-auto'>
-                            <img
-                              className='size-40'
-                              src='/img/flightIcons/1.png'
-                              alt='image'
-                            />
-                          </div>
-                          <div className='col'>
-                            <div className='row x-gap-20 items-end'>
-                              <div className='col-auto'>
-                                <div className='lh-15 fw-500'>
-                                  {element.provider === 'aa' &&
-                                    segment.departure.time.slice(-8, -3)}
-                                  {element.provider === 'tj' &&
-                                    segment.departure.time.slice(-5)}
-                                </div>
-                                <div className='text-15 lh-15 text-light-1'>
-                                  {segment.departure.airport.code}
-                                </div>
-                              </div>
-                              <div className='col text-center'>
-                                <div className='flightLine'>
-                                  <div />
-                                  <div />
-                                </div>
-                                {element.segments.length === 1 && (
-                                  <div className='text-15 lh-15 text-light-1 mt-10'>
-                                    Nonstop
-                                  </div>
-                                )}
-                              </div>
-                              <div className='col-auto'>
-                                <div className='lh-15 fw-500'>
-                                  {element.provider === 'aa' &&
-                                    segment.arrival.time.slice(-8, -3)}
-                                  {element.provider === 'tj' &&
-                                    segment.arrival.time.slice(-5)}
-                                </div>
-                                <div className='text-15 lh-15 text-light-1'>
-                                  {segment.arrival.airport.code}
-                                </div>
-                              </div>
+                  <div
+                    className='col d-flex flex-column justify-between'
+                    style={{ minHeight: '200px' }}
+                  >
+                    <div className='row y-gap-10 items-center'>
+                      <div className='col-sm-auto'>
+                        <img
+                          className='size-40'
+                          src='/img/flightIcons/1.png'
+                          alt='image'
+                        />
+                      </div>
+                      <div className='col'>
+                        <div className='row x-gap-20 items-end'>
+                          <div className='col-auto'>
+                            <div className='lh-15 fw-500'>
+                              {element.provider === 'aa' &&
+                                element.segments[0].departure.time.slice(-8, -3)}
+                              {element.provider === 'tj' &&
+                                element.segments[0].departure.time.slice(-5)}
+                            </div>
+                            <div className='text-15 lh-15 text-light-1'>
+                              {element.segments[0].departure.airport.code}
                             </div>
                           </div>
-                          <div className='col-md-auto'>
-                            <div className='text-15 text-light-1 px-20 md:px-0'>
-                              {hours}h {minutes}m
+                          <div className='col text-center'>
+                            <div className='flightLine'>
+                              <div />
+                              <div />
+                            </div>
+                            <div className='text-15 lh-15 text-light-1 mt-10'>
+                              {element.segments.length > 1
+                                ? element.segments.length - 1 > 1
+                                  ? `${element.segments.length - 1} Stops`
+                                  : `${element.segments.length - 1} Stop`
+                                : 'Nonstop'}
+                            </div>
+                          </div>
+                          <div className='col-auto'>
+                            <div className='lh-15 fw-500'>
+                              {element.provider === 'aa' &&
+                                element.segments.at(-1).arrival.time.slice(-8, -3)}
+                              {element.provider === 'tj' &&
+                                element.segments.at(-1).arrival.time.slice(-5)}
+                            </div>
+                            <div className='text-15 lh-15 text-light-1'>
+                              {element.segments.at(-1).arrival.airport.code}
                             </div>
                           </div>
                         </div>
-                      );
-                    })}
+                      </div>
+                      <div className='col-md-auto'>
+                        <div className='text-15 text-light-1 px-20 md:px-0'>
+                          {Math.floor(element.totalDuration / 60)}h{' '}
+                          {element.totalDuration % 60}m
+                        </div>
+                      </div>
+                    </div>
                     {/* Return Trip */}
                     {/* <div className='row y-gap-10 items-center pt-30'>
                       <div className='col-sm-auto'>
@@ -165,60 +180,79 @@ const FlightProperties = () => {
                         <div className='text-15 text-light-1 px-20 md:px-0'>4h 05m</div>
                       </div>
                     </div> */}
+                    <div className='d-flex justify-center accordion__button'>
+                      <button
+                        className='button -dark-1 px-30 h-40 text-white'
+                        data-bs-toggle='collapse'
+                        data-bs-target={`#${element.selectId}`}
+                        onClick={() =>
+                          setExpand((prev) => {
+                            if (prev.includes(element.selectId)) {
+                              prev = prev.filter((e) => e !== element.selectId);
+                            } else {
+                              prev.push(element.selectId);
+                            }
+                            return [...prev];
+                          })
+                        }
+                      >
+                        <FaChevronCircleDown
+                          className='text-info text-25'
+                          style={{
+                            transitionDuration: '0.3s',
+                            rotate: expand.includes(element.selectId) && '180deg',
+                          }}
+                        />
+                      </button>
+                    </div>
                   </div>
                   {/* End .col */}
                   <div className='col-md-auto'>
                     <div className='d-flex items-center h-full'>
                       <div className='pl-30 border-left-light h-full md:d-none' />
                       <div>
-                        <div className='text-right md:text-left mb-10'>
+                        <button className='button -dark-1 px-30 h-50 bg-blue-1 text-white'>
+                          Book Now <div className='icon-arrow-top-right ml-15' />
+                        </button>
+                        <div className='text-right md:text-left mt-10'>
                           <div className='text-18 lh-16 fw-500'>
                             INR{' '}
-                            {total.toLocaleString('en-IN', {
+                            {element.total.toLocaleString('en-IN', {
                               maximumFractionDigits: 2,
                               style: 'currency',
                               currency: 'INR',
                             })}
                           </div>
-                          {infantPrice > 0 && (
+                          {element.infantPrice > 0 && (
                             <div className='text-15 lh-16 text-light-1'>
                               {travellerDOBS.INF}x Infant -{' '}
-                              {infantPrice.toLocaleString('en-IN', {
+                              {element.infantPrice.toLocaleString('en-IN', {
                                 maximumFractionDigits: 2,
                                 style: 'currency',
                                 currency: 'INR',
                               })}
                             </div>
                           )}
-                          {childPrice > 0 && (
+                          {element.childPrice > 0 && (
                             <div className='text-15 lh-16 text-light-1'>
                               {travellerDOBS.CHD}x Child -{' '}
-                              {childPrice.toLocaleString('en-IN', {
+                              {element.childPrice.toLocaleString('en-IN', {
                                 maximumFractionDigits: 2,
                                 style: 'currency',
                                 currency: 'INR',
                               })}
                             </div>
                           )}
-                          {adultPrice > 0 && (
+                          {element.adultPrice > 0 && (
                             <div className='text-15 lh-16 text-light-1'>
                               {travellerDOBS.ADT}x Adult -{' '}
-                              {adultPrice.toLocaleString('en-IN', {
+                              {element.adultPrice.toLocaleString('en-IN', {
                                 maximumFractionDigits: 2,
                                 style: 'currency',
                                 currency: 'INR',
                               })}
                             </div>
                           )}
-                        </div>
-                        <div className='accordion__button'>
-                          <button
-                            className='button -dark-1 px-30 h-50 bg-blue-1 text-white'
-                            data-bs-toggle='collapse'
-                            data-bs-target={`#${element.selectId}`}
-                          >
-                            View Deal <div className='icon-arrow-top-right ml-15' />
-                          </button>
                         </div>
                       </div>
                     </div>
@@ -227,21 +261,29 @@ const FlightProperties = () => {
                 </div>
                 {/* End .row */}
                 <div className=' collapse' id={element.selectId}>
-                  {element.segments.map((segment) => {
-                    let duration;
-                    if (segment.journey) {
-                      duration = segment.journey.duration;
-                    } else {
-                      duration =
-                        (new Date(segment.arrival.time).getTime() -
-                          new Date(segment.departure.time).getTime()) /
-                        60000;
-                    }
+                  {element.segments.map((segment, segmentIndex) => {
+                    // Duration
+                    let duration =
+                      (new Date(segment.arrival.time).getTime() -
+                        new Date(segment.departure.time).getTime()) /
+                      60000;
                     let hours = Math.floor(duration / 60);
                     let minutes = duration % 60;
 
+                    // Layover Time
+                    let layoverTime;
+                    if (segmentIndex + 1 < element.segments.length) {
+                      layoverTime =
+                        (new Date(
+                          element.segments[segmentIndex + 1].departure.time
+                        ).getTime() -
+                          new Date(segment.arrival.time).getTime()) /
+                        60000;
+                    }
+
                     const departureDate = new Date(segment.departure.time).toString();
 
+                    // Airport Name
                     let departureAirport;
                     let arrivalAirport;
                     for (let airport of airports) {
@@ -251,99 +293,120 @@ const FlightProperties = () => {
                         arrivalAirport = airport.name;
                     }
 
+                    // Airline Name
+                    let airlineName = segment.flight.airline;
+                    for (let airline of airlineOrgs) {
+                      if (airline.code === segment.flight.airline)
+                        airlineName = airline.name;
+                    }
+
+                    // Business Class
+
                     return (
-                      <div className='border-light rounded-4 mt-30'>
-                        <div className='py-20 px-30'>
-                          <div className='row justify-between items-center'>
-                            <div className='col-auto'>
-                              <div className='fw-500 text-dark-1'>
-                                Depart • {departureDate.slice(0, 3)},{' '}
-                                {departureDate.slice(3, 10)}
+                      <div key={segmentIndex}>
+                        <div className='border-light rounded-4 my-3'>
+                          <div className='py-20 px-30'>
+                            <div className='row justify-between items-center'>
+                              <div className='col-auto'>
+                                <div className='fw-500 text-dark-1'>
+                                  Depart • {departureDate.slice(0, 3)},{' '}
+                                  {departureDate.slice(3, 10)}
+                                </div>
                               </div>
-                            </div>
-                            <div className='col-auto'>
-                              <div className='text-14 text-light-1'>
-                                {hours}h {minutes}m
+                              <div className='col-auto'>
+                                <div className='text-14 text-light-1'>
+                                  {hours}h {minutes}m
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                        <div className='py-30 px-30 border-top-light'>
-                          <div className='row y-gap-10 justify-between'>
-                            <div className='col-auto'>
-                              <div className='d-flex items-center mb-15'>
-                                <div className='w-28 d-flex justify-center mr-15'>
-                                  <img src='/img/flights/1.png' alt='image' />
-                                </div>
-                                <div className='text-14 text-light-1'>
-                                  Pegasus Airlines {segment.flight.number}
-                                </div>
-                              </div>
-                              <div className='relative z-0'>
-                                <div className='border-line-2' />
-                                <div className='d-flex items-center'>
+                          <div className='py-30 px-30 border-top-light'>
+                            <div className='row y-gap-10 justify-between'>
+                              <div className='col-auto'>
+                                <div className='d-flex items-center mb-15'>
                                   <div className='w-28 d-flex justify-center mr-15'>
-                                    <div className='size-10 border-light rounded-full bg-white' />
-                                  </div>
-                                  <div className='row'>
-                                    <div className='col-auto'>
-                                      <div className='lh-14 fw-500'>
-                                        {element.provider === 'aa' &&
-                                          segment.departure.time.slice(-8, -3)}
-                                        {element.provider === 'tj' &&
-                                          segment.departure.time.slice(-5)}
-                                      </div>
-                                    </div>
-                                    <div className='col-auto'>
-                                      <div className='lh-14 fw-500'>
-                                        {departureAirport} (
-                                        {segment.departure.airport.code})
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className='d-flex items-center mt-15'>
-                                  <div className='w-28 d-flex justify-center mr-15'>
-                                    <img src='/img/flights/plane.svg' alt='image' />
+                                    <img src='/img/flights/1.png' alt='image' />
                                   </div>
                                   <div className='text-14 text-light-1'>
-                                    {hours}h {minutes}m
+                                    {airlineName} {segment.flight.number}
                                   </div>
                                 </div>
-                                <div className='d-flex items-center mt-15'>
-                                  <div className='w-28 d-flex justify-center mr-15'>
-                                    <div className='size-10 border-light rounded-full bg-border' />
-                                  </div>
-                                  <div className='row'>
-                                    <div className='col-auto'>
-                                      <div className='lh-14 fw-500'>
-                                        {element.provider === 'aa' &&
-                                          segment.arrival.time.slice(-8, -3)}
-                                        {element.provider === 'tj' &&
-                                          segment.arrival.time.slice(-5)}
+                                <div className='relative z-0'>
+                                  <div className='border-line-2' />
+                                  <div className='d-flex items-center'>
+                                    <div className='w-28 d-flex justify-center mr-15'>
+                                      <div className='size-10 border-light rounded-full bg-white' />
+                                    </div>
+                                    <div className='row'>
+                                      <div className='col-auto'>
+                                        <div className='lh-14 fw-500'>
+                                          {element.provider === 'aa' &&
+                                            segment.departure.time.slice(-8, -3)}
+                                          {element.provider === 'tj' &&
+                                            segment.departure.time.slice(-5)}
+                                        </div>
+                                      </div>
+                                      <div className='col-auto'>
+                                        <div className='lh-14 fw-500'>
+                                          {departureAirport} (
+                                          {segment.departure.airport.code})
+                                        </div>
                                       </div>
                                     </div>
-                                    <div className='col-auto'>
-                                      <div className='lh-14 fw-500'>
-                                        {arrivalAirport} ({segment.arrival.airport.code})
+                                  </div>
+                                  <div className='d-flex items-center mt-15'>
+                                    <div className='w-28 d-flex justify-center mr-15'>
+                                      <img src='/img/flights/plane.svg' alt='image' />
+                                    </div>
+                                    <div className='text-14 text-light-1'>
+                                      {hours}h {minutes}m
+                                    </div>
+                                  </div>
+                                  <div className='d-flex items-center mt-15'>
+                                    <div className='w-28 d-flex justify-center mr-15'>
+                                      <div className='size-10 border-light rounded-full bg-border' />
+                                    </div>
+                                    <div className='row'>
+                                      <div className='col-auto'>
+                                        <div className='lh-14 fw-500'>
+                                          {element.provider === 'aa' &&
+                                            segment.arrival.time.slice(-8, -3)}
+                                          {element.provider === 'tj' &&
+                                            segment.arrival.time.slice(-5)}
+                                        </div>
+                                      </div>
+                                      <div className='col-auto'>
+                                        <div className='lh-14 fw-500'>
+                                          {arrivalAirport} ({segment.arrival.airport.code}
+                                          )
+                                        </div>
                                       </div>
                                     </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                            <div className='col-auto text-right md:text-left'>
-                              <div className='text-14 text-light-1'>Economy</div>
-                              <div className='text-14 mt-15 md:mt-5'>
-                                Airbus A320neo (Narrow-body jet)
-                                <br />
-                                Wi-Fi available
-                                <br />
-                                USB outlet
+                              <div className='col-auto text-right md:text-left'>
+                                <div className='text-14 text-light-1'>Economy</div>
+                                <div className='text-14 mt-15 md:mt-5'>
+                                  {segment.flight.equipment.charAt(0) === '7' &&
+                                    'Boeing ' + segment.flight.equipment}
+                                  {segment.flight.equipment.charAt(0) === '3' &&
+                                    'Airbus A' + segment.flight.equipment}
+                                  <br />
+                                  Wi-Fi available
+                                  <br />
+                                  USB outlet
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
+                        {segmentIndex + 1 < element.segments.length && (
+                          <span className='ml-10 d-flex items-center gap-2'>
+                            <FaRegClock className='text-danger text-20' /> Layover Time -{' '}
+                            {Math.floor(layoverTime / 60)}h {layoverTime % 60}m
+                          </span>
+                        )}
                       </div>
                     );
                   })}
