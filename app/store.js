@@ -3,15 +3,16 @@ import findPlaceSlice from '../features/hero/findPlaceSlice';
 import { authReducer } from '../features/auth/authSlice';
 import { apisReducer } from '../features/apis/apisSlice';
 import { persistReducer, persistStore } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
+import { flightSearchReducer } from '../features/flightSearch/flightSearchSlice';
 import { encryptTransform } from 'redux-persist-transform-encrypt';
 import thunk from 'redux-thunk';
+import storage from 'redux-persist-indexeddb-storage';
 
 const secretKey = process?.env?.NEXT_PUBLIC_REDUX_PERSIST_SECRET_KEY;
 
 const persistConfig = {
   key: 'root',
-  storage,
+  storage: storage('xplorzDB'),
   whitelist: ['auth', 'apis'],
   transforms: [
     encryptTransform({
@@ -24,6 +25,7 @@ const persistConfig = {
 };
 
 const rootReducer = combineReducers({
+  flightSearch: flightSearchReducer,
   apis: apisReducer,
   hero: findPlaceSlice,
   auth: authReducer,

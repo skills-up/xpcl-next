@@ -3,15 +3,23 @@ import { useEffect, useState } from 'react';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 import { useDispatch, useSelector } from 'react-redux';
 import WindowedSelect from 'react-windowed-select';
-import checkAirportCache from '../../../utils/airplaneCacheValidity';
+import checkAirportCache from '../../../utils/airportCacheValidity';
 import { sendToast } from '../../../utils/toastify';
 import ReactSwitch from 'react-switch';
 import FilterSelect from '../flight-list-v1/FilterSelect';
 import Select from 'react-select';
 import { customAPICall, getList } from '../../../api/xplorzApi';
+import { checkUser } from '../../../utils/checkTokenValidity';
+import {
+  setAirlineOrgs,
+  setReturnFlight,
+  setSearchData,
+  setTravellerDOBS,
+  setTravellers as setTravellersRedux,
+  setInitialSearchData,
+} from '../../../features/flightSearch/flightSearchSlice';
 
 const MainFilterSearchBox = () => {
-  const [returnFlight, setReturnFlight] = useState(true);
   const [directFlight, setDirectFlight] = useState(true);
   const [from, setFrom] = useState(null);
   const [to, setTo] = useState(null);
@@ -30,9 +38,11 @@ const MainFilterSearchBox = () => {
   const token = useSelector((state) => state.auth.value.token);
   const airports = useSelector((state) => state.apis.value.airports);
   const client_id = useSelector((state) => state.auth.value.currentOrganization);
+  const returnFlight = useSelector((state) => state.flightSearch.value.returnFlight);
 
   useEffect(() => {
     if (token !== '') {
+      checkUser(router, dispatch);
       checkAirportCache(dispatch);
       getData();
     } else {
@@ -47,10 +57,12 @@ const MainFilterSearchBox = () => {
     });
     const airlines = await getList('organizations', { is_airline: 1 });
     if (clientTravellers?.success && airlines?.success) {
+      dispatch(setAirlineOrgs({ airlineOrgs: airlines.data }));
       setClientTravellers(
         clientTravellers.data.map((element) => ({
           value: element.id,
           label: element.traveller_name,
+          traveller_id: element.traveller_id,
         }))
       );
       setAirlines(
@@ -66,11 +78,69 @@ const MainFilterSearchBox = () => {
   };
 
   const search = async () => {
+    // Checking if all mandatory fields are filled
+    if (!to?.value) {
+      sendToast('error', 'Please select your destination', 4000);
+      return;
+    }
+    if (!from?.value) {
+      sendToast('error', 'Please select your departure destination', 4000);
+      return;
+    }
+    if (!travellers || travellers?.length === 0) {
+      sendToast('error', 'Please select travellers', 4000);
+      return;
+    }
+    // Redux Calls
+    dispatch(setInitialSearchData());
+    // Getting Traveller DOBS
+    let pax = {};
+    const traveller_ids = travellers.map((el) => el.traveller_id);
+    const travellerDetails = await getList('travellers', { traveller_ids });
+    if (travellerDetails?.success) {
+      let ADT = 0;
+      let CHD = 0;
+      let INF = 0;
+      let currentTime = +Date.now();
+      for (let traveller of travellerDetails.data) {
+        if (traveller?.passport_dob) {
+          const age = (
+            (currentTime -
+              +new DateObject({
+                date: traveller.passport_dob,
+                format: 'YYYY-MM-DD',
+              })
+                .toDate()
+                .getTime()) /
+            31536000000
+          ).toFixed(2);
+          // If below 2 years of age, infant
+          if (age < 2) INF += 1;
+          // If above 2 but below 12, child
+          if (age >= 2 && age < 12) CHD += 1;
+          // If above 12 years, consider adult
+          if (age >= 12) ADT += 1;
+        } else {
+          ADT += 1;
+        }
+      }
+      if (ADT > 0) pax['ADT'] = ADT;
+      if (CHD > 0) pax['CHD'] = CHD;
+      if (INF > 0) pax['INF'] = INF;
+      dispatch(setTravellerDOBS({ ADT, CHD, INF }));
+    } else {
+      sendToast('error', 'Error getting traveller details', 4000);
+    }
+    // Formulating Request
     let request = {
-      pax: { ADT: 2 },
-      cabinType: preferredCabin?.value,
+      pax,
+      cabinType: preferredCabin?.value
+        ? preferredCabin.value === 'Premium Economy'
+          ? 'PREMIUM_ECONOMY'
+          : preferredCabin?.value?.toUpperCase()
+        : null,
       directOnly: directFlight,
-      preferredCarriers: preferredAirlines.map((el) => el?.code),
+      preferredCarriers: preferredAirlines.map((el) => el?.code).filter((el) => el),
       sectors: [
         {
           from: from?.iata,
@@ -86,13 +156,27 @@ const MainFilterSearchBox = () => {
         date: returnDate.format('YYYY-MM-DD'),
       });
     }
+    console.log(request);
+
     // Akasa
     customAPICall('aa/v1/search', 'post', request, {}, true)
-      .then((res) => console.log(res))
+      .then((res) => {
+        console.log(res.data);
+        if (res?.success) {
+          dispatch(setSearchData({ aa: res.data }));
+          dispatch(setTravellers({ travellers: values }));
+        }
+      })
       .catch((err) => console.error(err));
     // Tripjack
     customAPICall('tj/v1/search', 'post', request, {}, true)
-      .then((res) => console.log(res))
+      .then((res) => {
+        console.log('dat', res.data);
+        if (res?.success) {
+          dispatch(setSearchData({ tj: res.data }));
+          dispatch(setTravellers({ travellers: values }));
+        }
+      })
       .catch((err) => console.error(err));
   };
 
@@ -107,9 +191,11 @@ const MainFilterSearchBox = () => {
         <div className='d-flex items-center mb-20 justify-center'>
           <div className='searchMenu-date py-10 pl-30 lg:py-20 lg:pl-0 js-form-dd js-calendar'>
             <div className='d-flex items-center gap-2'>
-              <label>Single Trip</label>
+              <label>One Way</label>
               <ReactSwitch
-                onChange={() => setReturnFlight((prev) => !prev)}
+                onChange={() =>
+                  dispatch(setReturnFlight({ returnFlight: !returnFlight }))
+                }
                 checked={returnFlight}
               />
               <label>Return Trip</label>
@@ -125,7 +211,9 @@ const MainFilterSearchBox = () => {
             />
           </div>
           <div className='searchMenu-date pl-30 lg:py-20 lg:pl-0 lg:pr-0 js-form-dd js-calendar w-300'>
-            <label>Travellers</label>
+            <label>
+              Travellers<span className='text-danger'>*</span>
+            </label>
             <Select
               options={clientTravellers}
               value={travellers}
@@ -147,7 +235,9 @@ const MainFilterSearchBox = () => {
         </div>
         <div className='button-grid items-center'>
           <div className='searchMenu-date pl-30 pr-20 lg:py-20 lg:pl-0 lg:pr-0 js-form-dd js-calendar w-350'>
-            <label>From</label>
+            <label>
+              From<span className='text-danger'>*</span>
+            </label>
             <WindowedSelect
               options={airports.map((airport) => ({
                 value: airport.id,
@@ -185,7 +275,9 @@ const MainFilterSearchBox = () => {
           {/* End Location Flying From */}
 
           <div className='searchMenu-date pl-30 pr-20 lg:py-20 lg:pl-0 lg:pr-0 js-form-dd js-calendar w-350'>
-            <label>To</label>
+            <label>
+              To<span className='text-danger'>*</span>
+            </label>
             <WindowedSelect
               options={airports.map((airport) => ({
                 value: airport.id,
@@ -239,21 +331,23 @@ const MainFilterSearchBox = () => {
           </div>
           {/* End Depart */}
 
-          <div className='searchMenu-date py-10 pl-30 lg:py-20 lg:pl-0 js-form-dd js-calendar'>
-            <label>
-              Depart Date<span className='text-danger'>*</span>
-            </label>
-            <DatePicker
-              style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
-              inputClass='custom_input-picker'
-              containerClassName='custom_container-picker'
-              value={returnDate}
-              onChange={setReturnDate}
-              numberOfMonths={1}
-              offsetY={10}
-              format='DD MMMM YYYY'
-            />
-          </div>
+          {returnFlight && (
+            <div className='searchMenu-date py-10 pl-30 lg:py-20 lg:pl-0 js-form-dd js-calendar'>
+              <label>
+                Return Date<span className='text-danger'>*</span>
+              </label>
+              <DatePicker
+                style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
+                inputClass='custom_input-picker'
+                containerClassName='custom_container-picker'
+                value={returnDate}
+                onChange={setReturnDate}
+                numberOfMonths={1}
+                offsetY={10}
+                format='DD MMMM YYYY'
+              />
+            </div>
+          )}
           {/* End Return */}
 
           <div className='searchMenu-date py-10 pl-30 lg:py-20 lg:pl-0 js-form-dd js-calendar'>
