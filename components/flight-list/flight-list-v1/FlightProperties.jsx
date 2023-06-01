@@ -6,9 +6,8 @@ const FlightProperties = () => {
   const [manip, setManip] = useState([]);
   const [currentTab, setCurrentTab] = useState('To');
   const airports = useSelector((state) => state.apis.value.airports);
-  const preferredCabin = useSelector((state) => state.flightSearch.value.preferredCabin);
   const travellerDOBS = useSelector((state) => state.flightSearch.value.travellerDOBS);
-  
+
   /* TODO
   - TABS + Display according to tabs
   - Pagination

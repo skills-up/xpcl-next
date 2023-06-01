@@ -15,8 +15,7 @@ import {
   setReturnFlight,
   setSearchData,
   setTravellerDOBS,
-  setTravellers,
-  setPreferredCabin as setPreferredCabinRedux,
+  setTravellers as setTravellersRedux,
   setInitialSearchData,
 } from '../../../features/flightSearch/flightSearchSlice';
 
@@ -165,8 +164,6 @@ const MainFilterSearchBox = () => {
         console.log(res.data);
         if (res?.success) {
           dispatch(setSearchData({ aa: res.data }));
-          // if (preferredCabin?.value)
-          // dispatch(setPreferredCabinRedux(preferredCabin.value));
           dispatch(setTravellers({ travellers: values }));
         }
       })
@@ -177,8 +174,6 @@ const MainFilterSearchBox = () => {
         console.log('dat', res.data);
         if (res?.success) {
           dispatch(setSearchData({ tj: res.data }));
-          // if (preferredCabin?.value)
-          // dispatch(setPreferredCabinRedux(preferredCabin.value));
           dispatch(setTravellers({ travellers: values }));
         }
       })
