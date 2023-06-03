@@ -161,12 +161,10 @@ const MainFilterSearchBox = () => {
         date: returnDate.format('YYYY-MM-DD'),
       });
     }
-    console.log(request);
 
     // Akasa
     customAPICall('aa/v1/search', 'post', request, {}, true)
       .then((res) => {
-        console.log(res.data);
         if (res?.success) {
           dispatch(setSearchData({ aa: res.data }));
           dispatch(setTravellers({ travellers: values }));
@@ -176,7 +174,6 @@ const MainFilterSearchBox = () => {
     // Tripjack
     customAPICall('tj/v1/search', 'post', request, {}, true)
       .then((res) => {
-        console.log('dat', res.data);
         if (res?.success) {
           dispatch(setSearchData({ tj: res.data }));
           dispatch(setTravellers({ travellers: values }));
