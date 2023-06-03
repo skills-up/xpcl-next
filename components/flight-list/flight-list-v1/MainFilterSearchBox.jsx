@@ -125,20 +125,20 @@ const MainFilterSearchBox = () => {
         }
       }
       if (ADT > 0) pax['ADT'] = ADT;
+      else {
+        sendToast('error', 'There must be an Adult traveller', 4000);
+        return;
+      }
       if (CHD > 0) pax['CHD'] = CHD;
       if (INF > 0) pax['INF'] = INF;
       dispatch(setTravellerDOBS({ ADT, CHD, INF }));
     } else {
       sendToast('error', 'Error getting traveller details', 4000);
+      return;
     }
     // Formulating Request
     let request = {
       pax,
-      cabinType: preferredCabin?.value
-        ? preferredCabin.value === 'Premium Economy'
-          ? 'PREMIUM_ECONOMY'
-          : preferredCabin?.value?.toUpperCase()
-        : null,
       directOnly: directFlight,
       preferredCarriers: preferredAirlines.map((el) => el?.code).filter((el) => el),
       sectors: [
@@ -149,6 +149,11 @@ const MainFilterSearchBox = () => {
         },
       ],
     };
+    if (preferredCabin?.value) {
+      if (preferredCabin.value === 'Premium Economy')
+        request['cabinType'] = 'PREMIUM_ECONOMY';
+      else request['cabinType'] = preferredCabin.value.toUpperCase();
+    }
     if (returnFlight) {
       request.sectors.push({
         to: from?.iata,

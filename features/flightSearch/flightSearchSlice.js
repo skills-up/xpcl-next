@@ -10,6 +10,8 @@ export const initialState = {
     // travellerDOBS: { ADT: 0, CHD: 0, INF: 0 },
     travellerDOBS: { ADT: 1, CHD: 1, INF: 1 },
     airlineOrgs: [],
+    paginateDataNumber: 0,
+    paginateDataPerPage: 10,
   },
 };
 
@@ -32,6 +34,12 @@ const flightSearchSlice = createSlice({
     setAirlineOrgs: (state, action) => {
       state.value.airlineOrgs = action.payload.airlineOrgs;
     },
+    setPaginateDataNumber: (state, action) => {
+      state.value.paginateDataNumber = action.payload.paginateDataNumber;
+    },
+    setPaginateDataPerPage: (state, action) => {
+      state.value.paginateDataPerPage = action.payload.paginateDataPerPage;
+    },
     setTravellers: (state, action) => {
       state.value.travellers = action.payload.travellers;
     },
@@ -48,6 +56,8 @@ export const {
   setTravellerDOBS,
   setAirlineOrgs,
   setInitialSearchData,
+  setPaginateDataNumber,
+  setPaginateDataPerPage,
   setInitialState,
 } = flightSearchSlice.actions;
 
