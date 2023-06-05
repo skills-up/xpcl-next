@@ -231,7 +231,9 @@ const AddNewPaymentReceipt = () => {
                         Debit Account<span className='text-danger'>*</span>
                       </label>
                       <Select
-                        options={accounts}
+                        options={accounts.filter(
+                          (acc) => acc?.value !== crAccountID?.value
+                        )}
                         value={drAccountID}
                         placeholder='Search & Select Debit Account (required)'
                         onChange={(id) => setDrAccountID(id)}
@@ -242,7 +244,9 @@ const AddNewPaymentReceipt = () => {
                         Credit Account<span className='text-danger'>*</span>
                       </label>
                       <Select
-                        options={accounts}
+                        options={accounts.filter(
+                          (acc) => acc?.value !== drAccountID?.value
+                        )}
                         value={crAccountID}
                         placeholder='Search & Select Credit Account (required)'
                         onChange={(id) => setCrAccountID(id)}

@@ -315,7 +315,8 @@ const Sidebar = () => {
                 if (response?.success) {
                   setOrganizationsID(id);
                   dispatch(setCurrentOrganization({ currentOrganization: id.value }));
-                  window.location.reload();
+                  // Giving redux persist time to update
+                  setTimeout(() => router.reload(), 1000);
                 } else {
                   sendToast(
                     'error',

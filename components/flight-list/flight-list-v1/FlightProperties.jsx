@@ -196,8 +196,7 @@ const FlightProperties = () => {
                         <div className='row y-gap-10 items-center'>
                           <div className='col-sm-auto'>
                             <img
-                              className='size-40'
-                              src='/img/flightIcons/1.png'
+                              src={`/img/flights/${element.segments[0].flight.airline}.png`}
                               alt='image'
                             />
                           </div>
@@ -310,9 +309,9 @@ const FlightProperties = () => {
                         <div className='text-15 text-light-1 px-20 md:px-0'>4h 05m</div>
                       </div>
                     </div> */}
-                        <div className='d-flex justify-center accordion__button'>
-                          <button
-                            className='button -dark-1 px-30 h-40 text-white'
+                        <div className='d-flex justify-center pb-5'>
+                          <FaChevronCircleDown
+                            className='text-info text-25 cursor-pointer'
                             data-bs-toggle='collapse'
                             data-bs-target={`#${element.selectId}`}
                             onClick={() =>
@@ -325,15 +324,11 @@ const FlightProperties = () => {
                                 return [...prev];
                               })
                             }
-                          >
-                            <FaChevronCircleDown
-                              className='text-info text-25'
-                              style={{
-                                transitionDuration: '0.3s',
-                                rotate: expand.includes(element.selectId) && '180deg',
-                              }}
-                            />
-                          </button>
+                            style={{
+                              transitionDuration: '0.3s',
+                              rotate: expand.includes(element.selectId) && '180deg',
+                            }}
+                          />
                         </div>
                       </div>
                       {/* End .col */}
@@ -353,10 +348,10 @@ const FlightProperties = () => {
                                   currency: 'INR',
                                 })}
                               </div>
-                              {element.infantPrice > 0 && (
+                              {element.adultPrice > 0 && (
                                 <div className='text-15 lh-16 text-light-1'>
-                                  {travellerDOBS.INF}x Infant -{' '}
-                                  {element.infantPrice.toLocaleString('en-IN', {
+                                  {travellerDOBS.ADT}x Adult @{' '}
+                                  {element.adultPrice.toLocaleString('en-IN', {
                                     maximumFractionDigits: 2,
                                     style: 'currency',
                                     currency: 'INR',
@@ -365,7 +360,7 @@ const FlightProperties = () => {
                               )}
                               {element.childPrice > 0 && (
                                 <div className='text-15 lh-16 text-light-1'>
-                                  {travellerDOBS.CHD}x Child -{' '}
+                                  {travellerDOBS.CHD}x Child @{' '}
                                   {element.childPrice.toLocaleString('en-IN', {
                                     maximumFractionDigits: 2,
                                     style: 'currency',
@@ -373,10 +368,10 @@ const FlightProperties = () => {
                                   })}
                                 </div>
                               )}
-                              {element.adultPrice > 0 && (
+                              {element.infantPrice > 0 && (
                                 <div className='text-15 lh-16 text-light-1'>
-                                  {travellerDOBS.ADT}x Adult -{' '}
-                                  {element.adultPrice.toLocaleString('en-IN', {
+                                  {travellerDOBS.INF}x Infant @{' '}
+                                  {element.infantPrice.toLocaleString('en-IN', {
                                     maximumFractionDigits: 2,
                                     style: 'currency',
                                     currency: 'INR',
@@ -496,8 +491,8 @@ const FlightProperties = () => {
                                         />
                                       </div>
                                       <div className='text-14 text-light-1'>
-                                        {airlineName} {segment.flight.number} (
-                                        {segment.flight.airline})
+                                        {airlineName} - {segment.flight.airline}{' '}
+                                        {segment.flight.number}
                                       </div>
                                     </div>
                                     <div className='relative z-0'>
