@@ -384,7 +384,8 @@ const ReissueBooking = () => {
               to_airport_id: element['to_airport_id']?.value,
               travel_date: element['travel_date']?.format('YYYY-MM-DD'),
               travel_time: element['travel_time'],
-              details: element['details'],
+              details:
+                element['details'].trim().length > 0 ? element['details'] : undefined,
               booking_class: element['booking_class']?.value,
             })),
       is_offshore: isOffshore,
@@ -394,11 +395,23 @@ const ReissueBooking = () => {
       sendToast('success', 'Reissued Booking Successfully.', 4000);
       router.push('/dashboard/bookings');
     } else {
-      sendToast(
-        'error',
-        response.data?.message || response.data?.error || 'Failed to Reissue Booking.',
-        4000
-      );
+      if (response.data?.errors) {
+        sendToast(
+          'error',
+          <ul className='list-disc'>
+            {Object.values(response.data.errors).map((er) => (
+              <li>{er}</li>
+            ))}
+          </ul>,
+          8000
+        );
+      } else {
+        sendToast(
+          'error',
+          response.data?.message || response.data?.error || 'Failed to Create Booking.',
+          4000
+        );
+      }
     }
   };
 
