@@ -372,7 +372,7 @@ const UpdateBooking = () => {
       payment_account_id: paymentAccountID?.value,
       payment_amount: +paymentAmount ? paymentAmount : undefined,
       client_referrer_id: clientReferrerID?.value,
-      client_referral_fee: clientReferralFee,
+      client_referral_fee: +clientReferralFee ? clientReferralFee : undefined,
       client_base_amount: clientBaseAmount,
       client_tax_amount: clientTaxAmount,
       client_gst_amount: clientGSTAmount,
