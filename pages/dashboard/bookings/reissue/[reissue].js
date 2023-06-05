@@ -113,35 +113,35 @@ const ReissueBooking = () => {
     if (router.query.reissue) {
       const response = await getItem('bookings', router.query.reissue);
       if (response?.success) {
-        setTicketNumber(response.data.ticket_number);
+        // setTicketNumber(response.data.ticket_number);
         setPNR(response.data.pnr);
-        setVendorBaseAmount(response.data.vendor_base_amount);
-        setVendorTaxAmount(response.data.vendor_tax_amount);
-        setVendorGSTAmount(response.data.vendor_gst_amount);
-        setVendorMiscChargers(response.data.vendor_misc_charges);
-        setVendorYQAmount(response.data.vendor_yq_amount);
-        setVendorTotal(response.data.vendor_total);
-        setIATACommissionPercent(response.data.iata_commission_percent);
-        setPLBCommissionPercent(response.data.plb_commission_percent);
-        setVendorServiceCharges(response.data.vendor_service_charges);
-        setVendorTDS(response.data.vendor_tds);
-        setCommissionReceivable(response.data.commission_receivable);
-        setClientReferralFee(response.data.client_referral_fee);
-        setClientBaseAmount(response.data.client_base_amount);
-        setClientTaxAmount(response.data.client_tax_amount);
-        setClientGSTAmount(response.data.client_gst_amount);
-        setClientServicesCharges(response.data.client_service_charges);
-        setClientTotal(response.data.client_total);
+        // setVendorBaseAmount(response.data.vendor_base_amount);
+        // setVendorTaxAmount(response.data.vendor_tax_amount);
+        // setVendorGSTAmount(response.data.vendor_gst_amount);
+        // setVendorMiscChargers(response.data.vendor_misc_charges);
+        // setVendorYQAmount(response.data.vendor_yq_amount);
+        // setVendorTotal(response.data.vendor_total);
+        // setIATACommissionPercent(response.data.iata_commission_percent);
+        // setPLBCommissionPercent(response.data.plb_commission_percent);
+        // setVendorServiceCharges(response.data.vendor_service_charges);
+        // setVendorTDS(response.data.vendor_tds);
+        // setCommissionReceivable(response.data.commission_receivable);
+        // setClientReferralFee(response.data.client_referral_fee);
+        // setClientBaseAmount(response.data.client_base_amount);
+        // setClientTaxAmount(response.data.client_tax_amount);
+        // setClientGSTAmount(response.data.client_gst_amount);
+        // setClientServicesCharges(response.data.client_service_charges);
+        // setClientTotal(response.data.client_total);
         setSector(response.data.sector);
         setBookingDate(
           new DateObject({ date: response.data.booking_date, format: 'YYYY-MM-DD' })
         );
         setIsOffshore(response.data?.is_offshore);
-        setClientQuotedAmount(
-          +response.data.client_base_amount +
-            +response.data.client_tax_amount +
-            +response.data.client_gst_amount
-        );
+        // setClientQuotedAmount(
+        //   +response.data.client_base_amount +
+        //     +response.data.client_tax_amount +
+        //     +response.data.client_gst_amount
+        // );
 
         // Client GST Percent
         if (
@@ -299,7 +299,7 @@ const ReissueBooking = () => {
           }
           setBookingSectors(tempBookingSectors);
           // Set Payment Amount
-          setTimeout(() => setPaymentAmount(response.data.payment_amount), 1000);
+          // setTimeout(() => setPaymentAmount(response.data.payment_amount), 1000);
         } else {
           sendToast('error', 'Unable to fetch required data', 4000);
           router.push('/dashboard/bookings');
@@ -1061,7 +1061,7 @@ const ReissueBooking = () => {
                           onChange={(e) => setReissuePenalty(e.target.value)}
                           value={reissuePenalty}
                           placeholder=' '
-                          type='number' 
+                          type='number'
                           onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
