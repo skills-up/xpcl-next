@@ -291,6 +291,7 @@ const AddNewBooking = () => {
           label: element.traveller_name,
         }))
       );
+      setClientTravellerID(null);
     } else {
       sendToast('error', 'Error getting client travellers', 4000);
     }
