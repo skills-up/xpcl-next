@@ -54,6 +54,7 @@ const UpdateBooking = () => {
   // Dates
   const [bookingDate, setBookingDate] = useState(new DateObject());
   // Dropdowns
+  const [clientID, setClientID] = useState(null);
   const [bookingType, setBookingType] = useState(null);
   const [miscellaneousType, setMiscellaneousType] = useState(null);
   const [vendorID, setVendorID] = useState(null);
@@ -97,11 +98,13 @@ const UpdateBooking = () => {
   const [paymentAccounts, setPaymentAccounts] = useState([]);
   const [clients, setClients] = useState([]);
   const [clientTravellers, setClientTravellers] = useState([]);
+  const [clientOrgs, setClientOrgs] = useState([]);
 
   const [xplorzGSTFocused, setXplorzGSTFocused] = useState(false);
   const [vendorGSTFocused, setVendorGSTFocused] = useState(false);
   const [vendorTDSPercentFocused, setVendorTDSPercentFocused] = useState(false);
   const [clientBaseAmountFocused, setClientBaseAmountFocused] = useState(false);
+  const [clientTravellerFirstCheck, setClientTravellerFirstCheck] = useState(false);
 
   const airports = useSelector((state) => state.apis.value.airports);
   const token = useSelector((state) => state.auth.value.token);
@@ -177,8 +180,9 @@ const UpdateBooking = () => {
         const airlines = await getList('organizations', { is_airline: 1 });
         const paymentAccounts = await getList('accounts', { category: 'Credit Cards' });
         const clients = await getList('accounts', { category: 'Referrers' });
+        const clientOrgs = await getList('organizations', { is_client: 1 });
         const clientTravellers = await getList('client-travellers', {
-          client_id: store.getState().auth.value.currentOrganization,
+          client_id: response.data?.client_id,
         });
         if (
           vendors?.success &&
@@ -186,6 +190,7 @@ const UpdateBooking = () => {
           airlines?.success &&
           paymentAccounts?.success &&
           clients?.success &&
+          clientOrgs?.success &&
           clientTravellers?.success
         ) {
           setVendors(
@@ -218,6 +223,12 @@ const UpdateBooking = () => {
           );
           setClients(
             clients.data.map((element) => ({
+              value: element.id,
+              label: element.name,
+            }))
+          );
+          setClientOrgs(
+            clientOrgs.data.map((element) => ({
               value: element.id,
               label: element.name,
             }))
@@ -262,6 +273,14 @@ const UpdateBooking = () => {
           for (let client of clients.data)
             if (client.id === response.data.client_referrer_id)
               setClientReferrerID({ value: client.id, label: client.name });
+          // Client Org IDS
+          for (let client of clientOrgs.data) {
+            if (client.id === response.data.client_id)
+              setClientID({
+                value: client.id,
+                label: client.name,
+              });
+          }
           // Client Traveller IDS
           for (let client of clientTravellers.data) {
             if (client.id === response.data.client_traveller_id)
@@ -303,8 +322,11 @@ const UpdateBooking = () => {
             });
           }
           setBookingSectors(tempBookingSectors);
-          // Set Payment Amount
-          setTimeout(() => setPaymentAmount(response.data.payment_amount), 1000);
+          // Set Payment Amount + First Client Traveller Check
+          setTimeout(() => {
+            setPaymentAmount(response.data.payment_amount);
+            setClientTravellerFirstCheck(true);
+          }, 1000);
         } else {
           sendToast('error', 'Unable to fetch required data', 4000);
           router.push('/dashboard/bookings');
@@ -333,6 +355,10 @@ const UpdateBooking = () => {
       sendToast('error', 'Please Select a Vendor', 4000);
       return;
     }
+    if (!clientID?.value) {
+      sendToast('error', 'Please Select a Client', 4000);
+      return;
+    }
     if (!clientTravellerID?.value) {
       sendToast('error', 'Please Select a Client Traveller', 4000);
       return;
@@ -351,6 +377,7 @@ const UpdateBooking = () => {
     // Adding response
     const editData = {
       booking_type: bookingType.value,
+      client_id: clientID.value,
       booking_date: bookingDate.format('YYYY-MM-DD'),
       ticket_number: ticketNumber,
       pnr,
@@ -420,6 +447,30 @@ const UpdateBooking = () => {
           4000
         );
       }
+    }
+  };
+
+  // Client Traveller List
+  useEffect(() => {
+    if (clientID?.value && clientTravellerFirstCheck) {
+      getClientTravellers();
+    }
+  }, [clientID]);
+
+  const getClientTravellers = async () => {
+    const clientTravellers = await getList('client-travellers', {
+      client_id: clientID?.value,
+    });
+    if (clientTravellers?.success) {
+      setClientTravellers(
+        clientTravellers.data.map((element) => ({
+          value: element.id,
+          label: element.traveller_name,
+        }))
+      );
+      setClientTravellerID(null);
+    } else {
+      sendToast('error', 'Error getting client travellers', 4000);
     }
   };
 
@@ -666,6 +717,30 @@ const UpdateBooking = () => {
                         onChange={(id) => setBookingType(id)}
                       />
                     </div>
+                    <div className='form-input-select'>
+                      <label>
+                        Client<span className='text-danger'>*</span>
+                      </label>
+                      <Select
+                        options={clientOrgs}
+                        value={clientID}
+                        placeholder='Search & Select Client'
+                        onChange={(id) => setClientID(id)}
+                      />
+                    </div>
+                    {clientTravellers && clientTravellers.length > 0 && (
+                      <div className='form-input-select'>
+                        <label>
+                          Client Traveller<span className='text-danger'>*</span>
+                        </label>
+                        <Select
+                          options={clientTravellers}
+                          value={clientTravellerID}
+                          placeholder='Search & Select Client Traveller'
+                          onChange={(id) => setClientTravellerID(id)}
+                        />
+                      </div>
+                    )}
                     <div className='d-block ml-3 form-datepicker'>
                       <label>
                         Booking Date<span className='text-danger'>*</span>
@@ -762,10 +837,21 @@ const UpdateBooking = () => {
                                       From<span className='text-danger'>*</span>
                                     </label>
                                     <WindowedSelect
-                                      options={airports.map((airport) => ({
-                                        value: airport.id,
-                                        label: `${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
-                                      }))}
+                                      options={airports
+                                        .filter((airport) => {
+                                          if (
+                                            bookingType?.value ===
+                                            'Domestic Flight Ticket'
+                                          ) {
+                                            return airport.country_name === 'India';
+                                          } else {
+                                            return true;
+                                          }
+                                        })
+                                        .map((airport) => ({
+                                          value: airport.id,
+                                          label: `${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
+                                        }))}
                                       formatOptionLabel={(opt) => {
                                         const [iata_code, city, name, country_name] =
                                           opt.label.split('|');
@@ -805,10 +891,21 @@ const UpdateBooking = () => {
                                       To<span className='text-danger'>*</span>
                                     </label>
                                     <WindowedSelect
-                                      options={airports.map((airport) => ({
-                                        value: airport.id,
-                                        label: `${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
-                                      }))}
+                                      options={airports
+                                        .filter((airport) => {
+                                          if (
+                                            bookingType?.value ===
+                                            'Domestic Flight Ticket'
+                                          ) {
+                                            return airport.country_name === 'India';
+                                          } else {
+                                            return true;
+                                          }
+                                        })
+                                        .map((airport) => ({
+                                          value: airport.id,
+                                          label: `${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
+                                        }))}
                                       formatOptionLabel={(opt) => {
                                         const [iata_code, city, name, country_name] =
                                           opt.label.split('|');
@@ -964,6 +1061,7 @@ const UpdateBooking = () => {
                           value={vendorBaseAmount}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           required
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -978,6 +1076,7 @@ const UpdateBooking = () => {
                           value={vendorYQAmount}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Vendor YQ Amount
@@ -991,6 +1090,7 @@ const UpdateBooking = () => {
                           value={vendorTaxAmount}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           required
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -1005,6 +1105,7 @@ const UpdateBooking = () => {
                           value={vendorGSTAmount}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           required
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -1019,6 +1120,7 @@ const UpdateBooking = () => {
                           value={vendorMiscCharges}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Vendor Misc Charges
@@ -1033,6 +1135,7 @@ const UpdateBooking = () => {
                             value={reissuePenalty}
                             placeholder=' '
                             type='number'
+                            onWheel={(e) => e.target.blur()}
                           />
                           <label className='lh-1 text-16 text-light-1'>
                             Reissue Penalty
@@ -1047,6 +1150,7 @@ const UpdateBooking = () => {
                           value={vendorTotal}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           disabled
                           required
                         />
@@ -1071,6 +1175,7 @@ const UpdateBooking = () => {
                           value={paymentAmount}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Payment Amount
@@ -1093,6 +1198,7 @@ const UpdateBooking = () => {
                           value={IATACommissionPercent}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           IATA Commission Percent
@@ -1106,6 +1212,7 @@ const UpdateBooking = () => {
                           value={plbCommissionPercent}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           PLB Commission Percent
@@ -1119,6 +1226,7 @@ const UpdateBooking = () => {
                           value={vendorServiceChargePercent}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           onFocus={() => setVendorGSTFocused(true)}
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -1132,6 +1240,7 @@ const UpdateBooking = () => {
                           value={vendorServiceCharges}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           onFocus={() => setVendorGSTFocused(false)}
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -1146,6 +1255,7 @@ const UpdateBooking = () => {
                           value={vendorTDSPercent}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           onFocus={() => setVendorTDSPercentFocused(true)}
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -1159,6 +1269,7 @@ const UpdateBooking = () => {
                           value={vendorTDS}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           onFocus={() => setVendorTDSPercentFocused(false)}
                         />
                         <label className='lh-1 text-16 text-light-1'>Vendor TDS</label>
@@ -1171,6 +1282,7 @@ const UpdateBooking = () => {
                           value={commissionReceivable}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           disabled
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -1214,6 +1326,7 @@ const UpdateBooking = () => {
                           value={clientReferralFee}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           onFocus={() => setXplorzGSTFocused(true)}
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -1228,6 +1341,7 @@ const UpdateBooking = () => {
                           value={clientQuotedAmount}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Client Quoted Amount
@@ -1241,6 +1355,7 @@ const UpdateBooking = () => {
                           value={clientBaseAmount}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           required
                           onFocus={() => {
                             setClientBaseAmountFocused(true);
@@ -1260,6 +1375,7 @@ const UpdateBooking = () => {
                           value={clientTaxAmount}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           required
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -1284,6 +1400,7 @@ const UpdateBooking = () => {
                           value={clientGSTAmount}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           required
                           disabled
                         />
@@ -1310,6 +1427,7 @@ const UpdateBooking = () => {
                             placeholder=' '
                             onFocus={() => setXplorzGSTFocused(true)}
                             type='number'
+                            onWheel={(e) => e.target.blur()}
                             required
                           />
                           <label className='lh-1 text-16 text-light-1'>
@@ -1323,6 +1441,7 @@ const UpdateBooking = () => {
                             value={clientServiceCharges}
                             placeholder=' '
                             type='number'
+                            onWheel={(e) => e.target.blur()}
                             required
                             onFocus={() => setXplorzGSTFocused(false)}
                             onBlur={() => setXplorzGSTFocused(true)}
@@ -1340,6 +1459,7 @@ const UpdateBooking = () => {
                           value={clientTotal}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           required
                           disabled
                         />
@@ -1347,17 +1467,6 @@ const UpdateBooking = () => {
                           Client Total<span className='text-danger'>*</span>
                         </label>
                       </div>
-                    </div>
-                    <div className='form-input-select'>
-                      <label>
-                        Client Traveller<span className='text-danger'>*</span>
-                      </label>
-                      <Select
-                        options={clientTravellers}
-                        value={clientTravellerID}
-                        placeholder='Search & Select Client Traveller'
-                        onChange={(id) => setClientTravellerID(id)}
-                      />
                     </div>
                     <div className='d-inline-block'>
                       <button

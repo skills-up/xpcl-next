@@ -52,6 +52,7 @@ const AddNewBooking = () => {
   // Dates
   const [bookingDate, setBookingDate] = useState(new DateObject());
   // Dropdowns
+  const [clientID, setClientID] = useState(null);
   const [bookingType, setBookingType] = useState(null);
   const [miscellaneousType, setMiscellaneousType] = useState(null);
   const [vendorID, setVendorID] = useState(null);
@@ -95,6 +96,7 @@ const AddNewBooking = () => {
   const [paymentAccounts, setPaymentAccounts] = useState([]);
   const [clients, setClients] = useState([]);
   const [clientTravellers, setClientTravellers] = useState([]);
+  const [clientOrgs, setClientOrgs] = useState([]);
 
   const [xplorzGSTFocused, setXplorzGSTFocused] = useState(false);
   const [vendorGSTFocused, setVendorGSTFocused] = useState(false);
@@ -111,21 +113,25 @@ const AddNewBooking = () => {
 
   const getData = async () => {
     const vendors = await getList('organizations', { is_vendor: 1 });
+    const clientOrgs = await getList('organizations', { is_client: 1 });
     const commissionRules = await getList('commission-rules');
     const airlines = await getList('organizations', { is_airline: 1 });
     const paymentAccounts = await getList('accounts', { category: 'Credit Cards' });
     const clients = await getList('accounts', { category: 'Referrers' });
-    const clientTravellers = await getList('client-travellers', {
-      client_id: store.getState().auth.value.currentOrganization,
-    });
     if (
       vendors?.success &&
       commissionRules?.success &&
       airlines?.success &&
       paymentAccounts?.success &&
       clients?.success &&
-      clientTravellers?.success
+      clientOrgs?.success
     ) {
+      setClientOrgs(
+        clientOrgs.data.map((element) => ({
+          value: element.id,
+          label: element.name,
+        }))
+      );
       setVendors(
         vendors.data.map((element) => ({
           value: element.id,
@@ -160,12 +166,6 @@ const AddNewBooking = () => {
           label: element.name,
         }))
       );
-      setClientTravellers(
-        clientTravellers.data.map((element) => ({
-          value: element.id,
-          label: element.traveller_name,
-        }))
-      );
     } else {
       sendToast('error', 'Unable to fetch required data', 4000);
       router.push('/dashboard/bookings');
@@ -181,6 +181,10 @@ const AddNewBooking = () => {
     }
     if (!vendorID?.value) {
       sendToast('error', 'Please Select a Vendor', 4000);
+      return;
+    }
+    if (!clientID?.value) {
+      sendToast('error', 'Please Select a Client', 4000);
       return;
     }
     if (!clientTravellerID?.value) {
@@ -201,6 +205,7 @@ const AddNewBooking = () => {
     // Adding response
     const response = await createItem('bookings', {
       booking_type: bookingType.value,
+      client_id: clientID?.value,
       booking_date: bookingDate.format('YYYY-MM-DD'),
       ticket_number: ticketNumber,
       pnr,
@@ -265,6 +270,29 @@ const AddNewBooking = () => {
           4000
         );
       }
+    }
+  };
+
+  // Client Traveller List
+  useEffect(() => {
+    if (clientID?.value) {
+      getClientTravellers();
+    }
+  }, [clientID]);
+
+  const getClientTravellers = async () => {
+    const clientTravellers = await getList('client-travellers', {
+      client_id: clientID?.value,
+    });
+    if (clientTravellers?.success) {
+      setClientTravellers(
+        clientTravellers.data.map((element) => ({
+          value: element.id,
+          label: element.traveller_name,
+        }))
+      );
+    } else {
+      sendToast('error', 'Error getting client travellers', 4000);
     }
   };
 
@@ -511,6 +539,30 @@ const AddNewBooking = () => {
                         onChange={(id) => setBookingType(id)}
                       />
                     </div>
+                    <div className='form-input-select'>
+                      <label>
+                        Client<span className='text-danger'>*</span>
+                      </label>
+                      <Select
+                        options={clientOrgs}
+                        value={clientID}
+                        placeholder='Search & Select Client'
+                        onChange={(id) => setClientID(id)}
+                      />
+                    </div>
+                    {clientTravellers && clientTravellers.length > 0 && (
+                      <div className='form-input-select'>
+                        <label>
+                          Client Traveller<span className='text-danger'>*</span>
+                        </label>
+                        <Select
+                          options={clientTravellers}
+                          value={clientTravellerID}
+                          placeholder='Search & Select Client Traveller'
+                          onChange={(id) => setClientTravellerID(id)}
+                        />
+                      </div>
+                    )}
                     <div className='d-block ml-3 form-datepicker'>
                       <label>
                         Booking Date<span className='text-danger'>*</span>
@@ -607,10 +659,21 @@ const AddNewBooking = () => {
                                       From<span className='text-danger'>*</span>
                                     </label>
                                     <WindowedSelect
-                                      options={airports.map((airport) => ({
-                                        value: airport.id,
-                                        label: `${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
-                                      }))}
+                                      options={airports
+                                        .filter((airport) => {
+                                          if (
+                                            bookingType?.value ===
+                                            'Domestic Flight Ticket'
+                                          ) {
+                                            return airport.country_name === 'India';
+                                          } else {
+                                            return true;
+                                          }
+                                        })
+                                        .map((airport) => ({
+                                          value: airport.id,
+                                          label: `${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
+                                        }))}
                                       formatOptionLabel={(opt) => {
                                         const [iata_code, city, name, country_name] =
                                           opt.label.split('|');
@@ -650,10 +713,21 @@ const AddNewBooking = () => {
                                       To<span className='text-danger'>*</span>
                                     </label>
                                     <WindowedSelect
-                                      options={airports.map((airport) => ({
-                                        value: airport.id,
-                                        label: `${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
-                                      }))}
+                                      options={airports
+                                        .filter((airport) => {
+                                          if (
+                                            bookingType?.value ===
+                                            'Domestic Flight Ticket'
+                                          ) {
+                                            return airport.country_name === 'India';
+                                          } else {
+                                            return true;
+                                          }
+                                        })
+                                        .map((airport) => ({
+                                          value: airport.id,
+                                          label: `${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
+                                        }))}
                                       formatOptionLabel={(opt) => {
                                         const [iata_code, city, name, country_name] =
                                           opt.label.split('|');
@@ -809,6 +883,7 @@ const AddNewBooking = () => {
                           value={vendorBaseAmount}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           required
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -823,6 +898,7 @@ const AddNewBooking = () => {
                           value={vendorYQAmount}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Vendor YQ Amount
@@ -836,6 +912,7 @@ const AddNewBooking = () => {
                           value={vendorTaxAmount}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           required
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -850,6 +927,7 @@ const AddNewBooking = () => {
                           value={vendorGSTAmount}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           required
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -864,6 +942,7 @@ const AddNewBooking = () => {
                           value={vendorMiscCharges}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Vendor Misc Charges
@@ -877,6 +956,7 @@ const AddNewBooking = () => {
                           value={vendorTotal}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           disabled
                           required
                         />
@@ -901,6 +981,7 @@ const AddNewBooking = () => {
                           value={paymentAmount}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Payment Amount
@@ -923,6 +1004,7 @@ const AddNewBooking = () => {
                           value={IATACommissionPercent}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           IATA Commission Percent
@@ -936,6 +1018,7 @@ const AddNewBooking = () => {
                           value={plbCommissionPercent}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           PLB Commission Percent
@@ -949,6 +1032,7 @@ const AddNewBooking = () => {
                           value={vendorServiceChargePercent}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           onFocus={() => setVendorGSTFocused(true)}
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -962,6 +1046,7 @@ const AddNewBooking = () => {
                           value={vendorServiceCharges}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           onFocus={() => setVendorGSTFocused(false)}
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -976,6 +1061,7 @@ const AddNewBooking = () => {
                           value={vendorTDSPercent}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           onFocus={() => setVendorTDSPercentFocused(true)}
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -989,6 +1075,7 @@ const AddNewBooking = () => {
                           value={vendorTDS}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           onFocus={() => setVendorTDSPercentFocused(false)}
                         />
                         <label className='lh-1 text-16 text-light-1'>Vendor TDS</label>
@@ -1001,6 +1088,7 @@ const AddNewBooking = () => {
                           value={commissionReceivable}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           disabled
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -1044,6 +1132,7 @@ const AddNewBooking = () => {
                           value={clientReferralFee}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           onFocus={() => setXplorzGSTFocused(true)}
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -1058,6 +1147,7 @@ const AddNewBooking = () => {
                           value={clientQuotedAmount}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Client Quoted Amount
@@ -1071,6 +1161,7 @@ const AddNewBooking = () => {
                           value={clientBaseAmount}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           required
                           onFocus={() => {
                             setClientBaseAmountFocused(true);
@@ -1090,6 +1181,7 @@ const AddNewBooking = () => {
                           value={clientTaxAmount}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           required
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -1114,6 +1206,7 @@ const AddNewBooking = () => {
                           value={clientGSTAmount}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           required
                           disabled
                         />
@@ -1140,6 +1233,7 @@ const AddNewBooking = () => {
                             placeholder=' '
                             onFocus={() => setXplorzGSTFocused(true)}
                             type='number'
+                            onWheel={(e) => e.target.blur()}
                             required
                           />
                           <label className='lh-1 text-16 text-light-1'>
@@ -1153,6 +1247,7 @@ const AddNewBooking = () => {
                             value={clientServiceCharges}
                             placeholder=' '
                             type='number'
+                            onWheel={(e) => e.target.blur()}
                             required
                             onFocus={() => setXplorzGSTFocused(false)}
                             onBlur={() => setXplorzGSTFocused(true)}
@@ -1170,6 +1265,7 @@ const AddNewBooking = () => {
                           value={clientTotal}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           required
                           disabled
                         />
@@ -1177,17 +1273,6 @@ const AddNewBooking = () => {
                           Client Total<span className='text-danger'>*</span>
                         </label>
                       </div>
-                    </div>
-                    <div className='form-input-select'>
-                      <label>
-                        Client Traveller<span className='text-danger'>*</span>
-                      </label>
-                      <Select
-                        options={clientTravellers}
-                        value={clientTravellerID}
-                        placeholder='Search & Select Client Traveller'
-                        onChange={(id) => setClientTravellerID(id)}
-                      />
                     </div>
                     <div className='d-inline-block'>
                       <button

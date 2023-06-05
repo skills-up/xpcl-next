@@ -173,7 +173,7 @@ const ReissueBooking = () => {
         const paymentAccounts = await getList('accounts', { category: 'Credit Cards' });
         const clients = await getList('accounts', { category: 'Referrers' });
         const clientTravellers = await getList('client-travellers', {
-          client_id: store.getState().auth.value.currentOrganization,
+          client_id: response.data?.client_id,
         });
         if (
           vendors?.success &&
@@ -658,6 +658,17 @@ const ReissueBooking = () => {
                         onChange={(id) => setBookingType(id)}
                       />
                     </div>
+                    <div className='form-input-select'>
+                      <label>
+                        Client Traveller<span className='text-danger'>*</span>
+                      </label>
+                      <Select
+                        options={clientTravellers}
+                        value={clientTravellerID}
+                        placeholder='Search & Select Client Traveller'
+                        onChange={(id) => setClientTravellerID(id)}
+                      />
+                    </div>
                     <div className='d-block ml-3 form-datepicker'>
                       <label>
                         Booking Date<span className='text-danger'>*</span>
@@ -754,10 +765,21 @@ const ReissueBooking = () => {
                                       From<span className='text-danger'>*</span>
                                     </label>
                                     <WindowedSelect
-                                      options={airports.map((airport) => ({
-                                        value: airport.id,
-                                        label: `${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
-                                      }))}
+                                      options={airports
+                                        .filter((airport) => {
+                                          if (
+                                            bookingType?.value ===
+                                            'Domestic Flight Ticket'
+                                          ) {
+                                            return airport.country_name === 'India';
+                                          } else {
+                                            return true;
+                                          }
+                                        })
+                                        .map((airport) => ({
+                                          value: airport.id,
+                                          label: `${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
+                                        }))}
                                       formatOptionLabel={(opt) => {
                                         const [iata_code, city, name, country_name] =
                                           opt.label.split('|');
@@ -797,10 +819,21 @@ const ReissueBooking = () => {
                                       To<span className='text-danger'>*</span>
                                     </label>
                                     <WindowedSelect
-                                      options={airports.map((airport) => ({
-                                        value: airport.id,
-                                        label: `${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
-                                      }))}
+                                      options={airports
+                                        .filter((airport) => {
+                                          if (
+                                            bookingType?.value ===
+                                            'Domestic Flight Ticket'
+                                          ) {
+                                            return airport.country_name === 'India';
+                                          } else {
+                                            return true;
+                                          }
+                                        })
+                                        .map((airport) => ({
+                                          value: airport.id,
+                                          label: `${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
+                                        }))}
                                       formatOptionLabel={(opt) => {
                                         const [iata_code, city, name, country_name] =
                                           opt.label.split('|');
@@ -956,6 +989,7 @@ const ReissueBooking = () => {
                           value={vendorBaseAmount}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           required
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -970,6 +1004,7 @@ const ReissueBooking = () => {
                           value={vendorYQAmount}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Vendor YQ Amount
@@ -983,6 +1018,7 @@ const ReissueBooking = () => {
                           value={vendorTaxAmount}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           required
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -997,6 +1033,7 @@ const ReissueBooking = () => {
                           value={vendorGSTAmount}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           required
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -1011,6 +1048,7 @@ const ReissueBooking = () => {
                           value={vendorMiscCharges}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Vendor Misc Charges
@@ -1023,10 +1061,11 @@ const ReissueBooking = () => {
                           onChange={(e) => setReissuePenalty(e.target.value)}
                           value={reissuePenalty}
                           placeholder=' '
-                          type='number'
+                          type='number' 
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
-                          Reissue Penalty
+                          Reissue Penalty<span className='text-danger'>*</span>
                         </label>
                       </div>
                     </div>
@@ -1037,6 +1076,7 @@ const ReissueBooking = () => {
                           value={vendorTotal}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           disabled
                           required
                         />
@@ -1061,6 +1101,7 @@ const ReissueBooking = () => {
                           value={paymentAmount}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Payment Amount
@@ -1083,6 +1124,7 @@ const ReissueBooking = () => {
                           value={IATACommissionPercent}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           IATA Commission Percent
@@ -1096,6 +1138,7 @@ const ReissueBooking = () => {
                           value={plbCommissionPercent}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           PLB Commission Percent
@@ -1109,6 +1152,7 @@ const ReissueBooking = () => {
                           value={vendorServiceChargePercent}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           onFocus={() => setVendorGSTFocused(true)}
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -1122,6 +1166,7 @@ const ReissueBooking = () => {
                           value={vendorServiceCharges}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           onFocus={() => setVendorGSTFocused(false)}
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -1136,6 +1181,7 @@ const ReissueBooking = () => {
                           value={vendorTDSPercent}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           onFocus={() => setVendorTDSPercentFocused(true)}
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -1149,6 +1195,7 @@ const ReissueBooking = () => {
                           value={vendorTDS}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           onFocus={() => setVendorTDSPercentFocused(false)}
                         />
                         <label className='lh-1 text-16 text-light-1'>Vendor TDS</label>
@@ -1161,6 +1208,7 @@ const ReissueBooking = () => {
                           value={commissionReceivable}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           disabled
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -1204,6 +1252,7 @@ const ReissueBooking = () => {
                           value={clientReferralFee}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           onFocus={() => setXplorzGSTFocused(true)}
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -1218,6 +1267,7 @@ const ReissueBooking = () => {
                           value={clientQuotedAmount}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Client Quoted Amount
@@ -1231,6 +1281,7 @@ const ReissueBooking = () => {
                           value={clientBaseAmount}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           required
                           onFocus={() => {
                             setClientBaseAmountFocused(true);
@@ -1250,6 +1301,7 @@ const ReissueBooking = () => {
                           value={clientTaxAmount}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           required
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -1274,6 +1326,7 @@ const ReissueBooking = () => {
                           value={clientGSTAmount}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           required
                           disabled
                         />
@@ -1300,6 +1353,7 @@ const ReissueBooking = () => {
                             placeholder=' '
                             onFocus={() => setXplorzGSTFocused(true)}
                             type='number'
+                            onWheel={(e) => e.target.blur()}
                             required
                           />
                           <label className='lh-1 text-16 text-light-1'>
@@ -1313,6 +1367,7 @@ const ReissueBooking = () => {
                             value={clientServiceCharges}
                             placeholder=' '
                             type='number'
+                            onWheel={(e) => e.target.blur()}
                             required
                             onFocus={() => setXplorzGSTFocused(false)}
                             onBlur={() => setXplorzGSTFocused(true)}
@@ -1330,6 +1385,7 @@ const ReissueBooking = () => {
                           value={clientTotal}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           required
                           disabled
                         />
@@ -1337,17 +1393,6 @@ const ReissueBooking = () => {
                           Client Total<span className='text-danger'>*</span>
                         </label>
                       </div>
-                    </div>
-                    <div className='form-input-select'>
-                      <label>
-                        Client Traveller<span className='text-danger'>*</span>
-                      </label>
-                      <Select
-                        options={clientTravellers}
-                        value={clientTravellerID}
-                        placeholder='Search & Select Client Traveller'
-                        onChange={(id) => setClientTravellerID(id)}
-                      />
                     </div>
                     <div className='d-inline-block'>
                       <button
