@@ -278,7 +278,7 @@ const AddNewBooking = () => {
   // Booking Type Changes
   useEffect(() => {
     // Client Service Charge Percent
-    if (clientServiceCharges.trim().length === 0) {
+    if (clientServiceCharges.trim().length === 0 || +clientServiceCharges === 0) {
       if (bookingType?.value === 'Domestic Flight Ticket')
         setClientServiceChargePercent(0.9);
       else setClientServiceChargePercent(1.8);
@@ -1044,6 +1044,7 @@ const AddNewBooking = () => {
                           value={clientReferralFee}
                           placeholder=' '
                           type='number'
+                          onFocus={() => setXplorzGSTFocused(true)}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Client Referral Fee
@@ -1071,7 +1072,10 @@ const AddNewBooking = () => {
                           placeholder=' '
                           type='number'
                           required
-                          onFocus={() => setClientBaseAmountFocused(true)}
+                          onFocus={() => {
+                            setClientBaseAmountFocused(true);
+                            setXplorzGSTFocused(true);
+                          }}
                           onBlur={() => setClientBaseAmountFocused(false)}
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -1151,6 +1155,7 @@ const AddNewBooking = () => {
                             type='number'
                             required
                             onFocus={() => setXplorzGSTFocused(false)}
+                            onBlur={() => setXplorzGSTFocused(true)}
                           />
                           <label className='lh-1 text-16 text-light-1'>
                             Client Services Charges<span className='text-danger'>*</span>
