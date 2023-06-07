@@ -20,7 +20,7 @@ export const initialState = {
     arrivingAt: null,
     departTimes: null,
     arriveTimes: null,
-    price: { min: 0, max: 0 },
+    price: { value: { min: 0, max: 0 }, maxPrice: 0 },
   },
 };
 

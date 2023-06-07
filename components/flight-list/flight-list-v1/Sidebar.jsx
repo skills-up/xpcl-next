@@ -5,6 +5,8 @@ import DepartingFrom from '../sidebar/DepartingFrom';
 import PirceSlider from '../sidebar/PirceSlider';
 import ArrivingAt from '../sidebar/ArrivingAt';
 import Cabin from '../sidebar/Cabin';
+import DepartTime from '../sidebar/DepartTime';
+import ArrivalTime from '../sidebar/ArrivalTime';
 
 const Sidebar = () => {
   return (
@@ -55,9 +57,18 @@ const Sidebar = () => {
       {/* End CruiseStyle filter */}
 
       <div className='sidebar__item'>
-        <h5 className='text-18 fw-500 mb-10'>Departing from</h5>
+        <h5 className='text-18 fw-500 mb-10'>Departing Time</h5>
         <div className='sidebar-checkbox'>
-          <DepartingFrom />
+          <DepartTime />
+        </div>
+        {/* End Sidebar-checkbox */}
+      </div>
+      {/* End Port filter */}
+
+      <div className='sidebar__item'>
+        <h5 className='text-18 fw-500 mb-10'>Arrival Time</h5>
+        <div className='sidebar-checkbox'>
+          <ArrivalTime />
         </div>
         {/* End Sidebar-checkbox */}
       </div>

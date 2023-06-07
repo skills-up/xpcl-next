@@ -3,8 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { FaChevronCircleDown, FaRegClock } from 'react-icons/fa';
 import {
   setAirlines,
+  setArriveTimes,
   setCabins,
+  setDepartTimes,
   setPaginateTotalDataSize,
+  setPrice,
   setStops,
 } from '../../../features/flightSearch/flightSearchSlice';
 import { BsArrowRight } from 'react-icons/bs';
@@ -25,6 +28,9 @@ const FlightProperties = () => {
   const stops = useSelector((state) => state.flightSearch.value.stops);
   const cabins = useSelector((state) => state.flightSearch.value.cabins);
   const airlines = useSelector((state) => state.flightSearch.value.airlines);
+  const departTimes = useSelector((state) => state.flightSearch.value.departTimes);
+  const arriveTimes = useSelector((state) => state.flightSearch.value.arriveTimes);
+  const price = useSelector((state) => state.flightSearch.value.price);
 
   const paginateDataNumber = useSelector(
     (state) => state.flightSearch.value.paginateDataNumber
@@ -33,10 +39,6 @@ const FlightProperties = () => {
     (state) => state.flightSearch.value.paginateDataPerPage
   );
   const dispatch = useDispatch();
-
-  /* TODO
-  - Pagination
-  */
 
   // Manipulating Data
   useEffect(() => {
@@ -50,6 +52,23 @@ const FlightProperties = () => {
       let stops = {};
       let cabins = {};
       let airlines = {};
+      let maxPrice = 0;
+      let departTimes = {
+        early_morning: { times: '04:00 - 08:00', value: true, number: 0 },
+        morning: { times: '08:00 - 12:00', value: true, number: 0 },
+        afternoon: { times: '12:00 - 16:00', value: true, number: 0 },
+        evening: { times: '16:00 - 20:00', value: true, number: 0 },
+        night: { times: '20:00 - 24:00', value: true, number: 0 },
+        late_night: { times: '00:00 - 04:00', value: true, number: 0 },
+      };
+      let arriveTimes = {
+        early_morning: { times: '04:00 - 08:00', value: true, number: 0 },
+        morning: { times: '08:00 - 12:00', value: true, number: 0 },
+        afternoon: { times: '12:00 - 16:00', value: true, number: 0 },
+        evening: { times: '16:00 - 20:00', value: true, number: 0 },
+        night: { times: '20:00 - 24:00', value: true, number: 0 },
+        late_night: { times: '00:00 - 04:00', value: true, number: 0 },
+      };
       // Iterating over providers
       for (let [key, value] of Object.entries(searchData)) {
         // If provider was found
@@ -144,6 +163,33 @@ const FlightProperties = () => {
                 airlines[val.segments[0].flight.airline]
                   ? (airlines[val.segments[0].flight.airline] += 1)
                   : (airlines[val.segments[0].flight.airline] = 1);
+                // Depart Time
+                let departHour = val.segments[0].departure.time
+                  .split('T')[1]
+                  .split(':')[0];
+                for (let [key, value] of Object.entries(departTimes)) {
+                  if (
+                    +departHour >= +value.times.slice(0, 2) &&
+                    +departHour < +value.times.slice(8, 10)
+                  )
+                    departTimes[key].number += 1;
+                }
+                // Arriving Time
+                let arrivalHour = val.segments
+                  .at(-1)
+                  .arrival.time.split('T')[1]
+                  .split(':')[0];
+                for (let [key, value] of Object.entries(arriveTimes)) {
+                  if (
+                    +arrivalHour >= +value.times.slice(0, 2) &&
+                    +arrivalHour < +value.times.slice(8, 10)
+                  )
+                    arriveTimes[key].number += 1;
+                }
+                // Pricing
+                if (total > maxPrice) maxPrice = total;
+                // Departing From
+                // Arriving At
                 /* Pushing */
                 temp.push({
                   ...val,
@@ -173,7 +219,7 @@ const FlightProperties = () => {
       for (let [key, value] of Object.entries(cabins)) {
         cabins[key] = { number: value, value: true };
       }
-      // Manipulating AIrlines
+      // Manipulating Airlines
       for (let [key, value] of Object.entries(airlines)) {
         for (let org of airlineOrgs) {
           if (org.code === key) {
@@ -186,6 +232,11 @@ const FlightProperties = () => {
       dispatch(setStops(stops));
       dispatch(setCabins(cabins));
       dispatch(setAirlines(airlines));
+      dispatch(setDepartTimes(departTimes));
+      dispatch(setArriveTimes(arriveTimes));
+      dispatch(
+        setPrice({ value: { min: 0, max: maxPrice + 1 }, maxPrice: maxPrice + 1 })
+      );
       console.log(temp);
       setFrom(from);
       setTo(to);
@@ -291,6 +342,30 @@ const FlightProperties = () => {
                 if (el.segments[0].flight.airline === airline.code)
                   if (!airline.value) return false;
               }
+              // Filter By Depart Time
+              let departHour = el.segments[0].departure.time.split('T')[1].split(':')[0];
+              for (let [key, value] of Object.entries(departTimes)) {
+                if (
+                  +departHour >= +value.times.slice(0, 2) &&
+                  +departHour < +value.times.slice(8, 10)
+                )
+                  if (!value.value) return false;
+              }
+              // Filter By Airline Time
+              let arrivalHour = el.segments
+                .at(-1)
+                .arrival.time.split('T')[1]
+                .split(':')[0];
+              for (let [key, value] of Object.entries(arriveTimes)) {
+                if (
+                  +arrivalHour >= +value.times.slice(0, 2) &&
+                  +arrivalHour < +value.times.slice(8, 10)
+                )
+                  if (!value.value) return false;
+              }
+              // Filter By Price Slider
+              if (!(el.total >= price.value.min && el.total <= price.value.max))
+                return false;
               // Return True by Default
               return true;
             } else {
