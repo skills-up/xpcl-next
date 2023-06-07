@@ -1,90 +1,45 @@
+import { useDispatch, useSelector } from 'react-redux';
+import { setAirlines } from '../../../features/flightSearch/flightSearchSlice';
+
 const Airlines = () => {
+  const dispatch = useDispatch();
+  const airlines = useSelector((state) => state.flightSearch.value.airlines);
+
   return (
     <>
-      <div className="row y-gap-10 items-center justify-between">
-        <div className="col-auto">
-          <div className="form-checkbox d-flex items-center">
-            <input type="checkbox" name="name" />
-            <div className="form-checkbox__mark">
-              <div className="form-checkbox__icon icon-check" />
+      {airlines &&
+        Object.entries(airlines).map(([key, value], index) => (
+          <div className='row y-gap-10 items-center justify-between'>
+            <div className='col-auto'>
+              <div className='form-checkbox d-flex items-center'>
+                <input
+                  type='checkbox'
+                  name='name'
+                  checked={value.value}
+                  onClick={() =>
+                    dispatch(
+                      setAirlines({
+                        ...airlines,
+                        [key]: {
+                          number: value.number,
+                          value: !value.value,
+                          code: value.code,
+                        },
+                      })
+                    )
+                  }
+                />
+                <div className='form-checkbox__mark'>
+                  <div className='form-checkbox__icon icon-check' />
+                </div>
+                <div className='text-15 ml-10'>{key}</div>
+              </div>
             </div>
-            <div className="text-15 ml-10">Air France</div>
-          </div>
-        </div>
-        {/* End col-auto */}
-        <div className="col-auto">
-          <div className="text-15 text-light-1">92</div>
-        </div>
-      </div>
-      {/* End .row */}
-
-      <div className="row y-gap-10 items-center justify-between">
-        <div className="col-auto">
-          <div className="form-checkbox d-flex items-center">
-            <input type="checkbox" name="name" />
-            <div className="form-checkbox__mark">
-              <div className="form-checkbox__icon icon-check" />
+            <div className='col-auto'>
+              <div className='text-15 text-light-1'>{value.number}</div>
             </div>
-            <div className="text-15 ml-10">Aer Lingus</div>
           </div>
-        </div>
-        {/* End col-auto */}
-        <div className="col-auto">
-          <div className="text-15 text-light-1">45</div>
-        </div>
-      </div>
-      {/* End .row */}
-
-      <div className="row y-gap-10 items-center justify-between">
-        <div className="col-auto">
-          <div className="form-checkbox d-flex items-center">
-            <input type="checkbox" name="name" />
-            <div className="form-checkbox__mark">
-              <div className="form-checkbox__icon icon-check" />
-            </div>
-            <div className="text-15 ml-10">Air Canada</div>
-          </div>
-        </div>
-        {/* End col-auto */}
-        <div className="col-auto">
-          <div className="text-15 text-light-1">21</div>
-        </div>
-      </div>
-      {/* End .row */}
-
-      <div className="row y-gap-10 items-center justify-between">
-        <div className="col-auto">
-          <div className="form-checkbox d-flex items-center">
-            <input type="checkbox" name="name" />
-            <div className="form-checkbox__mark">
-              <div className="form-checkbox__icon icon-check" />
-            </div>
-            <div className="text-15 ml-10">Air Europa</div>
-          </div>
-        </div>
-        {/* End col-auto */}
-        <div className="col-auto">
-          <div className="text-15 text-light-1">21</div>
-        </div>
-      </div>
-      {/* End .row */}
-
-      <div className="row y-gap-10 items-center justify-between">
-        <div className="col-auto">
-          <div className="form-checkbox d-flex items-center">
-            <input type="checkbox" name="name" />
-            <div className="form-checkbox__mark">
-              <div className="form-checkbox__icon icon-check" />
-            </div>
-            <div className="text-15 ml-10">Turkish Airlines</div>
-          </div>
-        </div>
-        {/* End col-auto */}
-        <div className="col-auto">
-          <div className="text-15 text-light-1">21</div>
-        </div>
-      </div>
-      {/* End .row */}
+        ))}
     </>
   );
 };

@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FaChevronCircleDown, FaRegClock } from 'react-icons/fa';
 import {
+  setAirlines,
+  setCabins,
   setPaginateTotalDataSize,
   setStops,
 } from '../../../features/flightSearch/flightSearchSlice';
@@ -21,6 +23,8 @@ const FlightProperties = () => {
   const [from, setFrom] = useState('');
 
   const stops = useSelector((state) => state.flightSearch.value.stops);
+  const cabins = useSelector((state) => state.flightSearch.value.cabins);
+  const airlines = useSelector((state) => state.flightSearch.value.airlines);
 
   const paginateDataNumber = useSelector(
     (state) => state.flightSearch.value.paginateDataNumber
@@ -44,6 +48,8 @@ const FlightProperties = () => {
       let to = '',
         from = '';
       let stops = {};
+      let cabins = {};
+      let airlines = {};
       // Iterating over providers
       for (let [key, value] of Object.entries(searchData)) {
         // If provider was found
@@ -114,7 +120,31 @@ const FlightProperties = () => {
                 } else {
                   stops['Nonstop'] ? (stops['Nonstop'] += 1) : (stops['Nonstop'] = 1);
                 }
-                // Pushing
+                // Cabin
+                if (key === 'aa') {
+                  if (val.prices.prices.ADT.cabinClass === 'EC')
+                    cabins['Economy']
+                      ? (cabins['Economy'] += 1)
+                      : (cabins['Economy'] = 1);
+                } else if (key === 'tj') {
+                  if (val.prices.prices.ADULT.cabinClass === 'PREMIUM_ECONOMY')
+                    cabins['Premium Economy']
+                      ? (cabins['Premium Economy'] += 1)
+                      : (cabins['Premium Economy'] = 1);
+                  else {
+                    let tempClass =
+                      val.prices.prices.ADULT.cabinClass.charAt(0).toUpperCase() +
+                      val.prices.prices.ADULT.cabinClass.slice(1).toLowerCase();
+                    cabins[tempClass]
+                      ? (cabins[tempClass] += 1)
+                      : (cabins[tempClass] = 1);
+                  }
+                }
+                // Airlines
+                airlines[val.segments[0].flight.airline]
+                  ? (airlines[val.segments[0].flight.airline] += 1)
+                  : (airlines[val.segments[0].flight.airline] = 1);
+                /* Pushing */
                 temp.push({
                   ...val,
                   ...{
@@ -139,7 +169,23 @@ const FlightProperties = () => {
       for (let [key, value] of Object.entries(stops)) {
         stops[key] = { number: value, value: true };
       }
+      // Manipulating Cabins
+      for (let [key, value] of Object.entries(cabins)) {
+        cabins[key] = { number: value, value: true };
+      }
+      // Manipulating AIrlines
+      for (let [key, value] of Object.entries(airlines)) {
+        for (let org of airlineOrgs) {
+          if (org.code === key) {
+            airlines[org.name] = { number: value, value: true, code: key };
+            delete airlines[key];
+            break;
+          }
+        }
+      }
       dispatch(setStops(stops));
+      dispatch(setCabins(cabins));
+      dispatch(setAirlines(airlines));
       console.log(temp);
       setFrom(from);
       setTo(to);
@@ -225,6 +271,25 @@ const FlightProperties = () => {
                 if (!stops['1 Stop']?.value) return false;
               } else {
                 if (!stops[`${el.segments.length - 1} Stops`]?.value) return false;
+              }
+              // Filter By Cabin
+              if (el.provider === 'aa') {
+                if (el.prices.prices.ADT.cabinClass === 'EC')
+                  if (!cabins['Economy']?.value) return false;
+              } else if (el.provider === 'tj') {
+                if (el.prices.prices.ADULT.cabinClass === 'PREMIUM_ECONOMY') {
+                  if (!cabins['Premium Economy']?.value) return false;
+                } else {
+                  let tempClass =
+                    el.prices.prices.ADULT.cabinClass.charAt(0).toUpperCase() +
+                    el.prices.prices.ADULT.cabinClass.slice(1).toLowerCase();
+                  if (!cabins[tempClass]?.value) return false;
+                }
+              }
+              // Filter By Airline
+              for (let airline of Object.values(airlines)) {
+                if (el.segments[0].flight.airline === airline.code)
+                  if (!airline.value) return false;
               }
               // Return True by Default
               return true;
