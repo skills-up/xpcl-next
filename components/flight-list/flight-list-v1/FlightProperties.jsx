@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FaChevronCircleDown, FaRegClock } from 'react-icons/fa';
-import { setPaginateTotalDataSize } from '../../../features/flightSearch/flightSearchSlice';
+import {
+  setPaginateTotalDataSize,
+  setStops,
+} from '../../../features/flightSearch/flightSearchSlice';
 import { BsArrowRight } from 'react-icons/bs';
 
 const FlightProperties = () => {
@@ -16,6 +19,8 @@ const FlightProperties = () => {
   const [combinedCount, setCombinedCount] = useState(0);
   const [to, setTo] = useState('');
   const [from, setFrom] = useState('');
+
+  const stops = useSelector((state) => state.flightSearch.value.stops);
 
   const paginateDataNumber = useSelector(
     (state) => state.flightSearch.value.paginateDataNumber
@@ -38,8 +43,12 @@ const FlightProperties = () => {
       let combinedCount = 0;
       let to = '',
         from = '';
+      let stops = {};
+      // Iterating over providers
       for (let [key, value] of Object.entries(searchData)) {
+        // If provider was found
         if (value) {
+          // Iterating over to, from and combined
           for (let [secondKey, secondValue] of Object.entries(value)) {
             if (secondValue && secondValue?.length > 0) {
               for (let val of secondValue) {
@@ -94,6 +103,17 @@ const FlightProperties = () => {
                 // Setting from and combined count
                 if (secondKey === 'from') fromCount += 1;
                 if (secondKey === 'combined') combinedCount += 1;
+                /* Sorting */
+                // Stops
+                if (val.segments.length > 1) {
+                  if (val.segments.length > 2)
+                    stops[`${val.segments.length - 1} Stops`]
+                      ? (stops[`${val.segments.length - 1} Stops`] += 1)
+                      : (stops[`${val.segments.length - 1} Stops`] = 1);
+                  else stops['1 Stop'] ? (stops['1 Stop'] += 1) : (stops['1 Stop'] = 1);
+                } else {
+                  stops['Nonstop'] ? (stops['Nonstop'] += 1) : (stops['Nonstop'] = 1);
+                }
                 // Pushing
                 temp.push({
                   ...val,
@@ -115,6 +135,11 @@ const FlightProperties = () => {
           }
         }
       }
+      // Manipulating Stops
+      for (let [key, value] of Object.entries(stops)) {
+        stops[key] = { number: value, value: true };
+      }
+      dispatch(setStops(stops));
       console.log(temp);
       setFrom(from);
       setTo(to);
@@ -188,7 +213,25 @@ const FlightProperties = () => {
       {manip &&
         manip.length > 0 &&
         manip
-          .filter((el) => el.type === currentTab)
+          .filter((el) => {
+            // If Element type is of current tab
+            if (el.type === currentTab) {
+              // Filters:
+              let matchesSort = true;
+              // Filter By Stops
+              if (el.segments.length === 1) {
+                if (!stops['Nonstop']?.value) return false;
+              } else if (el.segments.length === 2) {
+                if (!stops['1 Stop']?.value) return false;
+              } else {
+                if (!stops[`${el.segments.length - 1} Stops`]?.value) return false;
+              }
+              // Return True by Default
+              return true;
+            } else {
+              return false;
+            }
+          })
           .map((element, index) => {
             // 1 Get lower bound
             let lowerBound;
