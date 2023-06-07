@@ -415,12 +415,12 @@ const ReissueBooking = () => {
     }
   };
 
-  // If vendor is an airline, setting airline automatically
-  useEffect(() => {
-    if (vendorID?.value)
-      for (let airline of airlines)
-        if (vendorID.value === airline.value) setAirlineID(vendorID);
-  }, [vendorID]);
+  // // If vendor is an airline, setting airline automatically
+  // useEffect(() => {
+  //   if (vendorID?.value)
+  //     for (let airline of airlines)
+  //       if (vendorID.value === airline.value) setAirlineID(vendorID);
+  // }, [vendorID]);
 
   // Booking Type Changes
   useEffect(() => {
@@ -731,6 +731,15 @@ const ReissueBooking = () => {
                         </label>
                       </div>
                     </div>
+                    <div className='form-input-select'>
+                      <label>Airline</label>
+                      <Select
+                        options={airlines}
+                        value={airlineID}
+                        placeholder='Search & Select Airline'
+                        onChange={(id) => setAirlineID(id)}
+                      />
+                    </div>
                     {/* Booking Sectors */}
                     {bookingType?.value !== 'Miscellaneous' && (
                       <div>
@@ -778,10 +787,10 @@ const ReissueBooking = () => {
                                         })
                                         .map((airport) => ({
                                           value: airport.id,
-                                          label: `${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
+                                          label: `|${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
                                         }))}
                                       formatOptionLabel={(opt) => {
-                                        const [iata_code, city, name, country_name] =
+                                        const [_, iata_code, city, name, country_name] =
                                           opt.label.split('|');
                                         return (
                                           <div key={iata_code}>
@@ -832,10 +841,10 @@ const ReissueBooking = () => {
                                         })
                                         .map((airport) => ({
                                           value: airport.id,
-                                          label: `${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
+                                          label: `|${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
                                         }))}
                                       formatOptionLabel={(opt) => {
-                                        const [iata_code, city, name, country_name] =
+                                        const [_, iata_code, city, name, country_name] =
                                           opt.label.split('|');
                                         return (
                                           <div key={iata_code}>
@@ -1215,15 +1224,6 @@ const ReissueBooking = () => {
                           Commission Receivable
                         </label>
                       </div>
-                    </div>
-                    <div className='form-input-select'>
-                      <label>Airline</label>
-                      <Select
-                        options={airlines}
-                        value={airlineID}
-                        placeholder='Search & Select Airline'
-                        onChange={(id) => setAirlineID(id)}
-                      />
                     </div>
                     {bookingType?.value === 'Miscellaneous' && (
                       <div className='form-input-select'>

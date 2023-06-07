@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FaChevronCircleDown, FaRegClock } from 'react-icons/fa';
 import { setPaginateTotalDataSize } from '../../../features/flightSearch/flightSearchSlice';
+import { BsArrowRight } from 'react-icons/bs';
 
 const FlightProperties = () => {
   const searchData = useSelector((state) => state.flightSearch.value.searchData);
@@ -13,6 +14,8 @@ const FlightProperties = () => {
   const [expand, setExpand] = useState([]);
   const [fromCount, setFromCount] = useState(0);
   const [combinedCount, setCombinedCount] = useState(0);
+  const [to, setTo] = useState('');
+  const [from, setFrom] = useState('');
 
   const paginateDataNumber = useSelector(
     (state) => state.flightSearch.value.paginateDataNumber
@@ -33,6 +36,8 @@ const FlightProperties = () => {
       let counter = 1;
       let fromCount = 0;
       let combinedCount = 0;
+      let to = '',
+        from = '';
       for (let [key, value] of Object.entries(searchData)) {
         if (value) {
           for (let [secondKey, secondValue] of Object.entries(value)) {
@@ -81,6 +86,11 @@ const FlightProperties = () => {
                     )) /
                     (1000 * 60 * 60 * 24)
                 );
+                // Setting Arrival and Departure Airport Codes
+                if (from === '' && to === '' && secondKey === 'to') {
+                  from = val.segments[0].departure.airport.code;
+                  to = val.segments.at(-1).arrival.airport.code;
+                }
                 // Setting from and combined count
                 if (secondKey === 'from') fromCount += 1;
                 if (secondKey === 'combined') combinedCount += 1;
@@ -106,6 +116,8 @@ const FlightProperties = () => {
         }
       }
       console.log(temp);
+      setFrom(from);
+      setTo(to);
       setFromCount(fromCount);
       setCombinedCount(combinedCount);
       setManip(temp);
@@ -132,6 +144,7 @@ const FlightProperties = () => {
         >
           <span
             onClick={() => setCurrentTab('to')}
+            className='d-flex items-center justify-center gap-2'
             style={{
               cursor: 'pointer',
               borderBottom:
@@ -139,11 +152,12 @@ const FlightProperties = () => {
               flex: '1',
             }}
           >
-            To
+            {from} <BsArrowRight /> {to}
           </span>
           {fromCount > 0 && (
             <span
               onClick={() => setCurrentTab('from')}
+              className='d-flex items-center justify-center gap-2'
               style={{
                 cursor: 'pointer',
                 borderBottom:
@@ -151,12 +165,13 @@ const FlightProperties = () => {
                 flex: '1',
               }}
             >
-              From
+              {to} <BsArrowRight /> {from}
             </span>
           )}
           {combinedCount > 0 && (
             <span
               onClick={() => setCurrentTab('combined')}
+              className='d-flex items-center justify-center gap-2'
               style={{
                 cursor: 'pointer',
                 borderBottom:
@@ -164,7 +179,7 @@ const FlightProperties = () => {
                 flex: '1',
               }}
             >
-              Combined
+              Round Trip
             </span>
           )}
         </div>
@@ -228,11 +243,11 @@ const FlightProperties = () => {
                                         if (stopIndex + 1 < element.segments.length) {
                                           if (stopIndex === 0) {
                                             return (
-                                              <>{segmentStop.departure.airport.code}</>
+                                              <>{segmentStop.arrival.airport.code}</>
                                             );
                                           } else {
                                             return (
-                                              <>,{segmentStop.departure.airport.code}</>
+                                              <>,{segmentStop.arrival.airport.code}</>
                                             );
                                           }
                                         }
