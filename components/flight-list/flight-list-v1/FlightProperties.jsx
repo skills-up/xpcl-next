@@ -4,7 +4,9 @@ import { FaChevronCircleDown, FaRegClock } from 'react-icons/fa';
 import {
   setAirlines,
   setArriveTimes,
+  setArrivingAt,
   setCabins,
+  setDepartingFrom,
   setDepartTimes,
   setPaginateTotalDataSize,
   setPrice,
@@ -31,6 +33,8 @@ const FlightProperties = () => {
   const departTimes = useSelector((state) => state.flightSearch.value.departTimes);
   const arriveTimes = useSelector((state) => state.flightSearch.value.arriveTimes);
   const price = useSelector((state) => state.flightSearch.value.price);
+  const departingFrom = useSelector((state) => state.flightSearch.value.departingFrom);
+  const arrivingAt = useSelector((state) => state.flightSearch.value.arrivingAt);
 
   const paginateDataNumber = useSelector(
     (state) => state.flightSearch.value.paginateDataNumber
@@ -42,7 +46,7 @@ const FlightProperties = () => {
 
   // Manipulating Data
   useEffect(() => {
-    if (searchData) {
+    if (searchData && airlineOrgs) {
       let temp = [];
       let counter = 1;
       let fromCount = 0;
@@ -53,6 +57,8 @@ const FlightProperties = () => {
       let cabins = {};
       let airlines = {};
       let maxPrice = 0;
+      let departingFrom = {};
+      let arrivingAt = {};
       let departTimes = {
         early_morning: { times: '04:00 - 08:00', value: true, number: 0 },
         morning: { times: '08:00 - 12:00', value: true, number: 0 },
@@ -189,7 +195,13 @@ const FlightProperties = () => {
                 // Pricing
                 if (total > maxPrice) maxPrice = total;
                 // Departing From
+                departingFrom[val.segments[0].departure.airport.code]
+                  ? (departingFrom[val.segments[0].departure.airport.code] += 1)
+                  : (departingFrom[val.segments[0].departure.airport.code] = 1);
                 // Arriving At
+                arrivingAt[val.segments.at(-1).arrival.airport.code]
+                  ? (arrivingAt[val.segments.at(-1).arrival.airport.code] += 1)
+                  : (arrivingAt[val.segments.at(-1).arrival.airport.code] = 1);
                 /* Pushing */
                 temp.push({
                   ...val,
@@ -229,6 +241,24 @@ const FlightProperties = () => {
           }
         }
       }
+      // Manipulating Departing From
+      for (let [key, value] of Object.entries(departingFrom)) {
+        for (let airport of airports) {
+          if (airport.iata_code === key) {
+            departingFrom[airport.name] = { number: value, value: true, iata_code: key };
+            delete departingFrom[key];
+          }
+        }
+      }
+      // Manipulating Arriving At
+      for (let [key, value] of Object.entries(arrivingAt)) {
+        for (let airport of airports) {
+          if (airport.iata_code === key) {
+            arrivingAt[airport.name] = { number: value, value: true, iata_code: key };
+            delete arrivingAt[key];
+          }
+        }
+      }
       dispatch(setStops(stops));
       dispatch(setCabins(cabins));
       dispatch(setAirlines(airlines));
@@ -237,6 +267,8 @@ const FlightProperties = () => {
       dispatch(
         setPrice({ value: { min: 0, max: maxPrice + 1 }, maxPrice: maxPrice + 1 })
       );
+      dispatch(setDepartingFrom(departingFrom));
+      dispatch(setArrivingAt(arrivingAt));
       console.log(temp);
       setFrom(from);
       setTo(to);
@@ -244,7 +276,7 @@ const FlightProperties = () => {
       setCombinedCount(combinedCount);
       setManip(temp);
     }
-  }, [searchData]);
+  }, [searchData, airlineOrgs]);
 
   useEffect(() => {
     if (manip) {
@@ -366,6 +398,15 @@ const FlightProperties = () => {
               // Filter By Price Slider
               if (!(el.total >= price.value.min && el.total <= price.value.max))
                 return false;
+              // Filter By Departing From & Arriving At
+              for (let dep of Object.values(departingFrom)) {
+                if (el.segments[0].departure.airport.code === dep.iata_code)
+                  if (!dep.value) return false;
+              }
+              for (let arr of Object.values(arrivingAt)) {
+                if (el.segments.at(-1).arrival.airport.code === arr.iata_code)
+                  if (!arr.value) return false;
+              }
               // Return True by Default
               return true;
             } else {

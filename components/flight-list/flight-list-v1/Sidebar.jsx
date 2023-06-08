@@ -75,6 +75,14 @@ const Sidebar = () => {
       {/* End Port filter */}
 
       <div className='sidebar__item'>
+        <h5 className='text-18 fw-500 mb-10'>Departing From</h5>
+        <div className='sidebar-checkbox'>
+          <DepartingFrom />
+        </div>
+        {/* End Sidebar-checkbox */}
+      </div>
+
+      <div className='sidebar__item'>
         <h5 className='text-18 fw-500 mb-10'>Arriving at</h5>
         <div className='sidebar-checkbox'>
           <ArrivingAt />
