@@ -16389,6 +16389,121 @@ export const tripjack = {
         type: 'PUBLISHED',
       },
     },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'I5',
+            number: '740',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-14T00:50',
+          },
+          arrival: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-14T01:30',
+          },
+          journey: {
+            stops: 0,
+            duration: 170,
+            layoverMins: 645,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'I5',
+            number: '2991',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-15T21:25',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-15T22:40',
+          },
+          journey: {
+            stops: 0,
+            duration: 95,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          CHILD: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'EC',
+            fare: 5282.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 4,
+          },
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'EC',
+            fare: 5282.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 4,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+            },
+            fare: 3017.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+        },
+        id: '22-8516858531_17DELBLRI5740BLRBOMI52991_35113472812022',
+        type: 'PUBLISHED',
+      },
+    },
   ],
 };
 

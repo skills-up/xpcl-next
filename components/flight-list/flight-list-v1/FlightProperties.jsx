@@ -542,8 +542,23 @@ const FlightProperties = () => {
                           </div>
                           <div className='col-md-auto'>
                             <div className='text-15 text-light-1 px-20 md:px-0'>
-                              {Math.floor(element.totalDuration / 60)}h{' '}
-                              {element.totalDuration % 60}m
+                              {/* Checking Days, Hours, Minutes */}
+                              {element.totalDuration >= 1440 ? (
+                                <>
+                                  {Math.floor(element.totalDuration / 24 / 60)}d{' '}
+                                  {Math.floor((element.totalDuration / 60) % 24)}h{' '}
+                                  {element.totalDuration % 60}m
+                                </>
+                              ) : (
+                                <>
+                                  {Math.floor(element.totalDuration / 60) > 0 ? (
+                                    <>{Math.floor(element.totalDuration / 60)}h</>
+                                  ) : (
+                                    <></>
+                                  )}{' '}
+                                  {element.totalDuration % 60}m
+                                </>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -747,7 +762,7 @@ const FlightProperties = () => {
                                   </div>
                                   <div className='col-auto'>
                                     <div className='text-14 text-light-1'>
-                                      {hours}h {minutes}m
+                                      {hours > 0 ? <>{hours}h</> : <></>} {minutes}m
                                     </div>
                                   </div>
                                 </div>
@@ -795,7 +810,7 @@ const FlightProperties = () => {
                                           <img src='/img/flights/plane.svg' alt='image' />
                                         </div>
                                         <div className='text-14 text-light-1'>
-                                          {hours}h {minutes}m
+                                          {hours > 0 ? <>{hours}h</> : <></>} {minutes}m
                                         </div>
                                       </div>
                                       <div className='d-flex items-center mt-15'>
@@ -853,7 +868,23 @@ const FlightProperties = () => {
                             {segmentIndex + 1 < element.segments.length && (
                               <span className='ml-10 d-flex items-center gap-2'>
                                 <FaRegClock className='text-danger text-20' /> Layover
-                                Time - {Math.floor(layoverTime / 60)}h {layoverTime % 60}m
+                                Time -{' '}
+                                {layoverTime >= 1440 ? (
+                                  <>
+                                    {Math.floor(layoverTime / 24 / 60)}d{' '}
+                                    {Math.floor((layoverTime / 60) % 24)}h{' '}
+                                    {layoverTime % 60}m
+                                  </>
+                                ) : (
+                                  <>
+                                    {Math.floor(layoverTime / 60) > 0 ? (
+                                      <>{Math.floor(layoverTime / 60)}h</>
+                                    ) : (
+                                      <></>
+                                    )}{' '}
+                                    {layoverTime % 60}m
+                                  </>
+                                )}
                               </span>
                             )}
                           </div>
