@@ -184,14 +184,14 @@ const MainFilterSearchBox = () => {
 
   return (
     <>
-      <div className='row y-gap-20 items-center'>
+      {/* <div className='row y-gap-20 items-center'>
         <FilterSelect />
-      </div>
+      </div> */}
       {/* End .row */}
 
       <div className='border-light rounded-4 pr-20 py-20 lg:px-20 lg:pt-5 lg:pb-20 mt-15'>
-        <div className='flight-search pl-20'>
-          <div className='d-flex items-center gap-2'>
+        <div className='flight-search pl-20 lg:pl-0'>
+          <div className='d-flex items-center gap-2 justify-center'>
             <label>One Way</label>
             <ReactSwitch
               onChange={() => dispatch(setReturnFlight({ returnFlight: !returnFlight }))}
@@ -199,7 +199,7 @@ const MainFilterSearchBox = () => {
             />
             <label>Return Trip</label>
           </div>
-          <div className='w-300'>
+          <div className='flight-search-select'>
             <label>Preferred Cabin</label>
             <Select
               options={cabinOptions.map((el) => ({ label: el, value: el }))}
@@ -208,7 +208,7 @@ const MainFilterSearchBox = () => {
               onChange={(id) => setPrefferedCabin(id)}
             />
           </div>
-          <div className='w-300'>
+          <div className='flight-search-select'>
             <label>
               Travellers<span className='text-danger'>*</span>
             </label>
@@ -220,7 +220,7 @@ const MainFilterSearchBox = () => {
               onChange={(values) => setTravellers(values)}
             />
           </div>
-          <div className='w-300'>
+          <div className='flight-search-select'>
             <label>Airlines</label>
             <Select
               options={airlines}
@@ -230,7 +230,7 @@ const MainFilterSearchBox = () => {
               onChange={(values) => setPreferredAirlines(values)}
             />
           </div>
-          <div className='w-300'>
+          <div className='flight-search-select'>
             <label>
               From<span className='text-danger'>*</span>
             </label>
@@ -269,7 +269,7 @@ const MainFilterSearchBox = () => {
           </div>
           {/* End Location Flying From */}
 
-          <div className='w-300'>
+          <div className='flight-search-select'>
             <label>
               To<span className='text-danger'>*</span>
             </label>
@@ -308,7 +308,7 @@ const MainFilterSearchBox = () => {
           </div>
           {/* End Location Flying To */}
 
-          <div className='w-300 pt-5 pl-30 d-flex gap-1 items-center justify-center'>
+          <div className='flight-search-select pt-5 pl-30 d-flex gap-1 lg:pl-5 items-center justify-center'>
             <div>
               <label>
                 Depart Date<span className='text-danger'>*</span>

@@ -2404,4 +2404,25 @@ table.table-6 {
   grid-template-columns: auto auto auto auto;
   gap: 1rem 0;
   align-items: center;
+  @include media-below(lg) {
+    padding-top: 1rem;
+    grid-template-columns: auto;
+  }
+  .flight-search-select {
+    width: 300px;
+    max-width: 100%;
+    @include media-below(lg) {
+      width: 250px;
+      max-width: 100%;
+    }
+  }
+}
+
+.flight-search-sort-container {
+  position: relative;
+  .flight-search-sort {
+    position: absolute;
+    min-width: 170px;
+    margin-top: 1rem;
+  }
 }

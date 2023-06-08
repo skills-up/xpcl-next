@@ -21,6 +21,12 @@ export const initialState = {
     departTimes: null,
     arriveTimes: null,
     price: { value: { min: 0, max: 0 }, maxPrice: 0 },
+    sort: {
+      price: true,
+      total_duration: false,
+      departure_time: false,
+      arrival_time: false,
+    },
   },
 };
 
@@ -54,6 +60,12 @@ const flightSearchSlice = createSlice({
     },
     setSearchData: (state, action) => {
       state.value.searchData = { ...state.value.searchData, ...action.payload };
+    },
+    setSort: (state, action) => {
+      for (let [key, value] of Object.entries(state.value.sort)) {
+        if (key !== action.payload.key) state.value.sort[key] = false;
+        else state.value.sort[key] = action.payload.value;
+      }
     },
     setInitialSearchData: (state) => {
       state.value.searchData = initialState.value.searchData;
@@ -97,6 +109,7 @@ export const {
   setArrivingAt,
   setCabins,
   setDepartTimes,
+  setSort,
   setDepartingFrom,
   setPrice,
   setStops,

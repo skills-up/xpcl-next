@@ -35,6 +35,7 @@ const FlightProperties = () => {
   const price = useSelector((state) => state.flightSearch.value.price);
   const departingFrom = useSelector((state) => state.flightSearch.value.departingFrom);
   const arrivingAt = useSelector((state) => state.flightSearch.value.arrivingAt);
+  const sort = useSelector((state) => state.flightSearch.value.sort);
 
   const paginateDataNumber = useSelector(
     (state) => state.flightSearch.value.paginateDataNumber
@@ -282,11 +283,93 @@ const FlightProperties = () => {
     if (manip) {
       dispatch(
         setPaginateTotalDataSize({
-          paginateTotalDataSize: manip.filter((el) => el.type === currentTab).length,
+          paginateTotalDataSize: manip.filter((el) => {
+            let stat = filter(el);
+            return stat;
+          }).length,
         })
       );
     }
-  }, [manip, currentTab]);
+  }, [
+    manip,
+    currentTab,
+    stops,
+    cabins,
+    airlines,
+    departTimes,
+    arriveTimes,
+    price,
+    departingFrom,
+    arrivingAt,
+  ]);
+
+  const filter = (el) => {
+    // If Element type is of current tab
+    if (el.type === currentTab) {
+      // Filters:
+      let matchesSort = true;
+      // Filter By Stops
+      if (el.segments.length === 1) {
+        if (!stops['Nonstop']?.value) return false;
+      } else if (el.segments.length === 2) {
+        if (!stops['1 Stop']?.value) return false;
+      } else {
+        if (!stops[`${el.segments.length - 1} Stops`]?.value) return false;
+      }
+      // Filter By Cabin
+      if (el.provider === 'aa') {
+        if (el.prices.prices.ADT.cabinClass === 'EC')
+          if (!cabins['Economy']?.value) return false;
+      } else if (el.provider === 'tj') {
+        if (el.prices.prices.ADULT.cabinClass === 'PREMIUM_ECONOMY') {
+          if (!cabins['Premium Economy']?.value) return false;
+        } else {
+          let tempClass =
+            el.prices.prices.ADULT.cabinClass.charAt(0).toUpperCase() +
+            el.prices.prices.ADULT.cabinClass.slice(1).toLowerCase();
+          if (!cabins[tempClass]?.value) return false;
+        }
+      }
+      // Filter By Airline
+      for (let airline of Object.values(airlines)) {
+        if (el.segments[0].flight.airline === airline.code)
+          if (!airline.value) return false;
+      }
+      // Filter By Depart Time
+      let departHour = el.segments[0].departure.time.split('T')[1].split(':')[0];
+      for (let [key, value] of Object.entries(departTimes)) {
+        if (
+          +departHour >= +value.times.slice(0, 2) &&
+          +departHour < +value.times.slice(8, 10)
+        )
+          if (!value.value) return false;
+      }
+      // Filter By Airline Time
+      let arrivalHour = el.segments.at(-1).arrival.time.split('T')[1].split(':')[0];
+      for (let [key, value] of Object.entries(arriveTimes)) {
+        if (
+          +arrivalHour >= +value.times.slice(0, 2) &&
+          +arrivalHour < +value.times.slice(8, 10)
+        )
+          if (!value.value) return false;
+      }
+      // Filter By Price Slider
+      if (!(el.total >= price.value.min && el.total <= price.value.max)) return false;
+      // Filter By Departing From & Arriving At
+      for (let dep of Object.values(departingFrom)) {
+        if (el.segments[0].departure.airport.code === dep.iata_code)
+          if (!dep.value) return false;
+      }
+      for (let arr of Object.values(arrivingAt)) {
+        if (el.segments.at(-1).arrival.airport.code === arr.iata_code)
+          if (!arr.value) return false;
+      }
+      // Return True by Default
+      return true;
+    } else {
+      return false;
+    }
+  };
 
   return (
     <>
@@ -343,74 +426,24 @@ const FlightProperties = () => {
         manip.length > 0 &&
         manip
           .filter((el) => {
-            // If Element type is of current tab
-            if (el.type === currentTab) {
-              // Filters:
-              let matchesSort = true;
-              // Filter By Stops
-              if (el.segments.length === 1) {
-                if (!stops['Nonstop']?.value) return false;
-              } else if (el.segments.length === 2) {
-                if (!stops['1 Stop']?.value) return false;
-              } else {
-                if (!stops[`${el.segments.length - 1} Stops`]?.value) return false;
-              }
-              // Filter By Cabin
-              if (el.provider === 'aa') {
-                if (el.prices.prices.ADT.cabinClass === 'EC')
-                  if (!cabins['Economy']?.value) return false;
-              } else if (el.provider === 'tj') {
-                if (el.prices.prices.ADULT.cabinClass === 'PREMIUM_ECONOMY') {
-                  if (!cabins['Premium Economy']?.value) return false;
-                } else {
-                  let tempClass =
-                    el.prices.prices.ADULT.cabinClass.charAt(0).toUpperCase() +
-                    el.prices.prices.ADULT.cabinClass.slice(1).toLowerCase();
-                  if (!cabins[tempClass]?.value) return false;
-                }
-              }
-              // Filter By Airline
-              for (let airline of Object.values(airlines)) {
-                if (el.segments[0].flight.airline === airline.code)
-                  if (!airline.value) return false;
-              }
-              // Filter By Depart Time
-              let departHour = el.segments[0].departure.time.split('T')[1].split(':')[0];
-              for (let [key, value] of Object.entries(departTimes)) {
-                if (
-                  +departHour >= +value.times.slice(0, 2) &&
-                  +departHour < +value.times.slice(8, 10)
-                )
-                  if (!value.value) return false;
-              }
-              // Filter By Airline Time
-              let arrivalHour = el.segments
-                .at(-1)
-                .arrival.time.split('T')[1]
-                .split(':')[0];
-              for (let [key, value] of Object.entries(arriveTimes)) {
-                if (
-                  +arrivalHour >= +value.times.slice(0, 2) &&
-                  +arrivalHour < +value.times.slice(8, 10)
-                )
-                  if (!value.value) return false;
-              }
-              // Filter By Price Slider
-              if (!(el.total >= price.value.min && el.total <= price.value.max))
-                return false;
-              // Filter By Departing From & Arriving At
-              for (let dep of Object.values(departingFrom)) {
-                if (el.segments[0].departure.airport.code === dep.iata_code)
-                  if (!dep.value) return false;
-              }
-              for (let arr of Object.values(arrivingAt)) {
-                if (el.segments.at(-1).arrival.airport.code === arr.iata_code)
-                  if (!arr.value) return false;
-              }
-              // Return True by Default
-              return true;
-            } else {
-              return false;
+            let stat = filter(el);
+            return stat;
+          })
+          .sort((a, b) => {
+            if (sort.price) {
+              return +a.total - +b.total;
+            } else if (sort.total_duration) {
+              return +a.totalDuration - +b.totalDuration;
+            } else if (sort.departure_time) {
+              return (
+                new Date(a.segments[0].departure.time).getTime() -
+                new Date(b.segments[0].departure.time).getTime()
+              );
+            } else if (sort.arrival_time) {
+              return (
+                new Date(a.segments.at(-1).arrival.time).getTime() -
+                new Date(b.segments.at(-1).arrival.time).getTime()
+              );
             }
           })
           .map((element, index) => {
