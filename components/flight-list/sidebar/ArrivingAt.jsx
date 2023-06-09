@@ -1,38 +1,46 @@
+import { useDispatch, useSelector } from 'react-redux';
+import { setArrivingAt } from '../../../features/flightSearch/flightSearchSlice';
+
 const ArrivingAt = () => {
+  const dispatch = useDispatch();
+  const arrivingAt = useSelector((state) => state.flightSearch.value.arrivingAt);
+
   return (
     <>
-      <div className="row y-gap-10 items-center justify-between">
-        <div className="col-auto">
-          <div className="form-checkbox d-flex items-center">
-            <input type="checkbox" name="name" />
-            <div className="form-checkbox__mark">
-              <div className="form-checkbox__icon icon-check" />
+      {arrivingAt &&
+        Object.entries(arrivingAt).map(([key, value], index) => (
+          <div className='row y-gap-10 items-center justify-between'>
+            <div className='col-auto'>
+              <div className='form-checkbox d-flex items-center'>
+                <input
+                  type='checkbox'
+                  name='name'
+                  checked={value.value}
+                  onChange={() =>
+                    dispatch(
+                      setArrivingAt({
+                        ...arrivingAt,
+                        [key]: {
+                          number: value.number,
+                          value: !value.value,
+                          iata_code: value.iata_code,
+                        },
+                      })
+                    )
+                  }
+                />
+                <div className='form-checkbox__mark'>
+                  <div className='form-checkbox__icon icon-check' />
+                </div>
+                <div className='text-15 ml-10'>{key}</div>
+              </div>
             </div>
-            <div className="text-15 ml-10">LCY London</div>
-          </div>
-        </div>
-        {/* End .col */}
-        <div className="col-auto">
-          <div className="text-15 text-light-1">92</div>
-        </div>
-      </div>
-      {/* End .row */}
-
-      <div className="row y-gap-10 items-center justify-between">
-        <div className="col-auto">
-          <div className="form-checkbox d-flex items-center">
-            <input type="checkbox" name="name" />
-            <div className="form-checkbox__mark">
-              <div className="form-checkbox__icon icon-check" />
+            {/* End .col */}
+            <div className='col-auto'>
+              <div className='text-15 text-light-1'>{value.number}</div>
             </div>
-            <div className="text-15 ml-10">LGW London</div>
           </div>
-        </div>
-        {/* End .col */}
-        <div className="col-auto">
-          <div className="text-15 text-light-1">45</div>
-        </div>
-      </div>
+        ))}
       {/* End .row */}
     </>
   );

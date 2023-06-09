@@ -13,6 +13,20 @@ export const initialState = {
     paginateDataNumber: 0,
     paginateDataPerPage: 7,
     paginateTotalDataSize: 0,
+    stops: null,
+    cabins: null,
+    airlines: null,
+    departingFrom: null,
+    arrivingAt: null,
+    departTimes: null,
+    arriveTimes: null,
+    price: { value: { min: 0, max: 0 }, maxPrice: 0 },
+    sort: {
+      price: true,
+      total_duration: false,
+      departure_time: false,
+      arrival_time: false,
+    },
   },
 };
 
@@ -20,11 +34,38 @@ const flightSearchSlice = createSlice({
   name: 'flightSearch',
   initialState,
   reducers: {
-    setReturnFlight: (state, action) => {
-      state.value.returnFlight = action.payload.returnFlight;
+    setStops: (state, action) => {
+      state.value.stops = action.payload;
+    },
+    setCabins: (state, action) => {
+      state.value.cabins = action.payload;
+    },
+    setAirlines: (state, action) => {
+      state.value.airlines = action.payload;
+    },
+    setDepartTimes: (state, action) => {
+      state.value.departTimes = action.payload;
+    },
+    setArriveTimes: (state, action) => {
+      state.value.arriveTimes = action.payload;
+    },
+    setDepartingFrom: (state, action) => {
+      state.value.departingFrom = action.payload;
+    },
+    setArrivingAt: (state, action) => {
+      state.value.arrivingAt = action.payload;
+    },
+    setPrice: (state, action) => {
+      state.value.price = action.payload;
     },
     setSearchData: (state, action) => {
       state.value.searchData = { ...state.value.searchData, ...action.payload };
+    },
+    setSort: (state, action) => {
+      for (let [key, value] of Object.entries(state.value.sort)) {
+        if (key !== action.payload.key) state.value.sort[key] = false;
+        else state.value.sort[key] = action.payload.value;
+      }
     },
     setInitialSearchData: (state) => {
       state.value.searchData = initialState.value.searchData;
@@ -63,6 +104,15 @@ export const {
   setPaginateDataNumber,
   setPaginateDataPerPage,
   setPaginateTotalDataSize,
+  setAirlines,
+  setArriveTimes,
+  setArrivingAt,
+  setCabins,
+  setDepartTimes,
+  setSort,
+  setDepartingFrom,
+  setPrice,
+  setStops,
   setInitialState,
 } = flightSearchSlice.actions;
 

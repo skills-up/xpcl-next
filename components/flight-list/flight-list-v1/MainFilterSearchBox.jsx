@@ -184,26 +184,22 @@ const MainFilterSearchBox = () => {
 
   return (
     <>
-      <div className='row y-gap-20 items-center'>
+      {/* <div className='row y-gap-20 items-center'>
         <FilterSelect />
-      </div>
+      </div> */}
       {/* End .row */}
 
-      <div className='mainSearch d-flex flex-column -col-5 border-light rounded-4 pr-20 py-20 lg:px-20 lg:pt-5 lg:pb-20 mt-15'>
-        <div className='d-flex items-center mb-20 justify-center'>
-          <div className='searchMenu-date py-10 pl-30 lg:py-20 lg:pl-0 js-form-dd js-calendar'>
-            <div className='d-flex items-center gap-2'>
-              <label>One Way</label>
-              <ReactSwitch
-                onChange={() =>
-                  dispatch(setReturnFlight({ returnFlight: !returnFlight }))
-                }
-                checked={returnFlight}
-              />
-              <label>Return Trip</label>
-            </div>
+      <div className='border-light rounded-4 pr-20 py-20 lg:px-20 lg:pt-5 lg:pb-20 mt-15'>
+        <div className='flight-search pl-20 lg:pl-0'>
+          <div className='d-flex items-center gap-2 justify-center'>
+            <label>One Way</label>
+            <ReactSwitch
+              onChange={() => dispatch(setReturnFlight({ returnFlight: !returnFlight }))}
+              checked={returnFlight}
+            />
+            <label>Return Trip</label>
           </div>
-          <div className='searchMenu-date pl-30 lg:py-20 lg:pl-0 lg:pr-0 js-form-dd js-calendar w-300'>
+          <div className='flight-search-select'>
             <label>Preferred Cabin</label>
             <Select
               options={cabinOptions.map((el) => ({ label: el, value: el }))}
@@ -212,7 +208,7 @@ const MainFilterSearchBox = () => {
               onChange={(id) => setPrefferedCabin(id)}
             />
           </div>
-          <div className='searchMenu-date pl-30 lg:py-20 lg:pl-0 lg:pr-0 js-form-dd js-calendar w-300'>
+          <div className='flight-search-select'>
             <label>
               Travellers<span className='text-danger'>*</span>
             </label>
@@ -224,7 +220,7 @@ const MainFilterSearchBox = () => {
               onChange={(values) => setTravellers(values)}
             />
           </div>
-          <div className='searchMenu-date pl-30 lg:py-20 lg:pl-0 lg:pr-0 js-form-dd js-calendar w-300'>
+          <div className='flight-search-select'>
             <label>Airlines</label>
             <Select
               options={airlines}
@@ -234,20 +230,17 @@ const MainFilterSearchBox = () => {
               onChange={(values) => setPreferredAirlines(values)}
             />
           </div>
-        </div>
-        <div className='button-grid items-center'>
-          <div className='searchMenu-date pl-30 pr-20 lg:py-20 lg:pl-0 lg:pr-0 js-form-dd js-calendar w-350'>
+          <div className='flight-search-select'>
             <label>
               From<span className='text-danger'>*</span>
             </label>
             <WindowedSelect
               options={airports.map((airport) => ({
                 value: airport.id,
-                label: `${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
-                iata: airport.iata_code,
+                label: `|${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
               }))}
               formatOptionLabel={(opt) => {
-                const [iata_code, city, name, country_name] = opt.label.split('|');
+                const [_, iata_code, city, name, country_name] = opt.label.split('|');
                 return (
                   <div key={iata_code}>
                     <div
@@ -276,18 +269,17 @@ const MainFilterSearchBox = () => {
           </div>
           {/* End Location Flying From */}
 
-          <div className='searchMenu-date pl-30 pr-20 lg:py-20 lg:pl-0 lg:pr-0 js-form-dd js-calendar w-350'>
+          <div className='flight-search-select'>
             <label>
               To<span className='text-danger'>*</span>
             </label>
             <WindowedSelect
               options={airports.map((airport) => ({
                 value: airport.id,
-                label: `${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
-                iata: airport.iata_code,
+                label: `|${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
               }))}
               formatOptionLabel={(opt) => {
-                const [iata_code, city, name, country_name] = opt.label.split('|');
+                const [_, iata_code, city, name, country_name] = opt.label.split('|');
                 return (
                   <div key={iata_code}>
                     <div
@@ -316,44 +308,46 @@ const MainFilterSearchBox = () => {
           </div>
           {/* End Location Flying To */}
 
-          <div className='searchMenu-date py-10 pl-30 lg:py-20 lg:pl-0 js-form-dd js-calendar'>
-            <label>
-              Depart Date<span className='text-danger'>*</span>
-            </label>
-            <DatePicker
-              style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
-              inputClass='custom_input-picker'
-              containerClassName='custom_container-picker'
-              value={departDate}
-              onChange={setDepartDate}
-              numberOfMonths={1}
-              offsetY={10}
-              format='DD MMMM YYYY'
-            />
-          </div>
-          {/* End Depart */}
-
-          {returnFlight && (
-            <div className='searchMenu-date py-10 pl-30 lg:py-20 lg:pl-0 js-form-dd js-calendar'>
+          <div className='flight-search-select pt-5 pl-30 d-flex gap-1 lg:pl-5 items-center justify-center'>
+            <div>
               <label>
-                Return Date<span className='text-danger'>*</span>
+                Depart Date<span className='text-danger'>*</span>
               </label>
               <DatePicker
                 style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
                 inputClass='custom_input-picker'
                 containerClassName='custom_container-picker'
-                value={returnDate}
-                onChange={setReturnDate}
+                value={departDate}
+                onChange={setDepartDate}
                 numberOfMonths={1}
                 offsetY={10}
                 format='DD MMMM YYYY'
               />
             </div>
-          )}
+            {/* End Depart */}
+            {returnFlight && (
+              <div>
+                <label>
+                  Return Date<span className='text-danger'>*</span>
+                </label>
+                <DatePicker
+                  style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
+                  inputClass='custom_input-picker'
+                  containerClassName='custom_container-picker'
+                  value={returnDate}
+                  onChange={setReturnDate}
+                  numberOfMonths={1}
+                  offsetY={10}
+                  format='DD MMMM YYYY'
+                />
+              </div>
+            )}
+          </div>
+
           {/* End Return */}
 
-          <div className='searchMenu-date py-10 pl-30 lg:py-20 lg:pl-0 js-form-dd js-calendar'>
-            <div className='d-flex flex-column items-center'>
+          <div>
+            <div className='pl-5 d-flex gap-2 items-center'>
               <label>Direct Flight</label>
               <ReactSwitch
                 onChange={() => setDirectFlight((prev) => !prev)}
@@ -362,9 +356,9 @@ const MainFilterSearchBox = () => {
             </div>
           </div>
           {/* End guest */}
-
-          {/* End search button_item */}
         </div>
+
+        {/* End search button_item */}
         <div className='button-item pl-20 mt-20'>
           <button
             className='d-block mainSearch__submit button -blue-1 py-15 h-60 col-12 rounded-4 bg-dark-3 text-white'
