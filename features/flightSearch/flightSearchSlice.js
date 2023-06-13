@@ -10,8 +10,9 @@ export const initialState = {
     // travellerDOBS: { ADT: 0, CHD: 0, INF: 0 },
     travellerDOBS: { ADT: 1, CHD: 1, INF: 1 },
     airlineOrgs: [],
+    clientTravellers: [],
     paginateDataNumber: 0,
-    paginateDataPerPage: 7,
+    paginateDataPerPage: 10,
     paginateTotalDataSize: 0,
     stops: null,
     cabins: null,
@@ -22,11 +23,15 @@ export const initialState = {
     arriveTimes: null,
     price: { value: { min: 0, max: 0 }, maxPrice: 0 },
     sort: {
+      _: true,
       price: true,
       total_duration: false,
       departure_time: false,
       arrival_time: false,
     },
+    selectedBookings: { to: null, from: null },
+    emailClientMode: false,
+    emailClients: [],
   },
 };
 
@@ -61,11 +66,26 @@ const flightSearchSlice = createSlice({
     setSearchData: (state, action) => {
       state.value.searchData = { ...state.value.searchData, ...action.payload };
     },
+    setReturnFlight: (state, action) => {
+      state.value.returnFlight = action.payload;
+    },
     setSort: (state, action) => {
-      for (let [key, value] of Object.entries(state.value.sort)) {
-        if (key !== action.payload.key) state.value.sort[key] = false;
-        else state.value.sort[key] = action.payload.value;
+      if (action.payload.key === '_') {
+        state.value.sort['_'] = action.payload.value;
+      } else {
+        for (let [key, value] of Object.entries(state.value.sort)) {
+          if (key !== '_') {
+            if (key !== action.payload.key) state.value.sort[key] = false;
+            else state.value.sort[key] = action.payload.value;
+          }
+        }
       }
+    },
+    setEmailClientMode: (state, action) => {
+      state.value.emailClientMode = action.payload;
+    },
+    setEmailClients: (state, action) => {
+      state.value.emailClients = action.payload;
     },
     setInitialSearchData: (state) => {
       state.value.searchData = initialState.value.searchData;
@@ -75,6 +95,9 @@ const flightSearchSlice = createSlice({
     },
     setAirlineOrgs: (state, action) => {
       state.value.airlineOrgs = action.payload.airlineOrgs;
+    },
+    setClientTravellers: (state, action) => {
+      state.value.clientTravellers = action.payload.clientTravellers;
     },
     setPaginateDataNumber: (state, action) => {
       state.value.paginateDataNumber = action.payload.paginateDataNumber;
@@ -88,6 +111,9 @@ const flightSearchSlice = createSlice({
     setTravellers: (state, action) => {
       state.value.travellers = action.payload.travellers;
     },
+    setSelectedBookings: (state, action) => {
+      state.value.selectedBookings = action.payload;
+    },
     setInitialState: (state) => {
       state.value = initialState.value;
     },
@@ -100,14 +126,18 @@ export const {
   setTravellers,
   setTravellerDOBS,
   setAirlineOrgs,
+  setEmailClientMode,
+  setEmailClients,
   setInitialSearchData,
   setPaginateDataNumber,
   setPaginateDataPerPage,
   setPaginateTotalDataSize,
   setAirlines,
+  setClientTravellers,
   setArriveTimes,
   setArrivingAt,
   setCabins,
+  setSelectedBookings,
   setDepartTimes,
   setSort,
   setDepartingFrom,

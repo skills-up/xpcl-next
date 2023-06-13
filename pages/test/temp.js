@@ -16464,6 +16464,42 @@ export const tripjack = {
             duration: 95,
           },
         },
+        {
+          segmentNo: 2,
+          flight: {
+            airline: 'I5',
+            number: '2991',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-15T23:25',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-17T21:40',
+          },
+          journey: {
+            stops: 0,
+            duration: 95,
+          },
+        },
       ],
       prices: {
         prices: {

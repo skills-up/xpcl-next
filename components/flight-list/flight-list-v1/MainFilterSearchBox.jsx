@@ -12,11 +12,13 @@ import { customAPICall, getList } from '../../../api/xplorzApi';
 import { checkUser } from '../../../utils/checkTokenValidity';
 import {
   setAirlineOrgs,
-  setReturnFlight,
+  setReturnFlight as setReturnFlightRedux,
   setSearchData,
   setTravellerDOBS,
   setTravellers as setTravellersRedux,
+  setClientTravellers as setClientTravellersRedux,
   setInitialSearchData,
+  setSelectedBookings,
 } from '../../../features/flightSearch/flightSearchSlice';
 
 const MainFilterSearchBox = () => {
@@ -28,7 +30,7 @@ const MainFilterSearchBox = () => {
   const [preferredAirlines, setPreferredAirlines] = useState([]);
   const [departDate, setDepartDate] = useState(new DateObject());
   const [returnDate, setReturnDate] = useState(new DateObject());
-
+  const [returnFlight, setReturnFlight] = useState(true);
   const cabinOptions = ['Economy', 'Premium Economy', 'Business', 'First'];
   const [clientTravellers, setClientTravellers] = useState([]);
   const [airlines, setAirlines] = useState([]);
@@ -38,7 +40,6 @@ const MainFilterSearchBox = () => {
   const token = useSelector((state) => state.auth.value.token);
   const airports = useSelector((state) => state.apis.value.airports);
   const client_id = useSelector((state) => state.auth.value.currentOrganization);
-  const returnFlight = useSelector((state) => state.flightSearch.value.returnFlight);
 
   useEffect(() => {
     if (token !== '') {
@@ -58,6 +59,7 @@ const MainFilterSearchBox = () => {
     const airlines = await getList('organizations', { is_airline: 1 });
     if (clientTravellers?.success && airlines?.success) {
       dispatch(setAirlineOrgs({ airlineOrgs: airlines.data }));
+      dispatch(setClientTravellersRedux({ clientTravellers: clientTravellers.data }));
       setClientTravellers(
         clientTravellers.data.map((element) => ({
           value: element.id,
@@ -167,7 +169,9 @@ const MainFilterSearchBox = () => {
       .then((res) => {
         if (res?.success) {
           dispatch(setSearchData({ aa: res.data }));
-          dispatch(setTravellers({ travellers: values }));
+          dispatch(setReturnFlightRedux({ returnFlight }));
+          dispatch(setSelectedBookings({ to: null, from: null }));
+          // dispatch(setTravellers({ travellers }));
         }
       })
       .catch((err) => console.error(err));
@@ -176,7 +180,9 @@ const MainFilterSearchBox = () => {
       .then((res) => {
         if (res?.success) {
           dispatch(setSearchData({ tj: res.data }));
-          dispatch(setTravellers({ travellers: values }));
+          dispatch(setReturnFlightRedux({ returnFlight }));
+          dispatch(setSelectedBookings({ to: null, from: null }));
+          // dispatch(setTravellers({ travellers }));
         }
       })
       .catch((err) => console.error(err));
@@ -194,7 +200,7 @@ const MainFilterSearchBox = () => {
           <div className='d-flex items-center gap-2 justify-center'>
             <label>One Way</label>
             <ReactSwitch
-              onChange={() => dispatch(setReturnFlight({ returnFlight: !returnFlight }))}
+              onChange={() => setReturnFlight((prev) => !prev)}
               checked={returnFlight}
             />
             <label>Return Trip</label>
@@ -238,6 +244,7 @@ const MainFilterSearchBox = () => {
               options={airports.map((airport) => ({
                 value: airport.id,
                 label: `|${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
+                iata: airport.iata_code,
               }))}
               formatOptionLabel={(opt) => {
                 const [_, iata_code, city, name, country_name] = opt.label.split('|');
@@ -277,6 +284,7 @@ const MainFilterSearchBox = () => {
               options={airports.map((airport) => ({
                 value: airport.id,
                 label: `|${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
+                iata: airport.iata_code,
               }))}
               formatOptionLabel={(opt) => {
                 const [_, iata_code, city, name, country_name] = opt.label.split('|');
@@ -359,7 +367,7 @@ const MainFilterSearchBox = () => {
         </div>
 
         {/* End search button_item */}
-        <div className='button-item pl-20 mt-20'>
+        <div className='button-item pl-20 mt-20 lg:pl-0'>
           <button
             className='d-block mainSearch__submit button -blue-1 py-15 h-60 col-12 rounded-4 bg-dark-3 text-white'
             onClick={search}
