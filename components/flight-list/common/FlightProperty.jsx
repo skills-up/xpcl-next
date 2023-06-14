@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { FaChevronCircleDown, FaRegClock } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
@@ -22,6 +23,7 @@ function FlightProperty({ element, isSelectedBooking = false }) {
     (state) => state.flightSearch.value.emailClientMode
   );
   const emailClients = useSelector((state) => state.flightSearch.value.emailClients);
+  const router = useRouter();
 
   useEffect(() => {
     if (!isSelectedBooking) {
@@ -204,17 +206,17 @@ function FlightProperty({ element, isSelectedBooking = false }) {
                 {!isSelectedBooking && (
                   <button
                     onClick={async () => {
-                      if (returnFlight)
-                        dispatch(
-                          setSelectedBookings({
-                            ...selectedBookings,
-                            [element.type]: element,
-                          })
-                        );
+                      dispatch(
+                        setSelectedBookings({
+                          ...selectedBookings,
+                          [element.type]: element,
+                        })
+                      );
+                      if (!returnFlight) router.push('/flights/book');
                     }}
                     className='button -dark-1 px-30 h-50 bg-blue-1 text-white mb-10'
                   >
-                    {returnFlight ? <span>Select</span> : 'Book Now'}
+                    {returnFlight ? 'Select' : 'Book Now'}
                     <div className='icon-arrow-top-right ml-15' />
                   </button>
                 )}

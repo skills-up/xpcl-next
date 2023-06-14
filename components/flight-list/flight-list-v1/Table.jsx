@@ -11,6 +11,7 @@ function Table() {
   const emailClientMode = useSelector(
     (state) => state.flightSearch.value.emailClientMode
   );
+  const returnFlight = useSelector((state) => state.flightSearch.value.returnFlight);
 
   return (
     <>
@@ -59,9 +60,11 @@ function Table() {
 
               <div className='col-xl-9 '>
                 {emailClientMode && <EmailClients />}
-                <div className='row'>
-                  <SelectedBookings />
-                </div>
+                {returnFlight && (
+                  <div className='row'>
+                    <SelectedBookings />
+                  </div>
+                )}
                 <div className='row'>
                   <TopHeaderFilter />
                 </div>

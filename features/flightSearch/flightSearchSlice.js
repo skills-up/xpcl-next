@@ -4,9 +4,36 @@ import { akasa, tripjack } from '../../pages/test/temp';
 export const initialState = {
   value: {
     returnFlight: true,
+    // destinations: { from: null, to: null, departDate: null, returnDate: null },
+    destinations: {
+      to: {
+        value: 885,
+        label: '|BOM|Mumbai|Chhatrapati Shivaji International Airport|India',
+        iata: 'BOM',
+      },
+      from: {
+        value: 1739,
+        label: '|DEL|Delhi|Indira Gandhi International Airport|India',
+        iata: 'DEL',
+      },
+      departDate: '2023-06-10',
+      returnDate: '2023-06-14',
+    },
     // searchData: { aa: null, tj: null, ad: null },
     searchData: { aa: akasa, tj: tripjack, ad: null },
-    travellers: [],
+    // travellers: [],
+    travellers: [
+      {
+        value: 2,
+        label: 'Someone UsedToKnow',
+        traveller_id: 2,
+      },
+      {
+        value: 1,
+        label: 'Sahil Verma',
+        traveller_id: 1,
+      },
+    ],
     // travellerDOBS: { ADT: 0, CHD: 0, INF: 0 },
     travellerDOBS: { ADT: 1, CHD: 1, INF: 1 },
     airlineOrgs: [],
@@ -60,6 +87,10 @@ const flightSearchSlice = createSlice({
     setArrivingAt: (state, action) => {
       state.value.arrivingAt = action.payload;
     },
+    setDestinations: (state, action) => {
+      state.value.destinations = action.payload;
+      console.log('destinations', state.value.destinations);
+    },
     setPrice: (state, action) => {
       state.value.price = action.payload;
     },
@@ -67,7 +98,7 @@ const flightSearchSlice = createSlice({
       state.value.searchData = { ...state.value.searchData, ...action.payload };
     },
     setReturnFlight: (state, action) => {
-      state.value.returnFlight = action.payload;
+      state.value.returnFlight = action.payload.returnFlight;
     },
     setSort: (state, action) => {
       if (action.payload.key === '_') {
@@ -89,6 +120,10 @@ const flightSearchSlice = createSlice({
     },
     setInitialSearchData: (state) => {
       state.value.searchData = initialState.value.searchData;
+      state.value.emailClientMode = initialState.value.emailClientMode;
+      state.value.emailClients = initialState.value.emailClients;
+      state.value.selectedBookings = initialState.value.selectedBookings;
+      state.value.destinations = initialState.value.destinations;
     },
     setTravellerDOBS: (state, action) => {
       state.value.travellerDOBS = action.payload;
@@ -130,6 +165,7 @@ export const {
   setEmailClients,
   setInitialSearchData,
   setPaginateDataNumber,
+  setDestinations,
   setPaginateDataPerPage,
   setPaginateTotalDataSize,
   setAirlines,

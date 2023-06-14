@@ -19,6 +19,7 @@ import {
   setClientTravellers as setClientTravellersRedux,
   setInitialSearchData,
   setSelectedBookings,
+  setDestinations,
 } from '../../../features/flightSearch/flightSearchSlice';
 
 const MainFilterSearchBox = () => {
@@ -166,26 +167,34 @@ const MainFilterSearchBox = () => {
 
     // Akasa
     customAPICall('aa/v1/search', 'post', request, {}, true)
-      .then((res) => {
+      .then(async (res) => {
         if (res?.success) {
-          dispatch(setSearchData({ aa: res.data }));
-          dispatch(setReturnFlightRedux({ returnFlight }));
-          dispatch(setSelectedBookings({ to: null, from: null }));
-          // dispatch(setTravellers({ travellers }));
+          await dispatchCalls(res, 'aa');
         }
       })
       .catch((err) => console.error(err));
     // Tripjack
     customAPICall('tj/v1/search', 'post', request, {}, true)
-      .then((res) => {
+      .then(async (res) => {
         if (res?.success) {
-          dispatch(setSearchData({ tj: res.data }));
-          dispatch(setReturnFlightRedux({ returnFlight }));
-          dispatch(setSelectedBookings({ to: null, from: null }));
-          // dispatch(setTravellers({ travellers }));
+          await dispatchCalls(res, 'tj');
         }
       })
       .catch((err) => console.error(err));
+  };
+
+  const dispatchCalls = async (res, key) => {
+    dispatch(setSearchData({ [key]: res.data }));
+    dispatch(setReturnFlightRedux({ returnFlight }));
+    dispatch(setTravellersRedux({ travellers }));
+    dispatch(
+      setDestinations({
+        to,
+        from,
+        departDate: departDate.format('YYYY-MM-DD'),
+        returnDate: returnFlight ? returnDate.format('YYYY-MM-DD') : null,
+      })
+    );
   };
 
   return (

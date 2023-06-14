@@ -5,9 +5,10 @@ import DatePicker, { DateObject } from 'react-multi-date-picker';
 import { BiPlusMedical } from 'react-icons/bi';
 import { BsSend, BsTrash3 } from 'react-icons/bs';
 import WindowedSelect from 'react-windowed-select';
+import { sendToast } from '../../../utils/toastify';
+import { createItem } from '../../../api/xplorzApi';
 
 function EmailClients() {
-  const [travellers, setTravellers] = useState([]);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [markup, setMarkup] = useState(0);
@@ -19,37 +20,261 @@ function EmailClients() {
   const airlines = useSelector((state) => state.flightSearch.value.airlineOrgs);
   const airports = useSelector((state) => state.apis.value.airports);
   const cabinOptions = ['Economy', 'Premium Economy', 'Business', 'First'];
-  const classOptions = ['O', 'W', 'P', 'J'];
+  const travellers = useSelector((state) => state.flightSearch.value.travellers);
+  const emailClients = useSelector((state) => state.flightSearch.value.emailClients);
+  const destinations = useSelector((state) => state.flightSearch.value.destinations);
+  const travellerDOBS = useSelector((state) => state.flightSearch.value.travellerDOBS);
 
-  useEffect(() => {
-    getData();
-  }, []);
-
-  const getData = async () => {};
-
-  const submit = async () => {};
+  const submit = async (type) => {
+    if (additionalFlights.length === 0 && emailClients.length === 0) {
+      sendToast('error', 'Please select a record to send to the client', 4000);
+      return;
+    }
+    if (name.trim().length === 0) {
+      sendToast('error', 'Please enter a Recipient Name', 4000);
+      return;
+    }
+    if (email.trim().length === 0) {
+      sendToast('error', 'Please enter a Recipient Email', 4000);
+      return;
+    }
+    if (markup === '') {
+      sendToast('error', 'Please enter a Markup', 4000);
+      return;
+    }
+    for (let additionalFlight of additionalFlights) {
+      if (!additionalFlight.airline) {
+        sendToast('error', 'Please Select an Airline', 4000);
+        return;
+      }
+      if (additionalFlight.flight.trim().length === 0) {
+        sendToast('error', 'Please enter Flight Code', 4000);
+        return;
+      }
+      if (!additionalFlight.from_airport_id) {
+        sendToast('error', 'Please Select From Airport', 4000);
+        return;
+      }
+      if (!additionalFlight.to_airport_id) {
+        sendToast('error', 'Please Select To Airport', 4000);
+        return;
+      }
+      if (!additionalFlight.depart_time) {
+        sendToast('error', 'Please enter Depart Time', 4000);
+        return;
+      }
+      if (!additionalFlight.arrival_time) {
+        sendToast('error', 'Please enter Arrival Time', 4000);
+        return;
+      }
+      if (!additionalFlight.cabin) {
+        sendToast('error', 'Please Select a Cabin', 4000);
+        return;
+      }
+      if (!additionalFlight.class) {
+        sendToast('error', 'Please enter Class', 4000);
+        return;
+      }
+      if (!additionalFlight.price) {
+        sendToast('error', 'Please enter Price', 4000);
+        return;
+      }
+    }
+    // From, To, Date
+    let fromDestination;
+    let toDestination;
+    for (let airport of airports) {
+      if (destinations.from.iata === airport.iata_code) fromDestination = airport.name;
+      if (destinations.to.iata === airport.iata_code) toDestination = airport.name;
+    }
+    let dateDestination = new DateObject({
+      date: destinations.departDate,
+      format: 'YYYY-MM-DD',
+    })
+      .toDate()
+      .toDateString();
+    // Manipulating Data
+    let tempTo = [];
+    let tempFrom = [];
+    for (let opt of emailClients) {
+      let airlineName;
+      for (let airline of airlines) {
+        if (airline.code === opt.segments[0].flight.airline) airlineName = airline.name;
+      }
+      let cabin;
+      if (opt.provider === 'aa') {
+        if (opt.prices.prices.ADT.cabinClass === 'EC') cabin = 'Economy';
+      } else if (opt.provider === 'tj') {
+        if (opt.prices.prices.ADULT.cabinClass === 'PREMIUM_ECONOMY')
+          cabin = 'Premium Economy';
+        else {
+          cabin =
+            opt.prices.prices.ADULT.cabinClass.charAt(0).toUpperCase() +
+            opt.prices.prices.ADULT.cabinClass.slice(1).toLowerCase();
+        }
+      }
+      let data = {
+        airline: airlineName,
+        airline_code: opt.segments[0].flight.airline,
+        from: destinations.from.iata,
+        to: destinations.to.iata,
+        departure: new Date(opt.segments[0].departure.time).toDateString(),
+        arrival: new Date(opt.segments.at(-1).arrival.time).toDateString(),
+        flight: `${opt.segments[0].flight.airline} ${opt.segments[0].flight.number}`,
+        cabin,
+        price: opt.total,
+      };
+      if (opt.type === 'to') {
+        tempTo.push(data);
+      } else if (opt.type === 'from') {
+        tempFrom.push(data);
+      }
+    }
+    for (let opt of additionalFlights) {
+      let data = {
+        airline: opt.airline.label,
+        airline_code: opt.airline.value,
+        from: opt.from_airport_id.iata,
+        to: opt.to_airport_id.iata,
+        departure: new Date(
+          opt.depart_date.format('YYYY-MM-DD') + 'T' + opt.depart_time
+        ).toDateString(),
+        arrival: new Date(
+          opt.arrival_date.format('YYYY-MM-DD') + 'T' + opt.arrival_time
+        ).toDateString(),
+        flight: `${opt.airline.code} ${flight}`,
+        cabin: opt.cabin.value,
+        price: opt.price,
+      };
+      if (opt.from_airport_id.value === destinations.from.iata) {
+        tempTo.push(data);
+      } else {
+        tempFrom.push(data);
+      }
+    }
+    let manipData = { to: tempTo, from: tempFrom };
+    // Form Data
+    let formData = new FormData();
+    formData.append(
+      'subject',
+      `Flight Options from ${fromDestination} to ${toDestination} - ${dateDestination}`
+    );
+    formData.append(
+      'body',
+      <div>
+        <p>Hi {name},</p>
+        <p>
+          Here are the options for {fromDestination} to {toDestination} on{' '}
+          {dateDestination}
+        </p>
+        {Object.entries(manipData).map(([key, value], index) => {
+          // Traveller Names
+          let str = '';
+          for (let traveller of travellers) {
+            str += `+${traveller.label.replaceAll(' ', '+')}`;
+          }
+          if (value && value.length > 0)
+            return (
+              <table width='100%' style='border:0'>
+                <thead>
+                  <tr style='border-bottom:1px solid #ccc;padding-top:15px'>
+                    <th>S.No.</th>
+                    <th>Airline</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Departure</th>
+                    <th>Arrival</th>
+                    <th>Flight</th>
+                    <th>Cabin</th>
+                    <th>Price</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {value.map((element, index) => {
+                    return (
+                      <>
+                        <tr key={index}>
+                          <td colspan='10'>
+                            <hr />
+                          </td>
+                        </tr>
+                        <tr style='border-bottom:1px solid #ccc;padding-top:15px'>
+                          <td rowspan='1' style='text-align:center'>
+                            {index + 1}.
+                          </td>
+                          <td rowspan='1' style='text-align:center'>
+                            <span
+                              class='proton-image-anchor'
+                              data-proton-remote='remote-1'
+                              style='max-width: 50px;'
+                            >
+                              <img
+                                src={`/img/flights/${element.airline_code}.png`}
+                                loading='lazy'
+                                style='max-width:50px'
+                              />
+                            </span>
+                            <br />
+                            {element.airline}
+                          </td>
+                          <td style='text-align:center'>{element.from}</td>
+                          <td style='text-align:center'>{element.to}</td>
+                          <td style='text-align:center'>{element.departure}</td>
+                          <td style='text-align:center'>{element.arrival}</td>
+                          <td style='text-align:center'>{element.flight}</td>
+                          <td style='text-align:center'>{element.cabin}</td>
+                          <td rowspan='1' style='text-align:center'>
+                            {(+element.price).toLocaleString('en-IN', {
+                              maximumFractionDigits: 2,
+                              style: 'currency',
+                              currency: 'INR',
+                            })}
+                          </td>
+                          <td rowspan='1' style='text-align:center'>
+                            <a
+                              target='_blank'
+                              href={`mailto:${email}?cc=support@xplorz.com&amp;subject=Selected+flight+option+for${str}+from+${element.from}+to+${element.to}+on+${element.departure}&amp;body=Dear+Gaurav,%0D%0A%0D%0AWe've+selected+the+following+flight+option+for${str}:%0D%0A%0D%0A${element.flight}+:+${element.from}+@+${element.departure}+-%3E+${element.to}+@+${element.arrival}+-+${element.cabin}+%0D%0A%0D%0AFare+per+pax:+${element.price}/-%0D%0A%0D%0APlease+book+the+same.%0D%0A%0D%0AThanks!`}
+                              style='background:#f0ad4e;color:#fff;border-color:#eea236;font-weight:bold;padding:1em;text-decoration:none;font-size:12px;line-height:1.5;border-radius:3px'
+                              rel='noreferrer nofollow noopener'
+                            >
+                              Book
+                            </a>
+                          </td>
+                        </tr>
+                      </>
+                    );
+                  })}
+                </tbody>
+              </table>
+            );
+        })}
+        <br />
+        <p>Please let us know which of the above work.</p>
+        <p>
+          Regards,
+          <br />
+          XCPL Support Team
+        </p>
+      </div>
+    );
+    formData.append('to[]', email);
+    formData.append('files[]', null);
+    // Email
+    let response;
+    if (type === 'email') {
+      response = await createItem('send/email', formData);
+    }
+    // Whatsapp
+    else if (type === 'whatsapp') {
+    }
+  };
 
   return (
     <>
       {/* End .row */}
       <div className='border-light bg-white rounded-4 pr-20 py-20 lg:px-10 lg:pb-20 mb-15'>
         <div className='pl-20 lg:pl-0'>
-          <div className='form-input-select'>
-            <label>
-              Travellers<span className='text-danger'>*</span>
-            </label>
-            <Select
-              options={clientTravellers.map((el) => ({
-                value: el.id,
-                label: el.traveller_name,
-                traveller_id: el.traveller_id,
-              }))}
-              value={travellers}
-              isMulti
-              placeholder='Search..'
-              onChange={(values) => setTravellers(values)}
-            />
-          </div>
           <div className='row x-gap-30 y-gap-20 my-2'>
             <div className='col-md-5'>
               <div className='form-input'>
@@ -59,7 +284,9 @@ function EmailClients() {
                   placeholder=' '
                   type='text'
                 />
-                <label className='lh-1 text-16 text-light-1'>Recipient First Name</label>
+                <label className='lh-1 text-16 text-light-1'>
+                  Recipient First Name<span className='text-danger'>*</span>
+                </label>
               </div>
             </div>
             <div className='col-md-5'>
@@ -70,7 +297,9 @@ function EmailClients() {
                   placeholder=' '
                   type='email'
                 />
-                <label className='lh-1 text-16 text-light-1'>Recipient Email</label>
+                <label className='lh-1 text-16 text-light-1'>
+                  Recipient Email<span className='text-danger'>*</span>
+                </label>
               </div>
             </div>
             <div className='col-md-2'>
@@ -81,7 +310,9 @@ function EmailClients() {
                   placeholder=' '
                   type='number'
                 />
-                <label className='lh-1 text-16 text-light-1'>Mark-Up</label>
+                <label className='lh-1 text-16 text-light-1'>
+                  Mark-Up<span className='text-danger'>*</span>
+                </label>
               </div>
             </div>
           </div>
@@ -162,7 +393,9 @@ function EmailClients() {
                             placeholder=' '
                             type='text'
                           />
-                          <label className='lh-1 text-16 text-light-1'>Flight</label>
+                          <label className='lh-1 text-16 text-light-1'>
+                            Flight<span className='text-danger'>*</span>
+                          </label>
                         </div>
                       </div>
                       <div className='form-input-select col-md-6'>
@@ -173,6 +406,7 @@ function EmailClients() {
                           options={airports.map((airport) => ({
                             value: airport.id,
                             label: `|${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
+                            iata: airport.iata_code,
                           }))}
                           formatOptionLabel={(opt) => {
                             const [_, iata_code, city, name, country_name] =
@@ -216,6 +450,7 @@ function EmailClients() {
                           options={airports.map((airport) => ({
                             value: airport.id,
                             label: `|${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
+                            iata: airport.iata_code,
                           }))}
                           formatOptionLabel={(opt) => {
                             const [_, iata_code, city, name, country_name] =
@@ -285,7 +520,9 @@ function EmailClients() {
                             type='time'
                             step={30}
                           />
-                          <label className='lh-1 text-16 text-light-1'>Depart Time</label>
+                          <label className='lh-1 text-16 text-light-1'>
+                            Depart Time<span className='text-danger'>*</span>
+                          </label>
                         </div>
                       </div>
                       <div className='col-md-6 col-lg-3 form-datepicker'>
@@ -323,12 +560,14 @@ function EmailClients() {
                             step={30}
                           />
                           <label className='lh-1 text-16 text-light-1'>
-                            Arrival Time
+                            Arrival Time<span className='text-danger'>*</span>
                           </label>
                         </div>
                       </div>
                       <div className='col-md-6 form-input-select'>
-                        <label>Cabin</label>
+                        <label>
+                          Cabin<span className='text-danger'>*</span>
+                        </label>
                         <Select
                           options={cabinOptions.map((el) => ({ value: el, label: el }))}
                           value={element['cabin']}
@@ -340,21 +579,25 @@ function EmailClients() {
                           }
                         />
                       </div>
-                      <div className='form-input-select col-md-3'>
-                        <label>
-                          Class<span className='text-danger'>*</span>
-                        </label>
-                        <Select
-                          options={classOptions.map((el) => ({ value: el, label: el }))}
-                          value={element['class']}
-                          placeholder='Search..'
-                          onChange={(id) =>
-                            setAdditionalFlights((prev) => {
-                              prev[index]['class'] = id;
-                              return [...prev];
-                            })
-                          }
-                        />
+                      <div className='col-md-3'>
+                        <div className='form-input bg-white'>
+                          <input
+                            onChange={(e) =>
+                              setAdditionalFlights((prev) => {
+                                prev[index]['class'] = e.target.value;
+                                return [...prev];
+                              })
+                            }
+                            value={element['class']}
+                            placeholder=' '
+                            minLength={1}
+                            maxLength={1}
+                            type='text'
+                          />
+                          <label className='lh-1 text-16 text-light-1'>
+                            Class<span className='text-danger'>*</span>
+                          </label>
+                        </div>
                       </div>
                       <div className='col-md-3'>
                         <div className='form-input bg-white'>
@@ -369,7 +612,9 @@ function EmailClients() {
                             placeholder=' '
                             type='number'
                           />
-                          <label className='lh-1 text-16 text-light-1'>Price</label>
+                          <label className='lh-1 text-16 text-light-1'>
+                            Price<span className='text-danger'>*</span>
+                          </label>
                         </div>
                       </div>
                     </div>
@@ -400,7 +645,7 @@ function EmailClients() {
                         arrival_date: new DateObject(),
                         arrival_time: '',
                         cabin: null,
-                        class: null,
+                        class: '',
                         price: '',
                       },
                     ];
@@ -413,14 +658,25 @@ function EmailClients() {
           </div>
         </div>
         {/* End search button_item */}
-        <div className='button-item pl-20 mt-20 lg:pl-0'>
-          <button
-            className='d-block mainSearch__submit button -blue-1 py-15 h-60 col-12 rounded-4 bg-dark-3 text-white'
-            onClick={submit}
-          >
-            <BsSend className='icon-search text-20 mr-10' />
-            Send In Email
-          </button>
+        <div className='button-item pl-20 mt-20 lg:pl-0 row x-gap-10 y-gap-10'>
+          <div className='col-md-6'>
+            <button
+              className='d-block mainSearch__submit button -blue-1 col-12 py-15 h-60 rounded-4 bg-dark-3 text-white'
+              onClick={() => submit('email')}
+            >
+              <BsSend className='icon-search text-20 mr-10' />
+              Send In Email
+            </button>
+          </div>
+          <div className='col-md-6'>
+            <button
+              className='d-block mainSearch__submit button -blue-1 py-15 col-12 h-60 rounded-4 bg-dark-3 text-white'
+              onClick={submit}
+            >
+              <BsSend className='icon-search text-20 mr-10' />
+              Send Through Whatsapp
+            </button>
+          </div>
         </div>
       </div>
       {/* End .mainSearch */}
