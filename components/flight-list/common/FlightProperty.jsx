@@ -212,7 +212,7 @@ function FlightProperty({ element, isSelectedBooking = false }) {
                           [element.type]: element,
                         })
                       );
-                      if (!returnFlight) router.push('/flights/book');
+                      if (!returnFlight) router.push('/flight/book');
                     }}
                     className='button -dark-1 px-30 h-50 bg-blue-1 text-white mb-10'
                   >

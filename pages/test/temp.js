@@ -2,255 +2,7 @@ export const akasa = {
   to: [
     {
       journeyKey:
-        'UVB_NzMwMH4gfn5CT01_MDYvMTAvMjAyMyAwNzowMH5ERUx_MDYvMTAvMjAyMyAwODo0NX5_',
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'QP',
-            number: '7300',
-            equipment: '7MA',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              terminal: 'T1',
-            },
-            time: '2023-06-10T07:00:00',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              terminal: 'T2',
-            },
-            time: '2023-06-10T08:45:00',
-          },
-        },
-      ],
-      prices: {
-        id: 'MH5WOX5_UVB_VjlSN1JCSVh_MTAwM35_Mn4xfk5CT01ERUwwMDIwMDEwflghMA--',
-        prices: {
-          ADT: {
-            fare: 3458,
-            cabinClass: 'EC',
-          },
-          CHD: {
-            fare: 3458,
-            cabinClass: 'EC',
-          },
-        },
-      },
-    },
-    {
-      journeyKey:
-        'UVB_ODUwOH4gfn5CT01_MDYvMTAvMjAyMyAwOTowMH5ERUx_MDYvMTAvMjAyMyAxMTowMH5_',
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'QP',
-            number: '8508',
-            equipment: '7MA',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              terminal: 'T1',
-            },
-            time: '2023-06-10T09:00:00',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              terminal: 'T1',
-            },
-            time: '2023-06-10T11:00:00',
-          },
-        },
-      ],
-      prices: {
-        id: 'MH5WOX5_UVB_VjlSN1JCSVh_MTAwM35_Mn4xfk5CT01ERUwwMDIwMDEwflghMA--',
-        prices: {
-          ADT: {
-            fare: 3458,
-            cabinClass: 'EC',
-          },
-          CHD: {
-            fare: 3458,
-            cabinClass: 'EC',
-          },
-        },
-      },
-    },
-    {
-      journeyKey:
-        'UVB_NzMxMH4gfn5CT01_MDYvMTAvMjAyMyAwNzowMH5ERUx_MDYvMTAvMjAyMyAwODo1NX5_',
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'QP',
-            number: '7310',
-            equipment: '7MZ',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              terminal: 'T2',
-            },
-            time: '2023-06-10T07:00:00',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              terminal: 'T1',
-            },
-            time: '2023-06-10T08:55:00',
-          },
-        },
-      ],
-      prices: {
-        id: 'MH5WNn5_UVB_VjZSN1JCSVh_MTAwM35_Mn4xfk5CT01ERUwwMDIwMDEwflghMQ--',
-        prices: {
-          ADT: {
-            fare: 4091,
-            cabinClass: 'EC',
-          },
-          CHD: {
-            fare: 4091,
-            cabinClass: 'EC',
-          },
-        },
-      },
-    },
-    {
-      journeyKey:
-        'UVB_MTEyN34gfn5CT01_MDYvMTAvMjAyMyAxMzoyNX5ERUx_MDYvMTAvMjAyMyAxNToyMH5_',
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'QP',
-            number: '1127',
-            equipment: '7MZ',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              terminal: 'T1',
-            },
-            time: '2023-06-10T13:25:00',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              terminal: 'T2',
-            },
-            time: '2023-06-10T15:20:00',
-          },
-        },
-      ],
-      prices: {
-        id: 'MH5VMX5_UVB_VTFSN1JCSVh_MTAwM35_Mn4xfk5CT01ERUwwMDIwMDEwflghMg--',
-        prices: {
-          ADT: {
-            fare: 4652,
-            cabinClass: 'EC',
-          },
-          CHD: {
-            fare: 4652,
-            cabinClass: 'EC',
-          },
-        },
-      },
-    },
-    {
-      journeyKey:
-        'UVB_MTIyMn4gfn5CT01_MDYvMTAvMjAyMyAxMTozMH5ERUx_MDYvMTAvMjAyMyAxMzowMH5_',
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'QP',
-            number: '1222',
-            equipment: '7MZ',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              terminal: null,
-            },
-            time: '2023-06-10T11:30:00',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              terminal: null,
-            },
-            time: '2023-06-10T13:00:00',
-          },
-        },
-      ],
-      prices: {
-        id: 'MH5Kfn5RUH5KMFI3UkJJWH4xMDAzfn4yfjF_TkJPTURFTDAwMjAwMTB_WCEz',
-        prices: {
-          ADT: {
-            fare: 9414,
-            cabinClass: 'EC',
-          },
-          CHD: {
-            fare: 9414,
-            cabinClass: 'EC',
-          },
-        },
-      },
-    },
-  ],
-  from: [
-    {
-      journeyKey:
-        'UVB_NzMxMX4gfn5ERUx_MDYvMTQvMjAyMyAxODowMH5CT01_MDYvMTQvMjAyMyAxOTo1NX5_',
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'QP',
-            number: '7311',
-            equipment: '7MA',
-          },
-          departure: {
-            airport: {
-              code: 'DEL',
-              terminal: 'T2',
-            },
-            time: '2023-06-14T18:00:00',
-          },
-          arrival: {
-            airport: {
-              code: 'BOM',
-              terminal: 'T1',
-            },
-            time: '2023-06-14T19:55:00',
-          },
-        },
-      ],
-      prices: {
-        id: 'MH5WOX5_UVB_VjlSN1JCSVh_MTAwM35_MX4xfk5CT01ERUwwMDEwMDEwflghNA--',
-        prices: {
-          ADT: {
-            fare: 4015,
-            cabinClass: 'EC',
-          },
-          CHD: {
-            fare: 4015,
-            cabinClass: 'EC',
-          },
-        },
-      },
-    },
-    {
-      journeyKey:
-        'UVB_MTEyOH4gfn5ERUx_MDYvMTQvMjAyMyAxNjoxMH5CT01_MDYvMTQvMjAyMyAxODozMH5_',
+        'UVB_MTEyOH4gfn5ERUx_MDYvMjEvMjAyMyAxNjoxMH5CT01_MDYvMjEvMjAyMyAxODozMH5_',
       segments: [
         {
           segmentNo: 0,
@@ -264,26 +16,22 @@ export const akasa = {
               code: 'DEL',
               terminal: 'T2',
             },
-            time: '2023-06-14T16:10:00',
+            time: '2023-06-21T16:10:00',
           },
           arrival: {
             airport: {
               code: 'BOM',
               terminal: 'T1',
             },
-            time: '2023-06-14T18:30:00',
+            time: '2023-06-21T18:30:00',
           },
         },
       ],
       prices: {
-        id: 'MH5SOX5_UVB_UjlSN1JCSVh_MTAwM35_MX4xfk5CT01ERUwwMDEwMDEwflghNQ--',
+        id: 'MH5UM35_UVB_VDNPN09CSVh_MTAwOH5_MX4xfk5CT01ERUwwMDEwMDEwflghMA--',
         prices: {
           ADT: {
-            fare: 5178,
-            cabinClass: 'EC',
-          },
-          CHD: {
-            fare: 5178,
+            fare: 5815,
             cabinClass: 'EC',
           },
         },
@@ -291,7 +39,7 @@ export const akasa = {
     },
     {
       journeyKey:
-        'UVB_NzMwNX4gfn5ERUx_MDYvMTQvMjAyMyAxNzoxNX5CT01_MDYvMTQvMjAyMyAxOToxMH5_',
+        'UVB_NzMwNX4gfn5ERUx_MDYvMjEvMjAyMyAxNzoxNX5CT01_MDYvMjEvMjAyMyAxOToxMH5_',
       segments: [
         {
           segmentNo: 0,
@@ -305,32 +53,66 @@ export const akasa = {
               code: 'DEL',
               terminal: 'T2',
             },
-            time: '2023-06-14T17:15:00',
+            time: '2023-06-21T17:15:00',
           },
           arrival: {
             airport: {
               code: 'BOM',
               terminal: 'T1',
             },
-            time: '2023-06-14T19:10:00',
+            time: '2023-06-21T19:10:00',
           },
         },
       ],
       prices: {
-        id: 'MH5SOH5_UVB_UjhSN1JCSVh_MTAwM35_MX4xfk5CT01ERUwwMDEwMDEwflghNg--',
+        id: 'MH5SOH5_UVB_UjhPN09CSVh_MTAwOH5_MX4xfk5CT01ERUwwMDEwMDEwflghMQ--',
         prices: {
           ADT: {
-            fare: 5252,
+            fare: 6129,
             cabinClass: 'EC',
           },
-          CHD: {
-            fare: 5252,
+        },
+      },
+    },
+    {
+      journeyKey:
+        'UVB_NzMxMX4gfn5ERUx_MDYvMjEvMjAyMyAxODowMH5CT01_MDYvMjEvMjAyMyAxOTo1NX5_',
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'QP',
+            number: '7311',
+            equipment: '7MA',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              terminal: 'T2',
+            },
+            time: '2023-06-21T18:00:00',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              terminal: 'T1',
+            },
+            time: '2023-06-21T19:55:00',
+          },
+        },
+      ],
+      prices: {
+        id: 'MH5SOH5_UVB_UjhPN09CSVh_MTAwOH5_MX4xfk5CT01ERUwwMDEwMDEwflghMQ--',
+        prices: {
+          ADT: {
+            fare: 6129,
             cabinClass: 'EC',
           },
         },
       },
     },
   ],
+  from: [],
   combined: [],
 };
 
@@ -342,22 +124,10 @@ export const tripjack = {
           segmentNo: 0,
           flight: {
             airline: 'G8',
-            number: '330',
+            number: '530',
             equipment: '32N',
           },
           departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T00:10',
-          },
-          arrival: {
             airport: {
               code: 'DEL',
               name: 'Delhi Indira Gandhi Intl',
@@ -367,7 +137,19 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-10T02:20',
+            time: '2023-06-21T07:00',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T09:10',
           },
           journey: {
             stops: 0,
@@ -378,18 +160,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9170.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 139,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -397,10 +167,10 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'GS',
-            fare: 9170.7,
+            fare: 15372.7,
             refundable: 1,
             freeMeal: false,
-            seatsRemaining: 139,
+            seatsRemaining: 45,
           },
           INFANT: {
             baggage: {
@@ -411,7249 +181,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '1-8516858531_0BOMDELG8330_35114252473063',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'G8',
-            number: '329',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T06:05',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T08:05',
-          },
-          journey: {
-            stops: 0,
-            duration: 120,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9170.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 173,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9170.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 173,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '1-8516858531_1BOMDELG8329_35114252474828',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'G8',
-            number: '327',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T08:05',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T10:15',
-          },
-          journey: {
-            stops: 0,
-            duration: 130,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9170.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 169,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9170.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 169,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '1-8516858531_2BOMDELG8327_35114252476846',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'G8',
-            number: '319',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T09:55',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T12:10',
-          },
-          journey: {
-            stops: 0,
-            duration: 135,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9170.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 168,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9170.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 168,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '1-8516858531_3BOMDELG8319_35114252478282',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'G8',
-            number: '321',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T12:10',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T14:20',
-          },
-          journey: {
-            stops: 0,
-            duration: 130,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9170.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 172,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9170.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 172,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '1-8516858531_4BOMDELG8321_35114252480021',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'G8',
-            number: '391',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T13:50',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T15:55',
-          },
-          journey: {
-            stops: 0,
-            duration: 125,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9170.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 173,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9170.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 173,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '1-8516858531_5BOMDELG8391_35114252481605',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'G8',
-            number: '339',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T18:55',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T21:00',
-          },
-          journey: {
-            stops: 0,
-            duration: 125,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9170.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 172,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9170.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 172,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '1-8516858531_6BOMDELG8339_35114252483049',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'G8',
-            number: '341',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T20:40',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T22:55',
-          },
-          journey: {
-            stops: 0,
-            duration: 135,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9170.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 174,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9170.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 174,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '1-8516858531_7BOMDELG8341_35114252484469',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'G8',
-            number: '322',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T21:15',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T23:30',
-          },
-          journey: {
-            stops: 0,
-            duration: 135,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9170.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 174,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9170.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 174,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '1-8516858531_8BOMDELG8322_35114252485945',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'G8',
-            number: '345',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T23:00',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-11T01:20',
-          },
-          journey: {
-            stops: 0,
-            duration: 140,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9170.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 174,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9170.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 174,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '1-8516858531_9BOMDELG8345_35114252487373',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'G8',
-            number: '2508',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T23:55',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-11T01:55',
-          },
-          journey: {
-            stops: 0,
-            duration: 120,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9170.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 174,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9170.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 174,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '1-8516858531_10BOMDELG82508_35114252489039',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'G8',
-            number: '2504',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T13:30',
-          },
-          arrival: {
-            airport: {
-              code: 'AMD',
-              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
-              cityCode: 'AMD',
-              city: 'Ahmedabad',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T14:40',
-          },
-          journey: {
-            stops: 0,
-            duration: 70,
-            stopOvers: [],
-            layoverMins: 250,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: 'G8',
-            number: '718',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'AMD',
-              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
-              cityCode: 'AMD',
-              city: 'Ahmedabad',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T18:50',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T20:35',
-          },
-          journey: {
-            stops: 0,
-            duration: 105,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 19129.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 70,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 19129.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 70,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '1-8516858531_11BOMAMDG82504AMDDELG8718_35114252491394',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'G8',
-            number: '349',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T12:15',
-          },
-          arrival: {
-            airport: {
-              code: 'VNS',
-              name: 'Lal Bahadur Shastri Arpt',
-              cityCode: 'VNS',
-              city: 'Varanasi',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T14:25',
-          },
-          journey: {
-            stops: 0,
-            duration: 130,
-            stopOvers: [],
-            layoverMins: 110,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: 'G8',
-            number: '405',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'VNS',
-              name: 'Lal Bahadur Shastri Arpt',
-              cityCode: 'VNS',
-              city: 'Varanasi',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T16:15',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T17:25',
-          },
-          journey: {
-            stops: 0,
-            duration: 70,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9170.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 174,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9170.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 174,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '1-8516858531_12BOMVNSG8349VNSDELG8405_35114252494347',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'G8',
-            number: '331',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T11:30',
-          },
-          arrival: {
-            airport: {
-              code: 'GOI',
-              name: 'Dabolim Arpt',
-              cityCode: 'GOI',
-              city: 'Goa In',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T12:45',
-          },
-          journey: {
-            stops: 0,
-            duration: 75,
-            stopOvers: [],
-            layoverMins: 280,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: 'G8',
-            number: '285',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'GOI',
-              name: 'Dabolim Arpt',
-              cityCode: 'GOI',
-              city: 'Goa In',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T17:25',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T20:10',
-          },
-          journey: {
-            stops: 0,
-            duration: 165,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 23175.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 69,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 23175.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 69,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '1-8516858531_13BOMGOIG8331GOIDELG8285_35114252496940',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'G8',
-            number: '351',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T11:20',
-          },
-          arrival: {
-            airport: {
-              code: 'PAT',
-              name: 'Jai Prakash Narayan Arpt',
-              cityCode: 'PAT',
-              city: 'Patna',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T13:50',
-          },
-          journey: {
-            stops: 0,
-            duration: 150,
-            stopOvers: [],
-            layoverMins: 210,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: 'G8',
-            number: '134',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'PAT',
-              name: 'Jai Prakash Narayan Arpt',
-              cityCode: 'PAT',
-              city: 'Patna',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T17:20',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T19:05',
-          },
-          journey: {
-            stops: 0,
-            duration: 105,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 25043.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 70,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 25043.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 70,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '1-8516858531_14BOMPATG8351PATDELG8134_35114252499164',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'G8',
-            number: '351',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T11:20',
-          },
-          arrival: {
-            airport: {
-              code: 'PAT',
-              name: 'Jai Prakash Narayan Arpt',
-              cityCode: 'PAT',
-              city: 'Patna',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T13:50',
-          },
-          journey: {
-            stops: 0,
-            duration: 150,
-            stopOvers: [],
-            layoverMins: 60,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: 'G8',
-            number: '229',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'PAT',
-              name: 'Jai Prakash Narayan Arpt',
-              cityCode: 'PAT',
-              city: 'Patna',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T14:50',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T16:25',
-          },
-          journey: {
-            stops: 0,
-            duration: 95,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 25043.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 70,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 25043.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 70,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '1-8516858531_15BOMPATG8351PATDELG8229_35114252501519',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'G8',
-            number: '461',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T04:35',
-          },
-          arrival: {
-            airport: {
-              code: 'IXC',
-              name: 'Chandigarh Arpt',
-              cityCode: 'IXC',
-              city: 'Chandigarh',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T07:20',
-          },
-          journey: {
-            stops: 0,
-            duration: 165,
-            stopOvers: [],
-            layoverMins: 190,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: 'G8',
-            number: '104',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'IXC',
-              name: 'Chandigarh Arpt',
-              cityCode: 'IXC',
-              city: 'Chandigarh',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T10:30',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T11:40',
-          },
-          journey: {
-            stops: 0,
-            duration: 70,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9538.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 174,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9538.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 174,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '1-8516858531_16BOMIXCG8461IXCDELG8104_35114252504005',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'G8',
-            number: '287',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T10:50',
-          },
-          arrival: {
-            airport: {
-              code: 'SXR',
-              name: 'Srinagar Arpt',
-              cityCode: 'SXR',
-              city: 'Srinagar',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T15:00',
-          },
-          journey: {
-            stops: 1,
-            duration: 250,
-            stopOvers: [
-              {
-                code: 'IXJ',
-                name: 'Satwari Arpt',
-                cityCode: 'IXJ',
-                city: 'Jammu',
-                country: 'India',
-                countryCode: 'IN',
-              },
-            ],
-            layoverMins: 90,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: 'G8',
-            number: '197',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'SXR',
-              name: 'Srinagar Arpt',
-              cityCode: 'SXR',
-              city: 'Srinagar',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T16:30',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T18:10',
-          },
-          journey: {
-            stops: 0,
-            duration: 100,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 27146.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 70,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 27146.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 70,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '1-8516858531_17BOMSXRG8287SXRDELG8197_35114252506327',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'G8',
-            number: '287',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T10:50',
-          },
-          arrival: {
-            airport: {
-              code: 'IXJ',
-              name: 'Satwari Arpt',
-              cityCode: 'IXJ',
-              city: 'Jammu',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T13:40',
-          },
-          journey: {
-            stops: 0,
-            duration: 170,
-            stopOvers: [],
-            layoverMins: 150,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: 'G8',
-            number: '171',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'IXJ',
-              name: 'Satwari Arpt',
-              cityCode: 'IXJ',
-              city: 'Jammu',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T16:10',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T17:40',
-          },
-          journey: {
-            stops: 0,
-            duration: 90,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9538.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 174,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9538.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 174,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '1-8516858531_18BOMIXJG8287IXJDELG8171_35114252508723',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'G8',
-            number: '287',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T10:50',
-          },
-          arrival: {
-            airport: {
-              code: 'IXJ',
-              name: 'Satwari Arpt',
-              cityCode: 'IXJ',
-              city: 'Jammu',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T13:40',
-          },
-          journey: {
-            stops: 0,
-            duration: 170,
-            stopOvers: [],
-            layoverMins: 80,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: 'G8',
-            number: '196',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'IXJ',
-              name: 'Satwari Arpt',
-              cityCode: 'IXJ',
-              city: 'Jammu',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T15:00',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T16:15',
-          },
-          journey: {
-            stops: 0,
-            duration: 75,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9538.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 174,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9538.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 174,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '1-8516858531_19BOMIXJG8287IXJDELG8196_35114252511012',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'G8',
-            number: '306',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T10:50',
-          },
-          arrival: {
-            airport: {
-              code: 'LKO',
-              name: 'Amausi Arpt',
-              cityCode: 'LKO',
-              city: 'Lucknow',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T13:05',
-          },
-          journey: {
-            stops: 0,
-            duration: 135,
-            stopOvers: [],
-            layoverMins: 330,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: 'G8',
-            number: '175',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'LKO',
-              name: 'Amausi Arpt',
-              cityCode: 'LKO',
-              city: 'Lucknow',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T18:35',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T19:55',
-          },
-          journey: {
-            stops: 0,
-            duration: 80,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 20465.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 70,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 20465.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 70,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '1-8516858531_20BOMLKOG8306LKODELG8175_35114252513490',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'G8',
-            number: '382',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T15:20',
-          },
-          arrival: {
-            airport: {
-              code: 'GOI',
-              name: 'Dabolim Arpt',
-              cityCode: 'GOI',
-              city: 'Goa In',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T16:40',
-          },
-          journey: {
-            stops: 0,
-            duration: 80,
-            stopOvers: [],
-            layoverMins: 45,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: 'G8',
-            number: '285',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'GOI',
-              name: 'Dabolim Arpt',
-              cityCode: 'GOI',
-              city: 'Goa In',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T17:25',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T20:10',
-          },
-          journey: {
-            stops: 0,
-            duration: 165,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 23175.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 69,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 23175.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 69,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '1-8516858531_21BOMGOIG8382GOIDELG8285_35114252516247',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'G8',
-            number: '287',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T10:50',
-          },
-          arrival: {
-            airport: {
-              code: 'SXR',
-              name: 'Srinagar Arpt',
-              cityCode: 'SXR',
-              city: 'Srinagar',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T15:00',
-          },
-          journey: {
-            stops: 1,
-            duration: 250,
-            stopOvers: [
-              {
-                code: 'IXJ',
-                name: 'Satwari Arpt',
-                cityCode: 'IXJ',
-                city: 'Jammu',
-                country: 'India',
-                countryCode: 'IN',
-              },
-            ],
-            layoverMins: 200,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: 'G8',
-            number: '582',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'SXR',
-              name: 'Srinagar Arpt',
-              cityCode: 'SXR',
-              city: 'Srinagar',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T18:20',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T19:50',
-          },
-          journey: {
-            stops: 0,
-            duration: 90,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 27146.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 70,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 27146.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 70,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '1-8516858531_22BOMSXRG8287SXRDELG8582_35114252518676',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'G8',
-            number: '364',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T19:10',
-          },
-          arrival: {
-            airport: {
-              code: 'AMD',
-              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
-              cityCode: 'AMD',
-              city: 'Ahmedabad',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T20:45',
-          },
-          journey: {
-            stops: 0,
-            duration: 95,
-            stopOvers: [],
-            layoverMins: 55,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: 'G8',
-            number: '714',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'AMD',
-              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
-              cityCode: 'AMD',
-              city: 'Ahmedabad',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T21:40',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T23:20',
-          },
-          journey: {
-            stops: 0,
-            duration: 100,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 19129.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 69,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 19129.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 69,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '1-8516858531_23BOMAMDG8364AMDDELG8714_35114252521096',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '2083',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T22:45',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-11T01:00',
-          },
-          journey: {
-            stops: 0,
-            duration: 135,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 4771.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 4771.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_0BOMDEL6E2083_35114595815692',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '2051',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T21:30',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T23:30',
-          },
-          journey: {
-            stops: 0,
-            duration: 120,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 4771.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 4771.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_1BOMDEL6E2051_35114595818277',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '2398',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T07:00',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T09:10',
-          },
-          journey: {
-            stops: 0,
-            duration: 130,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 5726.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 5726.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_2BOMDEL6E2398_35114595820673',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '825',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T07:45',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T09:55',
-          },
-          journey: {
-            stops: 0,
-            duration: 130,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 5726.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 5726.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_3BOMDEL6E825_35114595823077',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '2518',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T20:10',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T22:25',
-          },
-          journey: {
-            stops: 0,
-            duration: 135,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 5726.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 5726.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_4BOMDEL6E2518_35114595825276',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '2113',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T19:00',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T21:10',
-          },
-          journey: {
-            stops: 0,
-            duration: 130,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 5726.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 5726.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_5BOMDEL6E2113_35114595827327',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '6082',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T18:00',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T20:00',
-          },
-          journey: {
-            stops: 0,
-            duration: 120,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 5726.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 5726.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_6BOMDEL6E6082_35114595829354',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '2103',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T17:15',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T19:25',
-          },
-          journey: {
-            stops: 0,
-            duration: 130,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 5726.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 5726.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_7BOMDEL6E2103_35114595831594',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '2326',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T15:45',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T17:55',
-          },
-          journey: {
-            stops: 0,
-            duration: 130,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 5726.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 5726.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_8BOMDEL6E2326_35114595833858',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '2015',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T12:45',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T15:00',
-          },
-          journey: {
-            stops: 0,
-            duration: 135,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6146.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6146.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_9BOMDEL6E2015_35114595836025',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '5113',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T11:45',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 3',
-            },
-            time: '2023-06-10T14:05',
-          },
-          journey: {
-            stops: 0,
-            duration: 140,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6146.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6146.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_10BOMDEL6E5113_35114595838068',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '5008',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T09:30',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 3',
-            },
-            time: '2023-06-10T11:40',
-          },
-          journey: {
-            stops: 0,
-            duration: 130,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6146.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6146.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_11BOMDEL6E5008_35114595840381',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '2139',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T08:30',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T10:40',
-          },
-          journey: {
-            stops: 0,
-            duration: 130,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6146.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6146.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_12BOMDEL6E2139_35114595842260',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '5187',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T06:05',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 3',
-            },
-            time: '2023-06-10T08:05',
-          },
-          journey: {
-            stops: 0,
-            duration: 120,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6146.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6146.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_13BOMDEL6E5187_35114595844090',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '993',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T14:30',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T16:35',
-          },
-          journey: {
-            stops: 0,
-            duration: 125,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6146.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6146.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_14BOMDEL6E993_35114595846018',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '2111',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T02:30',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T04:40',
-          },
-          journey: {
-            stops: 0,
-            duration: 130,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6146.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6146.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_15BOMDEL6E2111_35114595848160',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '6821',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T10:30',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T12:50',
-          },
-          journey: {
-            stops: 0,
-            duration: 140,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6566.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6566.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_16BOMDEL6E6821_35114595850244',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '2056',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T05:00',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T07:15',
-          },
-          journey: {
-            stops: 0,
-            duration: 135,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6566.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6566.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_17BOMDEL6E2056_35114595852131',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '5194',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T22:10',
-          },
-          arrival: {
-            airport: {
-              code: 'AMD',
-              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
-              cityCode: 'AMD',
-              city: 'Ahmedabad',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T23:15',
-          },
-          journey: {
-            stops: 0,
-            duration: 65,
-            stopOvers: [],
-            layoverMins: 315,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: '6E',
-            number: '158',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'AMD',
-              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
-              cityCode: 'AMD',
-              city: 'Ahmedabad',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-11T04:30',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-11T06:10',
-          },
-          journey: {
-            stops: 0,
-            duration: 100,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 5827.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 5827.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_18BOMAMD6E5194AMDDEL6E158_35114595854995',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '5236',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T15:05',
-          },
-          arrival: {
-            airport: {
-              code: 'JAI',
-              name: 'Sanganeer Arpt',
-              cityCode: 'JAI',
-              city: 'Jaipur',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T16:45',
-          },
-          journey: {
-            stops: 0,
-            duration: 100,
-            stopOvers: [],
-            layoverMins: 315,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: '6E',
-            number: '2405',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'JAI',
-              name: 'Sanganeer Arpt',
-              cityCode: 'JAI',
-              city: 'Jaipur',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T22:00',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T22:55',
-          },
-          journey: {
-            stops: 0,
-            duration: 55,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 5345.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 5345.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_19BOMJAI6E5236JAIDEL6E2405_35114595862125',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '5135',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T16:05',
-          },
-          arrival: {
-            airport: {
-              code: 'AMD',
-              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
-              cityCode: 'AMD',
-              city: 'Ahmedabad',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T17:15',
-          },
-          journey: {
-            stops: 0,
-            duration: 70,
-            stopOvers: [],
-            layoverMins: 310,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: '6E',
-            number: '6235',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'AMD',
-              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
-              cityCode: 'AMD',
-              city: 'Ahmedabad',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T22:25',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-11T00:05',
-          },
-          journey: {
-            stops: 0,
-            duration: 100,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6327.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6327.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_20BOMAMD6E5135AMDDEL6E6235_35114595866342',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '5135',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T16:05',
-          },
-          arrival: {
-            airport: {
-              code: 'AMD',
-              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
-              cityCode: 'AMD',
-              city: 'Ahmedabad',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T17:15',
-          },
-          journey: {
-            stops: 0,
-            duration: 70,
-            stopOvers: [],
-            layoverMins: 225,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: '6E',
-            number: '6202',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'AMD',
-              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
-              cityCode: 'AMD',
-              city: 'Ahmedabad',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T21:00',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T22:35',
-          },
-          journey: {
-            stops: 0,
-            duration: 95,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6327.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6327.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_21BOMAMD6E5135AMDDEL6E6202_35114595870576',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '5276',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T06:25',
-          },
-          arrival: {
-            airport: {
-              code: 'AMD',
-              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
-              cityCode: 'AMD',
-              city: 'Ahmedabad',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T07:30',
-          },
-          journey: {
-            stops: 0,
-            duration: 65,
-            stopOvers: [],
-            layoverMins: 275,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: '6E',
-            number: '729',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'AMD',
-              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
-              cityCode: 'AMD',
-              city: 'Ahmedabad',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T12:05',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T13:50',
-          },
-          journey: {
-            stops: 0,
-            duration: 105,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6856.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6856.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_23BOMAMD6E5276AMDDEL6E729_35114595878642',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '6484',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T13:10',
-          },
-          arrival: {
-            airport: {
-              code: 'AMD',
-              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
-              cityCode: 'AMD',
-              city: 'Ahmedabad',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T14:10',
-          },
-          journey: {
-            stops: 0,
-            duration: 60,
-            stopOvers: [],
-            layoverMins: 240,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: '6E',
-            number: '178',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'AMD',
-              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
-              cityCode: 'AMD',
-              city: 'Ahmedabad',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T18:10',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T19:50',
-          },
-          journey: {
-            stops: 0,
-            duration: 100,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 7137.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 7137.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_25BOMAMD6E6484AMDDEL6E178_35114595886593',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '6484',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T13:10',
-          },
-          arrival: {
-            airport: {
-              code: 'AMD',
-              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
-              cityCode: 'AMD',
-              city: 'Ahmedabad',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T14:10',
-          },
-          journey: {
-            stops: 0,
-            duration: 60,
-            stopOvers: [],
-            layoverMins: 90,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: '6E',
-            number: '246',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'AMD',
-              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
-              cityCode: 'AMD',
-              city: 'Ahmedabad',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T15:40',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T17:10',
-          },
-          journey: {
-            stops: 0,
-            duration: 90,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 7787.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 7787.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_26BOMAMD6E6484AMDDEL6E246_35114595893772',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '2443',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T09:05',
-          },
-          arrival: {
-            airport: {
-              code: 'AMD',
-              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
-              cityCode: 'AMD',
-              city: 'Ahmedabad',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T10:15',
-          },
-          journey: {
-            stops: 0,
-            duration: 70,
-            stopOvers: [],
-            layoverMins: 110,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: '6E',
-            number: '729',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'AMD',
-              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
-              cityCode: 'AMD',
-              city: 'Ahmedabad',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T12:05',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T13:50',
-          },
-          journey: {
-            stops: 0,
-            duration: 105,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 8121.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 8121.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_29BOMAMD6E2443AMDDEL6E729_35114595905916',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '2443',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T09:05',
-          },
-          arrival: {
-            airport: {
-              code: 'AMD',
-              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
-              cityCode: 'AMD',
-              city: 'Ahmedabad',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T10:15',
-          },
-          journey: {
-            stops: 0,
-            duration: 70,
-            stopOvers: [],
-            layoverMins: 325,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: '6E',
-            number: '246',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'AMD',
-              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
-              cityCode: 'AMD',
-              city: 'Ahmedabad',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T15:40',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T17:10',
-          },
-          journey: {
-            stops: 0,
-            duration: 90,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 8242.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 8242.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_30BOMAMD6E2443AMDDEL6E246_35114595909386',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '273',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T16:20',
-          },
-          arrival: {
-            airport: {
-              code: 'UDR',
-              name: 'Maharana Pratap Arpt',
-              cityCode: 'UDR',
-              city: 'Udaipur',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T17:45',
-          },
-          journey: {
-            stops: 0,
-            duration: 85,
-            stopOvers: [],
-            layoverMins: 65,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: '6E',
-            number: '5356',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'UDR',
-              name: 'Maharana Pratap Arpt',
-              cityCode: 'UDR',
-              city: 'Udaipur',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T18:50',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 3',
-            },
-            time: '2023-06-10T20:10',
-          },
-          journey: {
-            stops: 0,
-            duration: 80,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 9440.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 9440.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_31BOMUDR6E273UDRDEL6E5356_35114595912882',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '5281',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T08:20',
-          },
-          arrival: {
-            airport: {
-              code: 'JAI',
-              name: 'Sanganeer Arpt',
-              cityCode: 'JAI',
-              city: 'Jaipur',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T10:05',
-          },
-          journey: {
-            stops: 0,
-            duration: 105,
-            stopOvers: [],
-            layoverMins: 255,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: '6E',
-            number: '2205',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'JAI',
-              name: 'Sanganeer Arpt',
-              cityCode: 'JAI',
-              city: 'Jaipur',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T14:20',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T15:30',
-          },
-          journey: {
-            stops: 0,
-            duration: 70,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 9910.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 9910.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_32BOMJAI6E5281JAIDEL6E2205_35114595916500',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '843',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T17:30',
-          },
-          arrival: {
-            airport: {
-              code: 'IDR',
-              name: 'Devi Ahilya Bai Holkar Arpt',
-              cityCode: 'IDR',
-              city: 'Indore',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T18:45',
-          },
-          journey: {
-            stops: 0,
-            duration: 75,
-            stopOvers: [],
-            layoverMins: 245,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: '6E',
-            number: '6102',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'IDR',
-              name: 'Devi Ahilya Bai Holkar Arpt',
-              cityCode: 'IDR',
-              city: 'Indore',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T22:50',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-11T00:20',
-          },
-          journey: {
-            stops: 0,
-            duration: 90,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 10971.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 10971.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_33BOMIDR6E843IDRDEL6E6102_35114595920225',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '6538',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T06:15',
-          },
-          arrival: {
-            airport: {
-              code: 'UDR',
-              name: 'Maharana Pratap Arpt',
-              cityCode: 'UDR',
-              city: 'Udaipur',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T07:40',
-          },
-          journey: {
-            stops: 0,
-            duration: 85,
-            stopOvers: [],
-            layoverMins: 135,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: '6E',
-            number: '5184',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'UDR',
-              name: 'Maharana Pratap Arpt',
-              cityCode: 'UDR',
-              city: 'Udaipur',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T09:55',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 3',
-            },
-            time: '2023-06-10T11:15',
-          },
-          journey: {
-            stops: 0,
-            duration: 80,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 11892.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 11892.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_34BOMUDR6E6538UDRDEL6E5184_35114595923860',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '5041',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T11:15',
-          },
-          arrival: {
-            airport: {
-              code: 'RAJ',
-              name: 'Rajkot Civil Arpt',
-              cityCode: 'RAJ',
-              city: 'Rajkot',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T12:15',
-          },
-          journey: {
-            stops: 0,
-            duration: 60,
-            stopOvers: [],
-            layoverMins: 325,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: '6E',
-            number: '6279',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'RAJ',
-              name: 'Rajkot Civil Arpt',
-              cityCode: 'RAJ',
-              city: 'Rajkot',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T17:40',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T19:30',
-          },
-          journey: {
-            stops: 0,
-            duration: 110,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 13793.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 13793.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_35BOMRAJ6E5041RAJDEL6E6279_35114595930629',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '5186',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-10T15:40',
-          },
-          arrival: {
-            airport: {
-              code: 'BDQ',
-              name: 'Vadodara Arpt',
-              cityCode: 'BDQ',
-              city: 'Vadodara',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T17:00',
-          },
-          journey: {
-            stops: 0,
-            duration: 80,
-            stopOvers: [],
-            layoverMins: 220,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: '6E',
-            number: '2271',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'BDQ',
-              name: 'Vadodara Arpt',
-              cityCode: 'BDQ',
-              city: 'Vadodara',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T20:40',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T22:20',
-          },
-          journey: {
-            stops: 0,
-            duration: 100,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6905.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6905.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_37BOMBDQ6E5186BDQDEL6E2271_35114595937554',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'SG',
-            number: '8152',
-            equipment: '737',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T05:20',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 3',
-            },
-            time: '2023-06-10T07:35',
-          },
-          journey: {
-            stops: 0,
-            duration: 135,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'RS',
-            fare: 3319.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 1,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'RS',
-            fare: 3655.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 1,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '0 Kg',
-            },
-            fare: 1767.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '4-8516858531_3BOMDELSG8152_35114485411505',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'SG',
-            number: '8710',
-            equipment: '737',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T20:25',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 3',
-            },
-            time: '2023-06-10T22:35',
-          },
-          journey: {
-            stops: 0,
-            duration: 130,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'RS',
-            fare: 3319.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 1,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'RS',
-            fare: 3655.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 1,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '0 Kg',
-            },
-            fare: 1767.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '4-8516858531_4BOMDELSG8710_35114485412777',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'SG',
-            number: '8158',
-            equipment: '737',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T21:45',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 3',
-            },
-            time: '2023-06-11T00:15',
-          },
-          journey: {
-            stops: 0,
-            duration: 150,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'RS',
-            fare: 3319.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 1,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'RS',
-            fare: 3655.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 1,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '0 Kg',
-            },
-            fare: 1767.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '4-8516858531_5BOMDELSG8158_35114485414057',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'I5',
-            number: '773',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T21:00',
-          },
-          arrival: {
-            airport: {
-              code: 'JAI',
-              name: 'Sanganeer Arpt',
-              cityCode: 'JAI',
-              city: 'Jaipur',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T22:50',
-          },
-          journey: {
-            stops: 0,
-            duration: 110,
-            layoverMins: 60,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: 'I5',
-            number: '773',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'JAI',
-              name: 'Sanganeer Arpt',
-              cityCode: 'JAI',
-              city: 'Jaipur',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T23:50',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 3',
-            },
-            time: '2023-06-11T01:00',
-          },
-          journey: {
-            stops: 0,
-            duration: 70,
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 5517.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 5,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 5517.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 5,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '22-8516858531_2BOMJAII5773JAIDELI5773_35113473070285',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'I5',
-            number: '331',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T06:15',
-          },
-          arrival: {
-            airport: {
-              code: 'IXR',
-              name: 'Birsa Munda Arpt',
-              cityCode: 'IXR',
-              city: 'Ranchi',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T08:40',
-          },
-          journey: {
-            stops: 0,
-            duration: 145,
-            layoverMins: 100,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: 'I5',
-            number: '745',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'IXR',
-              name: 'Birsa Munda Arpt',
-              cityCode: 'IXR',
-              city: 'Ranchi',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T10:20',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 3',
-            },
-            time: '2023-06-10T12:15',
-          },
-          journey: {
-            stops: 0,
-            duration: 115,
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 5517.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 2,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 5517.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 2,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 3017.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '22-8516858531_3BOMIXRI5331IXRDELI5745_35113473073067',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'I5',
-            number: '331',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T06:15',
-          },
-          arrival: {
-            airport: {
-              code: 'IXR',
-              name: 'Birsa Munda Arpt',
-              cityCode: 'IXR',
-              city: 'Ranchi',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T08:40',
-          },
-          journey: {
-            stops: 0,
-            duration: 145,
-            layoverMins: 230,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: 'I5',
-            number: '549',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'IXR',
-              name: 'Birsa Munda Arpt',
-              cityCode: 'IXR',
-              city: 'Ranchi',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T12:30',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 3',
-            },
-            time: '2023-06-10T14:25',
-          },
-          journey: {
-            stops: 0,
-            duration: 115,
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 5517.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 2,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 5517.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 2,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 3017.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '22-8516858531_4BOMIXRI5331IXRDELI5549_35113473075192',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'I5',
-            number: '331',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T06:15',
-          },
-          arrival: {
-            airport: {
-              code: 'IXR',
-              name: 'Birsa Munda Arpt',
-              cityCode: 'IXR',
-              city: 'Ranchi',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T08:40',
-          },
-          journey: {
-            stops: 0,
-            duration: 145,
-            layoverMins: 555,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: 'I5',
-            number: '560',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'IXR',
-              name: 'Birsa Munda Arpt',
-              cityCode: 'IXR',
-              city: 'Ranchi',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T17:55',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 3',
-            },
-            time: '2023-06-10T19:45',
-          },
-          journey: {
-            stops: 0,
-            duration: 110,
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 5517.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 2,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 5517.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 2,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 3017.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '22-8516858531_5BOMIXRI5331IXRDELI5560_35113473077399',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'I5',
-            number: '762',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T11:30',
-          },
-          arrival: {
-            airport: {
-              code: 'GOI',
-              name: 'Dabolim Arpt',
-              cityCode: 'GOI',
-              city: 'Goa In',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T12:50',
-          },
-          journey: {
-            stops: 0,
-            duration: 80,
-            layoverMins: 300,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: 'I5',
-            number: '732',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'GOI',
-              name: 'Dabolim Arpt',
-              cityCode: 'GOI',
-              city: 'Goa In',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T17:50',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 3',
-            },
-            time: '2023-06-10T20:30',
-          },
-          journey: {
-            stops: 0,
-            duration: 160,
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 5517.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 5,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 5517.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 5,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 3017.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '22-8516858531_6BOMGOII5762GOIDELI5732_35113473079245',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'I5',
-            number: '762',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T11:30',
-          },
-          arrival: {
-            airport: {
-              code: 'GOI',
-              name: 'Dabolim Arpt',
-              cityCode: 'GOI',
-              city: 'Goa In',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T12:50',
-          },
-          journey: {
-            stops: 0,
-            duration: 80,
-            layoverMins: 635,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: 'I5',
-            number: '830',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'GOI',
-              name: 'Dabolim Arpt',
-              cityCode: 'GOI',
-              city: 'Goa In',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T23:25',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 3',
-            },
-            time: '2023-06-11T02:00',
-          },
-          journey: {
-            stops: 0,
-            duration: 155,
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 5517.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 5,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 5517.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 5,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 3017.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '22-8516858531_7BOMGOII5762GOIDELI5830_35113473081264',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'I5',
-            number: '763',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T12:05',
-          },
-          arrival: {
-            airport: {
-              code: 'IXR',
-              name: 'Birsa Munda Arpt',
-              cityCode: 'IXR',
-              city: 'Ranchi',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T14:20',
-          },
-          journey: {
-            stops: 0,
-            duration: 135,
-            layoverMins: 215,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: 'I5',
-            number: '560',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'IXR',
-              name: 'Birsa Munda Arpt',
-              cityCode: 'IXR',
-              city: 'Ranchi',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T17:55',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 3',
-            },
-            time: '2023-06-10T19:45',
-          },
-          journey: {
-            stops: 0,
-            duration: 110,
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 5517.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 5,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 5517.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 5,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 3017.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '22-8516858531_8BOMIXRI5763IXRDELI5560_35113473083258',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'I5',
-            number: '679',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T15:15',
-          },
-          arrival: {
-            airport: {
-              code: 'JAI',
-              name: 'Sanganeer Arpt',
-              cityCode: 'JAI',
-              city: 'Jaipur',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T16:50',
-          },
-          journey: {
-            stops: 0,
-            duration: 95,
-            layoverMins: 340,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: 'I5',
-            number: '769',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'JAI',
-              name: 'Sanganeer Arpt',
-              cityCode: 'JAI',
-              city: 'Jaipur',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T22:30',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 3',
-            },
-            time: '2023-06-10T23:45',
-          },
-          journey: {
-            stops: 0,
-            duration: 75,
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 5517.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 5,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 5517.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 5,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 3017.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '22-8516858531_9BOMJAII5679JAIDELI5769_35113473085251',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'I5',
-            number: '679',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T15:15',
-          },
-          arrival: {
-            airport: {
-              code: 'JAI',
-              name: 'Sanganeer Arpt',
-              cityCode: 'JAI',
-              city: 'Jaipur',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T16:50',
-          },
-          journey: {
-            stops: 0,
-            duration: 95,
-            layoverMins: 420,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: 'I5',
-            number: '773',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'JAI',
-              name: 'Sanganeer Arpt',
-              cityCode: 'JAI',
-              city: 'Jaipur',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T23:50',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 3',
-            },
-            time: '2023-06-11T01:00',
-          },
-          journey: {
-            stops: 0,
-            duration: 70,
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 5517.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 5,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 5517.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 5,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 3017.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '22-8516858531_10BOMJAII5679JAIDELI5773_35113473087319',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'I5',
-            number: '338',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T17:50',
-          },
-          arrival: {
-            airport: {
-              code: 'GOI',
-              name: 'Dabolim Arpt',
-              cityCode: 'GOI',
-              city: 'Goa In',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T18:55',
-          },
-          journey: {
-            stops: 0,
-            duration: 65,
-            layoverMins: 270,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: 'I5',
-            number: '830',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'GOI',
-              name: 'Dabolim Arpt',
-              cityCode: 'GOI',
-              city: 'Goa In',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T23:25',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 3',
-            },
-            time: '2023-06-11T02:00',
-          },
-          journey: {
-            stops: 0,
-            duration: 155,
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 5517.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 5,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 5517.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 5,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 3017.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '22-8516858531_11BOMGOII5338GOIDELI5830_35113473089215',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'I5',
-            number: '670',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T19:45',
-          },
-          arrival: {
-            airport: {
-              code: 'BLR',
-              name: 'Bengaluru Intl Arpt',
-              cityCode: 'BLR',
-              city: 'Bengaluru',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T21:35',
-          },
-          journey: {
-            stops: 0,
-            duration: 110,
-            layoverMins: 35,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: 'I5',
-            number: '670',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'BLR',
-              name: 'Bengaluru Intl Arpt',
-              cityCode: 'BLR',
-              city: 'Bengaluru',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T22:10',
-          },
-          arrival: {
-            airport: {
-              code: 'GOI',
-              name: 'Dabolim Arpt',
-              cityCode: 'GOI',
-              city: 'Goa In',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-10T23:20',
-          },
-          journey: {
-            stops: 0,
-            duration: 70,
-            layoverMins: 525,
-          },
-        },
-        {
-          segmentNo: 2,
-          flight: {
-            airline: 'I5',
-            number: '315',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'GOI',
-              name: 'Dabolim Arpt',
-              cityCode: 'GOI',
-              city: 'Goa In',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-11T08:05',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 3',
-            },
-            time: '2023-06-11T10:35',
-          },
-          journey: {
-            stops: 0,
-            duration: 150,
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 5517.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 4,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 5517.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 4,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 3017.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '22-8516858531_12BOMBLRI5670BLRGOII5670GOIDELI5315_35113473091725',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'I5',
-            number: '773',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T21:00',
-          },
-          arrival: {
-            airport: {
-              code: 'JAI',
-              name: 'Sanganeer Arpt',
-              cityCode: 'JAI',
-              city: 'Jaipur',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T22:50',
-          },
-          journey: {
-            stops: 0,
-            duration: 110,
-            layoverMins: 450,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: 'I5',
-            number: '744',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'JAI',
-              name: 'Sanganeer Arpt',
-              cityCode: 'JAI',
-              city: 'Jaipur',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-11T06:20',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 3',
-            },
-            time: '2023-06-11T07:20',
-          },
-          journey: {
-            stops: 0,
-            duration: 60,
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 5517.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 5,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 5517.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 5,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 3017.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '22-8516858531_13BOMJAII5773JAIDELI5744_35113473094203',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'I5',
-            number: '336',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T21:25',
-          },
-          arrival: {
-            airport: {
-              code: 'JAI',
-              name: 'Sanganeer Arpt',
-              cityCode: 'JAI',
-              city: 'Jaipur',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-10T23:20',
-          },
-          journey: {
-            stops: 0,
-            duration: 115,
-            layoverMins: 420,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: 'I5',
-            number: '744',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'JAI',
-              name: 'Sanganeer Arpt',
-              cityCode: 'JAI',
-              city: 'Jaipur',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-11T06:20',
-          },
-          arrival: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 3',
-            },
-            time: '2023-06-11T07:20',
-          },
-          journey: {
-            stops: 0,
-            duration: 60,
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 5517.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 5,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 5517.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 5,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 3017.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '22-8516858531_14BOMJAII5336JAIDELI5744_35113473096181',
-        type: 'PUBLISHED',
-      },
-    },
-  ],
-  from: [
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'G8',
-            number: '2501',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-14T02:40',
-          },
-          arrival: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-14T04:50',
-          },
-          journey: {
-            stops: 0,
-            duration: 130,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9943.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 163,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9943.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 163,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '1-8516858531_0DELBOMG82501_35114252140683',
+        id: '1-4063513597_0DELBOMG8530_67355355664302',
         type: 'PUBLISHED',
       },
     },
@@ -7676,7 +204,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T22:45',
+            time: '2023-06-21T22:45',
           },
           arrival: {
             airport: {
@@ -7688,7 +216,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-15T01:00',
+            time: '2023-06-22T01:00',
           },
           journey: {
             stops: 0,
@@ -7699,18 +227,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9943.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 168,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -7718,10 +234,10 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'GS',
-            fare: 9943.7,
+            fare: 15372.7,
             refundable: 1,
             freeMeal: false,
-            seatsRemaining: 168,
+            seatsRemaining: 66,
           },
           INFANT: {
             baggage: {
@@ -7732,7 +248,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '1-8516858531_1DELBOMG8354_35114252143251',
+        id: '1-4063513597_1DELBOMG8354_67355355666534',
         type: 'PUBLISHED',
       },
     },
@@ -7755,7 +271,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T19:50',
+            time: '2023-06-21T19:50',
           },
           arrival: {
             airport: {
@@ -7767,7 +283,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T22:00',
+            time: '2023-06-21T22:00',
           },
           journey: {
             stops: 0,
@@ -7778,18 +294,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9943.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 170,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -7797,10 +301,10 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'GS',
-            fare: 9943.7,
+            fare: 15372.7,
             refundable: 1,
             freeMeal: false,
-            seatsRemaining: 170,
+            seatsRemaining: 68,
           },
           INFANT: {
             baggage: {
@@ -7811,7 +315,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '1-8516858531_2DELBOMG8346_35114252145253',
+        id: '1-4063513597_2DELBOMG8346_67355355668421',
         type: 'PUBLISHED',
       },
     },
@@ -7834,7 +338,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T18:20',
+            time: '2023-06-21T18:20',
           },
           arrival: {
             airport: {
@@ -7846,7 +350,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T20:35',
+            time: '2023-06-21T20:35',
           },
           journey: {
             stops: 0,
@@ -7857,18 +361,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9943.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 171,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -7876,10 +368,10 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'GS',
-            fare: 9943.7,
+            fare: 15372.7,
             refundable: 1,
             freeMeal: false,
-            seatsRemaining: 171,
+            seatsRemaining: 70,
           },
           INFANT: {
             baggage: {
@@ -7890,7 +382,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '1-8516858531_3DELBOMG8323_35114252147132',
+        id: '1-4063513597_3DELBOMG8323_67355355670283',
         type: 'PUBLISHED',
       },
     },
@@ -7913,7 +405,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T15:45',
+            time: '2023-06-21T15:45',
           },
           arrival: {
             airport: {
@@ -7925,7 +417,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T18:00',
+            time: '2023-06-21T18:00',
           },
           journey: {
             stops: 0,
@@ -7936,18 +428,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9943.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 174,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -7955,10 +435,10 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'GS',
-            fare: 9943.7,
+            fare: 15372.7,
             refundable: 1,
             freeMeal: false,
-            seatsRemaining: 174,
+            seatsRemaining: 69,
           },
           INFANT: {
             baggage: {
@@ -7969,7 +449,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '1-8516858531_4DELBOMG8392_35114252148831',
+        id: '1-4063513597_4DELBOMG8392_67355355672097',
         type: 'PUBLISHED',
       },
     },
@@ -7992,7 +472,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T20:50',
+            time: '2023-06-21T20:50',
           },
           arrival: {
             airport: {
@@ -8004,7 +484,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T23:20',
+            time: '2023-06-21T23:20',
           },
           journey: {
             stops: 0,
@@ -8015,18 +495,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9943.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 171,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -8034,10 +502,10 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'GS',
-            fare: 9943.7,
+            fare: 15372.7,
             refundable: 1,
             freeMeal: false,
-            seatsRemaining: 171,
+            seatsRemaining: 70,
           },
           INFANT: {
             baggage: {
@@ -8048,7 +516,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '1-8516858531_5DELBOMG8328_35114252150587',
+        id: '1-4063513597_5DELBOMG8328_67355355673771',
         type: 'PUBLISHED',
       },
     },
@@ -8071,7 +539,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T12:00',
+            time: '2023-06-21T12:00',
           },
           arrival: {
             airport: {
@@ -8083,7 +551,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T14:25',
+            time: '2023-06-21T14:25',
           },
           journey: {
             stops: 0,
@@ -8094,18 +562,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9943.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 173,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -8113,10 +569,10 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'GS',
-            fare: 9943.7,
+            fare: 15372.7,
             refundable: 1,
             freeMeal: false,
-            seatsRemaining: 173,
+            seatsRemaining: 69,
           },
           INFANT: {
             baggage: {
@@ -8127,7 +583,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '1-8516858531_6DELBOMG87601_35114252152695',
+        id: '1-4063513597_6DELBOMG87601_67355355675715',
         type: 'PUBLISHED',
       },
     },
@@ -8150,7 +606,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T10:55',
+            time: '2023-06-21T10:55',
           },
           arrival: {
             airport: {
@@ -8162,7 +618,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T13:10',
+            time: '2023-06-21T13:10',
           },
           journey: {
             stops: 0,
@@ -8173,18 +629,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9943.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 172,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -8192,10 +636,10 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'GS',
-            fare: 9943.7,
+            fare: 15372.7,
             refundable: 1,
             freeMeal: false,
-            seatsRemaining: 172,
+            seatsRemaining: 69,
           },
           INFANT: {
             baggage: {
@@ -8206,7 +650,74 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '1-8516858531_7DELBOMG8338_35114252154443',
+        id: '1-4063513597_7DELBOMG8338_67355355677487',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'G8',
+            number: '2501',
+            equipment: '32N',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T08:40',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T10:50',
+          },
+          journey: {
+            stops: 0,
+            duration: 130,
+            stopOvers: [],
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kg',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'GS',
+            fare: 15372.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 70,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+            },
+            fare: 1517.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+        },
+        id: '1-4063513597_8DELBOMG82501_67355355679178',
         type: 'PUBLISHED',
       },
     },
@@ -8229,7 +740,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T08:00',
+            time: '2023-06-21T08:00',
           },
           arrival: {
             airport: {
@@ -8241,7 +752,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T10:15',
+            time: '2023-06-21T10:15',
           },
           journey: {
             stops: 0,
@@ -8252,18 +763,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9943.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 173,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -8271,10 +770,10 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'GS',
-            fare: 9943.7,
+            fare: 15372.7,
             refundable: 1,
             freeMeal: false,
-            seatsRemaining: 173,
+            seatsRemaining: 67,
           },
           INFANT: {
             baggage: {
@@ -8285,86 +784,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '1-8516858531_8DELBOMG8334_35114252156273',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'G8',
-            number: '530',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-14T07:00',
-          },
-          arrival: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-14T09:10',
-          },
-          journey: {
-            stops: 0,
-            duration: 130,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9943.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 172,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9943.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 172,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '1-8516858531_9DELBOMG8530_35114252158020',
+        id: '1-4063513597_9DELBOMG8334_67355355680950',
         type: 'PUBLISHED',
       },
     },
@@ -8387,7 +807,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T14:30',
+            time: '2023-06-21T14:30',
           },
           arrival: {
             airport: {
@@ -8399,7 +819,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T16:40',
+            time: '2023-06-21T16:40',
           },
           journey: {
             stops: 0,
@@ -8410,18 +830,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 9943.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 173,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -8429,10 +837,10 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'GS',
-            fare: 9943.7,
+            fare: 15372.7,
             refundable: 1,
             freeMeal: false,
-            seatsRemaining: 173,
+            seatsRemaining: 69,
           },
           INFANT: {
             baggage: {
@@ -8443,7 +851,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '1-8516858531_10DELBOMG8336_35114252159637',
+        id: '1-4063513597_10DELBOMG8336_67355355682591',
         type: 'PUBLISHED',
       },
     },
@@ -8466,7 +874,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T11:00',
+            time: '2023-06-21T11:00',
           },
           arrival: {
             airport: {
@@ -8477,7 +885,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T12:35',
+            time: '2023-06-21T12:35',
           },
           journey: {
             stops: 0,
@@ -8502,7 +910,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T14:20',
+            time: '2023-06-21T14:20',
           },
           arrival: {
             airport: {
@@ -8514,7 +922,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T16:40',
+            time: '2023-06-21T16:40',
           },
           journey: {
             stops: 0,
@@ -8525,18 +933,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 23206.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 70,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -8544,10 +940,10 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'GS',
-            fare: 23206.7,
+            fare: 25156.7,
             refundable: 1,
             freeMeal: false,
-            seatsRemaining: 70,
+            seatsRemaining: 68,
           },
           INFANT: {
             baggage: {
@@ -8558,7 +954,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '1-8516858531_11DELPATG82511PATBOMG8352_35114252162525',
+        id: '1-4063513597_11DELPATG82511PATBOMG8352_67355355685446',
         type: 'PUBLISHED',
       },
     },
@@ -8581,7 +977,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T16:45',
+            time: '2023-06-21T16:45',
           },
           arrival: {
             airport: {
@@ -8593,7 +989,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T18:20',
+            time: '2023-06-21T18:20',
           },
           journey: {
             stops: 0,
@@ -8619,7 +1015,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T19:55',
+            time: '2023-06-21T19:55',
           },
           arrival: {
             airport: {
@@ -8631,7 +1027,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T21:10',
+            time: '2023-06-21T21:10',
           },
           journey: {
             stops: 0,
@@ -8642,18 +1038,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 19491.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 70,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -8661,10 +1045,10 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'GS',
-            fare: 19491.7,
+            fare: 21073.7,
             refundable: 1,
             freeMeal: false,
-            seatsRemaining: 70,
+            seatsRemaining: 69,
           },
           INFANT: {
             baggage: {
@@ -8675,7 +1059,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '1-8516858531_12DELAMDG8717AMDBOMG8537_35114252167144',
+        id: '1-4063513597_12DELAMDG8717AMDBOMG8537_67355355689311',
         type: 'PUBLISHED',
       },
     },
@@ -8698,7 +1082,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T13:45',
+            time: '2023-06-21T13:45',
           },
           arrival: {
             airport: {
@@ -8709,7 +1093,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T15:10',
+            time: '2023-06-21T15:10',
           },
           journey: {
             stops: 0,
@@ -8734,7 +1118,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T16:00',
+            time: '2023-06-21T16:00',
           },
           arrival: {
             airport: {
@@ -8746,7 +1130,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T17:30',
+            time: '2023-06-21T17:30',
           },
           journey: {
             stops: 0,
@@ -8757,18 +1141,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 24489.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 68,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -8776,10 +1148,10 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'GS',
-            fare: 24489.7,
+            fare: 27552.7,
             refundable: 1,
             freeMeal: false,
-            seatsRemaining: 68,
+            seatsRemaining: 70,
           },
           INFANT: {
             baggage: {
@@ -8790,7 +1162,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '1-8516858531_13DELSXRG8199SXRBOMG87901_35114252170714',
+        id: '1-4063513597_13DELSXRG8199SXRBOMG87901_67355355692774',
         type: 'PUBLISHED',
       },
     },
@@ -8813,7 +1185,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T12:10',
+            time: '2023-06-21T12:10',
           },
           arrival: {
             airport: {
@@ -8824,7 +1196,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T13:25',
+            time: '2023-06-21T13:25',
           },
           journey: {
             stops: 0,
@@ -8849,7 +1221,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T15:35',
+            time: '2023-06-21T15:35',
           },
           arrival: {
             airport: {
@@ -8861,7 +1233,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T18:25',
+            time: '2023-06-21T18:25',
           },
           journey: {
             stops: 0,
@@ -8872,18 +1244,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 24489.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 69,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -8891,10 +1251,10 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'GS',
-            fare: 24489.7,
+            fare: 27552.7,
             refundable: 1,
             freeMeal: false,
-            seatsRemaining: 69,
+            seatsRemaining: 70,
           },
           INFANT: {
             baggage: {
@@ -8905,7 +1265,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '1-8516858531_14DELSXRG81010SXRBOMG8287_35114252174193',
+        id: '1-4063513597_14DELSXRG81010SXRBOMG8287_67355355696638',
         type: 'PUBLISHED',
       },
     },
@@ -8928,7 +1288,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T12:10',
+            time: '2023-06-21T12:10',
           },
           arrival: {
             airport: {
@@ -8939,7 +1299,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T13:25',
+            time: '2023-06-21T13:25',
           },
           journey: {
             stops: 0,
@@ -8964,7 +1324,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T16:00',
+            time: '2023-06-21T16:00',
           },
           arrival: {
             airport: {
@@ -8976,7 +1336,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T17:30',
+            time: '2023-06-21T17:30',
           },
           journey: {
             stops: 0,
@@ -8987,18 +1347,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 24489.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 68,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -9006,10 +1354,10 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'GS',
-            fare: 24489.7,
+            fare: 27552.7,
             refundable: 1,
             freeMeal: false,
-            seatsRemaining: 68,
+            seatsRemaining: 70,
           },
           INFANT: {
             baggage: {
@@ -9020,7 +1368,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '1-8516858531_15DELSXRG81010SXRBOMG87901_35114252177992',
+        id: '1-4063513597_15DELSXRG81010SXRBOMG87901_67355355700101',
         type: 'PUBLISHED',
       },
     },
@@ -9043,7 +1391,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T11:50',
+            time: '2023-06-21T11:50',
           },
           arrival: {
             airport: {
@@ -9054,7 +1402,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T13:20',
+            time: '2023-06-21T13:20',
           },
           journey: {
             stops: 0,
@@ -9079,7 +1427,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T16:00',
+            time: '2023-06-21T16:00',
           },
           arrival: {
             airport: {
@@ -9091,7 +1439,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T17:30',
+            time: '2023-06-21T17:30',
           },
           journey: {
             stops: 0,
@@ -9102,18 +1450,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 24489.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 68,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -9121,10 +1457,10 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'GS',
-            fare: 24489.7,
+            fare: 27552.7,
             refundable: 1,
             freeMeal: false,
-            seatsRemaining: 68,
+            seatsRemaining: 70,
           },
           INFANT: {
             baggage: {
@@ -9135,7 +1471,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '1-8516858531_16DELSXRG8213SXRBOMG87901_35114252191292',
+        id: '1-4063513597_16DELSXRG8213SXRBOMG87901_67355355703350',
         type: 'PUBLISHED',
       },
     },
@@ -9158,7 +1494,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T11:50',
+            time: '2023-06-21T11:50',
           },
           arrival: {
             airport: {
@@ -9169,7 +1505,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T13:20',
+            time: '2023-06-21T13:20',
           },
           journey: {
             stops: 0,
@@ -9194,7 +1530,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T15:35',
+            time: '2023-06-21T15:35',
           },
           arrival: {
             airport: {
@@ -9206,7 +1542,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T18:25',
+            time: '2023-06-21T18:25',
           },
           journey: {
             stops: 0,
@@ -9217,18 +1553,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 24489.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 69,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -9236,10 +1560,10 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'GS',
-            fare: 24489.7,
+            fare: 27552.7,
             refundable: 1,
             freeMeal: false,
-            seatsRemaining: 69,
+            seatsRemaining: 70,
           },
           INFANT: {
             baggage: {
@@ -9250,7 +1574,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '1-8516858531_17DELSXRG8213SXRBOMG8287_35114252194804',
+        id: '1-4063513597_17DELSXRG8213SXRBOMG8287_67355355706821',
         type: 'PUBLISHED',
       },
     },
@@ -9273,7 +1597,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T10:30',
+            time: '2023-06-21T10:30',
           },
           arrival: {
             airport: {
@@ -9284,7 +1608,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T13:05',
+            time: '2023-06-21T13:05',
           },
           journey: {
             stops: 1,
@@ -9318,7 +1642,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T16:00',
+            time: '2023-06-21T16:00',
           },
           arrival: {
             airport: {
@@ -9330,7 +1654,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T17:30',
+            time: '2023-06-21T17:30',
           },
           journey: {
             stops: 0,
@@ -9341,18 +1665,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 25962.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 68,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -9360,10 +1672,10 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'GS',
-            fare: 25962.7,
+            fare: 4405.7,
             refundable: 1,
             freeMeal: false,
-            seatsRemaining: 68,
+            seatsRemaining: 6,
           },
           INFANT: {
             baggage: {
@@ -9374,7 +1686,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '1-8516858531_18DELSXRG82403SXRBOMG87901_35114252198529',
+        id: '1-4063513597_18DELSXRG82403SXRBOMG87901_67355355709971',
         type: 'PUBLISHED',
       },
     },
@@ -9397,7 +1709,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T05:45',
+            time: '2023-06-21T05:45',
           },
           arrival: {
             airport: {
@@ -9409,7 +1721,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T07:50',
+            time: '2023-06-21T07:50',
           },
           journey: {
             stops: 0,
@@ -9435,7 +1747,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T10:00',
+            time: '2023-06-21T10:00',
           },
           arrival: {
             airport: {
@@ -9447,7 +1759,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T12:40',
+            time: '2023-06-21T12:40',
           },
           journey: {
             stops: 0,
@@ -9458,18 +1770,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 27583.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 69,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -9477,10 +1777,10 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'GS',
-            fare: 27583.7,
+            fare: 27686.7,
             refundable: 1,
             freeMeal: false,
-            seatsRemaining: 69,
+            seatsRemaining: 70,
           },
           INFANT: {
             baggage: {
@@ -9491,7 +1791,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '1-8516858531_19DELCCUG8101CCUBOMG8519_35114252201868',
+        id: '1-4063513597_19DELCCUG8101CCUBOMG8519_67355355713811',
         type: 'PUBLISHED',
       },
     },
@@ -9514,7 +1814,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T08:40',
+            time: '2023-06-21T08:40',
           },
           arrival: {
             airport: {
@@ -9525,7 +1825,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T11:30',
+            time: '2023-06-21T11:30',
           },
           journey: {
             stops: 0,
@@ -9550,7 +1850,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T13:15',
+            time: '2023-06-21T13:15',
           },
           arrival: {
             airport: {
@@ -9562,7 +1862,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T14:40',
+            time: '2023-06-21T14:40',
           },
           journey: {
             stops: 0,
@@ -9573,18 +1873,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 22102.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 70,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -9592,7 +1880,7 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'GS',
-            fare: 22102.7,
+            fare: 23122.7,
             refundable: 1,
             freeMeal: false,
             seatsRemaining: 70,
@@ -9606,7 +1894,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '1-8516858531_20DELGOIG8300GOIBOMG8332_35114252205725',
+        id: '1-4063513597_20DELGOIG8300GOIBOMG8332_67355355716954',
         type: 'PUBLISHED',
       },
     },
@@ -9629,7 +1917,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T06:10',
+            time: '2023-06-21T06:10',
           },
           arrival: {
             airport: {
@@ -9641,7 +1929,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T07:35',
+            time: '2023-06-21T07:35',
           },
           journey: {
             stops: 0,
@@ -9667,7 +1955,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T11:00',
+            time: '2023-06-21T11:00',
           },
           arrival: {
             airport: {
@@ -9679,7 +1967,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T12:20',
+            time: '2023-06-21T12:20',
           },
           journey: {
             stops: 0,
@@ -9690,18 +1978,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 19491.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 67,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -9709,10 +1985,10 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'GS',
-            fare: 19491.7,
+            fare: 21073.7,
             refundable: 1,
             freeMeal: false,
-            seatsRemaining: 67,
+            seatsRemaining: 68,
           },
           INFANT: {
             baggage: {
@@ -9723,7 +1999,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '1-8516858531_21DELAMDG8719AMDBOMG8247_35114252209499',
+        id: '1-4063513597_21DELAMDG8719AMDBOMG8247_67355355720195',
         type: 'PUBLISHED',
       },
     },
@@ -9746,7 +2022,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T06:10',
+            time: '2023-06-21T06:10',
           },
           arrival: {
             airport: {
@@ -9757,7 +2033,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T07:40',
+            time: '2023-06-21T07:40',
           },
           journey: {
             stops: 0,
@@ -9782,7 +2058,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T08:30',
+            time: '2023-06-21T08:30',
           },
           arrival: {
             airport: {
@@ -9794,7 +2070,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T11:30',
+            time: '2023-06-21T11:30',
           },
           journey: {
             stops: 0,
@@ -9805,18 +2081,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 24489.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 67,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -9824,10 +2088,10 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'GS',
-            fare: 24489.7,
+            fare: 27552.7,
             refundable: 1,
             freeMeal: false,
-            seatsRemaining: 67,
+            seatsRemaining: 70,
           },
           INFANT: {
             baggage: {
@@ -9838,7 +2102,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '1-8516858531_22DELSXRG8260SXRBOMG8386_35114252213413',
+        id: '1-4063513597_22DELSXRG8260SXRBOMG8386_67355355727932',
         type: 'PUBLISHED',
       },
     },
@@ -9861,7 +2125,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T06:10',
+            time: '2023-06-21T06:10',
           },
           arrival: {
             airport: {
@@ -9873,7 +2137,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T07:35',
+            time: '2023-06-21T07:35',
           },
           journey: {
             stops: 0,
@@ -9899,7 +2163,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T08:45',
+            time: '2023-06-21T08:45',
           },
           arrival: {
             airport: {
@@ -9911,7 +2175,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T10:00',
+            time: '2023-06-21T10:00',
           },
           journey: {
             stops: 0,
@@ -9922,18 +2186,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 19491.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 67,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -9941,10 +2193,10 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'GS',
-            fare: 19491.7,
+            fare: 21073.7,
             refundable: 1,
             freeMeal: false,
-            seatsRemaining: 67,
+            seatsRemaining: 68,
           },
           INFANT: {
             baggage: {
@@ -9955,7 +2207,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '1-8516858531_23DELAMDG8719AMDBOMG8459_35114252219075',
+        id: '1-4063513597_23DELAMDG8719AMDBOMG8459_67355355731124',
         type: 'PUBLISHED',
       },
     },
@@ -9978,7 +2230,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T16:55',
+            time: '2023-06-21T16:55',
           },
           arrival: {
             airport: {
@@ -9990,7 +2242,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T18:05',
+            time: '2023-06-21T18:05',
           },
           journey: {
             stops: 0,
@@ -10016,7 +2268,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T18:55',
+            time: '2023-06-21T18:55',
           },
           arrival: {
             airport: {
@@ -10028,7 +2280,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T21:10',
+            time: '2023-06-21T21:10',
           },
           journey: {
             stops: 0,
@@ -10039,18 +2291,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 23866.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 70,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -10072,7 +2312,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '1-8516858531_24DELLKOG8188LKOBOMG8396_35114252222898',
+        id: '1-4063513597_24DELLKOG8188LKOBOMG8396_67355355734201',
         type: 'PUBLISHED',
       },
     },
@@ -10095,7 +2335,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T05:45',
+            time: '2023-06-21T05:45',
           },
           arrival: {
             airport: {
@@ -10106,7 +2346,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T07:15',
+            time: '2023-06-21T07:15',
           },
           journey: {
             stops: 0,
@@ -10131,7 +2371,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T08:30',
+            time: '2023-06-21T08:30',
           },
           arrival: {
             airport: {
@@ -10143,7 +2383,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T11:30',
+            time: '2023-06-21T11:30',
           },
           journey: {
             stops: 0,
@@ -10154,18 +2394,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 24489.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 67,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -10173,10 +2401,10 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'GS',
-            fare: 24489.7,
+            fare: 27552.7,
             refundable: 1,
             freeMeal: false,
-            seatsRemaining: 67,
+            seatsRemaining: 70,
           },
           INFANT: {
             baggage: {
@@ -10187,7 +2415,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '1-8516858531_25DELSXRG8266SXRBOMG8386_35114252226295',
+        id: '1-4063513597_25DELSXRG8266SXRBOMG8386_67355355737171',
         type: 'PUBLISHED',
       },
     },
@@ -10210,7 +2438,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T05:20',
+            time: '2023-06-21T05:20',
           },
           arrival: {
             airport: {
@@ -10221,7 +2449,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T06:45',
+            time: '2023-06-21T06:45',
           },
           journey: {
             stops: 0,
@@ -10246,7 +2474,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T08:30',
+            time: '2023-06-21T08:30',
           },
           arrival: {
             airport: {
@@ -10258,7 +2486,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T11:30',
+            time: '2023-06-21T11:30',
           },
           journey: {
             stops: 0,
@@ -10269,18 +2497,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 24489.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 67,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -10288,10 +2504,10 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'GS',
-            fare: 24489.7,
+            fare: 27552.7,
             refundable: 1,
             freeMeal: false,
-            seatsRemaining: 67,
+            seatsRemaining: 70,
           },
           INFANT: {
             baggage: {
@@ -10302,7 +2518,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '1-8516858531_26DELSXRG8190SXRBOMG8386_35114252229602',
+        id: '1-4063513597_26DELSXRG8190SXRBOMG8386_67355355740183',
         type: 'PUBLISHED',
       },
     },
@@ -10325,7 +2541,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T02:10',
+            time: '2023-06-21T02:10',
           },
           arrival: {
             airport: {
@@ -10336,7 +2552,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T04:55',
+            time: '2023-06-21T04:55',
           },
           journey: {
             stops: 0,
@@ -10361,7 +2577,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T06:40',
+            time: '2023-06-21T06:40',
           },
           arrival: {
             airport: {
@@ -10373,7 +2589,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T08:00',
+            time: '2023-06-21T08:00',
           },
           journey: {
             stops: 0,
@@ -10384,18 +2600,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 22102.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 70,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -10403,7 +2607,7 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'GS',
-            fare: 22102.7,
+            fare: 23122.7,
             refundable: 1,
             freeMeal: false,
             seatsRemaining: 70,
@@ -10417,7 +2621,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '1-8516858531_27DELGOIG81764GOIBOMG8381_35114252233253',
+        id: '1-4063513597_27DELGOIG81764GOIBOMG8381_67355355743415',
         type: 'PUBLISHED',
       },
     },
@@ -10440,7 +2644,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T09:00',
+            time: '2023-06-21T09:00',
           },
           arrival: {
             airport: {
@@ -10451,7 +2655,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T10:00',
+            time: '2023-06-21T10:00',
           },
           journey: {
             stops: 0,
@@ -10476,7 +2680,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T11:30',
+            time: '2023-06-21T11:30',
           },
           arrival: {
             airport: {
@@ -10488,7 +2692,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T13:55',
+            time: '2023-06-21T13:55',
           },
           journey: {
             stops: 0,
@@ -10499,18 +2703,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 10311.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 174,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -10518,10 +2710,10 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'GS',
-            fare: 10311.7,
+            fare: 23529.7,
             refundable: 1,
             freeMeal: false,
-            seatsRemaining: 174,
+            seatsRemaining: 70,
           },
           INFANT: {
             baggage: {
@@ -10532,7 +2724,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '1-8516858531_28DELIXCG8108IXCBOMG8382_35114252236568',
+        id: '1-4063513597_28DELIXCG8108IXCBOMG8382_67355355746673',
         type: 'PUBLISHED',
       },
     },
@@ -10555,7 +2747,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T19:15',
+            time: '2023-06-21T19:15',
           },
           arrival: {
             airport: {
@@ -10567,7 +2759,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T20:55',
+            time: '2023-06-21T20:55',
           },
           journey: {
             stops: 0,
@@ -10593,7 +2785,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-15T00:40',
+            time: '2023-06-22T00:40',
           },
           arrival: {
             airport: {
@@ -10605,7 +2797,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-15T02:00',
+            time: '2023-06-22T02:00',
           },
           journey: {
             stops: 0,
@@ -10616,18 +2808,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 19491.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 69,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -10635,10 +2815,10 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'GS',
-            fare: 19491.7,
+            fare: 21073.7,
             refundable: 1,
             freeMeal: false,
-            seatsRemaining: 69,
+            seatsRemaining: 70,
           },
           INFANT: {
             baggage: {
@@ -10649,7 +2829,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '1-8516858531_29DELAMDG8713AMDBOMG8413_35114252239989',
+        id: '1-4063513597_29DELAMDG8713AMDBOMG8413_67355355749635',
         type: 'PUBLISHED',
       },
     },
@@ -10672,7 +2852,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T10:40',
+            time: '2023-06-21T10:40',
           },
           arrival: {
             airport: {
@@ -10684,7 +2864,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T15:05',
+            time: '2023-06-21T15:05',
           },
           journey: {
             stops: 1,
@@ -10719,7 +2899,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T16:30',
+            time: '2023-06-21T16:30',
           },
           arrival: {
             airport: {
@@ -10731,7 +2911,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T18:15',
+            time: '2023-06-21T18:15',
           },
           journey: {
             stops: 0,
@@ -10742,18 +2922,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'GS',
-            fare: 4405.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 6,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -10775,7 +2943,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '1-8516858531_30DELBLRG8286BLRBOMG8320_35114252242820',
+        id: '1-4063513597_30DELBLRG8286BLRBOMG8320_67355355752154',
         type: 'PUBLISHED',
       },
     },
@@ -10784,276 +2952,9 @@ export const tripjack = {
         {
           segmentNo: 0,
           flight: {
-            airline: '6E',
-            number: '2028',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-14T10:30',
-          },
-          arrival: {
-            airport: {
-              code: 'GWL',
-              name: 'Gwalior Airport',
-              cityCode: 'GWL',
-              city: 'Gwalior',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-14T11:30',
-          },
-          journey: {
-            stops: 0,
-            duration: 60,
-            stopOvers: [],
-            layoverMins: 220,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: '6E',
-            number: '5059',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'GWL',
-              name: 'Gwalior Airport',
-              cityCode: 'GWL',
-              city: 'Gwalior',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-14T15:10',
-          },
-          arrival: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-14T16:50',
-          },
-          journey: {
-            stops: 0,
-            duration: 100,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 5899.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 5899.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_0DELGWL6E2028GWLBOM6E5059_35114595333528',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '2519',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-14T23:15',
-          },
-          arrival: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-15T01:20',
-          },
-          journey: {
-            stops: 0,
-            duration: 125,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6600.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6600.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_1DELBOM6E2519_35114595339476',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '2114',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-14T22:00',
-          },
-          arrival: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-15T00:05',
-          },
-          journey: {
-            stops: 0,
-            duration: 125,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6600.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6600.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_2DELBOM6E2114_35114595341848',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '5197',
-            equipment: '321',
+            airline: 'SG',
+            number: '8169',
+            equipment: '737',
           },
           departure: {
             airport: {
@@ -11065,84 +2966,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 3',
             },
-            time: '2023-06-14T16:30',
-          },
-          arrival: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-14T18:40',
-          },
-          journey: {
-            stops: 0,
-            duration: 130,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6600.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6600.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_3DELBOM6E5197_35114595343981',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '2016',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-14T15:45',
+            time: '2023-06-21T20:00',
           },
           arrival: {
             airport: {
@@ -11154,7 +2978,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T18:00',
+            time: '2023-06-21T22:15',
           },
           journey: {
             stops: 0,
@@ -11165,38 +2989,28 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6600.7,
-            refundable: 1,
-            freeMeal: false,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
+              checkIn: '15 Kg',
             },
             cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6600.7,
+            bookingClass: 'RS',
+            fare: 3449.7,
             refundable: 1,
             freeMeal: false,
+            seatsRemaining: 1,
           },
           INFANT: {
             baggage: {
-              cabin: '7 Kg',
+              cabin: '0 Kg',
             },
-            fare: 1517.7,
+            fare: 1767.7,
             refundable: 1,
             freeMeal: false,
           },
         },
-        id: '5-8516858531_4DELBOM6E2016_35114595346311',
+        id: '4-4063513597_3DELBOMSG8169_67356162528587',
         type: 'PUBLISHED',
       },
     },
@@ -11205,9 +3019,9 @@ export const tripjack = {
         {
           segmentNo: 0,
           flight: {
-            airline: '6E',
-            number: '2176',
-            equipment: '321',
+            airline: 'SG',
+            number: '8109',
+            equipment: '737',
           },
           departure: {
             airport: {
@@ -11217,9 +3031,9 @@ export const tripjack = {
               city: 'Delhi',
               country: 'India',
               countryCode: 'IN',
-              terminal: 'Terminal 2',
+              terminal: 'Terminal 3',
             },
-            time: '2023-06-14T14:20',
+            time: '2023-06-21T22:35',
           },
           arrival: {
             airport: {
@@ -11231,49 +3045,39 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T16:30',
+            time: '2023-06-22T00:50',
           },
           journey: {
             stops: 0,
-            duration: 130,
+            duration: 135,
             stopOvers: [],
           },
         },
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6600.7,
-            refundable: 1,
-            freeMeal: false,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
+              checkIn: '15 Kg',
             },
             cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6600.7,
+            bookingClass: 'RS',
+            fare: 3449.7,
             refundable: 1,
             freeMeal: false,
+            seatsRemaining: 1,
           },
           INFANT: {
             baggage: {
-              cabin: '7 Kg',
+              cabin: '0 Kg',
             },
-            fare: 1517.7,
+            fare: 1767.7,
             refundable: 1,
             freeMeal: false,
           },
         },
-        id: '5-8516858531_5DELBOM6E2176_35114595348486',
+        id: '4-4063513597_4DELBOMSG8109_67356162529588',
         type: 'PUBLISHED',
       },
     },
@@ -11296,7 +3100,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T02:00',
+            time: '2023-06-21T02:00',
           },
           arrival: {
             airport: {
@@ -11308,7 +3112,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T04:05',
+            time: '2023-06-21T04:05',
           },
           journey: {
             stops: 0,
@@ -11319,17 +3123,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6600.7,
-            refundable: 1,
-            freeMeal: false,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -11337,7 +3130,7 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'R',
-            fare: 6600.7,
+            fare: 5316.7,
             refundable: 1,
             freeMeal: false,
           },
@@ -11350,7 +3143,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '5-8516858531_6DELBOM6E2009_35114595350652',
+        id: '5-4063513597_0DELBOM6E2009_67355395995588',
         type: 'PUBLISHED',
       },
     },
@@ -11360,84 +3153,7 @@ export const tripjack = {
           segmentNo: 0,
           flight: {
             airline: '6E',
-            number: '824',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-14T11:00',
-          },
-          arrival: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-14T13:00',
-          },
-          journey: {
-            stops: 0,
-            duration: 120,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6600.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6600.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_7DELBOM6E824_35114595352687',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '2328',
+            number: '2519',
             equipment: '321',
           },
           departure: {
@@ -11450,7 +3166,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T10:00',
+            time: '2023-06-21T23:15',
           },
           arrival: {
             airport: {
@@ -11462,84 +3178,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T12:15',
-          },
-          journey: {
-            stops: 0,
-            duration: 135,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6600.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6600.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_8DELBOM6E2328_35114595354746',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '6814',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-14T07:15',
-          },
-          arrival: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-14T09:20',
+            time: '2023-06-22T01:20',
           },
           journey: {
             stops: 0,
@@ -11550,17 +3189,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6600.7,
-            refundable: 1,
-            freeMeal: false,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -11568,7 +3196,7 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'R',
-            fare: 6600.7,
+            fare: 5316.7,
             refundable: 1,
             freeMeal: false,
           },
@@ -11581,84 +3209,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '5-8516858531_9DELBOM6E6814_35114595356765',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '5218',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 3',
-            },
-            time: '2023-06-14T06:30',
-          },
-          arrival: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-14T08:50',
-          },
-          journey: {
-            stops: 0,
-            duration: 140,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6600.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6600.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_10DELBOM6E5218_35114595358767',
+        id: '5-4063513597_1DELBOM6E2519_67355395998205',
         type: 'PUBLISHED',
       },
     },
@@ -11681,7 +3232,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T05:30',
+            time: '2023-06-21T05:30',
           },
           arrival: {
             airport: {
@@ -11693,7 +3244,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T07:35',
+            time: '2023-06-21T07:35',
           },
           journey: {
             stops: 0,
@@ -11704,17 +3255,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6600.7,
-            refundable: 1,
-            freeMeal: false,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -11722,7 +3262,7 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'R',
-            fare: 6600.7,
+            fare: 5760.7,
             refundable: 1,
             freeMeal: false,
           },
@@ -11735,7 +3275,271 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '5-8516858531_11DELBOM6E2112_35114595360851',
+        id: '5-4063513597_2DELBOM6E2112_67355396000232',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: '6E',
+            number: '5218',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T06:30',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T08:50',
+          },
+          journey: {
+            stops: 0,
+            duration: 140,
+            stopOvers: [],
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'R',
+            fare: 5760.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+            },
+            fare: 1517.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+        },
+        id: '5-4063513597_3DELBOM6E5218_67355396002554',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: '6E',
+            number: '6814',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T07:15',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T09:20',
+          },
+          journey: {
+            stops: 0,
+            duration: 125,
+            stopOvers: [],
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'R',
+            fare: 5760.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+            },
+            fare: 1517.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+        },
+        id: '5-4063513597_4DELBOM6E6814_67355396004252',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: '6E',
+            number: '2328',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T10:00',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T12:15',
+          },
+          journey: {
+            stops: 0,
+            duration: 135,
+            stopOvers: [],
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'R',
+            fare: 5760.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+            },
+            fare: 1517.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+        },
+        id: '5-4063513597_5DELBOM6E2328_67355396006205',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: '6E',
+            number: '824',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T11:00',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T13:00',
+          },
+          journey: {
+            stops: 0,
+            duration: 120,
+            stopOvers: [],
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'R',
+            fare: 5760.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+            },
+            fare: 1517.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+        },
+        id: '5-4063513597_6DELBOM6E824_67355396007854',
         type: 'PUBLISHED',
       },
     },
@@ -11758,7 +3562,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T12:45',
+            time: '2023-06-21T12:45',
           },
           arrival: {
             airport: {
@@ -11770,7 +3574,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T15:05',
+            time: '2023-06-21T15:05',
           },
           journey: {
             stops: 0,
@@ -11781,17 +3585,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6600.7,
-            refundable: 1,
-            freeMeal: false,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -11799,7 +3592,7 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'R',
-            fare: 6600.7,
+            fare: 5760.7,
             refundable: 1,
             freeMeal: false,
           },
@@ -11812,7 +3605,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '5-8516858531_12DELBOM6E6092_35114595363189',
+        id: '5-4063513597_7DELBOM6E6092_67355396010037',
         type: 'PUBLISHED',
       },
     },
@@ -11822,7 +3615,73 @@ export const tripjack = {
           segmentNo: 0,
           flight: {
             airline: '6E',
-            number: '5112',
+            number: '2176',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T14:20',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T16:30',
+          },
+          journey: {
+            stops: 0,
+            duration: 130,
+            stopOvers: [],
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'R',
+            fare: 5760.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+            },
+            fare: 1517.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+        },
+        id: '5-4063513597_8DELBOM6E2176_67355396011842',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: '6E',
+            number: '5197',
             equipment: '321',
           },
           departure: {
@@ -11835,7 +3694,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 3',
             },
-            time: '2023-06-14T09:00',
+            time: '2023-06-21T16:30',
           },
           arrival: {
             airport: {
@@ -11847,238 +3706,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T11:05',
-          },
-          journey: {
-            stops: 0,
-            duration: 125,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 7230.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 7230.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_13DELBOM6E5112_35114595365060',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '2075',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-14T08:00',
-          },
-          arrival: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-14T10:15',
-          },
-          journey: {
-            stops: 0,
-            duration: 135,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 7230.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 7230.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_14DELBOM6E2075_35114595367111',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '6083',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-14T20:45',
-          },
-          arrival: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-14T23:05',
-          },
-          journey: {
-            stops: 0,
-            duration: 140,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 7230.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 7230.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_15DELBOM6E6083_35114595369138',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '864',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-14T17:30',
-          },
-          arrival: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-14T19:40',
+            time: '2023-06-21T18:40',
           },
           journey: {
             stops: 0,
@@ -12089,17 +3717,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 7230.7,
-            refundable: 1,
-            freeMeal: false,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -12107,7 +3724,7 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'R',
-            fare: 7230.7,
+            fare: 5760.7,
             refundable: 1,
             freeMeal: false,
           },
@@ -12120,7 +3737,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '5-8516858531_16DELBOM6E864_35114595371279',
+        id: '5-4063513597_9DELBOM6E5197_67355396013861',
         type: 'PUBLISHED',
       },
     },
@@ -12130,350 +3747,7 @@ export const tripjack = {
           segmentNo: 0,
           flight: {
             airline: '6E',
-            number: '731',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-14T06:10',
-          },
-          arrival: {
-            airport: {
-              code: 'BHO',
-              name: 'Raja Bhoj Arpt',
-              cityCode: 'BHO',
-              city: 'Bhopal',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-14T07:35',
-          },
-          journey: {
-            stops: 0,
-            duration: 85,
-            stopOvers: [],
-            layoverMins: 180,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: '6E',
-            number: '5046',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'BHO',
-              name: 'Raja Bhoj Arpt',
-              cityCode: 'BHO',
-              city: 'Bhopal',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-14T10:35',
-          },
-          arrival: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-14T12:05',
-          },
-          journey: {
-            stops: 0,
-            duration: 90,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 7041.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 7041.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_17DELBHO6E731BHOBOM6E5046_35114595373880',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '2033',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-14T23:40',
-          },
-          arrival: {
-            airport: {
-              code: 'AMD',
-              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
-              cityCode: 'AMD',
-              city: 'Ahmedabad',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-15T01:15',
-          },
-          journey: {
-            stops: 0,
-            duration: 95,
-            stopOvers: [],
-            layoverMins: 185,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: '6E',
-            number: '5277',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'AMD',
-              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
-              cityCode: 'AMD',
-              city: 'Ahmedabad',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-15T04:20',
-          },
-          arrival: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-15T05:40',
-          },
-          journey: {
-            stops: 0,
-            duration: 80,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6804.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 6804.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_18DELAMD6E2033AMDBOM6E5277_35114595378229',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '6492',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-14T13:30',
-          },
-          arrival: {
-            airport: {
-              code: 'AMD',
-              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
-              cityCode: 'AMD',
-              city: 'Ahmedabad',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-14T15:05',
-          },
-          journey: {
-            stops: 0,
-            duration: 95,
-            stopOvers: [],
-            layoverMins: 165,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: '6E',
-            number: '5136',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'AMD',
-              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
-              cityCode: 'AMD',
-              city: 'Ahmedabad',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-14T17:50',
-          },
-          arrival: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-14T19:05',
-          },
-          journey: {
-            stops: 0,
-            duration: 75,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 7179.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 7179.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_19DELAMD6E6492AMDBOM6E5136_35114595382348',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '2084',
+            number: '2114',
             equipment: '321',
           },
           departure: {
@@ -12486,7 +3760,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T19:45',
+            time: '2023-06-21T22:00',
           },
           arrival: {
             airport: {
@@ -12498,7 +3772,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T21:50',
+            time: '2023-06-22T00:05',
           },
           journey: {
             stops: 0,
@@ -12509,17 +3783,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 7860.7,
-            refundable: 1,
-            freeMeal: false,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -12527,7 +3790,7 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'R',
-            fare: 7860.7,
+            fare: 5760.7,
             refundable: 1,
             freeMeal: false,
           },
@@ -12540,7 +3803,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '5-8516858531_20DELBOM6E2084_35114595386287',
+        id: '5-4063513597_10DELBOM6E2114_67355396015575',
         type: 'PUBLISHED',
       },
     },
@@ -12563,7 +3826,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T21:55',
+            time: '2023-06-21T21:55',
           },
           arrival: {
             airport: {
@@ -12575,7 +3838,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T23:25',
+            time: '2023-06-21T23:25',
           },
           journey: {
             stops: 0,
@@ -12601,7 +3864,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-15T04:20',
+            time: '2023-06-22T04:20',
           },
           arrival: {
             airport: {
@@ -12613,7 +3876,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-15T05:40',
+            time: '2023-06-22T05:40',
           },
           journey: {
             stops: 0,
@@ -12624,17 +3887,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 7272.7,
-            refundable: 1,
-            freeMeal: false,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -12642,7 +3894,7 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'R',
-            fare: 7272.7,
+            fare: 5465.7,
             refundable: 1,
             freeMeal: false,
           },
@@ -12655,122 +3907,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '5-8516858531_21DELAMD6E607AMDBOM6E5277_35114595388871',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '2042',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-14T20:45',
-          },
-          arrival: {
-            airport: {
-              code: 'JAI',
-              name: 'Sanganeer Arpt',
-              cityCode: 'JAI',
-              city: 'Jaipur',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-14T21:30',
-          },
-          journey: {
-            stops: 0,
-            duration: 45,
-            stopOvers: [],
-            layoverMins: 80,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: '6E',
-            number: '6945',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'JAI',
-              name: 'Sanganeer Arpt',
-              cityCode: 'JAI',
-              city: 'Jaipur',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-14T22:50',
-          },
-          arrival: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-15T00:35',
-          },
-          journey: {
-            stops: 0,
-            duration: 105,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 7799.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 7799.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_22DELJAI6E2042JAIBOM6E6945_35114595393335',
+        id: '5-4063513597_11DELAMD6E607AMDBOM6E5277_67355396018661',
         type: 'PUBLISHED',
       },
     },
@@ -12793,7 +3930,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T23:40',
+            time: '2023-06-21T23:40',
           },
           arrival: {
             airport: {
@@ -12805,7 +3942,243 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-15T01:15',
+            time: '2023-06-22T01:15',
+          },
+          journey: {
+            stops: 0,
+            duration: 95,
+            stopOvers: [],
+            layoverMins: 185,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: '6E',
+            number: '5277',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'AMD',
+              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
+              cityCode: 'AMD',
+              city: 'Ahmedabad',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-22T04:20',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-22T05:40',
+          },
+          journey: {
+            stops: 0,
+            duration: 80,
+            stopOvers: [],
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'R',
+            fare: 5465.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+            },
+            fare: 1517.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+        },
+        id: '5-4063513597_12DELAMD6E2033AMDBOM6E5277_67355396022698',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: '6E',
+            number: '2016',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T15:45',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T18:00',
+          },
+          journey: {
+            stops: 0,
+            duration: 135,
+            stopOvers: [],
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'R',
+            fare: 6180.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+            },
+            fare: 1517.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+        },
+        id: '5-4063513597_13DELBOM6E2016_67355396025758',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: '6E',
+            number: '864',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T17:30',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T19:40',
+          },
+          journey: {
+            stops: 0,
+            duration: 130,
+            stopOvers: [],
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'R',
+            fare: 6180.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+            },
+            fare: 1517.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+        },
+        id: '5-4063513597_14DELBOM6E864_67355396027268',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: '6E',
+            number: '2033',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T23:40',
+          },
+          arrival: {
+            airport: {
+              code: 'AMD',
+              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
+              cityCode: 'AMD',
+              city: 'Ahmedabad',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-22T01:15',
           },
           journey: {
             stops: 0,
@@ -12831,7 +4204,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-15T06:40',
+            time: '2023-06-22T06:40',
           },
           arrival: {
             airport: {
@@ -12843,7 +4216,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-15T07:55',
+            time: '2023-06-22T07:55',
           },
           journey: {
             stops: 0,
@@ -12854,17 +4227,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 7599.7,
-            refundable: 1,
-            freeMeal: false,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -12872,7 +4234,7 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'R',
-            fare: 7599.7,
+            fare: 6065.7,
             refundable: 1,
             freeMeal: false,
           },
@@ -12885,7 +4247,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '5-8516858531_23DELAMD6E2033AMDBOM6E5017_35114595397347',
+        id: '5-4063513597_15DELAMD6E2033AMDBOM6E5017_67355396030156',
         type: 'PUBLISHED',
       },
     },
@@ -12895,7 +4257,7 @@ export const tripjack = {
           segmentNo: 0,
           flight: {
             airline: '6E',
-            number: '6231',
+            number: '184',
             equipment: '321',
           },
           departure: {
@@ -12908,43 +4270,43 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T05:15',
+            time: '2023-06-21T10:00',
           },
           arrival: {
             airport: {
-              code: 'IDR',
-              name: 'Devi Ahilya Bai Holkar Arpt',
-              cityCode: 'IDR',
-              city: 'Indore',
+              code: 'BDQ',
+              name: 'Vadodara Arpt',
+              cityCode: 'BDQ',
+              city: 'Vadodara',
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T06:40',
+            time: '2023-06-21T11:25',
           },
           journey: {
             stops: 0,
             duration: 85,
             stopOvers: [],
-            layoverMins: 95,
+            layoverMins: 140,
           },
         },
         {
           segmentNo: 1,
           flight: {
             airline: '6E',
-            number: '6673',
-            equipment: '320',
+            number: '5185',
+            equipment: '321',
           },
           departure: {
             airport: {
-              code: 'IDR',
-              name: 'Devi Ahilya Bai Holkar Arpt',
-              cityCode: 'IDR',
-              city: 'Indore',
+              code: 'BDQ',
+              name: 'Vadodara Arpt',
+              cityCode: 'BDQ',
+              city: 'Vadodara',
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T08:15',
+            time: '2023-06-21T13:45',
           },
           arrival: {
             airport: {
@@ -12954,9 +4316,9 @@ export const tripjack = {
               city: 'Mumbai',
               country: 'India',
               countryCode: 'IN',
-              terminal: 'Terminal 2',
+              terminal: 'Terminal 1',
             },
-            time: '2023-06-14T09:25',
+            time: '2023-06-21T14:55',
           },
           journey: {
             stops: 0,
@@ -12967,17 +4329,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 7709.7,
-            refundable: 1,
-            freeMeal: false,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -12985,7 +4336,7 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'R',
-            fare: 7709.7,
+            fare: 6242.7,
             refundable: 1,
             freeMeal: false,
           },
@@ -12998,7 +4349,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '5-8516858531_24DELIDR6E6231IDRBOM6E6673_35114595401614',
+        id: '5-4063513597_16DELBDQ6E184BDQBOM6E5185_67355396033668',
         type: 'PUBLISHED',
       },
     },
@@ -13008,7 +4359,7 @@ export const tripjack = {
           segmentNo: 0,
           flight: {
             airline: '6E',
-            number: '6492',
+            number: '184',
             equipment: '321',
           },
           departure: {
@@ -13021,45 +4372,43 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T13:30',
+            time: '2023-06-21T10:00',
           },
           arrival: {
             airport: {
-              code: 'AMD',
-              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
-              cityCode: 'AMD',
-              city: 'Ahmedabad',
+              code: 'BDQ',
+              name: 'Vadodara Arpt',
+              cityCode: 'BDQ',
+              city: 'Vadodara',
               country: 'India',
               countryCode: 'IN',
-              terminal: 'Terminal 1',
             },
-            time: '2023-06-14T15:05',
+            time: '2023-06-21T11:25',
           },
           journey: {
             stops: 0,
-            duration: 95,
+            duration: 85,
             stopOvers: [],
-            layoverMins: 225,
+            layoverMins: 210,
           },
         },
         {
           segmentNo: 1,
           flight: {
             airline: '6E',
-            number: '5079',
-            equipment: '320',
+            number: '5056',
+            equipment: '321',
           },
           departure: {
             airport: {
-              code: 'AMD',
-              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
-              cityCode: 'AMD',
-              city: 'Ahmedabad',
+              code: 'BDQ',
+              name: 'Vadodara Arpt',
+              cityCode: 'BDQ',
+              city: 'Vadodara',
               country: 'India',
               countryCode: 'IN',
-              terminal: 'Terminal 1',
             },
-            time: '2023-06-14T18:50',
+            time: '2023-06-21T14:55',
           },
           arrival: {
             airport: {
@@ -13071,28 +4420,17 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T20:05',
+            time: '2023-06-21T16:05',
           },
           journey: {
             stops: 0,
-            duration: 75,
+            duration: 70,
             stopOvers: [],
           },
         },
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 7743.7,
-            refundable: 1,
-            freeMeal: false,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -13100,7 +4438,7 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'R',
-            fare: 7743.7,
+            fare: 6242.7,
             refundable: 1,
             freeMeal: false,
           },
@@ -13113,7 +4451,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '5-8516858531_25DELAMD6E6492AMDBOM6E5079_35114595410836',
+        id: '5-4063513597_17DELBDQ6E184BDQBOM6E5056_67355396036786',
         type: 'PUBLISHED',
       },
     },
@@ -13123,8 +4461,8 @@ export const tripjack = {
           segmentNo: 0,
           flight: {
             airline: '6E',
-            number: '2017',
-            equipment: '321',
+            number: '2075',
+            equipment: '320',
           },
           departure: {
             airport: {
@@ -13136,7 +4474,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T18:30',
+            time: '2023-06-21T08:00',
           },
           arrival: {
             airport: {
@@ -13148,7 +4486,73 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T20:35',
+            time: '2023-06-21T10:15',
+          },
+          journey: {
+            stops: 0,
+            duration: 135,
+            stopOvers: [],
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'R',
+            fare: 6600.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+            },
+            fare: 1517.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+        },
+        id: '5-4063513597_18DELBOM6E2075_67355396039674',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: '6E',
+            number: '5112',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T09:00',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T11:05',
           },
           journey: {
             stops: 0,
@@ -13159,17 +4563,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 8490.7,
-            refundable: 1,
-            freeMeal: false,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -13177,7 +4570,7 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'R',
-            fare: 8490.7,
+            fare: 6600.7,
             refundable: 1,
             freeMeal: false,
           },
@@ -13190,7 +4583,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '5-8516858531_27DELBOM6E2017_35114595419222',
+        id: '5-4063513597_19DELBOM6E5112_67355396041233',
         type: 'PUBLISHED',
       },
     },
@@ -13200,286 +4593,20 @@ export const tripjack = {
           segmentNo: 0,
           flight: {
             airline: '6E',
-            number: '6034',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-14T04:55',
-          },
-          arrival: {
-            airport: {
-              code: 'AMD',
-              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
-              cityCode: 'AMD',
-              city: 'Ahmedabad',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-14T06:30',
-          },
-          journey: {
-            stops: 0,
-            duration: 95,
-            stopOvers: [],
-            layoverMins: 165,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: '6E',
-            number: '6425',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'AMD',
-              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
-              cityCode: 'AMD',
-              city: 'Ahmedabad',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-14T09:15',
-          },
-          arrival: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-14T10:35',
-          },
-          journey: {
-            stops: 0,
-            duration: 80,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 8283.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 8283.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_28DELAMD6E6034AMDBOM6E6425_35114595421823',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '6187',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-14T15:20',
-          },
-          arrival: {
-            airport: {
-              code: 'RAJ',
-              name: 'Rajkot Civil Arpt',
-              cityCode: 'RAJ',
-              city: 'Rajkot',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-14T17:05',
-          },
-          journey: {
-            stops: 0,
-            duration: 105,
-            stopOvers: [],
-            layoverMins: 125,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: '6E',
-            number: '5222',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'RAJ',
-              name: 'Rajkot Civil Arpt',
-              cityCode: 'RAJ',
-              city: 'Rajkot',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-14T19:10',
-          },
-          arrival: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-14T20:20',
-          },
-          journey: {
-            stops: 0,
-            duration: 70,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 10592.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 10592.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_29DELRAJ6E6187RAJBOM6E5222_35114595425893',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '6201',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-14T18:35',
-          },
-          arrival: {
-            airport: {
-              code: 'AMD',
-              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
-              cityCode: 'AMD',
-              city: 'Ahmedabad',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-14T20:05',
-          },
-          journey: {
-            stops: 0,
-            duration: 90,
-            stopOvers: [],
-            layoverMins: 150,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: '6E',
-            number: '6794',
+            number: '6083',
             equipment: '321',
           },
           departure: {
             airport: {
-              code: 'AMD',
-              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
-              cityCode: 'AMD',
-              city: 'Ahmedabad',
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
               country: 'India',
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T22:35',
+            time: '2023-06-21T20:45',
           },
           arrival: {
             airport: {
@@ -13491,28 +4618,17 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-15T00:05',
+            time: '2023-06-21T23:05',
           },
           journey: {
             stops: 0,
-            duration: 90,
+            duration: 140,
             stopOvers: [],
           },
         },
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 11016.7,
-            refundable: 1,
-            freeMeal: false,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -13520,7 +4636,7 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'R',
-            fare: 11016.7,
+            fare: 6600.7,
             refundable: 1,
             freeMeal: false,
           },
@@ -13533,7 +4649,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '5-8516858531_30DELAMD6E6201AMDBOM6E6794_35114595429946',
+        id: '5-4063513597_20DELBOM6E6083_67355396042718',
         type: 'PUBLISHED',
       },
     },
@@ -13556,7 +4672,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T20:00',
+            time: '2023-06-21T20:00',
           },
           arrival: {
             airport: {
@@ -13568,350 +4684,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T21:25',
-          },
-          journey: {
-            stops: 0,
-            duration: 85,
-            stopOvers: [],
-            layoverMins: 70,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: '6E',
-            number: '6794',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'AMD',
-              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
-              cityCode: 'AMD',
-              city: 'Ahmedabad',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-14T22:35',
-          },
-          arrival: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-15T00:05',
-          },
-          journey: {
-            stops: 0,
-            duration: 90,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 11795.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 11795.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_32DELAMD6E153AMDBOM6E6794_35114595438323',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '6201',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-14T18:35',
-          },
-          arrival: {
-            airport: {
-              code: 'AMD',
-              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
-              cityCode: 'AMD',
-              city: 'Ahmedabad',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-14T20:05',
-          },
-          journey: {
-            stops: 0,
-            duration: 90,
-            stopOvers: [],
-            layoverMins: 220,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: '6E',
-            number: '5195',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'AMD',
-              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
-              cityCode: 'AMD',
-              city: 'Ahmedabad',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-14T23:45',
-          },
-          arrival: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-15T00:45',
-          },
-          journey: {
-            stops: 0,
-            duration: 60,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 12072.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 12072.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_33DELAMD6E6201AMDBOM6E5195_35114595442656',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '6902',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-14T15:20',
-          },
-          arrival: {
-            airport: {
-              code: 'IDR',
-              name: 'Devi Ahilya Bai Holkar Arpt',
-              cityCode: 'IDR',
-              city: 'Indore',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-14T16:45',
-          },
-          journey: {
-            stops: 0,
-            duration: 85,
-            stopOvers: [],
-            layoverMins: 135,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: '6E',
-            number: '5139',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'IDR',
-              name: 'Devi Ahilya Bai Holkar Arpt',
-              cityCode: 'IDR',
-              city: 'Indore',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-14T19:00',
-          },
-          arrival: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-14T20:15',
-          },
-          journey: {
-            stops: 0,
-            duration: 75,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 12648.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 12648.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 1517.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '5-8516858531_34DELIDR6E6902IDRBOM6E5139_35114595446651',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: '6E',
-            number: '153',
-            equipment: '321',
-          },
-          departure: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-14T20:00',
-          },
-          arrival: {
-            airport: {
-              code: 'AMD',
-              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
-              cityCode: 'AMD',
-              city: 'Ahmedabad',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 1',
-            },
-            time: '2023-06-14T21:25',
+            time: '2023-06-21T21:25',
           },
           journey: {
             stops: 0,
@@ -13937,7 +4710,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T23:45',
+            time: '2023-06-21T23:45',
           },
           arrival: {
             airport: {
@@ -13949,7 +4722,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-15T00:45',
+            time: '2023-06-22T00:45',
           },
           journey: {
             stops: 0,
@@ -13960,17 +4733,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'R',
-            fare: 12851.7,
-            refundable: 1,
-            freeMeal: false,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -13978,7 +4740,7 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'R',
-            fare: 12851.7,
+            fare: 6083.7,
             refundable: 1,
             freeMeal: false,
           },
@@ -13991,7 +4753,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '5-8516858531_35DELAMD6E153AMDBOM6E5195_35114595450516',
+        id: '5-4063513597_21DELAMD6E153AMDBOM6E5195_67355396045294',
         type: 'PUBLISHED',
       },
     },
@@ -14000,9 +4762,9 @@ export const tripjack = {
         {
           segmentNo: 0,
           flight: {
-            airline: 'SG',
-            number: '8157',
-            equipment: '737',
+            airline: '6E',
+            number: '6034',
+            equipment: '320',
           },
           departure: {
             airport: {
@@ -14012,362 +4774,47 @@ export const tripjack = {
               city: 'Delhi',
               country: 'India',
               countryCode: 'IN',
-              terminal: 'Terminal 3',
+              terminal: 'Terminal 1',
             },
-            time: '2023-06-14T06:20',
+            time: '2023-06-21T04:55',
           },
           arrival: {
             airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
+              code: 'AMD',
+              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
+              cityCode: 'AMD',
+              city: 'Ahmedabad',
               country: 'India',
               countryCode: 'IN',
-              terminal: 'Terminal 2',
+              terminal: 'Terminal 1',
             },
-            time: '2023-06-14T08:40',
+            time: '2023-06-21T06:30',
           },
           journey: {
             stops: 0,
-            duration: 140,
+            duration: 95,
             stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'RS',
-            fare: 3449.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 1,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'RS',
-            fare: 3449.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 1,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '0 Kg',
-            },
-            fare: 1767.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '4-8516858531_3DELBOMSG8157_35114485199387',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'SG',
-            number: '8709',
-            equipment: '737',
-          },
-          departure: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 3',
-            },
-            time: '2023-06-14T17:25',
-          },
-          arrival: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-14T19:45',
-          },
-          journey: {
-            stops: 0,
-            duration: 140,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'RS',
-            fare: 2680.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 1,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'RS',
-            fare: 3292.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 1,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '0 Kg',
-            },
-            fare: 1767.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '4-8516858531_4DELBOMSG8709_35114485200921',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'SG',
-            number: '8169',
-            equipment: '737',
-          },
-          departure: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 3',
-            },
-            time: '2023-06-14T20:00',
-          },
-          arrival: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-14T22:15',
-          },
-          journey: {
-            stops: 0,
-            duration: 135,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'RS',
-            fare: 2680.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 1,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'RS',
-            fare: 3292.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 1,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '0 Kg',
-            },
-            fare: 1767.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '4-8516858531_5DELBOMSG8169_35114485202308',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'SG',
-            number: '8109',
-            equipment: '737',
-          },
-          departure: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 3',
-            },
-            time: '2023-06-14T22:35',
-          },
-          arrival: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-15T00:50',
-          },
-          journey: {
-            stops: 0,
-            duration: 135,
-            stopOvers: [],
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'RS',
-            fare: 2680.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 1,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'RS',
-            fare: 3292.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 1,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '0 Kg',
-            },
-            fare: 1767.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '4-8516858531_6DELBOMSG8109_35114485204031',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'I5',
-            number: '784',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 3',
-            },
-            time: '2023-06-14T16:25',
-          },
-          arrival: {
-            airport: {
-              code: 'LKO',
-              name: 'Amausi Arpt',
-              cityCode: 'LKO',
-              city: 'Lucknow',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-14T17:40',
-          },
-          journey: {
-            stops: 0,
-            duration: 75,
-            layoverMins: 30,
+            layoverMins: 165,
           },
         },
         {
           segmentNo: 1,
           flight: {
-            airline: 'I5',
-            number: '784',
-            equipment: '32N',
+            airline: '6E',
+            number: '6425',
+            equipment: '320',
           },
           departure: {
             airport: {
-              code: 'LKO',
-              name: 'Amausi Arpt',
-              cityCode: 'LKO',
-              city: 'Lucknow',
+              code: 'AMD',
+              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
+              cityCode: 'AMD',
+              city: 'Ahmedabad',
               country: 'India',
               countryCode: 'IN',
-              terminal: 'Terminal 2',
+              terminal: 'Terminal 1',
             },
-            time: '2023-06-14T18:10',
+            time: '2023-06-21T09:15',
           },
           arrival: {
             airport: {
@@ -14379,7 +4826,2566 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T20:20',
+            time: '2023-06-21T10:35',
+          },
+          journey: {
+            stops: 0,
+            duration: 80,
+            stopOvers: [],
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'R',
+            fare: 6515.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+            },
+            fare: 1517.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+        },
+        id: '5-4063513597_22DELAMD6E6034AMDBOM6E6425_67355396048511',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: '6E',
+            number: '2042',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T20:45',
+          },
+          arrival: {
+            airport: {
+              code: 'JAI',
+              name: 'Sanganeer Arpt',
+              cityCode: 'JAI',
+              city: 'Jaipur',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T21:30',
+          },
+          journey: {
+            stops: 0,
+            duration: 45,
+            stopOvers: [],
+            layoverMins: 80,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: '6E',
+            number: '6945',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'JAI',
+              name: 'Sanganeer Arpt',
+              cityCode: 'JAI',
+              city: 'Jaipur',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T22:50',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T00:35',
+          },
+          journey: {
+            stops: 0,
+            duration: 105,
+            stopOvers: [],
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'R',
+            fare: 6443.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+            },
+            fare: 1517.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+        },
+        id: '5-4063513597_23DELJAI6E2042JAIBOM6E6945_67355396052162',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: '6E',
+            number: '6492',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T13:30',
+          },
+          arrival: {
+            airport: {
+              code: 'AMD',
+              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
+              cityCode: 'AMD',
+              city: 'Ahmedabad',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T15:05',
+          },
+          journey: {
+            stops: 0,
+            duration: 95,
+            stopOvers: [],
+            layoverMins: 165,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: '6E',
+            number: '5136',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'AMD',
+              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
+              cityCode: 'AMD',
+              city: 'Ahmedabad',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T17:50',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T19:05',
+          },
+          journey: {
+            stops: 0,
+            duration: 75,
+            stopOvers: [],
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'R',
+            fare: 6891.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+            },
+            fare: 1517.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+        },
+        id: '5-4063513597_24DELAMD6E6492AMDBOM6E5136_67355396055510',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: '6E',
+            number: '2017',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T18:30',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T20:35',
+          },
+          journey: {
+            stops: 0,
+            duration: 125,
+            stopOvers: [],
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'R',
+            fare: 7230.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+            },
+            fare: 1517.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+        },
+        id: '5-4063513597_25DELBOM6E2017_67355396058168',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: '6E',
+            number: '2084',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T19:45',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T21:50',
+          },
+          journey: {
+            stops: 0,
+            duration: 125,
+            stopOvers: [],
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'R',
+            fare: 7230.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+            },
+            fare: 1517.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+        },
+        id: '5-4063513597_26DELBOM6E2084_67355396059990',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: '6E',
+            number: '731',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T06:10',
+          },
+          arrival: {
+            airport: {
+              code: 'BHO',
+              name: 'Raja Bhoj Arpt',
+              cityCode: 'BHO',
+              city: 'Bhopal',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T07:35',
+          },
+          journey: {
+            stops: 0,
+            duration: 85,
+            stopOvers: [],
+            layoverMins: 180,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: '6E',
+            number: '5046',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'BHO',
+              name: 'Raja Bhoj Arpt',
+              cityCode: 'BHO',
+              city: 'Bhopal',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T10:35',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T12:05',
+          },
+          journey: {
+            stops: 0,
+            duration: 90,
+            stopOvers: [],
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'R',
+            fare: 7041.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+            },
+            fare: 1517.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+        },
+        id: '5-4063513597_27DELBHO6E731BHOBOM6E5046_67355396062139',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: '6E',
+            number: '2028',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T10:30',
+          },
+          arrival: {
+            airport: {
+              code: 'GWL',
+              name: 'Gwalior Airport',
+              cityCode: 'GWL',
+              city: 'Gwalior',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T11:30',
+          },
+          journey: {
+            stops: 0,
+            duration: 60,
+            stopOvers: [],
+            layoverMins: 220,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: '6E',
+            number: '5059',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'GWL',
+              name: 'Gwalior Airport',
+              cityCode: 'GWL',
+              city: 'Gwalior',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T15:10',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T16:50',
+          },
+          journey: {
+            stops: 0,
+            duration: 100,
+            stopOvers: [],
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'R',
+            fare: 7308.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+            },
+            fare: 1517.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+        },
+        id: '5-4063513597_28DELGWL6E2028GWLBOM6E5059_67355396065430',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: '6E',
+            number: '153',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T20:00',
+          },
+          arrival: {
+            airport: {
+              code: 'AMD',
+              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
+              cityCode: 'AMD',
+              city: 'Ahmedabad',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T21:25',
+          },
+          journey: {
+            stops: 0,
+            duration: 85,
+            stopOvers: [],
+            layoverMins: 70,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: '6E',
+            number: '6794',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'AMD',
+              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
+              cityCode: 'AMD',
+              city: 'Ahmedabad',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T22:35',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T00:05',
+          },
+          journey: {
+            stops: 0,
+            duration: 90,
+            stopOvers: [],
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'R',
+            fare: 7244.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+            },
+            fare: 1517.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+        },
+        id: '5-4063513597_29DELAMD6E153AMDBOM6E6794_67355396068548',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: '6E',
+            number: '2204',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T13:05',
+          },
+          arrival: {
+            airport: {
+              code: 'JAI',
+              name: 'Sanganeer Arpt',
+              cityCode: 'JAI',
+              city: 'Jaipur',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T13:45',
+          },
+          journey: {
+            stops: 0,
+            duration: 40,
+            stopOvers: [],
+            layoverMins: 215,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: '6E',
+            number: '5165',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'JAI',
+              name: 'Sanganeer Arpt',
+              cityCode: 'JAI',
+              city: 'Jaipur',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T17:20',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T19:15',
+          },
+          journey: {
+            stops: 0,
+            duration: 115,
+            stopOvers: [],
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'R',
+            fare: 7650.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+            },
+            fare: 1517.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+        },
+        id: '5-4063513597_30DELJAI6E2204JAIBOM6E5165_67355396071862',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: '6E',
+            number: '6231',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T05:15',
+          },
+          arrival: {
+            airport: {
+              code: 'IDR',
+              name: 'Devi Ahilya Bai Holkar Arpt',
+              cityCode: 'IDR',
+              city: 'Indore',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T06:40',
+          },
+          journey: {
+            stops: 0,
+            duration: 85,
+            stopOvers: [],
+            layoverMins: 95,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: '6E',
+            number: '6673',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'IDR',
+              name: 'Devi Ahilya Bai Holkar Arpt',
+              cityCode: 'IDR',
+              city: 'Indore',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T08:15',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T09:25',
+          },
+          journey: {
+            stops: 0,
+            duration: 70,
+            stopOvers: [],
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'R',
+            fare: 7814.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+            },
+            fare: 1517.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+        },
+        id: '5-4063513597_31DELIDR6E6231IDRBOM6E6673_67355396074816',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: '6E',
+            number: '5554',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T09:10',
+          },
+          arrival: {
+            airport: {
+              code: 'JDH',
+              name: 'Jodhpur Arpt',
+              cityCode: 'JDH',
+              city: 'Jodhpur',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T10:25',
+          },
+          journey: {
+            stops: 0,
+            duration: 75,
+            stopOvers: [],
+            layoverMins: 240,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: '6E',
+            number: '773',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'JDH',
+              name: 'Jodhpur Arpt',
+              cityCode: 'JDH',
+              city: 'Jodhpur',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T14:25',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T16:05',
+          },
+          journey: {
+            stops: 0,
+            duration: 100,
+            stopOvers: [],
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'R',
+            fare: 7459.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+            },
+            fare: 1517.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+        },
+        id: '5-4063513597_32DELJDH6E5554JDHBOM6E773_67355396077885',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: '6E',
+            number: '6492',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T13:30',
+          },
+          arrival: {
+            airport: {
+              code: 'AMD',
+              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
+              cityCode: 'AMD',
+              city: 'Ahmedabad',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T15:05',
+          },
+          journey: {
+            stops: 0,
+            duration: 95,
+            stopOvers: [],
+            layoverMins: 225,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: '6E',
+            number: '5079',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'AMD',
+              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
+              cityCode: 'AMD',
+              city: 'Ahmedabad',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T18:50',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T20:05',
+          },
+          journey: {
+            stops: 0,
+            duration: 75,
+            stopOvers: [],
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'R',
+            fare: 8361.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+            },
+            fare: 1517.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+        },
+        id: '5-4063513597_33DELAMD6E6492AMDBOM6E5079_67355396080880',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: '6E',
+            number: '6187',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T15:20',
+          },
+          arrival: {
+            airport: {
+              code: 'RAJ',
+              name: 'Rajkot Civil Arpt',
+              cityCode: 'RAJ',
+              city: 'Rajkot',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T17:05',
+          },
+          journey: {
+            stops: 0,
+            duration: 105,
+            stopOvers: [],
+            layoverMins: 125,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: '6E',
+            number: '5222',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'RAJ',
+              name: 'Rajkot Civil Arpt',
+              cityCode: 'RAJ',
+              city: 'Rajkot',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T19:10',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T20:20',
+          },
+          journey: {
+            stops: 0,
+            duration: 70,
+            stopOvers: [],
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'R',
+            fare: 8790.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+            },
+            fare: 1517.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+        },
+        id: '5-4063513597_34DELRAJ6E6187RAJBOM6E5222_67355396084293',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: '6E',
+            number: '6201',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T18:35',
+          },
+          arrival: {
+            airport: {
+              code: 'AMD',
+              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
+              cityCode: 'AMD',
+              city: 'Ahmedabad',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T20:05',
+          },
+          journey: {
+            stops: 0,
+            duration: 90,
+            stopOvers: [],
+            layoverMins: 220,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: '6E',
+            number: '5195',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'AMD',
+              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
+              cityCode: 'AMD',
+              city: 'Ahmedabad',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T23:45',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-22T00:45',
+          },
+          journey: {
+            stops: 0,
+            duration: 60,
+            stopOvers: [],
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'R',
+            fare: 9392.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+            },
+            fare: 1517.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+        },
+        id: '5-4063513597_35DELAMD6E6201AMDBOM6E5195_67355396087190',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: '6E',
+            number: '6201',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T18:35',
+          },
+          arrival: {
+            airport: {
+              code: 'AMD',
+              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
+              cityCode: 'AMD',
+              city: 'Ahmedabad',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T20:05',
+          },
+          journey: {
+            stops: 0,
+            duration: 90,
+            stopOvers: [],
+            layoverMins: 150,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: '6E',
+            number: '6794',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'AMD',
+              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
+              cityCode: 'AMD',
+              city: 'Ahmedabad',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T22:35',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T00:05',
+          },
+          journey: {
+            stops: 0,
+            duration: 90,
+            stopOvers: [],
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'R',
+            fare: 10552.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+            },
+            fare: 1517.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+        },
+        id: '5-4063513597_36DELAMD6E6201AMDBOM6E6794_67355396089988',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: '6E',
+            number: '6902',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T15:20',
+          },
+          arrival: {
+            airport: {
+              code: 'IDR',
+              name: 'Devi Ahilya Bai Holkar Arpt',
+              cityCode: 'IDR',
+              city: 'Indore',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T16:45',
+          },
+          journey: {
+            stops: 0,
+            duration: 85,
+            stopOvers: [],
+            layoverMins: 135,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: '6E',
+            number: '5139',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'IDR',
+              name: 'Devi Ahilya Bai Holkar Arpt',
+              cityCode: 'IDR',
+              city: 'Indore',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T19:00',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T20:15',
+          },
+          journey: {
+            stops: 0,
+            duration: 75,
+            stopOvers: [],
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'R',
+            fare: 12438.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+            },
+            fare: 1517.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+        },
+        id: '5-4063513597_37DELIDR6E6902IDRBOM6E5139_67355396092744',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '441',
+            equipment: '77W',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T17:15',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T19:30',
+          },
+          journey: {
+            stops: 0,
+            duration: 135,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'S',
+            fare: 4808.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'S',
+            fare: 1508.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_0DELBOMAI441_67358453534829',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '814',
+            equipment: '32N',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T22:30',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T00:45',
+          },
+          journey: {
+            stops: 0,
+            duration: 135,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'S',
+            fare: 4808.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'S',
+            fare: 1508.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_1DELBOMAI814_67358453540375',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '678',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T09:00',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T11:20',
+          },
+          journey: {
+            stops: 0,
+            duration: 140,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'S',
+            fare: 4808.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 4,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'S',
+            fare: 1508.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 4,
+          },
+        },
+        id: '15-2-10-4063513597_2DELBOMAI678_67358453541696',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '605',
+            equipment: '32N',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T21:15',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T23:35',
+          },
+          journey: {
+            stops: 0,
+            duration: 140,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'S',
+            fare: 4808.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'S',
+            fare: 1508.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_3DELBOMAI605_67358453543091',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '887',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T07:00',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T09:15',
+          },
+          journey: {
+            stops: 0,
+            duration: 135,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'T',
+            fare: 5333.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'T',
+            fare: 1508.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_4DELBOMAI887_67358453544289',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '805',
+            equipment: '788',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T20:00',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T22:15',
+          },
+          journey: {
+            stops: 0,
+            duration: 135,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'T',
+            fare: 5333.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'T',
+            fare: 1508.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_5DELBOMAI805_67358453545372',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '665',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T08:00',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T10:20',
+          },
+          journey: {
+            stops: 0,
+            duration: 140,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'T',
+            fare: 5333.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'T',
+            fare: 1508.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_6DELBOMAI665_67358453546464',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '865',
+            equipment: '77L',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T10:30',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T12:55',
+          },
+          journey: {
+            stops: 0,
+            duration: 145,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'T',
+            fare: 5333.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'T',
+            fare: 1508.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_7DELBOMAI865_67358453547448',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '969',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T18:00',
+          },
+          arrival: {
+            airport: {
+              code: 'AMD',
+              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
+              cityCode: 'AMD',
+              city: 'Ahmedabad',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T19:40',
+          },
+          journey: {
+            stops: 0,
+            duration: 100,
+            layoverMins: 765,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'UK',
+            number: '936',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'AMD',
+              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
+              cityCode: 'AMD',
+              city: 'Ahmedabad',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-22T08:25',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T09:40',
+          },
+          journey: {
+            stops: 0,
+            duration: 75,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '1  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'E',
+            fare: 6028.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 2,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'E',
+            fare: 1739.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 2,
+          },
+        },
+        id: '15-2-10-4063513597_8DELAMDUK969AMDBOMUK936_67358453549549',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '929',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T21:20',
+          },
+          arrival: {
+            airport: {
+              code: 'AMD',
+              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
+              cityCode: 'AMD',
+              city: 'Ahmedabad',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T22:55',
+          },
+          journey: {
+            stops: 0,
+            duration: 95,
+            layoverMins: 365,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'UK',
+            number: '918',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'AMD',
+              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
+              cityCode: 'AMD',
+              city: 'Ahmedabad',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-22T05:00',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T06:15',
+          },
+          journey: {
+            stops: 0,
+            duration: 75,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'V',
+            fare: 6246.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'V',
+            fare: 1739.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_9DELAMDUK929AMDBOMUK918_67358453552240',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '929',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T21:20',
+          },
+          arrival: {
+            airport: {
+              code: 'AMD',
+              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
+              cityCode: 'AMD',
+              city: 'Ahmedabad',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T22:55',
+          },
+          journey: {
+            stops: 0,
+            duration: 95,
+            layoverMins: 570,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'UK',
+            number: '936',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'AMD',
+              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
+              cityCode: 'AMD',
+              city: 'Ahmedabad',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-22T08:25',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T09:40',
+          },
+          journey: {
+            stops: 0,
+            duration: 75,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'V',
+            fare: 6246.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'V',
+            fare: 1739.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_10DELAMDUK929AMDBOMUK936_67358453554414',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '999',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T21:55',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T23:55',
+          },
+          journey: {
+            stops: 0,
+            duration: 120,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'Q',
+            fare: 6591.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 2,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'Q',
+            fare: 1561.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 2,
+          },
+        },
+        id: '15-2-10-4063513597_11DELBOMUK999_67358453555883',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '995',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T10:20',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T12:35',
+          },
+          journey: {
+            stops: 0,
+            duration: 135,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'Q',
+            fare: 6643.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 1,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'Q',
+            fare: 1561.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 1,
+          },
+        },
+        id: '15-2-10-4063513597_12DELBOMUK995_67358453557130',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '933',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T15:30',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T17:40',
           },
           journey: {
             stops: 0,
@@ -14389,18 +7395,11024 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
+          ADULT: {
             baggage: {
               cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
+              checkIn: '15 Kilograms',
             },
             cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 3516.7,
+            bookingClass: 'Q',
+            fare: 6811.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'Q',
+            fare: 1561.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_13DELBOMUK933_67358453558238',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '941',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T16:50',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T19:05',
+          },
+          journey: {
+            stops: 0,
+            duration: 135,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'Q',
+            fare: 6811.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'Q',
+            fare: 1561.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_14DELBOMUK941_67358453559288',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '955',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T17:45',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T20:05',
+          },
+          journey: {
+            stops: 0,
+            duration: 140,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'Q',
+            fare: 6811.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 2,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'Q',
+            fare: 1561.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 2,
+          },
+        },
+        id: '15-2-10-4063513597_15DELBOMUK955_67358453560338',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '969',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T18:00',
+          },
+          arrival: {
+            airport: {
+              code: 'AMD',
+              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
+              cityCode: 'AMD',
+              city: 'Ahmedabad',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T19:40',
+          },
+          journey: {
+            stops: 0,
+            duration: 100,
+            layoverMins: 1380,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'UK',
+            number: '956',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'AMD',
+              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
+              cityCode: 'AMD',
+              city: 'Ahmedabad',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-22T18:40',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T20:10',
+          },
+          journey: {
+            stops: 0,
+            duration: 90,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'Q',
+            fare: 6990.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 6,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'Q',
+            fare: 1739.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 6,
+          },
+        },
+        id: '15-2-10-4063513597_16DELAMDUK969AMDBOMUK956_67358453561955',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '951',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T14:20',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T16:30',
+          },
+          journey: {
+            stops: 0,
+            duration: 130,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'W',
+            fare: 7494.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 7,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'W',
+            fare: 1561.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 7,
+          },
+        },
+        id: '15-2-10-4063513597_17DELBOMUK951_67358453563424',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '981',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T21:30',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T23:40',
+          },
+          journey: {
+            stops: 0,
+            duration: 130,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'W',
+            fare: 7494.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 7,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'W',
+            fare: 1561.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 7,
+          },
+        },
+        id: '15-2-10-4063513597_18DELBOMUK981_67358453564564',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '969',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T18:00',
+          },
+          arrival: {
+            airport: {
+              code: 'AMD',
+              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
+              cityCode: 'AMD',
+              city: 'Ahmedabad',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T19:40',
+          },
+          journey: {
+            stops: 0,
+            duration: 100,
+            layoverMins: 560,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'UK',
+            number: '918',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'AMD',
+              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
+              cityCode: 'AMD',
+              city: 'Ahmedabad',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-22T05:00',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T06:15',
+          },
+          journey: {
+            stops: 0,
+            duration: 75,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '1  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'E',
+            fare: 6013.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 2,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'E',
+            fare: 3104.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 2,
+          },
+        },
+        id: '15-2-10-4063513597_19DELAMDUK969AMDBOMUK918_67358453566541',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '993',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T12:50',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T15:00',
+          },
+          journey: {
+            stops: 0,
+            duration: 130,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'W',
+            fare: 7651.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'W',
+            fare: 1561.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_20DELBOMUK993_67358453568002',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '945',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T11:40',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T14:00',
+          },
+          journey: {
+            stops: 0,
+            duration: 140,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'W',
+            fare: 7651.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'W',
+            fare: 1561.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_21DELBOMUK945_67358453569052',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '957',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T20:50',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T23:00',
+          },
+          journey: {
+            stops: 0,
+            duration: 130,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'W',
+            fare: 7704.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'W',
+            fare: 1561.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_22DELBOMUK957_67358453570160',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '531',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T19:35',
+          },
+          arrival: {
+            airport: {
+              code: 'AMD',
+              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
+              cityCode: 'AMD',
+              city: 'Ahmedabad',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T21:05',
+          },
+          journey: {
+            stops: 0,
+            duration: 90,
+            layoverMins: 1230,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '632',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'AMD',
+              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
+              cityCode: 'AMD',
+              city: 'Ahmedabad',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-22T17:35',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T18:50',
+          },
+          journey: {
+            stops: 0,
+            duration: 75,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'U',
+            fare: 6360.7,
             refundable: 1,
             freeMeal: false,
             seatsRemaining: 5,
           },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'U',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 5,
+          },
+        },
+        id: '15-2-10-4063513597_23DELAMDAI531AMDBOMAI632_67358453571899',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '929',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T21:20',
+          },
+          arrival: {
+            airport: {
+              code: 'AMD',
+              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
+              cityCode: 'AMD',
+              city: 'Ahmedabad',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T22:55',
+          },
+          journey: {
+            stops: 0,
+            duration: 95,
+            layoverMins: 1185,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'UK',
+            number: '956',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'AMD',
+              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
+              cityCode: 'AMD',
+              city: 'Ahmedabad',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-22T18:40',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T20:10',
+          },
+          journey: {
+            stops: 0,
+            duration: 90,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'W',
+            fare: 7830.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'W',
+            fare: 1739.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_24DELAMDUK929AMDBOMUK956_67358453573795',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '835',
+            equipment: '32N',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T16:15',
+          },
+          arrival: {
+            airport: {
+              code: 'AMD',
+              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
+              cityCode: 'AMD',
+              city: 'Ahmedabad',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T17:55',
+          },
+          journey: {
+            stops: 0,
+            duration: 100,
+            layoverMins: 1420,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '632',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'AMD',
+              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
+              cityCode: 'AMD',
+              city: 'Ahmedabad',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-22T17:35',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T18:50',
+          },
+          journey: {
+            stops: 0,
+            duration: 75,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'L',
+            fare: 6885.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 8,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'L',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 8,
+          },
+        },
+        id: '15-2-10-4063513597_25DELAMDAI835AMDBOMAI632_67358453575961',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '624',
+            equipment: '32N',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T19:10',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T21:25',
+          },
+          journey: {
+            stops: 0,
+            duration: 135,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'W',
+            fare: 8596.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'W',
+            fare: 1508.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_26DELBOMAI624_67358453577257',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '863',
+            equipment: '32N',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T14:00',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T16:20',
+          },
+          journey: {
+            stops: 0,
+            duration: 140,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'W',
+            fare: 8596.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'W',
+            fare: 1508.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_27DELBOMAI863_67358453578660',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '985',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T19:45',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T22:00',
+          },
+          journey: {
+            stops: 0,
+            duration: 135,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 8544.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 1561.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_28DELBOMUK985_67358453579653',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '943',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T07:30',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T09:45',
+          },
+          journey: {
+            stops: 0,
+            duration: 135,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 8596.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 4,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 1561.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 4,
+          },
+        },
+        id: '15-2-10-4063513597_29DELBOMUK943_67358453580564',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '963',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T09:00',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T11:15',
+          },
+          journey: {
+            stops: 0,
+            duration: 135,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 8596.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 1561.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_30DELBOMUK963_67358453581590',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '481',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T08:30',
+          },
+          arrival: {
+            airport: {
+              code: 'AMD',
+              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
+              cityCode: 'AMD',
+              city: 'Ahmedabad',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T10:00',
+          },
+          journey: {
+            stops: 0,
+            duration: 90,
+            layoverMins: 455,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '632',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'AMD',
+              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
+              cityCode: 'AMD',
+              city: 'Ahmedabad',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T17:35',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T18:50',
+          },
+          journey: {
+            stops: 0,
+            duration: 75,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'U',
+            fare: 7410.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'U',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_31DELAMDAI481AMDBOMAI632_67358453583190',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '823',
+            equipment: '32A',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T04:45',
+          },
+          arrival: {
+            airport: {
+              code: 'BDQ',
+              name: 'Vadodara Arpt',
+              cityCode: 'BDQ',
+              city: 'Vadodara',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T06:40',
+          },
+          journey: {
+            stops: 0,
+            duration: 115,
+            layoverMins: 720,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '690',
+            equipment: '319',
+          },
+          departure: {
+            airport: {
+              code: 'BDQ',
+              name: 'Vadodara Arpt',
+              cityCode: 'BDQ',
+              city: 'Vadodara',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T18:40',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T19:50',
+          },
+          journey: {
+            stops: 0,
+            duration: 70,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'S',
+            fare: 7813.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'S',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_32DELBDQAI823BDQBOMAI690_67358453585233',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '817',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T05:15',
+          },
+          arrival: {
+            airport: {
+              code: 'AMD',
+              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
+              cityCode: 'AMD',
+              city: 'Ahmedabad',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T07:10',
+          },
+          journey: {
+            stops: 0,
+            duration: 115,
+            layoverMins: 625,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '632',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'AMD',
+              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
+              cityCode: 'AMD',
+              city: 'Ahmedabad',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T17:35',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T18:50',
+          },
+          journey: {
+            stops: 0,
+            duration: 75,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'G',
+            fare: 8460.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'G',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_33DELAMDAI817AMDBOMAI632_67358453587079',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '544',
+            equipment: '77W',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T17:00',
+          },
+          arrival: {
+            airport: {
+              code: 'HYD',
+              name: 'Shamshabad Rajiv Gandhi Intl Arpt',
+              cityCode: 'HYD',
+              city: 'Hyderabad',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T19:10',
+          },
+          journey: {
+            stops: 0,
+            duration: 130,
+            layoverMins: 200,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '698',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'HYD',
+              name: 'Shamshabad Rajiv Gandhi Intl Arpt',
+              cityCode: 'HYD',
+              city: 'Hyderabad',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T22:30',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T00:10',
+          },
+          journey: {
+            stops: 0,
+            duration: 100,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'U',
+            fare: 8911.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 6,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'U',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 6,
+          },
+        },
+        id: '15-2-10-4063513597_34DELHYDAI544HYDBOMAI698_67358453588827',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '544',
+            equipment: '77W',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T17:00',
+          },
+          arrival: {
+            airport: {
+              code: 'HYD',
+              name: 'Shamshabad Rajiv Gandhi Intl Arpt',
+              cityCode: 'HYD',
+              city: 'Hyderabad',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T19:10',
+          },
+          journey: {
+            stops: 0,
+            duration: 130,
+            layoverMins: 790,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '616',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'HYD',
+              name: 'Shamshabad Rajiv Gandhi Intl Arpt',
+              cityCode: 'HYD',
+              city: 'Hyderabad',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-22T08:20',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T09:55',
+          },
+          journey: {
+            stops: 0,
+            duration: 95,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'U',
+            fare: 8911.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 6,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'U',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 6,
+          },
+        },
+        id: '15-2-10-4063513597_35DELHYDAI544HYDBOMAI616_67358453590664',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '544',
+            equipment: '77W',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T17:00',
+          },
+          arrival: {
+            airport: {
+              code: 'HYD',
+              name: 'Shamshabad Rajiv Gandhi Intl Arpt',
+              cityCode: 'HYD',
+              city: 'Hyderabad',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T19:10',
+          },
+          journey: {
+            stops: 0,
+            duration: 130,
+            layoverMins: 1090,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '618',
+            equipment: '319',
+          },
+          departure: {
+            airport: {
+              code: 'HYD',
+              name: 'Shamshabad Rajiv Gandhi Intl Arpt',
+              cityCode: 'HYD',
+              city: 'Hyderabad',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-22T13:20',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T15:00',
+          },
+          journey: {
+            stops: 0,
+            duration: 100,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'U',
+            fare: 8911.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 6,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'U',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 6,
+          },
+        },
+        id: '15-2-10-4063513597_36DELHYDAI544HYDBOMAI618_67358453592839',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '819',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T17:50',
+          },
+          arrival: {
+            airport: {
+              code: 'BDQ',
+              name: 'Vadodara Arpt',
+              cityCode: 'BDQ',
+              city: 'Vadodara',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T19:35',
+          },
+          journey: {
+            stops: 0,
+            duration: 105,
+            layoverMins: 685,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '670',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'BDQ',
+              name: 'Vadodara Arpt',
+              cityCode: 'BDQ',
+              city: 'Vadodara',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-22T07:00',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T08:10',
+          },
+          journey: {
+            stops: 0,
+            duration: 70,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'G',
+            fare: 8956.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'G',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_37DELBDQAI819BDQBOMAI670_67358453594816',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '819',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T17:50',
+          },
+          arrival: {
+            airport: {
+              code: 'BDQ',
+              name: 'Vadodara Arpt',
+              cityCode: 'BDQ',
+              city: 'Vadodara',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T19:35',
+          },
+          journey: {
+            stops: 0,
+            duration: 105,
+            layoverMins: 1385,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '690',
+            equipment: '319',
+          },
+          departure: {
+            airport: {
+              code: 'BDQ',
+              name: 'Vadodara Arpt',
+              cityCode: 'BDQ',
+              city: 'Vadodara',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-22T18:40',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T19:50',
+          },
+          journey: {
+            stops: 0,
+            duration: 70,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'G',
+            fare: 8956.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'G',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_38DELBDQAI819BDQBOMAI690_67358453596777',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '475',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T12:55',
+          },
+          arrival: {
+            airport: {
+              code: 'JDH',
+              name: 'Jodhpur Arpt',
+              cityCode: 'JDH',
+              city: 'Jodhpur',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T14:25',
+          },
+          journey: {
+            stops: 0,
+            duration: 90,
+            layoverMins: 1280,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '646',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'JDH',
+              name: 'Jodhpur Arpt',
+              cityCode: 'JDH',
+              city: 'Jodhpur',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-22T11:45',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T13:25',
+          },
+          journey: {
+            stops: 0,
+            duration: 100,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'L',
+            fare: 9298.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 2,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'L',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 2,
+          },
+        },
+        id: '15-2-10-4063513597_39DELJDHAI475JDHBOMAI646_67358453598664',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '851',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T04:35',
+          },
+          arrival: {
+            airport: {
+              code: 'PNQ',
+              name: 'Lohegaon Arpt',
+              cityCode: 'PNQ',
+              city: 'Pune',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T07:00',
+          },
+          journey: {
+            stops: 0,
+            duration: 145,
+            layoverMins: 260,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '663',
+            equipment: '319',
+          },
+          departure: {
+            airport: {
+              code: 'PNQ',
+              name: 'Lohegaon Arpt',
+              cityCode: 'PNQ',
+              city: 'Pune',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T11:20',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T12:25',
+          },
+          journey: {
+            stops: 0,
+            duration: 65,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'G',
+            fare: 9331.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 5,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'G',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 5,
+          },
+        },
+        id: '15-2-10-4063513597_40DELPNQAI851PNQBOMAI663_67358453600773',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '1851',
+            equipment: '319',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T21:45',
+          },
+          arrival: {
+            airport: {
+              code: 'PNQ',
+              name: 'Lohegaon Arpt',
+              cityCode: 'PNQ',
+              city: 'Pune',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T23:50',
+          },
+          journey: {
+            stops: 0,
+            duration: 125,
+            layoverMins: 690,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '663',
+            equipment: '319',
+          },
+          departure: {
+            airport: {
+              code: 'PNQ',
+              name: 'Lohegaon Arpt',
+              cityCode: 'PNQ',
+              city: 'Pune',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-22T11:20',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T12:25',
+          },
+          journey: {
+            stops: 0,
+            duration: 65,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'G',
+            fare: 9331.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'G',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_41DELPNQAI1851PNQBOMAI663_67358453602726',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '481',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T08:30',
+          },
+          arrival: {
+            airport: {
+              code: 'AMD',
+              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
+              cityCode: 'AMD',
+              city: 'Ahmedabad',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T10:00',
+          },
+          journey: {
+            stops: 0,
+            duration: 90,
+            layoverMins: 30,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '481',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'AMD',
+              name: 'Sardar Vallabh Bhai Patel Intl Arpt',
+              cityCode: 'AMD',
+              city: 'Ahmedabad',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T10:30',
+          },
+          arrival: {
+            airport: {
+              code: 'PNQ',
+              name: 'Lohegaon Arpt',
+              cityCode: 'PNQ',
+              city: 'Pune',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T12:10',
+          },
+          journey: {
+            stops: 0,
+            duration: 100,
+            layoverMins: 1390,
+          },
+        },
+        {
+          segmentNo: 2,
+          flight: {
+            airline: 'AI',
+            number: '663',
+            equipment: '319',
+          },
+          departure: {
+            airport: {
+              code: 'PNQ',
+              name: 'Lohegaon Arpt',
+              cityCode: 'PNQ',
+              city: 'Pune',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-22T11:20',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T12:25',
+          },
+          journey: {
+            stops: 0,
+            duration: 65,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'G',
+            fare: 9331.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'G',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_42DELAMDAI481AMDPNQAI481PNQBOMAI663_67358453605253',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '522',
+            equipment: '32N',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T11:05',
+          },
+          arrival: {
+            airport: {
+              code: 'HYD',
+              name: 'Shamshabad Rajiv Gandhi Intl Arpt',
+              cityCode: 'HYD',
+              city: 'Hyderabad',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T13:25',
+          },
+          journey: {
+            stops: 0,
+            duration: 140,
+            layoverMins: 545,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '698',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'HYD',
+              name: 'Shamshabad Rajiv Gandhi Intl Arpt',
+              cityCode: 'HYD',
+              city: 'Hyderabad',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T22:30',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T00:10',
+          },
+          journey: {
+            stops: 0,
+            duration: 100,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'L',
+            fare: 9436.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 5,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'L',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 5,
+          },
+        },
+        id: '15-2-10-4063513597_43DELHYDAI522HYDBOMAI698_67358453607542',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '522',
+            equipment: '32N',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T11:05',
+          },
+          arrival: {
+            airport: {
+              code: 'HYD',
+              name: 'Shamshabad Rajiv Gandhi Intl Arpt',
+              cityCode: 'HYD',
+              city: 'Hyderabad',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T13:25',
+          },
+          journey: {
+            stops: 0,
+            duration: 140,
+            layoverMins: 1135,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '616',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'HYD',
+              name: 'Shamshabad Rajiv Gandhi Intl Arpt',
+              cityCode: 'HYD',
+              city: 'Hyderabad',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-22T08:20',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T09:55',
+          },
+          journey: {
+            stops: 0,
+            duration: 95,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'L',
+            fare: 9436.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 5,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'L',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 5,
+          },
+        },
+        id: '15-2-10-4063513597_44DELHYDAI522HYDBOMAI616_67358453609733',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '811',
+            equipment: '319',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T18:50',
+          },
+          arrival: {
+            airport: {
+              code: 'LKO',
+              name: 'Amausi Arpt',
+              cityCode: 'LKO',
+              city: 'Lucknow',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T20:05',
+          },
+          journey: {
+            stops: 0,
+            duration: 75,
+            layoverMins: 1075,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '626',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'LKO',
+              name: 'Amausi Arpt',
+              cityCode: 'LKO',
+              city: 'Lucknow',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T14:00',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T16:25',
+          },
+          journey: {
+            stops: 0,
+            duration: 145,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'U',
+            fare: 9541.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 1,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'U',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 1,
+          },
+        },
+        id: '15-2-10-4063513597_45DELLKOAI811LKOBOMAI626_67358453611620',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '403',
+            equipment: '32A',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T17:25',
+          },
+          arrival: {
+            airport: {
+              code: 'RAJ',
+              name: 'Rajkot Civil Arpt',
+              cityCode: 'RAJ',
+              city: 'Rajkot',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T19:20',
+          },
+          journey: {
+            stops: 0,
+            duration: 115,
+            layoverMins: 805,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '688',
+            equipment: '319',
+          },
+          departure: {
+            airport: {
+              code: 'RAJ',
+              name: 'Rajkot Civil Arpt',
+              cityCode: 'RAJ',
+              city: 'Rajkot',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-22T08:45',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T09:55',
+          },
+          journey: {
+            stops: 0,
+            duration: 70,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'G',
+            fare: 9613.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 3,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'G',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 3,
+          },
+        },
+        id: '15-2-10-4063513597_46DELRAJAI403RAJBOMAI688_67358453613483',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '403',
+            equipment: '32A',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T17:25',
+          },
+          arrival: {
+            airport: {
+              code: 'RAJ',
+              name: 'Rajkot Civil Arpt',
+              cityCode: 'RAJ',
+              city: 'Rajkot',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T19:20',
+          },
+          journey: {
+            stops: 0,
+            duration: 115,
+            layoverMins: 1370,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '656',
+            equipment: '319',
+          },
+          departure: {
+            airport: {
+              code: 'RAJ',
+              name: 'Rajkot Civil Arpt',
+              cityCode: 'RAJ',
+              city: 'Rajkot',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-22T18:10',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T19:15',
+          },
+          journey: {
+            stops: 0,
+            duration: 65,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'G',
+            fare: 9613.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 3,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'G',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 3,
+          },
+        },
+        id: '15-2-10-4063513597_47DELRAJAI403RAJBOMAI656_67358453615222',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '435',
+            equipment: '32A',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T05:55',
+          },
+          arrival: {
+            airport: {
+              code: 'BHO',
+              name: 'Raja Bhoj Arpt',
+              cityCode: 'BHO',
+              city: 'Bhopal',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T07:25',
+          },
+          journey: {
+            stops: 0,
+            duration: 90,
+            layoverMins: 310,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '634',
+            equipment: '319',
+          },
+          departure: {
+            airport: {
+              code: 'BHO',
+              name: 'Raja Bhoj Arpt',
+              cityCode: 'BHO',
+              city: 'Bhopal',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T12:35',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T14:25',
+          },
+          journey: {
+            stops: 0,
+            duration: 110,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'T',
+            fare: 9708.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'T',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_48DELBHOAI435BHOBOMAI634_67358453617585',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '479',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T20:55',
+          },
+          arrival: {
+            airport: {
+              code: 'ATQ',
+              name: 'Raja Sansi Arpt',
+              cityCode: 'ATQ',
+              city: 'Amritsar',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T22:25',
+          },
+          journey: {
+            stops: 0,
+            duration: 90,
+            layoverMins: 630,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '1650',
+            equipment: '32A',
+          },
+          departure: {
+            airport: {
+              code: 'ATQ',
+              name: 'Raja Sansi Arpt',
+              cityCode: 'ATQ',
+              city: 'Amritsar',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-22T08:55',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T11:40',
+          },
+          journey: {
+            stops: 0,
+            duration: 165,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'U',
+            fare: 10066.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'U',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_49DELATQAI479ATQBOMAI1650_67358453619374',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '881',
+            equipment: '32N',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T15:45',
+          },
+          arrival: {
+            airport: {
+              code: 'GOI',
+              name: 'Dabolim Arpt',
+              cityCode: 'GOI',
+              city: 'Goa In',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T18:20',
+          },
+          journey: {
+            stops: 0,
+            duration: 155,
+            layoverMins: 290,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '697',
+            equipment: '319',
+          },
+          departure: {
+            airport: {
+              code: 'GOI',
+              name: 'Dabolim Arpt',
+              cityCode: 'GOI',
+              city: 'Goa In',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T23:10',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T00:20',
+          },
+          journey: {
+            stops: 0,
+            duration: 70,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'W',
+            fare: 10087.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 4,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'W',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 4,
+          },
+        },
+        id: '15-2-10-4063513597_50DELGOIAI881GOIBOMAI697_67358453621581',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '560',
+            equipment: '32N',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T07:10',
+          },
+          arrival: {
+            airport: {
+              code: 'HYD',
+              name: 'Shamshabad Rajiv Gandhi Intl Arpt',
+              cityCode: 'HYD',
+              city: 'Hyderabad',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T09:20',
+          },
+          journey: {
+            stops: 0,
+            duration: 130,
+            layoverMins: 240,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '618',
+            equipment: '319',
+          },
+          departure: {
+            airport: {
+              code: 'HYD',
+              name: 'Shamshabad Rajiv Gandhi Intl Arpt',
+              cityCode: 'HYD',
+              city: 'Hyderabad',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T13:20',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T15:00',
+          },
+          journey: {
+            stops: 0,
+            duration: 100,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'G',
+            fare: 10276.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'G',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_51DELHYDAI560HYDBOMAI618_67358453627497',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '839',
+            equipment: '32N',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T21:30',
+          },
+          arrival: {
+            airport: {
+              code: 'HYD',
+              name: 'Shamshabad Rajiv Gandhi Intl Arpt',
+              cityCode: 'HYD',
+              city: 'Hyderabad',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T23:50',
+          },
+          journey: {
+            stops: 0,
+            duration: 140,
+            layoverMins: 510,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '616',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'HYD',
+              name: 'Shamshabad Rajiv Gandhi Intl Arpt',
+              cityCode: 'HYD',
+              city: 'Hyderabad',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-22T08:20',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T09:55',
+          },
+          journey: {
+            stops: 0,
+            duration: 95,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'G',
+            fare: 10276.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'G',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_52DELHYDAI839HYDBOMAI616_67358453629959',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '881',
+            equipment: '32N',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T15:45',
+          },
+          arrival: {
+            airport: {
+              code: 'GOI',
+              name: 'Dabolim Arpt',
+              cityCode: 'GOI',
+              city: 'Goa In',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T18:20',
+          },
+          journey: {
+            stops: 0,
+            duration: 155,
+            layoverMins: 105,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '662',
+            equipment: '319',
+          },
+          departure: {
+            airport: {
+              code: 'GOI',
+              name: 'Dabolim Arpt',
+              cityCode: 'GOI',
+              city: 'Goa In',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T20:05',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T21:30',
+          },
+          journey: {
+            stops: 0,
+            duration: 85,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'W',
+            fare: 10297.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'W',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_53DELGOIAI881GOIBOMAI662_67358453631821',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '453',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T04:55',
+          },
+          arrival: {
+            airport: {
+              code: 'ATQ',
+              name: 'Raja Sansi Arpt',
+              cityCode: 'ATQ',
+              city: 'Amritsar',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T06:10',
+          },
+          journey: {
+            stops: 0,
+            duration: 75,
+            layoverMins: 165,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '1650',
+            equipment: '32A',
+          },
+          departure: {
+            airport: {
+              code: 'ATQ',
+              name: 'Raja Sansi Arpt',
+              cityCode: 'ATQ',
+              city: 'Amritsar',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T08:55',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T11:40',
+          },
+          journey: {
+            stops: 0,
+            duration: 165,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'T',
+            fare: 10381.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'T',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_54DELATQAI453ATQBOMAI1650_67358453633922',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '975',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T06:00',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T08:00',
+          },
+          journey: {
+            stops: 0,
+            duration: 120,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'N',
+            fare: 12061.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 5,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'N',
+            fare: 1561.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 5,
+          },
+        },
+        id: '15-2-10-4063513597_55DELBOMUK975_67358453635259',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '433',
+            equipment: '32N',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T11:20',
+          },
+          arrival: {
+            airport: {
+              code: 'BHO',
+              name: 'Raja Bhoj Arpt',
+              cityCode: 'BHO',
+              city: 'Bhopal',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T12:50',
+          },
+          journey: {
+            stops: 0,
+            duration: 90,
+            layoverMins: 1425,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '634',
+            equipment: '319',
+          },
+          departure: {
+            airport: {
+              code: 'BHO',
+              name: 'Raja Bhoj Arpt',
+              cityCode: 'BHO',
+              city: 'Bhopal',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-22T12:35',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T14:25',
+          },
+          journey: {
+            stops: 0,
+            duration: 110,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'W',
+            fare: 10653.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 4,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'W',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 4,
+          },
+        },
+        id: '15-2-10-4063513597_56DELBHOAI433BHOBOMAI634_67358453637171',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '847',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T11:10',
+          },
+          arrival: {
+            airport: {
+              code: 'GOI',
+              name: 'Dabolim Arpt',
+              cityCode: 'GOI',
+              city: 'Goa In',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T13:50',
+          },
+          journey: {
+            stops: 0,
+            duration: 160,
+            layoverMins: 1405,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'UK',
+            number: '842',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'GOI',
+              name: 'Dabolim Arpt',
+              cityCode: 'GOI',
+              city: 'Goa In',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-22T13:15',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T14:45',
+          },
+          journey: {
+            stops: 0,
+            duration: 90,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'V',
+            fare: 10549.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 5,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'V',
+            fare: 3104.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 5,
+          },
+        },
+        id: '15-2-10-4063513597_57DELGOIUK847GOIBOMUK842_67358453638976',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '881',
+            equipment: '32N',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T15:45',
+          },
+          arrival: {
+            airport: {
+              code: 'GOI',
+              name: 'Dabolim Arpt',
+              cityCode: 'GOI',
+              city: 'Goa In',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T18:20',
+          },
+          journey: {
+            stops: 0,
+            duration: 155,
+            layoverMins: 780,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '684',
+            equipment: '319',
+          },
+          departure: {
+            airport: {
+              code: 'GOI',
+              name: 'Dabolim Arpt',
+              cityCode: 'GOI',
+              city: 'Goa In',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-22T07:20',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T08:40',
+          },
+          journey: {
+            stops: 0,
+            duration: 80,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'W',
+            fare: 10822.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'W',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_58DELGOIAI881GOIBOMAI684_67358453640937',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '881',
+            equipment: '32N',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T15:45',
+          },
+          arrival: {
+            airport: {
+              code: 'GOI',
+              name: 'Dabolim Arpt',
+              cityCode: 'GOI',
+              city: 'Goa In',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T18:20',
+          },
+          journey: {
+            stops: 0,
+            duration: 155,
+            layoverMins: 1265,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '664',
+            equipment: '319',
+          },
+          departure: {
+            airport: {
+              code: 'GOI',
+              name: 'Dabolim Arpt',
+              cityCode: 'GOI',
+              city: 'Goa In',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-22T15:25',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T16:50',
+          },
+          journey: {
+            stops: 0,
+            duration: 85,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'W',
+            fare: 10822.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'W',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_59DELGOIAI881GOIBOMAI664_67358453642718',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '831',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T11:05',
+          },
+          arrival: {
+            airport: {
+              code: 'COK',
+              name: 'Cochin Internation Arpt',
+              cityCode: 'COK',
+              city: 'Kochi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T14:25',
+          },
+          journey: {
+            stops: 0,
+            duration: 200,
+            layoverMins: 345,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '699',
+            equipment: '32A',
+          },
+          departure: {
+            airport: {
+              code: 'COK',
+              name: 'Cochin Internation Arpt',
+              cityCode: 'COK',
+              city: 'Kochi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T20:10',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T22:25',
+          },
+          journey: {
+            stops: 0,
+            duration: 135,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'S',
+            fare: 11346.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'S',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_60DELCOKAI831COKBOMAI699_67358453644400',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '831',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T11:05',
+          },
+          arrival: {
+            airport: {
+              code: 'COK',
+              name: 'Cochin Internation Arpt',
+              cityCode: 'COK',
+              city: 'Kochi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T14:25',
+          },
+          journey: {
+            stops: 0,
+            duration: 200,
+            layoverMins: 410,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '517',
+            equipment: '32N',
+          },
+          departure: {
+            airport: {
+              code: 'COK',
+              name: 'Cochin Internation Arpt',
+              cityCode: 'COK',
+              city: 'Kochi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T21:15',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T23:25',
+          },
+          journey: {
+            stops: 0,
+            duration: 130,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'S',
+            fare: 11346.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'S',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_61DELCOKAI831COKBOMAI517_67358453646073',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '833',
+            equipment: '32N',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T05:35',
+          },
+          arrival: {
+            airport: {
+              code: 'COK',
+              name: 'Cochin Internation Arpt',
+              cityCode: 'COK',
+              city: 'Kochi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T08:50',
+          },
+          journey: {
+            stops: 0,
+            duration: 195,
+            layoverMins: 360,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '692',
+            equipment: '319',
+          },
+          departure: {
+            airport: {
+              code: 'COK',
+              name: 'Cochin Internation Arpt',
+              cityCode: 'COK',
+              city: 'Kochi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T14:50',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T17:10',
+          },
+          journey: {
+            stops: 0,
+            duration: 140,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'S',
+            fare: 11346.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 2,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'S',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 2,
+          },
+        },
+        id: '15-2-10-4063513597_62DELCOKAI833COKBOMAI692_67358453648338',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '885',
+            equipment: '32A',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T10:40',
+          },
+          arrival: {
+            airport: {
+              code: 'GOI',
+              name: 'Dabolim Arpt',
+              cityCode: 'GOI',
+              city: 'Goa In',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T13:25',
+          },
+          journey: {
+            stops: 0,
+            duration: 165,
+            layoverMins: 585,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '697',
+            equipment: '319',
+          },
+          departure: {
+            airport: {
+              code: 'GOI',
+              name: 'Dabolim Arpt',
+              cityCode: 'GOI',
+              city: 'Goa In',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T23:10',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T00:20',
+          },
+          journey: {
+            stops: 0,
+            duration: 70,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'Q',
+            fare: 12135.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 3,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'Q',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 3,
+          },
+        },
+        id: '15-2-10-4063513597_63DELGOIAI885GOIBOMAI697_67358453650119',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '885',
+            equipment: '32A',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T10:40',
+          },
+          arrival: {
+            airport: {
+              code: 'GOI',
+              name: 'Dabolim Arpt',
+              cityCode: 'GOI',
+              city: 'Goa In',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T13:25',
+          },
+          journey: {
+            stops: 0,
+            duration: 165,
+            layoverMins: 400,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '662',
+            equipment: '319',
+          },
+          departure: {
+            airport: {
+              code: 'GOI',
+              name: 'Dabolim Arpt',
+              cityCode: 'GOI',
+              city: 'Goa In',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T20:05',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T21:30',
+          },
+          journey: {
+            stops: 0,
+            duration: 85,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'Q',
+            fare: 12345.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 3,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'Q',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 3,
+          },
+        },
+        id: '15-2-10-4063513597_64DELGOIAI885GOIBOMAI662_67358453651842',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '871',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T20:35',
+          },
+          arrival: {
+            airport: {
+              code: 'HYD',
+              name: 'Shamshabad Rajiv Gandhi Intl Arpt',
+              cityCode: 'HYD',
+              city: 'Hyderabad',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T22:55',
+          },
+          journey: {
+            stops: 0,
+            duration: 140,
+            layoverMins: 565,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'UK',
+            number: '874',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'HYD',
+              name: 'Shamshabad Rajiv Gandhi Intl Arpt',
+              cityCode: 'HYD',
+              city: 'Hyderabad',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-22T08:20',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T10:00',
+          },
+          journey: {
+            stops: 0,
+            duration: 100,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'W',
+            fare: 12511.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 2,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'W',
+            fare: 3104.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 2,
+          },
+        },
+        id: '15-2-10-4063513597_65DELHYDUK871HYDBOMUK874_67358453653614',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '465',
+            equipment: '32N',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T16:45',
+          },
+          arrival: {
+            airport: {
+              code: 'COK',
+              name: 'Cochin Internation Arpt',
+              cityCode: 'COK',
+              city: 'Kochi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T20:05',
+          },
+          journey: {
+            stops: 0,
+            duration: 200,
+            layoverMins: 70,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '517',
+            equipment: '32N',
+          },
+          departure: {
+            airport: {
+              code: 'COK',
+              name: 'Cochin Internation Arpt',
+              cityCode: 'COK',
+              city: 'Kochi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T21:15',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T23:25',
+          },
+          journey: {
+            stops: 0,
+            duration: 130,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'T',
+            fare: 12638.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'T',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_66DELCOKAI465COKBOMAI517_67358453655353',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '540',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T20:40',
+          },
+          arrival: {
+            airport: {
+              code: 'MAA',
+              name: 'Chennai Arpt',
+              cityCode: 'MAA',
+              city: 'Chennai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T23:35',
+          },
+          journey: {
+            stops: 0,
+            duration: 175,
+            layoverMins: 500,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '571',
+            equipment: '32N',
+          },
+          departure: {
+            airport: {
+              code: 'MAA',
+              name: 'Chennai Arpt',
+              cityCode: 'MAA',
+              city: 'Chennai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-22T07:55',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T10:00',
+          },
+          journey: {
+            stops: 0,
+            duration: 125,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'G',
+            fare: 13153.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 6,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'G',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 6,
+          },
+        },
+        id: '15-2-10-4063513597_67DELMAAAI540MAABOMAI571_67358453657019',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '855',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T18:40',
+          },
+          arrival: {
+            airport: {
+              code: 'GOI',
+              name: 'Dabolim Arpt',
+              cityCode: 'GOI',
+              city: 'Goa In',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T21:20',
+          },
+          journey: {
+            stops: 0,
+            duration: 160,
+            layoverMins: 955,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'UK',
+            number: '842',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'GOI',
+              name: 'Dabolim Arpt',
+              cityCode: 'GOI',
+              city: 'Goa In',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-22T13:15',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T14:45',
+          },
+          journey: {
+            stops: 0,
+            duration: 90,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'W',
+            fare: 13221.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'W',
+            fare: 3104.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_68DELGOIUK855GOIBOMUK842_67358453658726',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '673',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T13:20',
+          },
+          arrival: {
+            airport: {
+              code: 'VNS',
+              name: 'Lal Bahadur Shastri Arpt',
+              cityCode: 'VNS',
+              city: 'Varanasi',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T14:45',
+          },
+          journey: {
+            stops: 0,
+            duration: 85,
+            layoverMins: 90,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'UK',
+            number: '622',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'VNS',
+              name: 'Lal Bahadur Shastri Arpt',
+              cityCode: 'VNS',
+              city: 'Varanasi',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T16:15',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T18:30',
+          },
+          journey: {
+            stops: 0,
+            duration: 135,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 13563.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 3104.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_69DELVNSUK673VNSBOMUK622_67358453660441',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '879',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T17:40',
+          },
+          arrival: {
+            airport: {
+              code: 'HYD',
+              name: 'Shamshabad Rajiv Gandhi Intl Arpt',
+              cityCode: 'HYD',
+              city: 'Hyderabad',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T19:50',
+          },
+          journey: {
+            stops: 0,
+            duration: 130,
+            layoverMins: 105,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'UK',
+            number: '876',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'HYD',
+              name: 'Shamshabad Rajiv Gandhi Intl Arpt',
+              cityCode: 'HYD',
+              city: 'Hyderabad',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T21:35',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T23:10',
+          },
+          journey: {
+            stops: 0,
+            duration: 95,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 13668.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 3104.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_70DELHYDUK879HYDBOMUK876_67358453662221',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '637',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T17:05',
+          },
+          arrival: {
+            airport: {
+              code: 'IXC',
+              name: 'Chandigarh Arpt',
+              cityCode: 'IXC',
+              city: 'Chandigarh',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T18:15',
+          },
+          journey: {
+            stops: 0,
+            duration: 70,
+            layoverMins: 90,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'UK',
+            number: '652',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'IXC',
+              name: 'Chandigarh Arpt',
+              cityCode: 'IXC',
+              city: 'Chandigarh',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T19:45',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T22:00',
+          },
+          journey: {
+            stops: 0,
+            duration: 135,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 13930.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 3,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 3104.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 3,
+          },
+        },
+        id: '15-2-10-4063513597_71DELIXCUK637IXCBOMUK652_67358453663936',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '540',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T20:40',
+          },
+          arrival: {
+            airport: {
+              code: 'MAA',
+              name: 'Chennai Arpt',
+              cityCode: 'MAA',
+              city: 'Chennai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T23:35',
+          },
+          journey: {
+            stops: 0,
+            duration: 175,
+            layoverMins: 395,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '569',
+            equipment: '32N',
+          },
+          departure: {
+            airport: {
+              code: 'MAA',
+              name: 'Chennai Arpt',
+              cityCode: 'MAA',
+              city: 'Chennai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-22T06:10',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T08:15',
+          },
+          journey: {
+            stops: 0,
+            duration: 125,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'G',
+            fare: 14203.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 6,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'G',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 6,
+          },
+        },
+        id: '15-2-10-4063513597_72DELMAAAI540MAABOMAI569_67358453665692',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '636',
+            equipment: '32N',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T14:30',
+          },
+          arrival: {
+            airport: {
+              code: 'IDR',
+              name: 'Devi Ahilya Bai Holkar Arpt',
+              cityCode: 'IDR',
+              city: 'Indore',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T16:05',
+          },
+          journey: {
+            stops: 0,
+            duration: 95,
+            layoverMins: 30,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '636',
+            equipment: '32N',
+          },
+          departure: {
+            airport: {
+              code: 'IDR',
+              name: 'Devi Ahilya Bai Holkar Arpt',
+              cityCode: 'IDR',
+              city: 'Indore',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T16:35',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T18:00',
+          },
+          journey: {
+            stops: 0,
+            duration: 85,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'H',
+            fare: 15946.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'H',
+            fare: 1508.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_73DELIDRAI636IDRBOMAI636_67358453667341',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '401',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T06:55',
+          },
+          arrival: {
+            airport: {
+              code: 'CCU',
+              name: 'Netaji Subhas Chandra Bose Intl',
+              cityCode: 'CCU',
+              city: 'Kolkata',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T09:00',
+          },
+          journey: {
+            stops: 0,
+            duration: 125,
+            layoverMins: 405,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '775',
+            equipment: '319',
+          },
+          departure: {
+            airport: {
+              code: 'CCU',
+              name: 'Netaji Subhas Chandra Bose Intl',
+              cityCode: 'CCU',
+              city: 'Kolkata',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T15:45',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T19:05',
+          },
+          journey: {
+            stops: 0,
+            duration: 200,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'T',
+            fare: 14581.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 1,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'T',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 1,
+          },
+        },
+        id: '15-2-10-4063513597_74DELCCUAI401CCUBOMAI775_67358453669294',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '706',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T13:40',
+          },
+          arrival: {
+            airport: {
+              code: 'IXC',
+              name: 'Chandigarh Arpt',
+              cityCode: 'IXC',
+              city: 'Chandigarh',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T14:45',
+          },
+          journey: {
+            stops: 0,
+            duration: 65,
+            layoverMins: 300,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'UK',
+            number: '652',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'IXC',
+              name: 'Chandigarh Arpt',
+              cityCode: 'IXC',
+              city: 'Chandigarh',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T19:45',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T22:00',
+          },
+          journey: {
+            stops: 0,
+            duration: 135,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'L',
+            fare: 15190.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 1,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'L',
+            fare: 3104.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 1,
+          },
+        },
+        id: '15-2-10-4063513597_75DELIXCUK706IXCBOMUK652_67358453670976',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '429',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T09:50',
+          },
+          arrival: {
+            airport: {
+              code: 'MAA',
+              name: 'Chennai Arpt',
+              cityCode: 'MAA',
+              city: 'Chennai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T12:50',
+          },
+          journey: {
+            stops: 0,
+            duration: 180,
+            layoverMins: 495,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '574',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'MAA',
+              name: 'Chennai Arpt',
+              cityCode: 'MAA',
+              city: 'Chennai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T21:05',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T23:30',
+          },
+          journey: {
+            stops: 0,
+            duration: 145,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'Q',
+            fare: 15789.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'Q',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_76DELMAAAI429MAABOMAI574_67358453672601',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '420',
+            equipment: '788',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T05:25',
+          },
+          arrival: {
+            airport: {
+              code: 'COK',
+              name: 'Cochin Internation Arpt',
+              cityCode: 'COK',
+              city: 'Kochi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T08:35',
+          },
+          journey: {
+            stops: 0,
+            duration: 190,
+            layoverMins: 375,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '692',
+            equipment: '319',
+          },
+          departure: {
+            airport: {
+              code: 'COK',
+              name: 'Cochin Internation Arpt',
+              cityCode: 'COK',
+              city: 'Kochi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T14:50',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T17:10',
+          },
+          journey: {
+            stops: 0,
+            duration: 140,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'W',
+            fare: 16124.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 2,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'W',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 2,
+          },
+        },
+        id: '15-2-10-4063513597_77DELCOKAI420COKBOMAI692_67358453674217',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '514',
+            equipment: '32N',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T03:30',
+          },
+          arrival: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T06:25',
+          },
+          journey: {
+            stops: 0,
+            duration: 175,
+            layoverMins: 340,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '622',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T12:05',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T14:00',
+          },
+          journey: {
+            stops: 0,
+            duration: 115,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'Q',
+            fare: 16198.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 5,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'Q',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 5,
+          },
+        },
+        id: '15-2-10-4063513597_78DELBLRAI514BLRBOMAI622_67358453676030',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '815',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T15:35',
+          },
+          arrival: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T18:35',
+          },
+          journey: {
+            stops: 0,
+            duration: 180,
+            layoverMins: 45,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '610',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T19:20',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T21:20',
+          },
+          journey: {
+            stops: 0,
+            duration: 120,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'Q',
+            fare: 16219.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 1,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'Q',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 1,
+          },
+        },
+        id: '15-2-10-4063513597_79DELBLRAI815BLRBOMAI610_67358453677515',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '815',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T15:35',
+          },
+          arrival: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T18:35',
+          },
+          journey: {
+            stops: 0,
+            duration: 180,
+            layoverMins: 170,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '642',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T21:25',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T23:20',
+          },
+          journey: {
+            stops: 0,
+            duration: 115,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'Q',
+            fare: 16219.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 1,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'Q',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 1,
+          },
+        },
+        id: '15-2-10-4063513597_80DELBLRAI815BLRBOMAI642_67358453679599',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '514',
+            equipment: '32N',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T03:30',
+          },
+          arrival: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T06:25',
+          },
+          journey: {
+            stops: 0,
+            duration: 175,
+            layoverMins: 175,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '604',
+            equipment: '32N',
+          },
+          departure: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T09:20',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T11:35',
+          },
+          journey: {
+            stops: 0,
+            duration: 135,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'Q',
+            fare: 16219.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 5,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'Q',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 5,
+          },
+        },
+        id: '15-2-10-4063513597_81DELBLRAI514BLRBOMAI604_67358453681552',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '514',
+            equipment: '32N',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T03:30',
+          },
+          arrival: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T06:25',
+          },
+          journey: {
+            stops: 0,
+            duration: 175,
+            layoverMins: 490,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '602',
+            equipment: '32N',
+          },
+          departure: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T14:35',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T16:25',
+          },
+          journey: {
+            stops: 0,
+            duration: 110,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'Q',
+            fare: 16219.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 5,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'Q',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 5,
+          },
+        },
+        id: '15-2-10-4063513597_82DELBLRAI514BLRBOMAI602_67358453683850',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '406',
+            equipment: '319',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T10:35',
+          },
+          arrival: {
+            airport: {
+              code: 'VNS',
+              name: 'Lal Bahadur Shastri Arpt',
+              cityCode: 'VNS',
+              city: 'Varanasi',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T11:45',
+          },
+          journey: {
+            stops: 0,
+            duration: 70,
+            layoverMins: 100,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '696',
+            equipment: '319',
+          },
+          departure: {
+            airport: {
+              code: 'VNS',
+              name: 'Lal Bahadur Shastri Arpt',
+              cityCode: 'VNS',
+              city: 'Varanasi',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T13:25',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T15:50',
+          },
+          journey: {
+            stops: 0,
+            duration: 145,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 16471.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_83DELVNSAI406VNSBOMAI696_67358453685786',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '899',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T14:45',
+          },
+          arrival: {
+            airport: {
+              code: 'HYD',
+              name: 'Shamshabad Rajiv Gandhi Intl Arpt',
+              cityCode: 'HYD',
+              city: 'Hyderabad',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T17:00',
+          },
+          journey: {
+            stops: 0,
+            duration: 135,
+            layoverMins: 275,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'UK',
+            number: '876',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'HYD',
+              name: 'Shamshabad Rajiv Gandhi Intl Arpt',
+              cityCode: 'HYD',
+              city: 'Hyderabad',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T21:35',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T23:10',
+          },
+          journey: {
+            stops: 0,
+            duration: 95,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'N',
+            fare: 16639.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'N',
+            fare: 3104.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_84DELHYDUK899HYDBOMUK876_67358453687928',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '504',
+            equipment: '32N',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T21:10',
+          },
+          arrival: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-22T00:05',
+          },
+          journey: {
+            stops: 0,
+            duration: 175,
+            layoverMins: 400,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '640',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-22T06:45',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T08:35',
+          },
+          journey: {
+            stops: 0,
+            duration: 110,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'Q',
+            fare: 16744.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 5,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'Q',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 5,
+          },
+        },
+        id: '15-2-10-4063513597_85DELBLRAI504BLRBOMAI640_67358453689675',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '815',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T08:00',
+          },
+          arrival: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T10:50',
+          },
+          journey: {
+            stops: 0,
+            duration: 170,
+            layoverMins: 455,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'UK',
+            number: '854',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T18:25',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T20:15',
+          },
+          journey: {
+            stops: 0,
+            duration: 110,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'L',
+            fare: 17049.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 1,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'L',
+            fare: 3104.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 1,
+          },
+        },
+        id: '15-2-10-4063513597_86DELBLRUK815BLRBOMUK854_67358453691751',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '401',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T06:55',
+          },
+          arrival: {
+            airport: {
+              code: 'CCU',
+              name: 'Netaji Subhas Chandra Bose Intl',
+              cityCode: 'CCU',
+              city: 'Kolkata',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T09:00',
+          },
+          journey: {
+            stops: 0,
+            duration: 125,
+            layoverMins: 530,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '773',
+            equipment: '319',
+          },
+          departure: {
+            airport: {
+              code: 'CCU',
+              name: 'Netaji Subhas Chandra Bose Intl',
+              cityCode: 'CCU',
+              city: 'Kolkata',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T17:50',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T20:45',
+          },
+          journey: {
+            stops: 0,
+            duration: 175,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'T',
+            fare: 17206.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 1,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'T',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 1,
+          },
+        },
+        id: '15-2-10-4063513597_87DELCCUAI401CCUBOMAI773_67358453693499',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '839',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T13:45',
+          },
+          arrival: {
+            airport: {
+              code: 'MAA',
+              name: 'Chennai Arpt',
+              cityCode: 'MAA',
+              city: 'Chennai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T16:35',
+          },
+          journey: {
+            stops: 0,
+            duration: 170,
+            layoverMins: 235,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'UK',
+            number: '824',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'MAA',
+              name: 'Chennai Arpt',
+              cityCode: 'MAA',
+              city: 'Chennai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T20:30',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T22:30',
+          },
+          journey: {
+            stops: 0,
+            duration: 120,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 17206.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 3,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 3104.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 3,
+          },
+        },
+        id: '15-2-10-4063513597_88DELMAAUK839MAABOMUK824_67358453695591',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '411',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T07:00',
+          },
+          arrival: {
+            airport: {
+              code: 'LKO',
+              name: 'Amausi Arpt',
+              cityCode: 'LKO',
+              city: 'Lucknow',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T08:10',
+          },
+          journey: {
+            stops: 0,
+            duration: 70,
+            layoverMins: 350,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '626',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'LKO',
+              name: 'Amausi Arpt',
+              cityCode: 'LKO',
+              city: 'Lucknow',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T14:00',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T16:25',
+          },
+          journey: {
+            stops: 0,
+            duration: 145,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'H',
+            fare: 17311.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 1,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'H',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 1,
+          },
+        },
+        id: '15-2-10-4063513597_89DELLKOAI411LKOBOMAI626_67358453697643',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '767',
+            equipment: '32N',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T12:20',
+          },
+          arrival: {
+            airport: {
+              code: 'CCU',
+              name: 'Netaji Subhas Chandra Bose Intl',
+              cityCode: 'CCU',
+              city: 'Kolkata',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T14:30',
+          },
+          journey: {
+            stops: 0,
+            duration: 130,
+            layoverMins: 75,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '775',
+            equipment: '319',
+          },
+          departure: {
+            airport: {
+              code: 'CCU',
+              name: 'Netaji Subhas Chandra Bose Intl',
+              cityCode: 'CCU',
+              city: 'Kolkata',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T15:45',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T19:05',
+          },
+          journey: {
+            stops: 0,
+            duration: 200,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'V',
+            fare: 17626.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 1,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'V',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 1,
+          },
+        },
+        id: '15-2-10-4063513597_90DELCCUAI767CCUBOMAI775_67358453699439',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '429',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T09:50',
+          },
+          arrival: {
+            airport: {
+              code: 'MAA',
+              name: 'Chennai Arpt',
+              cityCode: 'MAA',
+              city: 'Chennai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T12:50',
+          },
+          journey: {
+            stops: 0,
+            duration: 180,
+            layoverMins: 445,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '575',
+            equipment: '32N',
+          },
+          departure: {
+            airport: {
+              code: 'MAA',
+              name: 'Chennai Arpt',
+              cityCode: 'MAA',
+              city: 'Chennai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T20:15',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T22:30',
+          },
+          journey: {
+            stops: 0,
+            duration: 135,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'Q',
+            fare: 18204.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'Q',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_91DELMAAAI429MAABOMAI575_67358453701138',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '781',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T17:50',
+          },
+          arrival: {
+            airport: {
+              code: 'BBI',
+              name: 'Biju Patnaik Arpt',
+              cityCode: 'BBI',
+              city: 'Bhubaneswar',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T19:55',
+          },
+          journey: {
+            stops: 0,
+            duration: 125,
+            layoverMins: 45,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'UK',
+            number: '546',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'BBI',
+              name: 'Biju Patnaik Arpt',
+              cityCode: 'BBI',
+              city: 'Bhubaneswar',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T20:40',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T23:40',
+          },
+          journey: {
+            stops: 0,
+            duration: 180,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'L',
+            fare: 18183.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 1,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'L',
+            fare: 3104.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 1,
+          },
+        },
+        id: '15-2-10-4063513597_92DELBBIUK781BBIBOMUK546_67358453703386',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '705',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T07:30',
+          },
+          arrival: {
+            airport: {
+              code: 'CCU',
+              name: 'Netaji Subhas Chandra Bose Intl',
+              cityCode: 'CCU',
+              city: 'Kolkata',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T09:35',
+          },
+          journey: {
+            stops: 0,
+            duration: 125,
+            layoverMins: 50,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'UK',
+            number: '772',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'CCU',
+              name: 'Netaji Subhas Chandra Bose Intl',
+              cityCode: 'CCU',
+              city: 'Kolkata',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T10:25',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T13:15',
+          },
+          journey: {
+            stops: 0,
+            duration: 170,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 18561.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 4,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 3104.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 4,
+          },
+        },
+        id: '15-2-10-4063513597_93DELCCUUK705CCUBOMUK772_67358453705142',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '813',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T08:10',
+          },
+          arrival: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T10:55',
+          },
+          journey: {
+            stops: 0,
+            duration: 165,
+            layoverMins: 70,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '622',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T12:05',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T14:00',
+          },
+          journey: {
+            stops: 0,
+            duration: 115,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 18823.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_94DELBLRAI813BLRBOMAI622_67358453707259',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '803',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T06:10',
+          },
+          arrival: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T09:00',
+          },
+          journey: {
+            stops: 0,
+            duration: 170,
+            layoverMins: 185,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '622',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T12:05',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T14:00',
+          },
+          journey: {
+            stops: 0,
+            duration: 115,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 18823.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_95DELBLRAI803BLRBOMAI622_67358453709056',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '807',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T17:15',
+          },
+          arrival: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T20:15',
+          },
+          journey: {
+            stops: 0,
+            duration: 180,
+            layoverMins: 70,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '642',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T21:25',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T23:20',
+          },
+          journey: {
+            stops: 0,
+            duration: 115,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 18844.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 6,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 6,
+          },
+        },
+        id: '15-2-10-4063513597_96DELBLRAI807BLRBOMAI642_67358453711312',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '506',
+            equipment: '32N',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T09:40',
+          },
+          arrival: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T12:30',
+          },
+          journey: {
+            stops: 0,
+            duration: 170,
+            layoverMins: 125,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '602',
+            equipment: '32N',
+          },
+          departure: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T14:35',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T16:25',
+          },
+          journey: {
+            stops: 0,
+            duration: 110,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 18844.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_97DELBLRAI506BLRBOMAI602_67358453713068',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '502',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T13:30',
+          },
+          arrival: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T16:20',
+          },
+          journey: {
+            stops: 0,
+            duration: 170,
+            layoverMins: 180,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '610',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T19:20',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T21:20',
+          },
+          journey: {
+            stops: 0,
+            duration: 120,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 18844.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 6,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 6,
+          },
+        },
+        id: '15-2-10-4063513597_98DELBLRAI502BLRBOMAI610_67358453715037',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '813',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T08:10',
+          },
+          arrival: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T10:55',
+          },
+          journey: {
+            stops: 0,
+            duration: 165,
+            layoverMins: 220,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '602',
+            equipment: '32N',
+          },
+          departure: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T14:35',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T16:25',
+          },
+          journey: {
+            stops: 0,
+            duration: 110,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 18844.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_99DELBLRAI813BLRBOMAI602_67358453716777',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '502',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T13:30',
+          },
+          arrival: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T16:20',
+          },
+          journey: {
+            stops: 0,
+            duration: 170,
+            layoverMins: 305,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '642',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T21:25',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T23:20',
+          },
+          journey: {
+            stops: 0,
+            duration: 115,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 18844.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 6,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 6,
+          },
+        },
+        id: '15-2-10-4063513597_100DELBLRAI502BLRBOMAI642_67358453718951',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '803',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T06:10',
+          },
+          arrival: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T09:00',
+          },
+          journey: {
+            stops: 0,
+            duration: 170,
+            layoverMins: 335,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '602',
+            equipment: '32N',
+          },
+          departure: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T14:35',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T16:25',
+          },
+          journey: {
+            stops: 0,
+            duration: 110,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 18844.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_101DELBLRAI803BLRBOMAI602_67358453720740',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '506',
+            equipment: '32N',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T09:40',
+          },
+          arrival: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T12:30',
+          },
+          journey: {
+            stops: 0,
+            duration: 170,
+            layoverMins: 410,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '610',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T19:20',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T21:20',
+          },
+          journey: {
+            stops: 0,
+            duration: 120,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 18844.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_102DELBLRAI506BLRBOMAI610_67358453722865',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '813',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T08:10',
+          },
+          arrival: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T10:55',
+          },
+          journey: {
+            stops: 0,
+            duration: 165,
+            layoverMins: 505,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '610',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T19:20',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T21:20',
+          },
+          journey: {
+            stops: 0,
+            duration: 120,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 18844.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_103DELBLRAI813BLRBOMAI610_67358453724604',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '506',
+            equipment: '32N',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T09:40',
+          },
+          arrival: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T12:30',
+          },
+          journey: {
+            stops: 0,
+            duration: 170,
+            layoverMins: 535,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '642',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T21:25',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T23:20',
+          },
+          journey: {
+            stops: 0,
+            duration: 115,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 18844.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'K',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_104DELBLRAI506BLRBOMAI642_67358453726262',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '787',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T10:30',
+          },
+          arrival: {
+            airport: {
+              code: 'BBI',
+              name: 'Biju Patnaik Arpt',
+              cityCode: 'BBI',
+              city: 'Bhubaneswar',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T12:40',
+          },
+          journey: {
+            stops: 0,
+            duration: 130,
+            layoverMins: 480,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'UK',
+            number: '546',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'BBI',
+              name: 'Biju Patnaik Arpt',
+              cityCode: 'BBI',
+              city: 'Bhubaneswar',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T20:40',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T23:40',
+          },
+          journey: {
+            stops: 0,
+            duration: 180,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'N',
+            fare: 19968.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 1,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'N',
+            fare: 3104.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 1,
+          },
+        },
+        id: '15-2-10-4063513597_105DELBBIUK787BBIBOMUK546_67358453729880',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '537',
+            equipment: '32N',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T16:15',
+          },
+          arrival: {
+            airport: {
+              code: 'MAA',
+              name: 'Chennai Arpt',
+              cityCode: 'MAA',
+              city: 'Chennai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T19:15',
+          },
+          journey: {
+            stops: 0,
+            duration: 180,
+            layoverMins: 110,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '574',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'MAA',
+              name: 'Chennai Arpt',
+              cityCode: 'MAA',
+              city: 'Chennai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T21:05',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T23:30',
+          },
+          journey: {
+            stops: 0,
+            duration: 145,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'H',
+            fare: 20146.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 3,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'H',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 3,
+          },
+        },
+        id: '15-2-10-4063513597_106DELMAAAI537MAABOMAI574_67358453732071',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '767',
+            equipment: '32N',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T12:20',
+          },
+          arrival: {
+            airport: {
+              code: 'CCU',
+              name: 'Netaji Subhas Chandra Bose Intl',
+              cityCode: 'CCU',
+              city: 'Kolkata',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T14:30',
+          },
+          journey: {
+            stops: 0,
+            duration: 130,
+            layoverMins: 200,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '773',
+            equipment: '319',
+          },
+          departure: {
+            airport: {
+              code: 'CCU',
+              name: 'Netaji Subhas Chandra Bose Intl',
+              cityCode: 'CCU',
+              city: 'Kolkata',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T17:50',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T20:45',
+          },
+          journey: {
+            stops: 0,
+            duration: 175,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'V',
+            fare: 20251.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 1,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'V',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 1,
+          },
+        },
+        id: '15-2-10-4063513597_107DELCCUAI767CCUBOMAI773_67358453734557',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '813',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T17:35',
+          },
+          arrival: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T20:25',
+          },
+          journey: {
+            stops: 0,
+            duration: 170,
+            layoverMins: 70,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'UK',
+            number: '840',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T21:35',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T23:20',
+          },
+          journey: {
+            stops: 0,
+            duration: 105,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'N',
+            fare: 20304.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 6,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'N',
+            fare: 3104.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 6,
+          },
+        },
+        id: '15-2-10-4063513597_108DELBLRUK813BLRBOMUK840_67358453736559',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '819',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T14:10',
+          },
+          arrival: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T16:45',
+          },
+          journey: {
+            stops: 0,
+            duration: 155,
+            layoverMins: 100,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'UK',
+            number: '854',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T18:25',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T20:15',
+          },
+          journey: {
+            stops: 0,
+            duration: 110,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'N',
+            fare: 20304.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 5,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'N',
+            fare: 3104.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 5,
+          },
+        },
+        id: '15-2-10-4063513597_109DELBLRUK819BLRBOMUK854_67358453738619',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '819',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T14:10',
+          },
+          arrival: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T16:45',
+          },
+          journey: {
+            stops: 0,
+            duration: 155,
+            layoverMins: 135,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'UK',
+            number: '864',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T19:00',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T20:45',
+          },
+          journey: {
+            stops: 0,
+            duration: 105,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'N',
+            fare: 20304.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 4,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'N',
+            fare: 3104.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 4,
+          },
+        },
+        id: '15-2-10-4063513597_110DELBLRUK819BLRBOMUK864_67358453740358',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '817',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T16:05',
+          },
+          arrival: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T18:45',
+          },
+          journey: {
+            stops: 0,
+            duration: 160,
+            layoverMins: 170,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'UK',
+            number: '840',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T21:35',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T23:20',
+          },
+          journey: {
+            stops: 0,
+            duration: 105,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'N',
+            fare: 20304.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 7,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'N',
+            fare: 3104.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 7,
+          },
+        },
+        id: '15-2-10-4063513597_111DELBLRUK817BLRBOMUK840_67358453742459',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '819',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T14:10',
+          },
+          arrival: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T16:45',
+          },
+          journey: {
+            stops: 0,
+            duration: 155,
+            layoverMins: 290,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'UK',
+            number: '840',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T21:35',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T23:20',
+          },
+          journey: {
+            stops: 0,
+            duration: 105,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'N',
+            fare: 20304.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 2,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'N',
+            fare: 3104.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 2,
+          },
+        },
+        id: '15-2-10-4063513597_112DELBLRUK819BLRBOMUK840_67358453744330',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '801',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T09:10',
+          },
+          arrival: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T11:50',
+          },
+          journey: {
+            stops: 0,
+            duration: 160,
+            layoverMins: 395,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'UK',
+            number: '854',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T18:25',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T20:15',
+          },
+          journey: {
+            stops: 0,
+            duration: 110,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'N',
+            fare: 20304.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 5,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'N',
+            fare: 3104.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 5,
+          },
+        },
+        id: '15-2-10-4063513597_113DELBLRUK801BLRBOMUK854_67358453746250',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '801',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T09:10',
+          },
+          arrival: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T11:50',
+          },
+          journey: {
+            stops: 0,
+            duration: 160,
+            layoverMins: 430,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'UK',
+            number: '864',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T19:00',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T20:45',
+          },
+          journey: {
+            stops: 0,
+            duration: 105,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'N',
+            fare: 20304.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 4,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'N',
+            fare: 3104.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 4,
+          },
+        },
+        id: '15-2-10-4063513597_114DELBLRUK801BLRBOMUK864_67358453748120',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '815',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T08:00',
+          },
+          arrival: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T10:50',
+          },
+          journey: {
+            stops: 0,
+            duration: 170,
+            layoverMins: 490,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'UK',
+            number: '864',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T19:00',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T20:45',
+          },
+          journey: {
+            stops: 0,
+            duration: 105,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'N',
+            fare: 20304.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 5,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'N',
+            fare: 3104.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 5,
+          },
+        },
+        id: '15-2-10-4063513597_115DELBLRUK815BLRBOMUK864_67358453750188',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '747',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T06:15',
+          },
+          arrival: {
+            airport: {
+              code: 'CCU',
+              name: 'Netaji Subhas Chandra Bose Intl',
+              cityCode: 'CCU',
+              city: 'Kolkata',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T08:20',
+          },
+          journey: {
+            stops: 0,
+            duration: 125,
+            layoverMins: 125,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'UK',
+            number: '772',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'CCU',
+              name: 'Netaji Subhas Chandra Bose Intl',
+              cityCode: 'CCU',
+              city: 'Kolkata',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T10:25',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T13:15',
+          },
+          journey: {
+            stops: 0,
+            duration: 170,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'N',
+            fare: 22551.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'N',
+            fare: 3104.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 9,
+          },
+        },
+        id: '15-2-10-4063513597_116DELCCUUK747CCUBOMUK772_67358453752009',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'AI',
+            number: '469',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T10:55',
+          },
+          arrival: {
+            airport: {
+              code: 'UDR',
+              name: 'Maharana Pratap Arpt',
+              cityCode: 'UDR',
+              city: 'Udaipur',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T12:15',
+          },
+          journey: {
+            stops: 0,
+            duration: 80,
+            layoverMins: 255,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'AI',
+            number: '644',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'UDR',
+              name: 'Maharana Pratap Arpt',
+              cityCode: 'UDR',
+              city: 'Udaipur',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T16:30',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T18:05',
+          },
+          journey: {
+            stops: 0,
+            duration: 95,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '25 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'Y',
+            fare: 23012.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 2,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '10 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'Y',
+            fare: 2999.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 2,
+          },
+        },
+        id: '15-2-10-4063513597_117DELUDRAI469UDRBOMAI644_67358453754020',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '707',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T17:30',
+          },
+          arrival: {
+            airport: {
+              code: 'CCU',
+              name: 'Netaji Subhas Chandra Bose Intl',
+              cityCode: 'CCU',
+              city: 'Kolkata',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T19:35',
+          },
+          journey: {
+            stops: 0,
+            duration: 125,
+            layoverMins: 55,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'UK',
+            number: '776',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'CCU',
+              name: 'Netaji Subhas Chandra Bose Intl',
+              cityCode: 'CCU',
+              city: 'Kolkata',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T20:30',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T23:20',
+          },
+          journey: {
+            stops: 0,
+            duration: 170,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'H',
+            fare: 24693.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 3,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'H',
+            fare: 3104.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 3,
+          },
+        },
+        id: '15-2-10-4063513597_118DELCCUUK707CCUBOMUK776_67358453755874',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '829',
+            equipment: '321',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T07:05',
+          },
+          arrival: {
+            airport: {
+              code: 'HYD',
+              name: 'Shamshabad Rajiv Gandhi Intl Arpt',
+              cityCode: 'HYD',
+              city: 'Hyderabad',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T09:25',
+          },
+          journey: {
+            stops: 0,
+            duration: 140,
+            layoverMins: 210,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'UK',
+            number: '878',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'HYD',
+              name: 'Shamshabad Rajiv Gandhi Intl Arpt',
+              cityCode: 'HYD',
+              city: 'Hyderabad',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T12:55',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T14:25',
+          },
+          journey: {
+            stops: 0,
+            duration: 90,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'A',
+            fare: 26126.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 6,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'A',
+            fare: 3104.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 6,
+          },
+        },
+        id: '15-2-10-4063513597_119DELHYDUK829HYDBOMUK878_67358453757999',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'UK',
+            number: '555',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T12:45',
+          },
+          arrival: {
+            airport: {
+              code: 'GOX',
+              name: 'Goa arpt',
+              cityCode: 'GOX',
+              city: 'Goa in',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T15:30',
+          },
+          journey: {
+            stops: 0,
+            duration: 165,
+            layoverMins: 40,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'UK',
+            number: '572',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'GOX',
+              name: 'Goa arpt',
+              cityCode: 'GOX',
+              city: 'Goa in',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T16:10',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T17:05',
+          },
+          journey: {
+            stops: 0,
+            duration: 55,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kilograms',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'B',
+            fare: 36879.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 6,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '0  Piece',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'B',
+            fare: 3104.7,
+            refundable: 1,
+            freeMeal: true,
+            seatsRemaining: 6,
+          },
+        },
+        id: '15-2-10-4063513597_120DELGOXUK555GOXBOMUK572_67358453759960',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'I5',
+            number: '779',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T04:35',
+          },
+          arrival: {
+            airport: {
+              code: 'GOI',
+              name: 'Dabolim Arpt',
+              cityCode: 'GOI',
+              city: 'Goa In',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T07:15',
+          },
+          journey: {
+            stops: 0,
+            duration: 160,
+            layoverMins: 370,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'I5',
+            number: '679',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'GOI',
+              name: 'Dabolim Arpt',
+              cityCode: 'GOI',
+              city: 'Goa In',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T13:25',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T14:40',
+          },
+          journey: {
+            stops: 0,
+            duration: 75,
+          },
+        },
+      ],
+      prices: {
+        prices: {
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -14411,19 +18423,19 @@ export const tripjack = {
             fare: 3516.7,
             refundable: 1,
             freeMeal: false,
-            seatsRemaining: 5,
+            seatsRemaining: 4,
           },
           INFANT: {
             baggage: {
               cabin: '7 Kg',
             },
             cabinClass: 'ECONOMY',
-            fare: 1517.7,
+            fare: 3017.7,
             refundable: 1,
             freeMeal: false,
           },
         },
-        id: '22-8516858531_0DELLKOI5784LKOBOMI5784_35113472758795',
+        id: '22-4063513597_0DELGOII5779GOIBOMI5679_67355300086320',
         type: 'PUBLISHED',
       },
     },
@@ -14446,7 +18458,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 3',
             },
-            time: '2023-06-14T20:20',
+            time: '2023-06-21T20:20',
           },
           arrival: {
             airport: {
@@ -14457,7 +18469,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T22:55',
+            time: '2023-06-21T22:55',
           },
           journey: {
             stops: 0,
@@ -14481,7 +18493,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-15T00:05',
+            time: '2023-06-22T00:05',
           },
           arrival: {
             airport: {
@@ -14492,7 +18504,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-15T01:15',
+            time: '2023-06-22T01:15',
           },
           journey: {
             stops: 0,
@@ -14517,7 +18529,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-15T02:00',
+            time: '2023-06-22T02:00',
           },
           arrival: {
             airport: {
@@ -14529,7 +18541,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-15T04:00',
+            time: '2023-06-22T04:00',
           },
           journey: {
             stops: 0,
@@ -14539,18 +18551,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 3516.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 2,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -14561,7 +18561,7 @@ export const tripjack = {
             fare: 3516.7,
             refundable: 1,
             freeMeal: false,
-            seatsRemaining: 2,
+            seatsRemaining: 3,
           },
           INFANT: {
             baggage: {
@@ -14572,7 +18572,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '22-8516858531_1DELGOII5560GOIBLRI5472BLRBOMI5472_35113472764268',
+        id: '22-4063513597_1DELGOII5560GOIBLRI5472BLRBOMI5472_67355300159173',
         type: 'PUBLISHED',
       },
     },
@@ -14595,7 +18595,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 3',
             },
-            time: '2023-06-14T19:25',
+            time: '2023-06-21T19:25',
           },
           arrival: {
             airport: {
@@ -14606,7 +18606,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T21:00',
+            time: '2023-06-21T21:00',
           },
           journey: {
             stops: 0,
@@ -14630,7 +18630,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T21:30',
+            time: '2023-06-21T21:30',
           },
           arrival: {
             airport: {
@@ -14642,7 +18642,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T23:35',
+            time: '2023-06-21T23:35',
           },
           journey: {
             stops: 0,
@@ -14667,7 +18667,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-15T02:00',
+            time: '2023-06-22T02:00',
           },
           arrival: {
             airport: {
@@ -14679,7 +18679,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-15T04:00',
+            time: '2023-06-22T04:00',
           },
           journey: {
             stops: 0,
@@ -14689,18 +18689,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 3516.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 2,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -14711,7 +18699,7 @@ export const tripjack = {
             fare: 3516.7,
             refundable: 1,
             freeMeal: false,
-            seatsRemaining: 2,
+            seatsRemaining: 3,
           },
           INFANT: {
             baggage: {
@@ -14722,7 +18710,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '22-8516858531_2DELSTVI51569STVBLRI51569BLRBOMI5472_35113472768789',
+        id: '22-4063513597_2DELSTVI51569STVBLRI51569BLRBOMI5472_67355300162972',
         type: 'PUBLISHED',
       },
     },
@@ -14745,7 +18733,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 3',
             },
-            time: '2023-06-14T16:30',
+            time: '2023-06-21T16:30',
           },
           arrival: {
             airport: {
@@ -14757,7 +18745,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T18:25',
+            time: '2023-06-21T18:25',
           },
           journey: {
             stops: 0,
@@ -14781,7 +18769,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T19:40',
+            time: '2023-06-21T19:40',
           },
           arrival: {
             airport: {
@@ -14793,7 +18781,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T22:05',
+            time: '2023-06-21T22:05',
           },
           journey: {
             stops: 0,
@@ -14803,18 +18791,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 3516.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 4,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -14825,7 +18801,7 @@ export const tripjack = {
             fare: 3516.7,
             refundable: 1,
             freeMeal: false,
-            seatsRemaining: 4,
+            seatsRemaining: 3,
           },
           INFANT: {
             baggage: {
@@ -14836,7 +18812,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '22-8516858531_3DELBBII5778BBIBOMI51784_35113472771932',
+        id: '22-4063513597_3DELBBII5778BBIBOMI51784_67355300165934',
         type: 'PUBLISHED',
       },
     },
@@ -14859,7 +18835,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 3',
             },
-            time: '2023-06-14T14:45',
+            time: '2023-06-21T14:45',
           },
           arrival: {
             airport: {
@@ -14870,7 +18846,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T17:20',
+            time: '2023-06-21T17:20',
           },
           journey: {
             stops: 0,
@@ -14894,7 +18870,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-15T00:05',
+            time: '2023-06-22T00:05',
           },
           arrival: {
             airport: {
@@ -14905,7 +18881,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-15T01:15',
+            time: '2023-06-22T01:15',
           },
           journey: {
             stops: 0,
@@ -14930,7 +18906,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-15T02:00',
+            time: '2023-06-22T02:00',
           },
           arrival: {
             airport: {
@@ -14942,7 +18918,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-15T04:00',
+            time: '2023-06-22T04:00',
           },
           journey: {
             stops: 0,
@@ -14952,18 +18928,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 3516.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 2,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -14974,7 +18938,7 @@ export const tripjack = {
             fare: 3516.7,
             refundable: 1,
             freeMeal: false,
-            seatsRemaining: 2,
+            seatsRemaining: 3,
           },
           INFANT: {
             baggage: {
@@ -14985,7 +18949,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '22-8516858531_4DELGOII5768GOIBLRI5472BLRBOMI5472_35113472775099',
+        id: '22-4063513597_4DELGOII5768GOIBLRI5472BLRBOMI5472_67355300169102',
         type: 'PUBLISHED',
       },
     },
@@ -15008,7 +18972,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 3',
             },
-            time: '2023-06-14T14:45',
+            time: '2023-06-21T14:45',
           },
           arrival: {
             airport: {
@@ -15019,7 +18983,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T17:20',
+            time: '2023-06-21T17:20',
           },
           journey: {
             stops: 0,
@@ -15031,7 +18995,7 @@ export const tripjack = {
           segmentNo: 1,
           flight: {
             airline: 'I5',
-            number: '334',
+            number: '336',
             equipment: '320',
           },
           departure: {
@@ -15043,7 +19007,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T19:25',
+            time: '2023-06-21T19:25',
           },
           arrival: {
             airport: {
@@ -15055,7 +19019,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T20:50',
+            time: '2023-06-21T20:50',
           },
           journey: {
             stops: 0,
@@ -15065,18 +19029,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 3516.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 5,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -15098,7 +19050,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '22-8516858531_5DELGOII5768GOIBOMI5334_35113472777839',
+        id: '22-4063513597_5DELGOII5768GOIBOMI5336_67355300172146',
         type: 'PUBLISHED',
       },
     },
@@ -15121,7 +19073,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 3',
             },
-            time: '2023-06-14T12:35',
+            time: '2023-06-21T12:35',
           },
           arrival: {
             airport: {
@@ -15132,7 +19084,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T15:10',
+            time: '2023-06-21T15:10',
           },
           journey: {
             stops: 0,
@@ -15156,7 +19108,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-15T00:05',
+            time: '2023-06-22T00:05',
           },
           arrival: {
             airport: {
@@ -15167,7 +19119,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-15T01:15',
+            time: '2023-06-22T01:15',
           },
           journey: {
             stops: 0,
@@ -15192,7 +19144,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-15T02:00',
+            time: '2023-06-22T02:00',
           },
           arrival: {
             airport: {
@@ -15204,7 +19156,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-15T04:00',
+            time: '2023-06-22T04:00',
           },
           journey: {
             stops: 0,
@@ -15214,18 +19166,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 3516.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 2,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -15236,7 +19176,7 @@ export const tripjack = {
             fare: 3516.7,
             refundable: 1,
             freeMeal: false,
-            seatsRemaining: 2,
+            seatsRemaining: 3,
           },
           INFANT: {
             baggage: {
@@ -15247,7 +19187,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '22-8516858531_6DELGOII5798GOIBLRI5472BLRBOMI5472_35113472780933',
+        id: '22-4063513597_6DELGOII5798GOIBLRI5472BLRBOMI5472_67355300175296',
         type: 'PUBLISHED',
       },
     },
@@ -15270,7 +19210,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 3',
             },
-            time: '2023-06-14T12:35',
+            time: '2023-06-21T12:35',
           },
           arrival: {
             airport: {
@@ -15281,7 +19221,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T15:10',
+            time: '2023-06-21T15:10',
           },
           journey: {
             stops: 0,
@@ -15293,7 +19233,7 @@ export const tripjack = {
           segmentNo: 1,
           flight: {
             airline: 'I5',
-            number: '334',
+            number: '336',
             equipment: '320',
           },
           departure: {
@@ -15305,7 +19245,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T19:25',
+            time: '2023-06-21T19:25',
           },
           arrival: {
             airport: {
@@ -15317,7 +19257,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T20:50',
+            time: '2023-06-21T20:50',
           },
           journey: {
             stops: 0,
@@ -15327,18 +19267,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 3516.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 5,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -15360,235 +19288,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '22-8516858531_7DELGOII5798GOIBOMI5334_35113472784239',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'I5',
-            number: '766',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 3',
-            },
-            time: '2023-06-14T20:55',
-          },
-          arrival: {
-            airport: {
-              code: 'JAI',
-              name: 'Sanganeer Arpt',
-              cityCode: 'JAI',
-              city: 'Jaipur',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-14T22:00',
-          },
-          journey: {
-            stops: 0,
-            duration: 65,
-            layoverMins: 115,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: 'I5',
-            number: '337',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'JAI',
-              name: 'Sanganeer Arpt',
-              cityCode: 'JAI',
-              city: 'Jaipur',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-14T23:55',
-          },
-          arrival: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-15T02:15',
-          },
-          journey: {
-            stops: 0,
-            duration: 140,
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 3516.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 4,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 3516.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 4,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 3017.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '22-8516858531_8DELJAII5766JAIBOMI5337_35113472786643',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'I5',
-            number: '710',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 3',
-            },
-            time: '2023-06-14T10:10',
-          },
-          arrival: {
-            airport: {
-              code: 'IXR',
-              name: 'Birsa Munda Arpt',
-              cityCode: 'IXR',
-              city: 'Ranchi',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-14T12:00',
-          },
-          journey: {
-            stops: 0,
-            duration: 110,
-            layoverMins: 180,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: 'I5',
-            number: '338',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'IXR',
-              name: 'Birsa Munda Arpt',
-              cityCode: 'IXR',
-              city: 'Ranchi',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-14T15:00',
-          },
-          arrival: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-14T17:10',
-          },
-          journey: {
-            stops: 0,
-            duration: 130,
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 3516.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 5,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 3516.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 5,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 3017.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '22-8516858531_9DELIXRI5710IXRBOMI5338_35113472788719',
+        id: '22-4063513597_7DELGOII5798GOIBOMI5336_67355300177865',
         type: 'PUBLISHED',
       },
     },
@@ -15611,7 +19311,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 3',
             },
-            time: '2023-06-14T07:50',
+            time: '2023-06-21T07:50',
           },
           arrival: {
             airport: {
@@ -15623,7 +19323,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T10:40',
+            time: '2023-06-21T10:40',
           },
           journey: {
             stops: 0,
@@ -15648,7 +19348,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T14:20',
+            time: '2023-06-21T14:20',
           },
           arrival: {
             airport: {
@@ -15660,7 +19360,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T16:10',
+            time: '2023-06-21T16:10',
           },
           journey: {
             stops: 0,
@@ -15670,18 +19370,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 3516.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 9,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -15703,7 +19391,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '22-8516858531_10DELBLRI5740BLRBOMI51782_35113472790885',
+        id: '22-4063513597_8DELBLRI5740BLRBOMI51782_67355300180211',
         type: 'PUBLISHED',
       },
     },
@@ -15726,7 +19414,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 3',
             },
-            time: '2023-06-14T05:35',
+            time: '2023-06-21T05:35',
           },
           arrival: {
             airport: {
@@ -15738,7 +19426,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 1',
             },
-            time: '2023-06-14T07:45',
+            time: '2023-06-21T07:45',
           },
           journey: {
             stops: 0,
@@ -15762,7 +19450,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T19:40',
+            time: '2023-06-21T19:40',
           },
           arrival: {
             airport: {
@@ -15774,7 +19462,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T22:05',
+            time: '2023-06-21T22:05',
           },
           journey: {
             stops: 0,
@@ -15784,18 +19472,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 3516.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 3,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -15817,7 +19493,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '22-8516858531_11DELBBII5711BBIBOMI51784_35113472793027',
+        id: '22-4063513597_9DELBBII5711BBIBOMI51784_67355300182353',
         type: 'PUBLISHED',
       },
     },
@@ -15827,8 +19503,8 @@ export const tripjack = {
           segmentNo: 0,
           flight: {
             airline: 'I5',
-            number: '743',
-            equipment: '32N',
+            number: '711',
+            equipment: '320',
           },
           departure: {
             airport: {
@@ -15840,7 +19516,249 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 3',
             },
-            time: '2023-06-14T05:00',
+            time: '2023-06-21T05:35',
+          },
+          arrival: {
+            airport: {
+              code: 'BBI',
+              name: 'Biju Patnaik Arpt',
+              cityCode: 'BBI',
+              city: 'Bhubaneswar',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T07:45',
+          },
+          journey: {
+            stops: 0,
+            duration: 130,
+            layoverMins: 665,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'I5',
+            number: '2991',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'BBI',
+              name: 'Biju Patnaik Arpt',
+              cityCode: 'BBI',
+              city: 'Bhubaneswar',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T18:50',
+          },
+          arrival: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T20:45',
+          },
+          journey: {
+            stops: 0,
+            duration: 115,
+            layoverMins: 40,
+          },
+        },
+        {
+          segmentNo: 2,
+          flight: {
+            airline: 'I5',
+            number: '2991',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'BLR',
+              name: 'Bengaluru Intl Arpt',
+              cityCode: 'BLR',
+              city: 'Bengaluru',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T21:25',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T23:00',
+          },
+          journey: {
+            stops: 0,
+            duration: 95,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'EC',
+            fare: 3516.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 1,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+            },
+            fare: 3017.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+        },
+        id: '22-4063513597_10DELBBII5711BBIBLRI52991BLRBOMI52991_67355300185011',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'I5',
+            number: '711',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T05:35',
+          },
+          arrival: {
+            airport: {
+              code: 'BBI',
+              name: 'Biju Patnaik Arpt',
+              cityCode: 'BBI',
+              city: 'Bhubaneswar',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 1',
+            },
+            time: '2023-06-21T07:45',
+          },
+          journey: {
+            stops: 0,
+            duration: 130,
+            layoverMins: 435,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'I5',
+            number: '338',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'BBI',
+              name: 'Biju Patnaik Arpt',
+              cityCode: 'BBI',
+              city: 'Bhubaneswar',
+              country: 'India',
+              countryCode: 'IN',
+            },
+            time: '2023-06-21T15:00',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T17:10',
+          },
+          journey: {
+            stops: 0,
+            duration: 130,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'EC',
+            fare: 3516.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 4,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+            },
+            fare: 3017.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+        },
+        id: '22-4063513597_11DELBBII5711BBIBOMI5338_67355300187440',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'I5',
+            number: '743',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T05:00',
           },
           arrival: {
             airport: {
@@ -15851,7 +19769,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T05:50',
+            time: '2023-06-21T05:50',
           },
           journey: {
             stops: 0,
@@ -15876,7 +19794,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T17:20',
+            time: '2023-06-21T17:20',
           },
           arrival: {
             airport: {
@@ -15888,7 +19806,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T18:50',
+            time: '2023-06-21T18:50',
           },
           journey: {
             stops: 0,
@@ -15898,18 +19816,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 3516.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 2,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -15931,7 +19837,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '22-8516858531_12DELJAII5743JAIBOMI5670_35113472799263',
+        id: '22-4063513597_12DELJAII5743JAIBOMI5670_67355300189426',
         type: 'PUBLISHED',
       },
     },
@@ -15942,7 +19848,7 @@ export const tripjack = {
           flight: {
             airline: 'I5',
             number: '743',
-            equipment: '32N',
+            equipment: '320',
           },
           departure: {
             airport: {
@@ -15954,7 +19860,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 3',
             },
-            time: '2023-06-14T05:00',
+            time: '2023-06-21T05:00',
           },
           arrival: {
             airport: {
@@ -15965,7 +19871,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T05:50',
+            time: '2023-06-21T05:50',
           },
           journey: {
             stops: 0,
@@ -15989,7 +19895,7 @@ export const tripjack = {
               country: 'India',
               countryCode: 'IN',
             },
-            time: '2023-06-14T09:10',
+            time: '2023-06-21T09:10',
           },
           arrival: {
             airport: {
@@ -16001,7 +19907,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T11:00',
+            time: '2023-06-21T11:00',
           },
           journey: {
             stops: 0,
@@ -16011,18 +19917,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 3516.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 5,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -16033,7 +19927,7 @@ export const tripjack = {
             fare: 3516.7,
             refundable: 1,
             freeMeal: false,
-            seatsRemaining: 5,
+            seatsRemaining: 2,
           },
           INFANT: {
             baggage: {
@@ -16044,233 +19938,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '22-8516858531_13DELJAII5743JAIBOMI5762_35113472801732',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'I5',
-            number: '779',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 3',
-            },
-            time: '2023-06-14T04:35',
-          },
-          arrival: {
-            airport: {
-              code: 'GOI',
-              name: 'Dabolim Arpt',
-              cityCode: 'GOI',
-              city: 'Goa In',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-14T07:15',
-          },
-          journey: {
-            stops: 0,
-            duration: 160,
-            layoverMins: 370,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: 'I5',
-            number: '679',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'GOI',
-              name: 'Dabolim Arpt',
-              cityCode: 'GOI',
-              city: 'Goa In',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-14T13:25',
-          },
-          arrival: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-14T14:40',
-          },
-          journey: {
-            stops: 0,
-            duration: 75,
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 3516.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 5,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 3516.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 5,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 3017.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '22-8516858531_14DELGOII5779GOIBOMI5679_35113472803940',
-        type: 'PUBLISHED',
-      },
-    },
-    {
-      segments: [
-        {
-          segmentNo: 0,
-          flight: {
-            airline: 'I5',
-            number: '744',
-            equipment: '32N',
-          },
-          departure: {
-            airport: {
-              code: 'DEL',
-              name: 'Delhi Indira Gandhi Intl',
-              cityCode: 'DEL',
-              city: 'Delhi',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 3',
-            },
-            time: '2023-06-14T08:10',
-          },
-          arrival: {
-            airport: {
-              code: 'IXR',
-              name: 'Birsa Munda Arpt',
-              cityCode: 'IXR',
-              city: 'Ranchi',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-14T09:50',
-          },
-          journey: {
-            stops: 0,
-            duration: 100,
-            layoverMins: 310,
-          },
-        },
-        {
-          segmentNo: 1,
-          flight: {
-            airline: 'I5',
-            number: '338',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'IXR',
-              name: 'Birsa Munda Arpt',
-              cityCode: 'IXR',
-              city: 'Ranchi',
-              country: 'India',
-              countryCode: 'IN',
-            },
-            time: '2023-06-14T15:00',
-          },
-          arrival: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-14T17:10',
-          },
-          journey: {
-            stops: 0,
-            duration: 130,
-          },
-        },
-      ],
-      prices: {
-        prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 3516.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 5,
-          },
-          ADULT: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 3516.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 5,
-          },
-          INFANT: {
-            baggage: {
-              cabin: '7 Kg',
-            },
-            fare: 3017.7,
-            refundable: 1,
-            freeMeal: false,
-          },
-        },
-        id: '22-8516858531_15DELIXRI5744IXRBOMI5338_35113472806221',
+        id: '22-4063513597_13DELJAII5743JAIBOMI5762_67355300191682',
         type: 'PUBLISHED',
       },
     },
@@ -16293,7 +19961,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 3',
             },
-            time: '2023-06-14T07:50',
+            time: '2023-06-21T07:50',
           },
           arrival: {
             airport: {
@@ -16305,7 +19973,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T10:40',
+            time: '2023-06-21T10:40',
           },
           journey: {
             stops: 0,
@@ -16330,7 +19998,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T21:25',
+            time: '2023-06-21T21:25',
           },
           arrival: {
             airport: {
@@ -16342,7 +20010,7 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T23:00',
+            time: '2023-06-21T23:00',
           },
           journey: {
             stops: 0,
@@ -16352,18 +20020,6 @@ export const tripjack = {
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 5282.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 4,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -16371,10 +20027,10 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'EC',
-            fare: 5282.7,
+            fare: 3516.7,
             refundable: 1,
             freeMeal: false,
-            seatsRemaining: 4,
+            seatsRemaining: 1,
           },
           INFANT: {
             baggage: {
@@ -16385,7 +20041,7 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '22-8516858531_17DELBLRI5740BLRBOMI52991_35113472812022',
+        id: '22-4063513597_14DELBLRI5740BLRBOMI52991_67355300193512',
         type: 'PUBLISHED',
       },
     },
@@ -16395,7 +20051,7 @@ export const tripjack = {
           segmentNo: 0,
           flight: {
             airline: 'I5',
-            number: '740',
+            number: '766',
             equipment: '320',
           },
           departure: {
@@ -16408,44 +20064,43 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 3',
             },
-            time: '2023-06-14T00:50',
+            time: '2023-06-21T21:40',
           },
           arrival: {
             airport: {
-              code: 'BLR',
-              name: 'Bengaluru Intl Arpt',
-              cityCode: 'BLR',
-              city: 'Bengaluru',
+              code: 'JAI',
+              name: 'Sanganeer Arpt',
+              cityCode: 'JAI',
+              city: 'Jaipur',
               country: 'India',
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-14T01:30',
+            time: '2023-06-21T22:30',
           },
           journey: {
             stops: 0,
-            duration: 170,
-            layoverMins: 645,
+            duration: 50,
+            layoverMins: 640,
           },
         },
         {
           segmentNo: 1,
           flight: {
             airline: 'I5',
-            number: '2991',
+            number: '762',
             equipment: '320',
           },
           departure: {
             airport: {
-              code: 'BLR',
-              name: 'Bengaluru Intl Arpt',
-              cityCode: 'BLR',
-              city: 'Bengaluru',
+              code: 'JAI',
+              name: 'Sanganeer Arpt',
+              cityCode: 'JAI',
+              city: 'Jaipur',
               country: 'India',
               countryCode: 'IN',
-              terminal: 'Terminal 2',
             },
-            time: '2023-06-15T21:25',
+            time: '2023-06-22T09:10',
           },
           arrival: {
             airport: {
@@ -16457,64 +20112,16 @@ export const tripjack = {
               countryCode: 'IN',
               terminal: 'Terminal 2',
             },
-            time: '2023-06-15T22:40',
+            time: '2023-06-22T11:00',
           },
           journey: {
             stops: 0,
-            duration: 95,
-          },
-        },
-        {
-          segmentNo: 2,
-          flight: {
-            airline: 'I5',
-            number: '2991',
-            equipment: '320',
-          },
-          departure: {
-            airport: {
-              code: 'BLR',
-              name: 'Bengaluru Intl Arpt',
-              cityCode: 'BLR',
-              city: 'Bengaluru',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-15T23:25',
-          },
-          arrival: {
-            airport: {
-              code: 'BOM',
-              name: 'Chhatrapati Shivaji',
-              cityCode: 'BOM',
-              city: 'Mumbai',
-              country: 'India',
-              countryCode: 'IN',
-              terminal: 'Terminal 2',
-            },
-            time: '2023-06-17T21:40',
-          },
-          journey: {
-            stops: 0,
-            duration: 95,
+            duration: 110,
           },
         },
       ],
       prices: {
         prices: {
-          CHILD: {
-            baggage: {
-              cabin: '7 Kg',
-              checkIn: '15 Kg (01 Piece only)',
-            },
-            cabinClass: 'ECONOMY',
-            bookingClass: 'EC',
-            fare: 5282.7,
-            refundable: 1,
-            freeMeal: false,
-            seatsRemaining: 4,
-          },
           ADULT: {
             baggage: {
               cabin: '7 Kg',
@@ -16522,10 +20129,10 @@ export const tripjack = {
             },
             cabinClass: 'ECONOMY',
             bookingClass: 'EC',
-            fare: 5282.7,
+            fare: 8538.7,
             refundable: 1,
             freeMeal: false,
-            seatsRemaining: 4,
+            seatsRemaining: 5,
           },
           INFANT: {
             baggage: {
@@ -16536,7 +20143,110 @@ export const tripjack = {
             freeMeal: false,
           },
         },
-        id: '22-8516858531_17DELBLRI5740BLRBOMI52991_35113472812022',
+        id: '22-4063513597_15DELJAII5766JAIBOMI5762_67355300195366',
+        type: 'PUBLISHED',
+      },
+    },
+    {
+      segments: [
+        {
+          segmentNo: 0,
+          flight: {
+            airline: 'I5',
+            number: '766',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'DEL',
+              name: 'Delhi Indira Gandhi Intl',
+              cityCode: 'DEL',
+              city: 'Delhi',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 3',
+            },
+            time: '2023-06-21T21:40',
+          },
+          arrival: {
+            airport: {
+              code: 'JAI',
+              name: 'Sanganeer Arpt',
+              cityCode: 'JAI',
+              city: 'Jaipur',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T22:30',
+          },
+          journey: {
+            stops: 0,
+            duration: 50,
+            layoverMins: 85,
+          },
+        },
+        {
+          segmentNo: 1,
+          flight: {
+            airline: 'I5',
+            number: '337',
+            equipment: '320',
+          },
+          departure: {
+            airport: {
+              code: 'JAI',
+              name: 'Sanganeer Arpt',
+              cityCode: 'JAI',
+              city: 'Jaipur',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-21T23:55',
+          },
+          arrival: {
+            airport: {
+              code: 'BOM',
+              name: 'Chhatrapati Shivaji',
+              cityCode: 'BOM',
+              city: 'Mumbai',
+              country: 'India',
+              countryCode: 'IN',
+              terminal: 'Terminal 2',
+            },
+            time: '2023-06-22T02:15',
+          },
+          journey: {
+            stops: 0,
+            duration: 140,
+          },
+        },
+      ],
+      prices: {
+        prices: {
+          ADULT: {
+            baggage: {
+              cabin: '7 Kg',
+              checkIn: '15 Kg (01 Piece only)',
+            },
+            cabinClass: 'ECONOMY',
+            bookingClass: 'EC',
+            fare: 8748.7,
+            refundable: 1,
+            freeMeal: false,
+            seatsRemaining: 5,
+          },
+          INFANT: {
+            baggage: {
+              cabin: '7 Kg',
+            },
+            fare: 3017.7,
+            refundable: 1,
+            freeMeal: false,
+          },
+        },
+        id: '22-4063513597_16DELJAII5766JAIBOMI5337_67355300197171',
         type: 'PUBLISHED',
       },
     },
