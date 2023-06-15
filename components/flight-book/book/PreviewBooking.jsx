@@ -1,7 +1,8 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { createItem } from '../../../api/xplorzApi';
+import { createItem, customAPICall } from '../../../api/xplorzApi';
+import { sendToast } from '../../../utils/toastify';
 import FlightProperty from '../../flight-list/common/FlightProperty';
 
 function PreviewBooking({ setCurrentStep, isBooked, setPNR }) {
@@ -18,6 +19,10 @@ function PreviewBooking({ setCurrentStep, isBooked, setPNR }) {
   const travellers = useSelector((state) => state.flightSearch.value.travellers);
 
   const onClick = async () => {
+    // Total API Calls to succeed, we check this by checking if selectedbookings.from has a value
+    let totalAPICalls = 1;
+    let currentAPICalls = 0;
+    if (selectedBookings.from) totalAPICalls = 2;
     // Api Call
     for (let [key, value] of Object.entries(selectedBookings)) {
       let response;
@@ -27,6 +32,7 @@ function PreviewBooking({ setCurrentStep, isBooked, setPNR }) {
         // Checking if low cost carrier or not
         if (lowCostBookings.includes(value.segments[0].flight.airline)) {
           // TJ
+          //   response = await customAPICall('aa/v1/review', 'post', request, {}, true)
         } else {
           // AD
           response = await createItem('flights/book', {
@@ -34,20 +40,24 @@ function PreviewBooking({ setCurrentStep, isBooked, setPNR }) {
             sectors: value.segments.map((el) => ({
               from: el.departure.airport.code,
               to: el.arrival.airport.code,
-              departureDate: el.departure.time,
-              arrivalDate: el.arrival.time,
+              departureDate: el.departure.time.replace('T', ' ') + ':00',
+              arrivalDate: el.arrival.time.replace('T', ' ') + ':00',
               companyCode: el.flight.airline,
               flightNumber: el.flight.number,
-              bookingClass: el.prices.prices.ADULT.bookingClass,
+              bookingClass: value.prices.prices.ADULT.bookingClass,
             })),
           });
           console.log(response);
-          if (response?.success) setPNR((prev) => ({ ...prev, [key]: response.data }));
+          if (response?.success) {
+            setPNR((prev) => ({ ...prev, [key]: response.data }));
+            currentAPICalls += 1;
+          }
         }
       }
     }
     // If Successful
-    setCurrentStep(2);
+    if (currentAPICalls === totalAPICalls) setCurrentStep(2);
+    else sendToast('error', 'Error', 4000);
   };
 
   return (

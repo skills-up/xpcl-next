@@ -7,6 +7,7 @@ import { BsSend, BsTrash3 } from 'react-icons/bs';
 import WindowedSelect from 'react-windowed-select';
 import { sendToast } from '../../../utils/toastify';
 import { createItem } from '../../../api/xplorzApi';
+import { renderToStaticMarkup } from 'react-dom/server';
 
 function EmailClients() {
   const [name, setName] = useState('');
@@ -159,8 +160,7 @@ function EmailClients() {
       'subject',
       `Flight Options from ${fromDestination} to ${toDestination} - ${dateDestination}`
     );
-    formData.append(
-      'body',
+    let data = (
       <div>
         <p>Hi {name},</p>
         <p>
@@ -175,9 +175,9 @@ function EmailClients() {
           }
           if (value && value.length > 0)
             return (
-              <table width='100%' style='border:0'>
+              <table width='100%' style={{ border: '0' }}>
                 <thead>
-                  <tr style='border-bottom:1px solid #ccc;padding-top:15px'>
+                  <tr style={{ borderBottom: '1px solid #ccc', paddingTop: '15px' }}>
                     <th>S.No.</th>
                     <th>Airline</th>
                     <th>From</th>
@@ -199,43 +199,56 @@ function EmailClients() {
                             <hr />
                           </td>
                         </tr>
-                        <tr style='border-bottom:1px solid #ccc;padding-top:15px'>
-                          <td rowspan='1' style='text-align:center'>
+                        <tr
+                          style={{ borderBottom: '1px solid #ccc', paddingTop: '15px' }}
+                        >
+                          <td rowspan='1' style={{ textAlign: 'center' }}>
                             {index + 1}.
                           </td>
-                          <td rowspan='1' style='text-align:center'>
+                          <td rowspan='1' style={{ textAlign: 'center' }}>
                             <span
                               class='proton-image-anchor'
                               data-proton-remote='remote-1'
-                              style='max-width: 50px;'
+                              style={{ maxWidth: '50px' }}
                             >
                               <img
                                 src={`/img/flights/${element.airline_code}.png`}
                                 loading='lazy'
-                                style='max-width:50px'
+                                style={{ maxWidth: '50px' }}
                               />
                             </span>
                             <br />
                             {element.airline}
                           </td>
-                          <td style='text-align:center'>{element.from}</td>
-                          <td style='text-align:center'>{element.to}</td>
-                          <td style='text-align:center'>{element.departure}</td>
-                          <td style='text-align:center'>{element.arrival}</td>
-                          <td style='text-align:center'>{element.flight}</td>
-                          <td style='text-align:center'>{element.cabin}</td>
-                          <td rowspan='1' style='text-align:center'>
+                          <td style={{ textAlign: 'center' }}>{element.from}</td>
+                          <td style={{ textAlign: 'center' }}>{element.to}</td>
+                          <td style={{ textAlign: 'center' }}>{element.departure}</td>
+                          <td style={{ textAlign: 'center' }}>{element.arrival}</td>
+                          <td style={{ textAlign: 'center' }}>{element.flight}</td>
+                          <td style={{ textAlign: 'center' }}>{element.cabin}</td>
+                          <td rowspan='1' style={{ textAlign: 'center' }}>
                             {(+element.price).toLocaleString('en-IN', {
                               maximumFractionDigits: 2,
                               style: 'currency',
                               currency: 'INR',
                             })}
                           </td>
-                          <td rowspan='1' style='text-align:center'>
+                          <td rowspan='1' style={{ textAlign: 'center' }}>
                             <a
                               target='_blank'
                               href={`mailto:${email}?cc=support@xplorz.com&amp;subject=Selected+flight+option+for${str}+from+${element.from}+to+${element.to}+on+${element.departure}&amp;body=Dear+Gaurav,%0D%0A%0D%0AWe've+selected+the+following+flight+option+for${str}:%0D%0A%0D%0A${element.flight}+:+${element.from}+@+${element.departure}+-%3E+${element.to}+@+${element.arrival}+-+${element.cabin}+%0D%0A%0D%0AFare+per+pax:+${element.price}/-%0D%0A%0D%0APlease+book+the+same.%0D%0A%0D%0AThanks!`}
-                              style='background:#f0ad4e;color:#fff;border-color:#eea236;font-weight:bold;padding:1em;text-decoration:none;font-size:12px;line-height:1.5;border-radius:3px'
+                              style={{
+                                background: '#f0ad4e',
+                                color: '#fff',
+                                borderColor: '#eea236',
+                                fontWeight: 'bold',
+                                padding: '1em',
+                                textDecoration: 'none',
+                                fontSize: '12px',
+                                lineHeight: '1.5',
+                                borderRadius: '3px',
+                              }}
+                              //  'background:#f0ad4e;color:#fff;border-color:#eea236;font-weight:bold;padding:1em;text-decoration:none;font-size:12px;line-height:1.5;border-radius:3px'
                               rel='noreferrer nofollow noopener'
                             >
                               Book
@@ -258,8 +271,8 @@ function EmailClients() {
         </p>
       </div>
     );
+    formData.append('body', renderToStaticMarkup(data));
     formData.append('to[]', email);
-    formData.append('files[]', null);
     // Email
     let response;
     if (type === 'email') {
