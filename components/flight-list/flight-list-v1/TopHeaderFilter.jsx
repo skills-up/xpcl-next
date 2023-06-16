@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import { BsFillArrowDownCircleFill } from 'react-icons/bs';
+import { BsFillArrowDownCircleFill, BsSend } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   setEmailClientMode,
   setSort,
 } from '../../../features/flightSearch/flightSearchSlice';
-import { AiOutlineMail } from 'react-icons/ai';
 
 const TopHeaderFilter = () => {
   const dispatch = useDispatch();
@@ -111,8 +110,8 @@ const TopHeaderFilter = () => {
                     dispatch(setEmailClientMode(!emailClientMode));
                   }}
                 >
-                  <AiOutlineMail className='icon-up-down text-17 mr-10' />
-                  Email Client
+                  <BsSend className='icon-up-down text-17 mr-10' />
+                  Send To Client
                 </button>
               </div>
             )}

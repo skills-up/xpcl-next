@@ -1,7 +1,6 @@
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { createItem, customAPICall } from '../../../api/xplorzApi';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { createItem } from '../../../api/xplorzApi';
 import { sendToast } from '../../../utils/toastify';
 import FlightProperty from '../../flight-list/common/FlightProperty';
 
@@ -67,14 +66,20 @@ function PreviewBooking({ setCurrentStep, isBooked, setPNR }) {
         {/* To */}
         {selectedBookings?.to && !isBooked.to && (
           <div className='mt-20'>
-            <h3>First Trip</h3>
+            <h3>
+              {selectedBookings.to.segments[0].departure.airport.code} &rarr;{' '}
+              {selectedBookings.to.segments.at(-1).arrival.airport.code}
+            </h3>
             <FlightProperty element={selectedBookings.to} isSelectedBooking />
           </div>
         )}
         {/* Return */}
         {selectedBookings?.from && returnFlight && !isBooked.from && (
           <div className='mt-30'>
-            <h3>Round Trip</h3>
+            <h3>
+              {selectedBookings.from.segments[0].departure.airport.code} &rarr;{' '}
+              {selectedBookings.from.segments.at(-1).arrival.airport.code}
+            </h3>
             <FlightProperty element={selectedBookings.from} isSelectedBooking />
           </div>
         )}

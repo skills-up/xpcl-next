@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { AiOutlineMail } from 'react-icons/ai';
+import { BiPlusMedical } from 'react-icons/bi';
+import { BsTrash3, BsWhatsapp } from 'react-icons/bs';
+import DatePicker, { DateObject } from 'react-multi-date-picker';
 import { useSelector } from 'react-redux';
 import Select from 'react-select';
-import DatePicker, { DateObject } from 'react-multi-date-picker';
-import { BiPlusMedical } from 'react-icons/bi';
-import { BsSend, BsTrash3 } from 'react-icons/bs';
 import WindowedSelect from 'react-windowed-select';
-import { sendToast } from '../../../utils/toastify';
 import { createItem } from '../../../api/xplorzApi';
-import { renderToStaticMarkup } from 'react-dom/server';
+import { sendToast } from '../../../utils/toastify';
 
 function EmailClients() {
   const [name, setName] = useState('');
@@ -25,6 +26,18 @@ function EmailClients() {
   const emailClients = useSelector((state) => state.flightSearch.value.emailClients);
   const destinations = useSelector((state) => state.flightSearch.value.destinations);
   const travellerDOBS = useSelector((state) => state.flightSearch.value.travellerDOBS);
+  const [user, setUser] = useState();
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = async () => {
+    const response = await createItem('auth/me', {});
+    if (response?.success) {
+      setUser(response.data);
+    }
+  };
 
   const submit = async (type) => {
     if (additionalFlights.length === 0 && emailClients.length === 0) {
@@ -117,13 +130,13 @@ function EmailClients() {
       let data = {
         airline: airlineName,
         airline_code: opt.segments[0].flight.airline,
-        from: destinations.from.iata,
-        to: destinations.to.iata,
-        departure: new Date(opt.segments[0].departure.time).toDateString(),
-        arrival: new Date(opt.segments.at(-1).arrival.time).toDateString(),
+        from: opt.segments[0].departure.airport.code,
+        to: opt.segments.at(-1).arrival.airport.code,
+        departure: new Date(opt.segments[0].departure.time).toString().slice(0, -31),
+        arrival: new Date(opt.segments.at(-1).arrival.time).toString().slice(0, -31),
         flight: `${opt.segments[0].flight.airline} ${opt.segments[0].flight.number}`,
         cabin,
-        price: opt.total,
+        price: +opt.total + +markup,
       };
       if (opt.type === 'to') {
         tempTo.push(data);
@@ -137,20 +150,20 @@ function EmailClients() {
         airline_code: opt.airline.value,
         from: opt.from_airport_id.iata,
         to: opt.to_airport_id.iata,
-        departure: new Date(
-          opt.depart_date.format('YYYY-MM-DD') + 'T' + opt.depart_time
-        ).toDateString(),
-        arrival: new Date(
-          opt.arrival_date.format('YYYY-MM-DD') + 'T' + opt.arrival_time
-        ).toDateString(),
-        flight: `${opt.airline.code} ${flight}`,
+        departure: new Date(opt.depart_date.format('YYYY-MM-DD') + 'T' + opt.depart_time)
+          .toString()
+          .slice(0, -31),
+        arrival: new Date(opt.arrival_date.format('YYYY-MM-DD') + 'T' + opt.arrival_time)
+          .toString()
+          .slice(0, -31),
+        flight: `${opt.airline.code} ${opt.flight}`,
         cabin: opt.cabin.value,
-        price: opt.price,
+        price: +opt.price + +markup,
       };
-      if (opt.from_airport_id.value === destinations.from.iata) {
-        tempTo.push(data);
-      } else {
+      if (opt.from_airport_id.iata === destinations.from.iata) {
         tempFrom.push(data);
+      } else {
+        tempTo.push(data);
       }
     }
     let manipData = { to: tempTo, from: tempFrom };
@@ -158,20 +171,32 @@ function EmailClients() {
     let formData = new FormData();
     formData.append(
       'subject',
-      `Flight Options from ${fromDestination} to ${toDestination} - ${dateDestination}`
+      `Flight Options from ${destinations.from.iata} to ${destinations.to.iata} - ${dateDestination}`
     );
     let data = (
       <div>
         <p>Hi {name},</p>
         <p>
-          Here are the options for {fromDestination} to {toDestination} on{' '}
+          Here are the options for {destinations.from.iata} to {destinations.to.iata} on{' '}
           {dateDestination}
         </p>
         {Object.entries(manipData).map(([key, value], index) => {
           // Traveller Names
           let str = '';
-          for (let traveller of travellers) {
-            str += `+${traveller.label.replaceAll(' ', '+')}`;
+          for (let i = 0; i < travellers.length; i++) {
+            if (travellers.length > 1) {
+              if (i + 1 < travellers.length) {
+                if (i > 0) {
+                  str += ' , ' + travellers[i].label;
+                } else {
+                  str += travellers[i].label;
+                }
+              } else {
+                str += ' and ' + travellers[i].label;
+              }
+            } else {
+              str += travellers[i].label;
+            }
           }
           if (value && value.length > 0)
             return (
@@ -186,7 +211,7 @@ function EmailClients() {
                     <th>Arrival</th>
                     <th>Flight</th>
                     <th>Cabin</th>
-                    <th>Price</th>
+                    {!withoutFares && <th>Price</th>}
                     <th></th>
                   </tr>
                 </thead>
@@ -226,17 +251,39 @@ function EmailClients() {
                           <td style={{ textAlign: 'center' }}>{element.arrival}</td>
                           <td style={{ textAlign: 'center' }}>{element.flight}</td>
                           <td style={{ textAlign: 'center' }}>{element.cabin}</td>
-                          <td rowspan='1' style={{ textAlign: 'center' }}>
-                            {(+element.price).toLocaleString('en-IN', {
-                              maximumFractionDigits: 2,
-                              style: 'currency',
-                              currency: 'INR',
-                            })}
-                          </td>
+                          {!withoutFares && (
+                            <td rowspan='1' style={{ textAlign: 'center' }}>
+                              {(+element.price).toLocaleString('en-IN', {
+                                maximumFractionDigits: 2,
+                                style: 'currency',
+                                currency: 'INR',
+                              })}
+                            </td>
+                          )}
                           <td rowspan='1' style={{ textAlign: 'center' }}>
                             <a
                               target='_blank'
-                              href={`mailto:${email}?cc=support@xplorz.com&amp;subject=Selected+flight+option+for${str}+from+${element.from}+to+${element.to}+on+${element.departure}&amp;body=Dear+Gaurav,%0D%0A%0D%0AWe've+selected+the+following+flight+option+for${str}:%0D%0A%0D%0A${element.flight}+:+${element.from}+@+${element.departure}+-%3E+${element.to}+@+${element.arrival}+-+${element.cabin}+%0D%0A%0D%0AFare+per+pax:+${element.price}/-%0D%0A%0D%0APlease+book+the+same.%0D%0A%0D%0AThanks!`}
+                              href={`mailto:${
+                                user?.email
+                              }?cc=support@xplorz.com&amp;subject=Selected flight option for ${str} from ${
+                                element.from
+                              } to ${element.to} on ${element.departure}&amp;body=Dear ${
+                                user?.name
+                              },%0D%0A%0D%0AWe've selected the following flight option for ${str}:%0D%0A%0D%0A${
+                                element.flight
+                              } : ${element.from} @ ${element.departure} &rarr; ${
+                                element.to
+                              } @ ${element.arrival} - ${element.cabin} ${
+                                !withoutFares ? '%0D%0A%0D%0AFare per pax: ' : ''
+                              }${
+                                !withoutFares
+                                  ? `${(+element.price).toLocaleString('en-IN', {
+                                      maximumFractionDigits: 2,
+                                      style: 'currency',
+                                      currency: 'INR',
+                                    })}/-`
+                                  : ''
+                              }%0D%0A%0D%0APlease book the same.%0D%0A%0D%0AThanks!`}
                               style={{
                                 background: '#f0ad4e',
                                 color: '#fff',
@@ -677,7 +724,7 @@ function EmailClients() {
               className='d-block mainSearch__submit button -blue-1 col-12 py-15 h-60 rounded-4 bg-dark-3 text-white'
               onClick={() => submit('email')}
             >
-              <BsSend className='icon-search text-20 mr-10' />
+              <AiOutlineMail className='icon-search text-20 mr-10' />
               Send In Email
             </button>
           </div>
@@ -686,7 +733,7 @@ function EmailClients() {
               className='d-block mainSearch__submit button -blue-1 py-15 col-12 h-60 rounded-4 bg-dark-3 text-white'
               onClick={submit}
             >
-              <BsSend className='icon-search text-20 mr-10' />
+              <BsWhatsapp className='icon-search text-20 mr-10' />
               Send Through Whatsapp
             </button>
           </div>
