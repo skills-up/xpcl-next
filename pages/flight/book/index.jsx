@@ -9,6 +9,7 @@ const index = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isBooked, setIsBooked] = useState({ to: false, from: false });
   const [pnr, setPNR] = useState({ to: null, from: null });
+  const [travellerInfo, setTravellerInfo] = useState([]);
   // 1 - View Itinerary
 
   return (
@@ -27,6 +28,7 @@ const index = () => {
           setCurrentStep={setCurrentStep}
           isBooked={isBooked}
           setPNR={setPNR}
+          travellerInfos={[travellerInfo, setTravellerInfo]}
         />
       )}
 

@@ -94,16 +94,14 @@ const MainFilterSearchBox = () => {
       sendToast('error', 'Please select travellers', 4000);
       return;
     }
-    // Redux Calls
-    dispatch(setInitialSearchData());
     // Getting Traveller DOBS
     let pax = {};
     const traveller_ids = travellers.map((el) => el.traveller_id);
     const travellerDetails = await getList('travellers', { traveller_ids });
+    let ADT = 0;
+    let CHD = 0;
+    let INF = 0;
     if (travellerDetails?.success) {
-      let ADT = 0;
-      let CHD = 0;
-      let INF = 0;
       let currentTime = +Date.now();
       for (let traveller of travellerDetails.data) {
         if (traveller?.passport_dob) {
@@ -134,7 +132,6 @@ const MainFilterSearchBox = () => {
       }
       if (CHD > 0) pax['CHD'] = CHD;
       if (INF > 0) pax['INF'] = INF;
-      dispatch(setTravellerDOBS({ ADT, CHD, INF }));
     } else {
       sendToast('error', 'Error getting traveller details', 4000);
       return;
@@ -184,6 +181,8 @@ const MainFilterSearchBox = () => {
   };
 
   const dispatchCalls = async (res, key) => {
+    dispatch(setInitialSearchData());
+    dispatch(setTravellerDOBS({ ADT, CHD, INF }));
     dispatch(setSearchData({ [key]: res.data }));
     dispatch(setReturnFlightRedux({ returnFlight }));
     dispatch(setTravellersRedux({ travellers }));
