@@ -31,9 +31,11 @@ function PreviewBooking({ setCurrentStep, isBooked, setPNR, travellerInfos }) {
     { value: 'Window', label: 'Window' },
     { value: 'Aisle', label: 'Aisle' },
   ];
-  const passportGenderOptions = [
-    { value: 'Male', label: 'Mr.' },
-    { value: 'Female', label: 'Mrs.' },
+  const passportPrefixOptions = [
+    { value: 'MR', label: 'Mr.' },
+    { value: 'MRS', label: 'Mrs.' },
+    { value: 'MSTR', label: 'Mstr.' },
+    { value: 'MS', label: 'Ms.' },
   ];
 
   useEffect(() => {
@@ -62,10 +64,16 @@ function PreviewBooking({ setCurrentStep, isBooked, setPNR, travellerInfos }) {
               meal_preference: el.meal_preference
                 ? { label: el.meal_preference, value: el.meal_preference }
                 : null,
-              passport_gender: el.passport_gender
-                ? el.passport_gender === 'Male'
-                  ? { label: 'Mr.', value: 'Male' }
-                  : { label: 'Mrs.', value: 'Female' }
+              prefix: el.prefix
+                ? el.prefix === 'MR'
+                  ? { value: 'MR', label: 'Mr.' }
+                  : el.prefix === 'MRS'
+                  ? { value: 'MRS', label: 'Mrs.' }
+                  : el.prefix === 'MSTR'
+                  ? { value: 'MSTR', label: 'Mstr.' }
+                  : el.prefix === 'MS'
+                  ? { value: 'MS', label: 'Ms.' }
+                  : null
                 : null,
             },
           }))
@@ -272,20 +280,20 @@ function PreviewBooking({ setCurrentStep, isBooked, setPNR, travellerInfos }) {
                   <h4>Traveller</h4>
                   <div className='row my-3'>
                     <div className='row col-12 mb-20 y-gap-20'>
-                      <div className='col-md-2 form-input-select'>
-                        <label>Gender</label>
+                      <div className='col-md-3 form-input-select'>
+                        <label>Prefix</label>
                         <Select
-                          options={passportGenderOptions}
-                          value={element.passport_gender}
+                          options={passportPrefixOptions}
+                          value={element.prefix}
                           onChange={(id) =>
                             setTravellerInfo((prev) => {
-                              prev[index]['passport_gender'] = id;
+                              prev[index]['prefix'] = id;
                               return [...prev];
                             })
                           }
                         />
                       </div>
-                      <div className='form-input col-md-5 bg-white'>
+                      <div className='form-input col-md-3 bg-white'>
                         <input
                           onChange={(e) =>
                             setTravellerInfo((prev) => {
@@ -299,7 +307,21 @@ function PreviewBooking({ setCurrentStep, isBooked, setPNR, travellerInfos }) {
                         />
                         <label className='lh-1 text-16 text-light-1'>First Name</label>
                       </div>
-                      <div className='form-input col-md-5 bg-white'>
+                      <div className='form-input col-md-3 bg-white'>
+                        <input
+                          onChange={(e) =>
+                            setTravellerInfo((prev) => {
+                              prev[index]['middle_name'] = e.target.value;
+                              return [...prev];
+                            })
+                          }
+                          value={element['middle_name']}
+                          placeholder=' '
+                          type='text'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>Middle Name</label>
+                      </div>
+                      <div className='form-input col-md-3 bg-white'>
                         <input
                           onChange={(e) =>
                             setTravellerInfo((prev) => {

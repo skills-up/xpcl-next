@@ -166,7 +166,7 @@ const MainFilterSearchBox = () => {
     customAPICall('aa/v1/search', 'post', request, {}, true)
       .then(async (res) => {
         if (res?.success) {
-          await dispatchCalls(res, 'aa');
+          await dispatchCalls(res, 'aa', ADT, CHD, INF);
         }
       })
       .catch((err) => console.error(err));
@@ -174,13 +174,13 @@ const MainFilterSearchBox = () => {
     customAPICall('tj/v1/search', 'post', request, {}, true)
       .then(async (res) => {
         if (res?.success) {
-          await dispatchCalls(res, 'tj');
+          await dispatchCalls(res, 'tj', ADT, CHD, INF);
         }
       })
       .catch((err) => console.error(err));
   };
 
-  const dispatchCalls = async (res, key) => {
+  const dispatchCalls = async (res, key, ADT, CHD, INF) => {
     dispatch(setInitialSearchData());
     dispatch(setTravellerDOBS({ ADT, CHD, INF }));
     dispatch(setSearchData({ [key]: res.data }));
@@ -195,6 +195,9 @@ const MainFilterSearchBox = () => {
       })
     );
   };
+
+  const searchData = useSelector((state) => state.flightSearch.value.searchData);
+  useEffect(() => console.log('sd', searchData), [searchData]);
 
   return (
     <>
