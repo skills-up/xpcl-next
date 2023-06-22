@@ -38,6 +38,8 @@ function PreviewBooking({ setCurrentStep, isBooked, setPNR, travellerInfos }) {
     { value: 'MS', label: 'Ms.' },
   ];
 
+  console.log('sel', selectedBookings);
+
   useEffect(() => {
     if ((!selectedBookings.to && !selectedBookings.from) || !travellers) {
       console.log('nothing found');
@@ -141,8 +143,15 @@ function PreviewBooking({ setCurrentStep, isBooked, setPNR, travellerInfos }) {
       });
       console.log(response);
       if (response?.success) {
-        setPNR((prev) => ({ from: response.data, to: response.data }));
+        setPNR((prev) => ({
+          from: { ...response.data, provider: 'ad' },
+          to: { ...response.data, provider: 'ad' },
+        }));
         setCurrentStep(2);
+        return;
+      } else {
+        sendToast('error', 'Error While Creating Booking', 4000);
+        router.back();
         return;
       }
     }
@@ -160,9 +169,9 @@ function PreviewBooking({ setCurrentStep, isBooked, setPNR, travellerInfos }) {
     console.log('test');
     for (let [key, value] of Object.entries(selectedBookings)) {
       let response;
-      if (value.provider === 'aa') {
+      if (value?.provider === 'aa') {
       }
-      if (value.provider === 'tj') {
+      if (value?.provider === 'tj') {
         // Checking if low cost carrier or not
         if (lowCostBookings.includes(value.segments[0].flight.airline)) {
           // TJ
@@ -175,7 +184,10 @@ function PreviewBooking({ setCurrentStep, isBooked, setPNR, travellerInfos }) {
           );
           console.log(response);
           if (response?.success) {
-            setPNR((prev) => ({ ...prev, [key]: response.data }));
+            setPNR((prev) => ({
+              ...prev,
+              ...{ [key]: response.data, provider: 'tj' },
+            }));
             currentAPICalls += 1;
           }
         } else {
@@ -196,7 +208,10 @@ function PreviewBooking({ setCurrentStep, isBooked, setPNR, travellerInfos }) {
           });
           console.log(response);
           if (response?.success) {
-            setPNR((prev) => ({ ...prev, [key]: response.data }));
+            setPNR((prev) => ({
+              ...prev,
+              ...{ [key]: response.data, provider: 'ad' },
+            }));
             currentAPICalls += 1;
           }
         }
@@ -204,7 +219,11 @@ function PreviewBooking({ setCurrentStep, isBooked, setPNR, travellerInfos }) {
     }
     // If Successful
     if (currentAPICalls === totalAPICalls) setCurrentStep(2);
-    else sendToast('error', 'Error', 4000);
+    else {
+      sendToast('error', 'Failed To Create Bookings', 4000);
+      router.back();
+      return;
+    }
   };
 
   return (
