@@ -38,63 +38,78 @@ function Seatmap({ setCurrentStep, isBooked, PNR, travellerInfos }) {
     // 3D Array
     let newArr = [];
     if (data?.tripSeatMap?.tripSeat) {
+      const columnLimit = Object.values(data.tripSeatMap.tripSeat)[0]?.sData.column;
+      const rowLimit = Object.values(data.tripSeatMap.tripSeat)[0]?.sData.row;
+      // Iterating for prototype 3D Array to mimic the seats
       let temp = [];
-      let prevRow = 1;
-      for (let dat of Object.values(data.tripSeatMap.tripSeat)[0]?.sInfo) {
-        if (dat.seatPosition.row > prevRow) {
-          newArr.push(temp.slice(0));
-          temp = [];
-          prevRow = dat.seatPosition.row;
+      for (let i = 0; i < rowLimit; i++) {
+        for (let j = 0; j < columnLimit; j++) {
+          temp.push(null);
         }
-        temp.push(dat);
+        newArr.push(temp);
+        temp = [];
       }
+      console.log('first', newArr, columnLimit, rowLimit);
+      // Adding values to 3D array
+      for (let dat of Object.values(data.tripSeatMap.tripSeat)[0]?.sInfo) {
+        newArr[dat.seatPosition.row - 1][dat.seatPosition.column - 1] = dat;
+      }
+      console.log('new arr', newArr);
     }
     return (
       <div className='tj-seatmap'>
         {newArr &&
           newArr.length > 0 &&
-          newArr.map((element, index) => (
-            <div key={index} className='tj-grid'>
-              {element.map((el, i) => (
-                <span key={i} className='d-flex items-center seat-container'>
-                  <Seat
-                    label={el.seatNo.split('').at(-1)}
-                    fill={
-                      el.isBooked ? '#FF0000' : el?.isSelected ? '#4CBB17' : undefined
-                    }
-                    clickable={el.isBooked ? false : true}
-                    onClick={
-                      !el.isBooked
-                        ? () => {
-                            if (!el.isBooked) {
-                              // Adding / Removing Selected Seats
-                              setSeatMap((prev) => {
-                                for (let dat of Object.values(
-                                  prev[type].data.tripSeatMap.tripSeat
-                                )[0]?.sInfo) {
-                                  if (dat.seatNo === el.seatNo) {
-                                    if (dat['isSelected']) {
-                                      dat['isSelected'] = false;
-                                    } else {
-                                      dat['isSelected'] = true;
+          newArr.map((element, index) => {
+            return (
+              <div key={index} className='tj-grid'>
+                {element.map((el, i) =>
+                  el ? (
+                    <Seat
+                      key={i}
+                      label={el.seatNo.split('').at(-1)}
+                      fill={
+                        el.isBooked ? '#FF0000' : el?.isSelected ? '#4CBB17' : undefined
+                      }
+                      clickable={el.isBooked ? false : true}
+                      onClick={
+                        !el.isBooked
+                          ? () => {
+                              if (!el.isBooked) {
+                                // Adding / Removing Selected Seats
+                                setSeatMap((prev) => {
+                                  for (let dat of Object.values(
+                                    prev[type].data.tripSeatMap.tripSeat
+                                  )[0]?.sInfo) {
+                                    if (dat.seatNo === el.seatNo) {
+                                      if (dat['isSelected']) {
+                                        dat['isSelected'] = false;
+                                      } else {
+                                        dat['isSelected'] = true;
+                                      }
                                     }
                                   }
-                                }
-                                return { ...prev };
-                              });
-                              console.log('testt');
+                                  return { ...prev };
+                                });
+                                console.log('testt');
+                              }
                             }
-                          }
-                        : undefined
-                    }
-                  />
-                  {element[i]?.isAisle && element[i + 1]?.isAisle && (
-                    <span className='row-number'>{el.seatPosition.row}</span>
-                  )}
-                </span>
-              ))}
-            </div>
-          ))}
+                          : undefined
+                      }
+                    />
+                  ) : (
+                    <>
+                      {element[i - 1]?.isAisle && element[i + 1]?.isAisle ? (
+                        <span className='row-number'>{index + 1}</span>
+                      ) : (
+                        <span className='row-number' />
+                      )}
+                    </>
+                  )
+                )}
+              </div>
+            );
+          })}
       </div>
     );
   };
