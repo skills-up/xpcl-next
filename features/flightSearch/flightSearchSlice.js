@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { akasa, tripjack } from '../../pages/test/temp';
+// import { akasa, tripjack } from '../../pages/test/temp';
 
 export const initialState = {
   value: {
@@ -19,8 +19,8 @@ export const initialState = {
       departDate: '2023-06-10',
       returnDate: '2023-06-14',
     },
-    // searchData: { aa: null, tj: null, ad: null },
-    searchData: { aa: akasa, tj: tripjack, ad: null },
+    searchData: { aa: null, tj: null, ad: null },
+    // searchData: { aa: akasa, tj: tripjack, ad: null },
     // travellers: [],
     travellers: [
       {
