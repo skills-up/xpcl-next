@@ -22,10 +22,9 @@ const FlightProperties = () => {
   const airports = useSelector((state) => state.apis.value.airports);
   const travellerDOBS = useSelector((state) => state.flightSearch.value.travellerDOBS);
   const airlineOrgs = useSelector((state) => state.flightSearch.value.airlineOrgs);
+  const [toCount, setToCount] = useState(0);
   const [fromCount, setFromCount] = useState(0);
   const [combinedCount, setCombinedCount] = useState(0);
-  const [to, setTo] = useState('');
-  const [from, setFrom] = useState('');
 
   const stops = useSelector((state) => state.flightSearch.value.stops);
   const cabins = useSelector((state) => state.flightSearch.value.cabins);
@@ -46,6 +45,7 @@ const FlightProperties = () => {
   const paginateDataPerPage = useSelector(
     (state) => state.flightSearch.value.paginateDataPerPage
   );
+  const destinations = useSelector((state) => state.flightSearch.value.destinations);
   const dispatch = useDispatch();
 
   // Manipulating Data
@@ -53,10 +53,9 @@ const FlightProperties = () => {
     if (searchData && airlineOrgs) {
       let temp = [];
       let counter = 1;
+      let toCount = 0;
       let fromCount = 0;
       let combinedCount = 0;
-      let to = '',
-        from = '';
       let stops = {};
       let cabins = {};
       let airlines = {};
@@ -130,12 +129,8 @@ const FlightProperties = () => {
                     )) /
                     (1000 * 60 * 60 * 24)
                 );
-                // Setting Arrival and Departure Airport Codes
-                if (from === '' && to === '' && secondKey === 'to') {
-                  from = val.segments[0].departure.airport.code;
-                  to = val.segments.at(-1).arrival.airport.code;
-                }
                 // Setting from and combined count
+                if (secondKey === 'to') toCount += 1;
                 if (secondKey === 'from') fromCount += 1;
                 if (secondKey === 'combined') combinedCount += 1;
                 /* Sorting */
@@ -274,11 +269,17 @@ const FlightProperties = () => {
       dispatch(setDepartingFrom(departingFrom));
       dispatch(setArrivingAt(arrivingAt));
       console.log(temp);
-      setFrom(from);
-      setTo(to);
+      setToCount(toCount);
       setFromCount(fromCount);
       setCombinedCount(combinedCount);
       setManip(temp);
+      if (toCount > 0) {
+        setCurrentTab('to');
+      } else if (fromCount > 0) {
+        setCurrentTab('from');
+      } else if (combinedCount > 0) {
+        setCurrentTab('combined');
+      }
     }
   }, [searchData, airlineOrgs]);
 
@@ -382,18 +383,20 @@ const FlightProperties = () => {
           style={{ width: '100%', display: 'flex', textAlign: 'center' }}
           className='mt-30'
         >
-          <span
-            onClick={() => setCurrentTab('to')}
-            className='d-flex items-center justify-center gap-2'
-            style={{
-              cursor: 'pointer',
-              borderBottom:
-                currentTab === 'to' ? 'solid 2px blue' : 'transparent 2px solid',
-              flex: '1',
-            }}
-          >
-            {from} <BsArrowRight /> {to}
-          </span>
+          {toCount > 0 && (
+            <span
+              onClick={() => setCurrentTab('to')}
+              className='d-flex items-center justify-center gap-2'
+              style={{
+                cursor: 'pointer',
+                borderBottom:
+                  currentTab === 'to' ? 'solid 2px blue' : 'transparent 2px solid',
+                flex: '1',
+              }}
+            >
+              {destinations?.from?.iata} <BsArrowRight /> {destinations?.to?.iata}
+            </span>
+          )}
           {fromCount > 0 && (
             <span
               onClick={() => setCurrentTab('from')}
@@ -405,7 +408,7 @@ const FlightProperties = () => {
                 flex: '1',
               }}
             >
-              {to} <BsArrowRight /> {from}
+              {destinations?.to?.iata} <BsArrowRight /> {destinations?.from?.iata}
             </span>
           )}
           {combinedCount > 0 && (
@@ -464,7 +467,9 @@ const FlightProperties = () => {
             }
             // 2 Return index between lower and upper
             if (index + 1 >= lowerBound && index + 1 <= paginateDataNumber)
-              return <FlightProperty element={element} key={index} />;
+              return (
+                <FlightProperty element={element} key={index} currentTab={currentTab} />
+              );
           })}
     </>
   );

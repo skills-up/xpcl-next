@@ -43,11 +43,15 @@ const Pagination = () => {
       isActive ? 'bg-dark-1 text-white' : ''
     }`;
     return (
-      <div key={pageNumber} className='col-auto'>
-        <div className={className} onClick={() => handlePageClick(pageNumber)}>
-          {pageNumber}
-        </div>
-      </div>
+      <>
+        {+pageNumber >= 0 && (
+          <div key={pageNumber} className='col-auto'>
+            <div className={className} onClick={() => handlePageClick(pageNumber)}>
+              {pageNumber}
+            </div>
+          </div>
+        )}
+      </>
     );
   };
 

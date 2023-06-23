@@ -163,9 +163,14 @@ const MainFilterSearchBox = () => {
     }
 
     // Akasa
+    let checked = false;
     customAPICall('aa/v1/search', 'post', request, {}, true)
       .then(async (res) => {
         if (res?.success) {
+          if (!checked) {
+            dispatch(setInitialSearchData());
+            checked = true;
+          }
           await dispatchCalls(res, 'aa', ADT, CHD, INF);
         }
       })
@@ -174,6 +179,10 @@ const MainFilterSearchBox = () => {
     customAPICall('tj/v1/search', 'post', request, {}, true)
       .then(async (res) => {
         if (res?.success) {
+          if (!checked) {
+            dispatch(setInitialSearchData());
+            checked = true;
+          }
           await dispatchCalls(res, 'tj', ADT, CHD, INF);
         }
       })
@@ -181,7 +190,6 @@ const MainFilterSearchBox = () => {
   };
 
   const dispatchCalls = async (res, key, ADT, CHD, INF) => {
-    dispatch(setInitialSearchData());
     dispatch(setTravellerDOBS({ ADT, CHD, INF }));
     dispatch(setSearchData({ [key]: res.data }));
     dispatch(setReturnFlightRedux({ returnFlight }));

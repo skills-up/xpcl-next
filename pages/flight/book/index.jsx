@@ -7,7 +7,7 @@ import DefaultFooter from '../../../components/footer/default';
 import Header1 from '../../../components/header/header-1';
 
 const index = () => {
-  const [currentStep, setCurrentStep] = useState(2);
+  const [currentStep, setCurrentStep] = useState(1);
   const [isBooked, setIsBooked] = useState({ to: false, from: false });
   const [PNR, setPNR] = useState({ to: null, from: null });
   const [travellerInfo, setTravellerInfo] = useState([]);

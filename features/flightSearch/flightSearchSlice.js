@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-// import { akasa, tripjack } from '../../pages/test/temp';
+import { akasa, tripjack } from '../../pages/test/temp';
 
 export const initialState = {
   value: {
