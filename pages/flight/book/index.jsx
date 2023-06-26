@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CallToActions from '../../../components/common/CallToActions';
 import Seo from '../../../components/common/Seo';
 import PreviewBooking from '../../../components/flight-book/book/PreviewBooking';
@@ -8,10 +8,11 @@ import Header1 from '../../../components/header/header-1';
 
 const index = () => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [isBooked, setIsBooked] = useState({ to: false, from: false });
-  const [PNR, setPNR] = useState({ to: null, from: null });
+  const [PNR, setPNR] = useState({ to: null, from: null, combined: null });
   const [travellerInfo, setTravellerInfo] = useState([]);
   // 1 - View Itinerary
+
+  useEffect(() => console.log('PNR', PNR), [PNR]);
 
   return (
     <>
@@ -27,7 +28,6 @@ const index = () => {
       {currentStep === 1 && (
         <PreviewBooking
           setCurrentStep={setCurrentStep}
-          isBooked={isBooked}
           setPNR={setPNR}
           travellerInfos={[travellerInfo, setTravellerInfo]}
         />

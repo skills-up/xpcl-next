@@ -56,7 +56,7 @@ export const initialState = {
       departure_time: false,
       arrival_time: false,
     },
-    selectedBookings: { to: null, from: null },
+    selectedBookings: { to: null, from: null, combined: null },
     emailClientMode: false,
     emailClients: [],
   },

@@ -136,6 +136,16 @@ const MainFilterSearchBox = () => {
       sendToast('error', 'Error getting traveller details', 4000);
       return;
     }
+    // Checking for domestic
+    let domestic = true;
+    if (from?.label && to?.label) {
+      if (
+        to?.label?.split('|')?.at(-1) !== 'India' ||
+        from?.label?.split('|')?.at(-1) !== 'India'
+      ) {
+        domestic = false;
+      }
+    }
     // Formulating Request
     let request = {
       pax,
@@ -154,16 +164,27 @@ const MainFilterSearchBox = () => {
         request['cabinType'] = 'PREMIUM_ECONOMY';
       else request['cabinType'] = preferredCabin.value.toUpperCase();
     }
-    if (returnFlight) {
+    if (returnFlight && !domestic) {
       request.sectors.push({
-        to: from?.iata,
         from: to?.iata,
+        to: from?.iata,
         date: returnDate.format('YYYY-MM-DD'),
       });
     }
-
-    // Akasa
+    // Return Request
+    let returnRequest = {
+      ...request,
+      sectors: [
+        {
+          from: to?.iata,
+          to: from?.iata,
+          date: returnDate.format('YYYY-MM-DD'),
+        },
+      ],
+    };
     let checked = false;
+    // Akasa
+    // To
     customAPICall('aa/v1/search', 'post', request, {}, true)
       .then(async (res) => {
         if (res?.success) {
@@ -171,11 +192,36 @@ const MainFilterSearchBox = () => {
             dispatch(setInitialSearchData());
             checked = true;
           }
+          if (returnFlight && domestic) {
+            if (searchData?.aa?.from) {
+              res.data.from = searchData.aa.from;
+            }
+          }
           await dispatchCalls(res, 'aa', ADT, CHD, INF);
         }
       })
       .catch((err) => console.error(err));
+    // From
+    if (returnFlight && domestic) {
+      customAPICall('aa/v1/search', 'post', returnRequest, {}, true)
+        .then(async (res) => {
+          if (res?.success) {
+            if (!checked) {
+              dispatch(setInitialSearchData());
+              checked = true;
+            }
+            res.data.from = res.data.to;
+            res.data.to = null;
+            if (searchData?.aa?.to) {
+              res.data.to = searchData.aa.to;
+            }
+            await dispatchCalls(res, 'aa', ADT, CHD, INF);
+          }
+        })
+        .catch((err) => console.error(err));
+    }
     // Tripjack
+    // To
     customAPICall('tj/v1/search', 'post', request, {}, true)
       .then(async (res) => {
         if (res?.success) {
@@ -183,10 +229,34 @@ const MainFilterSearchBox = () => {
             dispatch(setInitialSearchData());
             checked = true;
           }
+          if (returnFlight && domestic) {
+            if (searchData?.tj?.from) {
+              res.data.from = searchData.tj.from;
+            }
+          }
           await dispatchCalls(res, 'tj', ADT, CHD, INF);
         }
       })
       .catch((err) => console.error(err));
+    // From
+    if (returnFlight && domestic) {
+      customAPICall('tj/v1/search', 'post', returnRequest, {}, true)
+        .then(async (res) => {
+          if (res?.success) {
+            if (!checked) {
+              dispatch(setInitialSearchData());
+              checked = true;
+            }
+            res.data.from = res.data.to;
+            res.data.to = null;
+            if (searchData?.tj?.to) {
+              res.data.to = searchData.tj.to;
+            }
+            await dispatchCalls(res, 'tj', ADT, CHD, INF);
+          }
+        })
+        .catch((err) => console.error(err));
+    }
   };
 
   const dispatchCalls = async (res, key, ADT, CHD, INF) => {

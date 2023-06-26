@@ -215,11 +215,15 @@ function FlightProperty({ element, isSelectedBooking = false, currentTab }) {
                         dispatch(
                           setSelectedBookings({
                             ...selectedBookings,
-                            [element.type]: element,
+                            ...{ [element.type]: element, combined: null },
                           })
                         );
                         if (!returnFlight) router.push('/flight/book');
                       } else {
+                        dispatch(
+                          setSelectedBookings({ to: null, from: null, combined: element })
+                        );
+                        router.push('/flight/book');
                       }
                     }}
                     className='button -dark-1 px-30 h-50 bg-blue-1 text-white mb-10'

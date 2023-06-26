@@ -7,7 +7,7 @@ import FlightProperty from '../../flight-list/common/FlightProperty';
 import Select from 'react-select';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 
-function PreviewBooking({ setCurrentStep, isBooked, setPNR, travellerInfos }) {
+function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
   const selectedBookings = useSelector(
     (state) => state.flightSearch.value.selectedBookings
   );
@@ -41,7 +41,10 @@ function PreviewBooking({ setCurrentStep, isBooked, setPNR, travellerInfos }) {
   console.log('sel', selectedBookings);
 
   useEffect(() => {
-    if ((!selectedBookings.to && !selectedBookings.from) || !travellers) {
+    if (
+      (!selectedBookings.to && !selectedBookings.from && !selectedBookings.combined) ||
+      !travellers
+    ) {
       console.log('nothing found');
     }
     getData();
@@ -144,8 +147,9 @@ function PreviewBooking({ setCurrentStep, isBooked, setPNR, travellerInfos }) {
       console.log(response);
       if (response?.success) {
         setPNR((prev) => ({
-          from: { ...response.data, provider: 'ad' },
-          to: { ...response.data, provider: 'ad' },
+          from: { data: response.data, provider: 'ad' },
+          to: { data: response.data, provider: 'ad' },
+          combined: null,
         }));
         setCurrentStep(2);
         return;
@@ -186,9 +190,10 @@ function PreviewBooking({ setCurrentStep, isBooked, setPNR, travellerInfos }) {
           if (response?.success) {
             setPNR((prev) => ({
               ...prev,
-              ...{ [key]: response.data, provider: 'tj' },
+              [key]: { data: response.data, provider: 'tj' },
             }));
             currentAPICalls += 1;
+            console.log('yes success');
           }
         } else {
           // AD
@@ -210,7 +215,7 @@ function PreviewBooking({ setCurrentStep, isBooked, setPNR, travellerInfos }) {
           if (response?.success) {
             setPNR((prev) => ({
               ...prev,
-              ...{ [key]: response.data, provider: 'ad' },
+              [key]: { data: response.data, provider: 'ad' },
             }));
             currentAPICalls += 1;
           }
@@ -218,12 +223,12 @@ function PreviewBooking({ setCurrentStep, isBooked, setPNR, travellerInfos }) {
       }
     }
     // If Successful
-    if (currentAPICalls === totalAPICalls) setCurrentStep(2);
-    else {
-      sendToast('error', 'Failed To Create Bookings', 4000);
-      router.back();
-      return;
-    }
+    // if (currentAPICalls === totalAPICalls) setCurrentStep(2);
+    // else {
+    //   sendToast('error', 'Failed To Create Bookings', 4000);
+    //   router.back();
+    //   return;
+    // }
   };
 
   return (
@@ -233,7 +238,7 @@ function PreviewBooking({ setCurrentStep, isBooked, setPNR, travellerInfos }) {
         <div>
           <h1>Itinerary Details</h1>
           {/* To */}
-          {selectedBookings?.to && !isBooked.to && (
+          {selectedBookings?.to && (
             <div className='mt-20'>
               <h3>
                 {selectedBookings.to.segments[0].departure.airport.code} &rarr;{' '}
@@ -243,13 +248,20 @@ function PreviewBooking({ setCurrentStep, isBooked, setPNR, travellerInfos }) {
             </div>
           )}
           {/* Return */}
-          {selectedBookings?.from && returnFlight && !isBooked.from && (
+          {selectedBookings?.from && returnFlight && (
             <div className='mt-30'>
               <h3>
                 {selectedBookings.from.segments[0].departure.airport.code} &rarr;{' '}
                 {selectedBookings.from.segments.at(-1).arrival.airport.code}
               </h3>
               <FlightProperty element={selectedBookings.from} isSelectedBooking />
+            </div>
+          )}
+          {/* Return */}
+          {selectedBookings?.combined && (
+            <div className='mt-30'>
+              <h3>Round Trip</h3>
+              <FlightProperty element={selectedBookings.combined} isSelectedBooking />
             </div>
           )}
         </div>
