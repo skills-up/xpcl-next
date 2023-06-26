@@ -95,9 +95,7 @@ const flightSearchSlice = createSlice({
       state.value.price = action.payload;
     },
     setSearchData: (state, action) => {
-      console.log('test', action.payload);
-      state.value.searchData = { ...state.value.searchData, ...action.payload };
-      console.log('new', state.value.searchData);
+      state.value.searchData = action.payload;
     },
     setReturnFlight: (state, action) => {
       state.value.returnFlight = action.payload.returnFlight;

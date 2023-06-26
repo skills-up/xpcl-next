@@ -182,96 +182,101 @@ const MainFilterSearchBox = () => {
         },
       ],
     };
-    let checked = false;
+    let tempSearchData = { aa: null, tj: null, ad: null };
+    let callsCounter = 2;
+    if (returnFlight && domestic) {
+      callsCounter = 4;
+    }
+    let currentCalls = 0;
     // Akasa
     // To
     customAPICall('aa/v1/search', 'post', request, {}, true)
       .then(async (res) => {
         if (res?.success) {
-          if (!checked) {
-            dispatch(setInitialSearchData());
-            checked = true;
-          }
           if (returnFlight && domestic) {
-            if (searchData?.aa?.from) {
-              res.data.from = searchData.aa.from;
+            if (tempSearchData?.aa?.from) {
+              res.data.from = tempSearchData.aa.from;
             }
           }
-          await dispatchCalls(res, 'aa', ADT, CHD, INF);
+          tempSearchData = { ...tempSearchData, aa: res.data };
         }
       })
-      .catch((err) => console.error(err));
+      .catch((err) => console.error(err))
+      .then(() =>
+        dispatchCalls(tempSearchData, callsCounter, (currentCalls += 1), ADT, CHD, INF)
+      );
     // From
     if (returnFlight && domestic) {
       customAPICall('aa/v1/search', 'post', returnRequest, {}, true)
         .then(async (res) => {
           if (res?.success) {
-            if (!checked) {
-              dispatch(setInitialSearchData());
-              checked = true;
-            }
             res.data.from = res.data.to;
             res.data.to = null;
-            if (searchData?.aa?.to) {
-              res.data.to = searchData.aa.to;
+            if (tempSearchData?.aa?.to) {
+              res.data.to = tempSearchData.aa.to;
             }
-            await dispatchCalls(res, 'aa', ADT, CHD, INF);
+            tempSearchData = { ...tempSearchData, aa: res.data };
           }
         })
-        .catch((err) => console.error(err));
+        .catch((err) => console.error(err))
+        .then(() =>
+          dispatchCalls(tempSearchData, callsCounter, (currentCalls += 1), ADT, CHD, INF)
+        );
     }
     // Tripjack
     // To
     customAPICall('tj/v1/search', 'post', request, {}, true)
       .then(async (res) => {
         if (res?.success) {
-          if (!checked) {
-            dispatch(setInitialSearchData());
-            checked = true;
-          }
           if (returnFlight && domestic) {
-            if (searchData?.tj?.from) {
-              res.data.from = searchData.tj.from;
+            if (tempSearchData?.tj?.from) {
+              res.data.from = tempSearchData.tj.from;
             }
           }
-          await dispatchCalls(res, 'tj', ADT, CHD, INF);
+          tempSearchData = { ...tempSearchData, tj: res.data };
         }
       })
-      .catch((err) => console.error(err));
+      .catch((err) => console.error(err))
+      .then(() =>
+        dispatchCalls(tempSearchData, callsCounter, (currentCalls += 1), ADT, CHD, INF)
+      );
     // From
     if (returnFlight && domestic) {
       customAPICall('tj/v1/search', 'post', returnRequest, {}, true)
         .then(async (res) => {
           if (res?.success) {
-            if (!checked) {
-              dispatch(setInitialSearchData());
-              checked = true;
-            }
             res.data.from = res.data.to;
             res.data.to = null;
-            if (searchData?.tj?.to) {
-              res.data.to = searchData.tj.to;
+            if (tempSearchData?.tj?.to) {
+              res.data.to = tempSearchData.tj.to;
             }
-            await dispatchCalls(res, 'tj', ADT, CHD, INF);
+            tempSearchData = { ...tempSearchData, tj: res.data };
           }
         })
-        .catch((err) => console.error(err));
+        .catch((err) => console.error(err))
+        .then(() =>
+          dispatchCalls(tempSearchData, callsCounter, (currentCalls += 1), ADT, CHD, INF)
+        );
     }
   };
 
-  const dispatchCalls = async (res, key, ADT, CHD, INF) => {
-    dispatch(setTravellerDOBS({ ADT, CHD, INF }));
-    dispatch(setSearchData({ [key]: res.data }));
-    dispatch(setReturnFlightRedux({ returnFlight }));
-    dispatch(setTravellersRedux({ travellers }));
-    dispatch(
-      setDestinations({
-        to,
-        from,
-        departDate: departDate.format('YYYY-MM-DD'),
-        returnDate: returnFlight ? returnDate.format('YYYY-MM-DD') : null,
-      })
-    );
+  const dispatchCalls = async (searchData, totalCalls, currentCalls, ADT, CHD, INF) => {
+    console.log('yes called');
+    if (currentCalls === totalCalls) {
+      dispatch(setInitialSearchData());
+      dispatch(setTravellerDOBS({ ADT, CHD, INF }));
+      dispatch(setSearchData(searchData));
+      dispatch(setReturnFlightRedux({ returnFlight }));
+      dispatch(setTravellersRedux({ travellers }));
+      dispatch(
+        setDestinations({
+          to,
+          from,
+          departDate: departDate.format('YYYY-MM-DD'),
+          returnDate: returnFlight ? returnDate.format('YYYY-MM-DD') : null,
+        })
+      );
+    }
   };
 
   const searchData = useSelector((state) => state.flightSearch.value.searchData);
