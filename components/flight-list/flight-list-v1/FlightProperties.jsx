@@ -383,13 +383,22 @@ const FlightProperties = () => {
       // Filter By Price Slider
       if (!(el.total >= price.value.min && el.total <= price.value.max)) return false;
       // Filter By Departing From & Arriving At
+      let departValueCheck = el.segments[0].departure.airport.code;
       for (let dep of Object.values(departingFrom)) {
-        if (el.segments[0].departure.airport.code === dep.iata_code)
-          if (!dep.value) return false;
+        if (departValueCheck === dep.iata_code) if (!dep.value) return false;
+      }
+      let arrivalValueCheck = el.segments.at(-1).arrival.airport.code;
+      if (el?.type === 'combined') {
+        let x = false;
+        for (let segment of el.segments) {
+          if (segment.segmentNo === 0) {
+            if (!x) x = true;
+            else arrivalValueCheck = segment.departure.airport.code;
+          }
+        }
       }
       for (let arr of Object.values(arrivingAt)) {
-        if (el.segments.at(-1).arrival.airport.code === arr.iata_code)
-          if (!arr.value) return false;
+        if (arrivalValueCheck === arr.iata_code) if (!arr.value) return false;
       }
       // Return True by Default
       return true;
