@@ -14,7 +14,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
   const [frequentFliers, setFrequentFliers] = useState([]);
   const [travellerInfo, setTravellerInfo] = travellerInfos;
   const returnFlight = useSelector((state) => state.flightSearch.value.returnFlight);
-  const lowCostBookings = ['IX', '6E', 'SG', 'G8', 'I5'];
+  const lowCostBookings = ['IX', '6E', 'SG', 'G8', 'I5', 'QP'];
   const travellers = useSelector((state) => state.flightSearch.value.travellers);
   const airports = useSelector((state) => state.apis.value.airports);
   console.log('airports', airports);
@@ -97,6 +97,13 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
   };
 
   const onClick = async () => {
+    // Checking if each traveller has a prefix
+    for (let traveller of travellerInfo) {
+      if (!traveller.prefix) {
+        sendToast('error', 'Each traveller should have a prefix', 4000);
+        return;
+      }
+    }
     // Total API Calls to succeed, we check this by checking if selectedbookings.from has a value
     let totalAPICalls = 1;
     let currentAPICalls = 0;
@@ -113,50 +120,93 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
     }
     // Special Scenario Amadeus International Flight
     if (
-      !isDomestic &&
-      totalAPICalls === 2 &&
-      selectedBookings.from.provider === 'tj' &&
-      selectedBookings.to.provider === 'tj' &&
-      lowCostBookings.includes(selectedBookings.from.segments[0].flight.airline) &&
-      lowCostBookings.includes(selectedBookings.to.segments[0].flight.airline)
+      (!isDomestic &&
+        totalAPICalls === 2 &&
+        selectedBookings.from.provider === 'tj' &&
+        selectedBookings.to.provider === 'tj' &&
+        !lowCostBookings.includes(selectedBookings.from.segments[0].flight.airline) &&
+        !lowCostBookings.includes(selectedBookings.to.segments[0].flight.airline)) ||
+      (!isDomestic &&
+        selectedBookings?.combined?.provider === 'tj' &&
+        !lowCostBookings.includes(selectedBookings.combined.segments[0].flight.airline))
     ) {
       console.log('Amadaeus Detected');
-      response = await createItem('flights/book', {
-        travellers: travellers.map((el) => el.value),
-        sectors: [
-          selectedBookings.to.segments.map((el) => ({
-            from: el.departure.airport.code,
-            to: el.arrival.airport.code,
-            departureDate: el.departure.time.replace('T', ' ') + ':00',
-            arrivalDate: el.arrival.time.replace('T', ' ') + ':00',
-            companyCode: el.flight.airline,
-            flightNumber: el.flight.number,
-            bookingClass: selectedBookings.to.prices.prices.ADULT.bookingClass,
-          })),
-          selectedBookings.from.segments.map((el) => ({
-            from: el.departure.airport.code,
-            to: el.arrival.airport.code,
-            departureDate: el.departure.time.replace('T', ' ') + ':00',
-            arrivalDate: el.arrival.time.replace('T', ' ') + ':00',
-            companyCode: el.flight.airline,
-            flightNumber: el.flight.number,
-            bookingClass: selectedBookings.from.prices.prices.ADULT.bookingClass,
-          })),
-        ],
-      });
-      console.log(response);
-      if (response?.success) {
-        setPNR((prev) => ({
-          from: { data: response.data, provider: 'ad' },
-          to: { data: response.data, provider: 'ad' },
-          combined: null,
-        }));
-        setCurrentStep(2);
-        return;
+      if (selectedBookings.combined) {
+        let toSector = [];
+        let fromSector = [];
+        let toDone = 0;
+        for (let segment of selectedBookings.combined.segments) {
+          let dat = {
+            from: segment.departure.airport.code,
+            to: segment.arrival.airport.code,
+            departureDate: segment.departure.time.replace('T', ' ') + ':00',
+            arrivalDate: segment.arrival.time.replace('T', ' ') + ':00',
+            companyCode: segment.flight.airline,
+            flightNumber: segment.flight.number,
+            bookingClass: selectedBookings.combined.prices.prices.ADULT.bookingClass,
+          };
+          if (segment?.segmentNo === 0) toDone += 1;
+          if (toDone < 2) {
+            toSector.push(dat);
+          } else {
+            fromSector.push(dat);
+          }
+        }
+        let response = await createItem('flights/book', {
+          travellers: travellers.map((el) => el.value),
+          sectors: [toSector, fromSector],
+        });
+        console.log(response);
+        if (response?.success) {
+          setPNR((prev) => ({
+            ...prev,
+            combined: { data: response.data, provider: 'ad' },
+          }));
+          // setCurrentStep(2);
+          return;
+        } else {
+          // sendToast('error', 'Error While Creating Booking', 4000);
+          // router.back();
+          return;
+        }
       } else {
-        sendToast('error', 'Error While Creating Booking', 4000);
-        router.back();
-        return;
+        let response = await createItem('flights/book', {
+          travellers: travellers.map((el) => el.value),
+          sectors: [
+            selectedBookings.to.segments.map((el) => ({
+              from: el.departure.airport.code,
+              to: el.arrival.airport.code,
+              departureDate: el.departure.time.replace('T', ' ') + ':00',
+              arrivalDate: el.arrival.time.replace('T', ' ') + ':00',
+              companyCode: el.flight.airline,
+              flightNumber: el.flight.number,
+              bookingClass: selectedBookings.to.prices.prices.ADULT.bookingClass,
+            })),
+            selectedBookings.from.segments.map((el) => ({
+              from: el.departure.airport.code,
+              to: el.arrival.airport.code,
+              departureDate: el.departure.time.replace('T', ' ') + ':00',
+              arrivalDate: el.arrival.time.replace('T', ' ') + ':00',
+              companyCode: el.flight.airline,
+              flightNumber: el.flight.number,
+              bookingClass: selectedBookings.from.prices.prices.ADULT.bookingClass,
+            })),
+          ],
+        });
+        console.log(response);
+        if (response?.success) {
+          setPNR((prev) => ({
+            from: { data: response.data, provider: 'ad' },
+            to: { data: response.data, provider: 'ad' },
+            combined: null,
+          }));
+          setCurrentStep(2);
+          return;
+        } else {
+          sendToast('error', 'Error While Creating Booking', 4000);
+          router.back();
+          return;
+        }
       }
     }
     //  else {
@@ -174,6 +224,53 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
     for (let [key, value] of Object.entries(selectedBookings)) {
       let response;
       if (value?.provider === 'aa') {
+        // AA
+        let pax = [];
+        for (let traveller of travellerInfo) {
+          let tempObj = {};
+          // Code
+          const age = (
+            (Date.now() -
+              +new DateObject({
+                date: traveller?.passport_dob,
+                format: 'YYYY-MM-DD',
+              })
+                .toDate()
+                .getTime()) /
+            31536000000
+          ).toFixed(2);
+          // If below 2 years of age, infant
+          if (age < 2) tempObj['code'] = 'INF';
+          // If above 2 but below 12, child
+          if (age >= 2 && age < 12) tempObj['code'] = 'CHD';
+          // If above 12 years, consider adult
+          if (age >= 12) tempObj['code'] = 'ADT';
+          // Name
+          tempObj['name'] = {
+            title: traveller?.prefix?.value ? traveller.prefix.value : traveller?.prefix,
+            first: traveller?.first_name,
+            last: traveller?.last_name,
+            middle: traveller?.middle_name || undefined,
+          };
+          // DOB
+          tempObj['dob'] = traveller?.passport_dob;
+          pax.push(tempObj);
+        }
+        response = await customAPICall(
+          'aa/v1/review',
+          'post',
+          { pax, priceIds: [value.prices.id], journeyIds: [value.journeyKey] },
+          {},
+          true
+        );
+        console.log(response);
+        if (response?.success) {
+          setPNR((prev) => ({
+            ...prev,
+            [key]: { data: response.data, provider: 'aa' },
+          }));
+          currentAPICalls += 1;
+        }
       }
       if (value?.provider === 'tj') {
         // Checking if low cost carrier or not
@@ -193,7 +290,6 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
               [key]: { data: response.data, provider: 'tj' },
             }));
             currentAPICalls += 1;
-            console.log('yes success');
           }
         } else {
           // AD

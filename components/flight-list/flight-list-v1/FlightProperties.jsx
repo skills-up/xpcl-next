@@ -197,10 +197,23 @@ const FlightProperties = () => {
                 departingFrom[val.segments[0].departure.airport.code]
                   ? (departingFrom[val.segments[0].departure.airport.code] += 1)
                   : (departingFrom[val.segments[0].departure.airport.code] = 1);
-                // Arriving At
-                arrivingAt[val.segments.at(-1).arrival.airport.code]
-                  ? (arrivingAt[val.segments.at(-1).arrival.airport.code] += 1)
-                  : (arrivingAt[val.segments.at(-1).arrival.airport.code] = 1);
+                // Arriving At (Checking Combined Logic Too)
+                if (secondKey === 'combined') {
+                  let x = false;
+                  for (let segment of val.segments) {
+                    if (segment?.segmentNo === 0) {
+                      if (!x) x = true;
+                      else {
+                        arrivingAt[segment.departure.airport.code]
+                          ? (arrivingAt[segment.departure.airport.code] += 1)
+                          : (arrivingAt[segment.departure.airport.code] = 1);
+                      }
+                    }
+                  }
+                } else
+                  arrivingAt[val.segments.at(-1).arrival.airport.code]
+                    ? (arrivingAt[val.segments.at(-1).arrival.airport.code] += 1)
+                    : (arrivingAt[val.segments.at(-1).arrival.airport.code] = 1);
                 /* Pushing */
                 temp.push({
                   ...val,
@@ -244,7 +257,12 @@ const FlightProperties = () => {
       for (let [key, value] of Object.entries(departingFrom)) {
         for (let airport of airports) {
           if (airport.iata_code === key) {
-            departingFrom[airport.name] = { number: value, value: true, iata_code: key };
+            departingFrom[airport.name] = {
+              number: value,
+              value: true,
+              iata_code: key,
+              city: airport.city,
+            };
             delete departingFrom[key];
           }
         }
@@ -253,7 +271,12 @@ const FlightProperties = () => {
       for (let [key, value] of Object.entries(arrivingAt)) {
         for (let airport of airports) {
           if (airport.iata_code === key) {
-            arrivingAt[airport.name] = { number: value, value: true, iata_code: key };
+            arrivingAt[airport.name] = {
+              number: value,
+              value: true,
+              iata_code: key,
+              city: airport.city,
+            };
             delete arrivingAt[key];
           }
         }

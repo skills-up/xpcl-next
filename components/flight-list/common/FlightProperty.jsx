@@ -30,6 +30,22 @@ function FlightProperty({ element, isSelectedBooking = false, currentTab }) {
     setExpand([]);
   }, [currentTab]);
 
+  const [layoffSegment, setLayoffSegment] = useState(null);
+
+  // Not all airports have the same ending destination, so in case of combined, we are finding the end airport (used in layoffs)
+  // and where the airport ends
+  useEffect(() => {
+    if (element && element.type === 'combined') {
+      let x = false;
+      for (let segment of element.segments) {
+        if (segment.segmentNo === 0) {
+          if (!x) x = true;
+          else setLayoffSegment(segment.departure.airport.code);
+        }
+      }
+    }
+  }, [element]);
+
   useEffect(() => {
     if (!isSelectedBooking) {
       if (emailClientMode) {
@@ -154,7 +170,9 @@ function FlightProperty({ element, isSelectedBooking = false, currentTab }) {
                       )}
                     </div>
                     <div className='text-15 lh-15 text-light-1'>
-                      {element.segments.at(-1).arrival.airport.code}
+                      {layoffSegment
+                        ? layoffSegment
+                        : element.segments.at(-1).arrival.airport.code}
                     </div>
                   </div>
                 </div>
@@ -488,7 +506,7 @@ function FlightProperty({ element, isSelectedBooking = false, currentTab }) {
                     </div>
                   </div>
                   {segmentIndex + 1 < element.segments.length ? (
-                    segment.arrival.airport.code !== destinations?.to?.iata ? (
+                    segment.arrival.airport.code !== layoffSegment ? (
                       <span className='ml-10 d-flex items-center gap-2'>
                         <FaRegClock className='text-danger text-20' /> Layover Time -{' '}
                         {layoverTime >= 1440 ? (

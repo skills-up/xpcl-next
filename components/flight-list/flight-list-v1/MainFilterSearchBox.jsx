@@ -41,6 +41,7 @@ const MainFilterSearchBox = () => {
   const token = useSelector((state) => state.auth.value.token);
   const airports = useSelector((state) => state.apis.value.airports);
   const client_id = useSelector((state) => state.auth.value.currentOrganization);
+  // console.log('token', token);
 
   useEffect(() => {
     if (token !== '') {
@@ -136,6 +137,8 @@ const MainFilterSearchBox = () => {
       sendToast('error', 'Error getting traveller details', 4000);
       return;
     }
+    // Resetting Search Data
+    dispatch(setInitialSearchData());
     // Checking for domestic
     let domestic = true;
     if (from?.label && to?.label) {
@@ -261,11 +264,9 @@ const MainFilterSearchBox = () => {
   };
 
   const dispatchCalls = async (searchData, totalCalls, currentCalls, ADT, CHD, INF) => {
-    console.log('yes called');
+    dispatch(setSearchData(searchData));
     if (currentCalls === totalCalls) {
-      dispatch(setInitialSearchData());
       dispatch(setTravellerDOBS({ ADT, CHD, INF }));
-      dispatch(setSearchData(searchData));
       dispatch(setReturnFlightRedux({ returnFlight }));
       dispatch(setTravellersRedux({ travellers }));
       dispatch(
@@ -420,10 +421,14 @@ const MainFilterSearchBox = () => {
                 inputClass='custom_input-picker'
                 containerClassName='custom_container-picker'
                 value={departDate}
-                onChange={setDepartDate}
+                onChange={(i) => {
+                  setDepartDate(i);
+                  if (returnDate.valueOf() < i.valueOf()) setReturnDate(i);
+                }}
                 numberOfMonths={1}
                 offsetY={10}
                 format='DD MMMM YYYY'
+                minDate={new DateObject()}
               />
             </div>
             {/* End Depart */}
@@ -441,6 +446,7 @@ const MainFilterSearchBox = () => {
                   numberOfMonths={1}
                   offsetY={10}
                   format='DD MMMM YYYY'
+                  minDate={departDate}
                 />
               </div>
             )}
