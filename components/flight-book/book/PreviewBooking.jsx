@@ -319,12 +319,12 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
       }
     }
     // If Successful
-    // if (currentAPICalls === totalAPICalls) setCurrentStep(2);
-    // else {
-    //   sendToast('error', 'Failed To Create Bookings', 4000);
-    //   router.back();
-    //   return;
-    // }
+    if (currentAPICalls === totalAPICalls) setCurrentStep(2);
+    else {
+      sendToast('error', 'Failed To Create Bookings', 4000);
+      router.back();
+      return;
+    }
   };
 
   return (
@@ -543,7 +543,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
             className='button -dark-1 px-30 h-50 bg-blue-1 text-white col-4 mt-20'
             onClick={() => onClick()}
           >
-            Proceed With Booking
+            Proceed To Seat Selection
           </button>
         </div>
       </div>

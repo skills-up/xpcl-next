@@ -1,137 +1,206 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { createItem, customAPICall, getList } from '../../../api/xplorzApi';
+import { customAPICall } from '../../../api/xplorzApi';
 import { sendToast } from '../../../utils/toastify';
-import FlightProperty from '../../flight-list/common/FlightProperty';
-import Select from 'react-select';
-import DatePicker, { DateObject } from 'react-multi-date-picker';
-import { aaSeatMap, adSeatMap, tjSeatMap } from '../../../pages/test/temp';
 import Seat from '../common/Seat';
 
-function Seatmap({ setCurrentStep, isBooked, PNR, travellerInfos }) {
-  const [seatMap, setSeatMap] = useState({
-    to: { provider: 'tj', data: tjSeatMap, selected: 0 },
-    from: { provider: 'ad', data: adSeatMap, selecteD: 0 },
-  });
-
+function Seatmap({ seatMaps, setCurrentStep, PNR, travellerInfos }) {
+  const [seatMap, setSeatMap] = seatMaps;
   const travellers = useSelector((state) => state.flightSearch.value.travellers);
-
+  const selectedBookings = useSelector(
+    (state) => state.flightSearch.value.selectedBookings
+  );
   // Fetch Flight Details for PNRs
   // Save Them To Seatmaps
   // Display Seatmaps
 
+  const router = useRouter();
+
   useEffect(() => {
     getData();
-  });
+  }, []);
 
+  useEffect(() => {
+    console.log('Seatmap', seatMap);
+  }, [seatMap]);
+
+  // Fetching Seatmaps for PNRS
   const getData = async () => {
-    if (PNR?.to || PNR?.from) {
+    if (PNR) {
+      let response = {};
+      let tempDat = { to: null, from: null, combined: null };
       for (let [key, value] of Object.entries(PNR)) {
         if (value) {
           // API Call to Flight Booking + setSeatMap
+          // TJ
+          if (value?.provider === 'tj') {
+            response = await customAPICall(
+              'tj/v1/seatmaps',
+              'post',
+              value?.data,
+              {},
+              true
+            );
+            if (response?.success) {
+              tempDat[key] = {
+                data: response.data,
+                provider: 'tj',
+              };
+            }
+          }
+          // AA
+          // AD
         }
       }
+      if (!response?.success) {
+        sendToast('error', 'Could not fetch seatmap', 4000);
+        router.back();
+      }
+      setSeatMap(tempDat);
+    }
+  };
+
+  // On Click
+  const onClick = async () => {
+    //  Temporary TJ Booking
+    let pax = [];
+    const response = await customAPICall('tj/v1/book', 'post', { pax }, {}, true);
+    if (response?.success) {
     }
   };
 
   // TJ Seatmap
   const TJSeatMapRender = ({ data, type }) => {
-    // 3D Array
-    let newArr = [];
-    if (data?.data?.tripSeatMap?.tripSeat) {
-      const columnLimit = Object.values(data?.data?.tripSeatMap.tripSeat)[0]?.sData
-        .column;
-      const rowLimit = Object.values(data?.data?.tripSeatMap.tripSeat)[0]?.sData.row;
-      // Iterating for prototype 3D Array to mimic the seats
-      let temp = [];
-      for (let i = 0; i < rowLimit; i++) {
-        for (let j = 0; j < columnLimit; j++) {
-          temp.push(null);
-        }
-        newArr.push(temp);
-        temp = [];
-      }
-      console.log('first', newArr, columnLimit, rowLimit);
-      // Adding values to 3D array
-      for (let dat of Object.values(data?.data?.tripSeatMap.tripSeat)[0]?.sInfo) {
-        newArr[dat.seatPosition.row - 1][dat.seatPosition.column - 1] = dat;
-      }
-      console.log('new arr', newArr);
-    }
     return (
-      <div className='tj-seatmap'>
-        {newArr &&
-          newArr.length > 0 &&
-          newArr.map((element, index) => {
-            return (
-              <div key={index} className='tj-grid'>
-                {element.map((el, i) =>
-                  el ? (
-                    <Seat
-                      key={i}
-                      label={el.seatNo.split('').at(-1)}
-                      fill={
-                        el.isBooked
-                          ? '#FF0000'
-                          : el?.isSelected
-                          ? '#4CBB17'
-                          : el?.amount > 0
-                          ? '#FFA500'
-                          : undefined
-                      }
-                      clickable={
-                        el.isBooked
-                          ? false
-                          : data.selected < travellers.length
-                          ? true
-                          : el.isSelected
-                          ? true
-                          : false
-                      }
-                      onClick={
-                        !el.isBooked
-                          ? () => {
-                              if (!el.isBooked) {
-                                // Adding / Removing Selected Seats
-                                setSeatMap((prev) => {
-                                  for (let dat of Object.values(
-                                    prev[type].data.tripSeatMap.tripSeat
-                                  )[0]?.sInfo) {
-                                    if (dat.seatNo === el.seatNo) {
-                                      console.log('l', data.selected, travellers.length);
-                                      if (dat['isSelected']) {
-                                        dat['isSelected'] = false;
-                                        prev[type].selected -= 1;
-                                      } else {
-                                        if (data.selected < travellers.length) {
-                                          dat['isSelected'] = true;
-                                          prev[type].selected += 1;
+      <div>
+        {Object.entries(data?.seatMap).map(([key, value], index) => {
+          // 3D Array
+          let newArr = [];
+          if (value) {
+            const columnLimit = value?.sData?.column;
+            const rowLimit = value?.sData?.row;
+            // Iterating for prototype 3D Array to mimic the seats
+            let temp = [];
+            for (let i = 0; i < rowLimit; i++) {
+              for (let j = 0; j < columnLimit; j++) {
+                temp.push(null);
+              }
+              newArr.push(temp);
+              temp = [];
+            }
+            // Adding values to 3D array
+            for (let dat of value?.sInfo) {
+              newArr[dat.seatPosition.row - 1][dat.seatPosition.column - 1] = dat;
+            }
+          }
+          return (
+            <div className='tj-seatmap mb-20' key={index}>
+              <h2 className='mb-20'>
+                {selectedBookings[type].segments[index].departure.airport.code} &rarr;{' '}
+                {selectedBookings[type].segments[index].arrival.airport.code}
+              </h2>
+              {newArr &&
+                newArr.length > 0 &&
+                newArr.map((element, ind) => {
+                  return (
+                    <div key={ind} className='tj-grid'>
+                      {element.map((el, i) =>
+                        el ? (
+                          <Seat
+                            key={i}
+                            label={el.seatNo.split('').at(-1)}
+                            fill={
+                              el.isBooked
+                                ? '#FF0000'
+                                : el?.isSelected
+                                ? '#4CBB17'
+                                : el?.amount > 0
+                                ? '#FFA500'
+                                : undefined
+                            }
+                            clickable={el.isBooked ? false : true}
+                            onClick={
+                              !el.isBooked
+                                ? () => {
+                                    if (!el.isBooked) {
+                                      // Adding / Removing Selected Seats
+                                      setSeatMap((prev) => {
+                                        for (let dat of prev[type].data.seatMap[key]
+                                          ?.sInfo) {
+                                          if (dat.seatNo === el.seatNo) {
+                                            let travl = prev[type].data.seatMap[key][
+                                              'travellers'
+                                            ]
+                                              ? prev[type].data.seatMap[key]['travellers']
+                                              : [];
+                                            // If already selected, removing selected + traveller info on that seat
+                                            if (dat['isSelected']) {
+                                              dat['isSelected'] = false;
+                                              travl = travl.filter(
+                                                (trav) => trav.seatNo !== el.seatNo
+                                              );
+                                            }
+                                            // If not selected, then we add traveller and seat info (if max seats are selected,)
+                                            // Setting first traveller to new seat selected
+                                            else {
+                                              dat['isSelected'] = true;
+                                              if (travl) {
+                                                if (travl.length === travellers.length) {
+                                                  travl.push({
+                                                    ...travl[0],
+                                                    seatNo: el.seatNo,
+                                                  });
+                                                  prev[type].data.seatMap[key].sInfo =
+                                                    prev[type].data.seatMap[
+                                                      key
+                                                    ].sInfo.map((s) =>
+                                                      s.seatNo === travl[0].seatNo
+                                                        ? { ...s, isSelected: false }
+                                                        : s
+                                                    );
+                                                  travl.splice(0, 1);
+                                                } else
+                                                  travl.push({
+                                                    ...travellers[travl.length],
+                                                    seatNo: el.seatNo,
+                                                  });
+                                              } else {
+                                                travl = [
+                                                  {
+                                                    ...travellers[0],
+                                                    seatNo: el.seatNo,
+                                                  },
+                                                ];
+                                              }
+                                            }
+                                            prev[type].data.seatMap[key]['travellers'] =
+                                              travl;
+                                          }
                                         }
-                                      }
+                                        return { ...prev };
+                                      });
                                     }
                                   }
-                                  return { ...prev };
-                                });
-                                console.log('testt');
-                              }
+                                : undefined
                             }
-                          : undefined
-                      }
-                    />
-                  ) : (
-                    <>
-                      {element[i - 1]?.isAisle && element[i + 1]?.isAisle ? (
-                        <span className='row-number'>{index + 1}</span>
-                      ) : (
-                        <span className='row-number' />
+                          />
+                        ) : (
+                          <>
+                            {element[i - 1]?.isAisle && element[i + 1]?.isAisle ? (
+                              <span className='row-number'>{ind + 1}</span>
+                            ) : (
+                              <span className='row-number' />
+                            )}
+                          </>
+                        )
                       )}
-                    </>
-                  )
-                )}
-              </div>
-            );
-          })}
+                    </div>
+                  );
+                })}
+            </div>
+          );
+        })}
       </div>
     );
   };
@@ -392,13 +461,27 @@ function Seatmap({ setCurrentStep, isBooked, PNR, travellerInfos }) {
       <div className='container'>
         <h1>Flight Seatmaps</h1>
         {/* To */}
-        <h2 className='mt-20'>To Seatmap</h2>
-        <div className='bg-white py-30 px-30 mt-20'>
-          {/* TJ */}
-          {seatMap?.to?.data && seatMap?.to?.provider === 'tj' && (
-            <TJSeatMapRender data={seatMap.to} type='to' />
-          )}
-        </div>
+        {seatMap?.to?.data && (
+          <>
+            <h2 className='mt-20'>To Seatmap</h2>
+            <div className='bg-white py-30 px-30 mt-20'>
+              {
+                // TJ
+                seatMap?.to?.provider === 'tj' ? (
+                  <TJSeatMapRender data={seatMap.to.data} type='to' />
+                ) : // AA
+                seatMap?.to?.provider === 'aa' ? (
+                  <></>
+                ) : // AD
+                seatMap?.tp?.provider === 'ad' ? (
+                  <></>
+                ) : (
+                  <></>
+                )
+              }
+            </div>
+          </>
+        )}
         {/* From */}
         {seatMap?.from && (
           <>
@@ -409,12 +492,21 @@ function Seatmap({ setCurrentStep, isBooked, PNR, travellerInfos }) {
                 <TJSeatMapRender data={seatMap.from} type='from' />
               )}
               {/* AD */}
-              {seatMap?.from?.data && seatMap?.from?.provider === 'ad' && (
+              {/* {seatMap?.from?.data && seatMap?.from?.provider === 'ad' && (
                 <ADSeatMapRender data={seatMap.from} type='from' />
-              )}
+              )} */}
             </div>
           </>
         )}
+        {/* Proceed To Review */}
+        <div className='d-flex col-12 justify-end'>
+          <button
+            className='button -dark-1 px-30 h-50 bg-blue-1 text-white col-4 mt-20'
+            onClick={() => onClick()}
+          >
+            Proceed To Review
+          </button>
+        </div>
       </div>
     </section>
   );

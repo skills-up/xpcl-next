@@ -10,7 +10,17 @@ const index = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [PNR, setPNR] = useState({ to: null, from: null, combined: null });
   const [travellerInfo, setTravellerInfo] = useState([]);
-  // 1 - View Itinerary
+  const [seatMap, setSeatMap] = useState({
+    // to: { provider: 'tj', data: tjSeatMap, selected: 0 },
+    // from: { provider: 'ad', data: adSeatMap, selecteD: 0 },
+    to: null,
+    from: null,
+    combined: null,
+  });
+
+  // 1 - View Itinerary + Traveller Details
+  // 2 - Seat Maps
+  // 3 - Review
 
   useEffect(() => console.log('PNR', PNR), [PNR]);
 
@@ -33,7 +43,13 @@ const index = () => {
         />
       )}
 
-      {currentStep === 2 && <Seatmap PNR={PNR} />}
+      {currentStep === 2 && (
+        <Seatmap
+          PNR={PNR}
+          seatMaps={[seatMap, setSeatMap]}
+          setCurrentStep={setCurrentStep}
+        />
+      )}
 
       <CallToActions />
       {/* End Call To Actions Section */}
