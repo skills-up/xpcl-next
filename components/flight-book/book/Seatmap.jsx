@@ -127,7 +127,7 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
             for (let [k, v] of Object.entries(seatMap[key]?.data?.seatMap)) {
               if (v.travellers && v.travellers.length > 0) {
                 for (let trav of v.travellers) {
-                  if (trav.traveller_id === traveller.id) {
+                  if (trav.traveller_id === traveller.id && tempObj['code'] !== 'INF') {
                     seats.push({ key: k, code: trav.seatNo });
                     seatCost += trav.amount;
                   }
@@ -139,7 +139,7 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
             let meals = [];
             if (traveller.trip_meals[key]) {
               for (let meal of traveller.trip_meals[key]) {
-                if (meal.value.id && meal.value.code) {
+                if (meal.value.id && meal.value.code && tempObj['code'] !== 'INF') {
                   meals.push({ key: meal.value.id, code: meal.value.code });
                   mealCost += meal.value?.amount || 0;
                 }
@@ -736,7 +736,7 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
           </>
         )}
         {/* Combined */}
-        {seatMap?.from && (
+        {seatMap?.combined && (
           <>
             <h2 className='mt-20'>Onward and Return Trip</h2>
             <div className='bg-white py-30 px-30 mt-20'>

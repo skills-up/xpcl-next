@@ -4,38 +4,38 @@ import { akasa, tripjack } from '../../pages/test/temp';
 export const initialState = {
   value: {
     returnFlight: true,
-    // destinations: { from: null, to: null, departDate: null, returnDate: null },
-    destinations: {
-      to: {
-        value: 885,
-        label: '|BOM|Mumbai|Chhatrapati Shivaji International Airport|India',
-        iata: 'BOM',
-      },
-      from: {
-        value: 1739,
-        label: '|DEL|Delhi|Indira Gandhi International Airport|India',
-        iata: 'DEL',
-      },
-      departDate: '2023-06-10',
-      returnDate: '2023-06-14',
-    },
+    destinations: { from: null, to: null, departDate: null, returnDate: null },
+    // destinations: {
+    //   to: {
+    //     value: 885,
+    //     label: '|BOM|Mumbai|Chhatrapati Shivaji International Airport|India',
+    //     iata: 'BOM',
+    //   },
+    //   from: {
+    //     value: 1739,
+    //     label: '|DEL|Delhi|Indira Gandhi International Airport|India',
+    //     iata: 'DEL',
+    //   },
+    //   departDate: '2023-06-10',
+    //   returnDate: '2023-06-14',
+    // },
     searchData: { aa: null, tj: null, ad: null },
     // searchData: { aa: akasa, tj: tripjack, ad: null },
-    // travellers: [],
-    travellers: [
-      {
-        value: 2,
-        label: 'Someone UsedToKnow',
-        traveller_id: 2,
-      },
-      {
-        value: 1,
-        label: 'Sahil Verma',
-        traveller_id: 1,
-      },
-    ],
-    // travellerDOBS: { ADT: 0, CHD: 0, INF: 0 },
-    travellerDOBS: { ADT: 1, CHD: 1, INF: 1 },
+    travellers: [],
+    // travellers: [
+    //   {
+    //     value: 2,
+    //     label: 'Someone UsedToKnow',
+    //     traveller_id: 2,
+    //   },
+    //   {
+    //     value: 1,
+    //     label: 'Sahil Verma',
+    //     traveller_id: 1,
+    //   },
+    // ],
+    travellerDOBS: { ADT: 0, CHD: 0, INF: 0 },
+    // travellerDOBS: { ADT: 1, CHD: 1, INF: 1 },
     airlineOrgs: [],
     clientTravellers: [],
     paginateDataNumber: 0,
