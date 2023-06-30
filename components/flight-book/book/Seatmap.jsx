@@ -43,7 +43,7 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
             response = await customAPICall(
               'tj/v1/seatmaps',
               'post',
-              value?.data,
+              { bookingId: value?.data?.bookingId },
               {},
               true
             );
@@ -735,6 +735,28 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
             </div>
           </>
         )}
+        {/* Combined */}
+        {seatMap?.from && (
+          <>
+            <h2 className='mt-20'>Onward and Return Trip</h2>
+            <div className='bg-white py-30 px-30 mt-20'>
+              {
+                // TJ
+                seatMap?.combined?.provider === 'tj' ? (
+                  <TJSeatMapRender data={seatMap.combined.data} type='from' />
+                ) : // AA
+                seatMap?.combined?.provider === 'aa' ? (
+                  <></>
+                ) : // AD
+                seatMap?.combined?.provider === 'ad' ? (
+                  <></>
+                ) : (
+                  <></>
+                )
+              }
+            </div>
+          </>
+        )}
         {/* Traveller Meal Preferences + Review */}
         <h1 className='mt-30'>Review</h1>
         <div className='mt-10 bg-white px-20 py-20'>
@@ -830,7 +852,7 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
             className='button -dark-1 px-30 h-50 bg-blue-1 text-white col-4 mt-20'
             onClick={() => onClick()}
           >
-            Proceed To Review
+            Confirm and Book
           </button>
         </div>
       </div>

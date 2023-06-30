@@ -92,7 +92,8 @@ const FlightProperties = () => {
                 let childPrice = 0;
                 let adultPrice = 0;
                 if (key === 'aa') {
-                  infantPrice = val.prices.prices?.CHD?.fare * travellerDOBS.INF;
+                  // infantPrice = val.prices.prices?.CHD?.fare * travellerDOBS.INF;
+                  infantPrice = 1500 * travellerDOBS.INF;
                   childPrice = val.prices.prices?.CHD?.fare * travellerDOBS.CHD;
                   adultPrice = val.prices.prices?.ADT?.fare * travellerDOBS.ADT;
                   total =
