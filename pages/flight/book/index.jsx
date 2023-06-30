@@ -47,7 +47,7 @@ const index = () => {
         <Seatmap
           PNR={PNR}
           seatMaps={[seatMap, setSeatMap]}
-          setCurrentStep={setCurrentStep}
+          travellerInfos={[travellerInfo, setTravellerInfo]}
         />
       )}
 

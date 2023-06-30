@@ -66,9 +66,9 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
               seat_preference: el.seat_preference
                 ? { label: el.seat_preference, value: el.seat_preference }
                 : null,
-              meal_preference: el.meal_preference
-                ? { label: el.meal_preference, value: el.meal_preference }
-                : null,
+              // meal_preference: el.meal_preference
+              //   ? { label: el.meal_preference, value: el.meal_preference }
+              //   : null,
               prefix: el.prefix
                 ? el.prefix === 'MR'
                   ? { value: 'MR', label: 'Mr.' }
@@ -507,7 +507,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                   </div>
                   <h4>Miscellaneous Details</h4>
                   <div className='row my-3 y-gap-20'>
-                    <div className='col-md-6 form-input-select'>
+                    {/* <div className='col-md-6 form-input-select'>
                       <label>Meal Preference</label>
                       <Select
                         options={mealPreferenceOptions}
@@ -519,7 +519,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                           })
                         }
                       />
-                    </div>
+                    </div> */}
                     <div className='col-md-6 form-input-select'>
                       <label>Seat Preference</label>
                       <Select
