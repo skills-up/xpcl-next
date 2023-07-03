@@ -42,7 +42,6 @@ const MainFilterSearchBox = () => {
   console.log('token', token);
   const airports = useSelector((state) => state.apis.value.airports);
   const client_id = useSelector((state) => state.auth.value.currentOrganization);
-  // console.log('token', token);
 
   useEffect(() => {
     if (token !== '') {

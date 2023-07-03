@@ -5,7 +5,7 @@ import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { sendToast } from '../../../../utils/toastify';
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { createItem, getList } from '../../../../api/xplorzApi';
 import ReactSwitch from 'react-switch';
 import Select from 'react-select';
@@ -48,6 +48,8 @@ const AddNewTravellers = () => {
   const [aliases, setAliases] = useState([{ value: '' }]);
   const [vaccinationDates, setVaccinationDates] = useState([new DateObject()]);
   const [passportScanFiles, setPassportScanFiles] = useState([]);
+  const [countries, setCountries] = useState([]);
+  const [countryCodeID, setCountryCodeID] = useState(null);
 
   // Options
   const passportGenderOptions = [
@@ -82,6 +84,19 @@ const AddNewTravellers = () => {
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = async () => {
+    let response = await getList('countries');
+    if (response?.success) {
+      setCountries(response.data);
+    } else {
+      sendToast('error', 'Error Getting Country Data', 4000);
+    }
+  };
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -136,6 +151,9 @@ const AddNewTravellers = () => {
     );
     passportFormData.append('pan_card_scan_file', panCardScanFile ?? '');
     passportFormData.append('aadhaar_card_scan_file', aadhaarCardScanFile ?? '');
+    // Country
+    if (countryCodeID?.value)
+      passportFormData.append('passport_country_code', countryCodeID.value);
     // Aliases
     if (aliases.length === 1 && aliases[0].value.trim().length === 0) {
       passportFormData.append(
@@ -279,6 +297,18 @@ const AddNewTravellers = () => {
                         value={passportGender}
                         placeholder='Search & Select Passport Gender'
                         onChange={(id) => setPassportGender(id)}
+                      />
+                    </div>
+                    <div className='col-12 form-input-select'>
+                      <label>Passport Country Code</label>
+                      <Select
+                        options={countries.map((el) => ({
+                          value: el.code,
+                          label: `${el.name} (${el.code})`,
+                        }))}
+                        value={countryCodeID}
+                        placeholder='Search & Select Passport Country Code'
+                        onChange={(id) => setCountryCodeID(id)}
                       />
                     </div>
                     <div className='d-block ml-3 form-datepicker'>

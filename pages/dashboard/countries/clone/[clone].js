@@ -1,17 +1,16 @@
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { createItem, getItem } from '../../../../api/xplorzApi';
 import Seo from '../../../../components/common/Seo';
 import Footer from '../../../../components/footer/dashboard-footer';
 import Header from '../../../../components/header/dashboard-header';
 import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
-import { useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
 import { sendToast } from '../../../../utils/toastify';
-import { useEffect, useState } from 'react';
-import { createItem, getItem, getList } from '../../../../api/xplorzApi';
-import ReactSwitch from 'react-switch';
-import Select from 'react-select';
 
 const AddCountry = () => {
   const [name, setName] = useState('');
+  const [code, setCode] = useState('');
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -25,6 +24,7 @@ const AddCountry = () => {
       const response = await getItem('countries', router.query.clone);
       if (response?.success) {
         setName(response.data?.name);
+        setCode(response.data?.code);
       } else {
         sendToast(
           'error',
@@ -43,6 +43,7 @@ const AddCountry = () => {
     // Checking if account id is not null
     const response = await createItem('countries', {
       name,
+      code,
     });
     if (response?.success) {
       sendToast('success', 'Created Country Successfully.', 4000);
@@ -99,6 +100,20 @@ const AddCountry = () => {
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Name<span className='text-danger'>*</span>
+                        </label>
+                      </div>
+                    </div>
+                    <div className='col-12'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setCode(e.target.value)}
+                          value={code}
+                          placeholder=' '
+                          type='text'
+                          required
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Code<span className='text-danger'>*</span>
                         </label>
                       </div>
                     </div>

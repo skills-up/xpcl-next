@@ -54,7 +54,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
     // Getting Traveller Details
     if (travellers) {
       const travellerList = await getList('travellers', {
-        traveller_ids: travellers.map((el) => el?.value),
+        traveller_ids: travellers.map((el) => el?.traveller_id),
       });
       if (travellerList?.success) {
         setTravellerInfo(

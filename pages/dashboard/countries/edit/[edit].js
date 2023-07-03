@@ -10,6 +10,7 @@ import { createItem, getItem, getList, updateItem } from '../../../../api/xplorz
 
 const UpdateCountry = () => {
   const [name, setName] = useState('');
+  const [code, setCode] = useState('');
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -23,6 +24,7 @@ const UpdateCountry = () => {
       const response = await getItem('countries', router.query.edit);
       if (response?.success) {
         setName(response.data?.name);
+        setCode(response.data?.code);
       } else {
         sendToast(
           'error',
@@ -41,6 +43,7 @@ const UpdateCountry = () => {
     // Checking if account id is not null
     const response = await updateItem('countries', router.query.edit, {
       name,
+      code,
     });
     if (response?.success) {
       sendToast('success', 'Updated Country Successfully.', 4000);
@@ -97,6 +100,20 @@ const UpdateCountry = () => {
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Name<span className='text-danger'>*</span>
+                        </label>
+                      </div>
+                    </div>
+                    <div className='col-12'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setCode(e.target.value)}
+                          value={code}
+                          placeholder=' '
+                          type='text'
+                          required
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Code<span className='text-danger'>*</span>
                         </label>
                       </div>
                     </div>

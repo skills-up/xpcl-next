@@ -106,7 +106,9 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
             // Name
             tempObj['name'] = {
               title: traveller?.prefix?.value
-                ? traveller.prefix.value
+                ? traveller.prefix.value !== 'MSTR'
+                  ? traveller.prefix.value
+                  : 'MASTER'
                 : traveller?.prefix,
               first: traveller?.first_name,
               last: traveller?.last_name,
@@ -773,69 +775,76 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
                       {/* TJ */}
                       {value.provider === 'tj' &&
                         value.data?.data?.tripInfos?.[0].sI?.map((element, ind) => (
-                          <div className='col-md-6 form-input-select mt-10' key={ind}>
-                            <label>
-                              {element.da.code} &rarr; {element.aa.code}
-                            </label>
-                            <Select
-                              options={[
-                                {
-                                  value: {
-                                    id: element.id,
-                                  },
-                                  label: 'No Preference',
-                                },
-                                ...element.ssrInfo?.MEAL?.map((el) => ({
-                                  value: { ...el, id: element.id },
-                                  label:
-                                    el.desc +
-                                    ' - ' +
-                                    el.amount.toLocaleString('en-IN', {
-                                      maximumFractionDigits: 2,
-                                      style: 'currency',
-                                      currency: 'INR',
-                                    }),
-                                })),
-                              ]}
-                              defaultValue={{
-                                value: {
-                                  id: element.id,
-                                },
-                                label: 'No Preference',
-                              }}
-                              // value={element.seat_preference}
-                              onChange={(id) =>
-                                setTravellerInfo((prev) => {
-                                  for (let traveller of prev) {
-                                    if (traveller.id === travl.id) {
-                                      if (traveller.trip_meals[key]) {
-                                        let exists = false;
-                                        for (
-                                          let i = 0;
-                                          i < traveller.trip_meals[key].length;
-                                          i++
-                                        ) {
-                                          if (
-                                            element.id ===
-                                            traveller.trip_meals[key][i].value.id
-                                          ) {
-                                            traveller.trip_meals[key][i] = id;
-                                            exists = true;
+                          <>
+                            {element?.ssrInfo?.MEAL ? (
+                              <div className='col-md-6 form-input-select mt-10' key={ind}>
+                                <label>
+                                  {element.da.code} &rarr; {element.aa.code}
+                                </label>
+                                {console.log('element', element)}
+                                <Select
+                                  options={[
+                                    {
+                                      value: {
+                                        id: element.id,
+                                      },
+                                      label: 'No Preference',
+                                    },
+                                    ...element?.ssrInfo?.MEAL?.map((el) => ({
+                                      value: { ...el, id: element.id },
+                                      label:
+                                        el.desc +
+                                        ' - ' +
+                                        el.amount.toLocaleString('en-IN', {
+                                          maximumFractionDigits: 2,
+                                          style: 'currency',
+                                          currency: 'INR',
+                                        }),
+                                    })),
+                                  ]}
+                                  defaultValue={{
+                                    value: {
+                                      id: element.id,
+                                    },
+                                    label: 'No Preference',
+                                  }}
+                                  // value={element.seat_preference}
+                                  onChange={(id) =>
+                                    setTravellerInfo((prev) => {
+                                      for (let traveller of prev) {
+                                        if (traveller.id === travl.id) {
+                                          if (traveller.trip_meals[key]) {
+                                            let exists = false;
+                                            for (
+                                              let i = 0;
+                                              i < traveller.trip_meals[key].length;
+                                              i++
+                                            ) {
+                                              if (
+                                                element.id ===
+                                                traveller.trip_meals[key][i].value.id
+                                              ) {
+                                                traveller.trip_meals[key][i] = id;
+                                                exists = true;
+                                              }
+                                            }
+                                            if (!exists) {
+                                              traveller.trip_meals[key].push(id);
+                                            }
+                                          } else {
+                                            traveller.trip_meals[key] = [id];
                                           }
                                         }
-                                        if (!exists) {
-                                          traveller.trip_meals[key].push(id);
-                                        }
-                                      } else {
-                                        traveller.trip_meals[key] = [id];
                                       }
-                                    }
+                                      return [...prev];
+                                    })
                                   }
-                                  return [...prev];
-                                })
-                              }
-                            />
-                          </div>
+                                />
+                              </div>
+                            ) : (
+                              <></>
+                            )}
+                          </>
                         ))}
                       {/* AA */}
                       {/* AD */}
