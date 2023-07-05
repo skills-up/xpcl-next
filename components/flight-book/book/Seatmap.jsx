@@ -8,6 +8,7 @@ import 'react-tooltip/dist/react-tooltip.css';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { DateObject } from 'react-multi-date-picker';
 import Select from 'react-select';
+import { adSeatMap } from '../../../pages/test/temp';
 
 function Seatmap({ seatMaps, PNR, travellerInfos }) {
   const [seatMap, setSeatMap] = seatMaps;
@@ -15,6 +16,7 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
   const selectedBookings = useSelector(
     (state) => state.flightSearch.value.selectedBookings
   );
+  const travellerDOBS = useSelector((state) => state.flightSearch.value.travellerDOBS);
   const [travellerInfo, setTravellerInfo] = travellerInfos;
   // Fetch Flight Details for PNRs
   // Save Them To Seatmaps
@@ -35,6 +37,11 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
     if (PNR) {
       let response = {};
       let tempDat = { to: null, from: null, combined: null };
+      // let tempDat = {
+      //   to: { data: adSeatMap, provider: 'ad' },
+      //   from: null,
+      //   combined: null,
+      // };
       for (let [key, value] of Object.entries(PNR)) {
         if (value) {
           // API Call to Flight Booking + setSeatMap
@@ -56,11 +63,41 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
           }
           // AA
           // AD
+          if (value?.provider === 'ad') {
+            for (let [segKey, segValue] of Object.entries(value?.data?.segments)) {
+              response = await customAPICall(
+                'tj/v1/seatmaps',
+                'post',
+                {
+                  seatCount: travellerDOBS.ADT + travellerDOBS.CHD,
+                  sector: {
+                    departure: value.from,
+                    arrival: value.to,
+                    departureDate: value.departureDate,
+                    arrivalDate: value.arrivalDate,
+                    airline: value.companyCode,
+                    flightNumber: value.flightNumber,
+                    bookingClass: value.bookingClass,
+                  },
+                },
+                {},
+                true
+              );
+              if (response?.success) {
+                tempDat[key] = {
+                  data: tempDat[key]?.data
+                    ? tempDat[key].data.push(response.data)
+                    : [response.data],
+                  provider: 'ad',
+                };
+              }
+            }
+          }
+          if (!response?.success) {
+            sendToast('error', 'Could not fetch seatmap', 4000);
+            // router.back();
+          }
         }
-      }
-      if (!response?.success) {
-        sendToast('error', 'Could not fetch seatmap', 4000);
-        // router.back();
       }
       setSeatMap(tempDat);
       setTravellerInfo((prev) =>
@@ -443,10 +480,15 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
     let getArray = (x) => {
       return x ? (Array.isArray(x) ? x : [x]) : [];
     };
-
-    let seatmap = data?.data;
+    const reserveCodes = ['SO', 'BK', 'LA', 'G', 'GN', 'CL', 'ST', 'TA', '1', '8'];
+    let seatmap = data;
     let rows = seatmap.row;
     var currRow = 0;
+    let html = '';
+    function getLocation(loc, spacers) {
+      if (loc.length < 2) return loc;
+      return loc.charAt(spacers < 2 ? 0 : 1);
+    }
 
     var prices = {};
     var custData = seatmap.customerCentricData || {};
@@ -556,7 +598,7 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
       });
 
       // Add Seats
-      for (i = seatRows[0]; i <= seatRows[1]; i++) {
+      for (let i = seatRows[0]; i <= seatRows[1]; i++) {
         const cabinRow = rows[currRow++];
         if (cabinRow == undefined) continue;
 
@@ -679,14 +721,19 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
         cont += rowBefore + rowCont + rowAfter;
       }
       html +=
-        '<table class="table ' +
+        '<table class="amadeus-table ' +
         (isUpperDeck ? 'upper-deck' : 'lower-deck') +
         '"><tbody>' +
         facFront +
         cont +
         facRear +
-        '</tboady></table>';
+        '</tbody></table>';
     });
+    console.log('html', html);
+    return (
+      <div className='amadeus-container' dangerouslySetInnerHTML={{ __html: html }} />
+    );
+    // return <div>{html}</div>;
   };
 
   return (
@@ -707,7 +754,7 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
                   <></>
                 ) : // AD
                 seatMap?.to?.provider === 'ad' ? (
-                  <></>
+                  <ADSeatMapRender data={seatMap.to.data} type='to' />
                 ) : (
                   <></>
                 )
@@ -745,7 +792,7 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
               {
                 // TJ
                 seatMap?.combined?.provider === 'tj' ? (
-                  <TJSeatMapRender data={seatMap.combined.data} type='from' />
+                  <TJSeatMapRender data={seatMap.combined.data} type='combined' />
                 ) : // AA
                 seatMap?.combined?.provider === 'aa' ? (
                   <></>

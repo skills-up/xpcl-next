@@ -11,8 +11,6 @@ const index = () => {
   const [PNR, setPNR] = useState({ to: null, from: null, combined: null });
   const [travellerInfo, setTravellerInfo] = useState([]);
   const [seatMap, setSeatMap] = useState({
-    // to: { provider: 'tj', data: tjSeatMap, selected: 0 },
-    // from: { provider: 'ad', data: adSeatMap, selecteD: 0 },
     to: null,
     from: null,
     combined: null,

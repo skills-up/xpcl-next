@@ -2454,3 +2454,155 @@ table.table-6 {
     }
   }
 }
+
+// Amadeus Seatmap
+.amadeus-container {
+  .amadeus-table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    .upper-deck {
+      display: none;
+    }
+    tbody th:nth-child(2),
+    tbody td:nth-child(2) {
+      border-left: 2px solid #999;
+    }
+    tbody th:last-child,
+    tbody td:last-child {
+      border-right: 2px solid #999;
+    }
+    th.col-name {
+      text-align: center;
+    }
+    td.gap-row {
+      border-left: 2px dotted;
+      border-right: 2px dotted;
+    }
+    tr.seat-row.row-type-Z {
+      display: none;
+    }
+    tr.seat-row th.row-number {
+      font-size: x-small;
+      text-align: right;
+    }
+    td.seat,
+    div.seat {
+      height: 60px;
+      width: 60px;
+      background-image: url('../../img/flights/seat.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+    td.seat.seat-sel {
+      background-color: #6c69 !important;
+      font-weight: bold;
+    }
+    td.seat.seat-1 {
+      background-color: #fcc9 !important;
+      color: transparent !important;
+      cursor: not-allowed;
+    }
+    td.seat.seat-O {
+      background-color: #ccc9 !important;
+      color: #c33 !important;
+      cursor: not-allowed;
+    }
+    td.seat.seat-8 {
+      background: transparent !important;
+      cursor: not-allowed;
+    }
+    td.seat.seat-GN {
+      background-image: url('../../img/flights/unavailable.png');
+      cursor: not-allowed;
+      background-color: #fcc9;
+    }
+    td.seat.seat-SO {
+      background-image: url('../../img/flights/storage.png');
+      cursor: not-allowed;
+      background-color: #cf99;
+    }
+    td.seat.seat-BK {
+      background-image: url('../../img/flights/bulkhead.png');
+      cursor: not-allowed;
+      background-color: #cf99;
+    }
+    td.seat.seat-ST {
+      background-image: url('../../img/flights/stairs.png');
+      cursor: not-allowed;
+      background-color: #cf99;
+    }
+    td.seat.seat-LA {
+      background-image: url('../../img/flights/lavatory.png');
+      cursor: not-allowed;
+      background-color: #cc69;
+    }
+    td.seat.seat-AL {
+      background-color: #cc69;
+    }
+    td.seat.seat-G {
+      background-image: url('../../img/flights/galley.png');
+      cursor: not-allowed;
+      background-color: #6cc9;
+    }
+    td.seat.seat-AG {
+      background-color: #6cc9;
+    }
+    td.seat.seat-OW {
+      background-color: #ff99;
+    }
+    td.seat.seat-L,
+    td.seat.seat-K {
+      background-color: #ccf9;
+    }
+    td.seat.seat-E {
+      background-color: #66f9;
+    }
+    td.seat.seat-1D {
+      background-image: url('../../img/flights/seat-res.png');
+    }
+    td.seat.seat-B {
+      background-image: url('../../img/flights/seat-basin.png');
+    }
+    th.img-container {
+      padding: 0 !important;
+    }
+    th.img-container img {
+      width: 100%;
+    }
+    td.seat span.price {
+      display: none;
+      position: absolute;
+      margin-top: -2.5em;
+      margin-left: -0.25em;
+      font-size: 0.65em;
+      background: #000c;
+      color: #fff;
+      padding: 0.5em;
+    }
+    td.seat.seat-CH:not(.seat-O):hover span.price,
+    td.seat.seat-CH:not(.seat-O):focus span.price {
+      display: block;
+    }
+    td {
+      text-align: center;
+    }
+    div.seat-allot {
+      display: inline-block;
+    }
+    div.inits {
+      border: 2px solid;
+      border-radius: 50%;
+      padding: 10px;
+      font-weight: bold;
+      margin: 6px;
+    }
+    div.seat {
+      padding: 15px;
+    }
+    #upperDeckToggle {
+      margin-bottom: 1em;
+      display: none;
+    }
+  }
+}

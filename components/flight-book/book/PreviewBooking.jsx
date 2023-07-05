@@ -162,11 +162,11 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
             ...prev,
             combined: { data: response.data, provider: 'ad' },
           }));
-          // setCurrentStep(2);
+          setCurrentStep(2);
           return;
         } else {
-          // sendToast('error', 'Error While Creating Booking', 4000);
-          // router.back();
+          sendToast('error', 'Error While Creating Booking', 4000);
+          router.back();
           return;
         }
       } else {
