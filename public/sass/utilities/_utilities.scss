@@ -2448,6 +2448,10 @@ table.table-6 {
     display: flex;
     align-items: center;
     .row-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 55px;
       min-width: 55px;
       font-size: 1.2rem;
       text-align: center;
