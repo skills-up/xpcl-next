@@ -56,6 +56,8 @@ const UpdateTravellers = () => {
   const [previousPanCardScan, setPreviousPanCardScan] = useState('');
   const [previousAadhaarCardScan, setPreviousAadhaarCardScan] = useState('');
   const [previousPassportScanFiles, setPreviousPassportScanFiles] = useState([]);
+  const [countries, setCountries] = useState([]);
+  const [countryCodeID, setCountryCodeID] = useState(null);
 
   // Options
   const passportGenderOptions = [
@@ -101,6 +103,14 @@ const UpdateTravellers = () => {
     if (router.query.edit) {
       const response = await getItem('travellers', router.query.edit);
       if (response?.success) {
+        // Countries
+        let countries = await getList('countries');
+        if (countries?.success) {
+          setCountries(countries.data);
+        } else {
+          sendToast('error', 'Error Getting Country Data', 4000);
+        }
+
         // Setting previous values
         setPrefix(response.data?.prefix ?? '');
         setFirstName(response.data?.first_name ?? '');
@@ -140,6 +150,15 @@ const UpdateTravellers = () => {
         setPreviousAadhaarCardScan(response.data?.aadhaar_card_scan);
         if (response.data?.passport_scans)
           setPreviousPassportScanFiles(response.data?.passport_scans);
+        // Countries
+        for (let country of countries.data) {
+          if (country.code === response.data.passport_country_code) {
+            setCountryCodeID({
+              value: country.code,
+              label: `${country.name} (${country.code})`,
+            });
+          }
+        }
         // Setting Passport Gender
         for (let gender of passportGenderOptions)
           if (gender.value === response.data?.passport_gender) setPassportGender(gender);
@@ -250,6 +269,9 @@ const UpdateTravellers = () => {
       'vaccination_certificate',
       previousVaccinationCertificate ?? ''
     );
+    // Country
+    if (countryCodeID?.value)
+      passportFormData.append('passport_country_code', countryCodeID.value);
     // Aliases
     if (aliases.length === 1 && aliases[0].value.trim().length === 0) {
       passportFormData.append('aliases[]', null);
@@ -398,6 +420,18 @@ const UpdateTravellers = () => {
                         value={passportGender}
                         placeholder='Search & Select Passport Gender'
                         onChange={(id) => setPassportGender(id)}
+                      />
+                    </div>
+                    <div className='col-12 form-input-select'>
+                      <label>Passport Country Code</label>
+                      <Select
+                        options={countries.map((el) => ({
+                          value: el.code,
+                          label: `${el.name} (${el.code})`,
+                        }))}
+                        value={countryCodeID}
+                        placeholder='Search & Select Passport Country Code'
+                        onChange={(id) => setCountryCodeID(id)}
                       />
                     </div>
                     <div className='d-block ml-3 form-datepicker'>
@@ -654,9 +688,7 @@ const UpdateTravellers = () => {
                     )}
                     <div className='col-lg-12'>
                       <label>Aadhaar Card Scan Certificate File</label>
-                      <NewFileUploads
-                        setUploads={setAadhaarCardScanFile}
-                      />
+                      <NewFileUploads setUploads={setAadhaarCardScanFile} />
                     </div>
                     {/* Aliases */}
                     <div>

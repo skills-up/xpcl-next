@@ -12,11 +12,14 @@ import { customAPICall, getList } from '../../../api/xplorzApi';
 import { checkUser } from '../../../utils/checkTokenValidity';
 import {
   setAirlineOrgs,
-  setReturnFlight,
+  setReturnFlight as setReturnFlightRedux,
   setSearchData,
   setTravellerDOBS,
   setTravellers as setTravellersRedux,
+  setClientTravellers as setClientTravellersRedux,
   setInitialSearchData,
+  setSelectedBookings,
+  setDestinations,
 } from '../../../features/flightSearch/flightSearchSlice';
 
 const MainFilterSearchBox = () => {
@@ -28,7 +31,7 @@ const MainFilterSearchBox = () => {
   const [preferredAirlines, setPreferredAirlines] = useState([]);
   const [departDate, setDepartDate] = useState(new DateObject());
   const [returnDate, setReturnDate] = useState(new DateObject());
-
+  const [returnFlight, setReturnFlight] = useState(true);
   const cabinOptions = ['Economy', 'Premium Economy', 'Business', 'First'];
   const [clientTravellers, setClientTravellers] = useState([]);
   const [airlines, setAirlines] = useState([]);
@@ -36,9 +39,9 @@ const MainFilterSearchBox = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const token = useSelector((state) => state.auth.value.token);
+  console.log('token', token);
   const airports = useSelector((state) => state.apis.value.airports);
   const client_id = useSelector((state) => state.auth.value.currentOrganization);
-  const returnFlight = useSelector((state) => state.flightSearch.value.returnFlight);
 
   useEffect(() => {
     if (token !== '') {
@@ -58,6 +61,7 @@ const MainFilterSearchBox = () => {
     const airlines = await getList('organizations', { is_airline: 1 });
     if (clientTravellers?.success && airlines?.success) {
       dispatch(setAirlineOrgs({ airlineOrgs: airlines.data }));
+      dispatch(setClientTravellersRedux({ clientTravellers: clientTravellers.data }));
       setClientTravellers(
         clientTravellers.data.map((element) => ({
           value: element.id,
@@ -91,16 +95,14 @@ const MainFilterSearchBox = () => {
       sendToast('error', 'Please select travellers', 4000);
       return;
     }
-    // Redux Calls
-    dispatch(setInitialSearchData());
     // Getting Traveller DOBS
     let pax = {};
     const traveller_ids = travellers.map((el) => el.traveller_id);
     const travellerDetails = await getList('travellers', { traveller_ids });
+    let ADT = 0;
+    let CHD = 0;
+    let INF = 0;
     if (travellerDetails?.success) {
-      let ADT = 0;
-      let CHD = 0;
-      let INF = 0;
       let currentTime = +Date.now();
       for (let traveller of travellerDetails.data) {
         if (traveller?.passport_dob) {
@@ -131,10 +133,21 @@ const MainFilterSearchBox = () => {
       }
       if (CHD > 0) pax['CHD'] = CHD;
       if (INF > 0) pax['INF'] = INF;
-      dispatch(setTravellerDOBS({ ADT, CHD, INF }));
     } else {
       sendToast('error', 'Error getting traveller details', 4000);
       return;
+    }
+    // Resetting Search Data
+    dispatch(setInitialSearchData());
+    // Checking for domestic
+    let domestic = true;
+    if (from?.label && to?.label) {
+      if (
+        to?.label?.split('|')?.at(-1) !== 'India' ||
+        from?.label?.split('|')?.at(-1) !== 'India'
+      ) {
+        domestic = false;
+      }
     }
     // Formulating Request
     let request = {
@@ -154,33 +167,121 @@ const MainFilterSearchBox = () => {
         request['cabinType'] = 'PREMIUM_ECONOMY';
       else request['cabinType'] = preferredCabin.value.toUpperCase();
     }
-    if (returnFlight) {
+    if (returnFlight && !domestic) {
       request.sectors.push({
-        to: from?.iata,
         from: to?.iata,
+        to: from?.iata,
         date: returnDate.format('YYYY-MM-DD'),
       });
     }
-
+    // Return Request
+    let returnRequest = {
+      ...request,
+      sectors: [
+        {
+          from: to?.iata,
+          to: from?.iata,
+          date: returnDate.format('YYYY-MM-DD'),
+        },
+      ],
+    };
+    let tempSearchData = { aa: null, tj: null, ad: null };
+    let callsCounter = 2;
+    if (returnFlight && domestic) {
+      callsCounter = 4;
+    }
+    let currentCalls = 0;
     // Akasa
+    // To
     customAPICall('aa/v1/search', 'post', request, {}, true)
-      .then((res) => {
+      .then(async (res) => {
         if (res?.success) {
-          dispatch(setSearchData({ aa: res.data }));
-          dispatch(setTravellers({ travellers: values }));
+          if (returnFlight && domestic) {
+            if (tempSearchData?.aa?.from) {
+              res.data.from = tempSearchData.aa.from;
+            }
+          }
+          tempSearchData = { ...tempSearchData, aa: res.data };
         }
       })
-      .catch((err) => console.error(err));
+      .catch((err) => console.error(err))
+      .then(() =>
+        dispatchCalls(tempSearchData, callsCounter, (currentCalls += 1), ADT, CHD, INF)
+      );
+    // From
+    if (returnFlight && domestic) {
+      customAPICall('aa/v1/search', 'post', returnRequest, {}, true)
+        .then(async (res) => {
+          if (res?.success) {
+            res.data.from = res.data.to;
+            res.data.to = null;
+            if (tempSearchData?.aa?.to) {
+              res.data.to = tempSearchData.aa.to;
+            }
+            tempSearchData = { ...tempSearchData, aa: res.data };
+          }
+        })
+        .catch((err) => console.error(err))
+        .then(() =>
+          dispatchCalls(tempSearchData, callsCounter, (currentCalls += 1), ADT, CHD, INF)
+        );
+    }
     // Tripjack
+    // To
     customAPICall('tj/v1/search', 'post', request, {}, true)
-      .then((res) => {
+      .then(async (res) => {
         if (res?.success) {
-          dispatch(setSearchData({ tj: res.data }));
-          dispatch(setTravellers({ travellers: values }));
+          if (returnFlight && domestic) {
+            if (tempSearchData?.tj?.from) {
+              res.data.from = tempSearchData.tj.from;
+            }
+          }
+          tempSearchData = { ...tempSearchData, tj: res.data };
         }
       })
-      .catch((err) => console.error(err));
+      .catch((err) => console.error(err))
+      .then(() =>
+        dispatchCalls(tempSearchData, callsCounter, (currentCalls += 1), ADT, CHD, INF)
+      );
+    // From
+    if (returnFlight && domestic) {
+      customAPICall('tj/v1/search', 'post', returnRequest, {}, true)
+        .then(async (res) => {
+          if (res?.success) {
+            res.data.from = res.data.to;
+            res.data.to = null;
+            if (tempSearchData?.tj?.to) {
+              res.data.to = tempSearchData.tj.to;
+            }
+            tempSearchData = { ...tempSearchData, tj: res.data };
+          }
+        })
+        .catch((err) => console.error(err))
+        .then(() =>
+          dispatchCalls(tempSearchData, callsCounter, (currentCalls += 1), ADT, CHD, INF)
+        );
+    }
   };
+
+  const dispatchCalls = async (searchData, totalCalls, currentCalls, ADT, CHD, INF) => {
+    dispatch(setSearchData(searchData));
+    if (currentCalls === totalCalls) {
+      dispatch(setTravellerDOBS({ ADT, CHD, INF }));
+      dispatch(setReturnFlightRedux({ returnFlight }));
+      dispatch(setTravellersRedux({ travellers }));
+      dispatch(
+        setDestinations({
+          to,
+          from,
+          departDate: departDate.format('YYYY-MM-DD'),
+          returnDate: returnFlight ? returnDate.format('YYYY-MM-DD') : null,
+        })
+      );
+    }
+  };
+
+  const searchData = useSelector((state) => state.flightSearch.value.searchData);
+  useEffect(() => console.log('sd', searchData), [searchData]);
 
   return (
     <>
@@ -194,7 +295,7 @@ const MainFilterSearchBox = () => {
           <div className='d-flex items-center gap-2 justify-center'>
             <label>One Way</label>
             <ReactSwitch
-              onChange={() => dispatch(setReturnFlight({ returnFlight: !returnFlight }))}
+              onChange={() => setReturnFlight((prev) => !prev)}
               checked={returnFlight}
             />
             <label>Return Trip</label>
@@ -238,6 +339,7 @@ const MainFilterSearchBox = () => {
               options={airports.map((airport) => ({
                 value: airport.id,
                 label: `|${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
+                iata: airport.iata_code,
               }))}
               formatOptionLabel={(opt) => {
                 const [_, iata_code, city, name, country_name] = opt.label.split('|');
@@ -277,6 +379,7 @@ const MainFilterSearchBox = () => {
               options={airports.map((airport) => ({
                 value: airport.id,
                 label: `|${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
+                iata: airport.iata_code,
               }))}
               formatOptionLabel={(opt) => {
                 const [_, iata_code, city, name, country_name] = opt.label.split('|');
@@ -318,10 +421,14 @@ const MainFilterSearchBox = () => {
                 inputClass='custom_input-picker'
                 containerClassName='custom_container-picker'
                 value={departDate}
-                onChange={setDepartDate}
+                onChange={(i) => {
+                  setDepartDate(i);
+                  if (returnDate.valueOf() < i.valueOf()) setReturnDate(i);
+                }}
                 numberOfMonths={1}
                 offsetY={10}
                 format='DD MMMM YYYY'
+                minDate={new DateObject()}
               />
             </div>
             {/* End Depart */}
@@ -339,6 +446,7 @@ const MainFilterSearchBox = () => {
                   numberOfMonths={1}
                   offsetY={10}
                   format='DD MMMM YYYY'
+                  minDate={departDate}
                 />
               </div>
             )}
@@ -359,7 +467,7 @@ const MainFilterSearchBox = () => {
         </div>
 
         {/* End search button_item */}
-        <div className='button-item pl-20 mt-20'>
+        <div className='button-item pl-20 mt-20 lg:pl-0'>
           <button
             className='d-block mainSearch__submit button -blue-1 py-15 h-60 col-12 rounded-4 bg-dark-3 text-white'
             onClick={search}

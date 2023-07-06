@@ -4,14 +4,42 @@ import { akasa, tripjack } from '../../pages/test/temp';
 export const initialState = {
   value: {
     returnFlight: true,
-    // searchData: { aa: null, tj: null, ad: null },
-    searchData: { aa: akasa, tj: tripjack, ad: null },
+    destinations: { from: null, to: null, departDate: null, returnDate: null },
+    // destinations: {
+    //   to: {
+    //     value: 885,
+    //     label: '|BOM|Mumbai|Chhatrapati Shivaji International Airport|India',
+    //     iata: 'BOM',
+    //   },
+    //   from: {
+    //     value: 1739,
+    //     label: '|DEL|Delhi|Indira Gandhi International Airport|India',
+    //     iata: 'DEL',
+    //   },
+    //   departDate: '2023-06-10',
+    //   returnDate: '2023-06-14',
+    // },
+    searchData: { aa: null, tj: null, ad: null },
+    // searchData: { aa: akasa, tj: tripjack, ad: null },
     travellers: [],
-    // travellerDOBS: { ADT: 0, CHD: 0, INF: 0 },
-    travellerDOBS: { ADT: 1, CHD: 1, INF: 1 },
+    // travellers: [
+    //   {
+    //     value: 2,
+    //     label: 'Someone UsedToKnow',
+    //     traveller_id: 2,
+    //   },
+    //   {
+    //     value: 1,
+    //     label: 'Sahil Verma',
+    //     traveller_id: 1,
+    //   },
+    // ],
+    travellerDOBS: { ADT: 0, CHD: 0, INF: 0 },
+    // travellerDOBS: { ADT: 1, CHD: 1, INF: 1 },
     airlineOrgs: [],
+    clientTravellers: [],
     paginateDataNumber: 0,
-    paginateDataPerPage: 7,
+    paginateDataPerPage: 10,
     paginateTotalDataSize: 0,
     stops: null,
     cabins: null,
@@ -22,11 +50,15 @@ export const initialState = {
     arriveTimes: null,
     price: { value: { min: 0, max: 0 }, maxPrice: 0 },
     sort: {
+      _: true,
       price: true,
       total_duration: false,
       departure_time: false,
       arrival_time: false,
     },
+    selectedBookings: { to: null, from: null, combined: null },
+    emailClientMode: false,
+    emailClients: [],
   },
 };
 
@@ -55,26 +87,52 @@ const flightSearchSlice = createSlice({
     setArrivingAt: (state, action) => {
       state.value.arrivingAt = action.payload;
     },
+    setDestinations: (state, action) => {
+      state.value.destinations = action.payload;
+      console.log('destinations', state.value.destinations);
+    },
     setPrice: (state, action) => {
       state.value.price = action.payload;
     },
     setSearchData: (state, action) => {
-      state.value.searchData = { ...state.value.searchData, ...action.payload };
+      state.value.searchData = action.payload;
+    },
+    setReturnFlight: (state, action) => {
+      state.value.returnFlight = action.payload.returnFlight;
     },
     setSort: (state, action) => {
-      for (let [key, value] of Object.entries(state.value.sort)) {
-        if (key !== action.payload.key) state.value.sort[key] = false;
-        else state.value.sort[key] = action.payload.value;
+      if (action.payload.key === '_') {
+        state.value.sort['_'] = action.payload.value;
+      } else {
+        for (let [key, value] of Object.entries(state.value.sort)) {
+          if (key !== '_') {
+            if (key !== action.payload.key) state.value.sort[key] = false;
+            else state.value.sort[key] = action.payload.value;
+          }
+        }
       }
+    },
+    setEmailClientMode: (state, action) => {
+      state.value.emailClientMode = action.payload;
+    },
+    setEmailClients: (state, action) => {
+      state.value.emailClients = action.payload;
     },
     setInitialSearchData: (state) => {
       state.value.searchData = initialState.value.searchData;
+      state.value.emailClientMode = initialState.value.emailClientMode;
+      state.value.emailClients = initialState.value.emailClients;
+      state.value.selectedBookings = initialState.value.selectedBookings;
+      state.value.destinations = initialState.value.destinations;
     },
     setTravellerDOBS: (state, action) => {
       state.value.travellerDOBS = action.payload;
     },
     setAirlineOrgs: (state, action) => {
       state.value.airlineOrgs = action.payload.airlineOrgs;
+    },
+    setClientTravellers: (state, action) => {
+      state.value.clientTravellers = action.payload.clientTravellers;
     },
     setPaginateDataNumber: (state, action) => {
       state.value.paginateDataNumber = action.payload.paginateDataNumber;
@@ -88,6 +146,9 @@ const flightSearchSlice = createSlice({
     setTravellers: (state, action) => {
       state.value.travellers = action.payload.travellers;
     },
+    setSelectedBookings: (state, action) => {
+      state.value.selectedBookings = action.payload;
+    },
     setInitialState: (state) => {
       state.value = initialState.value;
     },
@@ -100,14 +161,19 @@ export const {
   setTravellers,
   setTravellerDOBS,
   setAirlineOrgs,
+  setEmailClientMode,
+  setEmailClients,
   setInitialSearchData,
   setPaginateDataNumber,
+  setDestinations,
   setPaginateDataPerPage,
   setPaginateTotalDataSize,
   setAirlines,
+  setClientTravellers,
   setArriveTimes,
   setArrivingAt,
   setCabins,
+  setSelectedBookings,
   setDepartTimes,
   setSort,
   setDepartingFrom,

@@ -1,11 +1,17 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setPaginateDataNumber } from '../../../features/flightSearch/flightSearchSlice';
+import {
+  setPaginateDataNumber,
+  setPaginateDataPerPage,
+} from '../../../features/flightSearch/flightSearchSlice';
+import Select from 'react-select';
 
 const Pagination = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = 5; // Change this to the actual total number of pages
   const dispatch = useDispatch();
+  const [dataPerPageID, setDataPerPageID] = useState({ label: 10, value: 10 });
+
   // const [currentMaxPage, setCurrentMaxPage] = useState(0);
   let currentMaxPage = 0;
 
@@ -18,6 +24,7 @@ const Pagination = () => {
   const paginateTotalDataSize = useSelector(
     (state) => state.flightSearch.value.paginateTotalDataSize
   );
+  const sort = useSelector((state) => state.flightSearch.value.sort);
 
   /*
       Total Size Change Trigger -> Change in Data Number -> Change in Page Number (1st Page) -> renderPage changes the page options below 
@@ -36,11 +43,15 @@ const Pagination = () => {
       isActive ? 'bg-dark-1 text-white' : ''
     }`;
     return (
-      <div key={pageNumber} className='col-auto'>
-        <div className={className} onClick={() => handlePageClick(pageNumber)}>
-          {pageNumber}
-        </div>
-      </div>
+      <>
+        {+pageNumber >= 0 && (
+          <div key={pageNumber} className='col-auto'>
+            <div className={className} onClick={() => handlePageClick(pageNumber)}>
+              {pageNumber}
+            </div>
+          </div>
+        )}
+      </>
     );
   };
 
@@ -77,9 +88,26 @@ const Pagination = () => {
     setCurrentPage(Math.ceil(paginateDataNumber / paginateDataPerPage));
   }, [paginateDataNumber]);
 
+  useEffect(() => {
+    handlePageClick(1);
+  }, [paginateDataPerPage, sort]);
+
   return (
     <div className='border-top-light mt-30 pt-30'>
+      <div className='form-input-select mb-30'>
+        <label>Data Per Page </label>
+        <Select
+          options={[10, 25, 50, 100].map((el) => ({ label: el, value: el }))}
+          value={dataPerPageID}
+          placeholder=''
+          onChange={(id) => {
+            setDataPerPageID(id);
+            dispatch(setPaginateDataPerPage({ paginateDataPerPage: +id.value }));
+          }}
+        />
+      </div>
       <div className='row x-gap-10 y-gap-20 justify-between md:justify-center'>
+        {/* Left Chevron */}
         <div className='col-auto md:order-1' style={{ minWidth: '100px' }}>
           {paginateDataNumber > paginateDataPerPage && (
             <button
@@ -91,10 +119,11 @@ const Pagination = () => {
           )}
         </div>
 
+        {/* Mapping Pages */}
         <div className='col-md-auto md:order-3'>
           <div className='row x-gap-20 y-gap-20 items-center md:d-none'>
             {renderPages()}
-            {/* If greater than 6 */}
+            {/* If greater than Total Pages */}
             {Math.ceil(+paginateTotalDataSize / +paginateDataPerPage) > totalPages + 1 &&
               currentMaxPage !==
                 Math.ceil(+paginateTotalDataSize / +paginateDataPerPage) && (
@@ -131,6 +160,7 @@ const Pagination = () => {
           </div> */}
         </div>
 
+        {/* Right Chevron */}
         <div className='col-auto md:order-2' style={{ minWidth: '100px' }}>
           {paginateDataNumber < paginateTotalDataSize && (
             <button

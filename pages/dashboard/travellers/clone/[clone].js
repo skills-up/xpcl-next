@@ -48,6 +48,8 @@ const AddNewTravellers = () => {
   const [aliases, setAliases] = useState([{ value: '' }]);
   const [vaccinationDates, setVaccinationDates] = useState([new DateObject()]);
   const [passportScanFiles, setPassportScanFiles] = useState([]);
+  const [countries, setCountries] = useState([]);
+  const [countryCodeID, setCountryCodeID] = useState(null);
 
   // Options
   const passportGenderOptions = [
@@ -93,6 +95,14 @@ const AddNewTravellers = () => {
     if (router.query.clone) {
       const response = await getItem('travellers', router.query.clone);
       if (response?.success) {
+        // Countries
+        let countries = await getList('countries');
+        if (countries?.success) {
+          setCountries(countries.data);
+        } else {
+          sendToast('error', 'Error Getting Country Data', 4000);
+        }
+
         // Setting previous values
         setPrefix(response.data?.prefix ?? '');
         setFirstName(response.data?.first_name ?? '');
@@ -127,6 +137,15 @@ const AddNewTravellers = () => {
         setSeatNotes(response.data?.seat_notes ?? '');
         setPanNumber(response.data?.pan_number ?? '');
         setAadhaarNumber(response.data?.aadhaar_number ?? '');
+        // Countries
+        for (let country of countries.data) {
+          if (country.code === response.data.passport_country_code) {
+            setCountryCodeID({
+              value: country.code,
+              label: `${country.name} (${country.code})`,
+            });
+          }
+        }
         // Setting Passport Gender
         for (let gender of passportGenderOptions)
           if (gender.value === response.data?.passport_gender) setPassportGender(gender);
@@ -231,6 +250,9 @@ const AddNewTravellers = () => {
     );
     passportFormData.append('pan_card_scan_file', panCardScanFile ?? '');
     passportFormData.append('aadhaar_card_scan_file', aadhaarCardScanFile ?? '');
+    // Country
+    if (countryCodeID?.value)
+      passportFormData.append('passport_country_code', countryCodeID.value);
     // Aliases
     if (aliases.length === 1 && aliases[0].value.trim().length === 0) {
       passportFormData.append(
@@ -374,6 +396,18 @@ const AddNewTravellers = () => {
                         value={passportGender}
                         placeholder='Search & Select Passport Gender'
                         onChange={(id) => setPassportGender(id)}
+                      />
+                    </div>
+                    <div className='col-12 form-input-select'>
+                      <label>Passport Country Code</label>
+                      <Select
+                        options={countries.map((el) => ({
+                          value: el.code,
+                          label: `${el.name} (${el.code})`,
+                        }))}
+                        value={countryCodeID}
+                        placeholder='Search & Select Passport Country Code'
+                        onChange={(id) => setCountryCodeID(id)}
                       />
                     </div>
                     <div className='d-block ml-3 form-datepicker'>

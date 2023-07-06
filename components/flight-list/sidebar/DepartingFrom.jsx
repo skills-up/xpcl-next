@@ -24,6 +24,7 @@ const DepartingFrom = () => {
                           number: value.number,
                           value: !value.value,
                           iata_code: value.iata_code,
+                          city: value.city,
                         },
                       })
                     )
@@ -32,7 +33,9 @@ const DepartingFrom = () => {
                 <div className='form-checkbox__mark'>
                   <div className='form-checkbox__icon icon-check' />
                 </div>
-                <div className='text-15 ml-10'>{key}</div>
+                <div className='text-15 ml-10'>
+                  {key} ({value.iata_code}), {value.city}
+                </div>
               </div>
             </div>
             {/* End .col */}

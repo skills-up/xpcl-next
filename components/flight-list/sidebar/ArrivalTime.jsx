@@ -35,9 +35,14 @@ const ArrivalTime = () => {
                     <div className='form-checkbox__icon icon-check' />
                   </div>
                   <div className='text-15 ml-10'>
-                    {key
-                      .split('_')
-                      .map((word) => `${word.charAt(0).toUpperCase() + word.slice(1)} `)}
+                    <span>
+                      {key
+                        .split('_')
+                        .map(
+                          (word) => `${word.charAt(0).toUpperCase() + word.slice(1)} `
+                        )}
+                    </span>
+                    <small className='text-secondary'>({value.times})</small>
                   </div>
                 </div>
               </div>

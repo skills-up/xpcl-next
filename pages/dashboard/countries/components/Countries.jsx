@@ -38,6 +38,10 @@ const Countries = () => {
       accessor: 'name',
     },
     {
+      Header: 'Country Code',
+      accessor: 'code',
+    },
+    {
       Header: 'Last Updated At',
       accessor: 'updated_at',
       Cell: (data) => {
@@ -157,8 +161,10 @@ const Countries = () => {
         downloadCSV
         CSVName='Countries.csv'
         columns={columns}
-        data={countries.filter((perm) =>
-          perm?.name?.toLowerCase().includes(searchQuery.toLowerCase())
+        data={countries.filter(
+          (perm) =>
+            perm?.code?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            perm?.name?.toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>

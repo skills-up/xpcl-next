@@ -19,7 +19,6 @@ const PirceSlider = () => {
           <div className='d-flex justify-between mb-20'>
             <div className='text-15 text-dark-1'>
               <span className='js-lower mx-1'>
-                $
                 {price.value.min.toLocaleString('en-IN', {
                   maximumFractionDigits: 2,
                   style: 'currency',
@@ -28,7 +27,6 @@ const PirceSlider = () => {
               </span>
               -
               <span className='js-upper mx-1'>
-                $
                 {price.value.max.toLocaleString('en-IN', {
                   maximumFractionDigits: 2,
                   style: 'currency',
