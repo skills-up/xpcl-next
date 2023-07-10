@@ -416,19 +416,18 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                   </span>
                 </div>
                 <div className='row my-3'>
-                  {travellers.map((trav, travInd) => {
+                  {travellerInfo.map((trav, travInd) => {
                     let seatSelected = '';
                     if (el.seatMap?.travellers)
                       for (let travl of el.seatMap?.travellers)
-                        if (travl.label === trav.label)
-                          seatSelected = travl?.designator || '';
+                        if (travl.id === trav.id) seatSelected = travl?.designator || '';
                     return (
                       <span
                         style={{ fontWeight: 'bold' }}
                         className='d-block col-auto'
                         key={travInd}
                       >
-                        <span>{trav?.label}</span>{' '}
+                        <span>{trav?.aliases[0]}</span>{' '}
                         <span
                           className='text-primary d-inline-block'
                           style={{ width: '40px' }}
