@@ -10,7 +10,8 @@ import { DateObject } from 'react-multi-date-picker';
 import Select from 'react-select';
 import { aaSeatMap, adSeatMap } from '../../../pages/test/temp';
 
-function Seatmap({ seatMaps, PNR, travellerInfos }) {
+function Seatmap({ seatMaps, PNRS, travellerInfos }) {
+  const [PNR, setPNR] = PNRS;
   const [seatMap, setSeatMap] = seatMaps;
   const travellers = useSelector((state) => state.flightSearch.value.travellers);
   const selectedBookings = useSelector(
@@ -42,6 +43,7 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
       //   from: null,
       //   combined: null,
       // };
+      let tempPNR = { ...PNR };
       for (let [key, value] of Object.entries(PNR)) {
         if (value) {
           // API Call to Flight Booking + setSeatMap
@@ -70,7 +72,27 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
               {},
               true
             );
-            if (response?.success) {
+            let ssr = await customAPICall(
+              'aa/v1/fetch-ssrs',
+              'post',
+              {
+                key: value.data.key,
+                trips: selectedBookings[key].segments.map((el) => ({
+                  origin: el.departure.airport.code,
+                  destination: el.arrival.airport.code,
+                  departureDate: el.departure.time.split('T')[0],
+                  identifier: {
+                    identifier: el.flight.number,
+                    carrierCode: el.flight.airline,
+                  },
+                })),
+                passengerKeys: value.data.pax.map((p) => p.key),
+              },
+              {},
+              true
+            );
+            if (response?.success && ssr.success) {
+              tempPNR[key].data['ssr'] = ssr.data;
               tempDat[key] = {
                 data: response.data,
                 provider: 'aa',
@@ -115,6 +137,7 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
         }
       }
       setSeatMap(tempDat);
+      setPNR(tempPNR);
       setTravellerInfo((prev) =>
         prev.map((el) => ({
           ...el,
@@ -221,6 +244,100 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
           }
         }
         // AA
+        if (value.provider === 'aa') {
+          // SSR Bookings
+          let ssrsTotal = 0;
+          let ssrs = [];
+          for (let traveller of travellerInfo) {
+            if (traveller.trip_meals[key]) {
+              for (let meal of traveller.trip_meals[key]) {
+                // Age
+                const age = (
+                  (Date.now() -
+                    +new DateObject({
+                      date: traveller?.passport_dob,
+                      format: 'YYYY-MM-DD',
+                    })
+                      .toDate()
+                      .getTime()) /
+                  31536000000
+                ).toFixed(2);
+                if (age >= 2) {
+                  ssrs.push({
+                    count: 1,
+                    key: Object.values(meal.value.passengersAvailability)[0].ssrKey,
+                  });
+                  ssrsTotal += Object.values(meal.value.passengersAvailability)[0].price;
+                }
+              }
+            }
+          }
+          if (ssrs.length > 0) {
+            const ssrsBooking = await customAPICall(
+              'aa/v1/book-ssrs',
+              'post',
+              {
+                key: value.data.key,
+                ssrs,
+              },
+              {},
+              true
+            );
+          }
+          // Seat Bookings (Per Segment Per Traveller)
+          let seatTotal = 0;
+          for (let pax of value.data.pax) {
+            for (let seg of seatMap[key].data) {
+              if (seg.seatMap.travellers && seg.seatMap.travellers.length > 0) {
+                for (let traveller of seg.seatMap.travellers) {
+                  if (
+                    traveller.first_name === pax.name.first &&
+                    traveller.last_name === pax.name.last &&
+                    traveller.passport_dob === pax.dob
+                  ) {
+                    const age = (
+                      (Date.now() -
+                        +new DateObject({
+                          date: traveller?.passport_dob,
+                          format: 'YYYY-MM-DD',
+                        })
+                          .toDate()
+                          .getTime()) /
+                      31536000000
+                    ).toFixed(2);
+                    if (age >= 2) {
+                      let seatBooking = await customAPICall(
+                        'aa/v1/seat-reserve',
+                        'post',
+                        {
+                          key: value.data.key,
+                          seatKey: traveller.unitKey,
+                          passengerKey: pax.key,
+                          journeyKey: selectedBookings[key].journeyKey,
+                        },
+                        {},
+                        true
+                      );
+                      seatTotal += traveller.amount;
+                    }
+                  }
+                }
+              }
+            }
+          }
+          // Final Booking
+          let total = selectedBookings[key].total + ssrsTotal + seatTotal;
+          let book = await customAPICall(
+            'aa/v1/book',
+            'post',
+            {
+              key: value.data.key,
+              amount: total,
+            },
+            {},
+            true
+          );
+        }
         // AD
       }
     }
@@ -228,13 +345,101 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
 
   // AA Seatmap
   const AASeatMapRender = ({ data, type }) => {
-    console.log('data', data);
     return (
       <div>
         {/* Iterating Segments */}
         {data.map((el, ind) => {
+          // Getting Group Fee
+          const groups = Object.values(el.fees)[0].groups;
+          let groupFeeArr = [];
+          for (let value of Object.values(groups)) {
+            let cost = 0;
+            value.fees[0].serviceCharges.map((x) => (cost += x.amount));
+            groupFeeArr.push({ group: value.group, amount: cost });
+          }
           return (
             <div key={ind} className='tj-seatmap mb-20'>
+              <h2 className='mb-20'>
+                {el.seatMap.departureStation} &rarr; {el.seatMap.arrivalStation}
+              </h2>
+              {/* Legend */}
+              <div className='d-inline-block bg-light-2 pt-10 px-20 mb-20'>
+                <h4 className='text-center mb-10'>Legend</h4>
+                <div className='d-flex gap-3 text-center'>
+                  <span className='d-flex flex-column items-center'>
+                    <Seat label={''} fill={'#FF0000'} />
+                    <span
+                      style={{
+                        fontWeight: '700',
+                        maxWidth: '100px',
+                        display: 'inline-block',
+                      }}
+                    >
+                      Booked
+                    </span>
+                  </span>
+                  <span className='d-flex flex-column items-center'>
+                    <Seat label={''} fill={'#4CBB17'} clickable />
+                    <span
+                      style={{
+                        fontWeight: '700',
+                        maxWidth: '100px',
+                        display: 'inline-block',
+                      }}
+                    >
+                      Selected
+                    </span>
+                  </span>
+                  <span className='d-flex flex-column items-center'>
+                    <Seat label={''} fill={'#FFA500'} clickable />
+                    <span
+                      style={{
+                        fontWeight: '700',
+                        maxWidth: '100px',
+                        display: 'inline-block',
+                      }}
+                    >
+                      Book With Extra Costs
+                    </span>
+                  </span>
+                  <span className='d-flex flex-column items-center'>
+                    <Seat label={''} fill={'#000'} clickable />
+                    <span
+                      style={{
+                        fontWeight: '700',
+                        maxWidth: '100px',
+                        display: 'inline-block',
+                      }}
+                    >
+                      Book Without Extra Costs
+                    </span>
+                  </span>
+                </div>
+                <div className='row my-3'>
+                  {travellers.map((trav, travInd) => {
+                    let seatSelected = '';
+                    if (el.seatMap?.travellers)
+                      for (let travl of el.seatMap?.travellers)
+                        if (travl.label === trav.label)
+                          seatSelected = travl?.designator || '';
+                    return (
+                      <span
+                        style={{ fontWeight: 'bold' }}
+                        className='d-block col-auto'
+                        key={travInd}
+                      >
+                        <span>{trav?.label}</span>{' '}
+                        <span
+                          className='text-primary d-inline-block'
+                          style={{ width: '40px' }}
+                        >
+                          - {seatSelected ? seatSelected : 'NA'}
+                        </span>
+                      </span>
+                    );
+                  })}
+                </div>
+              </div>
               {/* Iterating Decks */}
               {Object.entries(el.seatMap.decks).map(([deckKey, deckVal], deckIn) => {
                 // Preprocessing
@@ -288,122 +493,168 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
                     {/* Iterating Seats */}
                     {newArr.map((rowEl, rowInd) => (
                       <div key={rowInd} className='tj-grid'>
-                        {rowEl.map((element, index) =>
-                          element ? (
-                            <Seat
-                              key={index}
-                              label={element?.designator.split('').at(-1)}
-                              fill={
-                                !element.assignable
-                                  ? '#FF0000'
-                                  : element?.isSelected
-                                  ? '#4CBB17'
-                                  : undefined
-                              }
-                              clickable={!element.assignable ? false : true}
-                              onClick={
-                                element.assignable
-                                  ? () => {
-                                      if (element.assignable) {
-                                        // Adding / Removing Selected Seats
-                                        setSeatMap((prev) => {
-                                          for (let dat of prev[type]?.data[ind]?.seatMap
-                                            ?.decks[deckKey]?.compartments?.Y?.units) {
-                                            if (dat?.designator === element?.designator) {
-                                              let travl = prev[type]?.data[ind]?.seatMap
-                                                ?.decks[deckKey]['travellers']
-                                                ? prev[type]?.data[ind]?.seatMap?.decks[
-                                                    deckKey
-                                                  ]['travellers']
-                                                : [];
-                                              // If already selected, removing selected + traveller info on that seat
-                                              if (dat['isSelected']) {
-                                                dat['isSelected'] = false;
-                                                travl = travl.filter(
-                                                  (trav) =>
-                                                    trav.designator !== element.designator
-                                                );
-                                              }
-                                              // If not selected, then we add traveller and seat info (if max seats are selected,)
-                                              // Setting first traveller to new seat selected
-                                              else {
-                                                dat['isSelected'] = true;
-                                                if (travl) {
-                                                  if (
-                                                    travl.length === travellers.length
-                                                  ) {
-                                                    travl.push({
-                                                      ...travl[0],
-                                                      ...{
+                        {rowEl.map((element, index) => {
+                          let group = null;
+                          for (let grp of groupFeeArr) {
+                            if (element?.group === grp.group && grp.amount > 0) {
+                              group = grp;
+                            }
+                          }
+                          return (
+                            <>
+                              {element ? (
+                                <>
+                                  <a
+                                    data-tooltip-id={
+                                      group && element.assignable
+                                        ? element.designator
+                                        : undefined
+                                    }
+                                    data-tooltip-content={
+                                      group && group.amount > 0 && element.assignable
+                                        ? `Amount - ${group.amount.toLocaleString(
+                                            'en-IN',
+                                            {
+                                              maximumFractionDigits: 2,
+                                              style: 'currency',
+                                              currency: 'INR',
+                                            }
+                                          )}`
+                                        : undefined
+                                    }
+                                    data-tooltip-place='top'
+                                  >
+                                    <Seat
+                                      key={index}
+                                      label={element?.designator.split('').at(-1)}
+                                      fill={
+                                        !element.assignable
+                                          ? '#FF0000'
+                                          : element?.isSelected
+                                          ? '#4CBB17'
+                                          : group?.amount > 0
+                                          ? '#FFA500'
+                                          : undefined
+                                      }
+                                      clickable={!element.assignable ? false : true}
+                                      onClick={
+                                        element.assignable
+                                          ? () => {
+                                              if (element.assignable) {
+                                                // Adding / Removing Selected Seats
+                                                setSeatMap((prev) => {
+                                                  for (let dat of prev[type]?.data[ind]
+                                                    ?.seatMap?.decks[deckKey]
+                                                    ?.compartments?.Y?.units) {
+                                                    if (
+                                                      dat?.designator ===
+                                                      element?.designator
+                                                    ) {
+                                                      let travl = prev[type]?.data[ind]
+                                                        ?.seatMap['travellers']
+                                                        ? prev[type]?.data[ind]?.seatMap[
+                                                            'travellers'
+                                                          ]
+                                                        : [];
+                                                      let add = {
                                                         designator: element.designator,
-                                                        id: element.unitKey,
-                                                      },
-                                                    });
-                                                    prev[type].data[ind].seatMap.decks[
-                                                      deckKey
-                                                    ].compartments.Y.units = prev[
-                                                      type
-                                                    ]?.data[ind]?.seatMap?.decks[
-                                                      deckKey
-                                                    ]?.compartments?.Y?.units.map((s) =>
-                                                      s.designator === travl[0].designator
-                                                        ? { ...s, isSelected: false }
-                                                        : s
-                                                    );
-                                                    travl.splice(0, 1);
-                                                  } else {
-                                                    // Adding the first traveller in travellers that isnt added
-                                                    let travlToAdd = false;
-                                                    for (let x of travellers) {
-                                                      let match = false;
-                                                      for (let y of travl) {
-                                                        if (y.value === x.value) {
-                                                          match = true;
+                                                        unitKey: element.unitKey,
+                                                        amount: group?.amount || 0,
+                                                      };
+                                                      // If already selected, removing selected + traveller info on that seat
+                                                      if (dat['isSelected']) {
+                                                        dat['isSelected'] = false;
+                                                        travl = travl.filter(
+                                                          (trav) =>
+                                                            trav.designator !==
+                                                            element.designator
+                                                        );
+                                                      }
+                                                      // If not selected, then we add traveller and seat info (if max seats are selected,)
+                                                      // Setting first traveller to new seat selected
+                                                      else {
+                                                        dat['isSelected'] = true;
+                                                        if (travl) {
+                                                          if (
+                                                            travl.length ===
+                                                            travellers.length
+                                                          ) {
+                                                            travl.push({
+                                                              ...travl[0],
+                                                              ...add,
+                                                            });
+                                                            prev[type].data[
+                                                              ind
+                                                            ].seatMap.decks[
+                                                              deckKey
+                                                            ].compartments.Y.units = prev[
+                                                              type
+                                                            ]?.data[ind]?.seatMap?.decks[
+                                                              deckKey
+                                                            ]?.compartments?.Y?.units.map(
+                                                              (s) =>
+                                                                s.designator ===
+                                                                travl[0].designator
+                                                                  ? {
+                                                                      ...s,
+                                                                      isSelected: false,
+                                                                    }
+                                                                  : s
+                                                            );
+                                                            travl.splice(0, 1);
+                                                          } else {
+                                                            // Adding the first traveller in travellers that isnt added
+                                                            let travlToAdd = false;
+                                                            for (let x of travellerInfo) {
+                                                              let match = false;
+                                                              for (let y of travl) {
+                                                                if (y.id === x.id) {
+                                                                  match = true;
+                                                                }
+                                                              }
+                                                              if (!match && !travlToAdd) {
+                                                                travl.push({
+                                                                  ...x,
+                                                                  ...add,
+                                                                });
+                                                                travlToAdd = true;
+                                                              }
+                                                            }
+                                                          }
+                                                        } else {
+                                                          travl = [
+                                                            {
+                                                              ...travellers[0],
+                                                              ...add,
+                                                            },
+                                                          ];
                                                         }
                                                       }
-                                                      if (!match && !travlToAdd) {
-                                                        travl.push({
-                                                          ...x,
-                                                          ...{
-                                                            designator:
-                                                              element.designator,
-                                                            id: element.unitKey,
-                                                          },
-                                                        });
-                                                        travlToAdd = true;
-                                                      }
+                                                      prev[type].data[ind].seatMap[
+                                                        'travellers'
+                                                      ] = travl;
                                                     }
                                                   }
-                                                } else {
-                                                  travl = [
-                                                    {
-                                                      ...travellers[0],
-                                                      ...{
-                                                        designator: element.designator,
-                                                        id: element.unitKey,
-                                                      },
-                                                    },
-                                                  ];
-                                                }
+                                                  return { ...prev };
+                                                });
                                               }
-                                              prev[type].data[ind].seatMap.decks[deckKey][
-                                                'travellers'
-                                              ] = travl;
                                             }
-                                          }
-                                          return { ...prev };
-                                        });
+                                          : undefined
                                       }
-                                    }
-                                  : undefined
-                              }
-                            />
-                          ) : emptyCol.includes(index) ? (
-                            <span className='row-number'>{rowInd + 1}</span>
-                          ) : (
-                            <span className='row-number' />
-                          )
-                        )}
+                                    />
+                                  </a>
+                                  {group && group.amount > 0 && (
+                                    <ReactTooltip id={element.designator} />
+                                  )}
+                                </>
+                              ) : emptyCol.includes(index) ? (
+                                <span className='row-number'>{rowInd + 1}</span>
+                              ) : (
+                                <span className='row-number' />
+                              )}
+                            </>
+                          );
+                        })}
                       </div>
                     ))}
                   </div>
@@ -577,6 +828,11 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
                                                       'travellers'
                                                     ]
                                                   : [];
+                                                let add = {
+                                                  seatNo: el.seatNo,
+                                                  amount: el.amount,
+                                                  id: key,
+                                                };
                                                 // If already selected, removing selected + traveller info on that seat
                                                 if (dat['isSelected']) {
                                                   dat['isSelected'] = false;
@@ -594,11 +850,7 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
                                                     ) {
                                                       travl.push({
                                                         ...travl[0],
-                                                        ...{
-                                                          seatNo: el.seatNo,
-                                                          amount: el.amount,
-                                                          id: key,
-                                                        },
+                                                        ...add,
                                                       });
                                                       prev[type].data.seatMap[key].sInfo =
                                                         prev[type].data.seatMap[
@@ -622,11 +874,7 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
                                                         if (!match && !travlToAdd) {
                                                           travl.push({
                                                             ...x,
-                                                            ...{
-                                                              seatNo: el.seatNo,
-                                                              amount: el.amount,
-                                                              id: key,
-                                                            },
+                                                            ...add,
                                                           });
                                                           travlToAdd = true;
                                                         }
@@ -636,11 +884,7 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
                                                     travl = [
                                                       {
                                                         ...travellers[0],
-                                                        ...{
-                                                          seatNo: el.seatNo,
-                                                          amount: el.amount,
-                                                          id: key,
-                                                        },
+                                                        ...add,
                                                       },
                                                     ];
                                                   }
@@ -1023,7 +1267,7 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
               {Object.entries(PNR).map(([key, value], index) => (
                 <>
                   {value && (
-                    <div>
+                    <div key={index}>
                       {/* TJ */}
                       {value.provider === 'tj' &&
                         value.data?.data?.tripInfos?.[0].sI?.map((element, ind) => (
@@ -1033,7 +1277,6 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
                                 <label>
                                   {element.da.code} &rarr; {element.aa.code}
                                 </label>
-                                {console.log('element', element)}
                                 <Select
                                   options={[
                                     {
@@ -1099,6 +1342,83 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
                           </>
                         ))}
                       {/* AA */}
+                      {value.provider === 'aa' &&
+                        value.data?.ssr?.legSsrs?.map((element, ind) => (
+                          <>
+                            {element ? (
+                              <div className='col-md-6 form-input-select mt-10' key={ind}>
+                                <label>
+                                  {element.legDetails.origin} &rarr;{' '}
+                                  {element.legDetails.destination}
+                                </label>
+                                <Select
+                                  options={[
+                                    {
+                                      value: {
+                                        legKey: element.legKey,
+                                      },
+                                      label: 'No Preference',
+                                    },
+                                    ...element?.ssrs
+                                      .filter((el) => el.ssrType === 2)
+                                      .map((el) => ({
+                                        value: { ...el, legKey: element.legKey },
+                                        label:
+                                          el.name +
+                                          ' - ' +
+                                          Object.values(
+                                            el.passengersAvailability
+                                          )[0].price.toLocaleString('en-IN', {
+                                            maximumFractionDigits: 2,
+                                            style: 'currency',
+                                            currency: 'INR',
+                                          }),
+                                      })),
+                                  ]}
+                                  defaultValue={{
+                                    value: {
+                                      legKey: element.legKey,
+                                    },
+                                    label: 'No Preference',
+                                  }}
+                                  // value={element.seat_preference}
+                                  onChange={(id) =>
+                                    setTravellerInfo((prev) => {
+                                      for (let traveller of prev) {
+                                        if (traveller.id === travl.id) {
+                                          if (traveller.trip_meals[key]) {
+                                            let exists = false;
+                                            for (
+                                              let i = 0;
+                                              i < traveller.trip_meals[key].length;
+                                              i++
+                                            ) {
+                                              if (
+                                                element.legKey ===
+                                                traveller.trip_meals[key][i].value.legKey
+                                              ) {
+                                                traveller.trip_meals[key][i] = id;
+                                                exists = true;
+                                              }
+                                            }
+                                            if (!exists) {
+                                              traveller.trip_meals[key].push(id);
+                                            }
+                                          } else {
+                                            traveller.trip_meals[key] = [id];
+                                          }
+                                        }
+                                      }
+                                      return [...prev];
+                                    })
+                                  }
+                                />
+                              </div>
+                            ) : (
+                              <></>
+                            )}
+                          </>
+                        ))}
                       {/* AD */}
                     </div>
                   )}
