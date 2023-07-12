@@ -919,6 +919,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
   };
 
   const ADSeatMapRender = ({ data, type }) => {
+    const [test, setTest] = useState([]);
     let getArray = (x) => {
       return x ? (Array.isArray(x) ? x : [x]) : [];
     };
@@ -953,6 +954,84 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
 
     return (
       <div className='amadeus-container'>
+        {/* Legned */}
+        {/* <div>
+          <table className='amadeus-table'>
+            <tbody>
+              <tr>
+                <th colspan='2'>Legend</th>
+              </tr>
+              <tr>
+                <td class='seat seat-sel'> &nbsp; </td>
+                <td>Selected Seat</td>
+              </tr>
+              <tr>
+                <td class='seat seat-O'> X </td>
+                <td>Occupied Seat</td>
+              </tr>
+              <tr>
+                <td class='seat seat-CH'> ₹ </td>
+                <td>Paid Seat</td>
+              </tr>
+              <tr>
+                <td class='seat seat-1'> &nbsp; </td>
+                <td>Different Class / Reserved for Airport Check-In</td>
+              </tr>
+              <tr>
+                <td class='seat seat-L'> &nbsp; </td>
+                <td>Extra Leg Room Seat</td>
+              </tr>
+              <tr>
+                <td class='seat seat-E'> &nbsp; </td>
+                <td>Exit Row Preferred Seat</td>
+              </tr>
+              <tr>
+                <td class='seat seat-OW'> &nbsp; </td>
+                <td>Overwing Seat</td>
+              </tr>
+              <tr>
+                <td class='seat seat-LA'> &nbsp; </td>
+                <td>Lavatory</td>
+              </tr>
+              <tr>
+                <td class='seat seat-AL'> &nbsp; </td>
+                <td>Adjacent to Lavatory</td>
+              </tr>
+              <tr>
+                <td class='seat seat-G'> &nbsp; </td>
+                <td>Galley</td>
+              </tr>
+              <tr>
+                <td class='seat seat-AG'> &nbsp; </td>
+                <td>Adjacent to Galley</td>
+              </tr>
+              <tr>
+                <td class='seat seat-1D'> &nbsp; </td>
+                <td>Limited Recline Seat</td>
+              </tr>
+              <tr>
+                <td class='seat seat-B'> &nbsp; </td>
+                <td>Seat with Basinette</td>
+              </tr>
+              <tr>
+                <td class='seat seat-BK'> &nbsp; </td>
+                <td>Bulk Head</td>
+              </tr>
+              <tr>
+                <td class='seat seat-SO'> &nbsp; </td>
+                <td>Storage</td>
+              </tr>
+              <tr>
+                <td class='seat seat-ST'> &nbsp; </td>
+                <td>Stairs to Upper Deck</td>
+              </tr>
+              <tr>
+                <td class='seat seat-GN'> &nbsp; </td>
+                <td>Unavailable / Reserved for Other Usage</td>
+              </tr>
+            </tbody>
+          </table>
+        </div> */}
         {/* Iterating Cabins */}
         {getArray(seatmap.cabin).map((cabin, cabinIndex) => {
           const facilities = getArray(cabin.cabinFacilities || []);
@@ -1061,7 +1140,6 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                 {/* cont */}
                 {rowRange.map((i, index) => {
                   const cabinRow = rows[currRow++];
-                  console.log('cabinRow', currRow);
                   if (cabinRow !== undefined) {
                     var rowBefore = '',
                       rowAfter = '';
@@ -1126,6 +1204,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                         ),
                       }))
                     );
+
                     return (
                       <>
                         {parse(rowBefore)}
@@ -1157,11 +1236,110 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                 });
                                 if (!reserved) chars.push('AVL');
                               }
+                              // If Seat Selected
+                              let seatSelected = false;
+                              if (seatMap[type].data?.travellers) {
+                                for (let x of seatMap[type].data.travellers) {
+                                  if (x?.seatNo === rowNum + col) {
+                                    seatSelected = true;
+                                  }
+                                }
+                              }
                               if (chars.indexOf('8') >= 0) {
                                 return <td key={colInd} className='no-seat' />;
                               } else {
+                                // console.log('char', chars);
                                 return (
-                                  <td className={`seat seat-${chars.join(' seat-')}`}>
+                                  <td
+                                    className={`seat seat-${chars.join(' seat-')} ${
+                                      seatSelected ? 'seat-sel' : ''
+                                    } ${
+                                      chars.includes('AVL') &&
+                                      !chars.includes(1) &&
+                                      !chars.includes('O') &&
+                                      !chars.includes(8) &&
+                                      !chars.includes('GN') &&
+                                      !chars.includes('SO') &&
+                                      !chars.includes('BK') &&
+                                      !chars.includes('ST') &&
+                                      !chars.includes('LA') &&
+                                      !chars.includes('G')
+                                        ? 'cursor-pointer'
+                                        : ''
+                                    }`}
+                                    onClick={() => {
+                                      if (
+                                        chars.includes('AVL') &&
+                                        !chars.includes(1) &&
+                                        !chars.includes('O') &&
+                                        !chars.includes(8) &&
+                                        !chars.includes('GN') &&
+                                        !chars.includes('SO') &&
+                                        !chars.includes('BK') &&
+                                        !chars.includes('ST') &&
+                                        !chars.includes('LA') &&
+                                        !chars.includes('G')
+                                      ) {
+                                        // Seat Number = rowNum+col
+                                        console.log(
+                                          'data-row',
+                                          rowNum,
+                                          col,
+                                          price,
+                                          contents
+                                        );
+                                        setSeatMap((prev) => {
+                                          console.log('yea');
+                                          let add = {
+                                            amount: price,
+                                            seatNo: rowNum + col,
+                                          };
+                                          let travl = prev[type]?.data?.travellers;
+                                          if (travl) {
+                                            // Check if the seat is already selected
+                                            let seatSelected = false;
+                                            for (let x = travl.length - 1; x >= 0; x--) {
+                                              if (travl[x].seatNo === rowNum + col) {
+                                                travl.splice(x, 1);
+                                                seatSelected = true;
+                                              }
+                                            }
+                                            if (!seatSelected) {
+                                              // If the traveller is going to repeat
+                                              if (travl.length === travellers.length) {
+                                                travl.push({
+                                                  ...travl[0],
+                                                  ...add,
+                                                });
+                                                travl.splice(0, 1);
+                                              } else {
+                                                let travlToAdd = false;
+                                                for (let x of travellers) {
+                                                  let match = false;
+                                                  for (let y of travl) {
+                                                    if (y.value === x.value) {
+                                                      match = true;
+                                                    }
+                                                  }
+                                                  if (!match && !travlToAdd) {
+                                                    travl.push({
+                                                      ...x,
+                                                      ...add,
+                                                    });
+                                                    travlToAdd = true;
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          } else {
+                                            travl = [{ ...travellers[0], ...add }];
+                                          }
+                                          prev[type].data['travellers'] = travl;
+                                          return { ...prev };
+                                        });
+                                      }
+                                    }}
+                                  >
                                     <span>
                                       {+price > 0 && <>₹{price}</>} {contents}
                                     </span>
