@@ -1222,7 +1222,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                               var chars = details[col] || getArray(defSeatOcc);
                               var price = prices[rowNum + col] || 0;
                               // var contents = chars.indexOf('O') >= 0 ? 'X' : (chars.indexOf('E') >= 0 ? 'E' : (chars.indexOf('1') >= 0 ? 'R' : (chars.indexOf('CH') >= 0 ? '$' : '&nbsp;')));
-                              var contents = ' ';
+                              var contents = '\u00A0';
                               // If these codes then seat is unavailable
                               if (chars.indexOf('O') >= 0 || chars.indexOf('Z') >= 0) {
                                 contents = 'X';
@@ -1245,6 +1245,17 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                   }
                                 }
                               }
+                              let conditions =
+                                chars.includes('AVL') &&
+                                !chars.includes(1) &&
+                                !chars.includes('O') &&
+                                !chars.includes(8) &&
+                                !chars.includes('GN') &&
+                                !chars.includes('SO') &&
+                                !chars.includes('BK') &&
+                                !chars.includes('ST') &&
+                                !chars.includes('LA') &&
+                                !chars.includes('G');
                               if (chars.indexOf('8') >= 0) {
                                 return <td key={colInd} className='no-seat' />;
                               } else {
@@ -1253,33 +1264,9 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                   <td
                                     className={`seat seat-${chars.join(' seat-')} ${
                                       seatSelected ? 'seat-sel' : ''
-                                    } ${
-                                      chars.includes('AVL') &&
-                                      !chars.includes(1) &&
-                                      !chars.includes('O') &&
-                                      !chars.includes(8) &&
-                                      !chars.includes('GN') &&
-                                      !chars.includes('SO') &&
-                                      !chars.includes('BK') &&
-                                      !chars.includes('ST') &&
-                                      !chars.includes('LA') &&
-                                      !chars.includes('G')
-                                        ? 'cursor-pointer'
-                                        : ''
-                                    }`}
+                                    } ${conditions ? 'cursor-pointer' : ''}`}
                                     onClick={() => {
-                                      if (
-                                        chars.includes('AVL') &&
-                                        !chars.includes(1) &&
-                                        !chars.includes('O') &&
-                                        !chars.includes(8) &&
-                                        !chars.includes('GN') &&
-                                        !chars.includes('SO') &&
-                                        !chars.includes('BK') &&
-                                        !chars.includes('ST') &&
-                                        !chars.includes('LA') &&
-                                        !chars.includes('G')
-                                      ) {
+                                      if (conditions) {
                                         // Seat Number = rowNum+col
                                         console.log(
                                           'data-row',
@@ -1340,9 +1327,24 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                       }
                                     }}
                                   >
-                                    <span>
-                                      {+price > 0 && <>₹{price}</>} {contents}
-                                    </span>
+                                    <a
+                                      data-tooltip-id={
+                                        conditions ? rowNum + col : undefined
+                                      }
+                                      data-tooltip-content={
+                                        conditions
+                                          ? `Amount - ${price.toLocaleString('en-IN', {
+                                              maximumFractionDigits: 2,
+                                              style: 'currency',
+                                              currency: 'INR',
+                                            })}`
+                                          : undefined
+                                      }
+                                      data-tooltip-place='top'
+                                    >
+                                      {contents}
+                                    </a>
+                                    <ReactTooltip id={rowNum + col} />
                                   </td>
                                 );
                               }
