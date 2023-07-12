@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { customAPICall } from '../../../api/xplorzApi';
+import { createItem, customAPICall } from '../../../api/xplorzApi';
 import { sendToast } from '../../../utils/toastify';
 import Seat from '../common/Seat';
 import 'react-tooltip/dist/react-tooltip.css';
@@ -9,6 +9,7 @@ import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { DateObject } from 'react-multi-date-picker';
 import Select from 'react-select';
 import { aaSeatMap, adSeatMap } from '../../../pages/test/temp';
+import parse from 'html-react-parser';
 
 function Seatmap({ seatMaps, PNRS, travellerInfos }) {
   const [PNR, setPNR] = PNRS;
@@ -37,12 +38,12 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
   const getData = async () => {
     if (PNR) {
       let response = {};
-      let tempDat = { to: null, from: null, combined: null };
-      // let tempDat = {
-      //   to: { data: aaSeatMap, provider: 'aa' },
-      //   from: null,
-      //   combined: null,
-      // };
+      // let tempDat = { to: null, from: null, combined: null };
+      let tempDat = {
+        to: { data: adSeatMap, provider: 'ad' },
+        from: null,
+        combined: null,
+      };
       let tempPNR = { ...PNR };
       for (let [key, value] of Object.entries(PNR)) {
         if (value) {
@@ -102,24 +103,18 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
           // AD
           if (value?.provider === 'ad') {
             for (let [segKey, segValue] of Object.entries(value?.data?.segments)) {
-              response = await customAPICall(
-                'tj/v1/seatmaps',
-                'post',
-                {
-                  seatCount: travellerDOBS.ADT + travellerDOBS.CHD,
-                  sector: {
-                    departure: segValue.from,
-                    arrival: segValue.to,
-                    departureDate: segValue.departureDate,
-                    arrivalDate: segValue.arrivalDate,
-                    airline: segValue.companyCode,
-                    flightNumber: segValue.flightNumber,
-                    bookingClass: segValue.bookingClass,
-                  },
+              response = await createItem('flights/seatmap', {
+                seatCount: travellerDOBS.ADT + travellerDOBS.CHD,
+                sector: {
+                  departure: segValue.from,
+                  arrival: segValue.to,
+                  departureDate: segValue.departureDate,
+                  arrivalDate: segValue.arrivalDate,
+                  airline: segValue.companyCode,
+                  flightNumber: segValue.flightNumber,
+                  bookingClass: segValue.bookingClass,
                 },
-                {},
-                true
-              );
+              });
               if (response?.success) {
                 tempDat[key] = {
                   data: tempDat[key]?.data
@@ -923,7 +918,6 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
     );
   };
 
-  // AD Seatmap
   const ADSeatMapRender = ({ data, type }) => {
     let getArray = (x) => {
       return x ? (Array.isArray(x) ? x : [x]) : [];
@@ -957,231 +951,241 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
       });
     });
 
-    getArray(seatmap.cabin).forEach((cabin) => {
-      var cont = '';
-      var facFront = '';
-      var facRear = '';
-      const facilities = getArray(cabin.cabinFacilities || []);
-      const compartment = cabin.compartmentDetails;
-      const defSeatOcc =
-        compartment.defaultSeatOccupation || cabin.defaultSeatOccupation || 'F';
-      const seatRows = compartment.seatRowRange.number;
-      const isUpperDeck = compartment.cabinZoneCode == 'U';
-
-      if (isUpperDeck) $('#upperDeckToggle').show();
-
-      //Obtain column header and layout
-      var seatFormatArr = [];
-      var prev = '';
-      var spacers = 0;
-      compartment.columnDetails.forEach((detail) => {
-        var curr = getArray(detail.description);
-        if (curr.indexOf('A') >= 0 && prev.indexOf('A') >= 0) {
-          if (++spacers > 2) {
-            var unspacer = seatFormatArr.lastIndexOf(' ');
-            seatFormatArr.splice(unspacer, 1);
-          }
-          seatFormatArr.push(' ');
-        }
-        seatFormatArr.push(detail.seatColumn);
-        prev = curr;
-      });
-
-      const props = spacers < 2 ? ['L', 'R'] : ['L', 'C', 'R'];
-
-      //Add seat headers
-      facFront += '<tr><td></td>';
-      seatFormatArr.forEach((col) => {
-        facFront += '<th class="col-name">' + col + '</th>';
-      });
-      facFront += '</tr>';
-
-      //Gather facilities in front/rear of cabin
-      var facRow = '';
-      var propIdx, currProp, contObj;
-      facilities.forEach((fac) => {
-        var facObj = { L: [], C: [], R: [] };
-        var facDetails = fac.cabinFacilityDetails;
-        var facLocation = getLocation(facDetails.location, spacers);
-        facObj[facLocation].push(facDetails.type);
-        var otrFacDetails = getArray(fac.otherCabinFacilityDetails || []);
-        otrFacDetails.forEach((facDetails) => {
-          facLocation = getLocation(facDetails.location, spacers);
-          facObj[facLocation].push(facDetails.type);
-        });
-
-        facRow = '';
-        propIdx = 0;
-        currProp = 'L';
-        contObj = { L: '', C: '', R: '' };
-        seatFormatArr.forEach((col) => {
-          if (col == ' ') {
-            contObj[currProp] += '<td class="no-seat"></td>';
-            currProp = props[++propIdx];
-          } else {
-            var facility = facObj[currProp].shift();
-            if (facility) {
-              contObj[currProp] += '<td class="seat seat-' + facility + '"> &nbsp; </td>';
-            } else {
-              if (currProp == 'R') {
-                contObj[currProp] = '<td class="no-seat"></td>' + contObj[currProp];
-              } else if (currProp == 'C' && contObj[currProp].indexOf('</td><td') > 0) {
-                contObj[currProp] = contObj[currProp].replace(
-                  '</td><td',
-                  '</td><td class="no-seat"></td><td'
-                );
-              } else {
-                contObj[currProp] += '<td class="no-seat"></td>';
-              }
-            }
-          }
-        });
-        facRow = contObj['L'] + contObj['C'] + contObj['R'];
-
-        if (fac.rowLocation == 'F') {
-          facFront += '<tr><td></td>' + facRow + '</tr>';
-        } else {
-          facRear += '<tr><td></td>' + facRow + '</tr>';
-        }
-      });
-
-      // Add Seats
-      for (let i = seatRows[0]; i <= seatRows[1]; i++) {
-        const cabinRow = rows[currRow++];
-        if (cabinRow == undefined) continue;
-
-        var rowBefore = '',
-          rowAfter = '';
-        const rowFacilities = getArray(cabinRow.cabinFacility || []);
-        rowFacilities.forEach((fac) => {
-          var facObj = { L: [], C: [], R: [] };
-          var facDetails = fac.cabinFacilityDetails;
-          var facLocation = getLocation(facDetails.location, spacers);
-          facObj[facLocation].push(facDetails.type);
-          var otrFacDetails = getArray(fac.otherCabinFacilityDetails || []);
-          otrFacDetails.forEach((facDetails) => {
-            facLocation = getLocation(facDetails.location, spacers);
-            facObj[facLocation].push(facDetails.type);
-          });
-
-          facRow = '';
-          propIdx = 0;
-          currProp = 'L';
-          contObj = { L: '', C: '', R: '' };
-          seatFormatArr.forEach((col) => {
-            if (col == ' ') {
-              contObj[currProp] += '<td class="no-seat"></td>';
-              currProp = props[++propIdx];
-            } else {
-              var facility = facObj[currProp].shift();
-              if (facility) {
-                contObj[currProp] +=
-                  '<td class="seat seat-' + facility + '"> &nbsp; </td>';
-              } else {
-                if (currProp == 'R') {
-                  contObj[currProp] = '<td class="no-seat"></td>' + contObj[currProp];
-                } else if (currProp == 'C' && contObj[currProp].indexOf('</td><td') > 0) {
-                  contObj[currProp] = contObj[currProp].replace(
-                    '</td><td',
-                    '</td><td class="no-seat"></td><td'
-                  );
-                } else {
-                  contObj[currProp] += '<td class="no-seat"></td>';
-                }
-              }
-            }
-          });
-          facRow = contObj['L'] + contObj['C'] + contObj['R'];
-
-          if (fac.rowLocation == 'F') {
-            rowBefore += '<tr><td></td>' + facRow + '</tr>';
-          } else {
-            rowAfter += '<tr><td></td>' + facRow + '</tr>';
-          }
-        });
-
-        const row = cabinRow.rowDetails;
-        const rowNum = row.seatRowNumber || i;
-        // console.assert(i == row.seatRowNumber, "Seat number is different", i, row.seatRowNumber);
-        var rowCont =
-          '<tr class="seat-row' +
-          (row.rowCharacteristicDetails
-            ? ' row-type-' + row.rowCharacteristicDetails.rowCharacteristic
-            : '') +
-          '"><th class="row-number">' +
-          rowNum +
-          '</th>';
-        // if (row.seatOccupationDetails) {
-        var details = Object.assign(
-          {},
-          ...getArray(row.seatOccupationDetails).map((detail) => ({
-            [detail.seatColumn]: getArray(detail.seatCharacteristic).concat(
-              getArray(detail.seatOccupation)
-            ),
-          }))
-        );
-        seatFormatArr.forEach((col) => {
-          if (col == ' ' /*  || !details[col] */) {
-            rowCont += '<td class="no-seat"></td>';
-          } else {
-            //💺
-            var chars = details[col] || getArray(defSeatOcc);
-            var price = prices[rowNum + col] || 0;
-            // var contents = chars.indexOf('O') >= 0 ? 'X' : (chars.indexOf('E') >= 0 ? 'E' : (chars.indexOf('1') >= 0 ? 'R' : (chars.indexOf('CH') >= 0 ? '$' : '&nbsp;')));
-            var contents = '&nbsp;';
-            if (chars.indexOf('O') >= 0 || chars.indexOf('Z') >= 0) {
-              contents = 'X';
-            } else {
-              if (chars.indexOf('CH') >= 0) contents = '₹';
-              var reserved = false;
-              reserveCodes.forEach((code) => {
-                if (chars.indexOf(code) >= 0) {
-                  reserved = true;
-                }
-              });
-              if (!reserved) chars.push('AVL');
-            }
-            if (chars.indexOf('8') >= 0) {
-              rowCont += '<td class="no-seat"></td>';
-            } else {
-              rowCont +=
-                '<td class="seat seat-' +
-                chars.join(' seat-') +
-                '" data-row="' +
-                rowNum +
-                '" data-col="' +
-                col +
-                '" data-price="' +
-                price +
-                '"><span title="₹ ' +
-                price +
-                '"> ' +
-                contents +
-                ' </span></td>';
-            }
-          }
-        });
-        // } else {
-        //     rowCont += '<td class="no-seat" colspan="' + seatFormatArr.length + '"></td>';
-        // }
-        rowCont += '</tr>';
-
-        cont += rowBefore + rowCont + rowAfter;
-      }
-      html +=
-        '<table class="amadeus-table ' +
-        (isUpperDeck ? 'upper-deck' : 'lower-deck') +
-        '"><tbody>' +
-        facFront +
-        cont +
-        facRear +
-        '</tbody></table>';
-    });
-    console.log('html', html);
     return (
-      <div className='amadeus-container' dangerouslySetInnerHTML={{ __html: html }} />
+      <div className='amadeus-container'>
+        {/* Iterating Cabins */}
+        {getArray(seatmap.cabin).map((cabin, cabinIndex) => {
+          const facilities = getArray(cabin.cabinFacilities || []);
+          const compartment = cabin.compartmentDetails;
+          const defSeatOcc =
+            compartment.defaultSeatOccupation || cabin.defaultSeatOccupation || 'F';
+          const seatRows = compartment.seatRowRange.number;
+          const isUpperDeck = compartment.cabinZoneCode == 'U';
+
+          // TODO JQuery
+          if (isUpperDeck) $('#upperDeckToggle').show();
+
+          //Obtain column header and layout
+          var seatFormatArr = [];
+          var prev = '';
+          var spacers = 0;
+          compartment.columnDetails.map((detail) => {
+            var curr = getArray(detail.description);
+            // Checking if previous and current column was an A
+            if (curr.indexOf('A') >= 0 && prev.indexOf('A') >= 0) {
+              if (++spacers > 2) {
+                var unspacer = seatFormatArr.lastIndexOf(' ');
+                seatFormatArr.splice(unspacer, 1);
+              }
+              seatFormatArr.push(' ');
+            }
+            seatFormatArr.push(detail.seatColumn);
+            prev = curr;
+          });
+
+          let rowRange = [];
+          for (let i = seatRows[0]; i <= seatRows[1]; i++) {
+            rowRange.push(i);
+          }
+
+          console.log('row-range', rowRange);
+
+          const props = spacers < 2 ? ['L', 'R'] : ['L', 'C', 'R'];
+          var propIdx, currProp, contObj;
+          var facRow = '';
+          let facRear = '';
+          let facFront = '';
+
+          for (let fac of facilities) {
+            var facObj = { L: [], C: [], R: [] };
+            var facDetails = fac.cabinFacilityDetails;
+            var facLocation = getLocation(facDetails.location, spacers);
+            facObj[facLocation].push(facDetails.type);
+            var otrFacDetails = getArray(fac.otherCabinFacilityDetails || []);
+            otrFacDetails.forEach((facDetails) => {
+              facLocation = getLocation(facDetails.location, spacers);
+              facObj[facLocation].push(facDetails.type);
+            });
+            facRow = '';
+            propIdx = 0;
+            currProp = 'L';
+            contObj = { L: '', C: '', R: '' };
+            for (let col of seatFormatArr) {
+              if (col == ' ') {
+                contObj[currProp] += '<td class="no-seat"></td>';
+                currProp = props[++propIdx];
+              } else {
+                var facility = facObj[currProp].shift();
+                if (facility) {
+                  contObj[currProp] +=
+                    '<td class="seat seat-' + facility + '"> &nbsp; </td>';
+                } else {
+                  if (currProp == 'R') {
+                    contObj[currProp] = '<td class="no-seat"></td>' + contObj[currProp];
+                  } else if (
+                    currProp == 'C' &&
+                    contObj[currProp].indexOf('</td><td') > 0
+                  ) {
+                    contObj[currProp] = contObj[currProp].replace(
+                      '</td><td',
+                      '</td><td class="no-seat"></td><td'
+                    );
+                  } else {
+                    contObj[currProp] += '<td class="no-seat"></td>';
+                  }
+                }
+              }
+            }
+            facRow = contObj['L'] + contObj['C'] + contObj['R'];
+            if (fac.rowLocation == 'F') {
+              facFront += '<tr><td></td>' + facRow + '</tr>';
+            } else {
+              facRear += '<tr><td></td>' + facRow + '</tr>';
+            }
+          }
+
+          return (
+            <table
+              key={cabinIndex}
+              className={`amadeus-table ${isUpperDeck ? 'upper-deck' : 'lower-deck'}`}
+            >
+              <tbody>
+                {/* facFront */}
+                <tr>
+                  <td></td>
+                  {seatFormatArr.map((col) => (
+                    <th className='col-name'>{col}</th>
+                  ))}
+                </tr>
+                {parse(facFront)}
+                {/* cont */}
+                {rowRange.map((i, index) => {
+                  const cabinRow = rows[currRow++];
+                  console.log('cabinRow', currRow);
+                  if (cabinRow !== undefined) {
+                    var rowBefore = '',
+                      rowAfter = '';
+                    const rowFacilities = getArray(cabinRow.cabinFacility || []);
+                    rowFacilities.map((fac) => {
+                      var facObj = { L: [], C: [], R: [] };
+                      var facDetails = fac.cabinFacilityDetails;
+                      var facLocation = getLocation(facDetails.location, spacers);
+                      facObj[facLocation].push(facDetails.type);
+                      var otrFacDetails = getArray(fac.otherCabinFacilityDetails || []);
+                      otrFacDetails.forEach((facDetails) => {
+                        facLocation = getLocation(facDetails.location, spacers);
+                        facObj[facLocation].push(facDetails.type);
+                      });
+
+                      facRow = '';
+                      propIdx = 0;
+                      currProp = 'L';
+                      contObj = { L: '', C: '', R: '' };
+                      seatFormatArr.forEach((col) => {
+                        if (col == ' ') {
+                          contObj[currProp] += '<td class="no-seat"></td>';
+                          currProp = props[++propIdx];
+                        } else {
+                          var facility = facObj[currProp].shift();
+                          if (facility) {
+                            contObj[currProp] +=
+                              '<td class="seat seat-' + facility + '"> &nbsp; </td>';
+                          } else {
+                            if (currProp == 'R') {
+                              contObj[currProp] =
+                                '<td class="no-seat"></td>' + contObj[currProp];
+                            } else if (
+                              currProp == 'C' &&
+                              contObj[currProp].indexOf('</td><td') > 0
+                            ) {
+                              contObj[currProp] = contObj[currProp].replace(
+                                '</td><td',
+                                '</td><td class="no-seat"></td><td'
+                              );
+                            } else {
+                              contObj[currProp] += '<td class="no-seat"></td>';
+                            }
+                          }
+                        }
+                      });
+                      facRow = contObj['L'] + contObj['C'] + contObj['R'];
+
+                      if (fac.rowLocation == 'F') {
+                        rowBefore += '<tr><td></td>' + facRow + '</tr>';
+                      } else {
+                        rowAfter += '<tr><td></td>' + facRow + '</tr>';
+                      }
+                    });
+                    const row = cabinRow.rowDetails;
+                    const rowNum = row.seatRowNumber || i;
+                    var details = Object.assign(
+                      {},
+                      ...getArray(row.seatOccupationDetails).map((detail) => ({
+                        [detail.seatColumn]: getArray(detail.seatCharacteristic).concat(
+                          getArray(detail.seatOccupation)
+                        ),
+                      }))
+                    );
+                    return (
+                      <>
+                        {parse(rowBefore)}
+                        <tr
+                          className={`seat-row ${
+                            row.rowCharacteristicDetails
+                              ? 'row-type-' +
+                                row.rowCharacteristicDetails.rowCharacteristic
+                              : ''
+                          }`}
+                        >
+                          <th className='row-number'>{rowNum}</th>
+                          {seatFormatArr.map((col, colInd) => {
+                            if (col !== ' ') {
+                              var chars = details[col] || getArray(defSeatOcc);
+                              var price = prices[rowNum + col] || 0;
+                              // var contents = chars.indexOf('O') >= 0 ? 'X' : (chars.indexOf('E') >= 0 ? 'E' : (chars.indexOf('1') >= 0 ? 'R' : (chars.indexOf('CH') >= 0 ? '$' : '&nbsp;')));
+                              var contents = ' ';
+                              // If these codes then seat is unavailable
+                              if (chars.indexOf('O') >= 0 || chars.indexOf('Z') >= 0) {
+                                contents = 'X';
+                              } else {
+                                if (chars.indexOf('CH') >= 0) contents = '₹';
+                                var reserved = false;
+                                reserveCodes.forEach((code) => {
+                                  if (chars.indexOf(code) >= 0) {
+                                    reserved = true;
+                                  }
+                                });
+                                if (!reserved) chars.push('AVL');
+                              }
+                              if (chars.indexOf('8') >= 0) {
+                                return <td key={colInd} className='no-seat' />;
+                              } else {
+                                return (
+                                  <td className={`seat seat-${chars.join(' seat-')}`}>
+                                    <span>
+                                      {+price > 0 && <>₹{price}</>} {contents}
+                                    </span>
+                                  </td>
+                                );
+                              }
+                            } else {
+                              return <td key={colInd} className='no-seat' />;
+                            }
+                          })}
+                        </tr>
+                        {parse(rowAfter)}
+                      </>
+                    );
+                  }
+                })}
+                {/* facRear */}
+                {parse(facRear)}
+              </tbody>
+            </table>
+          );
+        })}
+      </div>
     );
-    // return <div>{html}</div>;
   };
 
   return (
