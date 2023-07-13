@@ -40,7 +40,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
       let response = {};
       // let tempDat = { to: null, from: null, combined: null };
       let tempDat = {
-        to: { data: adSeatMap, provider: 'ad' },
+        to: { data: [adSeatMap], provider: 'ad' },
         from: null,
         combined: null,
       };
@@ -118,8 +118,8 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
               if (response?.success) {
                 tempDat[key] = {
                   data: tempDat[key]?.data
-                    ? tempDat[key].data.push(response.data)
-                    : [response.data],
+                    ? tempDat[key].data.push({ ...response.data, ...segKey })
+                    : [{ ...response.data, ...segKey }],
                   provider: 'ad',
                 };
               }
@@ -334,6 +334,38 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
           );
         }
         // AD
+        // Reserving Seats
+        let seatRequested = false;
+        if (value.provider === 'ad') {
+          const sessionKey = value.data.session_key;
+          for (let seg of seatMap[key].data) {
+            if (seg.travellers) {
+              let tempSeg = [];
+              for (let traveller of seg.travellers) {
+                for (let trav of value.data.travellers) {
+                  if (traveller.id === trav.id) {
+                    tempSeg.push({ seatNumber: traveller.seatNo, paxRef: trav.paxRef });
+                  }
+                }
+              }
+              if (tempSeg.length > 0) {
+                seatRequested = true;
+                let seatBook = await createItem('flights/reserve-seats', {
+                  session_key: sessionKey,
+                  segRef: seg.segKey,
+                  seats: tempSeg,
+                });
+              }
+            }
+          }
+        }
+        // Finalize Booking
+
+        const booking = await createItem('flights/issue-tickets', {
+          session_key: sessionKey,
+          airline: Object.values(value.data.segments)[0].companyCode,
+          seatRequested,
+        });
       }
     }
   };
@@ -919,43 +951,44 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
   };
 
   const ADSeatMapRender = ({ data, type }) => {
-    const [test, setTest] = useState([]);
-    let getArray = (x) => {
-      return x ? (Array.isArray(x) ? x : [x]) : [];
-    };
-    const reserveCodes = ['SO', 'BK', 'LA', 'G', 'GN', 'CL', 'ST', 'TA', '1', '8'];
-    let seatmap = data;
-    let rows = seatmap.row;
-    var currRow = 0;
-    let html = '';
-    function getLocation(loc, spacers) {
-      if (loc.length < 2) return loc;
-      return loc.charAt(spacers < 2 ? 0 : 1);
-    }
+    let dIndex = 0;
+    for (let d of data) {
+      let getArray = (x) => {
+        return x ? (Array.isArray(x) ? x : [x]) : [];
+      };
+      const reserveCodes = ['SO', 'BK', 'LA', 'G', 'GN', 'CL', 'ST', 'TA', '1', '8'];
+      let seatmap = d;
+      let rows = seatmap.row;
+      var currRow = 0;
+      let html = '';
+      function getLocation(loc, spacers) {
+        if (loc.length < 2) return loc;
+        return loc.charAt(spacers < 2 ? 0 : 1);
+      }
 
-    var prices = {};
-    var custData = seatmap.customerCentricData || {};
-    getArray(custData.seatPrice).forEach((detail) => {
-      var price = 0;
-      getArray(detail.seatPrice.monetaryDetails).forEach((money) => {
-        if (money.typeQualifier == 'T') {
-          price = money.amount;
-        }
-      });
+      var prices = {};
+      var custData = seatmap.customerCentricData || {};
+      getArray(custData.seatPrice).forEach((detail) => {
+        var price = 0;
+        getArray(detail.seatPrice.monetaryDetails).forEach((money) => {
+          if (money.typeQualifier == 'T') {
+            price = money.amount;
+          }
+        });
 
-      getArray(detail.rowDetails).forEach((row) => {
-        var num = row.seatRowNumber;
-        getArray(row.seatOccupationDetails).forEach((sod) => {
-          var col = sod.seatColumn;
-          prices[num + col] = price;
+        getArray(detail.rowDetails).forEach((row) => {
+          var num = row.seatRowNumber;
+          getArray(row.seatOccupationDetails).forEach((sod) => {
+            var col = sod.seatColumn;
+            prices[num + col] = price;
+          });
         });
       });
-    });
 
-    return (
-      <div className='amadeus-container'>
-        {/* Legned */}
-        {/* <div>
+      return (
+        <div className='amadeus-container'>
+          {/* Legned */}
+          {/* <div>
           <table className='amadeus-table'>
             <tbody>
               <tr>
@@ -1032,340 +1065,349 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
             </tbody>
           </table>
         </div> */}
-        {/* Iterating Cabins */}
-        {getArray(seatmap.cabin).map((cabin, cabinIndex) => {
-          const facilities = getArray(cabin.cabinFacilities || []);
-          const compartment = cabin.compartmentDetails;
-          const defSeatOcc =
-            compartment.defaultSeatOccupation || cabin.defaultSeatOccupation || 'F';
-          const seatRows = compartment.seatRowRange.number;
-          const isUpperDeck = compartment.cabinZoneCode == 'U';
+          {/* Iterating Cabins */}
+          {getArray(seatmap.cabin).map((cabin, cabinIndex) => {
+            const facilities = getArray(cabin.cabinFacilities || []);
+            const compartment = cabin.compartmentDetails;
+            const defSeatOcc =
+              compartment.defaultSeatOccupation || cabin.defaultSeatOccupation || 'F';
+            const seatRows = compartment.seatRowRange.number;
+            const isUpperDeck = compartment.cabinZoneCode == 'U';
 
-          // TODO JQuery
-          if (isUpperDeck) $('#upperDeckToggle').show();
+            // TODO JQuery
+            if (isUpperDeck) $('#upperDeckToggle').show();
 
-          //Obtain column header and layout
-          var seatFormatArr = [];
-          var prev = '';
-          var spacers = 0;
-          compartment.columnDetails.map((detail) => {
-            var curr = getArray(detail.description);
-            // Checking if previous and current column was an A
-            if (curr.indexOf('A') >= 0 && prev.indexOf('A') >= 0) {
-              if (++spacers > 2) {
-                var unspacer = seatFormatArr.lastIndexOf(' ');
-                seatFormatArr.splice(unspacer, 1);
+            //Obtain column header and layout
+            var seatFormatArr = [];
+            var prev = '';
+            var spacers = 0;
+            compartment.columnDetails.map((detail) => {
+              var curr = getArray(detail.description);
+              // Checking if previous and current column was an A
+              if (curr.indexOf('A') >= 0 && prev.indexOf('A') >= 0) {
+                if (++spacers > 2) {
+                  var unspacer = seatFormatArr.lastIndexOf(' ');
+                  seatFormatArr.splice(unspacer, 1);
+                }
+                seatFormatArr.push(' ');
               }
-              seatFormatArr.push(' ');
-            }
-            seatFormatArr.push(detail.seatColumn);
-            prev = curr;
-          });
-
-          let rowRange = [];
-          for (let i = seatRows[0]; i <= seatRows[1]; i++) {
-            rowRange.push(i);
-          }
-
-          console.log('row-range', rowRange);
-
-          const props = spacers < 2 ? ['L', 'R'] : ['L', 'C', 'R'];
-          var propIdx, currProp, contObj;
-          var facRow = '';
-          let facRear = '';
-          let facFront = '';
-
-          for (let fac of facilities) {
-            var facObj = { L: [], C: [], R: [] };
-            var facDetails = fac.cabinFacilityDetails;
-            var facLocation = getLocation(facDetails.location, spacers);
-            facObj[facLocation].push(facDetails.type);
-            var otrFacDetails = getArray(fac.otherCabinFacilityDetails || []);
-            otrFacDetails.forEach((facDetails) => {
-              facLocation = getLocation(facDetails.location, spacers);
-              facObj[facLocation].push(facDetails.type);
+              seatFormatArr.push(detail.seatColumn);
+              prev = curr;
             });
-            facRow = '';
-            propIdx = 0;
-            currProp = 'L';
-            contObj = { L: '', C: '', R: '' };
-            for (let col of seatFormatArr) {
-              if (col == ' ') {
-                contObj[currProp] += '<td class="no-seat"></td>';
-                currProp = props[++propIdx];
-              } else {
-                var facility = facObj[currProp].shift();
-                if (facility) {
-                  contObj[currProp] +=
-                    '<td class="seat seat-' + facility + '"> &nbsp; </td>';
+
+            let rowRange = [];
+            for (let i = seatRows[0]; i <= seatRows[1]; i++) {
+              rowRange.push(i);
+            }
+
+            console.log('row-range', rowRange);
+
+            const props = spacers < 2 ? ['L', 'R'] : ['L', 'C', 'R'];
+            var propIdx, currProp, contObj;
+            var facRow = '';
+            let facRear = '';
+            let facFront = '';
+
+            for (let fac of facilities) {
+              var facObj = { L: [], C: [], R: [] };
+              var facDetails = fac.cabinFacilityDetails;
+              var facLocation = getLocation(facDetails.location, spacers);
+              facObj[facLocation].push(facDetails.type);
+              var otrFacDetails = getArray(fac.otherCabinFacilityDetails || []);
+              otrFacDetails.forEach((facDetails) => {
+                facLocation = getLocation(facDetails.location, spacers);
+                facObj[facLocation].push(facDetails.type);
+              });
+              facRow = '';
+              propIdx = 0;
+              currProp = 'L';
+              contObj = { L: '', C: '', R: '' };
+              for (let col of seatFormatArr) {
+                if (col == ' ') {
+                  contObj[currProp] += '<td class="no-seat"></td>';
+                  currProp = props[++propIdx];
                 } else {
-                  if (currProp == 'R') {
-                    contObj[currProp] = '<td class="no-seat"></td>' + contObj[currProp];
-                  } else if (
-                    currProp == 'C' &&
-                    contObj[currProp].indexOf('</td><td') > 0
-                  ) {
-                    contObj[currProp] = contObj[currProp].replace(
-                      '</td><td',
-                      '</td><td class="no-seat"></td><td'
-                    );
+                  var facility = facObj[currProp].shift();
+                  if (facility) {
+                    contObj[currProp] +=
+                      '<td class="seat seat-' + facility + '"> &nbsp; </td>';
                   } else {
-                    contObj[currProp] += '<td class="no-seat"></td>';
+                    if (currProp == 'R') {
+                      contObj[currProp] = '<td class="no-seat"></td>' + contObj[currProp];
+                    } else if (
+                      currProp == 'C' &&
+                      contObj[currProp].indexOf('</td><td') > 0
+                    ) {
+                      contObj[currProp] = contObj[currProp].replace(
+                        '</td><td',
+                        '</td><td class="no-seat"></td><td'
+                      );
+                    } else {
+                      contObj[currProp] += '<td class="no-seat"></td>';
+                    }
                   }
                 }
               }
+              facRow = contObj['L'] + contObj['C'] + contObj['R'];
+              if (fac.rowLocation == 'F') {
+                facFront += '<tr><td></td>' + facRow + '</tr>';
+              } else {
+                facRear += '<tr><td></td>' + facRow + '</tr>';
+              }
             }
-            facRow = contObj['L'] + contObj['C'] + contObj['R'];
-            if (fac.rowLocation == 'F') {
-              facFront += '<tr><td></td>' + facRow + '</tr>';
-            } else {
-              facRear += '<tr><td></td>' + facRow + '</tr>';
-            }
-          }
 
-          return (
-            <table
-              key={cabinIndex}
-              className={`amadeus-table ${isUpperDeck ? 'upper-deck' : 'lower-deck'}`}
-            >
-              <tbody>
-                {/* facFront */}
-                <tr>
-                  <td></td>
-                  {seatFormatArr.map((col) => (
-                    <th className='col-name'>{col}</th>
-                  ))}
-                </tr>
-                {parse(facFront)}
-                {/* cont */}
-                {rowRange.map((i, index) => {
-                  const cabinRow = rows[currRow++];
-                  if (cabinRow !== undefined) {
-                    var rowBefore = '',
-                      rowAfter = '';
-                    const rowFacilities = getArray(cabinRow.cabinFacility || []);
-                    rowFacilities.map((fac) => {
-                      var facObj = { L: [], C: [], R: [] };
-                      var facDetails = fac.cabinFacilityDetails;
-                      var facLocation = getLocation(facDetails.location, spacers);
-                      facObj[facLocation].push(facDetails.type);
-                      var otrFacDetails = getArray(fac.otherCabinFacilityDetails || []);
-                      otrFacDetails.forEach((facDetails) => {
-                        facLocation = getLocation(facDetails.location, spacers);
+            return (
+              <table
+                key={cabinIndex}
+                className={`amadeus-table ${isUpperDeck ? 'upper-deck' : 'lower-deck'}`}
+              >
+                <tbody>
+                  {/* facFront */}
+                  <tr>
+                    <td></td>
+                    {seatFormatArr.map((col) => (
+                      <th className='col-name'>{col}</th>
+                    ))}
+                  </tr>
+                  {parse(facFront)}
+                  {/* cont */}
+                  {rowRange.map((i, index) => {
+                    const cabinRow = rows[currRow++];
+                    if (cabinRow !== undefined) {
+                      var rowBefore = '',
+                        rowAfter = '';
+                      const rowFacilities = getArray(cabinRow.cabinFacility || []);
+                      rowFacilities.map((fac) => {
+                        var facObj = { L: [], C: [], R: [] };
+                        var facDetails = fac.cabinFacilityDetails;
+                        var facLocation = getLocation(facDetails.location, spacers);
                         facObj[facLocation].push(facDetails.type);
-                      });
+                        var otrFacDetails = getArray(fac.otherCabinFacilityDetails || []);
+                        otrFacDetails.forEach((facDetails) => {
+                          facLocation = getLocation(facDetails.location, spacers);
+                          facObj[facLocation].push(facDetails.type);
+                        });
 
-                      facRow = '';
-                      propIdx = 0;
-                      currProp = 'L';
-                      contObj = { L: '', C: '', R: '' };
-                      seatFormatArr.forEach((col) => {
-                        if (col == ' ') {
-                          contObj[currProp] += '<td class="no-seat"></td>';
-                          currProp = props[++propIdx];
-                        } else {
-                          var facility = facObj[currProp].shift();
-                          if (facility) {
-                            contObj[currProp] +=
-                              '<td class="seat seat-' + facility + '"> &nbsp; </td>';
+                        facRow = '';
+                        propIdx = 0;
+                        currProp = 'L';
+                        contObj = { L: '', C: '', R: '' };
+                        seatFormatArr.forEach((col) => {
+                          if (col == ' ') {
+                            contObj[currProp] += '<td class="no-seat"></td>';
+                            currProp = props[++propIdx];
                           } else {
-                            if (currProp == 'R') {
-                              contObj[currProp] =
-                                '<td class="no-seat"></td>' + contObj[currProp];
-                            } else if (
-                              currProp == 'C' &&
-                              contObj[currProp].indexOf('</td><td') > 0
-                            ) {
-                              contObj[currProp] = contObj[currProp].replace(
-                                '</td><td',
-                                '</td><td class="no-seat"></td><td'
-                              );
+                            var facility = facObj[currProp].shift();
+                            if (facility) {
+                              contObj[currProp] +=
+                                '<td class="seat seat-' + facility + '"> &nbsp; </td>';
                             } else {
-                              contObj[currProp] += '<td class="no-seat"></td>';
+                              if (currProp == 'R') {
+                                contObj[currProp] =
+                                  '<td class="no-seat"></td>' + contObj[currProp];
+                              } else if (
+                                currProp == 'C' &&
+                                contObj[currProp].indexOf('</td><td') > 0
+                              ) {
+                                contObj[currProp] = contObj[currProp].replace(
+                                  '</td><td',
+                                  '</td><td class="no-seat"></td><td'
+                                );
+                              } else {
+                                contObj[currProp] += '<td class="no-seat"></td>';
+                              }
                             }
                           }
+                        });
+                        facRow = contObj['L'] + contObj['C'] + contObj['R'];
+
+                        if (fac.rowLocation == 'F') {
+                          rowBefore += '<tr><td></td>' + facRow + '</tr>';
+                        } else {
+                          rowAfter += '<tr><td></td>' + facRow + '</tr>';
                         }
                       });
-                      facRow = contObj['L'] + contObj['C'] + contObj['R'];
+                      const row = cabinRow.rowDetails;
+                      const rowNum = row.seatRowNumber || i;
+                      var details = Object.assign(
+                        {},
+                        ...getArray(row.seatOccupationDetails).map((detail) => ({
+                          [detail.seatColumn]: getArray(detail.seatCharacteristic).concat(
+                            getArray(detail.seatOccupation)
+                          ),
+                        }))
+                      );
 
-                      if (fac.rowLocation == 'F') {
-                        rowBefore += '<tr><td></td>' + facRow + '</tr>';
-                      } else {
-                        rowAfter += '<tr><td></td>' + facRow + '</tr>';
-                      }
-                    });
-                    const row = cabinRow.rowDetails;
-                    const rowNum = row.seatRowNumber || i;
-                    var details = Object.assign(
-                      {},
-                      ...getArray(row.seatOccupationDetails).map((detail) => ({
-                        [detail.seatColumn]: getArray(detail.seatCharacteristic).concat(
-                          getArray(detail.seatOccupation)
-                        ),
-                      }))
-                    );
-
-                    return (
-                      <>
-                        {parse(rowBefore)}
-                        <tr
-                          className={`seat-row ${
-                            row.rowCharacteristicDetails
-                              ? 'row-type-' +
-                                row.rowCharacteristicDetails.rowCharacteristic
-                              : ''
-                          }`}
-                        >
-                          <th className='row-number'>{rowNum}</th>
-                          {seatFormatArr.map((col, colInd) => {
-                            if (col !== ' ') {
-                              var chars = details[col] || getArray(defSeatOcc);
-                              var price = prices[rowNum + col] || 0;
-                              // var contents = chars.indexOf('O') >= 0 ? 'X' : (chars.indexOf('E') >= 0 ? 'E' : (chars.indexOf('1') >= 0 ? 'R' : (chars.indexOf('CH') >= 0 ? '$' : '&nbsp;')));
-                              var contents = '\u00A0';
-                              // If these codes then seat is unavailable
-                              if (chars.indexOf('O') >= 0 || chars.indexOf('Z') >= 0) {
-                                contents = 'X';
-                              } else {
-                                if (chars.indexOf('CH') >= 0) contents = '₹';
-                                var reserved = false;
-                                reserveCodes.forEach((code) => {
-                                  if (chars.indexOf(code) >= 0) {
-                                    reserved = true;
-                                  }
-                                });
-                                if (!reserved) chars.push('AVL');
-                              }
-                              // If Seat Selected
-                              let seatSelected = false;
-                              if (seatMap[type].data?.travellers) {
-                                for (let x of seatMap[type].data.travellers) {
-                                  if (x?.seatNo === rowNum + col) {
-                                    seatSelected = true;
+                      return (
+                        <>
+                          {parse(rowBefore)}
+                          <tr
+                            className={`seat-row ${
+                              row.rowCharacteristicDetails
+                                ? 'row-type-' +
+                                  row.rowCharacteristicDetails.rowCharacteristic
+                                : ''
+                            }`}
+                          >
+                            <th className='row-number'>{rowNum}</th>
+                            {seatFormatArr.map((col, colInd) => {
+                              if (col !== ' ') {
+                                var chars = details[col] || getArray(defSeatOcc);
+                                var price = prices[rowNum + col] || 0;
+                                // var contents = chars.indexOf('O') >= 0 ? 'X' : (chars.indexOf('E') >= 0 ? 'E' : (chars.indexOf('1') >= 0 ? 'R' : (chars.indexOf('CH') >= 0 ? '$' : '&nbsp;')));
+                                var contents = '\u00A0';
+                                // If these codes then seat is unavailable
+                                if (chars.indexOf('O') >= 0 || chars.indexOf('Z') >= 0) {
+                                  contents = 'X';
+                                } else {
+                                  if (chars.indexOf('CH') >= 0) contents = '₹';
+                                  var reserved = false;
+                                  reserveCodes.forEach((code) => {
+                                    if (chars.indexOf(code) >= 0) {
+                                      reserved = true;
+                                    }
+                                  });
+                                  if (!reserved) chars.push('AVL');
+                                }
+                                // If Seat Selected
+                                let seatSelected = false;
+                                if (seatMap[type].data?.travellers) {
+                                  for (let x of seatMap[type].data.travellers) {
+                                    if (x?.seatNo === rowNum + col) {
+                                      seatSelected = true;
+                                    }
                                   }
                                 }
-                              }
-                              let conditions =
-                                chars.includes('AVL') &&
-                                !chars.includes(1) &&
-                                !chars.includes('O') &&
-                                !chars.includes(8) &&
-                                !chars.includes('GN') &&
-                                !chars.includes('SO') &&
-                                !chars.includes('BK') &&
-                                !chars.includes('ST') &&
-                                !chars.includes('LA') &&
-                                !chars.includes('G');
-                              if (chars.indexOf('8') >= 0) {
-                                return <td key={colInd} className='no-seat' />;
-                              } else {
-                                // console.log('char', chars);
-                                return (
-                                  <td
-                                    className={`seat seat-${chars.join(' seat-')} ${
-                                      seatSelected ? 'seat-sel' : ''
-                                    } ${conditions ? 'cursor-pointer' : ''}`}
-                                    onClick={() => {
-                                      if (conditions) {
-                                        // Seat Number = rowNum+col
-                                        console.log(
-                                          'data-row',
-                                          rowNum,
-                                          col,
-                                          price,
-                                          contents
-                                        );
-                                        setSeatMap((prev) => {
-                                          console.log('yea');
-                                          let add = {
-                                            amount: price,
-                                            seatNo: rowNum + col,
-                                          };
-                                          let travl = prev[type]?.data?.travellers;
-                                          if (travl) {
-                                            // Check if the seat is already selected
-                                            let seatSelected = false;
-                                            for (let x = travl.length - 1; x >= 0; x--) {
-                                              if (travl[x].seatNo === rowNum + col) {
-                                                travl.splice(x, 1);
-                                                seatSelected = true;
+                                let conditions =
+                                  chars.includes('AVL') &&
+                                  !chars.includes(1) &&
+                                  !chars.includes('O') &&
+                                  !chars.includes(8) &&
+                                  !chars.includes('GN') &&
+                                  !chars.includes('SO') &&
+                                  !chars.includes('BK') &&
+                                  !chars.includes('ST') &&
+                                  !chars.includes('LA') &&
+                                  !chars.includes('G');
+                                if (chars.indexOf('8') >= 0) {
+                                  return <td key={colInd} className='no-seat' />;
+                                } else {
+                                  // console.log('char', chars);
+                                  return (
+                                    <td
+                                      className={`seat seat-${chars.join(' seat-')} ${
+                                        seatSelected ? 'seat-sel' : ''
+                                      } ${conditions ? 'cursor-pointer' : ''}`}
+                                      onClick={() => {
+                                        if (conditions) {
+                                          // Seat Number = rowNum+col
+                                          console.log(
+                                            'data-row',
+                                            rowNum,
+                                            col,
+                                            price,
+                                            contents
+                                          );
+                                          setSeatMap((prev) => {
+                                            console.log('yea');
+                                            let add = {
+                                              amount: price,
+                                              seatNo: rowNum + col,
+                                            };
+                                            let travl =
+                                              prev[type]?.data[dIndex]?.travellers;
+                                            if (travl) {
+                                              // Check if the seat is already selected
+                                              let seatSelected = false;
+                                              for (
+                                                let x = travl.length - 1;
+                                                x >= 0;
+                                                x--
+                                              ) {
+                                                if (travl[x].seatNo === rowNum + col) {
+                                                  travl.splice(x, 1);
+                                                  seatSelected = true;
+                                                }
                                               }
-                                            }
-                                            if (!seatSelected) {
-                                              // If the traveller is going to repeat
-                                              if (travl.length === travellers.length) {
-                                                travl.push({
-                                                  ...travl[0],
-                                                  ...add,
-                                                });
-                                                travl.splice(0, 1);
-                                              } else {
-                                                let travlToAdd = false;
-                                                for (let x of travellers) {
-                                                  let match = false;
-                                                  for (let y of travl) {
-                                                    if (y.value === x.value) {
-                                                      match = true;
+                                              if (!seatSelected) {
+                                                // If the traveller is going to repeat
+                                                if (
+                                                  travl.length === travellerInfo.length
+                                                ) {
+                                                  travl.push({
+                                                    ...travl[0],
+                                                    ...add,
+                                                  });
+                                                  travl.splice(0, 1);
+                                                } else {
+                                                  let travlToAdd = false;
+                                                  for (let x of travellerInfo) {
+                                                    let match = false;
+                                                    for (let y of travl) {
+                                                      if (y.id === x.id) {
+                                                        match = true;
+                                                      }
                                                     }
-                                                  }
-                                                  if (!match && !travlToAdd) {
-                                                    travl.push({
-                                                      ...x,
-                                                      ...add,
-                                                    });
-                                                    travlToAdd = true;
+                                                    if (!match && !travlToAdd) {
+                                                      travl.push({
+                                                        ...x,
+                                                        ...add,
+                                                      });
+                                                      travlToAdd = true;
+                                                    }
                                                   }
                                                 }
                                               }
+                                            } else {
+                                              travl = [{ ...travellerInfo[0], ...add }];
                                             }
-                                          } else {
-                                            travl = [{ ...travellers[0], ...add }];
-                                          }
-                                          prev[type].data['travellers'] = travl;
-                                          return { ...prev };
-                                        });
-                                      }
-                                    }}
-                                  >
-                                    <a
-                                      data-tooltip-id={
-                                        conditions ? rowNum + col : undefined
-                                      }
-                                      data-tooltip-content={
-                                        conditions
-                                          ? `Amount - ${price.toLocaleString('en-IN', {
-                                              maximumFractionDigits: 2,
-                                              style: 'currency',
-                                              currency: 'INR',
-                                            })}`
-                                          : undefined
-                                      }
-                                      data-tooltip-place='top'
+                                            prev[type].data[dIndex]['travellers'] = travl;
+                                            return { ...prev };
+                                          });
+                                        }
+                                      }}
                                     >
-                                      {contents}
-                                    </a>
-                                    <ReactTooltip id={rowNum + col} />
-                                  </td>
-                                );
+                                      <a
+                                        data-tooltip-id={
+                                          conditions ? rowNum + col : undefined
+                                        }
+                                        data-tooltip-content={
+                                          conditions
+                                            ? `Amount - ${price.toLocaleString('en-IN', {
+                                                maximumFractionDigits: 2,
+                                                style: 'currency',
+                                                currency: 'INR',
+                                              })}`
+                                            : undefined
+                                        }
+                                        data-tooltip-place='top'
+                                      >
+                                        {contents}
+                                      </a>
+                                      <ReactTooltip id={rowNum + col} />
+                                    </td>
+                                  );
+                                }
+                              } else {
+                                return <td key={colInd} className='no-seat' />;
                               }
-                            } else {
-                              return <td key={colInd} className='no-seat' />;
-                            }
-                          })}
-                        </tr>
-                        {parse(rowAfter)}
-                      </>
-                    );
-                  }
-                })}
-                {/* facRear */}
-                {parse(facRear)}
-              </tbody>
-            </table>
-          );
-        })}
-      </div>
-    );
+                            })}
+                          </tr>
+                          {parse(rowAfter)}
+                        </>
+                      );
+                    }
+                  })}
+                  {/* facRear */}
+                  {parse(facRear)}
+                </tbody>
+              </table>
+            );
+          })}
+        </div>
+      );
+      dIndex++;
+    }
   };
 
   return (
@@ -1603,6 +1645,42 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                           </>
                         ))}
                       {/* AD */}
+                      {value.provider === 'ad' && (
+                        <div className='col-md-6 form-input-select mt-10' key={ind}>
+                          <label>
+                            {Object.values(value.data.segments)[0].from} &rarr;{' '}
+                            {Object.values(value.data.segments).at(-1).to}
+                          </label>
+                          <Select
+                            options={[
+                              {
+                                value: null,
+                                label: 'No Preference',
+                              },
+                              { value: 'Vegetarian', label: 'Vegetarian' },
+                              { value: 'Jain Vegetarian', label: 'Jain Vegetarian' },
+                              { value: 'Non Vegetarian', label: 'Non Vegetarian' },
+                              { value: 'Lacto Ovo Meal', label: 'Lacto Ovo Meal' },
+                              { value: 'Sea Food Meal', label: 'Sea Food Meal' },
+                            ]}
+                            defaultValue={{
+                              value: null,
+                              label: 'No Preference',
+                            }}
+                            // value={element.seat_preference}
+                            onChange={(id) =>
+                              setTravellerInfo((prev) => {
+                                for (let traveller of prev) {
+                                  if (traveller.id === travl.id) {
+                                    traveller.trip_meals[key] = [id];
+                                  }
+                                }
+                                return [...prev];
+                              })
+                            }
+                          />
+                        </div>
+                      )}
                     </div>
                   )}
                 </>
