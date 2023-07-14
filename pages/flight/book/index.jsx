@@ -7,7 +7,7 @@ import DefaultFooter from '../../../components/footer/default';
 import Header1 from '../../../components/header/header-1';
 
 const index = () => {
-  const [currentStep, setCurrentStep] = useState(2);
+  const [currentStep, setCurrentStep] = useState(1);
   const [PNR, setPNR] = useState({ to: null, from: null, combined: null });
   const [travellerInfo, setTravellerInfo] = useState([]);
   const [seatMap, setSeatMap] = useState({
