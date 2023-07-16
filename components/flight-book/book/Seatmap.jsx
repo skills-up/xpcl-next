@@ -42,12 +42,12 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
   const getData = async () => {
     if (PNR) {
       let response = {};
-      // let tempDat = { to: null, from: null, combined: null };
-      let tempDat = {
-        to: { data: aaSeatMap, provider: 'aa' },
-        from: null,
-        combined: null,
-      };
+      let tempDat = { to: null, from: null, combined: null };
+      // let tempDat = {
+      //   to: { data: aaSeatMap, provider: 'aa' },
+      //   from: null,
+      //   combined: null,
+      // };
       let tempPNR = { ...PNR };
       for (let [key, value] of Object.entries(PNR)) {
         if (value) {
@@ -1608,10 +1608,10 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                   <TJSeatMapRender data={seatMap.from.data} type='from' />
                 ) : // AA
                 seatMap?.from?.provider === 'aa' ? (
-                  <></>
+                  <AASeatMapRender data={seatMap.from.data} type='from' />
                 ) : // AD
                 seatMap?.from?.provider === 'ad' ? (
-                  <></>
+                  <ADSeatMapRender data={seatMap.from.data} type='from' />
                 ) : (
                   <></>
                 )
@@ -1630,10 +1630,10 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                   <TJSeatMapRender data={seatMap.combined.data} type='combined' />
                 ) : // AA
                 seatMap?.combined?.provider === 'aa' ? (
-                  <></>
+                  <AASeatMapRender data={seatMap.combined.data} type='combined' />
                 ) : // AD
                 seatMap?.combined?.provider === 'ad' ? (
-                  <></>
+                  <ADSeatMapRender data={seatMap.combined.data} type='combined' />
                 ) : (
                   <></>
                 )
