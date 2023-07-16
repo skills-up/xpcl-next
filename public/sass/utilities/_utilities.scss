@@ -2439,6 +2439,7 @@ table.table-6 {
     position: absolute;
     left: 42%;
     top: 12.5%;
+    font-size: 1rem !important;
   }
 }
 
@@ -2453,6 +2454,26 @@ table.table-6 {
       justify-content: center;
       min-height: 55px;
       min-width: 55px;
+      font-size: 1.2rem;
+      text-align: center;
+    }
+  }
+}
+
+// Tripjack Seatmap
+.aa-seatmap {
+  tr {
+    display: flex;
+    &.extra {
+      justify-content: space-between;
+    }
+    td {
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 55px;
+      min-height: 55px;
       font-size: 1.2rem;
       text-align: center;
     }
