@@ -2,8 +2,12 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper';
 import Image from 'next/image';
 import Link from 'next/link';
+import { DateObject } from 'react-multi-date-picker';
+import { useSelector } from 'react-redux';
 
 function HotelProperty({ item }) {
+  const searchData = useSelector((state) => state.hotelSearch.value.searchData);
+
   return (
     <div className='col-12' key={item?.id}>
       <div className='border-top-light pt-30'>
@@ -20,17 +24,20 @@ function HotelProperty({ item }) {
                     }}
                     navigation={true}
                   >
-                    {item?.slideImg?.map((slide, i) => (
-                      <SwiperSlide key={i}>
-                        <Image
-                          width={250}
-                          height={250}
-                          className='rounded-4 col-12 js-lazy'
-                          src={slide}
-                          alt='image'
-                        />
-                      </SwiperSlide>
-                    ))}
+                    {item?.img.map((slide, i) => {
+                      if (slide?.url || slide?.tns)
+                        return (
+                          <SwiperSlide key={i}>
+                            <Image
+                              width={250}
+                              height={250}
+                              className='rounded-4 col-12 js-lazy'
+                              src={slide?.url || slide?.tns}
+                              alt='image'
+                            />
+                          </SwiperSlide>
+                        );
+                    })}
                   </Swiper>
                 </div>
               </div>
@@ -47,14 +54,14 @@ function HotelProperty({ item }) {
 
           <div className='col-md'>
             <h3 className='text-18 lh-16 fw-500'>
-              {item?.title}
-              <br className='lg:d-none' /> {item?.location}
-              <div className='d-inline-block ml-10'>
-                <i className='icon-star text-10 text-yellow-2'></i>
-                <i className='icon-star text-10 text-yellow-2'></i>
-                <i className='icon-star text-10 text-yellow-2'></i>
-                <i className='icon-star text-10 text-yellow-2'></i>
-                <i className='icon-star text-10 text-yellow-2'></i>
+              {item?.name}
+              <div className='d-flex items-center'>
+                {item?.ad?.city?.name}
+                <div className='d-inline-flex ml-10 items-flex-start'>
+                  {[...Array(item?.rt)]?.map((rating, ratingIndex) => (
+                    <i key={ratingIndex} className='icon-star text-10 text-yellow-2'></i>
+                  ))}
+                </div>
               </div>
             </h3>
 
@@ -129,14 +136,36 @@ function HotelProperty({ item }) {
               </div>
               <div className='col-auto'>
                 <div className='flex-center text-white fw-600 text-14 size-40 rounded-4 bg-blue-1'>
-                  {item?.ratings}
+                  {item?.rt}
                 </div>
               </div>
             </div>
 
             <div className=''>
-              <div className='text-14 text-light-1 mt-50 md:mt-20'>8 nights, 2 adult</div>
-              <div className='text-22 lh-12 fw-600 mt-5'>US${item?.price}</div>
+              <div className='text-14 text-light-1 mt-50 md:mt-20'>
+                {(new DateObject({
+                  date: searchData.searchQuery.checkoutDate,
+                  format: 'YYYY-MM-DD',
+                })
+                  .toDate()
+                  .getTime() -
+                  new DateObject({
+                    date: searchData.searchQuery.checkinDate,
+                    format: 'YYYY-MM-DD',
+                  })
+                    .toDate()
+                    .getTime()) /
+                  86400000}{' '}
+                nights, 2 adult
+              </div>
+              <div className='text-22 lh-12 fw-600 mt-5'>
+                {item?.ops[0]?.tp.toLocaleString('en-IN', {
+                  maximumFractionDigits: 2,
+                  style: 'currency',
+                  currency: 'INR',
+                })}{' '}
+                Onwards
+              </div>
               <div className='text-14 text-light-1 mt-5'>+US$828 taxes and charges</div>
 
               <Link

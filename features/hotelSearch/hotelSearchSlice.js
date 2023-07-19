@@ -1,9 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { DateObject } from 'react-multi-date-picker';
-import { akasa, tripjack } from '../../pages/test/temp';
+import { akasa, tjHotel, tripjack } from '../../pages/test/temp';
 
 export const initialState = {
   value: {
+    searchData: tjHotel,
     rooms: [],
     city: '',
     checkInDate: new DateObject(),
@@ -16,9 +17,7 @@ export const initialState = {
     sort: {
       _: true,
       price: true,
-      total_duration: false,
-      departure_time: false,
-      arrival_time: false,
+      rating: false,
     },
   },
 };
@@ -27,6 +26,7 @@ const hotelSearchSlice = createSlice({
   name: 'hotelSearch',
   initialState,
   reducers: {
+    setSearchData: (state, action) => void (state.value.searchData = action.payload),
     setRooms: (state, action) => void (state.value.rooms = action.payload),
     setCity: (state, action) => void (state.value.city = action.payload),
     setCheckInDate: (state, action) => void (state.value.checkInDate = action.payload),
@@ -39,7 +39,18 @@ const hotelSearchSlice = createSlice({
     setPaginateTotalDataSize: (state, action) =>
       void (state.value.paginateTotalDataSize = action.payload.paginateTotalDataSize),
     setPrice: (state, action) => void (state.value.price = action.payload),
-    setSort: (state, action) => void (state.value.sort = action.payload),
+    setSort: (state, action) => {
+      if (action.payload.key === '_') {
+        state.value.sort['_'] = action.payload.value;
+      } else {
+        for (let [key, value] of Object.entries(state.value.sort)) {
+          if (key !== '_') {
+            if (key !== action.payload.key) state.value.sort[key] = false;
+            else state.value.sort[key] = action.payload.value;
+          }
+        }
+      }
+    },
     setInitialState: (state) => {
       state.value = initialState.value;
     },
@@ -47,6 +58,7 @@ const hotelSearchSlice = createSlice({
 });
 
 export const {
+  setSearchData,
   setCheckInDate,
   setCheckOutDate,
   setCity,
