@@ -2421,6 +2421,7 @@ table.table-6 {
 .flight-search-sort-container {
   position: relative;
   .flight-search-sort {
+    z-index: 9;
     position: absolute;
     min-width: 170px;
     margin-top: 1rem;
@@ -2659,6 +2660,7 @@ table.table-6 {
 .hotel-search-sort-container {
   position: relative;
   .hotel-search-sort {
+    z-index: 9;
     position: absolute;
     min-width: 170px;
     margin-top: 1rem;

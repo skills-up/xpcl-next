@@ -3,7 +3,12 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { customAPICall } from '../../../api/xplorzApi';
 import { hotelsData } from '../../../data/hotels';
-import { setPaginateTotalDataSize } from '../../../features/hotelSearch/hotelSearchSlice';
+import {
+  setOptions,
+  setPaginateTotalDataSize,
+  setPrice,
+  setRatings,
+} from '../../../features/hotelSearch/hotelSearchSlice';
 import HotelProperty from '../common/HotelProperty';
 
 const HotelProperties = () => {
@@ -16,26 +21,80 @@ const HotelProperties = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const sort = useSelector((state) => state.hotelSearch.value.sort);
+  const price = useSelector((state) => state.hotelSearch.value.price);
+  const ratings = useSelector((state) => state.hotelSearch.value.ratings);
+  const options = useSelector((state) => state.hotelSearch.value.options);
 
   const [manip, setManip] = useState([]);
   const searchData = useSelector((state) => state.hotelSearch.value.searchData);
 
   useEffect(() => {
     console.log('SearchData', searchData);
-    if (searchData?.searchResult?.his) setManip(searchData.searchResult?.his);
+    if (searchData?.searchResult?.his) {
+      let maxPrice = 0;
+      let options = {};
+      for (let data of searchData.searchResult?.his) {
+        // Options
+        for (let pop of data.pops)
+          options[pop.fc] ? (options[pop.fc] += 1) : (options[pop.fc] = 1);
+        // Max Price
+        if (data.ops[0].tp > maxPrice) {
+          maxPrice = data.ops[0].tp;
+        }
+      }
+      // Options Manip
+      for (let [key, value] of Object.entries(options))
+        options[key] = { number: value, value: true };
+      // Price
+      dispatch(
+        setPrice({ value: { min: 0, max: maxPrice + 1 }, maxPrice: maxPrice + 1 })
+      );
+      dispatch(setOptions(options));
+      // Setting Search Data
+      setManip(searchData.searchResult?.his);
+    }
   }, [searchData]);
 
   useEffect(() => {
     if (manip)
-      dispatch(setPaginateTotalDataSize({ paginateTotalDataSize: manip.length }));
-  }, [manip, sort]);
+      dispatch(
+        setPaginateTotalDataSize({
+          paginateTotalDataSize: manip.filter((el) => {
+            let stat = filter(el);
+            return stat;
+          }).length,
+        })
+      );
+  }, [manip, sort, options, ratings, price]);
+
+  const filter = (el) => {
+    // Filters
+
+    // Filter By Price Slider
+    if (!(el.ops[0].tp >= price.value.min && el.ops[0].tp <= price.value.max))
+      return false;
+    // Filter By Ratings
+    if (el.rt < ratings) return false;
+    // Filter By Options
+    let hasOption = false;
+    for (let [key, value] of Object.entries(options)) {
+      for (let pop of el.pops) {
+        if (pop.fc[0] === key && value.value) hasOption = true;
+      }
+    }
+    if (!hasOption) return false;
+    return true;
+  };
 
   return (
     <>
       {manip &&
         manip.length > 0 &&
         manip
-          .filter((el) => el)
+          .filter((el) => {
+            let stat = filter(el);
+            return stat;
+          })
           .sort((a, b) => {
             if (sort.price) {
               return sort._

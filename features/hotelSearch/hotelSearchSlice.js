@@ -13,6 +13,8 @@ export const initialState = {
     paginateDataNumber: 0,
     paginateDataPerPage: 10,
     paginateTotalDataSize: 0,
+    ratings: 1,
+    options: null,
     price: { value: { min: 0, max: 0 }, maxPrice: 0 },
     sort: {
       _: true,
@@ -39,6 +41,8 @@ const hotelSearchSlice = createSlice({
     setPaginateTotalDataSize: (state, action) =>
       void (state.value.paginateTotalDataSize = action.payload.paginateTotalDataSize),
     setPrice: (state, action) => void (state.value.price = action.payload),
+    setRatings: (state, action) => void (state.value.ratings = action.payload),
+    setOptions: (state, action) => void (state.value.options = action.payload),
     setSort: (state, action) => {
       if (action.payload.key === '_') {
         state.value.sort['_'] = action.payload.value;
@@ -58,6 +62,8 @@ const hotelSearchSlice = createSlice({
 });
 
 export const {
+  setRatings,
+  setOptions,
   setSearchData,
   setCheckInDate,
   setCheckOutDate,

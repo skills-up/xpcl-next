@@ -1,20 +1,25 @@
-import { useState } from "react";
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setRatings } from '../../../features/hotelSearch/hotelSearchSlice';
 
 const RatingsFilter = () => {
-  const ratings = [1, 2, 3, 4, 5];
+  const ratingOptions = [1, 2, 3, 4, 5];
   const [activeRating, setActiveRating] = useState(null);
 
+  const ratings = useSelector((state) => state.hotelSearch.value.ratings);
+  const dispatch = useDispatch();
+
   const handleRatingClick = (rating) => {
-    setActiveRating(rating === activeRating ? null : rating);
+    dispatch(setRatings(rating));
   };
 
   return (
     <>
-      {ratings.map((rating) => (
-        <div className="col-auto" key={rating}>
+      {ratingOptions.map((rating) => (
+        <div className='col-auto' key={rating}>
           <button
             className={`button -blue-1 bg-blue-1-05 text-blue-1 py-5 px-20 rounded-100 ${
-              rating === activeRating ? "active" : ""
+              rating === ratings ? 'active' : ''
             }`}
             onClick={() => handleRatingClick(rating)}
           >
