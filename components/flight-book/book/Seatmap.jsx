@@ -23,7 +23,18 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
   // Fetch Flight Details for PNRs
   // Save Them To Seatmaps
   // Display Seatmaps
-
+  const amadeusMealOptions = [
+    {
+      value: '_',
+      label: 'No Preference',
+    },
+    { value: 'AVML', label: 'Vegetarian' },
+    { value: 'HNML', label: 'Hindi Non Vegetarian' },
+    { value: 'VJML', label: 'Jain Vegetarian' },
+    { value: 'NVML', label: 'Non Vegetarian' },
+    { value: 'VLML', label: 'Lacto Ovo Meal' },
+    { value: 'SFML', label: 'Sea Food Meal' },
+  ];
   const router = useRouter();
 
   let getArray = (x) => {
@@ -106,6 +117,42 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
           }
           // AD
           if (value?.provider === 'ad') {
+            let travellersTemp = [];
+            for (let traveller of travellerInfo) {
+              let tempObj = {};
+              // Age
+              const age = (
+                (Date.now() -
+                  +new DateObject({
+                    date: traveller?.passport_dob,
+                    format: 'YYYY-MM-DD',
+                  })
+                    .toDate()
+                    .getTime()) /
+                31536000000
+              ).toFixed(2);
+              // If below 2 years of age, infant
+              if (age < 2) tempObj['type'] = 'INF';
+              // If above 2 but below 12, child
+              if (age >= 2 && age < 12) tempObj['type'] = 'CHD';
+              // If above 12 years, consider adult
+              if (age >= 12) tempObj['type'] = 'ADT';
+              tempObj['firstName'] = traveller?.first_name;
+              tempObj['lastName'] = traveller?.last_name;
+              tempObj['dateOfBirth'] = traveller?.passport_dob;
+              tempObj['fareBasisOverride'] = value?.data?.fareBasis[0];
+              // FF
+              if (
+                traveller?.frequentFliers?.value &&
+                traveller.membershipID.trim().length > 0
+              ) {
+                tempObj['ff'] = {
+                  code: traveller.frequentFliers.value,
+                  number: traveller.membershipID,
+                };
+              }
+              travellersTemp.push(tempObj);
+            }
             for (let [segKey, segValue] of Object.entries(value?.data?.segments)) {
               response = await createItem('flights/seatmap', {
                 seatCount: travellerDOBS.ADT + travellerDOBS.CHD,
@@ -118,6 +165,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                   flightNumber: segValue.flightNumber,
                   bookingClass: segValue.bookingClass,
                 },
+                travellers: travellersTemp,
               });
               if (response?.success) {
                 for (let cabin of getArray(response.data.cabin)) {
@@ -143,12 +191,6 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
       }
       setSeatMap(tempDat);
       setPNR(tempPNR);
-      setTravellerInfo((prev) =>
-        prev.map((el) => ({
-          ...el,
-          trip_meals: { from: null, to: null, combined: null },
-        }))
-      );
     }
   };
 
@@ -337,7 +379,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
             'post',
             {
               key: value.data.key,
-              amount: total,
+              // amount: total,
             },
             {},
             true
@@ -347,7 +389,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
         // Reserving Seats
         if (value.provider === 'ad') {
           let seatRequested = false;
-          const sessionKey = value.data.session_key;
+          const pnr = value.data.pnr;
           if (seatMap[key]?.data) {
             for (let seg of seatMap[key].data) {
               if (seg.travellers) {
@@ -356,13 +398,13 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                   for (let trav of value.data.travellers) {
                     if (traveller.id === trav.id) {
                       tempSeg.push({ seatNumber: traveller.seatNo, paxRef: trav.paxRef });
+                      if (traveller.amount > 0) seatRequested = true;
                     }
                   }
                 }
                 if (tempSeg.length > 0) {
-                  seatRequested = true;
                   let seatBook = await createItem('flights/reserve-seats', {
-                    session_key: sessionKey,
+                    pnr,
                     segRef: seg.segKey,
                     seats: tempSeg,
                   });
@@ -374,12 +416,14 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
           const frequentFliers = [];
           const mealRequests = [];
           for (let traveller of travellerInfo) {
+            // Getting PAX
             let paxRef;
             for (let trav of value.data.travellers) {
               if (traveller.id === trav.id) {
                 paxRef = trav.paxRef;
               }
             }
+            // FF
             if (
               traveller?.frequentFliers?.value &&
               traveller.membershipID.trim().length > 0
@@ -390,26 +434,49 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                 number: traveller.membershipID,
               });
             }
+            // Meals
+            // If meal preference existed for a traveller and they didnt change it, then adding this
+            let travellerMealFound = false;
+            let travellerMealToTake = null;
             if (traveller.trip_meals[key] && traveller.trip_meals[key].length > 0) {
-              if (traveller.trip_meals[key][0]?.value) {
-                let found = false;
-                for (let meal of mealRequests) {
-                  if (meal.type === traveller.trip_meals[key][0]?.value) {
-                    found = true;
-                    meal.paxRefs.push(paxRef);
+              if (
+                traveller.trip_meals[key][0]?.value &&
+                traveller.trip_meals[key][0]?.value !== '_'
+              ) {
+                travellerMealFound = true;
+              }
+            } else {
+              if (traveller.meal_preference) {
+                for (let meal of amadeusMealOptions) {
+                  if (traveller.meal_preference === meal.value) {
+                    travellerMealFound = true;
+                    travellerMealToTake = meal;
                   }
-                }
-                if (!found) {
-                  mealRequests.push({
-                    type: traveller.trip_meals[key][0]?.value,
-                    paxRefs: [paxRef],
-                  });
                 }
               }
             }
+            if (travellerMealFound) {
+              let found = false;
+              for (let meal of mealRequests) {
+                if (
+                  meal.type ===
+                  (travellerMealToTake?.value || traveller.trip_meals[key][0]?.value)
+                ) {
+                  found = true;
+                  meal.paxRefs.push(paxRef);
+                }
+              }
+              if (!found) {
+                mealRequests.push({
+                  type: travellerMealToTake?.value || traveller.trip_meals[key][0]?.value,
+                  paxRefs: [paxRef],
+                });
+              }
+            }
           }
+          // Booking Call
           const booking = await createItem('flights/issue-tickets', {
-            session_key: sessionKey,
+            pnr,
             airline: Object.values(value.data.segments)[0].companyCode,
             seatRequested,
             frequentFliers,
@@ -1813,21 +1880,19 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                             {Object.values(value.data.segments).at(-1).to}
                           </label>
                           <Select
-                            options={[
-                              {
-                                value: null,
-                                label: 'No Preference',
-                              },
-                              { value: 'Vegetarian', label: 'Vegetarian' },
-                              { value: 'Jain Vegetarian', label: 'Jain Vegetarian' },
-                              { value: 'Non Vegetarian', label: 'Non Vegetarian' },
-                              { value: 'Lacto Ovo Meal', label: 'Lacto Ovo Meal' },
-                              { value: 'Sea Food Meal', label: 'Sea Food Meal' },
-                            ]}
-                            defaultValue={{
-                              value: null,
-                              label: 'No Preference',
-                            }}
+                            options={amadeusMealOptions}
+                            defaultValue={
+                              travl.meal_preference
+                                ? amadeusMealOptions.map((meal) => {
+                                    if (meal.value === travl.meal_preference) {
+                                      return meal;
+                                    }
+                                  })
+                                : {
+                                    value: '_',
+                                    label: 'No Preference',
+                                  }
+                            }
                             // value={element.seat_preference}
                             onChange={(id) =>
                               setTravellerInfo((prev) => {

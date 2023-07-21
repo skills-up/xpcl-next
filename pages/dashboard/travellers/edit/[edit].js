@@ -70,11 +70,12 @@ const UpdateTravellers = () => {
     { value: 'Premium Economy', label: 'Premium Economy' },
   ];
   const mealPreferenceOptions = [
-    { value: 'Vegetarian', label: 'Vegetarian' },
-    { value: 'Jain Vegetarian', label: 'Jain Vegetarian' },
-    { value: 'Non Vegetarian', label: 'Non Vegetarian' },
-    { value: 'Lacto Ovo Meal', label: 'Lacto Ovo Meal' },
-    { value: 'Sea Food Meal', label: 'Sea Food Meal' },
+    { value: 'AVML', label: 'Vegetarian' },
+    { value: 'HNML', label: 'Hindu Non Vegetarian' },
+    { value: 'VJML', label: 'Jain Vegetarian' },
+    { value: 'NVML', label: 'Non Vegetarian' },
+    { value: 'VLML', label: 'Lacto Ovo Meal' },
+    { value: 'SFML', label: 'Sea Food Meal' },
   ];
   const seatPreferenceOptions = [
     { value: 'Window', label: 'Window' },

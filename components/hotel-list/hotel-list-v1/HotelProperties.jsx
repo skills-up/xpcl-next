@@ -33,6 +33,7 @@ const HotelProperties = () => {
     if (searchData?.searchResult?.his) {
       let maxPrice = 0;
       let options = {};
+      let minPrice = 0;
       for (let data of searchData.searchResult?.his) {
         // Options
         for (let pop of data.pops)
@@ -41,13 +42,18 @@ const HotelProperties = () => {
         if (data.ops[0].tp > maxPrice) {
           maxPrice = data.ops[0].tp;
         }
+        // Min Price
+        if (minPrice === 0 || data.ops[0].tp < minPrice) minPrice === data.ops[0].tp;
       }
       // Options Manip
       for (let [key, value] of Object.entries(options))
         options[key] = { number: value, value: true };
       // Price
       dispatch(
-        setPrice({ value: { min: 0, max: maxPrice + 1 }, maxPrice: maxPrice + 1 })
+        setPrice({
+          value: { min: minPrice, max: maxPrice + 1 },
+          maxPrice: maxPrice + 1,
+        })
       );
       dispatch(setOptions(options));
       // Setting Search Data

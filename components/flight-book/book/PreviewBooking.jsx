@@ -66,9 +66,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
               seat_preference: el.seat_preference
                 ? { label: el.seat_preference, value: el.seat_preference }
                 : null,
-              // meal_preference: el.meal_preference
-              //   ? { label: el.meal_preference, value: el.meal_preference }
-              //   : null,
+              trip_meals: { from: null, to: null, combined: null },
               prefix: el.prefix
                 ? el.prefix === 'MR'
                   ? { value: 'MR', label: 'Mr.' }
