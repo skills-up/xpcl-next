@@ -10,6 +10,7 @@ import { DateObject } from 'react-multi-date-picker';
 import Select from 'react-select';
 import { aaSeatMap, adSeatMap } from '../../../pages/test/temp';
 import parse from 'html-react-parser';
+import LoadingBar from 'react-top-loading-bar';
 
 function Seatmap({ seatMaps, PNRS, travellerInfos }) {
   const [PNR, setPNR] = PNRS;
@@ -20,6 +21,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
   );
   const travellerDOBS = useSelector((state) => state.flightSearch.value.travellerDOBS);
   const [travellerInfo, setTravellerInfo] = travellerInfos;
+  const [progress, setProgress] = useState(0);
   // Fetch Flight Details for PNRs
   // Save Them To Seatmaps
   // Display Seatmaps
@@ -52,6 +54,11 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
   // Fetching Seatmaps for PNRS
   const getData = async () => {
     if (PNR) {
+      let totalCalls = 0;
+      let CurrentCalls = 0;
+      for (let value of Object.values(PNR)) {
+        if (value) totalCalls += 1;
+      }
       let response = {};
       let tempDat = { to: null, from: null, combined: null };
       // let tempDat = {
@@ -187,6 +194,8 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
             sendToast('error', 'Could not fetch seatmap', 4000);
             // router.back();
           }
+          CurrentCalls += 1;
+          setProgress(Math.floor((CurrentCalls / totalCalls) * 100));
         }
       }
       setSeatMap(tempDat);
@@ -198,6 +207,11 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
 
   // On Click
   const onClick = async () => {
+    let totalCalls = 0;
+    let currentCalls = 0;
+    for (let value of Object.values(PNR)) {
+      if (value) totalCalls += 1;
+    }
     for (let [key, value] of Object.entries(PNR)) {
       if (value) {
         // TJ
@@ -248,6 +262,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
             // }
             // Seats
             let seats = [];
+            console.log('value', value);
             for (let [k, v] of Object.entries(seatMap[key]?.data?.seatMap)) {
               if (v.travellers && v.travellers.length > 0) {
                 for (let trav of v.travellers) {
@@ -483,6 +498,8 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
             mealRequests,
           });
         }
+        currentCalls += 1;
+        setProgress(Math.floor((currentCalls / totalCalls) * 100));
       }
     }
   };
@@ -1641,6 +1658,11 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
   return (
     <section className='pt-40 pb-40 bg-light-2'>
       <div className='container'>
+        <LoadingBar
+          color='#19f9fc'
+          progress={progress}
+          onLoaderFinished={() => setProgress(0)}
+        />
         <h1>Flight Seatmaps (Optional)</h1>
         {/* To */}
         {seatMap?.to?.data && (
