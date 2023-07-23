@@ -1230,83 +1230,109 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                 </button>
               )}
               {/* Legend */}
-              {/* <div>
-          <table className='amadeus-table'>
-            <tbody>
-              <tr>
-                <th colspan='2'>Legend</th>
-              </tr>
-              <tr>
-                <td class='seat seat-sel'> &nbsp; </td>
-                <td>Selected Seat</td>
-              </tr>
-              <tr>
-                <td class='seat seat-O'> X </td>
-                <td>Occupied Seat</td>
-              </tr>
-              <tr>
-                <td class='seat seat-CH'> ₹ </td>
-                <td>Paid Seat</td>
-              </tr>
-              <tr>
-                <td class='seat seat-1'> &nbsp; </td>
-                <td>Different Class / Reserved for Airport Check-In</td>
-              </tr>
-              <tr>
-                <td class='seat seat-L'> &nbsp; </td>
-                <td>Extra Leg Room Seat</td>
-              </tr>
-              <tr>
-                <td class='seat seat-E'> &nbsp; </td>
-                <td>Exit Row Preferred Seat</td>
-              </tr>
-              <tr>
-                <td class='seat seat-OW'> &nbsp; </td>
-                <td>Overwing Seat</td>
-              </tr>
-              <tr>
-                <td class='seat seat-LA'> &nbsp; </td>
-                <td>Lavatory</td>
-              </tr>
-              <tr>
-                <td class='seat seat-AL'> &nbsp; </td>
-                <td>Adjacent to Lavatory</td>
-              </tr>
-              <tr>
-                <td class='seat seat-G'> &nbsp; </td>
-                <td>Galley</td>
-              </tr>
-              <tr>
-                <td class='seat seat-AG'> &nbsp; </td>
-                <td>Adjacent to Galley</td>
-              </tr>
-              <tr>
-                <td class='seat seat-1D'> &nbsp; </td>
-                <td>Limited Recline Seat</td>
-              </tr>
-              <tr>
-                <td class='seat seat-B'> &nbsp; </td>
-                <td>Seat with Basinette</td>
-              </tr>
-              <tr>
-                <td class='seat seat-BK'> &nbsp; </td>
-                <td>Bulk Head</td>
-              </tr>
-              <tr>
-                <td class='seat seat-SO'> &nbsp; </td>
-                <td>Storage</td>
-              </tr>
-              <tr>
-                <td class='seat seat-ST'> &nbsp; </td>
-                <td>Stairs to Upper Deck</td>
-              </tr>
-              <tr>
-                <td class='seat seat-GN'> &nbsp; </td>
-                <td>Unavailable / Reserved for Other Usage</td>
-              </tr>
-            </tbody>
-          </table>
-        </div> */}
+              <div className='d-inline-block bg-light-2 pt-10 px-20 mb-20'>
+                <h1>
+                  <th colspan='2' className='text-center mb-10 d-block'>
+                    Legend
+                  </th>
+                </h1>
+                <table className='amadeus-table'>
+                  <tbody className='legend'>
+                    <tr>
+                      <td class='seat seat-sel'> &nbsp; </td>
+                      <span>Selected Seat</span>
+                    </tr>
+                    <tr>
+                      <td class='seat seat-O'> X </td>
+                      <span>Occupied Seat</span>
+                    </tr>
+                    <tr>
+                      <td class='seat seat-CH'> ₹ </td>
+                      <span>Paid Seat</span>
+                    </tr>
+                    <tr>
+                      <td class='seat seat-1'> &nbsp; </td>
+                      <span>Different Class / Reserved for Airport Check-In</span>
+                    </tr>
+                    <tr>
+                      <td class='seat seat-L'> &nbsp; </td>
+                      <span>Extra Leg Room Seat</span>
+                    </tr>
+                    <tr>
+                      <td class='seat seat-E'> &nbsp; </td>
+                      <span>Exit Row Preferred Seat</span>
+                    </tr>
+                    <tr>
+                      <td class='seat seat-OW'> &nbsp; </td>
+                      <span>Overwing Seat</span>
+                    </tr>
+                    <tr>
+                      <td class='seat seat-LA'> &nbsp; </td>
+                      <span>Lavatory</span>
+                    </tr>
+                    <tr>
+                      <td class='seat seat-AL'> &nbsp; </td>
+                      <span>Adjacent to Lavatory</span>
+                    </tr>
+                    <tr>
+                      <td class='seat seat-G'> &nbsp; </td>
+                      <span>Galley</span>
+                    </tr>
+                    <tr>
+                      <td class='seat seat-AG'> &nbsp; </td>
+                      <span>Adjacent to Galley</span>
+                    </tr>
+                    <tr>
+                      <td class='seat seat-1D'> &nbsp; </td>
+                      <span>Limited Recline Seat</span>
+                    </tr>
+                    <tr>
+                      <td class='seat seat-B'> &nbsp; </td>
+                      <span>Seat with Basinette</span>
+                    </tr>
+                    <tr>
+                      <td class='seat seat-BK'> &nbsp; </td>
+                      <span>Bulk Head</span>
+                    </tr>
+                    <tr>
+                      <td class='seat seat-SO'> &nbsp; </td>
+                      <span>Storage</span>
+                    </tr>
+                    <tr>
+                      <td class='seat seat-ST'> &nbsp; </td>
+                      <span>Stairs to Upper Deck</span>
+                    </tr>
+                    <tr>
+                      <td class='seat seat-GN'> &nbsp; </td>
+                      <span>Unavailable / Reserved for Other Usage</span>
+                    </tr>
+                  </tbody>
+                </table>
+                <div className='row my-3'>
+                  {travellerInfo.map((trav, travInd) => {
+                    let seatSelected = '';
+                    if (d?.travellers)
+                      for (let travl of d?.travellers)
+                        if (travl.label === trav.label)
+                          seatSelected = travl?.seatNo || '';
+                    return (
+                      <span
+                        style={{ fontWeight: 'bold' }}
+                        className='d-block col-auto'
+                        key={travInd}
+                      >
+                        <span>{trav?.aliases[0]}</span>{' '}
+                        <span
+                          className='text-primary d-inline-block'
+                          style={{ width: '40px' }}
+                        >
+                          - {seatSelected ? seatSelected : 'NA'}
+                        </span>
+                      </span>
+                    );
+                  })}
+                </div>
+              </div>
               {/* Iterating Cabins */}
               {getArray(seatmap.cabin).map((cabin, cabinIndex) => {
                 const facilities = getArray(cabin.cabinFacilities || []);
