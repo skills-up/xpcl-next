@@ -209,6 +209,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
   const onClick = async () => {
     let totalCalls = 0;
     let currentCalls = 0;
+    let totalSuccess = 0;
     for (let value of Object.values(PNR)) {
       if (value) totalCalls += 1;
     }
@@ -302,7 +303,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
             true
           );
           if (response?.success) {
-            console.log('booking successful');
+            totalSuccess += 1;
           }
         }
         // AA
@@ -345,6 +346,9 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
               {},
               true
             );
+            if (!ssrsBooking?.success) {
+              sendToast('error', 'Error in SSRS Booking', 4000);
+            }
           }
           // Seat Bookings (Per Segment Per Traveller)
           let seatTotal = 0;
@@ -380,6 +384,9 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                         {},
                         true
                       );
+                      if (!seatBooking?.success) {
+                        sendToast('error', 'Error in Seat Booking', 4000);
+                      }
                       seatTotal += traveller.amount;
                     }
                   }
@@ -399,6 +406,9 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
             {},
             true
           );
+          if (book?.success) {
+            totalSuccess += 1;
+          }
         }
         // AD
         // Reserving Seats
@@ -423,6 +433,9 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                     segRef: seg.segKey,
                     seats: tempSeg,
                   });
+                  if (!seatBook?.success) {
+                    sendToast('error', 'Error in Seat Bookings', 4000);
+                  }
                 }
               }
             }
@@ -497,9 +510,16 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
             frequentFliers,
             mealRequests,
           });
+          if (booking?.success) {
+            totalSuccess += 1;
+          }
         }
         currentCalls += 1;
         setProgress(Math.floor((currentCalls / totalCalls) * 100));
+        if (currentCalls === totalCalls) {
+          // What Call To Give Finally
+          sendToast('success', `${totalSuccess}/${totalCalls} Bookings Successful`, 4000);
+        }
       }
     }
   };
