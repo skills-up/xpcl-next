@@ -168,7 +168,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
           return;
         } else {
           sendToast('error', 'Error While Creating Booking', 4000);
-          // router.back();
+          router.back();
           return;
         }
       } else {

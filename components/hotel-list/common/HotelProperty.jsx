@@ -4,10 +4,15 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { DateObject } from 'react-multi-date-picker';
 import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
 
 function HotelProperty({ item }) {
   const searchData = useSelector((state) => state.hotelSearch.value.searchData);
-
+  const age = useSelector((state) => state.hotelSearch.value.age);
+  const totalAdults = age.totalAdult;
+  const totalChildren = age.totalChildren;
+  console.log('total', totalChildren, totalAdults);
+  const router = useRouter();
   return (
     <div className='col-12' key={item?.id}>
       <div className='border-top-light pt-30'>
@@ -70,37 +75,41 @@ function HotelProperty({ item }) {
                 <p className='text-14'>{item?.location}</p>
               </div>
 
-              <div className='col-auto'>
+              {/* <div className='col-auto'>
                 <button
                   data-x-click='mapFilter'
                   className='d-block text-14 text-blue-1 underline'
                 >
                   Show on map
                 </button>
-              </div>
+              </div> */}
 
-              <div className='col-auto'>
+              {/* <div className='col-auto'>
                 <div className='size-3 rounded-full bg-light-1'></div>
-              </div>
+              </div> */}
 
-              <div className='col-auto'>
-                <p className='text-14'>2 km to city center</p>
+              <div>
+                <p className='text-14'>
+                  {item.ad.adr}
+                  {item?.ad?.adr2 ? ', ' + item?.ad?.adr2 : ''},
+                  {' ' + item?.ad?.city.name}
+                </p>
               </div>
             </div>
 
-            <div className='text-14 lh-15 mt-20'>
+            {/* <div className='text-14 lh-15 mt-20'>
               <div className='fw-500'>King Room</div>
               <div className='text-light-1'>1 extra-large double bed</div>
-            </div>
+            </div> */}
 
-            <div className='text-14 text-green-2 lh-15 mt-10'>
+            {/* <div className='text-14 text-green-2 lh-15 mt-10'>
               <div className='fw-500'>Free cancellation</div>
               <div className=''>
                 You can cancel later, so lock in this great price today.
               </div>
-            </div>
+            </div> */}
 
-            <div className='row x-gap-10 y-gap-10 pt-20'>
+            {/* <div className='row x-gap-10 y-gap-10 pt-20'>
               <div className='col-auto'>
                 <div className='border-light rounded-100 py-5 px-20 text-14 lh-14'>
                   Breakfast
@@ -124,15 +133,14 @@ function HotelProperty({ item }) {
                   Bar
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
           {/* End .col-md */}
 
           <div className='col-md-auto text-right md:text-left'>
             <div className='row x-gap-10 y-gap-10 justify-end items-center md:justify-start'>
               <div className='col-auto'>
-                <div className='text-14 lh-14 fw-500'>Exceptional</div>
-                <div className='text-14 lh-14 text-light-1'>3,014 reviews</div>
+                <div className='text-14 lh-14 fw-500'>{item?.pt}</div>
               </div>
               <div className='col-auto'>
                 <div className='flex-center text-white fw-600 text-14 size-40 rounded-4 bg-blue-1'>
@@ -142,7 +150,7 @@ function HotelProperty({ item }) {
             </div>
 
             <div className=''>
-              <div className='text-14 text-light-1 mt-50 md:mt-20'>
+              <div className='text-14 text-light-1 mt-20'>
                 {(new DateObject({
                   date: searchData.searchQuery.checkoutDate,
                   format: 'YYYY-MM-DD',
@@ -156,7 +164,17 @@ function HotelProperty({ item }) {
                     .toDate()
                     .getTime()) /
                   86400000}{' '}
-                nights, 2 adult
+                nights,{' '}
+                {totalAdults > 0
+                  ? totalAdults > 1
+                    ? totalAdults + ' Adults'
+                    : totalAdults + ' Adult'
+                  : ''}
+                {totalChildren > 0
+                  ? totalChildren > 1
+                    ? ', ' + totalChildren + ' Children'
+                    : ', ' + totalChildren + ' Child'
+                  : ''}
               </div>
               <div className='text-22 lh-12 fw-600 mt-5'>
                 {item?.ops[0]?.tp.toLocaleString('en-IN', {
@@ -166,14 +184,14 @@ function HotelProperty({ item }) {
                 })}{' '}
                 Onwards
               </div>
-              <div className='text-14 text-light-1 mt-5'>+US$828 taxes and charges</div>
+              {/* <div className='text-14 text-light-1 mt-5'>+US$828 taxes and charges</div> */}
 
-              <Link
-                href={`/hotel/hotel-single-v1/${item.id}`}
+              <p
+                onClick={() => router.push(`/hotel/hotel-single-v1/${item.id}`)}
                 className='button -md -dark-1 bg-blue-1 text-white mt-24'
               >
                 See Availability <div className='icon-arrow-top-right ml-15'></div>
-              </Link>
+              </p>
             </div>
           </div>
         </div>

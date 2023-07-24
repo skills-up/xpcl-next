@@ -1,13 +1,10 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { customAPICall } from '../../../api/xplorzApi';
-import { hotelsData } from '../../../data/hotels';
 import {
   setOptions,
   setPaginateTotalDataSize,
   setPrice,
-  setRatings,
 } from '../../../features/hotelSearch/hotelSearchSlice';
 import HotelProperty from '../common/HotelProperty';
 
@@ -23,6 +20,7 @@ const HotelProperties = () => {
   const sort = useSelector((state) => state.hotelSearch.value.sort);
   const price = useSelector((state) => state.hotelSearch.value.price);
   const ratings = useSelector((state) => state.hotelSearch.value.ratings);
+  const maxRatings = useSelector((state) => state.hotelSearch.value.maxRatings);
   const options = useSelector((state) => state.hotelSearch.value.options);
 
   const [manip, setManip] = useState([]);
@@ -43,7 +41,7 @@ const HotelProperties = () => {
           maxPrice = data.ops[0].tp;
         }
         // Min Price
-        if (minPrice === 0 || data.ops[0].tp < minPrice) minPrice === data.ops[0].tp;
+        if (minPrice === 0 || data.ops[0].tp < minPrice) minPrice = data.ops[0].tp;
       }
       // Options Manip
       for (let [key, value] of Object.entries(options))
@@ -52,6 +50,7 @@ const HotelProperties = () => {
       dispatch(
         setPrice({
           value: { min: minPrice, max: maxPrice + 1 },
+          minPrice,
           maxPrice: maxPrice + 1,
         })
       );
@@ -71,7 +70,7 @@ const HotelProperties = () => {
           }).length,
         })
       );
-  }, [manip, sort, options, ratings, price]);
+  }, [manip, sort, options, ratings, maxRatings, price]);
 
   const filter = (el) => {
     // Filters
@@ -80,7 +79,7 @@ const HotelProperties = () => {
     if (!(el.ops[0].tp >= price.value.min && el.ops[0].tp <= price.value.max))
       return false;
     // Filter By Ratings
-    if (el.rt < ratings) return false;
+    if (el.rt < ratings || el.rt > maxRatings) return false;
     // Filter By Options
     let hasOption = false;
     for (let [key, value] of Object.entries(options)) {

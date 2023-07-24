@@ -37,9 +37,10 @@ const PirceSlider = () => {
           </div>
 
           <div className='px-5'>
+            {console.log('Min Price', price.minPrice)}
             <InputRange
               formatLabel={(value) => ``}
-              minValue={0}
+              minValue={price.minPrice}
               maxValue={price.maxPrice}
               value={price.value}
               onChange={(value) => handleOnChange(value)}

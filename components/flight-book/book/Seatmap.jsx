@@ -124,43 +124,44 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
           }
           // AD
           if (value?.provider === 'ad') {
-            let travellersTemp = [];
-            for (let traveller of travellerInfo) {
-              let tempObj = {};
-              // Age
-              const age = (
-                (Date.now() -
-                  +new DateObject({
-                    date: traveller?.passport_dob,
-                    format: 'YYYY-MM-DD',
-                  })
-                    .toDate()
-                    .getTime()) /
-                31536000000
-              ).toFixed(2);
-              // If below 2 years of age, infant
-              if (age < 2) tempObj['type'] = 'INF';
-              // If above 2 but below 12, child
-              if (age >= 2 && age < 12) tempObj['type'] = 'CHD';
-              // If above 12 years, consider adult
-              if (age >= 12) tempObj['type'] = 'ADT';
-              tempObj['firstName'] = traveller?.first_name;
-              tempObj['lastName'] = traveller?.last_name;
-              tempObj['dateOfBirth'] = traveller?.passport_dob;
-              tempObj['fareBasisOverride'] = value?.data?.fareBasis[0];
-              // FF
-              if (
-                traveller?.frequentFliers?.value &&
-                traveller.membershipID.trim().length > 0
-              ) {
-                tempObj['ff'] = {
-                  code: traveller.frequentFliers.value,
-                  number: traveller.membershipID,
-                };
-              }
-              travellersTemp.push(tempObj);
-            }
+            let counter = 0;
             for (let [segKey, segValue] of Object.entries(value?.data?.segments)) {
+              let travellersTemp = [];
+              for (let traveller of travellerInfo) {
+                let tempObj = {};
+                // Age
+                const age = (
+                  (Date.now() -
+                    +new DateObject({
+                      date: traveller?.passport_dob,
+                      format: 'YYYY-MM-DD',
+                    })
+                      .toDate()
+                      .getTime()) /
+                  31536000000
+                ).toFixed(2);
+                // If below 2 years of age, infant
+                if (age < 2) tempObj['type'] = 'INF';
+                // If above 2 but below 12, child
+                if (age >= 2 && age < 12) tempObj['type'] = 'CHD';
+                // If above 12 years, consider adult
+                if (age >= 12) tempObj['type'] = 'ADT';
+                tempObj['firstName'] = traveller?.first_name;
+                tempObj['lastName'] = traveller?.last_name;
+                tempObj['dateOfBirth'] = traveller?.passport_dob;
+                tempObj['fareBasisOverride'] = value?.data?.fareBasis[counter];
+                // FF
+                if (
+                  traveller?.frequentFliers?.value &&
+                  traveller.membershipID.trim().length > 0
+                ) {
+                  tempObj['ff'] = {
+                    code: traveller.frequentFliers.value,
+                    number: traveller.membershipID,
+                  };
+                }
+                travellersTemp.push(tempObj);
+              }
               response = await createItem('flights/seatmap', {
                 seatCount: travellerDOBS.ADT + travellerDOBS.CHD,
                 sector: {
@@ -188,11 +189,12 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                   provider: 'ad',
                 };
               }
+              counter += 1;
             }
           }
           if (!response?.success) {
             sendToast('error', 'Could not fetch seatmap', 4000);
-            // router.back();
+            router.back();
           }
           CurrentCalls += 1;
           setProgress(Math.floor((CurrentCalls / totalCalls) * 100));
@@ -1313,8 +1315,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                     let seatSelected = '';
                     if (d?.travellers)
                       for (let travl of d?.travellers)
-                        if (travl.label === trav.label)
-                          seatSelected = travl?.seatNo || '';
+                        if (travl.id === trav.id) seatSelected = travl?.seatNo || '';
                     return (
                       <span
                         style={{ fontWeight: 'bold' }}

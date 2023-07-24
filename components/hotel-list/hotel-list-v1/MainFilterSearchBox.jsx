@@ -4,7 +4,8 @@ import { useDispatch } from 'react-redux';
 import ReactSwitch from 'react-switch';
 import Select from 'react-select';
 import WindowedSelect from 'react-windowed-select';
-import { getList } from '../../../api/xplorzApi';
+import { customAPICall, getList } from '../../../api/xplorzApi';
+import { setAge, setSearchData } from '../../../features/hotelSearch/hotelSearchSlice';
 
 const MainFilterSearchBox = () => {
   const dispatch = useDispatch();
@@ -31,22 +32,31 @@ const MainFilterSearchBox = () => {
 
   const onSearch = async (e) => {
     e.preventDefault();
-    // const response = await customAPICall(
-    //   'tj/v1/htl/search',
-    //   'post',
-    //   {
-    //     cityId: '740051',
-    //     countryCode: '106',
-    //     checkIn: '2023-07-20',
-    //     checkOut: '2023-07-22',
-    //     rooms: [{ adults: 1, childAge: [] }],
-    //   },
-    //   {},
-    //   true
-    // );
-    // if (response?.success) {
-    //   dispatch(setSearchData(response.data));
-    // }
+    const response = await customAPICall(
+      'tj/v1/htl/search',
+      'post',
+      {
+        cityId: '740051',
+        checkIn: '2023-07-30',
+        checkOut: '2023-08-01',
+        rooms: [
+          // { adults: 2, childAge: [10, 8] },
+          { adults: 1, childAge: [] },
+        ],
+      },
+      {},
+      true
+    );
+    if (response?.success) {
+      let totalAdult = 0;
+      let totalChildren = 0;
+      for (let info of response.data.searchQuery.roomInfo) {
+        totalAdult += info.numberOfAdults;
+        totalChildren += info.numberOfChild;
+      }
+      dispatch(setAge({ totalAdult, totalChildren }));
+      dispatch(setSearchData(response.data));
+    }
   };
 
   return (
