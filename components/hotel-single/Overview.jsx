@@ -21,7 +21,11 @@ const Overview = ({ text }) => {
           </ul>
         );
       } catch (err) {
-        setFinal(text);
+        try {
+          setFinal(<div dangerouslySetInnerHTML={{ __html: text }} />);
+        } catch (err2) {
+          setFinal(text);
+        }
       }
     }
   }, []);

@@ -1,37 +1,71 @@
-const PropertyHighlights2 = () => {
-  const highlightsContent = [
+const PropertyHighlights2 = ({ facilities }) => {
+  const iconList = [
     {
-      id: 1,
-      icon: "icon-city",
-      text: `In London City Centre`,
+      icon: 'icon-city',
+      text: `Business Center`,
     },
     {
-      id: 2,
-      icon: "icon-airplane",
-      text: `Airport transfer`,
+      icon: 'icon-airplane',
+      text: `Fitness Center`,
     },
     {
-      id: 3,
-      icon: "icon-bell-ring",
-      text: `Front desk [24-hour]`,
+      icon: 'icon-bell-ring',
+      text: `Swimming Pool`,
     },
     {
-      id: 4,
-      icon: "icon-tv",
-      text: `Premium TV channels`,
+      icon: 'icon-tv',
+      text: `Spa`,
+    },
+    {
+      icon: 'icon-food',
+      text: `Restaurant`,
+    },
+    {
+      icon: 'icon-tv',
+      text: `Laundry`,
+    },
+    {
+      icon: 'icon-car',
+      text: `Parking`,
+    },
+    {
+      icon: 'icon-bell-ring',
+      text: `Room Service`,
+    },
+    {
+      icon: 'icon-tv',
+      text: `Bar/Lounge`,
+    },
+    {
+      icon: 'icon-tv',
+      text: `Newspaper`,
+    },
+    {
+      icon: 'icon-tv',
+      text: `Meeting room`,
+    },
+    {
+      icon: 'icon-tv',
+      text: `Luggage Storage Service`,
     },
   ];
-
   return (
-    <div className="row y-gap-20 pt-30">
-      {highlightsContent.map((item) => (
-        <div className="col-lg-3 col-6" key={item.id}>
-          <div className="text-center">
-            <i className={`${item.icon} text-24 text-blue-1`} />
-            <div className="text-15 lh-1 mt-10">{item.text}</div>
+    <div className='row y-gap-20 pt-30'>
+      {facilities.map((item, index) => {
+        //  Icon Selection
+        let icon = 'icon-award';
+        for (let ic of iconList)
+          if (ic.text.toLowerCase() === item.toLowerCase()) icon = ic.icon;
+
+        return (
+          <div className='col-lg-3 col-6' key={index}>
+            <div className='text-center'>
+              <i className={`${icon} text-24 text-blue-1`} />
+              <div className='text-15 lh-1 mt-10'>{item}</div>
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 };

@@ -29,6 +29,7 @@ import CallToActions from '../../../components/common/CallToActions';
 import DefaultFooter from '../../../components/footer/default';
 import Link from 'next/link';
 import { customAPICall } from '../../../api/xplorzApi';
+import { useSelector } from 'react-redux';
 
 const HotelSingleV1Dynamic = () => {
   const [isOpen, setOpen] = useState(false);
@@ -193,10 +194,12 @@ const HotelSingleV1Dynamic = () => {
               <div className='row y-gap-30'>
                 <div className='col-xl-8'>
                   <div className='row y-gap-40'>
-                    <div className='col-12'>
-                      <h3 className='text-22 fw-500'>Property highlights</h3>
-                      <PropertyHighlights />
-                    </div>
+                    {data.hotel?.fl && (
+                      <div className='col-12'>
+                        <h3 className='text-22 fw-500'>Facilities</h3>
+                        <PropertyHighlights facilities={data.hotel?.fl} />
+                      </div>
+                    )}
                     {/* End .col-12 Property highlights */}
 
                     <div id='overview' className='col-12'>

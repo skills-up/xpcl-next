@@ -188,7 +188,7 @@ function HotelProperty({ item }) {
 
               <p
                 onClick={() => router.push(`/hotel/hotel-single-v1/${item.id}`)}
-                className='button -md -dark-1 bg-blue-1 text-white mt-24'
+                className='button cursor-pointer -md -dark-1 bg-blue-1 text-white mt-24'
               >
                 See Availability <div className='icon-arrow-top-right ml-15'></div>
               </p>

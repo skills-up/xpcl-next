@@ -1,10 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { DateObject } from 'react-multi-date-picker';
-import { akasa, tjHotel, tripjack } from '../../pages/test/temp';
 
 export const initialState = {
   value: {
-    searchData: tjHotel,
+    searchData: null,
     rooms: [],
     city: '',
     checkInDate: new DateObject(),

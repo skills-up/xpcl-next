@@ -937,7 +937,7 @@ $_displays: none, inline-block, block, flex;
 
   &__header {
     display: grid;
-    grid-template-columns: 180px 1fr 60px 170px 140px 270px;
+    grid-template-columns: 180px 450px 225px;
     gap: 30px;
     background-color: var(--color-dark-3);
     color: white;
@@ -1017,7 +1017,7 @@ $_displays: none, inline-block, block, flex;
 
   &__content {
     display: grid;
-    grid-template-columns: 1fr 60px 170px 140px;
+    grid-template-columns: 450px 225px;
     gap: 30px;
 
     @include media-below(md) {
@@ -2656,7 +2656,7 @@ table.table-6 {
 // Hotel Search
 .hotel-search {
   display: grid;
-  grid-template-columns: auto auto auto auto;
+  grid-template-columns: auto auto auto;
   gap: 1rem 0;
   align-items: center;
   @include media-below(lg) {
@@ -2664,12 +2664,17 @@ table.table-6 {
     grid-template-columns: auto;
   }
   .hotel-search-select {
-    width: 300px;
     max-width: 100%;
     @include media-below(lg) {
       width: 250px;
       max-width: 100%;
     }
+  }
+}
+
+// Hotel Search Guest Selector
+.hotel-search-guest-selector {
+  .hotel-search-guest-container {
   }
 }
 
