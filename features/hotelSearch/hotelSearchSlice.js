@@ -22,6 +22,7 @@ export const initialState = {
       price: true,
       rating: false,
     },
+    PNR: null,
   },
 };
 
@@ -29,6 +30,7 @@ const hotelSearchSlice = createSlice({
   name: 'hotelSearch',
   initialState,
   reducers: {
+    setPNR: (state, action) => void (state.value.PNR = action.payload),
     setSearchData: (state, action) => void (state.value.searchData = action.payload),
     setRooms: (state, action) => void (state.value.rooms = action.payload),
     setCity: (state, action) => void (state.value.city = action.payload),
@@ -65,6 +67,7 @@ const hotelSearchSlice = createSlice({
 });
 
 export const {
+  setPNR,
   setRatings,
   setOptions,
   setSearchData,

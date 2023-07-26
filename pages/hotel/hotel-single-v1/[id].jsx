@@ -29,7 +29,9 @@ import CallToActions from '../../../components/common/CallToActions';
 import DefaultFooter from '../../../components/footer/default';
 import Link from 'next/link';
 import { customAPICall } from '../../../api/xplorzApi';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { sendToast } from '../../../utils/toastify';
+import { setPNR } from '../../../features/hotelSearch/hotelSearchSlice';
 
 const HotelSingleV1Dynamic = () => {
   const [isOpen, setOpen] = useState(false);
@@ -37,6 +39,7 @@ const HotelSingleV1Dynamic = () => {
   const [hotel, setHotel] = useState({});
   const id = router.query.id;
   const [data, setData] = useState(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (id) {
@@ -59,6 +62,23 @@ const HotelSingleV1Dynamic = () => {
     }
   };
 
+  const onRoomSelect = async (option) => {
+    const res = await customAPICall(
+      'tj/v1/htl/review',
+      'get',
+      {},
+      { params: { id, optionId: option.id } },
+      true
+    );
+    if (res?.success) {
+      dispatch(setPNR({ room: option, data: res.data }));
+      router.push('/hotel/booking-page');
+    } else {
+      sendToast('error', 'Unable to review the selected room', 4000);
+    }
+  };
+
+  console.log('test');
   return (
     <>
       <ModalVideo
@@ -194,7 +214,7 @@ const HotelSingleV1Dynamic = () => {
               <div className='row y-gap-30'>
                 <div className='col-xl-8'>
                   <div className='row y-gap-40'>
-                    {data.hotel?.fl && (
+                    {data.hotel?.fl && data.hotel?.fl?.length > 0 && (
                       <div className='col-12'>
                         <h3 className='text-22 fw-500'>Facilities</h3>
                         <PropertyHighlights facilities={data.hotel?.fl} />
@@ -202,9 +222,11 @@ const HotelSingleV1Dynamic = () => {
                     )}
                     {/* End .col-12 Property highlights */}
 
-                    <div id='overview' className='col-12'>
-                      <Overview text={data.hotel.des} />
-                    </div>
+                    {data?.hotel?.des && data?.hotel?.des?.trim()?.length > 0 && (
+                      <div id='overview' className='col-12'>
+                        <Overview text={data.hotel.des} />
+                      </div>
+                    )}
                     {/* End .col-12  Overview */}
 
                     {/* <div className='col-12'>
@@ -243,7 +265,7 @@ const HotelSingleV1Dynamic = () => {
               </div>
               {/* End .row */}
               {data.hotel.ops.map((op, opIn) => (
-                <AvailableRooms hotel={op} key={opIn} />
+                <AvailableRooms hotel={op} key={opIn} onRoomSelect={onRoomSelect} />
               ))}
             </div>
             {/* End .container */}

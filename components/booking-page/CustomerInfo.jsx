@@ -1,108 +1,264 @@
-import Link from "next/link";
-import BookingDetails from "./sidebar/BookingDetails";
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { customAPICall, getList } from '../../api/xplorzApi';
+import { sendToast } from '../../utils/toastify';
+import BookingDetails from './sidebar/BookingDetails';
+import Select from 'react-select';
+import { DateObject } from 'react-multi-date-picker';
+import { useRouter } from 'next/router';
 
 const CustomerInfo = () => {
+  const router = useRouter();
+  const rooms = useSelector((state) => state.hotelSearch.value.rooms);
+  const PNR = useSelector((state) => state.hotelSearch.value.PNR);
+  useEffect(() => {
+    if (!PNR || rooms.length < 1) {
+      router.back();
+    }
+    getData();
+  }, []);
+  const [travellers, setTravellers] = useState([]);
+  const passportPrefixOptions = [
+    { value: 'Mr', label: 'Mr.' },
+    { value: 'Mrs', label: 'Mrs.' },
+    { value: 'Master', label: 'Mstr.' },
+    { value: 'Ms', label: 'Ms.' },
+  ];
+
+  useEffect(() => console.log('travellers', travellers), [travellers]);
+  useEffect(() => console.log('PNR', PNR), [PNR]);
+
+  const getData = async () => {
+    // Get traveller details
+    let traveller_ids = [];
+    if (rooms.length > 0) {
+      for (let room of rooms) {
+        for (let trav of room.travellers) {
+          traveller_ids.push(trav?.value);
+        }
+      }
+    }
+    const travellers = await getList('travellers', { traveller_ids });
+    if (travellers.success) {
+      setTravellers(
+        travellers.data.map((el) => ({
+          ...el,
+          prefix: el.prefix
+            ? el.prefix === 'MR'
+              ? { value: 'Mr', label: 'Mr.' }
+              : el.prefix === 'MRS'
+              ? { value: 'Mrs', label: 'Mrs.' }
+              : el.prefix === 'MSTR'
+              ? { value: 'Master', label: 'Mstr.' }
+              : el.prefix === 'MS'
+              ? { value: 'Ms', label: 'Ms.' }
+              : null
+            : null,
+        }))
+      );
+    } else {
+      sendToast('error', 'Error getting travellers', 4000);
+    }
+  };
+
+  const confirmBooking = async () => {
+    let roomwiseGuests = [];
+    let currentTime = Date.now();
+    for (let room of rooms) {
+      let tempArr = [];
+      let hasPassport = true;
+      let hasPAN = false;
+      for (let travl of room.travellers) {
+        for (let traveller of travellers) {
+          if (traveller.id === travl.value) {
+            let type;
+            if (!traveller?.prefix?.value) {
+              sendToast('error', 'Each traveller needs to have a Prefix/Title', 4000);
+              return;
+            } else if (traveller.pan_number) hasPAN = true;
+            if (traveller.passport_number) hasPassport = true;
+            // Age
+            const age = (
+              (currentTime -
+                +new DateObject({
+                  date: traveller.passport_dob,
+                  format: 'YYYY-MM-DD',
+                })
+                  .toDate()
+                  .getTime()) /
+              31536000000
+            ).toFixed(2);
+            // If below 12, child
+            if (age < 12) type = 'CHILD';
+            // If above 12 years, consider adult
+            if (age >= 12) type = 'ADULT';
+            // Pushing
+            tempArr.push({
+              type,
+              title: traveller.prefix.value,
+              first: traveller.first_name,
+              last: traveller.last_name,
+              pan: traveller?.pan_number || undefined,
+              passport: traveller?.passport_number || undefined,
+            });
+          }
+        }
+      }
+      if (PNR.room.ipr && !hasPAN) {
+        sendToast(
+          'error',
+          'There should be a PAN number associated to at least 1 traveller in each room',
+          10000
+        );
+        return;
+      }
+      if (PNR.room.ipm && !hasPassport) {
+        sendToast(
+          'error',
+          'There should be a passport number associated to at least 1 traveller in each room',
+          4000
+        );
+        return;
+      }
+      roomwiseGuests.push(tempArr);
+    }
+
+    // Booking
+    const res = await customAPICall(
+      'tj/v1/htl/book',
+      'post',
+      {
+        bookingId: PNR.data.bookingId,
+        amount: PNR.data.conditions.isBA ? undefined : PNR.room.tp,
+        roomwiseGuests,
+      },
+      {},
+      true
+    );
+    if (res?.success) {
+      sendToast('success', 'Booking Successful', 4000);
+    } else {
+      sendToast('error', 'Error booking', 4000);
+    }
+  };
   return (
     <>
-      <div className="col-xl-7 col-lg-8 mt-30">
-        <div className="py-15 px-20 rounded-4 text-15 bg-blue-1-05">
-          Sign in to book with your saved details or{" "}
-          <Link href="/others-pages/signup" className="text-blue-1 fw-500">
-            register
-          </Link>{" "}
-          to manage your bookings on the go!
-        </div>
-        {/* End register notify */}
-
-        <h2 className="text-22 fw-500 mt-40 md:mt-24">
-          Let us know who you are
-        </h2>
-
-        <div className="row x-gap-20 y-gap-20 pt-20">
-          <div className="col-12">
-            <div className="form-input ">
-              <input type="text" required />
-              <label className="lh-1 text-16 text-light-1">Full Name</label>
-            </div>
-          </div>
-          {/* End col-12 */}
-
-          <div className="col-md-6">
-            <div className="form-input ">
-              <input type="text" required />
-              <label className="lh-1 text-16 text-light-1">Email</label>
-            </div>
-          </div>
-          {/* End col-12 */}
-
-          <div className="col-md-6">
-            <div className="form-input ">
-              <input type="text" required />
-              <label className="lh-1 text-16 text-light-1">Phone Number</label>
-            </div>
-          </div>
-          {/* End col-12 */}
-
-          <div className="col-12">
-            <div className="form-input ">
-              <input type="text" required />
-              <label className="lh-1 text-16 text-light-1">
-                Address line 1
-              </label>
-            </div>
-          </div>
-          {/* End col-12 */}
-
-          <div className="col-12">
-            <div className="form-input ">
-              <input type="text" required />
-              <label className="lh-1 text-16 text-light-1">
-                Address line 2
-              </label>
-            </div>
-          </div>
-          {/* End col-12 */}
-
-          <div className="col-md-6">
-            <div className="form-input ">
-              <input type="text" required />
-              <label className="lh-1 text-16 text-light-1">
-                State/Province/Region
-              </label>
-            </div>
-          </div>
-          {/* End col-12 */}
-
-          <div className="col-md-6">
-            <div className="form-input ">
-              <input type="text" required />
-              <label className="lh-1 text-16 text-light-1">
-                ZIP code/Postal code
-              </label>
-            </div>
-          </div>
-          {/* End col-12 */}
-
-          <div className="col-12">
-            <div className="form-input ">
-              <textarea required rows={6} defaultValue={""} />
-              <label className="lh-1 text-16 text-light-1">
-                Special Requests
-              </label>
-            </div>
-          </div>
-          {/* End col-12 */}
-
-          <div className="col-12">
-            <div className="row y-gap-20 items-center justify-between">
-              <div className="col-auto">
-                <div className="text-14 text-light-1">
-                  By proceeding with this booking, I agree to GoTrip Terms of
-                  Use and Privacy Policy.
-                </div>
-              </div>
-              {/* End col-12 */}
-            </div>
+      <div className='col-xl-7 col-lg-8 mt-30'>
+        <h2 className='fw-500 mt-40 md:mt-24'>Review Travellers</h2>
+        <div>
+          <div className='mt-20'>
+            {travellers &&
+              travellers.length > 0 &&
+              travellers.map((element, index) => {
+                // Getting Room Number
+                let roomNumber = 0;
+                let counter = 1;
+                for (let room of rooms) {
+                  for (let traveller of room.travellers) {
+                    if (traveller.value === element.id) {
+                      roomNumber = counter;
+                    }
+                  }
+                  counter += 1;
+                }
+                return (
+                  <div key={index}>
+                    <h3 className='mt-20'>
+                      {element.aliases[0]} (Room {roomNumber})
+                    </h3>
+                    <div
+                      key={index}
+                      className='bg-white pt-30 px-30 mt-20 border-light rounded-4'
+                    >
+                      <h4>Traveller</h4>
+                      <div className='row my-3'>
+                        <div className='row col-12 mb-20 y-gap-20'>
+                          <div className='col-md-6 form-input-select'>
+                            <label>Prefix/Title</label>
+                            <Select
+                              options={passportPrefixOptions}
+                              value={element.prefix}
+                              onChange={(id) =>
+                                setTravellers((prev) => {
+                                  prev[index]['prefix'] = id;
+                                  return [...prev];
+                                })
+                              }
+                            />
+                          </div>
+                          <div className='form-input col-md-6 bg-white'>
+                            <input
+                              onChange={(e) =>
+                                setTravellers((prev) => {
+                                  prev[index]['first_name'] = e.target.value;
+                                  return [...prev];
+                                })
+                              }
+                              value={element['first_name']}
+                              placeholder=' '
+                              type='text'
+                            />
+                            <label className='lh-1 text-16 text-light-1'>
+                              First Name
+                            </label>
+                          </div>
+                          <div className='form-input col-md-6 bg-white'>
+                            <input
+                              onChange={(e) =>
+                                setTravellers((prev) => {
+                                  prev[index]['last_name'] = e.target.value;
+                                  return [...prev];
+                                })
+                              }
+                              value={element['last_name']}
+                              placeholder=' '
+                              type='text'
+                            />
+                            <label className='lh-1 text-16 text-light-1'>Last Name</label>
+                          </div>
+                          {PNR?.room?.ipr && (
+                            <div className='form-input col-md-6 bg-white'>
+                              <input
+                                onChange={(e) =>
+                                  setTravellers((prev) => {
+                                    prev[index]['pan_number'] = e.target.value;
+                                    return [...prev];
+                                  })
+                                }
+                                value={element['pan_number']}
+                                placeholder=' '
+                                type='text'
+                              />
+                              <label className='lh-1 text-16 text-light-1'>
+                                PAN Number
+                              </label>
+                            </div>
+                          )}
+                          {PNR?.room?.ipm && (
+                            <div className='form-input col-md-6 bg-white'>
+                              <input
+                                onChange={(e) =>
+                                  setTravellers((prev) => {
+                                    prev[index]['passport_number'] = e.target.value;
+                                    return [...prev];
+                                  })
+                                }
+                                value={element['passport_number']}
+                                placeholder=' '
+                                type='text'
+                              />
+                              <label className='lh-1 text-16 text-light-1'>
+                                Passport Number
+                              </label>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
           </div>
           {/* End col-12 */}
         </div>
@@ -110,9 +266,17 @@ const CustomerInfo = () => {
       </div>
       {/* End .col-xl-7 */}
 
-      <div className="col-xl-5 col-lg-4 mt-30">
-        <div className="booking-sidebar">
-          <BookingDetails />
+      <div className='col-xl-5 col-lg-4 mt-30'>
+        <div className='booking-sidebar'>
+          <BookingDetails PNR={PNR} />{' '}
+          <div className='d-flex justify-end mt-20'>
+            <button
+              className='button col-lg-8 col-12 h-60 px-24 -dark-1 bg-blue-1 text-white'
+              onClick={confirmBooking}
+            >
+              Confirm Booking
+            </button>
+          </div>
         </div>
       </div>
       {/*  */}

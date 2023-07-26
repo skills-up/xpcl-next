@@ -2,7 +2,7 @@ import { auto } from '@popperjs/core';
 import Image from 'next/image';
 import { useSelector } from 'react-redux';
 
-const AvailableRooms = ({ hotel }) => {
+const AvailableRooms = ({ hotel, onRoomSelect }) => {
   const rooms = useSelector((state) => state.hotelSearch.value.rooms);
   return (
     <>
@@ -121,11 +121,12 @@ const AvailableRooms = ({ hotel }) => {
                         {/* Sleeps */}
                         <div>
                           <div className='d-flex gap-1 text-light-1 flex-column'>
-                            {rooms[hI].travellers.map((t, tI) => (
-                              <div key={tI} className='d-flex gap-2 items-center'>
-                                <div key={tI} className='icon-man text-24' /> {t.label}
-                              </div>
-                            ))}
+                            {rooms.length > 0 &&
+                              rooms[hI].travellers.map((t, tI) => (
+                                <div key={tI} className='d-flex gap-2 items-center'>
+                                  <div key={tI} className='icon-man text-24' /> {t.label}
+                                </div>
+                              ))}
                           </div>
                         </div>
                       </div>
@@ -141,12 +142,12 @@ const AvailableRooms = ({ hotel }) => {
                           currency: 'INR',
                         })}
                       </div>
-                      <a
-                        href='#'
+                      <button
+                        onClick={() => onRoomSelect(hotel)}
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white mt-10'
                       >
                         Reserve <div className='icon-arrow-top-right ml-15' />
-                      </a>
+                      </button>
                       <div className='text-15 fw-500 mt-30'>
                         You&lsquo;ll be taken to the next step
                       </div>
