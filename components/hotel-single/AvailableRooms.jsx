@@ -142,19 +142,12 @@ const AvailableRooms = ({ hotel, onRoomSelect }) => {
                           currency: 'INR',
                         })}
                       </div>
-                      <button
-                        onClick={() => onRoomSelect(hotel)}
-                        className='button h-50 px-24 -dark-1 bg-blue-1 text-white mt-10'
-                      >
-                        Reserve <div className='icon-arrow-top-right ml-15' />
-                      </button>
-                      <div className='text-15 fw-500 mt-30'>
+                      <div className='text-15 fw-500 mt-15'>
                         You&lsquo;ll be taken to the next step
                       </div>
                       <ul className='list-disc y-gap-4 pt-5'>
-                        <li className='text-14'>Confirmation is immediate</li>
+                        <li className='text-14'>Confirming Traveller</li>
                         <li className='text-14'>No registration required</li>
-                        <li className='text-14'>No booking or credit card fees!</li>
                       </ul>
                     </div>
                     {/* End right price info */}
@@ -169,6 +162,26 @@ const AvailableRooms = ({ hotel, onRoomSelect }) => {
             {hotel.ris.length > 1 && hI < hotel.ris.length - 1 && <hr className='my-4' />}
           </>
         ))}
+        <div className='border-light rounded-4 row px-10 py-10 mt-20 lg:px-0'>
+          <div className='col-lg-6 flex items-center gap-2'>
+            <div className='text-14 lh-1'>Booking Total</div>
+            <div className='text-22 fw-500 lh-17'>
+              {hotel?.tp?.toLocaleString('en-IN', {
+                maximumFractionDigits: 2,
+                style: 'currency',
+                currency: 'INR',
+              })}
+            </div>
+          </div>
+          <div className='col-lg-6'>
+            <button
+              onClick={() => onRoomSelect(hotel)}
+              className='button h-50 px-24 col-12 -dark-1 bg-blue-1 text-white'
+            >
+              Reserve <div className='icon-arrow-top-right ml-15' />
+            </button>
+          </div>
+        </div>
       </div>
       {/* End standard twin room */}
     </>

@@ -1,11 +1,32 @@
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
+import { IoMdWarning } from 'react-icons/io';
 import { DateObject } from 'react-multi-date-picker';
 import { useSelector } from 'react-redux';
+import { customAPICall } from '../../../api/xplorzApi';
 
 const BookingDetails = ({ PNR }) => {
   const age = useSelector((state) => state.hotelSearch.value.age);
   const totalAdults = age.totalAdult;
   const totalChildren = age.totalChildren;
+  const [cancellationPolicy, setCancellationPolicy] = useState(null);
+  useEffect(() => {
+    getCancellationPolicy();
+  }, []);
+
+  const getCancellationPolicy = async () => {
+    let response = await customAPICall(
+      'tj/v1/htl/cancel-policy',
+      'get',
+      {},
+      { params: { id: PNR.data.hInfo.id, optionId: PNR.room.id } },
+      true
+    );
+    if (response?.success) {
+      setCancellationPolicy(response.data);
+    }
+  };
+
   if (PNR)
     return (
       <div className='px-30 py-30 border-light rounded-4'>
@@ -123,6 +144,62 @@ const BookingDetails = ({ PNR }) => {
             </div>
           </div>
         </div>
+
+        {cancellationPolicy && (
+          <>
+            <div className='border-top-light mt-30 mb-20' />
+            <div>
+              {/* BA */}
+              <span>
+                {PNR.data.conditions.isBA
+                  ? 'This booking is refundable, subject to timely cancellation as per '
+                  : 'Cancellation for this booking will incur cancellation penalty as per '}
+                <span className='text-primary'>Cancellation Policy</span>.
+              </span>
+              {/* Cancellation Policy */}
+              <div className='bg-light px-10 py-10 mt-10'>
+                {cancellationPolicy.cancellationPolicy.ifra ? (
+                  'Full Refund is available.'
+                ) : (
+                  <span className='d-flex items-center gap-2'>
+                    <IoMdWarning className='text-25 text-warning' />
+                    Refund will include cancellation penalties.
+                  </span>
+                )}
+                {!cancellationPolicy.cancellationPolicy.ifra &&
+                  cancellationPolicy.cancellationPolicy.pd &&
+                  cancellationPolicy.cancellationPolicy.pd.length > 0 && (
+                    <div className='mt-20 ml-5'>
+                      <h5 className='mb-10'>Cancellation Penalty Details</h5>
+                      <ul className='list-disc'>
+                        {cancellationPolicy.cancellationPolicy.pd.map((pd, pdI) => (
+                          <li>
+                            {new Date(pd.fdt).toLocaleString('en-IN', {
+                              dateStyle: 'long',
+                              timeStyle: 'short',
+                            })}{' '}
+                            -{' '}
+                            {new Date(pd.tdt).toLocaleString('en-IN', {
+                              dateStyle: 'long',
+                              timeStyle: 'short',
+                            })}{' '}
+                            :{' '}
+                            <span style={{ fontWeight: 'bold' }}>
+                              {pd.am.toLocaleString('en-IN', {
+                                maximumFractionDigits: 2,
+                                style: 'currency',
+                                currency: 'INR',
+                              })}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+              </div>
+            </div>
+          </>
+        )}
         {/* End row */}
       </div>
       // End px-30

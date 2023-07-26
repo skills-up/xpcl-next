@@ -139,7 +139,11 @@ const CustomerInfo = () => {
     if (res?.success) {
       sendToast('success', 'Booking Successful', 4000);
     } else {
-      sendToast('error', 'Error booking', 4000);
+      sendToast(
+        'error',
+        res.data?.message || res.data?.error || 'Error while creating the booking',
+        4000
+      );
     }
   };
   return (

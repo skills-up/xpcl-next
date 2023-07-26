@@ -1,23 +1,35 @@
 import { FaLuggageCart } from 'react-icons/fa';
-import { GiGrassMushroom } from 'react-icons/gi';
+import {
+  GiGrassMushroom,
+  GiLotus,
+  GiNewspaper,
+  GiPublicSpeaker,
+  GiWashingMachine,
+} from 'react-icons/gi';
 import { MdOutlineFreeBreakfast } from 'react-icons/md';
+import { CgGym } from 'react-icons/cg';
+import { BsBriefcase } from 'react-icons/bs';
+import { TbTreadmill } from 'react-icons/tb';
+import { FaPersonSwimming } from 'react-icons/fa';
+import { IoBeer } from 'react-icons/io';
+import { BiSolidKey } from 'react-icons/bi';
 
 const PropertyHighlights2 = ({ facilities }) => {
   const iconList = [
     {
-      icon: <i className={`icon-city text-24 text-blue-1`} />,
+      icon: <BsBriefcase className={`mb-5 text-24 text-blue-1`} />,
       text: `Business Center`,
     },
     {
-      icon: <i className={`icon-airplane text-24 text-blue-1`} />,
+      icon: <TbTreadmill className={`mb-5 text-24 text-blue-1`} />,
       text: `Fitness Center`,
     },
     {
-      icon: <i className={`icon-bell-ring text-24 text-blue-1`} />,
+      icon: <FaPersonSwimming className={`mb-5 text-24 text-blue-1`} />,
       text: `Swimming Pool`,
     },
     {
-      icon: <i className={`icon-tv text-24 text-blue-1`} />,
+      icon: <GiLotus className={`mb-5 text-24 text-blue-1`} />,
       text: `Spa`,
     },
     {
@@ -25,27 +37,35 @@ const PropertyHighlights2 = ({ facilities }) => {
       text: `Restaurant`,
     },
     {
-      icon: <i className={`icon-tv text-24 text-blue-1`} />,
+      icon: <GiWashingMachine className={`mb-5 text-24 text-blue-1`} />,
       text: `Laundry`,
     },
     {
-      icon: <i className={`icon-car text-24 text-blue-1`} />,
+      icon: <GiWashingMachine className={`mb-5 text-24 text-blue-1`} />,
+      text: `Laundry Service`,
+    },
+    {
+      icon: <i className={`icon-parking text-24 text-blue-1`} />,
       text: `Parking`,
+    },
+    {
+      icon: <CgGym className={`mb-5 text-24 text-blue-1`} />,
+      text: `Gym`,
     },
     {
       icon: <i className={`icon-bell-ring text-24 text-blue-1`} />,
       text: `Room Service`,
     },
     {
-      icon: <i className={`icon-tv text-24 text-blue-1`} />,
-      text: `Bar/Lounge`,
+      icon: <IoBeer className={`mb-5 text-24 text-blue-1`} />,
+      text: `Bar`,
     },
     {
-      icon: <i className={`icon-tv text-24 text-blue-1`} />,
+      icon: <GiNewspaper className={`mb-5 text-24 text-blue-1`} />,
       text: `Newspaper`,
     },
     {
-      icon: <i className={`icon-tv text-24 text-blue-1`} />,
+      icon: <GiPublicSpeaker className={`mb-5 text-24 text-blue-1`} />,
       text: `Meeting room`,
     },
     {
@@ -55,6 +75,14 @@ const PropertyHighlights2 = ({ facilities }) => {
     {
       icon: <GiGrassMushroom className={`mb-5 text-24 text-blue-1`} />,
       text: `Garden`,
+    },
+    {
+      icon: <i className={`icon-wifi text-24 text-blue-1`} />,
+      text: `Wi-Fi`,
+    },
+    {
+      icon: <i className={`icon-parking text-24 text-blue-1`} />,
+      text: `Valet Parking`,
     },
     {
       icon: <MdOutlineFreeBreakfast className={`mb-5 text-24 text-blue-1`} />,
