@@ -159,7 +159,9 @@ const AvailableRooms = ({ hotel, onRoomSelect }) => {
             </div>
             {/* End .row */}
 
-            {hotel.ris.length > 1 && hI < hotel.ris.length - 1 && <hr className='my-4' />}
+            {hotel.ris.length > 1 && hI < hotel.ris.length - 1 && (
+              <div className='border-top-light mt-30 mb-20' />
+            )}
           </>
         ))}
         <div className='border-light rounded-4 row px-10 py-10 mt-20 lg:px-0'>

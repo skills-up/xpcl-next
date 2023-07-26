@@ -81,14 +81,6 @@ const HotelSingleV1Dynamic = () => {
   console.log('test');
   return (
     <>
-      <ModalVideo
-        channel='youtube'
-        autoplay
-        isOpen={isOpen}
-        videoId='oqNZOOWF8qM'
-        onClose={() => setOpen(false)}
-      />
-
       <Seo pageTitle='Hotel Single v1' />
       {/* End Page Title */}
 
@@ -98,10 +90,10 @@ const HotelSingleV1Dynamic = () => {
       <Header1 />
       {/* End Header 1 */}
 
-      <TopBreadCrumb />
+      {/* <TopBreadCrumb /> */}
       {/* End top breadcrumb */}
 
-      <StickyHeader hotel={hotel} />
+      {/* <StickyHeader hotel={hotel} /> */}
       {/* sticky single header for hotel single */}
 
       {data && (
@@ -215,7 +207,7 @@ const HotelSingleV1Dynamic = () => {
                 <div className='col-xl-8'>
                   <div className='row y-gap-40'>
                     {data.hotel?.fl && data.hotel?.fl?.length > 0 && (
-                      <div className='col-12'>
+                      <div className='col-12' id='facilities'>
                         <h3 className='text-22 fw-500'>Facilities</h3>
                         <PropertyHighlights facilities={data.hotel?.fl} />
                       </div>
