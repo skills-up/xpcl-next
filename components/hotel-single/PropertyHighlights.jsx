@@ -1,4 +1,6 @@
-import { FaLuggageCart } from 'react-icons/fa';
+import { BsBriefcase, BsCupHot } from 'react-icons/bs';
+import { CgGym } from 'react-icons/cg';
+import { FaCcVisa, FaLuggageCart, FaPersonSwimming } from 'react-icons/fa';
 import {
   GiGrassMushroom,
   GiLotus,
@@ -6,13 +8,10 @@ import {
   GiPublicSpeaker,
   GiWashingMachine,
 } from 'react-icons/gi';
-import { MdOutlineFreeBreakfast } from 'react-icons/md';
-import { CgGym } from 'react-icons/cg';
-import { BsBriefcase } from 'react-icons/bs';
-import { TbTreadmill } from 'react-icons/tb';
-import { FaPersonSwimming } from 'react-icons/fa';
 import { IoBeer } from 'react-icons/io';
-import { BiSolidKey } from 'react-icons/bi';
+import { MdOutlineFreeBreakfast } from 'react-icons/md';
+import { TbTreadmill } from 'react-icons/tb';
+import { SiAmericanexpress } from 'react-icons/si';
 
 const PropertyHighlights2 = ({ facilities }) => {
   const iconList = [
@@ -85,8 +84,40 @@ const PropertyHighlights2 = ({ facilities }) => {
       text: `Valet Parking`,
     },
     {
+      icon: <i className={`icon-parking text-24 text-blue-1`} />,
+      text: `Free valet parking`,
+    },
+    {
+      icon: <i className={`icon-parking text-24 text-blue-1`} />,
+      text: `Free self parking`,
+    },
+    {
+      icon: <i className={`icon-tv text-24 text-blue-1`} />,
+      text: `Television`,
+    },
+    {
+      icon: <i className={`icon-tv text-24 text-blue-1`} />,
+      text: `Television in lobby`,
+    },
+    {
       icon: <MdOutlineFreeBreakfast className={`mb-5 text-24 text-blue-1`} />,
       text: `Breakfast Service`,
+    },
+    {
+      icon: <i className={`icon-beach-umbrella text-24 text-blue-1`} />,
+      text: `Beach/pool umbrellas`,
+    },
+    {
+      icon: <BsCupHot className={`mb-5 text-24 text-blue-1`} />,
+      text: `Coffee/tea in lobby`,
+    },
+    {
+      icon: <SiAmericanexpress className={`mb-5 text-24 text-blue-1`} />,
+      text: `American Express`,
+    },
+    {
+      icon: <FaCcVisa className={`mb-5 text-24 text-blue-1`} />,
+      text: `Visa`,
     },
   ];
   return (
