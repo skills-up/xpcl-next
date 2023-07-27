@@ -159,7 +159,10 @@ const BookingDetails = ({ PNR }) => {
               {/* Cancellation Policy */}
               <div className='bg-light px-10 py-10 mt-10'>
                 {cancellationPolicy.cancellationPolicy.ifra ? (
-                  'Full Refund is available.'
+                  <span>
+                    <span className='text-primary'>Cancellation Policy</span> - Full
+                    Refund is available.
+                  </span>
                 ) : (
                   <span className='d-flex items-center gap-2'>
                     <IoMdWarning className='text-25 text-warning' />

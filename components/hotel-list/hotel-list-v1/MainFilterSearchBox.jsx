@@ -95,7 +95,6 @@ const MainFilterSearchBox = () => {
         }
       }
       if (temp.adults === 0 && room.travellers.length > 0) {
-        console.log('faulty', temp);
         sendToast('error', 'Each room should have an adult', 4000);
         return;
       }
@@ -137,8 +136,6 @@ const MainFilterSearchBox = () => {
     setProgress(100);
   };
 
-  useEffect(() => console.log('location', location), [location]);
-
   return (
     <>
       <LoadingBar
@@ -155,7 +152,7 @@ const MainFilterSearchBox = () => {
             </label>
             <WindowedSelect
               windowThreshold={200}
-              options={hotelSearchData.slice(0, 5).map((hotel) => ({
+              options={hotelSearchData.map((hotel) => ({
                 value: hotel.id,
                 label: hotel.fullRegionName,
                 cityName: hotel.cityName,

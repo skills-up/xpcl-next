@@ -47,12 +47,6 @@ function HotelProperty({ item }) {
                 </div>
               </div>
               {/* End image */}
-
-              <div className='cardImage__wishlist'>
-                <button className='button -blue-1 bg-white size-30 rounded-full shadow-2'>
-                  <i className='icon-heart text-12'></i>
-                </button>
-              </div>
             </div>
           </div>
           {/* End .col */}

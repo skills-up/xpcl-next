@@ -78,7 +78,6 @@ const Pagination = () => {
 
   // When the total size is changed, change it to the lowest possible val for data number
   useEffect(() => {
-    console.log('total', paginateTotalDataSize);
     if (paginateTotalDataSize < paginateDataPerPage) {
       dispatch(setPaginateDataNumber({ paginateDataNumber: paginateTotalDataSize }));
     } else {

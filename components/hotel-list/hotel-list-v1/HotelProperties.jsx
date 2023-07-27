@@ -27,7 +27,6 @@ const HotelProperties = () => {
   const searchData = useSelector((state) => state.hotelSearch.value.searchData);
 
   useEffect(() => {
-    console.log('SearchData', searchData);
     if (searchData?.searchResult?.his) {
       let maxPrice = 0;
       let options = {};

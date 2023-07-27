@@ -1,6 +1,7 @@
+import { BiBeer } from 'react-icons/bi';
 import { BsBriefcase, BsCupHot } from 'react-icons/bs';
 import { CgGym } from 'react-icons/cg';
-import { FaCcVisa, FaLuggageCart, FaPersonSwimming } from 'react-icons/fa';
+import { FaCcVisa, FaLuggageCart } from 'react-icons/fa';
 import {
   GiGrassMushroom,
   GiLotus,
@@ -10,8 +11,8 @@ import {
 } from 'react-icons/gi';
 import { IoBeer } from 'react-icons/io';
 import { MdOutlineFreeBreakfast } from 'react-icons/md';
-import { TbTreadmill } from 'react-icons/tb';
 import { SiAmericanexpress } from 'react-icons/si';
+import { TbHeartbeat, TbSwimming } from 'react-icons/tb';
 
 const PropertyHighlights2 = ({ facilities }) => {
   const iconList = [
@@ -20,11 +21,11 @@ const PropertyHighlights2 = ({ facilities }) => {
       text: `Business Center`,
     },
     {
-      icon: <TbTreadmill className={`mb-5 text-24 text-blue-1`} />,
+      icon: <TbHeartbeat className={`mb-5 text-24 text-blue-1`} />,
       text: `Fitness Center`,
     },
     {
-      icon: <FaPersonSwimming className={`mb-5 text-24 text-blue-1`} />,
+      icon: <TbSwimming className={`text-30 text-blue-1`} />,
       text: `Swimming Pool`,
     },
     {
@@ -44,6 +45,10 @@ const PropertyHighlights2 = ({ facilities }) => {
       text: `Laundry Service`,
     },
     {
+      icon: <GiWashingMachine className={`mb-5 text-24 text-blue-1`} />,
+      text: `Laundry Services`,
+    },
+    {
       icon: <i className={`icon-parking text-24 text-blue-1`} />,
       text: `Parking`,
     },
@@ -56,7 +61,7 @@ const PropertyHighlights2 = ({ facilities }) => {
       text: `Room Service`,
     },
     {
-      icon: <IoBeer className={`mb-5 text-24 text-blue-1`} />,
+      icon: <BiBeer className={`mb-5 text-24 text-blue-1`} />,
       text: `Bar`,
     },
     {

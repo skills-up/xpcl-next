@@ -7,8 +7,10 @@ import BookingDetails from './sidebar/BookingDetails';
 import Select from 'react-select';
 import { DateObject } from 'react-multi-date-picker';
 import { useRouter } from 'next/router';
+import LoadingBar from 'react-top-loading-bar';
 
 const CustomerInfo = () => {
+  const [progress, setProgress] = useState(0);
   const router = useRouter();
   const rooms = useSelector((state) => state.hotelSearch.value.rooms);
   const PNR = useSelector((state) => state.hotelSearch.value.PNR);
@@ -18,6 +20,7 @@ const CustomerInfo = () => {
     }
     getData();
   }, []);
+
   const [travellers, setTravellers] = useState([]);
   const passportPrefixOptions = [
     { value: 'Mr', label: 'Mr.' },
@@ -26,10 +29,8 @@ const CustomerInfo = () => {
     { value: 'Ms', label: 'Ms.' },
   ];
 
-  useEffect(() => console.log('travellers', travellers), [travellers]);
-  useEffect(() => console.log('PNR', PNR), [PNR]);
-
   const getData = async () => {
+    setProgress(30);
     // Get traveller details
     let traveller_ids = [];
     if (rooms.length > 0) {
@@ -39,7 +40,9 @@ const CustomerInfo = () => {
         }
       }
     }
+    setProgress(60);
     const travellers = await getList('travellers', { traveller_ids });
+    setProgress(100);
     if (travellers.success) {
       setTravellers(
         travellers.data.map((el) => ({
@@ -123,7 +126,7 @@ const CustomerInfo = () => {
       }
       roomwiseGuests.push(tempArr);
     }
-
+    setProgress(50);
     // Booking
     const res = await customAPICall(
       'tj/v1/htl/book',
@@ -136,6 +139,7 @@ const CustomerInfo = () => {
       {},
       true
     );
+    setProgress(100);
     if (res?.success) {
       sendToast('success', 'Booking Successful', 4000);
     } else {
@@ -148,6 +152,11 @@ const CustomerInfo = () => {
   };
   return (
     <>
+      <LoadingBar
+        color='#19f9fc'
+        progress={progress}
+        onLoaderFinished={() => setProgress(0)}
+      />
       <div className='col-xl-7 col-lg-8 mt-30'>
         <h2 className='fw-500 mt-40 md:mt-24'>Review Travellers</h2>
         <div>
@@ -269,7 +278,6 @@ const CustomerInfo = () => {
         {/* End .row */}
       </div>
       {/* End .col-xl-7 */}
-
       <div className='col-xl-5 col-lg-4 mt-30'>
         <div className='booking-sidebar'>
           <BookingDetails PNR={PNR} />{' '}

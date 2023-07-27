@@ -1,45 +1,31 @@
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import ModalVideo from 'react-modal-video';
 import 'photoswipe/dist/photoswipe.css';
+import { useEffect, useState } from 'react';
 import { Gallery, Item } from 'react-photoswipe-gallery';
-import { hotelsData } from '../../../data/hotels';
-import Seo from '../../../components/common/Seo';
-import Header1 from '../../../components/header/header-1';
-import Overview from '../../../components/hotel-single/Overview';
-import PopularFacilities from '../../../components/hotel-single/PopularFacilities';
-import PropertyHighlights from '../../../components/hotel-single/PropertyHighlights';
-import RatingTag from '../../../components/hotel-single/RatingTag';
-import StickyHeader from '../../../components/hotel-single/StickyHeader';
-import TopBreadCrumb from '../../../components/hotel-single/TopBreadCrumb';
-import SidebarRight from '../../../components/hotel-single/SidebarRight';
-import AvailableRooms from '../../../components/hotel-single/AvailableRooms';
-import ReviewProgress from '../../../components/hotel-single/guest-reviews/ReviewProgress';
-import DetailsReview from '../../../components/hotel-single/guest-reviews/DetailsReview';
-import ReplyForm from '../../../components/hotel-single/ReplyForm';
-import ReplyFormReview from '../../../components/hotel-single/ReplyFormReview';
-import Facilities from '../../../components/hotel-single/Facilities';
-import Image from 'next/image';
-import Surroundings from '../../../components/hotel-single/Surroundings';
-import HelpfulFacts from '../../../components/hotel-single/HelpfulFacts';
-import Faq from '../../../components/faq/Faq';
-import Hotels2 from '../../../components/hotels/Hotels2';
-import CallToActions from '../../../components/common/CallToActions';
-import DefaultFooter from '../../../components/footer/default';
-import Link from 'next/link';
-import { customAPICall } from '../../../api/xplorzApi';
 import { useDispatch, useSelector } from 'react-redux';
-import { sendToast } from '../../../utils/toastify';
+import { customAPICall } from '../../../api/xplorzApi';
+import CallToActions from '../../../components/common/CallToActions';
+import Seo from '../../../components/common/Seo';
+import DefaultFooter from '../../../components/footer/default';
+import Header1 from '../../../components/header/header-1';
+import AvailableRooms from '../../../components/hotel-single/AvailableRooms';
+import Overview from '../../../components/hotel-single/Overview';
+import PropertyHighlights from '../../../components/hotel-single/PropertyHighlights';
 import { setPNR } from '../../../features/hotelSearch/hotelSearchSlice';
+import { sendToast } from '../../../utils/toastify';
+import LoadingBar from 'react-top-loading-bar';
 
 const HotelSingleV1Dynamic = () => {
+  const [progress, setProgress] = useState(0);
   const [isOpen, setOpen] = useState(false);
   const router = useRouter();
   const [hotel, setHotel] = useState({});
   const id = router.query.id;
   const [data, setData] = useState(null);
   const dispatch = useDispatch();
+  const [isLoadMore, setIsLoadMore] = useState(false);
+  const rooms = useSelector((state) => state.hotelSearch.value.rooms);
 
   useEffect(() => {
     if (id) {
@@ -47,7 +33,14 @@ const HotelSingleV1Dynamic = () => {
     }
   }, [id]);
 
+  useEffect(() => {
+    if (rooms.length === 0) {
+      router.back();
+    }
+  }, [rooms]);
+
   const getHotel = async () => {
+    setProgress(50);
     const res = await customAPICall(
       'tj/v1/htl/search-detail',
       'get',
@@ -55,14 +48,17 @@ const HotelSingleV1Dynamic = () => {
       { params: { id } },
       true
     );
+    setProgress(100);
     if (res?.success) {
       setData(res.data);
     } else {
+      sendToast('error', 'Failed to get the hotel data', 4000);
       router.back();
     }
   };
 
   const onRoomSelect = async (option) => {
+    setProgress(50);
     const res = await customAPICall(
       'tj/v1/htl/review',
       'get',
@@ -70,6 +66,7 @@ const HotelSingleV1Dynamic = () => {
       { params: { id, optionId: option.id } },
       true
     );
+    setProgress(100);
     if (res?.success) {
       dispatch(setPNR({ room: option, data: res.data }));
       router.push('/hotel/booking-page');
@@ -78,24 +75,23 @@ const HotelSingleV1Dynamic = () => {
     }
   };
 
-  console.log('test');
   return (
     <>
+      <LoadingBar
+        color='#19f9fc'
+        progress={progress}
+        onLoaderFinished={() => setProgress(0)}
+      />
       <Seo pageTitle='Hotel Single v1' />
       {/* End Page Title */}
-
       <div className='header-margin'></div>
       {/* header top margin */}
-
       <Header1 />
       {/* End Header 1 */}
-
       {/* <TopBreadCrumb /> */}
       {/* End top breadcrumb */}
-
       {/* <StickyHeader hotel={hotel} /> */}
       {/* sticky single header for hotel single */}
-
       {data && (
         <>
           <section className='pt-40'>
@@ -125,14 +121,14 @@ const HotelSingleV1Dynamic = () => {
                         {' ' + data.hotel?.ad?.city.name}, {data.hotel?.ad?.state.name}
                       </div>
                     </div>
-                    <div className='col-auto'>
+                    {/* <div className='col-auto'>
                       <button
                         data-x-click='mapFilter'
                         className='text-blue-1 text-15 underline'
                       >
                         Show on map
                       </button>
-                    </div>
+                    </div> */}
                   </div>
                   {/* End .row */}
                 </div>
@@ -152,14 +148,14 @@ const HotelSingleV1Dynamic = () => {
                         </span>
                       </div>
                     </div>
-                    <div className='col-auto'>
+                    {/* <div className='col-auto'>
                       <Link
                         href='/hotel/booking-page'
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
                       >
                         Select Room <div className='icon-arrow-top-right ml-15' />
                       </Link>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
                 {/* End .col */}
@@ -169,33 +165,47 @@ const HotelSingleV1Dynamic = () => {
               <Gallery>
                 <div className='galleryGrid -type-1 pt-30'>
                   {data.hotel.img.map((image, imageIndex) => (
-                    <div key={imageIndex}>
-                      <Item
-                        width={image?.sz === 'XL' ? 660 : 450}
-                        height={image?.sz === 'XL' ? 660 : 450}
-                        original={image?.url}
-                        thumbnail={image?.url}
-                      >
-                        {({ ref, open }) => (
-                          <img
-                            style={{
-                              width: image?.sz === 'XL' ? '660' : '450',
-                              height: image?.sz === 'XL' ? '660' : '450',
-                            }}
-                            src={image?.url}
-                            ref={ref}
-                            onClick={open}
-                            alt='image'
-                            role='button'
-                            className='rounded-4'
-                          />
-                        )}
-                      </Item>
-                    </div>
+                    <>
+                      {((!isLoadMore && imageIndex < 5) || isLoadMore) && (
+                        <div key={imageIndex}>
+                          <Item
+                            width={image?.sz === 'XL' ? 660 : 450}
+                            height={image?.sz === 'XL' ? 660 : 450}
+                            original={image?.url}
+                            thumbnail={image?.url}
+                          >
+                            {({ ref, open }) => (
+                              <img
+                                style={{
+                                  width: image?.sz === 'XL' ? '660' : '450',
+                                  height: image?.sz === 'XL' ? '660' : '450',
+                                }}
+                                src={image?.url}
+                                ref={ref}
+                                onClick={open}
+                                alt='image'
+                                role='button'
+                                className='rounded-4'
+                              />
+                            )}
+                          </Item>
+                        </div>
+                      )}
+                    </>
                   ))}
                   {/* End .galleryGrid__item */}
                 </div>
               </Gallery>
+              {data.hotel.img.length > 5 && (
+                <div className='d-flex justify-center mt-20'>
+                  <button
+                    className='button col-12 h-60 px-24 -dark-1 bg-blue-1 text-white'
+                    onClick={() => setIsLoadMore((prev) => !prev)}
+                  >
+                    {isLoadMore ? 'Show Less' : 'Show More'}
+                  </button>
+                </div>
+              )}
             </div>
             {/* End .container */}
           </section>
@@ -257,7 +267,12 @@ const HotelSingleV1Dynamic = () => {
               </div>
               {/* End .row */}
               {data.hotel.ops.map((op, opIn) => (
-                <AvailableRooms hotel={op} key={opIn} onRoomSelect={onRoomSelect} />
+                <AvailableRooms
+                  hotel={op}
+                  key={opIn}
+                  rooms={rooms}
+                  onRoomSelect={onRoomSelect}
+                />
               ))}
             </div>
             {/* End .container */}
@@ -437,7 +452,6 @@ const HotelSingleV1Dynamic = () => {
       <br />
       <CallToActions />
       {/* End Call To Actions Section */}
-
       <DefaultFooter />
     </>
   );

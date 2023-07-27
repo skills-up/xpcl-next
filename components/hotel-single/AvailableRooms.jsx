@@ -2,8 +2,7 @@ import { auto } from '@popperjs/core';
 import Image from 'next/image';
 import { useSelector } from 'react-redux';
 
-const AvailableRooms = ({ hotel, onRoomSelect }) => {
-  const rooms = useSelector((state) => state.hotelSearch.value.rooms);
+const AvailableRooms = ({ hotel, onRoomSelect, rooms }) => {
   return (
     <>
       <div className='border-light rounded-4 px-30 py-30 sm:px-20 sm:py-20 mb-20'>
