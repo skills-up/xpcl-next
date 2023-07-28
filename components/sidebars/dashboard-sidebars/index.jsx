@@ -77,6 +77,8 @@ const Sidebar = () => {
       title: 'Travel',
       permissions: [],
       links: [
+        { title: 'Book Hotels', href: '/hotel/hotel-list-v1' },
+        { title: 'Book Flights', href: '/flight/flight-list-v1' },
         { title: 'Bookings', href: '/dashboard/bookings' },
         { title: 'Refunds', href: '/dashboard/refunds' },
         { title: 'Partial Refunds', href: '/dashboard/partial-refunds' },

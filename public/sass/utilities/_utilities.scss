@@ -2664,6 +2664,7 @@ table.table-6 {
     grid-template-columns: auto;
   }
   .hotel-search-select {
+    width: 350px;
     max-width: 100%;
     @include media-below(lg) {
       width: 250px;
