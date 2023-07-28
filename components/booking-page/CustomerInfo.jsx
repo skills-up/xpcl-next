@@ -14,6 +14,8 @@ const CustomerInfo = () => {
   const router = useRouter();
   const rooms = useSelector((state) => state.hotelSearch.value.rooms);
   const PNR = useSelector((state) => state.hotelSearch.value.PNR);
+  const [stage, setStage] = useState(0);
+  const [confirmationData, setConfirmationData] = useState(null);
   useEffect(() => {
     if (!PNR || rooms.length < 1) {
       router.back();
@@ -48,13 +50,13 @@ const CustomerInfo = () => {
         travellers.data.map((el) => ({
           ...el,
           prefix: el.prefix
-            ? el.prefix === 'MR'
+            ? el.prefix.toLowerCase() === 'mr'
               ? { value: 'Mr', label: 'Mr.' }
-              : el.prefix === 'MRS'
+              : el.prefix.toLowerCase() === 'mrs'
               ? { value: 'Mrs', label: 'Mrs.' }
-              : el.prefix === 'MSTR'
+              : el.prefix.toLowerCase() === 'mstr'
               ? { value: 'Master', label: 'Mstr.' }
-              : el.prefix === 'MS'
+              : el.prefix.toLowerCase() === 'ms'
               ? { value: 'Ms', label: 'Ms.' }
               : null
             : null,
@@ -102,8 +104,10 @@ const CustomerInfo = () => {
               title: traveller.prefix.value,
               first: traveller.first_name,
               last: traveller.last_name,
-              pan: traveller?.pan_number || undefined,
-              passport: traveller?.passport_number || undefined,
+              pan: PNR.room.ipr ? traveller?.pan_number || undefined : undefined,
+              passport: PNR.room.ipm
+                ? traveller?.passport_number || undefined
+                : undefined,
             });
           }
         }
@@ -157,140 +161,149 @@ const CustomerInfo = () => {
         progress={progress}
         onLoaderFinished={() => setProgress(0)}
       />
-      <div className='col-xl-7 col-lg-8 mt-30'>
-        <h2 className='fw-500 mt-40 md:mt-24'>Review Travellers</h2>
-        <div>
-          <div className='mt-20'>
-            {travellers &&
-              travellers.length > 0 &&
-              travellers.map((element, index) => {
-                // Getting Room Number
-                let roomNumber = 0;
-                let counter = 1;
-                for (let room of rooms) {
-                  for (let traveller of room.travellers) {
-                    if (traveller.value === element.id) {
-                      roomNumber = counter;
+      {/* Stage 0 */}
+      {stage === 0 && (
+        <>
+          <div className='col-xl-7 col-lg-8 mt-30'>
+            <h2 className='fw-500 mt-40 md:mt-24'>Review Travellers</h2>
+            <div>
+              <div className='mt-20'>
+                {travellers &&
+                  travellers.length > 0 &&
+                  travellers.map((element, index) => {
+                    // Getting Room Number
+                    let roomNumber = 0;
+                    let counter = 1;
+                    for (let room of rooms) {
+                      for (let traveller of room.travellers) {
+                        if (traveller.value === element.id) {
+                          roomNumber = counter;
+                        }
+                      }
+                      counter += 1;
                     }
-                  }
-                  counter += 1;
-                }
-                return (
-                  <div key={index}>
-                    <h3 className='mt-20'>
-                      {element.aliases[0]} (Room {roomNumber})
-                    </h3>
-                    <div
-                      key={index}
-                      className='bg-white pt-30 px-30 mt-20 border-light rounded-4'
-                    >
-                      <h4>Traveller</h4>
-                      <div className='row my-3'>
-                        <div className='row col-12 mb-20 y-gap-20'>
-                          <div className='col-md-6 form-input-select'>
-                            <label>Prefix/Title</label>
-                            <Select
-                              options={passportPrefixOptions}
-                              value={element.prefix}
-                              onChange={(id) =>
-                                setTravellers((prev) => {
-                                  prev[index]['prefix'] = id;
-                                  return [...prev];
-                                })
-                              }
-                            />
-                          </div>
-                          <div className='form-input col-md-6 bg-white'>
-                            <input
-                              onChange={(e) =>
-                                setTravellers((prev) => {
-                                  prev[index]['first_name'] = e.target.value;
-                                  return [...prev];
-                                })
-                              }
-                              value={element['first_name']}
-                              placeholder=' '
-                              type='text'
-                            />
-                            <label className='lh-1 text-16 text-light-1'>
-                              First Name
-                            </label>
-                          </div>
-                          <div className='form-input col-md-6 bg-white'>
-                            <input
-                              onChange={(e) =>
-                                setTravellers((prev) => {
-                                  prev[index]['last_name'] = e.target.value;
-                                  return [...prev];
-                                })
-                              }
-                              value={element['last_name']}
-                              placeholder=' '
-                              type='text'
-                            />
-                            <label className='lh-1 text-16 text-light-1'>Last Name</label>
-                          </div>
-                          {PNR?.room?.ipr && (
-                            <div className='form-input col-md-6 bg-white'>
-                              <input
-                                onChange={(e) =>
-                                  setTravellers((prev) => {
-                                    prev[index]['pan_number'] = e.target.value;
-                                    return [...prev];
-                                  })
-                                }
-                                value={element['pan_number']}
-                                placeholder=' '
-                                type='text'
-                              />
-                              <label className='lh-1 text-16 text-light-1'>
-                                PAN Number
-                              </label>
+                    return (
+                      <div key={index}>
+                        <h3 className='mt-20'>
+                          {element.aliases[0]} (Room {roomNumber})
+                        </h3>
+                        <div
+                          key={index}
+                          className='bg-white pt-30 px-30 mt-20 border-light rounded-4'
+                        >
+                          <h4>Traveller</h4>
+                          <div className='row my-3'>
+                            <div className='row col-12 mb-20 y-gap-20'>
+                              <div className='col-md-6 form-input-select'>
+                                <label>Prefix/Title</label>
+                                <Select
+                                  options={passportPrefixOptions}
+                                  value={element.prefix}
+                                  onChange={(id) =>
+                                    setTravellers((prev) => {
+                                      prev[index]['prefix'] = id;
+                                      return [...prev];
+                                    })
+                                  }
+                                />
+                              </div>
+                              <div className='form-input col-md-6 bg-white'>
+                                <input
+                                  onChange={(e) =>
+                                    setTravellers((prev) => {
+                                      prev[index]['first_name'] = e.target.value;
+                                      return [...prev];
+                                    })
+                                  }
+                                  value={element['first_name']}
+                                  placeholder=' '
+                                  type='text'
+                                />
+                                <label className='lh-1 text-16 text-light-1'>
+                                  First Name
+                                </label>
+                              </div>
+                              <div className='form-input col-md-6 bg-white'>
+                                <input
+                                  onChange={(e) =>
+                                    setTravellers((prev) => {
+                                      prev[index]['last_name'] = e.target.value;
+                                      return [...prev];
+                                    })
+                                  }
+                                  value={element['last_name']}
+                                  placeholder=' '
+                                  type='text'
+                                />
+                                <label className='lh-1 text-16 text-light-1'>
+                                  Last Name
+                                </label>
+                              </div>
+                              {PNR?.room?.ipr && (
+                                <div className='form-input col-md-6 bg-white'>
+                                  <input
+                                    onChange={(e) =>
+                                      setTravellers((prev) => {
+                                        prev[index]['pan_number'] = e.target.value;
+                                        return [...prev];
+                                      })
+                                    }
+                                    value={element['pan_number']}
+                                    placeholder=' '
+                                    type='text'
+                                  />
+                                  <label className='lh-1 text-16 text-light-1'>
+                                    PAN Number
+                                  </label>
+                                </div>
+                              )}
+                              {PNR?.room?.ipm && (
+                                <div className='form-input col-md-6 bg-white'>
+                                  <input
+                                    onChange={(e) =>
+                                      setTravellers((prev) => {
+                                        prev[index]['passport_number'] = e.target.value;
+                                        return [...prev];
+                                      })
+                                    }
+                                    value={element['passport_number']}
+                                    placeholder=' '
+                                    type='text'
+                                  />
+                                  <label className='lh-1 text-16 text-light-1'>
+                                    Passport Number
+                                  </label>
+                                </div>
+                              )}
                             </div>
-                          )}
-                          {PNR?.room?.ipm && (
-                            <div className='form-input col-md-6 bg-white'>
-                              <input
-                                onChange={(e) =>
-                                  setTravellers((prev) => {
-                                    prev[index]['passport_number'] = e.target.value;
-                                    return [...prev];
-                                  })
-                                }
-                                value={element['passport_number']}
-                                placeholder=' '
-                                type='text'
-                              />
-                              <label className='lh-1 text-16 text-light-1'>
-                                Passport Number
-                              </label>
-                            </div>
-                          )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                );
-              })}
+                    );
+                  })}
+              </div>
+              {/* End col-12 */}
+            </div>
+            {/* End .row */}
           </div>
-          {/* End col-12 */}
-        </div>
-        {/* End .row */}
-      </div>
-      {/* End .col-xl-7 */}
-      <div className='col-xl-5 col-lg-4 mt-30'>
-        <div className='booking-sidebar'>
-          <BookingDetails PNR={PNR} />{' '}
-          <div className='d-flex justify-end mt-20'>
-            <button
-              className='button col-lg-8 col-12 h-60 px-24 -dark-1 bg-blue-1 text-white'
-              onClick={confirmBooking}
-            >
-              Confirm Booking
-            </button>
+          {/* End .col-xl-7 */}
+          <div className='col-xl-5 col-lg-4 mt-30'>
+            <div className='booking-sidebar'>
+              <BookingDetails PNR={PNR} />{' '}
+              <div className='d-flex justify-end mt-20'>
+                <button
+                  className='button col-lg-8 col-12 h-60 px-24 -dark-1 bg-blue-1 text-white'
+                  onClick={confirmBooking}
+                >
+                  Confirm Booking
+                </button>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        </>
+      )}
+      {/* Stage 1 */}
+      {stage === 1 && confirmationData && <></>}
       {/*  */}
     </>
   );

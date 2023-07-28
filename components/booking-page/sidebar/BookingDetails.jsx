@@ -11,7 +11,7 @@ const BookingDetails = ({ PNR }) => {
   const totalChildren = age.totalChildren;
   const [cancellationPolicy, setCancellationPolicy] = useState(null);
   useEffect(() => {
-    getCancellationPolicy();
+    if (PNR) getCancellationPolicy();
   }, []);
 
   const getCancellationPolicy = async () => {

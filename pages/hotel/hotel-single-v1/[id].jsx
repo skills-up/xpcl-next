@@ -118,7 +118,8 @@ const HotelSingleV1Dynamic = () => {
                         <i className='icon-location-2 text-16 mr-5' />
                         {data.hotel.ad.adr}
                         {data.hotel?.ad?.adr2 ? ', ' + data.hotel?.ad?.adr2 : ''},
-                        {' ' + data.hotel?.ad?.city.name}, {data.hotel?.ad?.state.name}
+                        {' ' + data.hotel?.ad?.city?.name}, {data.hotel?.ad?.state?.name},{' '}
+                        {data.hotel?.ad?.country?.name} - {data.hotel.ad.postalCode}
                       </div>
                     </div>
                     {/* <div className='col-auto'>
@@ -214,7 +215,7 @@ const HotelSingleV1Dynamic = () => {
           <section className='pt-30'>
             <div className='container'>
               <div className='row y-gap-30'>
-                <div className='col-xl-8'>
+                <div className='col-12'>
                   <div className='row y-gap-40'>
                     {data.hotel?.fl && data.hotel?.fl?.length > 0 && (
                       <div className='col-12' id='facilities'>
