@@ -14,7 +14,6 @@ const CustomerInfo = () => {
   const router = useRouter();
   const rooms = useSelector((state) => state.hotelSearch.value.rooms);
   const PNR = useSelector((state) => state.hotelSearch.value.PNR);
-  const [stage, setStage] = useState(0);
   const [confirmationData, setConfirmationData] = useState(null);
   useEffect(() => {
     if (!PNR || rooms.length < 1) {
@@ -145,6 +144,7 @@ const CustomerInfo = () => {
     );
     setProgress(100);
     if (res?.success) {
+      setConfirmationData(res.data);
       sendToast('success', 'Booking Successful', 4000);
     } else {
       sendToast(
@@ -162,7 +162,7 @@ const CustomerInfo = () => {
         onLoaderFinished={() => setProgress(0)}
       />
       {/* Stage 0 */}
-      {stage === 0 && (
+      {!confirmationData && (
         <>
           <div className='col-xl-7 col-lg-8 mt-30'>
             <h2 className='fw-500 mt-40 md:mt-24'>Review Travellers</h2>
@@ -303,7 +303,7 @@ const CustomerInfo = () => {
         </>
       )}
       {/* Stage 1 */}
-      {stage === 1 && confirmationData && <></>}
+      {confirmationData && <div></div>}
       {/*  */}
     </>
   );

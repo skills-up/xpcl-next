@@ -15,6 +15,7 @@ import PropertyHighlights from '../../../components/hotel-single/PropertyHighlig
 import { setPNR } from '../../../features/hotelSearch/hotelSearchSlice';
 import { sendToast } from '../../../utils/toastify';
 import LoadingBar from 'react-top-loading-bar';
+import GoogleMapReact from 'google-map-react';
 
 const HotelSingleV1Dynamic = () => {
   const [progress, setProgress] = useState(0);
@@ -24,8 +25,10 @@ const HotelSingleV1Dynamic = () => {
   const id = router.query.id;
   const [data, setData] = useState(null);
   const dispatch = useDispatch();
+  const [images, setImages] = useState([]);
   const [isLoadMore, setIsLoadMore] = useState(false);
   const rooms = useSelector((state) => state.hotelSearch.value.rooms);
+  const [showMap, setShowMap] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -50,7 +53,26 @@ const HotelSingleV1Dynamic = () => {
     );
     setProgress(100);
     if (res?.success) {
-      setData(res.data);
+      let dat = res.data;
+      let a = dat.hotel.img;
+      let out = [];
+      for (let i = 0; i < a.length; i++) {
+        const e = a[i];
+        if (e.tns && e.url) {
+          out.push(e);
+        } else if (e.url && e.sz) {
+          const curr = e.sz;
+          if (i === 0) {
+            out.push({ url: e.url, sz: curr });
+          } else {
+            if (a[i - 1]?.sz === 'Standard' && curr !== 'XL') {
+              out.push({ url: e.url, sz: curr });
+            }
+          }
+        }
+      }
+      setImages(out);
+      setData(dat);
     } else {
       sendToast('error', 'Failed to get the hotel data', 4000);
       router.back();
@@ -122,14 +144,15 @@ const HotelSingleV1Dynamic = () => {
                         {data.hotel?.ad?.country?.name} - {data.hotel.ad.postalCode}
                       </div>
                     </div>
-                    {/* <div className='col-auto'>
+                    <div className='col-auto'>
                       <button
                         data-x-click='mapFilter'
                         className='text-blue-1 text-15 underline'
+                        onClick={() => setShowMap((prev) => !prev)}
                       >
-                        Show on map
+                        {showMap ? 'Hide map' : 'Show on map'}
                       </button>
-                    </div> */}
+                    </div>
                   </div>
                   {/* End .row */}
                 </div>
@@ -162,10 +185,25 @@ const HotelSingleV1Dynamic = () => {
                 {/* End .col */}
               </div>
               {/* End .row */}
-
+              {/* Map */}
+              {showMap && (
+                <div style={{ width: '100%', height: '100vh' }}>
+                  Test
+                  {data?.hotel?.gl?.lt} {data?.hotel?.gl?.ln}
+                  <GoogleMapReact
+                    bootstrapURLKeys={{ key: 'AIzaSyBPwPzoJGbMKBp5gfarlcmuxW0Vw4S5F5U' }}
+                    defaultCenter={{
+                      lat: +data?.hotel?.gl?.lt,
+                      lng: +data?.hotel?.gl?.ln,
+                    }}
+                    defaultZoom={20}
+                  ></GoogleMapReact>
+                </div>
+              )}
+              {/* Images */}
               <Gallery>
                 <div className='galleryGrid -type-1 pt-30'>
-                  {data.hotel.img.map((image, imageIndex) => (
+                  {images.map((image, imageIndex) => (
                     <>
                       {((!isLoadMore && imageIndex < 5) || isLoadMore) && (
                         <div key={imageIndex}>
