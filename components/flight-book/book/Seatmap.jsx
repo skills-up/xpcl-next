@@ -8,7 +8,7 @@ import 'react-tooltip/dist/react-tooltip.css';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { DateObject } from 'react-multi-date-picker';
 import Select from 'react-select';
-import { aaSeatMap, adSeatMap } from '../../../pages/test/temp';
+// import { aaSeatMap, adSeatMap } from '../../../pages/test/temp';
 import parse from 'html-react-parser';
 import LoadingBar from 'react-top-loading-bar';
 
