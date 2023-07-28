@@ -41,7 +41,7 @@ const TopHeaderFilter = () => {
               {openSort && (
                 <div className='flight-search-sort bg-white px-15 py-20'>
                   <h5 className='d-flex items-center justify-between text-18 fw-500 mb-10'>
-                    <span>Span</span>
+                    <span>Sort</span>
                     <span className='text-primary text-25 pr-10 pb-2'>
                       <BsFillArrowDownCircleFill
                         onClick={() => {

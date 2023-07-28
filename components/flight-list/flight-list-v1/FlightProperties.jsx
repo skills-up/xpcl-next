@@ -7,6 +7,7 @@ import {
   setCabins,
   setDepartingFrom,
   setDepartTimes,
+  setInitialState,
   setPaginateTotalDataSize,
   setPrice,
   setSelectedBookings,

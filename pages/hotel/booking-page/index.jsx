@@ -1,24 +1,26 @@
-import CallToActions from "../../../components/common/CallToActions";
-import Seo from "../../../components/common/Seo";
-import Header1 from "../../../components/header/header-1";
-import DefaultFooter from "../../../components/footer/default";
-import StepperBooking from "../../../components/booking-page/stepper-booking";
+import CustomerInfo from '../../../components/booking-page/CustomerInfo';
+import CallToActions from '../../../components/common/CallToActions';
+import Seo from '../../../components/common/Seo';
+import DefaultFooter from '../../../components/footer/default';
+import Header1 from '../../../components/header/header-1';
 
 const index = () => {
   return (
     <>
-      <Seo pageTitle="Hotel Booking Page" />
+      <Seo pageTitle='Hotel Booking Page' />
       {/* End Page Title */}
 
-      <div className="header-margin"></div>
+      <div className='header-margin'></div>
       {/* header top margin */}
 
       <Header1 />
       {/* End Header 1 */}
 
-      <section className="pt-40 layout-pb-md">
-        <div className="container">
-          <StepperBooking />
+      <section className='pt-40 layout-pb-md'>
+        <div className='container'>
+          <div className='row'>
+            <CustomerInfo />
+          </div>
         </div>
         {/* End container */}
       </section>

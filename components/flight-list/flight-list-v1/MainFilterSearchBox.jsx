@@ -2,25 +2,25 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 import { useDispatch, useSelector } from 'react-redux';
+import ReactSwitch from 'react-switch';
 import WindowedSelect from 'react-windowed-select';
 import checkAirportCache from '../../../utils/airportCacheValidity';
 import { sendToast } from '../../../utils/toastify';
-import ReactSwitch from 'react-switch';
-import FilterSelect from '../flight-list-v1/FilterSelect';
+import LoadingBar from 'react-top-loading-bar';
 import Select from 'react-select';
 import { customAPICall, getList } from '../../../api/xplorzApi';
-import { checkUser } from '../../../utils/checkTokenValidity';
 import {
   setAirlineOrgs,
+  setClientTravellers as setClientTravellersRedux,
+  setDestinations,
+  setInitialSearchData,
+  setInitialState,
   setReturnFlight as setReturnFlightRedux,
   setSearchData,
   setTravellerDOBS,
   setTravellers as setTravellersRedux,
-  setClientTravellers as setClientTravellersRedux,
-  setInitialSearchData,
-  setSelectedBookings,
-  setDestinations,
 } from '../../../features/flightSearch/flightSearchSlice';
+import { checkUser } from '../../../utils/checkTokenValidity';
 
 const MainFilterSearchBox = () => {
   const [directFlight, setDirectFlight] = useState(true);
@@ -35,6 +35,7 @@ const MainFilterSearchBox = () => {
   const cabinOptions = ['Economy', 'Premium Economy', 'Business', 'First'];
   const [clientTravellers, setClientTravellers] = useState([]);
   const [airlines, setAirlines] = useState([]);
+  const [progress, setProgress] = useState(0);
 
   const dispatch = useDispatch();
   const router = useRouter();
@@ -44,6 +45,7 @@ const MainFilterSearchBox = () => {
   const client_id = useSelector((state) => state.auth.value.currentOrganization);
 
   useEffect(() => {
+    dispatch(setInitialState());
     if (token !== '') {
       checkUser(router, dispatch);
       checkAirportCache(dispatch);
@@ -191,6 +193,18 @@ const MainFilterSearchBox = () => {
       callsCounter = 4;
     }
     let currentCalls = 0;
+    // Redux Values Update
+    dispatch(setTravellerDOBS({ ADT, CHD, INF }));
+    dispatch(setReturnFlightRedux({ returnFlight }));
+    dispatch(setTravellersRedux({ travellers }));
+    dispatch(
+      setDestinations({
+        to,
+        from,
+        departDate: departDate.format('YYYY-MM-DD'),
+        returnDate: returnFlight ? returnDate.format('YYYY-MM-DD') : null,
+      })
+    );
     // Akasa
     // To
     customAPICall('aa/v1/search', 'post', request, {}, true)
@@ -205,9 +219,7 @@ const MainFilterSearchBox = () => {
         }
       })
       .catch((err) => console.error(err))
-      .then(() =>
-        dispatchCalls(tempSearchData, callsCounter, (currentCalls += 1), ADT, CHD, INF)
-      );
+      .then(() => dispatchCalls(tempSearchData, callsCounter, (currentCalls += 1)));
     // From
     if (returnFlight && domestic) {
       customAPICall('aa/v1/search', 'post', returnRequest, {}, true)
@@ -222,9 +234,7 @@ const MainFilterSearchBox = () => {
           }
         })
         .catch((err) => console.error(err))
-        .then(() =>
-          dispatchCalls(tempSearchData, callsCounter, (currentCalls += 1), ADT, CHD, INF)
-        );
+        .then(() => dispatchCalls(tempSearchData, callsCounter, (currentCalls += 1)));
     }
     // Tripjack
     // To
@@ -240,9 +250,7 @@ const MainFilterSearchBox = () => {
         }
       })
       .catch((err) => console.error(err))
-      .then(() =>
-        dispatchCalls(tempSearchData, callsCounter, (currentCalls += 1), ADT, CHD, INF)
-      );
+      .then(() => dispatchCalls(tempSearchData, callsCounter, (currentCalls += 1)));
     // From
     if (returnFlight && domestic) {
       customAPICall('tj/v1/search', 'post', returnRequest, {}, true)
@@ -257,27 +265,14 @@ const MainFilterSearchBox = () => {
           }
         })
         .catch((err) => console.error(err))
-        .then(() =>
-          dispatchCalls(tempSearchData, callsCounter, (currentCalls += 1), ADT, CHD, INF)
-        );
+        .then(() => dispatchCalls(tempSearchData, callsCounter, (currentCalls += 1)));
     }
   };
 
-  const dispatchCalls = async (searchData, totalCalls, currentCalls, ADT, CHD, INF) => {
+  const dispatchCalls = async (searchData, callsCounter, currentCalls) => {
     dispatch(setSearchData(searchData));
-    if (currentCalls === totalCalls) {
-      dispatch(setTravellerDOBS({ ADT, CHD, INF }));
-      dispatch(setReturnFlightRedux({ returnFlight }));
-      dispatch(setTravellersRedux({ travellers }));
-      dispatch(
-        setDestinations({
-          to,
-          from,
-          departDate: departDate.format('YYYY-MM-DD'),
-          returnDate: returnFlight ? returnDate.format('YYYY-MM-DD') : null,
-        })
-      );
-    }
+    let percentage = (currentCalls / callsCounter) * 100;
+    setProgress(percentage);
   };
 
   const searchData = useSelector((state) => state.flightSearch.value.searchData);
@@ -289,7 +284,11 @@ const MainFilterSearchBox = () => {
         <FilterSelect />
       </div> */}
       {/* End .row */}
-
+      <LoadingBar
+        color='#19f9fc'
+        progress={progress}
+        onLoaderFinished={() => setProgress(0)}
+      />
       <div className='border-light rounded-4 pr-20 py-20 lg:px-20 lg:pt-5 lg:pb-20 mt-15'>
         <div className='flight-search pl-20 lg:pl-0'>
           <div className='d-flex items-center gap-2 justify-center'>

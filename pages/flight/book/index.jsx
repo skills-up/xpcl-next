@@ -43,7 +43,7 @@ const index = () => {
 
       {currentStep === 2 && (
         <Seatmap
-          PNR={PNR}
+          PNRS={[PNR, setPNR]}
           seatMaps={[seatMap, setSeatMap]}
           travellerInfos={[travellerInfo, setTravellerInfo]}
         />

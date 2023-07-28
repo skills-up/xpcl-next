@@ -937,7 +937,7 @@ $_displays: none, inline-block, block, flex;
 
   &__header {
     display: grid;
-    grid-template-columns: 180px 1fr 60px 170px 140px 270px;
+    grid-template-columns: 180px 450px 225px;
     gap: 30px;
     background-color: var(--color-dark-3);
     color: white;
@@ -1017,7 +1017,7 @@ $_displays: none, inline-block, block, flex;
 
   &__content {
     display: grid;
-    grid-template-columns: 1fr 60px 170px 140px;
+    grid-template-columns: 450px 225px;
     gap: 30px;
 
     @include media-below(md) {
@@ -2421,6 +2421,7 @@ table.table-6 {
 .flight-search-sort-container {
   position: relative;
   .flight-search-sort {
+    z-index: 9;
     position: absolute;
     min-width: 170px;
     margin-top: 1rem;
@@ -2439,6 +2440,7 @@ table.table-6 {
     position: absolute;
     left: 42%;
     top: 12.5%;
+    font-size: 1rem !important;
   }
 }
 
@@ -2448,7 +2450,32 @@ table.table-6 {
     display: flex;
     align-items: center;
     .row-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 55px;
       min-width: 55px;
+      font-size: 1.2rem;
+      text-align: center;
+    }
+  }
+}
+
+// Tripjack Seatmap
+.aa-seatmap {
+  tr {
+    display: flex;
+    justify-content: space-evenly;
+    &.extra {
+      // justify-content: space-between;
+    }
+    td {
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 55px;
+      min-height: 55px;
       font-size: 1.2rem;
       text-align: center;
     }
@@ -2570,6 +2597,9 @@ table.table-6 {
     th.img-container img {
       width: 100%;
     }
+    td.no-seat {
+      width: 30px;
+    }
     td.seat span.price {
       display: none;
       position: absolute;
@@ -2604,5 +2634,56 @@ table.table-6 {
       margin-bottom: 1em;
       display: none;
     }
+    .legend {
+      margin: 2rem 0;
+      display: grid;
+      grid-template-columns: auto auto auto auto auto;
+      gap: 1rem;
+      tr {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        width: 100px;
+      }
+      span {
+        font-weight: 700;
+      }
+    }
+  }
+}
+
+// Hotel Search
+.hotel-search {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  gap: 1rem 0;
+  align-items: center;
+  @include media-below(lg) {
+    padding-top: 1rem;
+    grid-template-columns: auto;
+  }
+  .hotel-search-select {
+    max-width: 100%;
+    @include media-below(lg) {
+      width: 250px;
+      max-width: 100%;
+    }
+  }
+}
+
+// Hotel Search Guest Selector
+.hotel-search-guest-selector {
+  .hotel-search-guest-container {
+  }
+}
+
+.hotel-search-sort-container {
+  position: relative;
+  .hotel-search-sort {
+    z-index: 9;
+    position: absolute;
+    min-width: 170px;
+    margin-top: 1rem;
   }
 }

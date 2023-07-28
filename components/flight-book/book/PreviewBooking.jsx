@@ -6,11 +6,13 @@ import { sendToast } from '../../../utils/toastify';
 import FlightProperty from '../../flight-list/common/FlightProperty';
 import Select from 'react-select';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
+import LoadingBar from 'react-top-loading-bar';
 
 function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
   const selectedBookings = useSelector(
     (state) => state.flightSearch.value.selectedBookings
   );
+  const [progress, setProgress] = useState(0);
   const [frequentFliers, setFrequentFliers] = useState([]);
   const [travellerInfo, setTravellerInfo] = travellerInfos;
   const returnFlight = useSelector((state) => state.flightSearch.value.returnFlight);
@@ -66,9 +68,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
               seat_preference: el.seat_preference
                 ? { label: el.seat_preference, value: el.seat_preference }
                 : null,
-              // meal_preference: el.meal_preference
-              //   ? { label: el.meal_preference, value: el.meal_preference }
-              //   : null,
+              trip_meals: { from: null, to: null, combined: null },
               prefix: el.prefix
                 ? el.prefix === 'MR'
                   ? { value: 'MR', label: 'Mr.' }
@@ -95,6 +95,8 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
       sendToast('error', 'Failed to fetch frequent fliers', 4000);
     }
   };
+
+  useEffect(() => console.log('progress', progress), [progress]);
 
   const onClick = async () => {
     // Checking if each traveller has a prefix
@@ -134,7 +136,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
       if (selectedBookings.combined) {
         let toSector = [];
         let fromSector = [];
-        let toDone = 0;
+        let isFound = false;
         for (let segment of selectedBookings.combined.segments) {
           let dat = {
             from: segment.departure.airport.code,
@@ -145,9 +147,9 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
             flightNumber: segment.flight.number,
             bookingClass: selectedBookings.combined.prices.prices.ADULT.bookingClass,
           };
-          if (segment?.segmentNo === 0) toDone += 1;
-          if (toDone < 2) {
+          if (!isFound) {
             toSector.push(dat);
+            if (segment.arrival.airport.code === destinations?.to?.iata) isFound = true;
           } else {
             fromSector.push(dat);
           }
@@ -220,7 +222,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
     //   );
     // }
 
-    console.log('test');
+    setProgress(Math.floor((currentAPICalls / totalAPICalls) * 100));
     for (let [key, value] of Object.entries(selectedBookings)) {
       let response;
       if (value?.provider === 'aa') {
@@ -317,6 +319,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
           }
         }
       }
+      setProgress(Math.floor((currentAPICalls / totalAPICalls) * 100));
     }
     // If Successful
     if (currentAPICalls === totalAPICalls) setCurrentStep(2);
@@ -329,6 +332,11 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
 
   return (
     <section className='pt-40 pb-40 bg-light-2'>
+      <LoadingBar
+        color='#19f9fc'
+        progress={progress}
+        onLoaderFinished={() => setProgress(0)}
+      />
       <div className='container'>
         {/* Itinerary */}
         <div>

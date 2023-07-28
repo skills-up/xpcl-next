@@ -1,16 +1,19 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { customAPICall } from '../../../api/xplorzApi';
+import { createItem, customAPICall } from '../../../api/xplorzApi';
 import { sendToast } from '../../../utils/toastify';
 import Seat from '../common/Seat';
 import 'react-tooltip/dist/react-tooltip.css';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import { DateObject } from 'react-multi-date-picker';
 import Select from 'react-select';
-import { adSeatMap } from '../../../pages/test/temp';
+import { aaSeatMap, adSeatMap } from '../../../pages/test/temp';
+import parse from 'html-react-parser';
+import LoadingBar from 'react-top-loading-bar';
 
-function Seatmap({ seatMaps, PNR, travellerInfos }) {
+function Seatmap({ seatMaps, PNRS, travellerInfos }) {
+  const [PNR, setPNR] = PNRS;
   const [seatMap, setSeatMap] = seatMaps;
   const travellers = useSelector((state) => state.flightSearch.value.travellers);
   const selectedBookings = useSelector(
@@ -18,11 +21,27 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
   );
   const travellerDOBS = useSelector((state) => state.flightSearch.value.travellerDOBS);
   const [travellerInfo, setTravellerInfo] = travellerInfos;
+  const [progress, setProgress] = useState(0);
   // Fetch Flight Details for PNRs
   // Save Them To Seatmaps
   // Display Seatmaps
-
+  const amadeusMealOptions = [
+    {
+      value: '_',
+      label: 'No Preference',
+    },
+    { value: 'AVML', label: 'Vegetarian' },
+    { value: 'HNML', label: 'Hindi Non Vegetarian' },
+    { value: 'VJML', label: 'Jain Vegetarian' },
+    { value: 'NVML', label: 'Non Vegetarian' },
+    { value: 'VLML', label: 'Lacto Ovo Meal' },
+    { value: 'SFML', label: 'Sea Food Meal' },
+  ];
   const router = useRouter();
+
+  let getArray = (x) => {
+    return x ? (Array.isArray(x) ? x : [x]) : [];
+  };
 
   useEffect(() => {
     getData();
@@ -35,13 +54,19 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
   // Fetching Seatmaps for PNRS
   const getData = async () => {
     if (PNR) {
+      let totalCalls = 0;
+      let CurrentCalls = 0;
+      for (let value of Object.values(PNR)) {
+        if (value) totalCalls += 1;
+      }
       let response = {};
       let tempDat = { to: null, from: null, combined: null };
       // let tempDat = {
-      //   to: { data: adSeatMap, provider: 'ad' },
+      //   to: { data: aaSeatMap, provider: 'aa' },
       //   from: null,
       //   combined: null,
       // };
+      let tempPNR = { ...PNR };
       for (let [key, value] of Object.entries(PNR)) {
         if (value) {
           // API Call to Flight Booking + setSeatMap
@@ -62,50 +87,121 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
             }
           }
           // AA
+          if (value?.provider === 'aa') {
+            response = await customAPICall(
+              'aa/v1/seatmaps',
+              'post',
+              { key: value.data.key },
+              {},
+              true
+            );
+            let ssr = await customAPICall(
+              'aa/v1/fetch-ssrs',
+              'post',
+              {
+                key: value.data.key,
+                trips: selectedBookings[key].segments.map((el) => ({
+                  origin: el.departure.airport.code,
+                  destination: el.arrival.airport.code,
+                  departureDate: el.departure.time.split('T')[0],
+                  identifier: {
+                    identifier: el.flight.number,
+                    carrierCode: el.flight.airline,
+                  },
+                })),
+                passengerKeys: value.data.pax.map((p) => p.key),
+              },
+              {},
+              true
+            );
+            if (response?.success && ssr.success) {
+              tempPNR[key].data['ssr'] = ssr.data;
+              tempDat[key] = {
+                data: response.data,
+                provider: 'aa',
+              };
+            }
+          }
           // AD
           if (value?.provider === 'ad') {
+            let counter = 0;
             for (let [segKey, segValue] of Object.entries(value?.data?.segments)) {
-              response = await customAPICall(
-                'tj/v1/seatmaps',
-                'post',
-                {
-                  seatCount: travellerDOBS.ADT + travellerDOBS.CHD,
-                  sector: {
-                    departure: value.from,
-                    arrival: value.to,
-                    departureDate: value.departureDate,
-                    arrivalDate: value.arrivalDate,
-                    airline: value.companyCode,
-                    flightNumber: value.flightNumber,
-                    bookingClass: value.bookingClass,
-                  },
+              let travellersTemp = [];
+              for (let traveller of travellerInfo) {
+                let tempObj = {};
+                // Age
+                const age = (
+                  (Date.now() -
+                    +new DateObject({
+                      date: traveller?.passport_dob,
+                      format: 'YYYY-MM-DD',
+                    })
+                      .toDate()
+                      .getTime()) /
+                  31536000000
+                ).toFixed(2);
+                // If below 2 years of age, infant
+                if (age < 2) tempObj['type'] = 'INF';
+                // If above 2 but below 12, child
+                if (age >= 2 && age < 12) tempObj['type'] = 'CHD';
+                // If above 12 years, consider adult
+                if (age >= 12) tempObj['type'] = 'ADT';
+                tempObj['firstName'] = traveller?.first_name;
+                tempObj['lastName'] = traveller?.last_name;
+                tempObj['dateOfBirth'] = traveller?.passport_dob;
+                tempObj['fareBasisOverride'] = value?.data?.fareBasis[counter];
+                // FF
+                if (
+                  traveller?.frequentFliers?.value &&
+                  traveller.membershipID.trim().length > 0
+                ) {
+                  tempObj['ff'] = {
+                    code: traveller.frequentFliers.value,
+                    number: traveller.membershipID,
+                  };
+                }
+                travellersTemp.push(tempObj);
+              }
+              response = await createItem('flights/seatmap', {
+                seatCount: travellerDOBS.ADT + travellerDOBS.CHD,
+                sector: {
+                  departure: segValue.from,
+                  arrival: segValue.to,
+                  departureDate: segValue.departureDate,
+                  arrivalDate: segValue.arrivalDate,
+                  airline: segValue.companyCode,
+                  flightNumber: segValue.flightNumber,
+                  bookingClass: segValue.bookingClass,
                 },
-                {},
-                true
-              );
+                travellers: travellersTemp,
+              });
               if (response?.success) {
+                for (let cabin of getArray(response.data.cabin)) {
+                  if (cabin.compartmentDetails.cabinZoneCode === 'U') {
+                    response.data['upperDeckToggle'] = false;
+                  }
+                }
                 tempDat[key] = {
-                  data: tempDat[key]?.data
-                    ? tempDat[key].data.push(response.data)
-                    : [response.data],
+                  data:
+                    tempDat[key]?.data && tempDat[key].data.length > 0
+                      ? [...tempDat[key].data, { ...response.data, segKey }]
+                      : [{ ...response.data, segKey }],
                   provider: 'ad',
                 };
               }
+              counter += 1;
             }
           }
           if (!response?.success) {
             sendToast('error', 'Could not fetch seatmap', 4000);
-            // router.back();
+            router.back();
           }
+          CurrentCalls += 1;
+          setProgress(Math.floor((CurrentCalls / totalCalls) * 100));
         }
       }
       setSeatMap(tempDat);
-      setTravellerInfo((prev) =>
-        prev.map((el) => ({
-          ...el,
-          trip_meals: { from: null, to: null, combined: null },
-        }))
-      );
+      setPNR(tempPNR);
     }
   };
 
@@ -113,6 +209,12 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
 
   // On Click
   const onClick = async () => {
+    let totalCalls = 0;
+    let currentCalls = 0;
+    let totalSuccess = 0;
+    for (let value of Object.values(PNR)) {
+      if (value) totalCalls += 1;
+    }
     for (let [key, value] of Object.entries(PNR)) {
       if (value) {
         // TJ
@@ -163,6 +265,7 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
             // }
             // Seats
             let seats = [];
+            console.log('value', value);
             for (let [k, v] of Object.entries(seatMap[key]?.data?.seatMap)) {
               if (v.travellers && v.travellers.length > 0) {
                 for (let trav of v.travellers) {
@@ -202,13 +305,613 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
             true
           );
           if (response?.success) {
-            console.log('booking successful');
+            totalSuccess += 1;
           }
         }
         // AA
+        if (value.provider === 'aa') {
+          // SSR Bookings
+          let ssrsTotal = 0;
+          let ssrs = [];
+          for (let traveller of travellerInfo) {
+            if (traveller.trip_meals[key]) {
+              for (let meal of traveller.trip_meals[key]) {
+                // Age
+                const age = (
+                  (Date.now() -
+                    +new DateObject({
+                      date: traveller?.passport_dob,
+                      format: 'YYYY-MM-DD',
+                    })
+                      .toDate()
+                      .getTime()) /
+                  31536000000
+                ).toFixed(2);
+                if (age >= 2) {
+                  ssrs.push({
+                    count: 1,
+                    key: Object.values(meal.value.passengersAvailability)[0].ssrKey,
+                  });
+                  ssrsTotal += Object.values(meal.value.passengersAvailability)[0].price;
+                }
+              }
+            }
+          }
+          if (ssrs.length > 0) {
+            const ssrsBooking = await customAPICall(
+              'aa/v1/book-ssrs',
+              'post',
+              {
+                key: value.data.key,
+                ssrs,
+              },
+              {},
+              true
+            );
+            if (!ssrsBooking?.success) {
+              sendToast('error', 'Error in SSRS Booking', 4000);
+            }
+          }
+          // Seat Bookings (Per Segment Per Traveller)
+          let seatTotal = 0;
+          for (let pax of value.data.pax) {
+            for (let seg of seatMap[key].data) {
+              if (seg.seatMap.travellers && seg.seatMap.travellers.length > 0) {
+                for (let traveller of seg.seatMap.travellers) {
+                  if (
+                    traveller.first_name === pax.name.first &&
+                    traveller.last_name === pax.name.last &&
+                    traveller.passport_dob === pax.dob
+                  ) {
+                    const age = (
+                      (Date.now() -
+                        +new DateObject({
+                          date: traveller?.passport_dob,
+                          format: 'YYYY-MM-DD',
+                        })
+                          .toDate()
+                          .getTime()) /
+                      31536000000
+                    ).toFixed(2);
+                    if (age >= 2) {
+                      let seatBooking = await customAPICall(
+                        'aa/v1/seat-reserve',
+                        'post',
+                        {
+                          key: value.data.key,
+                          seatKey: traveller.unitKey,
+                          passengerKey: pax.key,
+                          journeyKey: selectedBookings[key].journeyKey,
+                        },
+                        {},
+                        true
+                      );
+                      if (!seatBooking?.success) {
+                        sendToast('error', 'Error in Seat Booking', 4000);
+                      }
+                      seatTotal += traveller.amount;
+                    }
+                  }
+                }
+              }
+            }
+          }
+          // Final Booking
+          let total = selectedBookings[key].total + ssrsTotal + seatTotal;
+          let book = await customAPICall(
+            'aa/v1/book',
+            'post',
+            {
+              key: value.data.key,
+              // amount: total,
+            },
+            {},
+            true
+          );
+          if (book?.success) {
+            totalSuccess += 1;
+          }
+        }
         // AD
+        // Reserving Seats
+        if (value.provider === 'ad') {
+          let seatRequested = false;
+          const pnr = value.data.pnr;
+          if (seatMap[key]?.data) {
+            for (let seg of seatMap[key].data) {
+              if (seg.travellers) {
+                let tempSeg = [];
+                for (let traveller of seg.travellers) {
+                  for (let trav of value.data.travellers) {
+                    if (traveller.id === trav.id) {
+                      tempSeg.push({ seatNumber: traveller.seatNo, paxRef: trav.paxRef });
+                      if (traveller.amount > 0) seatRequested = true;
+                    }
+                  }
+                }
+                if (tempSeg.length > 0) {
+                  let seatBook = await createItem('flights/reserve-seats', {
+                    pnr,
+                    segRef: seg.segKey,
+                    seats: tempSeg,
+                  });
+                  if (!seatBook?.success) {
+                    sendToast('error', 'Error in Seat Bookings', 4000);
+                  }
+                }
+              }
+            }
+          }
+          // Finalize Booking
+          const frequentFliers = [];
+          const mealRequests = [];
+          for (let traveller of travellerInfo) {
+            // Getting PAX
+            let paxRef;
+            for (let trav of value.data.travellers) {
+              if (traveller.id === trav.id) {
+                paxRef = trav.paxRef;
+              }
+            }
+            // FF
+            if (
+              traveller?.frequentFliers?.value &&
+              traveller.membershipID.trim().length > 0
+            ) {
+              frequentFliers.push({
+                paxRef,
+                code: traveller.frequentFliers.value,
+                number: traveller.membershipID,
+              });
+            }
+            // Meals
+            // If meal preference existed for a traveller and they didnt change it, then adding this
+            let travellerMealFound = false;
+            let travellerMealToTake = null;
+            if (traveller.trip_meals[key] && traveller.trip_meals[key].length > 0) {
+              if (
+                traveller.trip_meals[key][0]?.value &&
+                traveller.trip_meals[key][0]?.value !== '_'
+              ) {
+                travellerMealFound = true;
+              }
+            } else {
+              if (traveller.meal_preference) {
+                for (let meal of amadeusMealOptions) {
+                  if (traveller.meal_preference === meal.value) {
+                    travellerMealFound = true;
+                    travellerMealToTake = meal;
+                  }
+                }
+              }
+            }
+            if (travellerMealFound) {
+              let found = false;
+              for (let meal of mealRequests) {
+                if (
+                  meal.type ===
+                  (travellerMealToTake?.value || traveller.trip_meals[key][0]?.value)
+                ) {
+                  found = true;
+                  meal.paxRefs.push(paxRef);
+                }
+              }
+              if (!found) {
+                mealRequests.push({
+                  type: travellerMealToTake?.value || traveller.trip_meals[key][0]?.value,
+                  paxRefs: [paxRef],
+                });
+              }
+            }
+          }
+          // Booking Call
+          const booking = await createItem('flights/issue-tickets', {
+            pnr,
+            airline: Object.values(value.data.segments)[0].companyCode,
+            seatRequested,
+            frequentFliers,
+            mealRequests,
+          });
+          if (booking?.success) {
+            totalSuccess += 1;
+          }
+        }
+        currentCalls += 1;
+        setProgress(Math.floor((currentCalls / totalCalls) * 100));
+        if (currentCalls === totalCalls) {
+          // What Call To Give Finally
+          sendToast('success', `${totalSuccess}/${totalCalls} Bookings Successful`, 4000);
+        }
       }
     }
+  };
+
+  // AA Seatmap
+  const AASeatMapRender = ({ data, type }) => {
+    return (
+      <div>
+        {/* Iterating Segments */}
+        {data.map((el, ind) => {
+          // Getting Group Fee
+          const groups = Object.values(el.fees)[0].groups;
+          let groupFeeArr = [];
+          for (let value of Object.values(groups)) {
+            let cost = 0;
+            value.fees[0].serviceCharges.map((x) => (cost += x.amount));
+            groupFeeArr.push({ group: value.group, amount: cost });
+          }
+          return (
+            <div key={ind} className='aa-seatmap mb-20'>
+              <h2 className='mb-20'>
+                {el.seatMap.departureStation} &rarr; {el.seatMap.arrivalStation}
+              </h2>
+              {/* Legend */}
+              <div className='d-inline-block bg-light-2 pt-10 px-20 mb-20'>
+                <h4 className='text-center mb-10'>Legend</h4>
+                <div className='d-flex gap-3 text-center'>
+                  <span className='d-flex flex-column items-center'>
+                    <Seat label={''} fill={'#FF0000'} />
+                    <span
+                      style={{
+                        fontWeight: '700',
+                        maxWidth: '100px',
+                        display: 'inline-block',
+                      }}
+                    >
+                      Booked
+                    </span>
+                  </span>
+                  <span className='d-flex flex-column items-center'>
+                    <Seat label={''} fill={'#4CBB17'} clickable />
+                    <span
+                      style={{
+                        fontWeight: '700',
+                        maxWidth: '100px',
+                        display: 'inline-block',
+                      }}
+                    >
+                      Selected
+                    </span>
+                  </span>
+                  <span className='d-flex flex-column items-center'>
+                    <Seat label={''} fill={'#FFA500'} clickable />
+                    <span
+                      style={{
+                        fontWeight: '700',
+                        maxWidth: '100px',
+                        display: 'inline-block',
+                      }}
+                    >
+                      Book With Extra Costs
+                    </span>
+                  </span>
+                  <span className='d-flex flex-column items-center'>
+                    <Seat label={''} fill={'#000'} clickable />
+                    <span
+                      style={{
+                        fontWeight: '700',
+                        maxWidth: '100px',
+                        display: 'inline-block',
+                      }}
+                    >
+                      Book Without Extra Costs
+                    </span>
+                  </span>
+                </div>
+                <div className='row my-3'>
+                  {travellerInfo.map((trav, travInd) => {
+                    let seatSelected = '';
+                    if (el.seatMap?.travellers)
+                      for (let travl of el.seatMap?.travellers)
+                        if (travl.id === trav.id) seatSelected = travl?.designator || '';
+                    return (
+                      <span
+                        style={{ fontWeight: 'bold' }}
+                        className='d-block col-auto'
+                        key={travInd}
+                      >
+                        <span>{trav?.aliases[0]}</span>{' '}
+                        <span
+                          className='text-primary d-inline-block'
+                          style={{ width: '40px' }}
+                        >
+                          - {seatSelected ? seatSelected : 'NA'}
+                        </span>
+                      </span>
+                    );
+                  })}
+                </div>
+              </div>
+              {/* Iterating Decks */}
+              {Object.entries(el.seatMap.decks).map(([deckKey, deckVal], deckIn) => {
+                return (
+                  <div key={deckIn}>
+                    {Object.entries(deckVal.compartments).map(
+                      ([compKey, compVal], compIn) => {
+                        // X - 1-2, 3-4
+                        // Y -
+                        // Preprocessing
+                        let width = compVal.width;
+                        let length = compVal.length;
+                        let emptyCol = [];
+                        let rowIndicator = [];
+                        let extraCols = [];
+                        for (let i = 1; i < width - 1; i++) {
+                          if (!emptyCol.includes(Math.ceil(i / 2)) && i % 2 !== 0) {
+                            emptyCol.push(i);
+                          }
+                        }
+                        // 3D Array
+                        let newArr = [];
+                        // Null Values 3D
+                        for (let l = 0; l <= length; l++) {
+                          let tempArr = [];
+                          for (let w = 0; w <= width; w++) {
+                            tempArr.push(null);
+                          }
+                          newArr.push(tempArr);
+                        }
+                        // Adding New Values + Extra Logic
+                        let currentRow = 1;
+                        for (let seat of compVal.units) {
+                          if (seat.type === 1 || seat.type === 2 || seat.type === 20) {
+                            // Exit
+                            if (seat.type === 20) {
+                              newArr[seat.y][seat.x] = seat;
+                              extraCols.push(seat.y);
+                            }
+                            // Normal Seats
+                            if (seat.type === 1 || seat.type === 2) {
+                              newArr[seat.y][seat.x] = seat;
+                              // Getting Empty Column
+                              let emptyIn = emptyCol.indexOf(seat.x);
+                              if (emptyIn !== -1) emptyCol.splice(emptyIn, 1);
+                              // Row Indicator
+                              let found = false;
+                              for (let indic of rowIndicator) {
+                                if (seat.y === indic.y) found = true;
+                              }
+                              if (!found) {
+                                rowIndicator.push({ y: seat.y, row: currentRow });
+                                currentRow++;
+                              }
+                            }
+                          }
+                        }
+                        return (
+                          <table key={compIn}>
+                            {/* Iterating Seats */}
+                            {newArr.map((rowEl, rowInd) => (
+                              <tr
+                                key={rowInd}
+                                className={`${extraCols.includes(rowInd) ? 'extra' : ''}`}
+                              >
+                                {rowEl.map((element, index) => {
+                                  let group = null;
+                                  for (let grp of groupFeeArr) {
+                                    if (element?.group === grp.group && grp.amount > 0) {
+                                      group = grp;
+                                    }
+                                  }
+                                  let row = null;
+                                  if (!element) {
+                                    for (let indic of rowIndicator) {
+                                      if (rowInd === indic.y) {
+                                        row = indic.row;
+                                      }
+                                    }
+                                  }
+                                  return (
+                                    <>
+                                      {element ? (
+                                        element.type === 20 ? (
+                                          <td
+                                            colSpan={element?.width || 1}
+                                            rowSpan={element?.height || 1}
+                                          ></td>
+                                        ) : (
+                                          <td
+                                            colSpan={element?.width || 1}
+                                            rowSpan={element?.height || 1}
+                                          >
+                                            <a
+                                              data-tooltip-id={
+                                                group && element.assignable
+                                                  ? element.designator
+                                                  : undefined
+                                              }
+                                              data-tooltip-content={
+                                                group &&
+                                                group.amount > 0 &&
+                                                element.assignable
+                                                  ? `Amount - ${group.amount.toLocaleString(
+                                                      'en-IN',
+                                                      {
+                                                        maximumFractionDigits: 2,
+                                                        style: 'currency',
+                                                        currency: 'INR',
+                                                      }
+                                                    )}`
+                                                  : undefined
+                                              }
+                                              data-tooltip-place='top'
+                                            >
+                                              <Seat
+                                                key={index}
+                                                label={element?.designator
+                                                  .split('')
+                                                  .at(-1)}
+                                                fill={
+                                                  !element.assignable
+                                                    ? '#FF0000'
+                                                    : element?.isSelected
+                                                    ? '#4CBB17'
+                                                    : group?.amount > 0
+                                                    ? '#FFA500'
+                                                    : undefined
+                                                }
+                                                clickable={
+                                                  !element.assignable ? false : true
+                                                }
+                                                onClick={
+                                                  element.assignable
+                                                    ? () => {
+                                                        if (element.assignable) {
+                                                          // Adding / Removing Selected Seats
+                                                          setSeatMap((prev) => {
+                                                            for (let dat of prev[type]
+                                                              ?.data[ind]?.seatMap?.decks[
+                                                              deckKey
+                                                            ]?.compartments[compKey]
+                                                              ?.units) {
+                                                              if (
+                                                                dat?.designator ===
+                                                                element?.designator
+                                                              ) {
+                                                                let travl = prev[type]
+                                                                  ?.data[ind]?.seatMap[
+                                                                  'travellers'
+                                                                ]
+                                                                  ? prev[type]?.data[ind]
+                                                                      ?.seatMap[
+                                                                      'travellers'
+                                                                    ]
+                                                                  : [];
+                                                                let add = {
+                                                                  designator:
+                                                                    element.designator,
+                                                                  unitKey:
+                                                                    element.unitKey,
+                                                                  amount:
+                                                                    group?.amount || 0,
+                                                                };
+                                                                // If already selected, removing selected + traveller info on that seat
+                                                                if (dat['isSelected']) {
+                                                                  dat[
+                                                                    'isSelected'
+                                                                  ] = false;
+                                                                  travl = travl.filter(
+                                                                    (trav) =>
+                                                                      trav.designator !==
+                                                                      element.designator
+                                                                  );
+                                                                }
+                                                                // If not selected, then we add traveller and seat info (if max seats are selected,)
+                                                                // Setting first traveller to new seat selected
+                                                                else {
+                                                                  dat[
+                                                                    'isSelected'
+                                                                  ] = true;
+                                                                  if (travl) {
+                                                                    if (
+                                                                      travl.length ===
+                                                                      travellers.length
+                                                                    ) {
+                                                                      travl.push({
+                                                                        ...travl[0],
+                                                                        ...add,
+                                                                      });
+                                                                      prev[type].data[
+                                                                        ind
+                                                                      ].seatMap.decks[
+                                                                        deckKey
+                                                                      ].compartments[
+                                                                        compKey
+                                                                      ].units = prev[
+                                                                        type
+                                                                      ]?.data[
+                                                                        ind
+                                                                      ]?.seatMap?.decks[
+                                                                        deckKey
+                                                                      ]?.compartments[
+                                                                        compKey
+                                                                      ]?.units.map((s) =>
+                                                                        s.designator ===
+                                                                        travl[0]
+                                                                          .designator
+                                                                          ? {
+                                                                              ...s,
+                                                                              isSelected: false,
+                                                                            }
+                                                                          : s
+                                                                      );
+                                                                      travl.splice(0, 1);
+                                                                    } else {
+                                                                      // Adding the first traveller in travellers that isnt added
+                                                                      let travlToAdd = false;
+                                                                      for (let x of travellerInfo) {
+                                                                        let match = false;
+                                                                        for (let y of travl) {
+                                                                          if (
+                                                                            y.id === x.id
+                                                                          ) {
+                                                                            match = true;
+                                                                          }
+                                                                        }
+                                                                        if (
+                                                                          !match &&
+                                                                          !travlToAdd
+                                                                        ) {
+                                                                          travl.push({
+                                                                            ...x,
+                                                                            ...add,
+                                                                          });
+                                                                          travlToAdd = true;
+                                                                        }
+                                                                      }
+                                                                    }
+                                                                  } else {
+                                                                    travl = [
+                                                                      {
+                                                                        ...travellers[0],
+                                                                        ...add,
+                                                                      },
+                                                                    ];
+                                                                  }
+                                                                }
+                                                                prev[type].data[
+                                                                  ind
+                                                                ].seatMap['travellers'] =
+                                                                  travl;
+                                                              }
+                                                            }
+                                                            return { ...prev };
+                                                          });
+                                                        }
+                                                      }
+                                                    : undefined
+                                                }
+                                              />
+                                            </a>
+                                            {group && group.amount > 0 && (
+                                              <ReactTooltip id={element.designator} />
+                                            )}
+                                          </td>
+                                        )
+                                      ) : emptyCol.includes(index) && row ? (
+                                        <td>
+                                          <span>{row}</span>
+                                        </td>
+                                      ) : (
+                                        <></>
+                                      )}
+                                    </>
+                                  );
+                                })}
+                              </tr>
+                            ))}
+                          </table>
+                        );
+                      }
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })}
+      </div>
+    );
   };
 
   // TJ Seatmap
@@ -218,9 +921,13 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
         {Object.entries(data?.seatMap).map(([key, value], index) => {
           // 3D Array
           let newArr = [];
+          let aisleArr = [];
           if (value) {
             const columnLimit = value?.sData?.column;
             const rowLimit = value?.sData?.row;
+            for (let i = 0; i < columnLimit; i++) {
+              aisleArr.push(i);
+            }
             // Iterating for prototype 3D Array to mimic the seats
             let temp = [];
             for (let i = 0; i < rowLimit; i++) {
@@ -233,6 +940,10 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
             // Adding values to 3D array
             for (let dat of value?.sInfo) {
               newArr[dat.seatPosition.row - 1][dat.seatPosition.column - 1] = dat;
+              let indexOf = aisleArr.indexOf(dat.seatPosition.column - 1);
+              if (indexOf !== -1) {
+                aisleArr.splice(indexOf, 1);
+              }
             }
           }
           return (
@@ -372,6 +1083,11 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
                                                       'travellers'
                                                     ]
                                                   : [];
+                                                let add = {
+                                                  seatNo: el.seatNo,
+                                                  amount: el.amount,
+                                                  id: key,
+                                                };
                                                 // If already selected, removing selected + traveller info on that seat
                                                 if (dat['isSelected']) {
                                                   dat['isSelected'] = false;
@@ -389,11 +1105,7 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
                                                     ) {
                                                       travl.push({
                                                         ...travl[0],
-                                                        ...{
-                                                          seatNo: el.seatNo,
-                                                          amount: el.amount,
-                                                          id: key,
-                                                        },
+                                                        ...add,
                                                       });
                                                       prev[type].data.seatMap[key].sInfo =
                                                         prev[type].data.seatMap[
@@ -417,11 +1129,7 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
                                                         if (!match && !travlToAdd) {
                                                           travl.push({
                                                             ...x,
-                                                            ...{
-                                                              seatNo: el.seatNo,
-                                                              amount: el.amount,
-                                                              id: key,
-                                                            },
+                                                            ...add,
                                                           });
                                                           travlToAdd = true;
                                                         }
@@ -431,11 +1139,7 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
                                                     travl = [
                                                       {
                                                         ...travellers[0],
-                                                        ...{
-                                                          seatNo: el.seatNo,
-                                                          amount: el.amount,
-                                                          id: key,
-                                                        },
+                                                        ...add,
                                                       },
                                                     ];
                                                   }
@@ -457,7 +1161,7 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
                           </>
                         ) : (
                           <>
-                            {element[i - 1]?.isAisle && element[i + 1]?.isAisle ? (
+                            {aisleArr.includes(i) ? (
                               <span className='row-number'>{ind + 1}</span>
                             ) : (
                               <span className='row-number' />
@@ -475,270 +1179,537 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
     );
   };
 
-  // AD Seatmap
   const ADSeatMapRender = ({ data, type }) => {
-    let getArray = (x) => {
-      return x ? (Array.isArray(x) ? x : [x]) : [];
-    };
     const reserveCodes = ['SO', 'BK', 'LA', 'G', 'GN', 'CL', 'ST', 'TA', '1', '8'];
-    let seatmap = data;
-    let rows = seatmap.row;
-    var currRow = 0;
-    let html = '';
-    function getLocation(loc, spacers) {
-      if (loc.length < 2) return loc;
-      return loc.charAt(spacers < 2 ? 0 : 1);
-    }
-
-    var prices = {};
-    var custData = seatmap.customerCentricData || {};
-    getArray(custData.seatPrice).forEach((detail) => {
-      var price = 0;
-      getArray(detail.seatPrice.monetaryDetails).forEach((money) => {
-        if (money.typeQualifier == 'T') {
-          price = money.amount;
-        }
-      });
-
-      getArray(detail.rowDetails).forEach((row) => {
-        var num = row.seatRowNumber;
-        getArray(row.seatOccupationDetails).forEach((sod) => {
-          var col = sod.seatColumn;
-          prices[num + col] = price;
-        });
-      });
-    });
-
-    getArray(seatmap.cabin).forEach((cabin) => {
-      var cont = '';
-      var facFront = '';
-      var facRear = '';
-      const facilities = getArray(cabin.cabinFacilities || []);
-      const compartment = cabin.compartmentDetails;
-      const defSeatOcc =
-        compartment.defaultSeatOccupation || cabin.defaultSeatOccupation || 'F';
-      const seatRows = compartment.seatRowRange.number;
-      const isUpperDeck = compartment.cabinZoneCode == 'U';
-
-      if (isUpperDeck) $('#upperDeckToggle').show();
-
-      //Obtain column header and layout
-      var seatFormatArr = [];
-      var prev = '';
-      var spacers = 0;
-      compartment.columnDetails.forEach((detail) => {
-        var curr = getArray(detail.description);
-        if (curr.indexOf('A') >= 0 && prev.indexOf('A') >= 0) {
-          if (++spacers > 2) {
-            var unspacer = seatFormatArr.lastIndexOf(' ');
-            seatFormatArr.splice(unspacer, 1);
-          }
-          seatFormatArr.push(' ');
-        }
-        seatFormatArr.push(detail.seatColumn);
-        prev = curr;
-      });
-
-      const props = spacers < 2 ? ['L', 'R'] : ['L', 'C', 'R'];
-
-      //Add seat headers
-      facFront += '<tr><td></td>';
-      seatFormatArr.forEach((col) => {
-        facFront += '<th class="col-name">' + col + '</th>';
-      });
-      facFront += '</tr>';
-
-      //Gather facilities in front/rear of cabin
-      var facRow = '';
-      var propIdx, currProp, contObj;
-      facilities.forEach((fac) => {
-        var facObj = { L: [], C: [], R: [] };
-        var facDetails = fac.cabinFacilityDetails;
-        var facLocation = getLocation(facDetails.location, spacers);
-        facObj[facLocation].push(facDetails.type);
-        var otrFacDetails = getArray(fac.otherCabinFacilityDetails || []);
-        otrFacDetails.forEach((facDetails) => {
-          facLocation = getLocation(facDetails.location, spacers);
-          facObj[facLocation].push(facDetails.type);
-        });
-
-        facRow = '';
-        propIdx = 0;
-        currProp = 'L';
-        contObj = { L: '', C: '', R: '' };
-        seatFormatArr.forEach((col) => {
-          if (col == ' ') {
-            contObj[currProp] += '<td class="no-seat"></td>';
-            currProp = props[++propIdx];
-          } else {
-            var facility = facObj[currProp].shift();
-            if (facility) {
-              contObj[currProp] += '<td class="seat seat-' + facility + '"> &nbsp; </td>';
-            } else {
-              if (currProp == 'R') {
-                contObj[currProp] = '<td class="no-seat"></td>' + contObj[currProp];
-              } else if (currProp == 'C' && contObj[currProp].indexOf('</td><td') > 0) {
-                contObj[currProp] = contObj[currProp].replace(
-                  '</td><td',
-                  '</td><td class="no-seat"></td><td'
-                );
-              } else {
-                contObj[currProp] += '<td class="no-seat"></td>';
-              }
-            }
-          }
-        });
-        facRow = contObj['L'] + contObj['C'] + contObj['R'];
-
-        if (fac.rowLocation == 'F') {
-          facFront += '<tr><td></td>' + facRow + '</tr>';
-        } else {
-          facRear += '<tr><td></td>' + facRow + '</tr>';
-        }
-      });
-
-      // Add Seats
-      for (let i = seatRows[0]; i <= seatRows[1]; i++) {
-        const cabinRow = rows[currRow++];
-        if (cabinRow == undefined) continue;
-
-        var rowBefore = '',
-          rowAfter = '';
-        const rowFacilities = getArray(cabinRow.cabinFacility || []);
-        rowFacilities.forEach((fac) => {
-          var facObj = { L: [], C: [], R: [] };
-          var facDetails = fac.cabinFacilityDetails;
-          var facLocation = getLocation(facDetails.location, spacers);
-          facObj[facLocation].push(facDetails.type);
-          var otrFacDetails = getArray(fac.otherCabinFacilityDetails || []);
-          otrFacDetails.forEach((facDetails) => {
-            facLocation = getLocation(facDetails.location, spacers);
-            facObj[facLocation].push(facDetails.type);
-          });
-
-          facRow = '';
-          propIdx = 0;
-          currProp = 'L';
-          contObj = { L: '', C: '', R: '' };
-          seatFormatArr.forEach((col) => {
-            if (col == ' ') {
-              contObj[currProp] += '<td class="no-seat"></td>';
-              currProp = props[++propIdx];
-            } else {
-              var facility = facObj[currProp].shift();
-              if (facility) {
-                contObj[currProp] +=
-                  '<td class="seat seat-' + facility + '"> &nbsp; </td>';
-              } else {
-                if (currProp == 'R') {
-                  contObj[currProp] = '<td class="no-seat"></td>' + contObj[currProp];
-                } else if (currProp == 'C' && contObj[currProp].indexOf('</td><td') > 0) {
-                  contObj[currProp] = contObj[currProp].replace(
-                    '</td><td',
-                    '</td><td class="no-seat"></td><td'
-                  );
-                } else {
-                  contObj[currProp] += '<td class="no-seat"></td>';
-                }
-              }
-            }
-          });
-          facRow = contObj['L'] + contObj['C'] + contObj['R'];
-
-          if (fac.rowLocation == 'F') {
-            rowBefore += '<tr><td></td>' + facRow + '</tr>';
-          } else {
-            rowAfter += '<tr><td></td>' + facRow + '</tr>';
-          }
-        });
-
-        const row = cabinRow.rowDetails;
-        const rowNum = row.seatRowNumber || i;
-        // console.assert(i == row.seatRowNumber, "Seat number is different", i, row.seatRowNumber);
-        var rowCont =
-          '<tr class="seat-row' +
-          (row.rowCharacteristicDetails
-            ? ' row-type-' + row.rowCharacteristicDetails.rowCharacteristic
-            : '') +
-          '"><th class="row-number">' +
-          rowNum +
-          '</th>';
-        // if (row.seatOccupationDetails) {
-        var details = Object.assign(
-          {},
-          ...getArray(row.seatOccupationDetails).map((detail) => ({
-            [detail.seatColumn]: getArray(detail.seatCharacteristic).concat(
-              getArray(detail.seatOccupation)
-            ),
-          }))
-        );
-        seatFormatArr.forEach((col) => {
-          if (col == ' ' /*  || !details[col] */) {
-            rowCont += '<td class="no-seat"></td>';
-          } else {
-            //💺
-            var chars = details[col] || getArray(defSeatOcc);
-            var price = prices[rowNum + col] || 0;
-            // var contents = chars.indexOf('O') >= 0 ? 'X' : (chars.indexOf('E') >= 0 ? 'E' : (chars.indexOf('1') >= 0 ? 'R' : (chars.indexOf('CH') >= 0 ? '$' : '&nbsp;')));
-            var contents = '&nbsp;';
-            if (chars.indexOf('O') >= 0 || chars.indexOf('Z') >= 0) {
-              contents = 'X';
-            } else {
-              if (chars.indexOf('CH') >= 0) contents = '₹';
-              var reserved = false;
-              reserveCodes.forEach((code) => {
-                if (chars.indexOf(code) >= 0) {
-                  reserved = true;
-                }
-              });
-              if (!reserved) chars.push('AVL');
-            }
-            if (chars.indexOf('8') >= 0) {
-              rowCont += '<td class="no-seat"></td>';
-            } else {
-              rowCont +=
-                '<td class="seat seat-' +
-                chars.join(' seat-') +
-                '" data-row="' +
-                rowNum +
-                '" data-col="' +
-                col +
-                '" data-price="' +
-                price +
-                '"><span title="₹ ' +
-                price +
-                '"> ' +
-                contents +
-                ' </span></td>';
-            }
-          }
-        });
-        // } else {
-        //     rowCont += '<td class="no-seat" colspan="' + seatFormatArr.length + '"></td>';
-        // }
-        rowCont += '</tr>';
-
-        cont += rowBefore + rowCont + rowAfter;
-      }
-      html +=
-        '<table class="amadeus-table ' +
-        (isUpperDeck ? 'upper-deck' : 'lower-deck') +
-        '"><tbody>' +
-        facFront +
-        cont +
-        facRear +
-        '</tbody></table>';
-    });
-    console.log('html', html);
     return (
-      <div className='amadeus-container' dangerouslySetInnerHTML={{ __html: html }} />
+      <>
+        {data.map((d, dIndex) => {
+          let seatmap = d;
+          let rows = seatmap.row;
+          var currRow = 0;
+          let html = '';
+          function getLocation(loc, spacers) {
+            if (loc.length < 2) return loc;
+            return loc.charAt(spacers < 2 ? 0 : 1);
+          }
+          var prices = {};
+          var custData = seatmap.customerCentricData || {};
+          getArray(custData.seatPrice).forEach((detail) => {
+            var price = 0;
+            getArray(detail.seatPrice.monetaryDetails).forEach((money) => {
+              if (money.typeQualifier == 'T') {
+                price = money.amount;
+              }
+            });
+
+            getArray(detail.rowDetails).forEach((row) => {
+              var num = row.seatRowNumber;
+              getArray(row.seatOccupationDetails).forEach((sod) => {
+                var col = sod.seatColumn;
+                prices[num + col] = price;
+              });
+            });
+          });
+
+          return (
+            <div className='amadeus-container mt-30'>
+              <h2 className='mb-20'>
+                {d.flightDateInformation.boardPointDetails.trueLocationId} &rarr;{' '}
+                {d.flightDateInformation.offpointDetails.trueLocationId}
+              </h2>
+              {d.upperDeckToggle !== null && d.upperDeckToggle !== undefined && (
+                <button
+                  className=' mb-30 btn btn-outline-dark'
+                  onClick={() =>
+                    setSeatMap((prev) => {
+                      prev[type].data[dIndex].upperDeckToggle =
+                        !prev[type].data[dIndex].upperDeckToggle;
+                      return { ...prev };
+                    })
+                  }
+                >
+                  {d.upperDeckToggle ? 'Show Lower Deck' : 'Show Upper Deck'}
+                </button>
+              )}
+              {/* Legend */}
+              <div className='d-inline-block bg-light-2 pt-10 px-20 mb-20'>
+                <h1>
+                  <th colspan='2' className='text-center mb-10 d-block'>
+                    Legend
+                  </th>
+                </h1>
+                <table className='amadeus-table'>
+                  <tbody className='legend'>
+                    <tr>
+                      <td class='seat seat-sel'> &nbsp; </td>
+                      <span>Selected Seat</span>
+                    </tr>
+                    <tr>
+                      <td class='seat seat-O'> X </td>
+                      <span>Occupied Seat</span>
+                    </tr>
+                    <tr>
+                      <td class='seat seat-CH'> ₹ </td>
+                      <span>Paid Seat</span>
+                    </tr>
+                    <tr>
+                      <td class='seat seat-1'> &nbsp; </td>
+                      <span>Different Class / Reserved for Airport Check-In</span>
+                    </tr>
+                    <tr>
+                      <td class='seat seat-L'> &nbsp; </td>
+                      <span>Extra Leg Room Seat</span>
+                    </tr>
+                    <tr>
+                      <td class='seat seat-E'> &nbsp; </td>
+                      <span>Exit Row Preferred Seat</span>
+                    </tr>
+                    <tr>
+                      <td class='seat seat-OW'> &nbsp; </td>
+                      <span>Overwing Seat</span>
+                    </tr>
+                    <tr>
+                      <td class='seat seat-LA'> &nbsp; </td>
+                      <span>Lavatory</span>
+                    </tr>
+                    <tr>
+                      <td class='seat seat-AL'> &nbsp; </td>
+                      <span>Adjacent to Lavatory</span>
+                    </tr>
+                    <tr>
+                      <td class='seat seat-G'> &nbsp; </td>
+                      <span>Galley</span>
+                    </tr>
+                    <tr>
+                      <td class='seat seat-AG'> &nbsp; </td>
+                      <span>Adjacent to Galley</span>
+                    </tr>
+                    <tr>
+                      <td class='seat seat-1D'> &nbsp; </td>
+                      <span>Limited Recline Seat</span>
+                    </tr>
+                    <tr>
+                      <td class='seat seat-B'> &nbsp; </td>
+                      <span>Seat with Basinette</span>
+                    </tr>
+                    <tr>
+                      <td class='seat seat-BK'> &nbsp; </td>
+                      <span>Bulk Head</span>
+                    </tr>
+                    <tr>
+                      <td class='seat seat-SO'> &nbsp; </td>
+                      <span>Storage</span>
+                    </tr>
+                    <tr>
+                      <td class='seat seat-ST'> &nbsp; </td>
+                      <span>Stairs to Upper Deck</span>
+                    </tr>
+                    <tr>
+                      <td class='seat seat-GN'> &nbsp; </td>
+                      <span>Unavailable / Reserved for Other Usage</span>
+                    </tr>
+                  </tbody>
+                </table>
+                <div className='row my-3'>
+                  {travellerInfo.map((trav, travInd) => {
+                    let seatSelected = '';
+                    if (d?.travellers)
+                      for (let travl of d?.travellers)
+                        if (travl.id === trav.id) seatSelected = travl?.seatNo || '';
+                    return (
+                      <span
+                        style={{ fontWeight: 'bold' }}
+                        className='d-block col-auto'
+                        key={travInd}
+                      >
+                        <span>{trav?.aliases[0]}</span>{' '}
+                        <span
+                          className='text-primary d-inline-block'
+                          style={{ width: '40px' }}
+                        >
+                          - {seatSelected ? seatSelected : 'NA'}
+                        </span>
+                      </span>
+                    );
+                  })}
+                </div>
+              </div>
+              {/* Iterating Cabins */}
+              {getArray(seatmap.cabin).map((cabin, cabinIndex) => {
+                const facilities = getArray(cabin.cabinFacilities || []);
+                const compartment = cabin.compartmentDetails;
+                const defSeatOcc =
+                  compartment.defaultSeatOccupation || cabin.defaultSeatOccupation || 'F';
+                const seatRows = compartment.seatRowRange.number;
+                const isUpperDeck = compartment.cabinZoneCode == 'U';
+
+                // TODO JQuery
+                // if (isUpperDeck) $('#upperDeckToggle').show();
+
+                //Obtain column header and layout
+                var seatFormatArr = [];
+                var prev = '';
+                var spacers = 0;
+                compartment.columnDetails.map((detail) => {
+                  var curr = getArray(detail.description);
+                  // Checking if previous and current column was an A
+                  if (curr.indexOf('A') >= 0 && prev.indexOf('A') >= 0) {
+                    if (++spacers > 2) {
+                      var unspacer = seatFormatArr.lastIndexOf(' ');
+                      seatFormatArr.splice(unspacer, 1);
+                    }
+                    seatFormatArr.push(' ');
+                  }
+                  seatFormatArr.push(detail.seatColumn);
+                  prev = curr;
+                });
+
+                let rowRange = [];
+                for (let i = seatRows[0]; i <= seatRows[1]; i++) {
+                  rowRange.push(i);
+                }
+
+                const props = spacers < 2 ? ['L', 'R'] : ['L', 'C', 'R'];
+                var propIdx, currProp, contObj;
+                var facRow = '';
+                let facRear = '';
+                let facFront = '';
+
+                for (let fac of facilities) {
+                  var facObj = { L: [], C: [], R: [] };
+                  var facDetails = fac.cabinFacilityDetails;
+                  var facLocation = getLocation(facDetails.location, spacers);
+                  facObj[facLocation].push(facDetails.type);
+                  var otrFacDetails = getArray(fac.otherCabinFacilityDetails || []);
+                  otrFacDetails.forEach((facDetails) => {
+                    facLocation = getLocation(facDetails.location, spacers);
+                    facObj[facLocation].push(facDetails.type);
+                  });
+                  facRow = '';
+                  propIdx = 0;
+                  currProp = 'L';
+                  contObj = { L: '', C: '', R: '' };
+                  for (let col of seatFormatArr) {
+                    if (col == ' ') {
+                      contObj[currProp] += '<td class="no-seat"></td>';
+                      currProp = props[++propIdx];
+                    } else {
+                      var facility = facObj[currProp].shift();
+                      if (facility) {
+                        contObj[currProp] +=
+                          '<td class="seat seat-' + facility + '"> &nbsp; </td>';
+                      } else {
+                        if (currProp == 'R') {
+                          contObj[currProp] =
+                            '<td class="no-seat"></td>' + contObj[currProp];
+                        } else if (
+                          currProp == 'C' &&
+                          contObj[currProp].indexOf('</td><td') > 0
+                        ) {
+                          contObj[currProp] = contObj[currProp].replace(
+                            '</td><td',
+                            '</td><td class="no-seat"></td><td'
+                          );
+                        } else {
+                          contObj[currProp] += '<td class="no-seat"></td>';
+                        }
+                      }
+                    }
+                  }
+                  facRow = contObj['L'] + contObj['C'] + contObj['R'];
+                  if (fac.rowLocation == 'F') {
+                    facFront += '<tr><td></td>' + facRow + '</tr>';
+                  } else {
+                    facRear += '<tr><td></td>' + facRow + '</tr>';
+                  }
+                }
+
+                let show = false;
+                if (d.upperDeckToggle !== undefined && d.upperDeckToggle !== null) {
+                  if (d.upperDeckToggle === true && isUpperDeck) {
+                    show = true;
+                  } else if (d.upperDeckToggle === false && !isUpperDeck) {
+                    show = true;
+                  }
+                } else {
+                  show = true;
+                }
+
+                return (
+                  <table
+                    key={cabinIndex}
+                    className={`amadeus-table ${
+                      isUpperDeck ? 'upper-deck' : 'lower-deck'
+                    }`}
+                    style={{ display: `${show ? 'block' : 'none'}` }}
+                  >
+                    <tbody>
+                      {/* facFront */}
+                      <tr>
+                        <td></td>
+                        {seatFormatArr.map((col) => (
+                          <th className='col-name'>{col}</th>
+                        ))}
+                      </tr>
+                      {parse(facFront)}
+                      {/* cont */}
+                      {rowRange.map((i, index) => {
+                        const cabinRow = rows[currRow++];
+                        if (cabinRow !== undefined) {
+                          var rowBefore = '',
+                            rowAfter = '';
+                          const rowFacilities = getArray(cabinRow.cabinFacility || []);
+                          rowFacilities.map((fac) => {
+                            var facObj = { L: [], C: [], R: [] };
+                            var facDetails = fac.cabinFacilityDetails;
+                            var facLocation = getLocation(facDetails.location, spacers);
+                            facObj[facLocation].push(facDetails.type);
+                            var otrFacDetails = getArray(
+                              fac.otherCabinFacilityDetails || []
+                            );
+                            otrFacDetails.forEach((facDetails) => {
+                              facLocation = getLocation(facDetails.location, spacers);
+                              facObj[facLocation].push(facDetails.type);
+                            });
+
+                            facRow = '';
+                            propIdx = 0;
+                            currProp = 'L';
+                            contObj = { L: '', C: '', R: '' };
+                            seatFormatArr.forEach((col) => {
+                              if (col == ' ') {
+                                contObj[currProp] += '<td class="no-seat"></td>';
+                                currProp = props[++propIdx];
+                              } else {
+                                var facility = facObj[currProp].shift();
+                                if (facility) {
+                                  contObj[currProp] +=
+                                    '<td class="seat seat-' +
+                                    facility +
+                                    '"> &nbsp; </td>';
+                                } else {
+                                  if (currProp == 'R') {
+                                    contObj[currProp] =
+                                      '<td class="no-seat"></td>' + contObj[currProp];
+                                  } else if (
+                                    currProp == 'C' &&
+                                    contObj[currProp].indexOf('</td><td') > 0
+                                  ) {
+                                    contObj[currProp] = contObj[currProp].replace(
+                                      '</td><td',
+                                      '</td><td class="no-seat"></td><td'
+                                    );
+                                  } else {
+                                    contObj[currProp] += '<td class="no-seat"></td>';
+                                  }
+                                }
+                              }
+                            });
+                            facRow = contObj['L'] + contObj['C'] + contObj['R'];
+
+                            if (fac.rowLocation == 'F') {
+                              rowBefore += '<tr><td></td>' + facRow + '</tr>';
+                            } else {
+                              rowAfter += '<tr><td></td>' + facRow + '</tr>';
+                            }
+                          });
+                          const row = cabinRow.rowDetails;
+                          const rowNum = row.seatRowNumber || i;
+                          var details = Object.assign(
+                            {},
+                            ...getArray(row.seatOccupationDetails).map((detail) => ({
+                              [detail.seatColumn]: getArray(
+                                detail.seatCharacteristic
+                              ).concat(getArray(detail.seatOccupation)),
+                            }))
+                          );
+
+                          return (
+                            <>
+                              {parse(rowBefore)}
+                              <tr
+                                className={`seat-row ${
+                                  row.rowCharacteristicDetails
+                                    ? 'row-type-' +
+                                      row.rowCharacteristicDetails.rowCharacteristic
+                                    : ''
+                                }`}
+                              >
+                                <th className='row-number'>{rowNum}</th>
+                                {seatFormatArr.map((col, colInd) => {
+                                  if (col !== ' ') {
+                                    var chars = details[col] || getArray(defSeatOcc);
+                                    var price = prices[rowNum + col] || 0;
+                                    // var contents = chars.indexOf('O') >= 0 ? 'X' : (chars.indexOf('E') >= 0 ? 'E' : (chars.indexOf('1') >= 0 ? 'R' : (chars.indexOf('CH') >= 0 ? '$' : '&nbsp;')));
+                                    var contents = '\u00A0';
+                                    // If these codes then seat is unavailable
+                                    if (
+                                      chars.indexOf('O') >= 0 ||
+                                      chars.indexOf('Z') >= 0
+                                    ) {
+                                      contents = 'X';
+                                    } else {
+                                      if (chars.indexOf('CH') >= 0) contents = '₹';
+                                      var reserved = false;
+                                      reserveCodes.forEach((code) => {
+                                        if (chars.indexOf(code) >= 0) {
+                                          reserved = true;
+                                        }
+                                      });
+                                      if (!reserved) chars.push('AVL');
+                                    }
+                                    // If Seat Selected
+                                    let seatSelected = false;
+                                    if (seatMap[type].data[dIndex]?.travellers) {
+                                      for (let x of seatMap[type].data[dIndex]
+                                        .travellers) {
+                                        if (x?.seatNo === rowNum + col) {
+                                          seatSelected = true;
+                                        }
+                                      }
+                                    }
+                                    let conditions =
+                                      chars.includes('AVL') &&
+                                      !chars.includes(1) &&
+                                      !chars.includes('O') &&
+                                      !chars.includes(8) &&
+                                      !chars.includes('GN') &&
+                                      !chars.includes('SO') &&
+                                      !chars.includes('BK') &&
+                                      !chars.includes('ST') &&
+                                      !chars.includes('LA') &&
+                                      !chars.includes('G');
+                                    if (chars.indexOf('8') >= 0) {
+                                      return <td key={colInd} className='no-seat' />;
+                                    } else {
+                                      return (
+                                        <td
+                                          className={`seat seat-${chars.join(' seat-')} ${
+                                            seatSelected ? 'seat-sel' : ''
+                                          } ${conditions ? 'cursor-pointer' : ''}`}
+                                          onClick={() => {
+                                            if (conditions) {
+                                              // Seat Number = rowNum+col
+                                              setSeatMap((prev) => {
+                                                let add = {
+                                                  amount: price,
+                                                  seatNo: rowNum + col,
+                                                };
+                                                let travl =
+                                                  prev[type]?.data[dIndex]?.travellers;
+                                                if (travl) {
+                                                  // Check if the seat is already selected
+                                                  let seatSelected = false;
+                                                  for (
+                                                    let x = travl.length - 1;
+                                                    x >= 0;
+                                                    x--
+                                                  ) {
+                                                    if (
+                                                      travl[x].seatNo ===
+                                                      rowNum + col
+                                                    ) {
+                                                      travl.splice(x, 1);
+                                                      seatSelected = true;
+                                                    }
+                                                  }
+                                                  if (!seatSelected) {
+                                                    // If the traveller is going to repeat
+                                                    if (
+                                                      travl.length ===
+                                                      travellerInfo.length
+                                                    ) {
+                                                      travl.push({
+                                                        ...travl[0],
+                                                        ...add,
+                                                      });
+                                                      travl.splice(0, 1);
+                                                    } else {
+                                                      let travlToAdd = false;
+                                                      for (let x of travellerInfo) {
+                                                        let match = false;
+                                                        for (let y of travl) {
+                                                          if (y.id === x.id) {
+                                                            match = true;
+                                                          }
+                                                        }
+                                                        if (!match && !travlToAdd) {
+                                                          travl.push({
+                                                            ...x,
+                                                            ...add,
+                                                          });
+                                                          travlToAdd = true;
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                } else {
+                                                  travl = [
+                                                    { ...travellerInfo[0], ...add },
+                                                  ];
+                                                }
+                                                prev[type].data[dIndex]['travellers'] =
+                                                  travl;
+                                                return { ...prev };
+                                              });
+                                            }
+                                          }}
+                                        >
+                                          <a
+                                            data-tooltip-id={
+                                              conditions ? rowNum + col : undefined
+                                            }
+                                            data-tooltip-content={
+                                              conditions
+                                                ? `Amount - ${price.toLocaleString(
+                                                    'en-IN',
+                                                    {
+                                                      maximumFractionDigits: 2,
+                                                      style: 'currency',
+                                                      currency: 'INR',
+                                                    }
+                                                  )}`
+                                                : undefined
+                                            }
+                                            data-tooltip-place='top'
+                                          >
+                                            {contents}
+                                          </a>
+                                          <ReactTooltip id={rowNum + col} />
+                                        </td>
+                                      );
+                                    }
+                                  } else {
+                                    return <td key={colInd} className='no-seat' />;
+                                  }
+                                })}
+                              </tr>
+                              {parse(rowAfter)}
+                            </>
+                          );
+                        }
+                      })}
+                      {/* facRear */}
+                      {parse(facRear)}
+                    </tbody>
+                  </table>
+                );
+              })}
+            </div>
+          );
+        })}
+      </>
     );
-    // return <div>{html}</div>;
   };
 
   return (
     <section className='pt-40 pb-40 bg-light-2'>
       <div className='container'>
+        <LoadingBar
+          color='#19f9fc'
+          progress={progress}
+          onLoaderFinished={() => setProgress(0)}
+        />
         <h1>Flight Seatmaps (Optional)</h1>
         {/* To */}
         {seatMap?.to?.data && (
@@ -751,7 +1722,7 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
                   <TJSeatMapRender data={seatMap.to.data} type='to' />
                 ) : // AA
                 seatMap?.to?.provider === 'aa' ? (
-                  <></>
+                  <AASeatMapRender data={seatMap.to.data} type='to' />
                 ) : // AD
                 seatMap?.to?.provider === 'ad' ? (
                   <ADSeatMapRender data={seatMap.to.data} type='to' />
@@ -773,10 +1744,10 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
                   <TJSeatMapRender data={seatMap.from.data} type='from' />
                 ) : // AA
                 seatMap?.from?.provider === 'aa' ? (
-                  <></>
+                  <AASeatMapRender data={seatMap.from.data} type='from' />
                 ) : // AD
                 seatMap?.from?.provider === 'ad' ? (
-                  <></>
+                  <ADSeatMapRender data={seatMap.from.data} type='from' />
                 ) : (
                   <></>
                 )
@@ -795,10 +1766,10 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
                   <TJSeatMapRender data={seatMap.combined.data} type='combined' />
                 ) : // AA
                 seatMap?.combined?.provider === 'aa' ? (
-                  <></>
+                  <AASeatMapRender data={seatMap.combined.data} type='combined' />
                 ) : // AD
                 seatMap?.combined?.provider === 'ad' ? (
-                  <></>
+                  <ADSeatMapRender data={seatMap.combined.data} type='combined' />
                 ) : (
                   <></>
                 )
@@ -818,7 +1789,7 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
               {Object.entries(PNR).map(([key, value], index) => (
                 <>
                   {value && (
-                    <div>
+                    <div key={index}>
                       {/* TJ */}
                       {value.provider === 'tj' &&
                         value.data?.data?.tripInfos?.[0].sI?.map((element, ind) => (
@@ -828,7 +1799,6 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
                                 <label>
                                   {element.da.code} &rarr; {element.aa.code}
                                 </label>
-                                {console.log('element', element)}
                                 <Select
                                   options={[
                                     {
@@ -894,7 +1864,118 @@ function Seatmap({ seatMaps, PNR, travellerInfos }) {
                           </>
                         ))}
                       {/* AA */}
+                      {value.provider === 'aa' &&
+                        value.data?.ssr?.legSsrs?.map((element, ind) => (
+                          <>
+                            {element ? (
+                              <div className='col-md-6 form-input-select mt-10' key={ind}>
+                                <label>
+                                  {element.legDetails.origin} &rarr;{' '}
+                                  {element.legDetails.destination}
+                                </label>
+                                <Select
+                                  options={[
+                                    {
+                                      value: {
+                                        legKey: element.legKey,
+                                      },
+                                      label: 'No Preference',
+                                    },
+                                    ...element?.ssrs
+                                      .filter((el) => el.ssrType === 2)
+                                      .map((el) => ({
+                                        value: { ...el, legKey: element.legKey },
+                                        label:
+                                          el.name +
+                                          ' - ' +
+                                          Object.values(
+                                            el.passengersAvailability
+                                          )[0].price.toLocaleString('en-IN', {
+                                            maximumFractionDigits: 2,
+                                            style: 'currency',
+                                            currency: 'INR',
+                                          }),
+                                      })),
+                                  ]}
+                                  defaultValue={{
+                                    value: {
+                                      legKey: element.legKey,
+                                    },
+                                    label: 'No Preference',
+                                  }}
+                                  // value={element.seat_preference}
+                                  onChange={(id) =>
+                                    setTravellerInfo((prev) => {
+                                      for (let traveller of prev) {
+                                        if (traveller.id === travl.id) {
+                                          if (traveller.trip_meals[key]) {
+                                            let exists = false;
+                                            for (
+                                              let i = 0;
+                                              i < traveller.trip_meals[key].length;
+                                              i++
+                                            ) {
+                                              if (
+                                                element.legKey ===
+                                                traveller.trip_meals[key][i].value.legKey
+                                              ) {
+                                                traveller.trip_meals[key][i] = id;
+                                                exists = true;
+                                              }
+                                            }
+                                            if (!exists) {
+                                              traveller.trip_meals[key].push(id);
+                                            }
+                                          } else {
+                                            traveller.trip_meals[key] = [id];
+                                          }
+                                        }
+                                      }
+                                      return [...prev];
+                                    })
+                                  }
+                                />
+                              </div>
+                            ) : (
+                              <></>
+                            )}
+                          </>
+                        ))}
                       {/* AD */}
+                      {value.provider === 'ad' && (
+                        <div className='col-md-6 form-input-select mt-10'>
+                          <label>
+                            {Object.values(value.data.segments)[0].from} &rarr;{' '}
+                            {Object.values(value.data.segments).at(-1).to}
+                          </label>
+                          <Select
+                            options={amadeusMealOptions}
+                            defaultValue={
+                              travl.meal_preference
+                                ? amadeusMealOptions.map((meal) => {
+                                    if (meal.value === travl.meal_preference) {
+                                      return meal;
+                                    }
+                                  })
+                                : {
+                                    value: '_',
+                                    label: 'No Preference',
+                                  }
+                            }
+                            // value={element.seat_preference}
+                            onChange={(id) =>
+                              setTravellerInfo((prev) => {
+                                for (let traveller of prev) {
+                                  if (traveller.id === travl.id) {
+                                    traveller.trip_meals[key] = [id];
+                                  }
+                                }
+                                return [...prev];
+                              })
+                            }
+                          />
+                        </div>
+                      )}
                     </div>
                   )}
                 </>
