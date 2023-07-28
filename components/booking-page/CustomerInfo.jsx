@@ -8,6 +8,8 @@ import Select from 'react-select';
 import { DateObject } from 'react-multi-date-picker';
 import { useRouter } from 'next/router';
 import LoadingBar from 'react-top-loading-bar';
+import { TiTickOutline } from 'react-icons/ti';
+import { bookingDetails } from '../../pages/test/temp';
 
 const CustomerInfo = () => {
   const [progress, setProgress] = useState(0);
@@ -15,6 +17,10 @@ const CustomerInfo = () => {
   const rooms = useSelector((state) => state.hotelSearch.value.rooms);
   const PNR = useSelector((state) => state.hotelSearch.value.PNR);
   const [confirmationData, setConfirmationData] = useState(null);
+  const age = useSelector((state) => state.hotelSearch.value.age);
+  const totalAdults = age.totalAdult;
+  const totalChildren = age.totalChildren;
+  const [stage, setStage] = useState(0);
   useEffect(() => {
     if (!PNR || rooms.length < 1) {
       router.back();
@@ -144,7 +150,19 @@ const CustomerInfo = () => {
     );
     setProgress(100);
     if (res?.success) {
-      setConfirmationData(res.data);
+      const bookingDetails = await customAPICall(
+        'tj/v1/htl/booking',
+        'get',
+        {},
+        {
+          params: { id: res.data.bookingId },
+        },
+        true
+      );
+      if (bookingDetails?.success) {
+        setConfirmationData(bookingDetails.data);
+      }
+      setStage(1);
       sendToast('success', 'Booking Successful', 4000);
     } else {
       sendToast(
@@ -162,7 +180,7 @@ const CustomerInfo = () => {
         onLoaderFinished={() => setProgress(0)}
       />
       {/* Stage 0 */}
-      {!confirmationData && (
+      {stage === 0 && (
         <>
           <div className='col-xl-7 col-lg-8 mt-30'>
             <h2 className='fw-500 mt-40 md:mt-24'>Review Travellers</h2>
@@ -303,7 +321,104 @@ const CustomerInfo = () => {
         </>
       )}
       {/* Stage 1 */}
-      {confirmationData && <div></div>}
+      {stage === 1 && (
+        <div className='border-light rounded-4 px-20 py-20'>
+          <h2 className='text-center mb-40 d-flex items-center justify-center gap-2'>
+            <TiTickOutline className='text-50 text-success' /> Booking Successful
+          </h2>
+          {confirmationData && (
+            <div className='border-light rounded-4  mx-4 my-4 px-20 py-20'>
+              <div className='row x-gap-20 y-gap-20'>
+                <div className='col-lg-4 text-center'>
+                  <h3 className='text-primary'>Hotel:</h3>
+                  <h5 className='text-secondary'>
+                    {confirmationData.itemInfos.HOTEL.hInfo.name}
+                  </h5>
+                </div>
+                <div className='col-lg-4 text-center'>
+                  <h3 className='text-primary'>Star Rating:</h3>
+                  <h5 className='text-secondary'>
+                    {confirmationData.itemInfos.HOTEL.hInfo.rt}
+                  </h5>
+                </div>
+                <div className='col-lg-4 text-center'>
+                  <h3 className='text-primary'>Traveller Total:</h3>
+                  <h5 className='text-secondary'>
+                    {totalAdults > 0
+                      ? totalAdults > 1
+                        ? totalAdults + ' Adults'
+                        : totalAdults + ' Adult'
+                      : ''}
+                    {totalChildren > 0
+                      ? totalChildren > 1
+                        ? ', ' + totalChildren + ' Children'
+                        : ', ' + totalChildren + ' Child'
+                      : ''}
+                  </h5>
+                </div>
+                <div className='col-lg-6 text-center'>
+                  <h3 className='text-primary'>Check-In / Check-Out:</h3>
+                  <h5 className='text-secondary'>
+                    {new DateObject({
+                      date: PNR.data.query.checkinDate,
+                      format: 'YYYY-MM-DD',
+                    }).format('D MMMM YYYY')}{' '}
+                    ~{' '}
+                    {new DateObject({
+                      date: PNR.data.query.checkoutDate,
+                      format: 'YYYY-MM-DD',
+                    }).format('D MMMM YYYY')}
+                  </h5>
+                </div>
+                <div className='col-lg-6 text-center'>
+                  <h3 className='text-primary'>Rooms:</h3>
+                  <h5 className='text-secondary'>
+                    {PNR.room.ris.map((element, index) => (
+                      <div className='fw-500' key={element.id}>
+                        <span className='text-black' style={{ fontWeight: 'bold' }}>
+                          {index + 1}.
+                        </span>{' '}
+                        {element.rc}
+                      </div>
+                    ))}
+                  </h5>
+                </div>
+                {confirmationData.itemInfos?.HOTEL?.hInfo?.ops &&
+                  confirmationData.itemInfos?.HOTEL?.hInfo?.ops[0]?.inst && (
+                    <div className='col-lg-12 text-center'>
+                      <h3 className='text-primary'>Instructions:</h3>
+                      <ul className='list-disc'>
+                        {confirmationData.itemInfos?.HOTEL?.hInfo?.ops[0].inst.map(
+                          (inst, instI) => (
+                            <li className='text-secondary'>
+                              <h5 className='d-inline'>
+                                <span
+                                  className='text-black'
+                                  style={{ fontWeight: 'bold' }}
+                                >
+                                  {inst?.type &&
+                                    inst.type
+                                      .split('_')
+                                      .map(
+                                        (split) =>
+                                          `${split.charAt(0).toUpperCase()}${split
+                                            .slice(1)
+                                            .toLowerCase()} `
+                                      )}
+                                </span>{' '}
+                                : {inst.msg}
+                              </h5>
+                            </li>
+                          )
+                        )}
+                      </ul>
+                    </div>
+                  )}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
       {/*  */}
     </>
   );

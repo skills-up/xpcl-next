@@ -53,6 +53,11 @@ const HotelSingleV1Dynamic = () => {
     );
     setProgress(100);
     if (res?.success) {
+      if (res.data.hotel.ops.length === 0) {
+        sendToast('error', 'No rooms available', 4000);
+        router.back();
+        return;
+      }
       let dat = res.data;
       let a = dat.hotel.img;
       let out = [];
@@ -188,15 +193,13 @@ const HotelSingleV1Dynamic = () => {
               {/* Map */}
               {showMap && (
                 <div style={{ width: '100%', height: '100vh' }}>
-                  Test
-                  {data?.hotel?.gl?.lt} {data?.hotel?.gl?.ln}
                   <GoogleMapReact
-                    bootstrapURLKeys={{ key: 'AIzaSyBPwPzoJGbMKBp5gfarlcmuxW0Vw4S5F5U' }}
+                    bootstrapURLKeys={{ key: process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY }}
                     defaultCenter={{
                       lat: +data?.hotel?.gl?.lt,
                       lng: +data?.hotel?.gl?.ln,
                     }}
-                    defaultZoom={20}
+                    defaultZoom={11}
                   ></GoogleMapReact>
                 </div>
               )}
@@ -235,7 +238,7 @@ const HotelSingleV1Dynamic = () => {
                   {/* End .galleryGrid__item */}
                 </div>
               </Gallery>
-              {data.hotel.img.length > 5 && (
+              {images.length > 5 && (
                 <div className='d-flex justify-center mt-20'>
                   <button
                     className='button col-12 h-60 px-24 -dark-1 bg-blue-1 text-white'
