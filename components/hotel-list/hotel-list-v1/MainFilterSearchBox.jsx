@@ -166,7 +166,7 @@ const MainFilterSearchBox = () => {
           </div>
           {/* End Location Flying From */}
 
-          <div className='hotel-search-select pt-5 d-flex gap-1 items-center justify-center'>
+          <div className='hotel-date-select pt-5 d-flex gap-1 items-center justify-center'>
             <div>
               <label>
                 Check In - Check Out<span className='text-danger'>*</span>

@@ -273,7 +273,7 @@ const Datatable = ({
                   }}
                   className='form-control mx-1'
                   style={{
-                    width: '30px',
+                    width: '44px',
                     textAlign: 'center',
                     fontWeight: '700',
                     display: 'inline',
