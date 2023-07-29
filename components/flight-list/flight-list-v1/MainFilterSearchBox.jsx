@@ -296,6 +296,9 @@ const MainFilterSearchBox = () => {
             <ReactSwitch
               onChange={() => setReturnFlight((prev) => !prev)}
               checked={returnFlight}
+              uncheckedIcon={false}
+              checkedIcon={false}
+              offColor='#080'
             />
             <label>Return Trip</label>
           </div>

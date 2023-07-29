@@ -68,6 +68,10 @@ const MainFilterSearchBox = () => {
     }
     let currentTime = Date.now();
     for (let room of rooms) {
+      if (!room.travellers || room.travellers.length === 0) {
+        sendToast('error', 'Each room should have a traveller..', 4000);
+        return;
+      }
       let temp = { adults: 0, childAge: [] };
       for (let travl of room.travellers) {
         for (let traveller of travellers.data) {
@@ -130,6 +134,10 @@ const MainFilterSearchBox = () => {
       dispatch(setRoomsRedux(rooms));
       dispatch(setAge({ totalAdult, totalChildren }));
       dispatch(setSearchData(response.data));
+      setTimeout(() => {
+        const el = document.getElementById('hotel-properties');
+        if (el) el.scrollIntoView();
+      }, 1000);
     } else {
       sendToast('error', 'No Rooms Found', 4000);
     }

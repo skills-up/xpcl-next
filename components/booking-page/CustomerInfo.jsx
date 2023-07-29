@@ -325,94 +325,183 @@ const CustomerInfo = () => {
             <TiTickOutline className='text-50 text-success' /> Booking Successful
           </h2>
           {confirmationData && (
-            <div className='border-light rounded-4  mx-4 my-4 px-20 py-20'>
-              <div className='row x-gap-20 y-gap-20'>
-                <div className='col-lg-4 text-center'>
-                  <h3 className='text-primary'>Hotel:</h3>
-                  <h5 className='text-secondary'>
-                    {confirmationData.itemInfos.HOTEL.hInfo.name}
-                  </h5>
-                </div>
-                <div className='col-lg-4 text-center'>
-                  <h3 className='text-primary'>Star Rating:</h3>
-                  <h5 className='text-secondary'>
-                    {confirmationData.itemInfos.HOTEL.hInfo.rt}
-                  </h5>
-                </div>
-                <div className='col-lg-4 text-center'>
-                  <h3 className='text-primary'>Traveller Total:</h3>
-                  <h5 className='text-secondary'>
-                    {totalAdults > 0
-                      ? totalAdults > 1
-                        ? totalAdults + ' Adults'
-                        : totalAdults + ' Adult'
-                      : ''}
-                    {totalChildren > 0
-                      ? totalChildren > 1
-                        ? ', ' + totalChildren + ' Children'
-                        : ', ' + totalChildren + ' Child'
-                      : ''}
-                  </h5>
-                </div>
-                <div className='col-lg-6 text-center'>
-                  <h3 className='text-primary'>Check-In / Check-Out:</h3>
-                  <h5 className='text-secondary'>
-                    {new DateObject({
-                      date: PNR.data.query.checkinDate,
-                      format: 'YYYY-MM-DD',
-                    }).format('D MMMM YYYY')}{' '}
-                    ~{' '}
-                    {new DateObject({
-                      date: PNR.data.query.checkoutDate,
-                      format: 'YYYY-MM-DD',
-                    }).format('D MMMM YYYY')}
-                  </h5>
-                </div>
-                <div className='col-lg-6 text-center'>
-                  <h3 className='text-primary'>Rooms:</h3>
-                  <h5 className='text-secondary'>
-                    {PNR.room.ris.map((element, index) => (
-                      <div className='fw-500' key={element.id}>
-                        <span className='text-black' style={{ fontWeight: 'bold' }}>
-                          {index + 1}.
-                        </span>{' '}
-                        {element.rc}
-                      </div>
-                    ))}
-                  </h5>
-                </div>
-                {confirmationData.itemInfos?.HOTEL?.hInfo?.ops &&
-                  confirmationData.itemInfos?.HOTEL?.hInfo?.ops[0]?.inst && (
-                    <div className='col-lg-12 text-center'>
-                      <h3 className='text-primary'>Instructions:</h3>
-                      <ul className='list-disc'>
-                        {confirmationData.itemInfos?.HOTEL?.hInfo?.ops[0].inst.map(
-                          (inst, instI) => (
-                            <li className='text-secondary'>
-                              <h5 className='d-inline'>
-                                <span
-                                  className='text-black'
-                                  style={{ fontWeight: 'bold' }}
-                                >
-                                  {inst?.type &&
-                                    inst.type
-                                      .split('_')
-                                      .map(
-                                        (split) =>
-                                          `${split.charAt(0).toUpperCase()}${split
-                                            .slice(1)
-                                            .toLowerCase()} `
-                                      )}
-                                </span>{' '}
-                                : {inst.msg}
-                              </h5>
-                            </li>
-                          )
-                        )}
-                      </ul>
-                    </div>
+            <div className='view-table'>
+              <table>
+                <tbody>
+                  <tr>
+                    <td style={{ fontWeight: 'bold' }}>Hotel:</td>
+                    <td className='text-secondary'>
+                      {confirmationData.itemInfos.HOTEL.hInfo.name}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style={{ fontWeight: 'bold' }}>Booking ID:</td>
+                    <td className='text-secondary'>{confirmationData.order.bookingId}</td>
+                  </tr>
+                  <tr>
+                    <td style={{ fontWeight: 'bold' }}>Total Amount:</td>
+                    <td className='text-secondary'>
+                      {PNR.room.tp.toLocaleString('en-IN', {
+                        maximumFractionDigits: 2,
+                        style: 'currency',
+                        currency: 'INR',
+                      })}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style={{ fontWeight: 'bold' }}>Address:</td>
+                    <td className='text-secondary'>
+                      {confirmationData.itemInfos.HOTEL.hInfo.ad?.adr}
+                      {confirmationData.itemInfos.HOTEL.hInfo.ad?.adr2 &&
+                        ', ' + confirmationData.itemInfos.HOTEL.hInfo.ad?.adr2}
+                      {confirmationData.itemInfos.HOTEL.hInfo.ad?.city?.name &&
+                        ', ' + confirmationData.itemInfos.HOTEL.hInfo.ad?.city?.name}
+                      {confirmationData.itemInfos.HOTEL.hInfo.ad?.state?.name &&
+                        ', ' + confirmationData.itemInfos.HOTEL.hInfo.ad?.state?.name}
+                      {confirmationData.itemInfos.HOTEL.hInfo.ad?.country?.name &&
+                        ', ' + confirmationData.itemInfos.HOTEL.hInfo.ad?.country?.name}
+                      {confirmationData.itemInfos.HOTEL.hInfo.ad?.postalCode &&
+                        ' - ' + confirmationData.itemInfos.HOTEL.hInfo.ad?.postalCode}
+                    </td>
+                  </tr>
+                  {confirmationData.itemInfos.HOTEL.hInfo?.cnt?.ph && (
+                    <tr>
+                      <td style={{ fontWeight: 'bold' }}>Contact</td>
+                      <td className='text-secondary'>
+                        {confirmationData.itemInfos.HOTEL.hInfo?.cnt?.ph}
+                      </td>
+                    </tr>
                   )}
-              </div>
+                  <tr>
+                    <td style={{ fontWeight: 'bold' }}>Star Rating:</td>
+                    <td className='text-secondary'>
+                      {confirmationData.itemInfos.HOTEL.hInfo.rt}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style={{ fontWeight: 'bold' }}>Check-In / Check-Out:</td>
+                    <td className='text-secondary'>
+                      {new DateObject({
+                        date: PNR.data.query.checkinDate,
+                        format: 'YYYY-MM-DD',
+                      }).format('D MMMM YYYY')}{' '}
+                      ~{' '}
+                      {new DateObject({
+                        date: PNR.data.query.checkoutDate,
+                        format: 'YYYY-MM-DD',
+                      }).format('D MMMM YYYY')}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style={{ fontWeight: 'bold' }}>Traveller Total:</td>
+                    <td className='text-secondary'>
+                      {totalAdults > 0
+                        ? totalAdults > 1
+                          ? totalAdults + ' Adults'
+                          : totalAdults + ' Adult'
+                        : ''}
+                      {totalChildren > 0
+                        ? totalChildren > 1
+                          ? ', ' + totalChildren + ' Children'
+                          : ', ' + totalChildren + ' Child'
+                        : ''}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style={{ fontWeight: 'bold' }}>Rooms:</td>
+                    <td className='text-secondary'>
+                      {console.log('room', rooms)}
+                      {PNR.room.ris.map((element, index) => {
+                        let travDetails = [];
+                        for (let travl of rooms[index]?.travellers) {
+                          for (let traveller of travellers) {
+                            if (travl.value === traveller.id) {
+                              travDetails.push(traveller);
+                            }
+                          }
+                        }
+                        console.log('trav', travDetails);
+                        return (
+                          <div className='fw-500' key={element.id}>
+                            Room {index + 1} - {element.rc}
+                            <div className='ml-20 lg:ml-10'>
+                              {travDetails.map((traveller, travellerI) => (
+                                <>
+                                  Traveller {travellerI + 1} - {traveller.aliases[0]}
+                                  <div className='ml-20'>
+                                    Title:{' '}
+                                    <span className='fw-300'>
+                                      {traveller.prefix?.value}
+                                    </span>
+                                  </div>
+                                  <div className='ml-20'>
+                                    First Name:{' '}
+                                    <span className='fw-300'>{traveller.first_name}</span>
+                                  </div>
+                                  <div className='ml-20'>
+                                    Last Name:{' '}
+                                    <span className='fw-300'>{traveller.last_name}</span>
+                                  </div>
+                                  {PNR.room.ipr && traveller?.pan_number && (
+                                    <div className='ml-20'>
+                                      PAN Number:{' '}
+                                      <span className='fw-300'>
+                                        {traveller.pan_number}
+                                      </span>
+                                    </div>
+                                  )}
+                                  {PNR.room.ipm && traveller?.passport_number && (
+                                    <div className='ml-20'>
+                                      Passport Number:{' '}
+                                      <span className='fw-300'>
+                                        {traveller.passport_number}
+                                      </span>
+                                    </div>
+                                  )}
+                                </>
+                              ))}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </td>
+                  </tr>
+                  {confirmationData.itemInfos?.HOTEL?.hInfo?.ops &&
+                    confirmationData.itemInfos?.HOTEL?.hInfo?.ops[0]?.inst &&
+                    confirmationData.itemInfos?.HOTEL?.hInfo?.ops?.inst?.length > 0 && (
+                      <tr>
+                        <td style={{ fontWeight: 'bold' }}>Instructions:</td>
+                        <td>
+                          <ul className='list-disc'>
+                            {confirmationData.itemInfos?.HOTEL?.hInfo?.ops[0].inst.map(
+                              (inst, instI) => (
+                                <li className='text-secondary'>
+                                  <h5 className='d-inline'>
+                                    <span
+                                      className='text-black'
+                                      style={{ fontWeight: 'bold' }}
+                                    >
+                                      {inst?.type &&
+                                        inst.type
+                                          .split('_')
+                                          .map(
+                                            (split) =>
+                                              `${split.charAt(0).toUpperCase()}${split
+                                                .slice(1)
+                                                .toLowerCase()} `
+                                          )}
+                                    </span>{' '}
+                                    : {inst.msg}
+                                  </h5>
+                                </li>
+                              )
+                            )}
+                          </ul>
+                        </td>
+                      </tr>
+                    )}
+                </tbody>
+              </table>
             </div>
           )}
         </div>

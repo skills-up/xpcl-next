@@ -67,15 +67,12 @@ const HotelSingleV1Dynamic = () => {
           out.push(e);
         } else if (e.url && e.sz) {
           const curr = e.sz;
-          if (i === 0) {
+          if (curr === 'Standard') {
             out.push({ url: e.url, sz: curr });
-          } else {
-            if (a[i - 1]?.sz === 'Standard' && curr !== 'XL') {
-              out.push({ url: e.url, sz: curr });
-            }
           }
         }
       }
+      console.log('out', a.length);
       setImages(out);
       setData(dat);
     } else {
@@ -143,10 +140,13 @@ const HotelSingleV1Dynamic = () => {
                     <div className='col-auto'>
                       <div className='d-flex items-center text-15 text-light-1'>
                         <i className='icon-location-2 text-16 mr-5' />
-                        {data.hotel.ad.adr}
-                        {data.hotel?.ad?.adr2 ? ', ' + data.hotel?.ad?.adr2 : ''},
-                        {' ' + data.hotel?.ad?.city?.name}, {data.hotel?.ad?.state?.name},{' '}
-                        {data.hotel?.ad?.country?.name} - {data.hotel.ad.postalCode}
+                        {data.hotel.ad?.adr}
+                        {data.hotel.ad?.adr2 && ', ' + data.hotel.ad?.adr2}
+                        {data.hotel.ad?.city?.name && ', ' + data.hotel.ad?.city?.name}
+                        {data.hotel.ad?.state?.name && ', ' + data.hotel.ad?.state?.name}
+                        {data.hotel.ad?.country?.name &&
+                          ', ' + data.hotel.ad?.country?.name}
+                        {data.hotel.ad?.postalCode && ' - ' + data.hotel.ad?.postalCode}
                       </div>
                     </div>
                     <div className='col-auto'>
@@ -199,7 +199,7 @@ const HotelSingleV1Dynamic = () => {
                       lat: +data?.hotel?.gl?.lt,
                       lng: +data?.hotel?.gl?.ln,
                     }}
-                    defaultZoom={11}
+                    defaultZoom={20}
                   ></GoogleMapReact>
                 </div>
               )}
@@ -208,20 +208,16 @@ const HotelSingleV1Dynamic = () => {
                 <div className='galleryGrid -type-1 pt-30'>
                   {images.map((image, imageIndex) => (
                     <>
-                      {((!isLoadMore && imageIndex < 5) || isLoadMore) && (
+                      {((!isLoadMore && imageIndex < 8) || isLoadMore) && (
                         <div key={imageIndex}>
                           <Item
-                            width={image?.sz === 'XL' ? 660 : 450}
-                            height={image?.sz === 'XL' ? 660 : 450}
+                            width={450}
+                            height={450}
                             original={image?.url}
                             thumbnail={image?.url}
                           >
                             {({ ref, open }) => (
                               <img
-                                style={{
-                                  width: image?.sz === 'XL' ? '660' : '450',
-                                  height: image?.sz === 'XL' ? '660' : '450',
-                                }}
                                 src={image?.url}
                                 ref={ref}
                                 onClick={open}
@@ -238,7 +234,7 @@ const HotelSingleV1Dynamic = () => {
                   {/* End .galleryGrid__item */}
                 </div>
               </Gallery>
-              {images.length > 5 && (
+              {images.length > 8 && (
                 <div className='d-flex justify-center mt-20'>
                   <button
                     className='button col-12 h-60 px-24 -dark-1 bg-blue-1 text-white'

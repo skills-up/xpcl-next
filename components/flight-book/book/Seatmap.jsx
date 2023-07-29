@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { createItem, customAPICall } from '../../../api/xplorzApi';
 import { sendToast } from '../../../utils/toastify';
 import Seat from '../common/Seat';
@@ -11,6 +11,7 @@ import Select from 'react-select';
 // import { aaSeatMap, adSeatMap } from '../../../pages/test/temp';
 import parse from 'html-react-parser';
 import LoadingBar from 'react-top-loading-bar';
+import { setSelectedBookings } from '../../../features/flightSearch/flightSearchSlice';
 
 function Seatmap({ seatMaps, PNRS, travellerInfos }) {
   const [PNR, setPNR] = PNRS;
@@ -22,6 +23,8 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
   const travellerDOBS = useSelector((state) => state.flightSearch.value.travellerDOBS);
   const [travellerInfo, setTravellerInfo] = travellerInfos;
   const [progress, setProgress] = useState(0);
+  const [alerts, setAlerts] = useState([]);
+  const dispatch = useDispatch();
   // Fetch Flight Details for PNRs
   // Save Them To Seatmaps
   // Display Seatmaps
@@ -46,6 +49,11 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
   useEffect(() => {
     getData();
   }, []);
+
+  useEffect(
+    () => console.log('alerts', alerts, selectedBookings),
+    [alerts, selectedBookings]
+  );
 
   useEffect(() => {
     console.log('Seatmap', seatMap);
@@ -84,6 +92,25 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                 data: response.data,
                 provider: 'tj',
               };
+              // Checking if any fair changes occurred
+              if (value?.data?.data?.alerts && value?.data?.data?.alerts?.length > 0) {
+                console.log('true');
+                for (let alert of value?.data?.data?.alerts) {
+                  if (
+                    alert?.oldFare &&
+                    alert?.newFare &&
+                    alert?.oldFare !== alert?.newFare
+                  ) {
+                    setAlerts((prev) => [...prev, { type: key, alert }]);
+                    dispatch(
+                      setSelectedBookings({
+                        ...selectedBookings,
+                        [key]: { ...selectedBookings[key], total: alert?.newFare },
+                      })
+                    );
+                  }
+                }
+              }
             }
           }
           // AA
@@ -1710,6 +1737,30 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
           progress={progress}
           onLoaderFinished={() => setProgress(0)}
         />
+        {/* Alerts */}
+        {alerts && alerts.length > 0 && (
+          <div className='bg-danger mb-10 px-20 py-10 text-white'>
+            <h4>Fair Change Alert</h4>
+            <ul className='list-disc'>
+              {alerts.map((a, aIndex) => (
+                <li>
+                  The fair for your{' '}
+                  <span style={{ fontWeight: 'bold' }}>
+                    {a.type === 'to'
+                      ? 'Onward'
+                      : a.type === 'from'
+                      ? 'Return'
+                      : 'Onward & Return'}{' '}
+                    Trip{' '}
+                  </span>{' '}
+                  has changed from {a.alert.oldFare} to {a.alert.oldFare}. Please proceed
+                  accordingly.
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {/* Seatmaps */}
         <h1>Flight Seatmaps (Optional)</h1>
         {/* To */}
         {seatMap?.to?.data && (
