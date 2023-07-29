@@ -142,11 +142,22 @@ const AvailableRooms = ({ hotel, onRoomSelect, rooms }) => {
                         })}
                       </div>
                       <div className='text-15 fw-500 mt-15'>
-                        You&lsquo;ll be taken to the next step
+                        Price Breakup (Base Fare + Taxes & Fee):
                       </div>
                       <ul className='list-disc y-gap-4 pt-5'>
-                        <li className='text-14'>Confirming Traveller</li>
-                        <li className='text-14'>No registration required</li>
+                        <li className='text-14'>
+                          {h?.tfcs?.BF?.toLocaleString('en-IN', {
+                            maximumFractionDigits: 2,
+                            style: 'currency',
+                            currency: 'INR',
+                          }) || 0}{' '}
+                          +{' '}
+                          {h?.tfcs?.TAF?.toLocaleString('en-IN', {
+                            maximumFractionDigits: 2,
+                            style: 'currency',
+                            currency: 'INR',
+                          }) || 0}
+                        </li>
                       </ul>
                     </div>
                     {/* End right price info */}

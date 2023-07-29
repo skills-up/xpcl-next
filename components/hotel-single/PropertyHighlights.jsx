@@ -134,7 +134,7 @@ const PropertyHighlights2 = ({ facilities }) => {
           if (ic.text.toLowerCase() === item.toLowerCase()) icon = ic.icon;
 
         return (
-          <div className='col-lg-3 col-6' key={index}>
+          <div className='col-xl-2 col-lg-3 col-6' key={index}>
             <div className='text-center'>
               {icon}
               <div className='text-15 lh-1 mt-10'>{item}</div>

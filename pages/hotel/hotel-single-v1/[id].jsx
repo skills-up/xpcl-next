@@ -15,6 +15,7 @@ import PropertyHighlights from '../../../components/hotel-single/PropertyHighlig
 import { setPNR } from '../../../features/hotelSearch/hotelSearchSlice';
 import { sendToast } from '../../../utils/toastify';
 import LoadingBar from 'react-top-loading-bar';
+import GoogleMapReact from 'google-map-react';
 
 const HotelSingleV1Dynamic = () => {
   const [progress, setProgress] = useState(0);
@@ -24,8 +25,10 @@ const HotelSingleV1Dynamic = () => {
   const id = router.query.id;
   const [data, setData] = useState(null);
   const dispatch = useDispatch();
+  const [images, setImages] = useState([]);
   const [isLoadMore, setIsLoadMore] = useState(false);
   const rooms = useSelector((state) => state.hotelSearch.value.rooms);
+  const [showMap, setShowMap] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -50,7 +53,31 @@ const HotelSingleV1Dynamic = () => {
     );
     setProgress(100);
     if (res?.success) {
-      setData(res.data);
+      if (res.data.hotel.ops.length === 0) {
+        sendToast('error', 'No rooms available', 4000);
+        router.back();
+        return;
+      }
+      let dat = res.data;
+      let a = dat.hotel.img;
+      let out = [];
+      for (let i = 0; i < a.length; i++) {
+        const e = a[i];
+        if (e.tns && e.url) {
+          out.push(e);
+        } else if (e.url && e.sz) {
+          const curr = e.sz;
+          if (i === 0) {
+            out.push({ url: e.url, sz: curr });
+          } else {
+            if (a[i - 1]?.sz === 'Standard' && curr !== 'XL') {
+              out.push({ url: e.url, sz: curr });
+            }
+          }
+        }
+      }
+      setImages(out);
+      setData(dat);
     } else {
       sendToast('error', 'Failed to get the hotel data', 4000);
       router.back();
@@ -118,17 +145,19 @@ const HotelSingleV1Dynamic = () => {
                         <i className='icon-location-2 text-16 mr-5' />
                         {data.hotel.ad.adr}
                         {data.hotel?.ad?.adr2 ? ', ' + data.hotel?.ad?.adr2 : ''},
-                        {' ' + data.hotel?.ad?.city.name}, {data.hotel?.ad?.state.name}
+                        {' ' + data.hotel?.ad?.city?.name}, {data.hotel?.ad?.state?.name},{' '}
+                        {data.hotel?.ad?.country?.name} - {data.hotel.ad.postalCode}
                       </div>
                     </div>
-                    {/* <div className='col-auto'>
+                    <div className='col-auto'>
                       <button
                         data-x-click='mapFilter'
                         className='text-blue-1 text-15 underline'
+                        onClick={() => setShowMap((prev) => !prev)}
                       >
-                        Show on map
+                        {showMap ? 'Hide map' : 'Show on map'}
                       </button>
-                    </div> */}
+                    </div>
                   </div>
                   {/* End .row */}
                 </div>
@@ -161,10 +190,23 @@ const HotelSingleV1Dynamic = () => {
                 {/* End .col */}
               </div>
               {/* End .row */}
-
+              {/* Map */}
+              {showMap && (
+                <div style={{ width: '100%', height: '100vh' }}>
+                  <GoogleMapReact
+                    bootstrapURLKeys={{ key: process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY }}
+                    defaultCenter={{
+                      lat: +data?.hotel?.gl?.lt,
+                      lng: +data?.hotel?.gl?.ln,
+                    }}
+                    defaultZoom={11}
+                  ></GoogleMapReact>
+                </div>
+              )}
+              {/* Images */}
               <Gallery>
                 <div className='galleryGrid -type-1 pt-30'>
-                  {data.hotel.img.map((image, imageIndex) => (
+                  {images.map((image, imageIndex) => (
                     <>
                       {((!isLoadMore && imageIndex < 5) || isLoadMore) && (
                         <div key={imageIndex}>
@@ -196,7 +238,7 @@ const HotelSingleV1Dynamic = () => {
                   {/* End .galleryGrid__item */}
                 </div>
               </Gallery>
-              {data.hotel.img.length > 5 && (
+              {images.length > 5 && (
                 <div className='d-flex justify-center mt-20'>
                   <button
                     className='button col-12 h-60 px-24 -dark-1 bg-blue-1 text-white'
@@ -214,7 +256,7 @@ const HotelSingleV1Dynamic = () => {
           <section className='pt-30'>
             <div className='container'>
               <div className='row y-gap-30'>
-                <div className='col-xl-8'>
+                <div className='col-12'>
                   <div className='row y-gap-40'>
                     {data.hotel?.fl && data.hotel?.fl?.length > 0 && (
                       <div className='col-12' id='facilities'>

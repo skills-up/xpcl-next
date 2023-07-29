@@ -2667,9 +2667,12 @@ table.table-6 {
     width: 350px;
     max-width: 100%;
     @include media-below(lg) {
-      width: 250px;
+      width: unset;
       max-width: 100%;
     }
+  }
+  #react-select-2-listbox {
+    z-index: 999;
   }
 }
 

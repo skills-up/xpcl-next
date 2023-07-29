@@ -225,6 +225,7 @@ const MainFilterSearchBox = () => {
                   <div className='form-input-select col-lg-9 px-0 lg:px-15'>
                     <label>Select Guests</label>
                     <Select
+                      isOptionDisabled={() => rooms[index].travellers.length >= 5}
                       options={clientTravellers
                         .filter((el) => {
                           let found = false;
@@ -255,13 +256,19 @@ const MainFilterSearchBox = () => {
                   </div>
                   {/* Buttons (Add + Trash) */}
                   <div className='col-lg-2 lg:px-15 m-0 d-flex gap-1'>
-                    <button
-                      onClick={() => setRooms((prev) => [...prev, { travellers: [] }])}
-                      className='btn btn-outline-success py-20 col-6 lg:py-10'
-                    >
-                      <BiPlusMedical style={{ fontSize: '1.5rem' }} />
-                    </button>
-                    {index > 0 && (
+                    {index < 8 && (
+                      <button
+                        onClick={() =>
+                          setRooms((prev) =>
+                            prev.length < 9 ? [...prev, { travellers: [] }] : [...prev]
+                          )
+                        }
+                        className='btn btn-outline-success py-20 col-6 lg:py-10'
+                      >
+                        <BiPlusMedical style={{ fontSize: '1.5rem' }} />
+                      </button>
+                    )}
+                    {index > 0 && index < 9 && (
                       <button
                         className='btn btn-outline-danger py-20 col-6 lg:py-10'
                         onClick={() =>

@@ -11,7 +11,7 @@ const BookingDetails = ({ PNR }) => {
   const totalChildren = age.totalChildren;
   const [cancellationPolicy, setCancellationPolicy] = useState(null);
   useEffect(() => {
-    getCancellationPolicy();
+    if (PNR) getCancellationPolicy();
   }, []);
 
   const getCancellationPolicy = async () => {
@@ -23,7 +23,7 @@ const BookingDetails = ({ PNR }) => {
       true
     );
     if (response?.success) {
-      setCancellationPolicy(response.data);
+      if (response.data.cancellationPolicy) setCancellationPolicy(response.data);
     }
   };
 
@@ -158,7 +158,7 @@ const BookingDetails = ({ PNR }) => {
               </span>
               {/* Cancellation Policy */}
               <div className='bg-light px-10 py-10 mt-10'>
-                {cancellationPolicy.cancellationPolicy.ifra ? (
+                {cancellationPolicy?.cancellationPolicy?.ifra ? (
                   <span>
                     <span className='text-primary'>Cancellation Policy</span> - Full
                     Refund is available.
@@ -169,7 +169,7 @@ const BookingDetails = ({ PNR }) => {
                     Refund will include cancellation penalties.
                   </span>
                 )}
-                {!cancellationPolicy.cancellationPolicy.ifra &&
+                {!cancellationPolicy?.cancellationPolicy?.ifra &&
                   cancellationPolicy.cancellationPolicy.pd &&
                   cancellationPolicy.cancellationPolicy.pd.length > 0 && (
                     <div className='mt-20 ml-5'>
