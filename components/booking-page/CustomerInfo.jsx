@@ -1,15 +1,13 @@
-import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { TiTickOutline } from 'react-icons/ti';
+import { DateObject } from 'react-multi-date-picker';
 import { useSelector } from 'react-redux';
+import Select from 'react-select';
+import LoadingBar from 'react-top-loading-bar';
 import { customAPICall, getList } from '../../api/xplorzApi';
 import { sendToast } from '../../utils/toastify';
 import BookingDetails from './sidebar/BookingDetails';
-import Select from 'react-select';
-import { DateObject } from 'react-multi-date-picker';
-import { useRouter } from 'next/router';
-import LoadingBar from 'react-top-loading-bar';
-import { TiTickOutline } from 'react-icons/ti';
-import { bookingDetails } from '../../pages/test/temp';
 
 const CustomerInfo = () => {
   const [progress, setProgress] = useState(0);
