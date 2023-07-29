@@ -410,7 +410,6 @@ const CustomerInfo = () => {
                   <tr>
                     <td style={{ fontWeight: 'bold' }}>Rooms:</td>
                     <td className='text-secondary'>
-                      {console.log('room', rooms)}
                       {PNR.room.ris.map((element, index) => {
                         let travDetails = [];
                         for (let travl of rooms[index]?.travellers) {
@@ -420,7 +419,6 @@ const CustomerInfo = () => {
                             }
                           }
                         }
-                        console.log('trav', travDetails);
                         return (
                           <div className='fw-500' key={element.id}>
                             Room {index + 1} - {element.rc}
