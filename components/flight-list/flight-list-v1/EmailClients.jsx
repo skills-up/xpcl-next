@@ -110,6 +110,7 @@ function EmailClients() {
     // Manipulating Data
     let tempTo = [];
     let tempFrom = [];
+    let tempCombined = [];
     console.log('emailClients', emailClients);
     for (let opt of emailClients) {
       let airlineName;
@@ -128,21 +129,54 @@ function EmailClients() {
             opt.prices.prices.ADULT.cabinClass.slice(1).toLowerCase();
         }
       }
-      let data = {
-        airline: airlineName,
-        airline_code: opt.segments[0].flight.airline,
-        from: opt.segments[0].departure.airport.code,
-        to: opt.segments.at(-1).arrival.airport.code,
-        departure: new Date(opt.segments[0].departure.time).toString().slice(0, -31),
-        arrival: new Date(opt.segments.at(-1).arrival.time).toString().slice(0, -31),
-        flight: `${opt.segments[0].flight.airline} ${opt.segments[0].flight.number}`,
-        cabin,
-        price: +opt.total + +markup,
-      };
+      let data;
+      if (opt.type === 'combined') {
+        let firstSeg = [];
+        let secondSeg = [];
+        let legCounter = 0;
+        for (let seg of opt.segments) {
+          if (seg.segmentNo === 0) legCounter += 1;
+          if (legCounter < 2) {
+            firstSeg.push(seg);
+          } else {
+            secondSeg.push(seg);
+          }
+        }
+        data = {
+          airline: airlineName,
+          airline_code: opt.segments[0].flight.airline,
+          from_one: firstSeg[0].departure.airport.code,
+          from_two: secondSeg[0].departure.airport.code,
+          to_one: firstSeg.at(-1).arrival.airport.code,
+          to_two: secondSeg.at(-1).arrival.airport.code,
+          departure_one: new Date(firstSeg[0].departure.time).toString().slice(0, -31),
+          departure_two: new Date(secondSeg[0].departure.time).toString().slice(0, -31),
+          arrival_one: new Date(firstSeg.at(-1).arrival.time).toString().slice(0, -31),
+          arrival_two: new Date(secondSeg.at(-1).arrival.time).toString().slice(0, -31),
+          flight_one: `${firstSeg[0].flight.airline} ${firstSeg[0].flight.number}`,
+          flight_two: `${secondSeg[0].flight.airline} ${firstSeg[0].flight.number}`,
+          cabin,
+          price: +opt.total + +markup,
+        };
+      } else
+        data = {
+          airline: airlineName,
+          airline_code: opt.segments[0].flight.airline,
+          from: opt.segments[0].departure.airport.code,
+          to: opt.segments.at(-1).arrival.airport.code,
+          departure: new Date(opt.segments[0].departure.time).toString().slice(0, -31),
+          arrival: new Date(opt.segments.at(-1).arrival.time).toString().slice(0, -31),
+          flight: `${opt.segments[0].flight.airline} ${opt.segments[0].flight.number}`,
+          cabin,
+          price: +opt.total + +markup,
+        };
+      console.log('opt', opt);
       if (opt.type === 'to') {
         tempTo.push(data);
       } else if (opt.type === 'from') {
         tempFrom.push(data);
+      } else if (opt.type === 'combined') {
+        tempCombined.push(data);
       }
     }
     for (let opt of additionalFlights) {
@@ -161,13 +195,15 @@ function EmailClients() {
         cabin: opt.cabin.value,
         price: +opt.price + +markup,
       };
-      if (opt.from_airport_id.iata === destinations.from.iata) {
+      console.log('destinations', opt.from_airport_id.iata, destinations.from.iata);
+      if (opt.from_airport_id.iata === destinations.to.iata) {
         tempFrom.push(data);
       } else {
         tempTo.push(data);
       }
     }
-    let manipData = { to: tempTo, from: tempFrom };
+    let manipData = { to: tempTo, from: tempFrom, combined: tempCombined };
+    console.log('manip', manipData);
     // Form Data
     let formData = new FormData();
     formData.append(
@@ -188,7 +224,7 @@ function EmailClients() {
             if (travellers.length > 1) {
               if (i + 1 < travellers.length) {
                 if (i > 0) {
-                  str += ' , ' + travellers[i].label;
+                  str += ', ' + travellers[i].label;
                 } else {
                   str += travellers[i].label;
                 }
@@ -199,9 +235,9 @@ function EmailClients() {
               str += travellers[i].label;
             }
           }
-          if (value && value.length > 0)
+          if (value && value.length > 0) {
             return (
-              <table width='100%' style={{ border: '0' }}>
+              <table width='100%' style={{ border: '0', marginBottom: '2rem' }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid #ccc', paddingTop: '15px' }}>
                     <th>S.No.</th>
@@ -218,97 +254,264 @@ function EmailClients() {
                 </thead>
                 <tbody>
                   {value.map((element, index) => {
-                    return (
-                      <>
-                        <tr key={index}>
-                          <td colspan='10'>
-                            <hr />
-                          </td>
-                        </tr>
-                        <tr
-                          style={{ borderBottom: '1px solid #ccc', paddingTop: '15px' }}
-                        >
-                          <td rowspan='1' style={{ textAlign: 'center' }}>
-                            {index + 1}.
-                          </td>
-                          <td rowspan='1' style={{ textAlign: 'center' }}>
-                            <span
-                              class='proton-image-anchor'
-                              data-proton-remote='remote-1'
-                              style={{ maxWidth: '50px' }}
-                            >
-                              <img
-                                src={`/img/flights/${element.airline_code}.png`}
-                                loading='lazy'
-                                style={{ maxWidth: '50px' }}
-                              />
-                            </span>
-                            <br />
-                            {element.airline}
-                          </td>
-                          <td style={{ textAlign: 'center' }}>{element.from}</td>
-                          <td style={{ textAlign: 'center' }}>{element.to}</td>
-                          <td style={{ textAlign: 'center' }}>{element.departure}</td>
-                          <td style={{ textAlign: 'center' }}>{element.arrival}</td>
-                          <td style={{ textAlign: 'center' }}>{element.flight}</td>
-                          <td style={{ textAlign: 'center' }}>{element.cabin}</td>
-                          {!withoutFares && (
-                            <td rowspan='1' style={{ textAlign: 'center' }}>
-                              {(+element.price).toLocaleString('en-IN', {
-                                maximumFractionDigits: 2,
-                                style: 'currency',
-                                currency: 'INR',
-                              })}
+                    // Combined
+                    if (key === 'combined')
+                      return (
+                        <>
+                          <tr key={index}>
+                            <td colspan='10'>
+                              <hr />
                             </td>
-                          )}
-                          <td rowspan='1' style={{ textAlign: 'center' }}>
-                            <a
-                              target='_blank'
-                              href={`mailto:${
-                                user?.email
-                              }?cc=support@xplorz.com&amp;subject=Selected flight option for ${str} from ${
-                                element.from
-                              } to ${element.to} on ${element.departure}&amp;body=Dear ${
-                                user?.name
-                              },%0D%0A%0D%0AWe've selected the following flight option for ${str}:%0D%0A%0D%0A${
-                                element.flight
-                              } : ${element.from} @ ${element.departure} &rarr; ${
-                                element.to
-                              } @ ${element.arrival} - ${element.cabin} ${
-                                !withoutFares ? '%0D%0A%0D%0AFare per pax: ' : ''
-                              }${
-                                !withoutFares
-                                  ? `${(+element.price).toLocaleString('en-IN', {
-                                      maximumFractionDigits: 2,
-                                      style: 'currency',
-                                      currency: 'INR',
-                                    })}/-`
-                                  : ''
-                              }%0D%0A%0D%0APlease book the same.%0D%0A%0D%0AThanks!`}
-                              style={{
-                                background: '#f0ad4e',
-                                color: '#fff',
-                                borderColor: '#eea236',
-                                fontWeight: 'bold',
-                                padding: '1em',
-                                textDecoration: 'none',
-                                fontSize: '12px',
-                                lineHeight: '1.5',
-                                borderRadius: '3px',
-                              }}
-                              //  'background:#f0ad4e;color:#fff;border-color:#eea236;font-weight:bold;padding:1em;text-decoration:none;font-size:12px;line-height:1.5;border-radius:3px'
-                              rel='noreferrer nofollow noopener'
-                            >
-                              Book
-                            </a>
-                          </td>
-                        </tr>
-                      </>
-                    );
+                          </tr>
+                          <tr
+                            style={{ borderBottom: '1px solid #ccc', paddingTop: '15px' }}
+                          >
+                            <td rowspan='1' style={{ textAlign: 'center' }}>
+                              {index + 1}.
+                            </td>
+                            <td rowspan='1' style={{ textAlign: 'center' }}>
+                              <span
+                                class='proton-image-anchor'
+                                data-proton-remote='remote-1'
+                                style={{ maxWidth: '50px' }}
+                              >
+                                <img
+                                  src={`/img/flights/${element.airline_code}.png`}
+                                  loading='lazy'
+                                  style={{ maxWidth: '50px' }}
+                                />
+                              </span>
+                              <br />
+                              {element.airline}
+                            </td>
+                            <td style={{ textAlign: 'center' }}>
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  flexDirection: 'column',
+                                  gap: '1rem',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}
+                              >
+                                <span>{element.from_one}</span>
+                                <span>{element.from_two}</span>
+                              </div>
+                            </td>
+                            <td style={{ textAlign: 'center' }}>
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  flexDirection: 'column',
+                                  gap: '1rem',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}
+                              >
+                                <span>{element.to_one}</span>
+                                <span>{element.to_two}</span>
+                              </div>
+                            </td>
+                            <td style={{ textAlign: 'center' }}>
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  flexDirection: 'column',
+                                  gap: '1rem',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}
+                              >
+                                <span>{element.departure_one}</span>
+                                <span>{element.departure_two}</span>
+                              </div>
+                            </td>
+                            <td style={{ textAlign: 'center' }}>
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  flexDirection: 'column',
+                                  gap: '1rem',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}
+                              >
+                                <span>{element.arrival_one}</span>
+                                <span>{element.arrival_two}</span>
+                              </div>
+                            </td>
+                            <td style={{ textAlign: 'center' }}>
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  flexDirection: 'column',
+                                  gap: '1rem',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}
+                              >
+                                <span>{element.flight_one}</span>
+                                <span>{element.flight_two}</span>
+                              </div>
+                            </td>
+                            <td style={{ textAlign: 'center' }}>{element.cabin}</td>
+                            {!withoutFares && (
+                              <td rowspan='1' style={{ textAlign: 'center' }}>
+                                {(+element.price).toLocaleString('en-IN', {
+                                  maximumFractionDigits: 2,
+                                  style: 'currency',
+                                  currency: 'INR',
+                                })}
+                              </td>
+                            )}
+                            <td rowspan='1' style={{ textAlign: 'center' }}>
+                              <a
+                                target='_blank'
+                                href={`mailto:${
+                                  user?.email
+                                }?cc=support@xplorz.com&amp;subject=Selected flight option for ${str} from ${
+                                  element.from_one
+                                } to ${element.to_one} on ${
+                                  element.departure_one
+                                } and from ${element.from_two} to ${element.to_two} on ${
+                                  element.departure_two
+                                }&amp;body=Dear ${
+                                  user?.name
+                                },%0D%0A%0D%0AWe've selected the following flight option for ${str}:%0D%0A%0D%0A${
+                                  element.flight_one
+                                }: ${element.from_one} @ ${
+                                  element.departure_one
+                                } &rarr; ${element.to_one} @ ${element.arrival_one} and ${
+                                  element.flight_two
+                                }: ${element.from_two} @ ${
+                                  element.departure_two
+                                } &rarr; ${element.to_two} @ ${element.arrival_two} - ${
+                                  element.cabin
+                                } ${!withoutFares ? '%0D%0A%0D%0AFare per pax: ' : ''}${
+                                  !withoutFares
+                                    ? `${(+element.price).toLocaleString('en-IN', {
+                                        maximumFractionDigits: 2,
+                                        style: 'currency',
+                                        currency: 'INR',
+                                      })}/-`
+                                    : ''
+                                }%0D%0A%0D%0APlease book the same.%0D%0A%0D%0AThanks!`}
+                                style={{
+                                  background: '#f0ad4e',
+                                  color: '#fff',
+                                  borderColor: '#eea236',
+                                  fontWeight: 'bold',
+                                  padding: '1em',
+                                  textDecoration: 'none',
+                                  fontSize: '12px',
+                                  lineHeight: '1.5',
+                                  borderRadius: '3px',
+                                }}
+                                //  'background:#f0ad4e;color:#fff;border-color:#eea236;font-weight:bold;padding:1em;text-decoration:none;font-size:12px;line-height:1.5;border-radius:3px'
+                                rel='noreferrer nofollow noopener'
+                              >
+                                Book
+                              </a>
+                            </td>
+                          </tr>
+                        </>
+                      );
+                    // To / From
+                    else
+                      return (
+                        <>
+                          <tr key={index}>
+                            <td colspan='10'>
+                              <hr />
+                            </td>
+                          </tr>
+                          <tr
+                            style={{ borderBottom: '1px solid #ccc', paddingTop: '15px' }}
+                          >
+                            <td rowspan='1' style={{ textAlign: 'center' }}>
+                              {index + 1}.
+                            </td>
+                            <td rowspan='1' style={{ textAlign: 'center' }}>
+                              <span
+                                class='proton-image-anchor'
+                                data-proton-remote='remote-1'
+                                style={{ maxWidth: '50px' }}
+                              >
+                                <img
+                                  src={`/img/flights/${element.airline_code}.png`}
+                                  loading='lazy'
+                                  style={{ maxWidth: '50px' }}
+                                />
+                              </span>
+                              <br />
+                              {element.airline}
+                            </td>
+                            <td style={{ textAlign: 'center' }}>{element.from}</td>
+                            <td style={{ textAlign: 'center' }}>{element.to}</td>
+                            <td style={{ textAlign: 'center' }}>{element.departure}</td>
+                            <td style={{ textAlign: 'center' }}>{element.arrival}</td>
+                            <td style={{ textAlign: 'center' }}>{element.flight}</td>
+                            <td style={{ textAlign: 'center' }}>{element.cabin}</td>
+                            {!withoutFares && (
+                              <td rowspan='1' style={{ textAlign: 'center' }}>
+                                {(+element.price).toLocaleString('en-IN', {
+                                  maximumFractionDigits: 2,
+                                  style: 'currency',
+                                  currency: 'INR',
+                                })}
+                              </td>
+                            )}
+                            <td rowspan='1' style={{ textAlign: 'center' }}>
+                              <a
+                                target='_blank'
+                                href={`mailto:${
+                                  user?.email
+                                }?cc=support@xplorz.com&amp;subject=Selected flight option for ${str} from ${
+                                  element.from
+                                } to ${element.to} on ${
+                                  element.departure
+                                }&amp;body=Dear ${
+                                  user?.name
+                                },%0D%0A%0D%0AWe've selected the following flight option for ${str}:%0D%0A%0D%0A${
+                                  element.flight
+                                }: ${element.from} @ ${element.departure} &rarr; ${
+                                  element.to
+                                } @ ${element.arrival} - ${element.cabin} ${
+                                  !withoutFares ? '%0D%0A%0D%0AFare per pax: ' : ''
+                                }${
+                                  !withoutFares
+                                    ? `${(+element.price).toLocaleString('en-IN', {
+                                        maximumFractionDigits: 2,
+                                        style: 'currency',
+                                        currency: 'INR',
+                                      })}/-`
+                                    : ''
+                                }%0D%0A%0D%0APlease book the same.%0D%0A%0D%0AThanks!`}
+                                style={{
+                                  background: '#f0ad4e',
+                                  color: '#fff',
+                                  borderColor: '#eea236',
+                                  fontWeight: 'bold',
+                                  padding: '1em',
+                                  textDecoration: 'none',
+                                  fontSize: '12px',
+                                  lineHeight: '1.5',
+                                  borderRadius: '3px',
+                                }}
+                                //  'background:#f0ad4e;color:#fff;border-color:#eea236;font-weight:bold;padding:1em;text-decoration:none;font-size:12px;line-height:1.5;border-radius:3px'
+                                rel='noreferrer nofollow noopener'
+                              >
+                                Book
+                              </a>
+                            </td>
+                          </tr>
+                        </>
+                      );
                   })}
                 </tbody>
               </table>
             );
+          }
         })}
         <br />
         <p>Please let us know which of the above work.</p>
@@ -324,7 +527,7 @@ function EmailClients() {
     // Email
     let response;
     if (type === 'email') {
-      // response = await createItem('send/email', formData);
+      response = await createItem('send/email', formData);
     }
     // Whatsapp
     else if (type === 'whatsapp') {
