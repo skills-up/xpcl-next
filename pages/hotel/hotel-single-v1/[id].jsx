@@ -72,7 +72,6 @@ const HotelSingleV1Dynamic = () => {
           }
         }
       }
-      console.log('out', a.length);
       setImages(out);
       setData(dat);
     } else {
@@ -125,7 +124,9 @@ const HotelSingleV1Dynamic = () => {
                   <div className='row x-gap-20  items-center'>
                     {/* Hotel Name */}
                     <div className='col-auto'>
-                      <h1 className='text-30 sm:text-25 fw-600'>{data?.hotel?.name}</h1>
+                      <h1 className='text-30 sm:text-25 fw-600'>
+                        {data?.hotel?.name.replaceAll('&amp;', '&')}
+                      </h1>
                     </div>
                     {/* Rating */}
                     <div className='col-auto'>
@@ -192,7 +193,7 @@ const HotelSingleV1Dynamic = () => {
               {/* End .row */}
               {/* Map */}
               {showMap && (
-                <div style={{ width: '100%', height: '100vh' }}>
+                <div style={{ width: '100%', height: '60vh' }}>
                   <GoogleMapReact
                     bootstrapURLKeys={{ key: process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY }}
                     defaultCenter={{

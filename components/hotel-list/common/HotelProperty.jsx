@@ -53,7 +53,7 @@ function HotelProperty({ item }) {
 
           <div className='col-md'>
             <h3 className='text-18 lh-16 fw-500'>
-              {item?.name}
+              {item?.name?.replaceAll('&amp;', '&')}
               <div className='d-flex items-center'>
                 {item?.ad?.city?.name}
                 <div className='d-inline-flex ml-10 items-flex-start'>

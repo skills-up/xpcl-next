@@ -8,6 +8,7 @@ import LoadingBar from 'react-top-loading-bar';
 import { customAPICall, getList } from '../../api/xplorzApi';
 import { sendToast } from '../../utils/toastify';
 import BookingDetails from './sidebar/BookingDetails';
+import GoogleMapReact from 'google-map-react';
 
 const CustomerInfo = () => {
   const [progress, setProgress] = useState(0);
@@ -325,123 +326,118 @@ const CustomerInfo = () => {
             <TiTickOutline className='text-50 text-success' /> Booking Successful
           </h2>
           {confirmationData && (
-            <div className='view-table'>
-              <table>
-                <tbody>
-                  <tr>
-                    <td style={{ fontWeight: 'bold' }}>Hotel:</td>
-                    <td className='text-secondary'>
-                      {confirmationData.itemInfos.HOTEL.hInfo.name}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ fontWeight: 'bold' }}>Booking ID:</td>
-                    <td className='text-secondary'>{confirmationData.order.bookingId}</td>
-                  </tr>
-                  <tr>
-                    <td style={{ fontWeight: 'bold' }}>Total Amount:</td>
-                    <td className='text-secondary'>
-                      {PNR.room.tp.toLocaleString('en-IN', {
-                        maximumFractionDigits: 2,
-                        style: 'currency',
-                        currency: 'INR',
-                      })}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ fontWeight: 'bold' }}>Address:</td>
-                    <td className='text-secondary'>
-                      {confirmationData.itemInfos.HOTEL.hInfo.ad?.adr}
-                      {confirmationData.itemInfos.HOTEL.hInfo.ad?.adr2 &&
-                        ', ' + confirmationData.itemInfos.HOTEL.hInfo.ad?.adr2}
-                      {confirmationData.itemInfos.HOTEL.hInfo.ad?.city?.name &&
-                        ', ' + confirmationData.itemInfos.HOTEL.hInfo.ad?.city?.name}
-                      {confirmationData.itemInfos.HOTEL.hInfo.ad?.state?.name &&
-                        ', ' + confirmationData.itemInfos.HOTEL.hInfo.ad?.state?.name}
-                      {confirmationData.itemInfos.HOTEL.hInfo.ad?.country?.name &&
-                        ', ' + confirmationData.itemInfos.HOTEL.hInfo.ad?.country?.name}
-                      {confirmationData.itemInfos.HOTEL.hInfo.ad?.postalCode &&
-                        ' - ' + confirmationData.itemInfos.HOTEL.hInfo.ad?.postalCode}
-                    </td>
-                  </tr>
-                  {confirmationData.itemInfos.HOTEL.hInfo?.cnt?.ph && (
-                    <tr>
-                      <td style={{ fontWeight: 'bold' }}>Contact</td>
-                      <td className='text-secondary'>
-                        {confirmationData.itemInfos.HOTEL.hInfo?.cnt?.ph}
-                      </td>
-                    </tr>
-                  )}
-                  <tr>
-                    <td style={{ fontWeight: 'bold' }}>Star Rating:</td>
-                    <td className='text-secondary'>
-                      {confirmationData.itemInfos.HOTEL.hInfo.rt}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ fontWeight: 'bold' }}>Check-In / Check-Out:</td>
-                    <td className='text-secondary'>
-                      {new DateObject({
-                        date: PNR.data.query.checkinDate,
-                        format: 'YYYY-MM-DD',
-                      }).format('D MMMM YYYY')}{' '}
-                      ~{' '}
-                      {new DateObject({
-                        date: PNR.data.query.checkoutDate,
-                        format: 'YYYY-MM-DD',
-                      }).format('D MMMM YYYY')}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ fontWeight: 'bold' }}>Traveller Total:</td>
-                    <td className='text-secondary'>
-                      {totalAdults > 0
-                        ? totalAdults > 1
-                          ? totalAdults + ' Adults'
-                          : totalAdults + ' Adult'
-                        : ''}
-                      {totalChildren > 0
-                        ? totalChildren > 1
-                          ? ', ' + totalChildren + ' Children'
-                          : ', ' + totalChildren + ' Child'
-                        : ''}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ fontWeight: 'bold' }}>Rooms:</td>
-                    <td className='text-secondary'>
-                      {PNR.room.ris.map((element, index) => {
-                        let travDetails = [];
-                        for (let travl of rooms[index]?.travellers) {
-                          for (let traveller of travellers) {
-                            if (travl.value === traveller.id) {
-                              travDetails.push(traveller);
-                            }
+            <div>
+              <div className='border-top-light mt-30' />
+              <div className='row y-gap-20'>
+                <div className='col-md-4 text-center'>
+                  <div className='text-15'>Booking ID</div>
+                  <div className='fw-500'>{confirmationData.order.bookingId}</div>
+                </div>
+                <div className='col-md-4 text-center'>
+                  <div className='text-15'>Booking Status</div>
+                  <div className='fw-500'>{confirmationData.order?.status}</div>
+                </div>
+                <div className='col-md-4 text-center'>
+                  <div className='text-15'>Total Amount</div>
+                  <div className='fw-500'>
+                    {PNR.room.tp.toLocaleString('en-IN', {
+                      maximumFractionDigits: 2,
+                      style: 'currency',
+                      currency: 'INR',
+                    })}
+                  </div>
+                </div>
+              </div>
+              <h3 className='mt-20 mb-10'>
+                {confirmationData.itemInfos.HOTEL.hInfo.name}
+              </h3>
+              <div className='row mt-8 y-gap-20 mb-20'>
+                {/* Address */}
+                <div className=''>
+                  <div className='text-15'>Address</div>
+                  <div className='fw-500'>
+                    {confirmationData.itemInfos.HOTEL.hInfo.ad?.adr}
+                    {confirmationData.itemInfos.HOTEL.hInfo.ad?.adr2 &&
+                      ', ' + confirmationData.itemInfos.HOTEL.hInfo.ad?.adr2}
+                    {confirmationData.itemInfos.HOTEL.hInfo.ad?.city?.name &&
+                      ', ' + confirmationData.itemInfos.HOTEL.hInfo.ad?.city?.name}
+                    {confirmationData.itemInfos.HOTEL.hInfo.ad?.state?.name &&
+                      ', ' + confirmationData.itemInfos.HOTEL.hInfo.ad?.state?.name}
+                    {confirmationData.itemInfos.HOTEL.hInfo.ad?.country?.name &&
+                      ', ' + confirmationData.itemInfos.HOTEL.hInfo.ad?.country?.name}
+                    {confirmationData.itemInfos.HOTEL.hInfo.ad?.postalCode &&
+                      ' - ' + confirmationData.itemInfos.HOTEL.hInfo.ad?.postalCode}
+                  </div>
+                </div>
+                {/* Star */}
+                <div>
+                  <div className='text-15'>Star Rating</div>
+                  <div className='fw-500'>
+                    {confirmationData.itemInfos.HOTEL.hInfo.rt}
+                  </div>
+                </div>
+                {/* Contact */}
+                {confirmationData.itemInfos.HOTEL.hInfo?.cnt?.ph && (
+                  <div>
+                    <div className='text-15'>Contact</div>
+                    <div className='fw-500'>
+                      {confirmationData.itemInfos.HOTEL.hInfo?.cnt?.ph}
+                    </div>
+                  </div>
+                )}
+                {/* Dates */}
+                <div>
+                  <div className='text-15'>Check-In / Check-Out</div>
+                  <div className='fw-500'>
+                    {new DateObject({
+                      date: PNR.data.query.checkinDate,
+                      format: 'YYYY-MM-DD',
+                    }).format('D MMMM YYYY')}{' '}
+                    ~{' '}
+                    {new DateObject({
+                      date: PNR.data.query.checkoutDate,
+                      format: 'YYYY-MM-DD',
+                    }).format('D MMMM YYYY')}
+                  </div>
+                </div>
+                {/* Rooms */}
+                <div>
+                  <div className='text-20'>Rooms</div>
+                  <div className='fw-500'>
+                    {PNR.room.ris.map((element, index) => {
+                      let travDetails = [];
+                      for (let travl of rooms[index]?.travellers) {
+                        for (let traveller of travellers) {
+                          if (travl.value === traveller.id) {
+                            travDetails.push(traveller);
                           }
                         }
-                        return (
-                          <div className='fw-500' key={element.id}>
-                            Room {index + 1} - {element.rc}
-                            <div className='ml-20 lg:ml-10'>
-                              {travDetails.map((traveller, travellerI) => (
-                                <>
-                                  Traveller {travellerI + 1} - {traveller.aliases[0]}
-                                  <div className='ml-20'>
+                      }
+                      return (
+                        <div className='fw-500' key={element.id}>
+                          Room {index + 1} - {element.rc}
+                          <div className='ml-20 lg:ml-10 mb-10'>
+                            {travDetails.map((traveller, travellerI) => (
+                              <>
+                                Traveller {travellerI + 1} -{' '}
+                                <span className='fw-300'>{traveller.aliases[0]}</span>
+                                <div className='ml-20'>
+                                  <div>
                                     Title:{' '}
                                     <span className='fw-300'>
                                       {traveller.prefix?.value}
                                     </span>
                                   </div>
-                                  <div className='ml-20'>
+                                  <div>
                                     First Name:{' '}
                                     <span className='fw-300'>{traveller.first_name}</span>
                                   </div>
-                                  <div className='ml-20'>
+                                  <div>
                                     Last Name:{' '}
                                     <span className='fw-300'>{traveller.last_name}</span>
                                   </div>
                                   {PNR.room.ipr && traveller?.pan_number && (
-                                    <div className='ml-20'>
+                                    <div>
                                       PAN Number:{' '}
                                       <span className='fw-300'>
                                         {traveller.pan_number}
@@ -456,50 +452,61 @@ const CustomerInfo = () => {
                                       </span>
                                     </div>
                                   )}
-                                </>
-                              ))}
-                            </div>
+                                </div>
+                              </>
+                            ))}
                           </div>
-                        );
-                      })}
-                    </td>
-                  </tr>
-                  {confirmationData.itemInfos?.HOTEL?.hInfo?.ops &&
-                    confirmationData.itemInfos?.HOTEL?.hInfo?.ops[0]?.inst &&
-                    confirmationData.itemInfos?.HOTEL?.hInfo?.ops?.inst?.length > 0 && (
-                      <tr>
-                        <td style={{ fontWeight: 'bold' }}>Instructions:</td>
-                        <td>
-                          <ul className='list-disc'>
-                            {confirmationData.itemInfos?.HOTEL?.hInfo?.ops[0].inst.map(
-                              (inst, instI) => (
-                                <li className='text-secondary'>
-                                  <h5 className='d-inline'>
-                                    <span
-                                      className='text-black'
-                                      style={{ fontWeight: 'bold' }}
-                                    >
-                                      {inst?.type &&
-                                        inst.type
-                                          .split('_')
-                                          .map(
-                                            (split) =>
-                                              `${split.charAt(0).toUpperCase()}${split
-                                                .slice(1)
-                                                .toLowerCase()} `
-                                          )}
-                                    </span>{' '}
-                                    : {inst.msg}
-                                  </h5>
-                                </li>
-                              )
-                            )}
-                          </ul>
-                        </td>
-                      </tr>
-                    )}
-                </tbody>
-              </table>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+                {/* Instructions */}
+                {confirmationData.itemInfos?.HOTEL?.hInfo?.ops &&
+                  confirmationData.itemInfos?.HOTEL?.hInfo?.ops[0]?.inst &&
+                  confirmationData.itemInfos?.HOTEL?.hInfo?.ops?.inst?.length > 0 && (
+                    <div>
+                      <div className='text-15'>Instructions</div>
+                      <div>
+                        <ul className='list-disc'>
+                          {confirmationData.itemInfos?.HOTEL?.hInfo?.ops[0].inst.map(
+                            (inst, instI) => (
+                              <li className='text-secondary'>
+                                <h5 className='d-inline'>
+                                  <span className='text-black fw-500'>
+                                    {inst?.type &&
+                                      inst.type
+                                        .split('_')
+                                        .map(
+                                          (split) =>
+                                            `${split.charAt(0).toUpperCase()}${split
+                                              .slice(1)
+                                              .toLowerCase()} `
+                                        )}
+                                  </span>{' '}
+                                  : {inst.msg}
+                                </h5>
+                              </li>
+                            )
+                          )}
+                        </ul>
+                      </div>
+                    </div>
+                  )}
+                <div>
+                  <div className='text-15'>Map</div>
+                  <div style={{ width: '100%', height: '60vh' }}>
+                    <GoogleMapReact
+                      bootstrapURLKeys={{ key: process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY }}
+                      defaultCenter={{
+                        lat: +confirmationData.itemInfos?.HOTEL?.hInfo?.gl?.lt,
+                        lng: +confirmationData.itemInfos?.HOTEL?.hInfo?.gl?.ln,
+                      }}
+                      defaultZoom={20}
+                    ></GoogleMapReact>{' '}
+                  </div>
+                </div>
+              </div>
             </div>
           )}
         </div>
