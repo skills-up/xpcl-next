@@ -70,13 +70,13 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                 : null,
               trip_meals: { from: null, to: null, combined: null },
               prefix: el.prefix
-                ? el.prefix === 'MR'
+                ? el.prefix.toLowerCase() === 'mr'
                   ? { value: 'MR', label: 'Mr.' }
-                  : el.prefix === 'MRS'
+                  : el.prefix.toLowerCase() === 'mrs'
                   ? { value: 'MRS', label: 'Mrs.' }
-                  : el.prefix === 'MSTR'
+                  : el.prefix.toLowerCase() === 'mstr'
                   ? { value: 'MSTR', label: 'Mstr.' }
-                  : el.prefix === 'MS'
+                  : el.prefix.toLowerCase() === 'ms'
                   ? { value: 'MS', label: 'Ms.' }
                   : null
                 : null,

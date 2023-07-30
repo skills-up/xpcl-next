@@ -91,7 +91,7 @@ const HotelProperties = () => {
   };
 
   return (
-    <>
+    <div id='hotel-properties'>
       {manip &&
         manip.length > 0 &&
         manip
@@ -121,7 +121,7 @@ const HotelProperties = () => {
             if (index + 1 >= lowerBound && index + 1 <= paginateDataNumber)
               return <HotelProperty key={index} item={element} />;
           })}
-    </>
+    </div>
   );
 };
 

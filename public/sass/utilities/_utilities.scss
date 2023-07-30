@@ -860,8 +860,7 @@ $_displays: none, inline-block, block, flex;
 
 .galleryGrid.-type-1 {
   display: grid;
-  grid-template-columns: 0.52fr 0.24fr 0.24fr;
-  grid-template-rows: 1fr 1fr;
+  grid-template-columns: 0.24fr 0.24fr 0.24fr 0.24fr;
   gap: 10px;
 
   @include media-below(lg) {
@@ -876,13 +875,13 @@ $_displays: none, inline-block, block, flex;
     grid-template-columns: 1fr;
   }
 
-  > *:nth-child(1) {
-    grid-row: 2 span;
+  // > *:nth-child(1) {
+  //   grid-row: 2 span;
 
-    @include media-below(lg) {
-      grid-row: 1;
-    }
-  }
+  //   @include media-below(lg) {
+  //     grid-row: 1;
+  //   }
+  // }
 
   img {
     width: 100%;
@@ -2412,7 +2411,7 @@ table.table-6 {
     width: 300px;
     max-width: 100%;
     @include media-below(lg) {
-      width: 250px;
+      width: unset;
       max-width: 100%;
     }
   }
@@ -2425,6 +2424,13 @@ table.table-6 {
     position: absolute;
     min-width: 170px;
     margin-top: 1rem;
+  }
+}
+
+#flight-properties {
+  scroll-margin-top: 10rem;
+  @include media-below(lg) {
+    scroll-margin-top: 12rem;
   }
 }
 
@@ -2689,5 +2695,12 @@ table.table-6 {
     position: absolute;
     min-width: 170px;
     margin-top: 1rem;
+  }
+}
+
+#hotel-properties {
+  scroll-margin-top: 10rem;
+  @include media-below(lg) {
+    scroll-margin-top: 12rem;
   }
 }

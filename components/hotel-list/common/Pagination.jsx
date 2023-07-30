@@ -96,7 +96,7 @@ const Pagination = () => {
   return (
     <div className='border-top-light mt-30 pt-30'>
       <div className='form-input-select mb-30'>
-        <label>Data Per Page </label>
+        <label>Options Per Page </label>
         <Select
           options={[10, 25, 50, 100].map((el) => ({ label: el, value: el }))}
           value={dataPerPageID}

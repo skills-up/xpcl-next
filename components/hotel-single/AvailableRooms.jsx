@@ -141,17 +141,18 @@ const AvailableRooms = ({ hotel, onRoomSelect, rooms }) => {
                           currency: 'INR',
                         })}
                       </div>
-                      <div className='text-15 fw-500 mt-15'>
-                        Price Breakup (Base Fare + Taxes & Fee):
-                      </div>
+                      <div className='text-15 fw-500 mt-15'>Price Breakup:</div>
                       <ul className='list-disc y-gap-4 pt-5'>
                         <li className='text-14'>
+                          <span style={{ fontWeight: 'bold' }}>Base Fare: </span>
                           {h?.tfcs?.BF?.toLocaleString('en-IN', {
                             maximumFractionDigits: 2,
                             style: 'currency',
                             currency: 'INR',
-                          }) || 0}{' '}
-                          +{' '}
+                          }) || 0}
+                        </li>
+                        <li className='text-14'>
+                          <span style={{ fontWeight: 'bold' }}>Taxes & Fees: </span>
                           {h?.tfcs?.TAF?.toLocaleString('en-IN', {
                             maximumFractionDigits: 2,
                             style: 'currency',

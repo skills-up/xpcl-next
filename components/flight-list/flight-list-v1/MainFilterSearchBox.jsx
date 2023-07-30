@@ -45,7 +45,7 @@ const MainFilterSearchBox = () => {
   const client_id = useSelector((state) => state.auth.value.currentOrganization);
 
   useEffect(() => {
-    dispatch(setInitialState());
+    // dispatch(setInitialState());
     if (token !== '') {
       checkUser(router, dispatch);
       checkAirportCache(dispatch);
@@ -272,6 +272,12 @@ const MainFilterSearchBox = () => {
   const dispatchCalls = async (searchData, callsCounter, currentCalls) => {
     dispatch(setSearchData(searchData));
     let percentage = (currentCalls / callsCounter) * 100;
+    if (percentage === 100) {
+      const el = document.getElementById('flight-properties');
+      if (el) {
+        setTimeout(() => el.scrollIntoView(), 750);
+      }
+    }
     setProgress(percentage);
   };
 
@@ -296,6 +302,9 @@ const MainFilterSearchBox = () => {
             <ReactSwitch
               onChange={() => setReturnFlight((prev) => !prev)}
               checked={returnFlight}
+              uncheckedIcon={false}
+              checkedIcon={false}
+              offColor='#080'
             />
             <label>Return Trip</label>
           </div>

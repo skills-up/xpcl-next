@@ -410,7 +410,7 @@ const FlightProperties = () => {
   };
 
   return (
-    <>
+    <div id='flight-properties'>
       {/* Tabs */}
       {(fromCount > 0 || combinedCount > 0) && (
         <div
@@ -505,7 +505,7 @@ const FlightProperties = () => {
                 <FlightProperty element={element} key={index} currentTab={currentTab} />
               );
           })}
-    </>
+    </div>
   );
 };
 
