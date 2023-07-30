@@ -2427,6 +2427,13 @@ table.table-6 {
   }
 }
 
+#flight-properties {
+  scroll-margin-top: 10rem;
+  @include media-below(lg) {
+    scroll-margin-top: 12rem;
+  }
+}
+
 // Seat Image
 #seat {
   position: relative;

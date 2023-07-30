@@ -110,6 +110,7 @@ function EmailClients() {
     // Manipulating Data
     let tempTo = [];
     let tempFrom = [];
+    console.log('emailClients', emailClients);
     for (let opt of emailClients) {
       let airlineName;
       for (let airline of airlines) {
@@ -323,7 +324,7 @@ function EmailClients() {
     // Email
     let response;
     if (type === 'email') {
-      response = await createItem('send/email', formData);
+      // response = await createItem('send/email', formData);
     }
     // Whatsapp
     else if (type === 'whatsapp') {
