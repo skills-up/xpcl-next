@@ -161,12 +161,12 @@ const MainFilterSearchBox = () => {
             <WindowedSelect
               windowThreshold={200}
               options={hotelSearchData.map((hotel) => ({
-                value: hotel.id,
-                label: hotel.fullRegionName,
-                cityName: hotel.cityName,
+                value: hotel[0],
+                label: hotel[2],
+                cityName: hotel[1],
               }))}
               formatOptionLabel={(opt) => {
-                return <div key={opt.value}>{opt.label}</div>;
+                return <div key={opt.value}>{opt.cityName}<br/><small>{opt.label}</small></div>;
               }}
               value={location}
               onChange={(id) => setLocation(id)}
