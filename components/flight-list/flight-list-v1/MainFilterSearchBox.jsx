@@ -297,7 +297,7 @@ const MainFilterSearchBox = () => {
       />
       <div className='border-light rounded-4 pr-20 py-20 lg:px-20 lg:pt-5 lg:pb-20 mt-15'>
         <div className='flight-search pl-20 lg:pl-0'>
-          <div className='d-flex items-center gap-2 justify-center'>
+          <div className='d-flex items-center gap-2 justify-center mt-30 lg:mt-0'>
             <label>One Way</label>
             <ReactSwitch
               onChange={() => setReturnFlight((prev) => !prev)}
@@ -375,6 +375,13 @@ const MainFilterSearchBox = () => {
               }}
               value={from}
               onChange={(id) => setFrom(id)}
+              placeholder={
+                <>
+                  Search..
+                  <br />
+                  <br />
+                </>
+              }
             />
           </div>
           {/* End Location Flying From */}
@@ -384,6 +391,13 @@ const MainFilterSearchBox = () => {
               To<span className='text-danger'>*</span>
             </label>
             <WindowedSelect
+              placeholder={
+                <>
+                  Search..
+                  <br />
+                  <br />
+                </>
+              }
               options={airports.map((airport) => ({
                 value: airport.id,
                 label: `|${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
@@ -419,14 +433,17 @@ const MainFilterSearchBox = () => {
           </div>
           {/* End Location Flying To */}
 
-          <div className='flight-search-select pt-5 pl-30 d-flex gap-1 lg:pl-5 items-center justify-center'>
-            <div>
+          <div
+            style={{ border: '1px solid lightgray' }}
+            className='flight-search-select rounded-4 mt-30 py-4 d-flex items-center justify-center gap-1 lg:mt-0 lg:pl-5 '
+          >
+            <div className='text-center'>
               <label>
                 Depart Date<span className='text-danger'>*</span>
               </label>
               <DatePicker
-                style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
-                inputClass='custom_input-picker'
+                style={{ fontSize: '1rem' }}
+                inputClass='custom_input-picker text-center'
                 containerClassName='custom_container-picker'
                 value={departDate}
                 onChange={(i) => {
@@ -435,25 +452,25 @@ const MainFilterSearchBox = () => {
                 }}
                 numberOfMonths={1}
                 offsetY={10}
-                format='DD MMMM YYYY'
+                format='DD MMM YYYY'
                 minDate={new DateObject()}
               />
             </div>
             {/* End Depart */}
             {returnFlight && (
-              <div>
+              <div className='text-center'>
                 <label>
                   Return Date<span className='text-danger'>*</span>
                 </label>
                 <DatePicker
-                  style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
-                  inputClass='custom_input-picker'
+                  style={{ fontSize: '1rem' }}
+                  inputClass='custom_input-picker text-center'
                   containerClassName='custom_container-picker'
                   value={returnDate}
                   onChange={setReturnDate}
                   numberOfMonths={1}
                   offsetY={10}
-                  format='DD MMMM YYYY'
+                  format='DD MMM YYYY'
                   minDate={departDate}
                 />
               </div>
@@ -463,7 +480,7 @@ const MainFilterSearchBox = () => {
           {/* End Return */}
 
           <div>
-            <div className='pl-5 d-flex gap-2 items-center'>
+            <div className='pl-5 d-flex mt-30 gap-2 justify-center lg:mt-0 items-center'>
               <label>Direct Flight</label>
               <ReactSwitch
                 onChange={() => setDirectFlight((prev) => !prev)}

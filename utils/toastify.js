@@ -1,6 +1,7 @@
 import { toast } from 'react-toastify';
 
 export const sendToast = (type, message = '', timeout = 5000) => {
+  toast.dismiss();
   if (type === 'success') {
     toast.success(message, {
       position: 'top-right',
