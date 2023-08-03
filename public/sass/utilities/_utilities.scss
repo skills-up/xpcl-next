@@ -2467,23 +2467,36 @@ table.table-6 {
   }
 }
 
-// Tripjack Seatmap
+// Akasa Seatmap
 .aa-seatmap {
-  tr {
+  .aa-grid {
     display: flex;
-    justify-content: space-evenly;
-    &.extra {
-      // justify-content: space-between;
-    }
-    td {
-      padding: 0;
+    align-items: center;
+    .row-number {
       display: flex;
       align-items: center;
       justify-content: center;
-      min-width: 55px;
       min-height: 55px;
+      min-width: 55px;
       font-size: 1.2rem;
       text-align: center;
+    }
+  }
+  #seat {
+    position: relative;
+    text-align: center;
+    .seat-img {
+      height: 67px;
+      width: 74px;
+    }
+    span {
+      display: block;
+      position: absolute;
+      max-width: 10px;
+      width: 100%;
+      left: 38%;
+      top: 18.5%;
+      font-size: 0.85rem !important;
     }
   }
 }

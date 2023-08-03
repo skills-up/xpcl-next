@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { createItem, customAPICall, getList } from '../../../api/xplorzApi';
+import { createItem, customAPICall, getList, updateItem } from '../../../api/xplorzApi';
 import { sendToast } from '../../../utils/toastify';
 import FlightProperty from '../../flight-list/common/FlightProperty';
 import Select from 'react-select';
@@ -14,12 +14,12 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
   );
   const [progress, setProgress] = useState(0);
   const [frequentFliers, setFrequentFliers] = useState([]);
+  const [containsInternational, setContainsInternational] = useState(false);
   const [travellerInfo, setTravellerInfo] = travellerInfos;
   const returnFlight = useSelector((state) => state.flightSearch.value.returnFlight);
   const lowCostBookings = ['IX', '6E', 'SG', 'G8', 'I5', 'QP'];
   const travellers = useSelector((state) => state.flightSearch.value.travellers);
   const airports = useSelector((state) => state.apis.value.airports);
-  console.log('airports', airports);
   const destinations = useSelector((state) => state.flightSearch.value.destinations);
   const router = useRouter();
   const mealPreferenceOptions = [
@@ -48,7 +48,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
       (!selectedBookings.to && !selectedBookings.from && !selectedBookings.combined) ||
       !travellers
     ) {
-      console.log('nothing found');
+      router.back();
     }
     getData();
   }, []);
@@ -81,6 +81,12 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
             },
           }))
         );
+        if (
+          destinations?.to?.label?.split('|')?.at(-1) !== 'India' ||
+          destinations?.from?.label?.split('|')?.at(-1) !== 'India'
+        ) {
+          setContainsInternational(true);
+        }
       } else {
         sendToast('error', 'Failed to fetch traveller details', 4000);
       }
@@ -93,8 +99,6 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
       sendToast('error', 'Failed to fetch frequent fliers', 4000);
     }
   };
-
-  useEffect(() => console.log('progress', progress), [progress]);
 
   const onClick = async () => {
     // Checking if each traveller has a prefix
@@ -111,6 +115,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
     // Is Domestic
     let isDomestic = true;
     if (destinations?.from && destinations?.to) {
+      console.log('destinations', destinations);
       if (
         destinations?.to?.label?.split('|')?.at(-1) !== 'India' ||
         destinations?.from?.label?.split('|')?.at(-1) !== 'India'
@@ -156,7 +161,6 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
           travellers: travellers.map((el) => el.value),
           sectors: [toSector, fromSector],
         });
-        console.log(response);
         if (response?.success) {
           setPNR((prev) => ({
             ...prev,
@@ -193,7 +197,6 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
             })),
           ],
         });
-        console.log(response);
         if (response?.success) {
           setPNR((prev) => ({
             from: { data: response.data, provider: 'ad' },
@@ -263,7 +266,6 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
           {},
           true
         );
-        console.log(response);
         if (response?.success) {
           setPNR((prev) => ({
             ...prev,
@@ -283,7 +285,6 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
             {},
             true
           );
-          console.log(response);
           if (response?.success) {
             setPNR((prev) => ({
               ...prev,
@@ -307,7 +308,6 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
               })),
             ],
           });
-          console.log(response);
           if (response?.success) {
             setPNR((prev) => ({
               ...prev,
@@ -379,7 +379,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                 <div key={index} className='bg-white py-30 px-30 mt-20'>
                   <h4>Frequent Flier</h4>
                   <div className='row my-3'>
-                    <div className='row col-12 mb-20 y-gap-20'>
+                    <div className='row col-12 y-gap-20'>
                       <div className='col-md-6 form-input-select'>
                         <label>Frequent Flier Program</label>
                         <Select
@@ -513,105 +513,111 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                       </div>
                     </div>
                   </div>
-                  <h4>Passport</h4>
-                  <div className='row my-3'>
-                    <div className='row col-12 mb-20 y-gap-20'>
-                      <div className='form-input col-md-4 bg-white'>
-                        <input
-                          onChange={(e) =>
-                            setTravellerInfo((prev) => {
-                              prev[index]['passport_number'] = e.target.value;
-                              return [...prev];
-                            })
-                          }
-                          value={element['passport_number']}
-                          placeholder=' '
-                          type='text'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Passport Number
-                        </label>
+                  {containsInternational && (
+                    <>
+                      <h4>Passport</h4>
+                      <div className='row my-3'>
+                        <div className='row col-12 y-gap-20'>
+                          <div className='form-input col-md-4 bg-white'>
+                            <input
+                              onChange={(e) =>
+                                setTravellerInfo((prev) => {
+                                  prev[index]['passport_number'] = e.target.value;
+                                  return [...prev];
+                                })
+                              }
+                              value={element['passport_number']}
+                              placeholder=' '
+                              type='text'
+                            />
+                            <label className='lh-1 text-16 text-light-1'>
+                              Passport Number
+                            </label>
+                          </div>
+                          <div className='form-input col-md-4 bg-white'>
+                            <input
+                              onChange={(e) =>
+                                setTravellerInfo((prev) => {
+                                  prev[index]['passport_name'] = e.target.value;
+                                  return [...prev];
+                                })
+                              }
+                              value={element['passport_name']}
+                              placeholder=' '
+                              type='text'
+                            />
+                            <label className='lh-1 text-16 text-light-1'>
+                              Passport Name
+                            </label>
+                          </div>
+                          <div className='form-input col-md-4 bg-white'>
+                            <input
+                              onChange={(e) =>
+                                setTravellerInfo((prev) => {
+                                  prev[index]['passport_issue_place'] = e.target.value;
+                                  return [...prev];
+                                })
+                              }
+                              value={element['passport_issue_place']}
+                              placeholder=' '
+                              type='text'
+                            />
+                            <label className='lh-1 text-16 text-light-1'>
+                              Passport Issue Place
+                            </label>
+                          </div>
+                          <div className='form-datepicker col-md-6'>
+                            <label>Issue Date</label>
+                            <DatePicker
+                              style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
+                              inputClass='custom_input-picker'
+                              containerClassName='custom_container-picker'
+                              value={
+                                new DateObject({
+                                  date: element.passport_issue_date,
+                                  format: 'YYYY-MM-DD',
+                                })
+                              }
+                              onChange={(date) =>
+                                setTravellerInfo((prev) => {
+                                  prev[index]['passport_issue_date'] =
+                                    date.format('YYYY-MM-DD');
+                                  return [...prev];
+                                })
+                              }
+                              numberOfMonths={1}
+                              offsetY={10}
+                              format='DD MMMM YYYY'
+                            />
+                          </div>
+                          <div className='form-datepicker col-md-6'>
+                            <label>Expiry Date</label>
+                            <DatePicker
+                              style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
+                              inputClass='custom_input-picker'
+                              containerClassName='custom_container-picker'
+                              value={
+                                new DateObject({
+                                  date: element.passport_expiry_date,
+                                  format: 'YYYY-MM-DD',
+                                })
+                              }
+                              onChange={(date) =>
+                                setTravellerInfo((prev) => {
+                                  prev[index]['passport_expiry_date'] =
+                                    date.format('YYYY-MM-DD');
+                                  return [...prev];
+                                })
+                              }
+                              numberOfMonths={1}
+                              offsetY={10}
+                              format='DD MMMM YYYY'
+                            />
+                          </div>
+                        </div>
                       </div>
-                      <div className='form-input col-md-4 bg-white'>
-                        <input
-                          onChange={(e) =>
-                            setTravellerInfo((prev) => {
-                              prev[index]['passport_name'] = e.target.value;
-                              return [...prev];
-                            })
-                          }
-                          value={element['passport_name']}
-                          placeholder=' '
-                          type='text'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>Passport Name</label>
-                      </div>
-                      <div className='form-input col-md-4 bg-white'>
-                        <input
-                          onChange={(e) =>
-                            setTravellerInfo((prev) => {
-                              prev[index]['passport_issue_place'] = e.target.value;
-                              return [...prev];
-                            })
-                          }
-                          value={element['passport_issue_place']}
-                          placeholder=' '
-                          type='text'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Passport Issue Place
-                        </label>
-                      </div>
-                      <div className='form-datepicker col-md-6'>
-                        <label>Issue Date</label>
-                        <DatePicker
-                          style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
-                          inputClass='custom_input-picker'
-                          containerClassName='custom_container-picker'
-                          value={
-                            new DateObject({
-                              date: element.passport_issue_date,
-                              format: 'YYYY-MM-DD',
-                            })
-                          }
-                          onChange={(date) =>
-                            setTravellerInfo((prev) => {
-                              prev[index]['passport_issue_date'] =
-                                date.format('YYYY-MM-DD');
-                              return [...prev];
-                            })
-                          }
-                          numberOfMonths={1}
-                          offsetY={10}
-                          format='DD MMMM YYYY'
-                        />
-                      </div>
-                      <div className='form-datepicker col-md-6'>
-                        <label>Issue Date</label>
-                        <DatePicker
-                          style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
-                          inputClass='custom_input-picker'
-                          containerClassName='custom_container-picker'
-                          value={
-                            new DateObject({
-                              date: element.passport_expiry_date,
-                              format: 'YYYY-MM-DD',
-                            })
-                          }
-                          onChange={(date) =>
-                            setTravellerInfo((prev) => {
-                              prev[index]['passport_expiry_date'] =
-                                date.format('YYYY-MM-DD');
-                              return [...prev];
-                            })
-                          }
-                          numberOfMonths={1}
-                          offsetY={10}
-                          format='DD MMMM YYYY'
-                        />
-                      </div>
-                    </div>
-                  </div>
+                    </>
+                  )}
                   <h4>Miscellaneous Details</h4>
                   <div className='row my-1 y-gap-20'>
                     <div className='col-md-6'>
@@ -646,13 +652,49 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                       />
                     </div> */}
                   </div>
+                  <div className='d-flex col-12 justify-end'>
+                    <button
+                      className='button -dark-1 px-30 h-50 bg-blue-1 text-white col-md-4'
+                      onClick={async () => {
+                        const response = await updateItem('travellers', element.id, {
+                          ...element,
+                          ...{
+                            prefix: element.prefix.value ? element.prefix.value : null,
+                            first_name: element.first_name,
+                            middle_name: element.middle_name,
+                            last_name: element.last_name,
+                            passport_dob: element.passport_dob,
+                            mobile_phone: element.mobile_phone,
+                            passport_number: element.passport_number,
+                            passport_name: element.passport_name,
+                            passport_issue_place: element.passport_issue_place,
+                            passport_issue_date: element.passport_issue_date,
+                            passport_expiry_date: element.passport_expiry_date,
+                          },
+                        });
+                        if (response.success) {
+                          sendToast('success', 'Traveller updated successfully', 4000);
+                        } else {
+                          sendToast(
+                            'error',
+                            response.data?.error ||
+                              response.data?.message ||
+                              'Error updating traveller',
+                            4000
+                          );
+                        }
+                      }}
+                    >
+                      Update This Traveller
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
         </div>
         <div className='d-flex col-12 justify-end'>
           <button
-            className='button -dark-1 px-30 h-50 bg-blue-1 text-white col-4 mt-20'
+            className='button -dark-1 px-30 h-50 bg-blue-1 text-white col-md-4 mt-20'
             onClick={() => onClick()}
           >
             Proceed To Seat Selection
