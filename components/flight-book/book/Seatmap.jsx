@@ -2783,17 +2783,25 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                     if (data?.serviceRequest) {
                                       let m;
                                       let s;
+                                      let st;
                                       // SSR Type And Who It Belongs To
                                       for (let ref of data?.referenceForDataElement
                                         ?.reference) {
                                         // PT
                                         if (ref?.qualifier === 'PT') {
                                           if (p === +ref?.number) {
-                                            for (let ml of amadeusMealOptions) {
-                                              if (
-                                                ml.value === data.serviceRequest.ssr.type
-                                              )
-                                                m = ml.label;
+                                            if (data.serviceRequest.ssr.type === 'RQST') {
+                                              if (data.serviceRequest?.ssrb?.data) {
+                                                st = data.serviceRequest?.ssrb?.data;
+                                              }
+                                            } else {
+                                              for (let ml of amadeusMealOptions) {
+                                                if (
+                                                  ml.value ===
+                                                  data.serviceRequest.ssr.type
+                                                )
+                                                  m = ml.label;
+                                              }
                                             }
                                           }
                                         }
@@ -2809,6 +2817,9 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                         }
                                         if (m && s) {
                                           meal.push({ [s]: m });
+                                        }
+                                        if (st && s) {
+                                          seat.push({ [s]: st });
                                         }
                                       }
                                     }
