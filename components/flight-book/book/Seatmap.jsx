@@ -103,6 +103,22 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
             if (value.data.fares.TAX) {
               tempObj['Taxes & Fee'] += value.data.fares.TAX;
             }
+          } else if (value?.provider === 'aa') {
+            if (value.data.totals.totalAmount) {
+              tempObj['Base Fare'] += value.data.totals.totalAmount;
+            }
+            if (value.data.totals.totalTax) {
+              tempObj['Taxes & Fee'] += value.data.totals.totalTax;
+            }
+            for (let traveller of travellerInfo) {
+              if (traveller.trip_meals[key] && traveller.trip_meals[key].length > 0) {
+                for (let meal of traveller.trip_meals[key]) {
+                  tempObj['Meal Total'] += meal?.value?.passengersAvailability
+                    ? Object.values(meal?.value?.passengersAvailability)[0]?.price || 0
+                    : 0;
+                }
+              }
+            }
           }
         }
       }
@@ -125,10 +141,17 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                 }
               }
             }
+          } else if (value.provider === 'aa') {
+            for (let seg of value.data) {
+              if (seg.seatMap.travellers) {
+                for (let trav of seg.seatMap.travellers) {
+                  tempObj['Seats Total'] += +trav.amount;
+                }
+              }
+            }
           }
         }
       }
-      console.log('tempObj', tempObj);
       setBreakdown(tempObj);
     }
   }, [PNR, travellerInfo, seatMap]);
@@ -446,11 +469,14 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                   31536000000
                 ).toFixed(2);
                 if (age >= 2) {
-                  ssrs.push({
-                    count: 1,
-                    key: Object.values(meal.value.passengersAvailability)[0].ssrKey,
-                  });
-                  ssrsTotal += Object.values(meal.value.passengersAvailability)[0].price;
+                  if (meal.value?.passengersAvailability) {
+                    ssrs.push({
+                      count: 1,
+                      key: Object.values(meal.value.passengersAvailability)[0].ssrKey,
+                    });
+                    ssrsTotal += Object.values(meal.value.passengersAvailability)[0]
+                      .price;
+                  }
                 }
               }
             }
@@ -2604,12 +2630,10 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                       tempObj['Base Fare'] = value.breakdown.journeyTotals.totalAmount;
                       tempObj['Taxes & Fee'] = value.breakdown.journeyTotals.totalTax;
                       tempObj['Special Service Fee (Meals + Seats)'] =
-                        value.breakdown.passengerTotals?.specialServices?.taxes +
-                        value.breakdown.passengerTotals?.specialServices?.total +
-                        value.breakdown.passengerTotals?.specialServices?.adjustments +
-                        value.breakdown.passengerTotals.seats?.taxes +
-                        value.breakdown.passengerTotals?.seats?.total +
-                        value.breakdown.passengerTotals?.seats?.adjustments;
+                        (value.breakdown.passengerTotals?.specialServices?.taxes || 0) +
+                        (value.breakdown.passengerTotals?.specialServices?.total || 0) +
+                        (value.breakdown.passengerTotals?.seats?.taxes || 0) +
+                        (value.breakdown.passengerTotals?.seats?.total || 0);
                     } else if (seatMap[key].provider === 'ad') {
                       bookingID =
                         value.pnrHeader.reservationInfo.reservation.controlNumber;
@@ -2662,7 +2686,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                           <div className='text-15'>Price Breakdown</div>
                           {Object.entries(tempObj).map(([key, value], i) => (
                             <>
-                              {value && (
+                              {value && value > 0 ? (
                                 <span className='d-block'>
                                   <span className='fw-500'>{key}</span>:{' '}
                                   {value?.toLocaleString('en-IN', {
@@ -2671,6 +2695,8 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                     currency: 'INR',
                                   })}
                                 </span>
+                              ) : (
+                                <></>
                               )}
                             </>
                           ))}
