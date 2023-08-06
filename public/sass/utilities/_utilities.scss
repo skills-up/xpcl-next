@@ -2678,6 +2678,7 @@ table.table-6 {
   grid-template-columns: auto auto auto;
   gap: 1rem 0;
   align-items: center;
+  justify-content: space-between;
   @include media-below(lg) {
     padding-top: 1rem;
     grid-template-columns: auto;
@@ -2689,6 +2690,10 @@ table.table-6 {
       width: unset;
       max-width: 100%;
     }
+  }
+  .hotel-date-select {
+    width: 350px;
+    max-width: 100%;
   }
   #react-select-2-listbox {
     z-index: 999;

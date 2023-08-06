@@ -17,17 +17,20 @@ import { hotelSearchData } from '../../../data/hotelSearchData';
 import { BiPlusMedical, BiTrash } from 'react-icons/bi';
 import { sendToast } from '../../../utils/toastify';
 import LoadingBar from 'react-top-loading-bar';
+import GuestSearch from '../../hotel-single/filter-box/GuestSearch';
 
 const MainFilterSearchBox = () => {
   const [progress, setProgress] = useState(0);
   const dispatch = useDispatch();
   const [location, setLocation] = useState(null);
   const [date, setDate] = useState([new DateObject(), new DateObject().add(1, 'days')]);
-  const [rooms, setRooms] = useState([{ travellers: [] }]);
+  const [rooms, setRooms] = useState([{ adult: 0, child: [] }]);
   const [ratingParam, setRatingParam] = useState([]);
   const [clientTravellers, setClientTravellers] = useState([]);
 
   const ratingOptions = ['1', '2', '3', '4', '5'];
+
+  useEffect(() => console.log('Rooms', rooms), [rooms]);
 
   useEffect(() => {
     getData();
@@ -51,58 +54,65 @@ const MainFilterSearchBox = () => {
     }
     // Getting Travellers Ages
     let roomsTemp = [];
-    let traveller_ids = [];
+    // let traveller_ids = [];
+    // for (let room of rooms) {
+    //   for (let traveller of room.travellers) {
+    //     traveller_ids.push(traveller.value);
+    //   }
+    // }
+    // if (traveller_ids.length === 0) {
+    //   sendToast('error', 'Please select at least one Traveller');
+    //   return;
+    // }
+    // const travellers = await getList('travellers', { traveller_ids });
+    // if (!travellers?.success) {
+    //   sendToast('error', 'Error fetching Traveller details');
+    //   return;
+    // }
+    // let currentTime = Date.now();
     for (let room of rooms) {
-      for (let traveller of room.travellers) {
-        traveller_ids.push(traveller.value);
-      }
-    }
-    if (traveller_ids.length === 0) {
-      sendToast('error', 'Please select at least one Traveller');
-      return;
-    }
-    const travellers = await getList('travellers', { traveller_ids });
-    if (!travellers?.success) {
-      sendToast('error', 'Error fetching Traveller details');
-      return;
-    }
-    let currentTime = Date.now();
-    for (let room of rooms) {
-      if (!room.travellers || room.travellers.length === 0) {
-        sendToast('error', 'Each room should have a traveller..', 4000);
-        return;
-      }
-      let temp = { adults: 0, childAge: [] };
-      for (let travl of room.travellers) {
-        for (let traveller of travellers.data) {
-          if (travl.value === traveller.id) {
-            // Getting Age
-            if (traveller?.passport_dob) {
-              const age = (
-                (currentTime -
-                  +new DateObject({
-                    date: traveller.passport_dob,
-                    format: 'YYYY-MM-DD',
-                  })
-                    .toDate()
-                    .getTime()) /
-                31536000000
-              ).toFixed(2);
-              // If below 12, child
-              if (age < 12) temp.childAge.push(Math.floor(age));
-              // If above 12 years, consider adult
-              if (age >= 12) temp.adults += 1;
-            } else {
-              temp.adults += 1;
-            }
-          }
-        }
-      }
-      if (temp.adults === 0 && room.travellers.length > 0) {
+      // if (!room.travellers || room.travellers.length === 0) {
+      //   sendToast('error', 'Each room should have a traveller..', 4000);
+      //   return;
+      // }
+      // let temp = { adults: 0, childAge: [] };
+      // for (let travl of room.travellers) {
+      //   for (let traveller of travellers.data) {
+      //     if (travl.value === traveller.id) {
+      //       // Getting Age
+      //       if (traveller?.passport_dob) {
+      //         const age = (
+      //           (currentTime -
+      //             +new DateObject({
+      //               date: traveller.passport_dob,
+      //               format: 'YYYY-MM-DD',
+      //             })
+      //               .toDate()
+      //               .getTime()) /
+      //           31536000000
+      //         ).toFixed(2);
+      //         // If below 12, child
+      //         if (age < 12) temp.childAge.push(Math.floor(age));
+      //         // If above 12 years, consider adult
+      //         if (age >= 12) temp.adults += 1;
+      //       } else {
+      //         temp.adults += 1;
+      //       }
+      //     }
+      //   }
+      // }
+      // if (temp.adults === 0 && room.travellers.length > 0) {
+      //   sendToast('error', 'Each room should have an adult', 4000);
+      //   return;
+      // }
+      if (room.adult === 0) {
         sendToast('error', 'Each room should have an adult', 4000);
         return;
       }
-      roomsTemp.push(temp);
+      roomsTemp.push({
+        adults: room.adult,
+        childAge: room.child,
+      });
     }
     setProgress(30);
     // Search Call
@@ -166,7 +176,13 @@ const MainFilterSearchBox = () => {
                 cityName: hotel[1],
               }))}
               formatOptionLabel={(opt) => {
-                return <div key={opt.value}>{opt.cityName}<br/><small>{opt.label}</small></div>;
+                return (
+                  <div key={opt.value}>
+                    {opt.cityName}
+                    <br />
+                    <small>{opt.label}</small>
+                  </div>
+                );
               }}
               value={location}
               onChange={(id) => setLocation(id)}
@@ -174,8 +190,11 @@ const MainFilterSearchBox = () => {
           </div>
           {/* End Location Flying From */}
 
-          <div className='hotel-date-select pt-5 d-flex gap-1 items-center justify-center'>
-            <div>
+          <div
+            style={{ border: '1px solid lightgray' }}
+            className='hotel-date-select py-4 d-flex mt-30 rounded-4 gap-1 items-center justify-center'
+          >
+            <div className='text-center'>
               <label>
                 Check In - Check Out<span className='text-danger'>*</span>
               </label>
@@ -183,7 +202,7 @@ const MainFilterSearchBox = () => {
                 range
                 rangeHover
                 style={{ fontSize: '1rem' }}
-                inputClass='custom_input-picker'
+                inputClass='custom_input-picker text-center'
                 containerClassName='custom_container-picker'
                 value={date}
                 onChange={(i) => {
@@ -199,7 +218,7 @@ const MainFilterSearchBox = () => {
           </div>
 
           {/* End Return */}
-          <div className='hotel-search-select'>
+          <div className='hotel-search-select '>
             <label>Specify Ratings (Optional) </label>
             <Select
               options={ratingOptions.map((el) => ({ label: el, value: el }))}
@@ -212,24 +231,26 @@ const MainFilterSearchBox = () => {
           {/* End guest */}
         </div>
         {/* Rooms Guests */}
-        <hr style={{ margin: 'auto', width: '90%' }} className='my-3' />
+        <hr
+          style={{ margin: 'auto', width: '90%', color: '#13357b', opacity: '100%' }}
+          className='my-3'
+        />
         <div className='pl-20 lg:pl-0'>
-          <h4 className='text-center'>Rooms & Guests</h4>
-          <div className='bg-white hotel-search-guest-selector mt-20 py-15'>
+          <h4 className='text-center mb-10'>Rooms & Guests</h4>
+          <GuestSearch room={[rooms, setRooms]} />
+          {/* <div className='bg-white hotel-search-guest-selector py-15'>
             {rooms.map((room, index) => {
               return (
                 <div
                   key={index}
                   className='px-30 lg:px-10 hotel-search-guest-container row items-center py-10 y-gap-10'
                 >
-                  {/* Room Number */}
                   <span
                     className='col-lg-1 text-center d-block'
                     style={{ fontWeight: 'bold' }}
                   >
                     Room {index + 1}
                   </span>
-                  {/* Add Guests Component */}
                   <div className='form-input-select col-lg-9 px-0 lg:px-15'>
                     <label>Select Guests</label>
                     <Select
@@ -262,7 +283,6 @@ const MainFilterSearchBox = () => {
                       }
                     />
                   </div>
-                  {/* Buttons (Add + Trash) */}
                   <div className='col-lg-2 lg:px-15 m-0 d-flex gap-1'>
                     {index < 8 && (
                       <button
@@ -293,7 +313,7 @@ const MainFilterSearchBox = () => {
                 </div>
               );
             })}
-          </div>
+          </div> */}
         </div>
         {/* End search button_item */}
         <div className='button-item pl-20 mt-20 lg:pl-0'>

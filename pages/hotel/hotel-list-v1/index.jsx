@@ -22,7 +22,7 @@ const index = () => {
       <Header1 />
       {/* End Header 1 */}
 
-      <section className='pt-40 pb-40 bg-light-2'>
+      <section className='pt-40 pb-40'>
         <div className='container'>
           <div className='row'>
             <div className='col-12'>
@@ -38,11 +38,11 @@ const index = () => {
       </section>
       {/* Top SearchBanner */}
       {searchData && (
-        <section className='layout-pt-md layout-pb-lg'>
+        <section className='layout-pt-md layout-pb-lg bg-light-2'>
           <div className='container'>
             <div className='row y-gap-30'>
               <div className='col-xl-3'>
-                <aside className='sidebar y-gap-40 xl:d-none'>
+                <aside className='sidebar y-gap-40 xl:d-none bg-white py-20 px-20'>
                   <Sidebar />
                 </aside>
                 {/* End sidebar for desktop */}

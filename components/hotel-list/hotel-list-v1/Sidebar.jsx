@@ -27,7 +27,7 @@ const Sidebar = () => {
       </div> */}
       {/* End deals filter */}
 
-      <div className='sidebar__item'>
+      <div className='sidebar__item -no-border'>
         <h5 className='text-18 fw-500 mb-10'>Boarding Type</h5>
         <div className='sidebar-checkbox'>
           <PopularFilters />

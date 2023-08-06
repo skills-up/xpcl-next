@@ -14,8 +14,8 @@ function HotelProperty({ item }) {
   console.log('total', totalChildren, totalAdults);
   const router = useRouter();
   return (
-    <div className='col-12' key={item?.id}>
-      <div className='border-top-light pt-30'>
+    <div className='col-12 bg-white px-20 mb-30 rounded-4 lg:mb-20' key={item?.id}>
+      <div className='pt-30 pb-30'>
         <div className='row x-gap-20 y-gap-20'>
           <div className='col-md-auto'>
             <div className='cardImage ratio ratio-1:1 w-250 md:w-1/1 rounded-4'>

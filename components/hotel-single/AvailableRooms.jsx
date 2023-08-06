@@ -119,13 +119,15 @@ const AvailableRooms = ({ hotel, onRoomSelect, rooms }) => {
                         )}
                         {/* Sleeps */}
                         <div>
-                          <div className='d-flex gap-1 text-light-1 flex-column'>
-                            {rooms.length > 0 &&
-                              rooms[hI].travellers.map((t, tI) => (
-                                <div key={tI} className='d-flex gap-2 items-center'>
-                                  <div key={tI} className='icon-man text-24' /> {t.label}
-                                </div>
-                              ))}
+                          <div className='d-flex gap-1 flex-column'>
+                            <span className='text-15 lh-12 fw-500'>
+                              {rooms[hI].adult} {rooms[hI].adult > 1 ? 'Adults' : 'Adult'}
+                              {rooms[hI].child.length > 0
+                                ? rooms[hI].child.length > 1
+                                  ? ', ' + rooms[hI].child.length + ' Children'
+                                  : ', ' + rooms[hI].child.length + ' Child'
+                                : ''}
+                            </span>
                           </div>
                         </div>
                       </div>

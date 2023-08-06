@@ -26,7 +26,8 @@ const CustomerInfo = () => {
     }
     getData();
   }, []);
-
+  const [selectedTravellers, setSelectedTravellers] = useState([]);
+  const [selectionConfirm, setSelectionConfirm] = useState(false);
   const [travellers, setTravellers] = useState([]);
   const passportPrefixOptions = [
     { value: 'Mr', label: 'Mr.' },
@@ -38,16 +39,19 @@ const CustomerInfo = () => {
   const getData = async () => {
     setProgress(30);
     // Get traveller details
-    let traveller_ids = [];
-    if (rooms.length > 0) {
-      for (let room of rooms) {
-        for (let trav of room.travellers) {
-          traveller_ids.push(trav?.value);
-        }
-      }
-    }
+    // let traveller_ids = [];
+    // if (rooms.length > 0) {
+    //   for (let room of rooms) {
+    //     for (let trav of room.travellers) {
+    //       traveller_ids.push(trav?.value);
+    //     }
+    //   }
+    // }
+    let tempSelectedTravellers = [];
+    for (let room of rooms) tempSelectedTravellers.push({ travellers: [] });
+    setSelectedTravellers(tempSelectedTravellers);
     setProgress(60);
-    const travellers = await getList('travellers', { traveller_ids });
+    const travellers = await getList('travellers');
     setProgress(100);
     if (travellers.success) {
       setTravellers(
@@ -74,47 +78,43 @@ const CustomerInfo = () => {
   const confirmBooking = async () => {
     let roomwiseGuests = [];
     let currentTime = Date.now();
-    for (let room of rooms) {
+    for (let room of selectedTravellers) {
       let tempArr = [];
-      let hasPassport = true;
+      let hasPassport = false;
       let hasPAN = false;
-      for (let travl of room.travellers) {
-        for (let traveller of travellers) {
-          if (traveller.id === travl.value) {
-            let type;
-            if (!traveller?.prefix?.value) {
-              sendToast('error', 'Each traveller needs to have a Prefix/Title', 4000);
-              return;
-            } else if (traveller.pan_number) hasPAN = true;
-            if (traveller.passport_number) hasPassport = true;
-            // Age
-            const age = (
-              (currentTime -
-                +new DateObject({
-                  date: traveller.passport_dob,
-                  format: 'YYYY-MM-DD',
-                })
-                  .toDate()
-                  .getTime()) /
-              31536000000
-            ).toFixed(2);
-            // If below 12, child
-            if (age < 12) type = 'CHILD';
-            // If above 12 years, consider adult
-            if (age >= 12) type = 'ADULT';
-            // Pushing
-            tempArr.push({
-              type,
-              title: traveller.prefix.value,
-              first: traveller.first_name,
-              last: traveller.last_name,
-              pan: PNR.room.ipr ? traveller?.pan_number || undefined : undefined,
-              passport: PNR.room.ipm
-                ? traveller?.passport_number || undefined
-                : undefined,
-            });
-          }
-        }
+      for (let traveller of room.travellers) {
+        let type;
+        if (!traveller?.value?.prefix?.value) {
+          sendToast('error', 'Each traveller needs to have a Prefix/Title', 4000);
+          return;
+        } else if (traveller.value?.pan_number) hasPAN = true;
+        if (traveller.value?.passport_number) hasPassport = true;
+        // Age
+        const age = (
+          (currentTime -
+            +new DateObject({
+              date: traveller.value.passport_dob,
+              format: 'YYYY-MM-DD',
+            })
+              .toDate()
+              .getTime()) /
+          31536000000
+        ).toFixed(2);
+        // If below 12, child
+        if (age < 12) type = 'CHILD';
+        // If above 12 years, consider adult
+        if (age >= 12) type = 'ADULT';
+        // Pushing
+        tempArr.push({
+          type,
+          title: traveller.value.prefix.value,
+          first: traveller.value.first_name,
+          last: traveller.value.last_name,
+          pan: PNR.room.ipr ? traveller?.value?.pan_number || undefined : undefined,
+          passport: PNR.room.ipm
+            ? traveller?.value?.passport_number || undefined
+            : undefined,
+        });
       }
       if (PNR.room.ipr && !hasPAN) {
         sendToast(
@@ -171,6 +171,12 @@ const CustomerInfo = () => {
       );
     }
   };
+
+  useEffect(
+    () => console.log('sel travellers', selectedTravellers),
+    [selectedTravellers]
+  );
+
   return (
     <>
       <LoadingBar
@@ -179,130 +185,245 @@ const CustomerInfo = () => {
         onLoaderFinished={() => setProgress(0)}
       />
       {/* Stage 0 */}
-      {stage === 0 && (
+      {stage === 0 && travellers.length > 0 && (
         <>
-          <div className='col-xl-7 col-lg-8 mt-30'>
-            <h2 className='fw-500 mt-40 md:mt-24'>Review Travellers</h2>
-            <div>
-              <div className='mt-20'>
-                {travellers &&
-                  travellers.length > 0 &&
-                  travellers.map((element, index) => {
-                    // Getting Room Number
-                    let roomNumber = 0;
-                    let counter = 1;
+          {!selectionConfirm && (
+            <div className='col-xl-7 col-lg-8 mt-30'>
+              <h2>Select Occupants</h2>
+              <div>
+                {rooms.map((room, index) => (
+                  <div className='mt-20'>
+                    <span className='text-17 fw-500'>
+                      Room {index + 1} ({room.adult} {room.adult > 1 ? 'Adults' : 'Adult'}{' '}
+                      {room.child.length > 0
+                        ? room.child.length > 1
+                          ? ', ' + room.child.length + ' Children'
+                          : ', ' + room.child.length + ' Child'
+                        : ''}
+                      )
+                    </span>
+                    <Select
+                      isOptionDisabled={() =>
+                        selectedTravellers[index].travellers.length >=
+                        room.adult + room.child.length
+                      }
+                      options={travellers
+                        .filter((el) => {
+                          let found = false;
+                          // If traveller in any other room
+                          for (let sel of selectedTravellers) {
+                            for (let traveller of sel.travellers) {
+                              if (traveller?.value?.id === el.id) {
+                                found = true;
+                              }
+                            }
+                          }
+                          if (!found) {
+                            return true;
+                          }
+                        })
+                        .map((el) => ({
+                          label: el.aliases[0],
+                          value: el,
+                        }))}
+                      isMulti
+                      value={selectedTravellers[index]?.travellers}
+                      onChange={(id) =>
+                        setSelectedTravellers((prev) => {
+                          prev[index].travellers = id;
+                          return [...prev];
+                        })
+                      }
+                    />
+                  </div>
+                ))}
+              </div>
+              <div className='d-flex justify-end mt-20'>
+                <button
+                  className='button col-lg-8 col-12 h-50 px-24 -dark-1 bg-blue-1 text-white'
+                  onClick={async () => {
+                    // Check if all the rooms have correct travellers
+                    let counter = 0;
+                    let currentTime = Date.now();
                     for (let room of rooms) {
-                      for (let traveller of room.travellers) {
-                        if (traveller.value === element.id) {
-                          roomNumber = counter;
+                      let adults = 0;
+                      let children = 0;
+                      for (let traveller of selectedTravellers[counter].travellers) {
+                        if (traveller?.value) {
+                          const age = (
+                            (currentTime -
+                              +new DateObject({
+                                date: traveller.value.passport_dob,
+                                format: 'YYYY-MM-DD',
+                              })
+                                .toDate()
+                                .getTime()) /
+                            31536000000
+                          ).toFixed(2);
+                          // If below 12, child
+                          if (age < 12) children += 1;
+                          // If above 12 years, consider adult
+                          if (age >= 12) adults += 1;
                         }
                       }
-                      counter += 1;
+                      if (adults !== room.adult || children !== room.child.length) {
+                        sendToast(
+                          'error',
+                          `In Room ${counter + 1}, there were a total of ${
+                            room.adult
+                          } adults${
+                            room.child.length > 0
+                              ? ` and ${room.child.length} children`
+                              : ''
+                          }, however ${adults} adults${
+                            room.child.length > 0 ? ` and ${children} children` : ''
+                          } were selected.`,
+                          10000
+                        );
+                        return;
+                      }
+                      counter++;
                     }
-                    return (
-                      <div key={index}>
-                        <h3 className='mt-20'>
-                          {element.aliases[0]} (Room {roomNumber})
-                        </h3>
-                        <div
-                          key={index}
-                          className='bg-white pt-30 px-30 mt-20 border-light rounded-4'
-                        >
-                          <h4>Traveller</h4>
-                          <div className='row my-3'>
-                            <div className='row col-12 mb-20 y-gap-20'>
-                              <div className='col-md-6 form-input-select'>
-                                <label>Prefix/Title</label>
-                                <Select
-                                  options={passportPrefixOptions}
-                                  value={element.prefix}
-                                  onChange={(id) =>
-                                    setTravellers((prev) => {
-                                      prev[index]['prefix'] = id;
-                                      return [...prev];
-                                    })
-                                  }
-                                />
-                              </div>
-                              <div className='form-input col-md-6 bg-white'>
-                                <input
-                                  onChange={(e) =>
-                                    setTravellers((prev) => {
-                                      prev[index]['first_name'] = e.target.value;
-                                      return [...prev];
-                                    })
-                                  }
-                                  value={element['first_name']}
-                                  placeholder=' '
-                                  type='text'
-                                />
-                                <label className='lh-1 text-16 text-light-1'>
-                                  First Name
-                                </label>
-                              </div>
-                              <div className='form-input col-md-6 bg-white'>
-                                <input
-                                  onChange={(e) =>
-                                    setTravellers((prev) => {
-                                      prev[index]['last_name'] = e.target.value;
-                                      return [...prev];
-                                    })
-                                  }
-                                  value={element['last_name']}
-                                  placeholder=' '
-                                  type='text'
-                                />
-                                <label className='lh-1 text-16 text-light-1'>
-                                  Last Name
-                                </label>
-                              </div>
-                              {PNR?.room?.ipr && (
-                                <div className='form-input col-md-6 bg-white'>
-                                  <input
-                                    onChange={(e) =>
-                                      setTravellers((prev) => {
-                                        prev[index]['pan_number'] = e.target.value;
-                                        return [...prev];
-                                      })
-                                    }
-                                    value={element['pan_number']}
-                                    placeholder=' '
-                                    type='text'
-                                  />
-                                  <label className='lh-1 text-16 text-light-1'>
-                                    PAN Number
-                                  </label>
-                                </div>
-                              )}
-                              {PNR?.room?.ipm && (
-                                <div className='form-input col-md-6 bg-white'>
-                                  <input
-                                    onChange={(e) =>
-                                      setTravellers((prev) => {
-                                        prev[index]['passport_number'] = e.target.value;
-                                        return [...prev];
-                                      })
-                                    }
-                                    value={element['passport_number']}
-                                    placeholder=' '
-                                    type='text'
-                                  />
-                                  <label className='lh-1 text-16 text-light-1'>
-                                    Passport Number
-                                  </label>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
+                    setSelectionConfirm(true);
+                  }}
+                >
+                  Confirm Occupants
+                </button>
               </div>
-              {/* End col-12 */}
             </div>
-            {/* End .row */}
-          </div>
+          )}
+          {selectionConfirm && (
+            <div className='col-xl-7 col-lg-8 mt-30'>
+              <h2 className='fw-500 mt-40 md:mt-24'>Review Travellers</h2>
+              <div>
+                <div className='mt-20'>
+                  {selectedTravellers &&
+                    selectedTravellers.length > 0 &&
+                    selectedTravellers.map((sel, selI) => (
+                      <>
+                        {sel.travellers &&
+                          sel.travellers.length > 0 &&
+                          sel.travellers.map((dat, index) => {
+                            // Getting Room Number
+                            let element = dat?.value;
+                            let roomNumber = selI + 1;
+                            return (
+                              <div key={index}>
+                                <h3 className='mt-20'>
+                                  {element.aliases[0]} (Room {roomNumber})
+                                </h3>
+                                <div
+                                  key={index}
+                                  className='bg-white pt-30 px-30 mt-20 border-light rounded-4'
+                                >
+                                  <h4>Traveller</h4>
+                                  <div className='row my-3'>
+                                    <div className='row col-12 mb-20 y-gap-20'>
+                                      <div className='col-md-6 form-input-select'>
+                                        <label>Prefix/Title</label>
+                                        <Select
+                                          options={passportPrefixOptions}
+                                          value={element.prefix}
+                                          onChange={(id) =>
+                                            setSelectedTravellers((prev) => {
+                                              prev[selI].travellers[index].value[
+                                                'prefix'
+                                              ] = id;
+                                              return [...prev];
+                                            })
+                                          }
+                                        />
+                                      </div>
+                                      <div className='form-input col-md-6 bg-white'>
+                                        <input
+                                          onChange={(e) =>
+                                            setSelectedTravellers((prev) => {
+                                              prev[selI].travellers[index].value[
+                                                'first_name'
+                                              ] = e.target.value;
+                                              return [...prev];
+                                            })
+                                          }
+                                          value={element['first_name']}
+                                          placeholder=' '
+                                          type='text'
+                                        />
+                                        <label className='lh-1 text-16 text-light-1'>
+                                          First Name
+                                        </label>
+                                      </div>
+                                      <div className='form-input col-md-6 bg-white'>
+                                        <input
+                                          onChange={(e) =>
+                                            setSelectedTravellers((prev) => {
+                                              prev[selI].travellers[index].value[
+                                                'last_name'
+                                              ] = e.target.value;
+                                              return [...prev];
+                                            })
+                                          }
+                                          value={element['last_name']}
+                                          placeholder=' '
+                                          type='text'
+                                        />
+                                        <label className='lh-1 text-16 text-light-1'>
+                                          Last Name
+                                        </label>
+                                      </div>
+                                      {PNR?.room?.ipr && (
+                                        <div className='form-input col-md-6 bg-white'>
+                                          <input
+                                            onChange={(e) =>
+                                              setSelectedTravellers((prev) => {
+                                                prev[selI].travellers[index].value[
+                                                  'pan_number'
+                                                ] = e.target.value;
+                                                return [...prev];
+                                              })
+                                            }
+                                            value={element['pan_number']}
+                                            placeholder=' '
+                                            type='text'
+                                          />
+                                          <label className='lh-1 text-16 text-light-1'>
+                                            PAN Number
+                                          </label>
+                                        </div>
+                                      )}
+                                      {PNR?.room?.ipm && (
+                                        <div className='form-input col-md-6 bg-white'>
+                                          <input
+                                            onChange={(e) =>
+                                              setSelectedTravellers((prev) => {
+                                                prev[selI].travellers[index].value[
+                                                  'passport_number'
+                                                ] = e.target.value;
+                                                return [...prev];
+                                              })
+                                            }
+                                            value={element['passport_number']}
+                                            placeholder=' '
+                                            type='text'
+                                          />
+                                          <label className='lh-1 text-16 text-light-1'>
+                                            Passport Number
+                                          </label>
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                      </>
+                    ))}
+                </div>
+                {/* End col-12 */}
+              </div>
+              {/* End .row */}
+            </div>
+          )}
           {/* End .col-xl-7 */}
           <div className='col-xl-5 col-lg-4 mt-30'>
             <div className='booking-sidebar'>
@@ -406,12 +527,8 @@ const CustomerInfo = () => {
                   <div className='fw-500'>
                     {PNR.room.ris.map((element, index) => {
                       let travDetails = [];
-                      for (let travl of rooms[index]?.travellers) {
-                        for (let traveller of travellers) {
-                          if (travl.value === traveller.id) {
-                            travDetails.push(traveller);
-                          }
-                        }
+                      for (let traveller of selectedTravellers[index]?.travellers) {
+                        travDetails.push(traveller?.value);
                       }
                       return (
                         <div className='fw-500' key={element.id}>
