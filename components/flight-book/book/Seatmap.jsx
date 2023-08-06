@@ -2627,11 +2627,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                   }
                   return (
                     <div key={index}>
-                      <h3>
-                        {tripType} (
-                        {selectedBookings[key].segments[0].departure.airport.code} &rarr;{' '}
-                        {selectedBookings[key].segments.at(-1).arrival.airport.code})
-                      </h3>
+                      <h3>{tripType}</h3>
                       <div className='border-top-light mt-30' />
                       <div className='row y-gap-20'>
                         <div className='col-md-4 text-center'>
@@ -2785,41 +2781,49 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                       let s;
                                       let st;
                                       // SSR Type And Who It Belongs To
-                                      for (let ref of data?.referenceForDataElement
-                                        ?.reference) {
-                                        // PT
-                                        if (ref?.qualifier === 'PT') {
-                                          if (p === +ref?.number) {
-                                            if (data.serviceRequest.ssr.type === 'RQST') {
-                                              if (data.serviceRequest?.ssrb?.data) {
-                                                st = data.serviceRequest?.ssrb?.data;
-                                              }
-                                            } else {
-                                              for (let ml of amadeusMealOptions) {
-                                                if (
-                                                  ml.value ===
-                                                  data.serviceRequest.ssr.type
-                                                )
-                                                  m = ml.label;
+                                      if (
+                                        data?.referenceForDataElement?.reference &&
+                                        data?.referenceForDataElement?.reference?.length >
+                                          0
+                                      ) {
+                                        for (let ref of data?.referenceForDataElement
+                                          ?.reference) {
+                                          // PT
+                                          if (ref?.qualifier === 'PT') {
+                                            if (p === +ref?.number) {
+                                              if (
+                                                data.serviceRequest.ssr.type === 'RQST'
+                                              ) {
+                                                if (data.serviceRequest?.ssrb?.data) {
+                                                  st = data.serviceRequest?.ssrb?.data;
+                                                }
+                                              } else {
+                                                for (let ml of amadeusMealOptions) {
+                                                  if (
+                                                    ml.value ===
+                                                    data.serviceRequest.ssr.type
+                                                  )
+                                                    m = ml.label;
+                                                }
                                               }
                                             }
                                           }
-                                        }
-                                        // ST
-                                        if (ref?.qualifier === 'ST') {
-                                          for (let [segKey, segVal] of Object.entries(
-                                            PNR[key].data.segments
-                                          )) {
-                                            if (+segKey === +ref.number) {
-                                              s = `${segVal.from}-${segVal.to}`;
+                                          // ST
+                                          if (ref?.qualifier === 'ST') {
+                                            for (let [segKey, segVal] of Object.entries(
+                                              PNR[key].data.segments
+                                            )) {
+                                              if (+segKey === +ref.number) {
+                                                s = `${segVal.from}-${segVal.to}`;
+                                              }
                                             }
                                           }
-                                        }
-                                        if (m && s) {
-                                          meal.push({ [s]: m });
-                                        }
-                                        if (st && s) {
-                                          seat.push({ [s]: st });
+                                          if (m && s) {
+                                            meal.push({ [s]: m });
+                                          }
+                                          if (st && s) {
+                                            seat.push({ [s]: st });
+                                          }
                                         }
                                       }
                                     }
