@@ -29,7 +29,8 @@ const HotelSingleV1Dynamic = () => {
   const [isLoadMore, setIsLoadMore] = useState(false);
   const rooms = useSelector((state) => state.hotelSearch.value.rooms);
   const [showMap, setShowMap] = useState(false);
-
+  const imageNumber = 5;
+  const allowedRes = ['XL'];
   useEffect(() => {
     if (id) {
       getHotel();
@@ -67,7 +68,7 @@ const HotelSingleV1Dynamic = () => {
           out.push(e);
         } else if (e.url && e.sz) {
           const curr = e.sz;
-          if (curr === 'Standard') {
+          if (allowedRes.includes(curr)) {
             out.push({ url: e.url, sz: curr });
           }
         }
@@ -209,7 +210,8 @@ const HotelSingleV1Dynamic = () => {
                 <div className='galleryGrid -type-1 pt-30'>
                   {images.map((image, imageIndex) => (
                     <>
-                      {((!isLoadMore && imageIndex < 8) || isLoadMore) && (
+                      {/* {((!isLoadMore && imageIndex < imageNumber) || isLoadMore) && ( */}
+                      {imageIndex !== 5 && (
                         <div key={imageIndex}>
                           <Item
                             width={450}
@@ -230,21 +232,33 @@ const HotelSingleV1Dynamic = () => {
                           </Item>
                         </div>
                       )}
+                      {/* )} */}
                     </>
                   ))}
                   {/* End .galleryGrid__item */}
                 </div>
+                {images.length > imageNumber && (
+                  <div className='d-flex justify-center mt-20'>
+                    <Item
+                      width={450}
+                      height={450}
+                      original={images[5]?.url}
+                      thumbnail={images[5]?.url}
+                    >
+                      {({ ref, open }) => (
+                        <button
+                          className='button col-12 h-60 px-24 -dark-1 bg-blue-1 text-white'
+                          ref={ref}
+                          onClick={open}
+                          role='button'
+                        >
+                          Show More
+                        </button>
+                      )}
+                    </Item>
+                  </div>
+                )}
               </Gallery>
-              {images.length > 8 && (
-                <div className='d-flex justify-center mt-20'>
-                  <button
-                    className='button col-12 h-60 px-24 -dark-1 bg-blue-1 text-white'
-                    onClick={() => setIsLoadMore((prev) => !prev)}
-                  >
-                    {isLoadMore ? 'Show Less' : 'Show More'}
-                  </button>
-                </div>
-              )}
             </div>
             {/* End .container */}
           </section>

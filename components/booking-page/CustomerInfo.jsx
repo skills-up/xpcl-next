@@ -5,7 +5,7 @@ import { DateObject } from 'react-multi-date-picker';
 import { useSelector } from 'react-redux';
 import Select from 'react-select';
 import LoadingBar from 'react-top-loading-bar';
-import { customAPICall, getList } from '../../api/xplorzApi';
+import { customAPICall, getList, updateItem } from '../../api/xplorzApi';
 import { sendToast } from '../../utils/toastify';
 import BookingDetails from './sidebar/BookingDetails';
 import GoogleMapReact from 'google-map-react';
@@ -318,7 +318,7 @@ const CustomerInfo = () => {
                                 >
                                   <h4>Traveller</h4>
                                   <div className='row my-3'>
-                                    <div className='row col-12 mb-20 y-gap-20'>
+                                    <div className='row col-12 y-gap-20'>
                                       <div className='col-md-6 form-input-select'>
                                         <label>Prefix/Title</label>
                                         <Select
@@ -411,6 +411,49 @@ const CustomerInfo = () => {
                                         </div>
                                       )}
                                     </div>
+                                  </div>
+                                  <div className='d-flex justify-end mb-20'>
+                                    <button
+                                      className='button col-lg-6 col-12 h-50 px-24 -dark-1 bg-blue-1 text-white'
+                                      onClick={async () => {
+                                        const response = await updateItem(
+                                          'travellers',
+                                          element.id,
+                                          {
+                                            ...element,
+                                            ...{
+                                              prefix: element.prefix.value
+                                                ? element.prefix.value === 'Master'
+                                                  ? 'MSTR'
+                                                  : element.prefix.value.toUpperCase()
+                                                : null,
+                                              first_name: element.first_name,
+                                              middle_name: element.middle_name,
+                                              last_name: element.last_name,
+                                              passport_number: element.passport_number,
+                                              pan_number: element.pan_number,
+                                            },
+                                          }
+                                        );
+                                        if (response.success) {
+                                          sendToast(
+                                            'success',
+                                            'Traveller updated successfully',
+                                            4000
+                                          );
+                                        } else {
+                                          sendToast(
+                                            'error',
+                                            response.data?.error ||
+                                              response.data?.message ||
+                                              'Error updating traveller',
+                                            4000
+                                          );
+                                        }
+                                      }}
+                                    >
+                                      Update Traveller
+                                    </button>
                                   </div>
                                 </div>
                               </div>

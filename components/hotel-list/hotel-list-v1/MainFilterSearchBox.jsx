@@ -161,7 +161,7 @@ const MainFilterSearchBox = () => {
         progress={progress}
         onLoaderFinished={() => setProgress(0)}
       />
-      <div className='border-light rounded-4 pr-20 py-20 lg:px-20 lg:pt-5 lg:pb-20 mt-15'>
+      <div className='border-light rounded-4 pr-20 py-20 lg:px-10 lg:pt-5 lg:pb-20 mt-15'>
         {/* Hotel Search */}
         <div className='hotel-search pl-20 lg:pl-0'>
           <div className='hotel-search-select'>

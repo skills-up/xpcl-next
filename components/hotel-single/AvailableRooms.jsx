@@ -118,18 +118,21 @@ const AvailableRooms = ({ hotel, onRoomSelect, rooms }) => {
                           </div>
                         )}
                         {/* Sleeps */}
-                        <div>
-                          <div className='d-flex gap-1 flex-column'>
-                            <span className='text-15 lh-12 fw-500'>
-                              {rooms[hI].adult} {rooms[hI].adult > 1 ? 'Adults' : 'Adult'}
-                              {rooms[hI].child.length > 0
-                                ? rooms[hI].child.length > 1
-                                  ? ', ' + rooms[hI].child.length + ' Children'
-                                  : ', ' + rooms[hI].child.length + ' Child'
-                                : ''}
-                            </span>
+                        {rooms && rooms.length > 0 && (
+                          <div>
+                            <div className='d-flex gap-1 flex-column'>
+                              <span className='text-15 lh-12 fw-500'>
+                                {rooms[hI].adult}{' '}
+                                {rooms[hI].adult > 1 ? 'Adults' : 'Adult'}
+                                {rooms[hI].child.length > 0
+                                  ? rooms[hI].child.length > 1
+                                    ? ', ' + rooms[hI].child.length + ' Children'
+                                    : ', ' + rooms[hI].child.length + ' Child'
+                                  : ''}
+                              </span>
+                            </div>
                           </div>
-                        </div>
+                        )}
                       </div>
                     </div>
                     {/* End price features */}
