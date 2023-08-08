@@ -846,6 +846,18 @@ const UpdateBooking = () => {
                                       From<span className='text-danger'>*</span>
                                     </label>
                                     <WindowedSelect
+                                      filterOption={(candidate, input) => {
+                                        if (input) {
+                                          return (
+                                            candidate.data.iata.toLowerCase() ===
+                                              input.toLowerCase() ||
+                                            candidate.label
+                                              .toLowerCase()
+                                              .includes(input.toLowerCase())
+                                          );
+                                        }
+                                        return true;
+                                      }}
                                       options={airports
                                         .filter((airport) => {
                                           if (
@@ -900,6 +912,18 @@ const UpdateBooking = () => {
                                       To<span className='text-danger'>*</span>
                                     </label>
                                     <WindowedSelect
+                                      filterOption={(candidate, input) => {
+                                        if (input) {
+                                          return (
+                                            candidate.data.iata.toLowerCase() ===
+                                              input.toLowerCase() ||
+                                            candidate.label
+                                              .toLowerCase()
+                                              .includes(input.toLowerCase())
+                                          );
+                                        }
+                                        return true;
+                                      }}
                                       options={airports
                                         .filter((airport) => {
                                           if (

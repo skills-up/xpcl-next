@@ -126,7 +126,9 @@ const HotelSingleV1Dynamic = () => {
                     {/* Hotel Name */}
                     <div className='col-auto'>
                       <h1 className='text-30 sm:text-25 fw-600'>
-                        {data?.hotel?.name.replaceAll('&amp;', '&')}
+                        {data?.hotel?.name
+                          .replaceAll('&amp;', '&')
+                          .replaceAll('&#039;', "'")}
                       </h1>
                     </div>
                     {/* Rating */}

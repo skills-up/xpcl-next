@@ -4,6 +4,7 @@ import { IoMdWarning } from 'react-icons/io';
 import { DateObject } from 'react-multi-date-picker';
 import { useSelector } from 'react-redux';
 import { customAPICall } from '../../../api/xplorzApi';
+import ItineraryContent from './ItineraryContent';
 
 const BookingDetails = ({ PNR }) => {
   const age = useSelector((state) => state.hotelSearch.value.age);
@@ -33,6 +34,7 @@ const BookingDetails = ({ PNR }) => {
         <div className='text-20 fw-500 mb-30'>Your booking details</div>
         <div className='row x-gap-15 y-gap-20'>
           <div className='col-auto'>
+            {console.log('PNR', PNR)}
             <Image
               width={140}
               height={140}
@@ -169,35 +171,23 @@ const BookingDetails = ({ PNR }) => {
                     Refund will include cancellation penalties.
                   </span>
                 )}
-                {!cancellationPolicy?.cancellationPolicy?.ifra &&
-                  cancellationPolicy.cancellationPolicy.pd &&
+                {cancellationPolicy.cancellationPolicy.pd &&
                   cancellationPolicy.cancellationPolicy.pd.length > 0 && (
-                    <div className='mt-20 ml-5'>
-                      <h5 className='mb-10'>Cancellation Penalty Details</h5>
-                      <ul className='list-disc'>
-                        {cancellationPolicy.cancellationPolicy.pd.map((pd, pdI) => (
-                          <li>
-                            {new Date(pd.fdt).toLocaleString('en-IN', {
-                              dateStyle: 'long',
-                              timeStyle: 'short',
-                            })}{' '}
-                            -{' '}
-                            {new Date(pd.tdt).toLocaleString('en-IN', {
-                              dateStyle: 'long',
-                              timeStyle: 'short',
-                            })}{' '}
-                            :{' '}
-                            <span style={{ fontWeight: 'bold' }}>
-                              {pd.am.toLocaleString('en-IN', {
-                                maximumFractionDigits: 2,
-                                style: 'currency',
-                                currency: 'INR',
-                              })}
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+                    <>
+                      <h5 className='mb-10 mt-20'>Cancellation Penalty Details</h5>
+                      <div className='relative'>
+                        <div className='border-test' />
+                        <div
+                          className='accordion -map row y-gap-20'
+                          id='itineraryContent'
+                        >
+                          <ItineraryContent
+                            checkIn={PNR.data.query.checkinDate}
+                            pd={cancellationPolicy.cancellationPolicy.pd}
+                          />{' '}
+                        </div>
+                      </div>
+                    </>
                   )}
               </div>
             </div>

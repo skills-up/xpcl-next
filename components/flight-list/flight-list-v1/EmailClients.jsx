@@ -667,6 +667,18 @@ function EmailClients() {
                           From<span className='text-danger'>*</span>
                         </label>
                         <WindowedSelect
+                          filterOption={(candidate, input) => {
+                            if (input) {
+                              return (
+                                candidate.data.iata.toLowerCase() ===
+                                  input.toLowerCase() ||
+                                candidate.label
+                                  .toLowerCase()
+                                  .includes(input.toLowerCase())
+                              );
+                            }
+                            return true;
+                          }}
                           options={airports.map((airport) => ({
                             value: airport.id,
                             label: `|${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
@@ -711,6 +723,18 @@ function EmailClients() {
                           To<span className='text-danger'>*</span>
                         </label>
                         <WindowedSelect
+                          filterOption={(candidate, input) => {
+                            if (input) {
+                              return (
+                                candidate.data.iata.toLowerCase() ===
+                                  input.toLowerCase() ||
+                                candidate.label
+                                  .toLowerCase()
+                                  .includes(input.toLowerCase())
+                              );
+                            }
+                            return true;
+                          }}
                           options={airports.map((airport) => ({
                             value: airport.id,
                             label: `|${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,

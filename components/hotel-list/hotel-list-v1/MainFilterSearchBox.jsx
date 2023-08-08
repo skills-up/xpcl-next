@@ -3,7 +3,7 @@ import DatePicker, { DateObject } from 'react-multi-date-picker';
 import { useDispatch } from 'react-redux';
 import ReactSwitch from 'react-switch';
 import Select from 'react-select';
-import WindowedSelect from 'react-windowed-select';
+import WindowedSelect, { createFilter } from 'react-windowed-select';
 import { customAPICall, getList } from '../../../api/xplorzApi';
 import {
   setAge,
@@ -165,10 +165,26 @@ const MainFilterSearchBox = () => {
         {/* Hotel Search */}
         <div className='hotel-search pl-20 lg:pl-0'>
           <div className='hotel-search-select'>
-            <label>
+            <label className='text-15 lh-12 fw-500'>
               Location<span className='text-danger'>*</span>
             </label>
             <WindowedSelect
+              filterOption={(candidate, input) => {
+                if (input) {
+                  return (
+                    candidate.data.cityName.toLowerCase() === input.toLowerCase() ||
+                    candidate.label.toLowerCase().includes(input.toLowerCase())
+                  );
+                }
+                return true;
+              }}
+              placeholder={
+                <>
+                  Search..
+                  <br />
+                  <br />
+                </>
+              }
               windowThreshold={200}
               options={hotelSearchData.map((hotel) => ({
                 value: hotel[0],
@@ -195,7 +211,7 @@ const MainFilterSearchBox = () => {
             className='hotel-date-select py-4 d-flex mt-30 rounded-4 gap-1 items-center justify-center'
           >
             <div className='text-center'>
-              <label>
+              <label className='text-15 lh-12 fw-500'>
                 Check In - Check Out<span className='text-danger'>*</span>
               </label>
               <DatePicker
@@ -219,12 +235,18 @@ const MainFilterSearchBox = () => {
 
           {/* End Return */}
           <div className='hotel-search-select '>
-            <label>Specify Ratings (Optional) </label>
+            <label className='text-15 lh-12 fw-500'>Specify Ratings (Optional) </label>
             <Select
               options={ratingOptions.map((el) => ({ label: el, value: el }))}
               isMulti
               value={ratingParam}
-              placeholder='Select'
+              placeholder={
+                <>
+                  Search..
+                  <br />
+                  <br />
+                </>
+              }
               onChange={(id) => setRatingParam(id)}
             />
           </div>

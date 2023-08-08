@@ -352,7 +352,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
     let totalCalls = 0;
     let currentCalls = 0;
     let totalSuccess = 0;
-    let bookingTemp = { from: null, to: null, combined: null };
+    let bookingTemp = { to: null, from: null, combined: null };
     for (let value of Object.values(PNR)) {
       if (value) totalCalls += 1;
     }
@@ -456,29 +456,39 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
           let ssrs = [];
           for (let traveller of travellerInfo) {
             if (traveller.trip_meals[key]) {
-              for (let meal of traveller.trip_meals[key]) {
-                // Age
-                const age = (
-                  (Date.now() -
-                    +new DateObject({
-                      date: traveller?.passport_dob,
-                      format: 'YYYY-MM-DD',
-                    })
-                      .toDate()
-                      .getTime()) /
-                  31536000000
-                ).toFixed(2);
-                if (age >= 2) {
-                  if (meal.value?.passengersAvailability) {
-                    ssrs.push({
-                      count: 1,
-                      key: Object.values(meal.value.passengersAvailability)[0].ssrKey,
-                    });
-                    ssrsTotal += Object.values(meal.value.passengersAvailability)[0]
-                      .price;
+              // Getting the traveller key
+              let pKey;
+              for (let p of value.data.pax) {
+                if (
+                  p.name.first === traveller.first_name &&
+                  p.name.last === traveller.last_name &&
+                  p.dob === traveller.passport_dob
+                )
+                  pKey = p.key;
+              }
+              if (pKey)
+                for (let meal of traveller.trip_meals[key]) {
+                  // Age
+                  const age = (
+                    (Date.now() -
+                      +new DateObject({
+                        date: traveller?.passport_dob,
+                        format: 'YYYY-MM-DD',
+                      })
+                        .toDate()
+                        .getTime()) /
+                    31536000000
+                  ).toFixed(2);
+                  if (age >= 2) {
+                    if (meal.value?.passengersAvailability[pKey]) {
+                      ssrs.push({
+                        count: 1,
+                        key: meal.value?.passengersAvailability[pKey]?.ssrKey,
+                      });
+                      ssrsTotal += meal.value?.passengersAvailability[pKey]?.price;
+                    }
                   }
                 }
-              }
             }
           }
           if (ssrs.length > 0) {
