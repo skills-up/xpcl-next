@@ -249,7 +249,7 @@ const HotelSingleV1Dynamic = () => {
                     >
                       {({ ref, open }) => (
                         <button
-                          className='button col-12 h-60 px-24 -dark-1 bg-blue-1 text-white'
+                          className='btn btn-outline-primary col-12 h-50 px-24 '
                           ref={ref}
                           onClick={open}
                           role='button'

@@ -61,7 +61,8 @@ const Counter = ({ name, defaultValue, onCounterChange }) => {
 };
 
 const GuestSearch = ({ room }) => {
-  const [rooms, setRooms] = room;
+  let [rooms, setRooms] = room;
+  rooms = [...rooms];
   const [guestCounts, setGuestCounts] = useState({
     Adults: 2,
     Children: 1,
@@ -224,6 +225,7 @@ const GuestSearch = ({ room }) => {
                   <i className='icon-plus text-15' />
                 </button>
               )}
+              {console.log('r', rooms)}
               {index > 0 && (
                 <button
                   className='button -outline-blue-1 text-blue-1 size-38 rounded-4 js-up'

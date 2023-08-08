@@ -13,7 +13,7 @@ function SelectedBookings() {
   return (
     <>
       {!emailClientMode && (selectedBooking?.to || selectedBooking?.from) && (
-        <div className='mb-30'>
+        <div className='mb-30' id='selected-bookings'>
           {/* Title */}
           <h2>Selected Bookings</h2>
           {/* To */}

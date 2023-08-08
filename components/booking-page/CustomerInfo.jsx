@@ -9,6 +9,7 @@ import { customAPICall, getList, updateItem } from '../../api/xplorzApi';
 import { sendToast } from '../../utils/toastify';
 import BookingDetails from './sidebar/BookingDetails';
 import GoogleMapReact from 'google-map-react';
+import Pluralize from '../../utils/pluralChecker';
 
 const CustomerInfo = () => {
   const [progress, setProgress] = useState(0);
@@ -177,6 +178,28 @@ const CustomerInfo = () => {
     [selectedTravellers]
   );
 
+  const JSONParse = (text) => {
+    try {
+      let newT = JSON.parse(text);
+      return (
+        <ul className='list-disc ml-10'>
+          {Object.entries(newT).map(([key, value], index) => (
+            <li className='mb-10 text-16' key={index}>
+              <span className='text-dark fw-500'>
+                {key.split('_').map((k) => (
+                  <>{k.charAt(0).toUpperCase() + k.slice(1).toLowerCase() + ' '}</>
+                ))}
+              </span>{' '}
+              : <span className='text-secondary'>{value}</span>
+            </li>
+          ))}
+        </ul>
+      );
+    } catch (err) {
+      return text;
+    }
+  };
+
   return (
     <>
       <LoadingBar
@@ -194,11 +217,12 @@ const CustomerInfo = () => {
                 {rooms.map((room, index) => (
                   <div className='mt-20'>
                     <span className='text-17 fw-500'>
-                      Room {index + 1} ({room.adult} {room.adult > 1 ? 'Adults' : 'Adult'}{' '}
+                      Room {index + 1} ({room.adult}{' '}
+                      {Pluralize('Adult', 'Adults', room.adult)}{' '}
                       {room.child.length > 0
-                        ? room.child.length > 1
-                          ? ', ' + room.child.length + ' Children'
-                          : ', ' + room.child.length + ' Child'
+                        ? ', ' +
+                          room.child.length +
+                          Pluralize(' Child', ' Children', room.child.length)
                         : ''}
                       )
                     </span>
@@ -269,15 +293,27 @@ const CustomerInfo = () => {
                       if (adults !== room.adult || children !== room.child.length) {
                         sendToast(
                           'error',
-                          `In Room ${counter + 1}, there were a total of ${
+                          `Room ${counter + 1} was searched for ${room.adult} ${Pluralize(
+                            'adult',
+                            'adults',
                             room.adult
-                          } adults${
+                          )}${
                             room.child.length > 0
-                              ? ` and ${room.child.length} children`
+                              ? ` and ${room.child.length} ${Pluralize(
+                                  'child',
+                                  'children',
+                                  room.child.length
+                                )}`
                               : ''
-                          }, however ${adults} adults${
-                            room.child.length > 0 ? ` and ${children} children` : ''
-                          } were selected.`,
+                          }, whereas ${adults} ${Pluralize('adult', 'adults', adults)}${
+                            children > 0
+                              ? ` and ${children} ${Pluralize(
+                                  'child',
+                                  'children',
+                                  children
+                                )}`
+                              : ''
+                          } have been selected.`,
                           10000
                         );
                         return;
@@ -413,8 +449,8 @@ const CustomerInfo = () => {
                                     </div>
                                   </div>
                                   <div className='d-flex justify-end mb-20'>
-                                    <button
-                                      className='button col-lg-6 col-12 h-50 px-24 -dark-1 bg-blue-1 text-white'
+                                    <a
+                                      className='cursor-pointer text-primary px-24'
                                       onClick={async () => {
                                         const response = await updateItem(
                                           'travellers',
@@ -453,7 +489,7 @@ const CustomerInfo = () => {
                                       }}
                                     >
                                       Update Traveller
-                                    </button>
+                                    </a>
                                   </div>
                                 </div>
                               </div>
@@ -471,14 +507,16 @@ const CustomerInfo = () => {
           <div className='col-xl-5 col-lg-4 mt-30'>
             <div className='booking-sidebar'>
               <BookingDetails PNR={PNR} />{' '}
-              <div className='d-flex justify-end mt-20'>
-                <button
-                  className='button col-lg-8 col-12 h-60 px-24 -dark-1 bg-blue-1 text-white'
-                  onClick={confirmBooking}
-                >
-                  Confirm Booking
-                </button>
-              </div>
+              {selectionConfirm && (
+                <div className='d-flex justify-end mt-20'>
+                  <button
+                    className='button col-lg-8 col-12 h-60 px-24 -dark-1 bg-blue-1 text-white'
+                    onClick={confirmBooking}
+                  >
+                    Confirm Booking
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </>
@@ -534,12 +572,12 @@ const CustomerInfo = () => {
                   </div>
                 </div>
                 {/* Star */}
-                <div>
+                {/* <div>
                   <div className='text-15'>Star Rating</div>
                   <div className='fw-500'>
                     {confirmationData.itemInfos.HOTEL.hInfo.rt}
                   </div>
-                </div>
+                </div> */}
                 {/* Contact */}
                 {confirmationData.itemInfos.HOTEL.hInfo?.cnt?.ph && (
                   <div>
@@ -566,7 +604,7 @@ const CustomerInfo = () => {
                 </div>
                 {/* Rooms */}
                 <div>
-                  <div className='text-20'>Rooms</div>
+                  <h4>Rooms</h4>
                   <div className='fw-500'>
                     {PNR.room.ris.map((element, index) => {
                       let travDetails = [];
@@ -622,39 +660,70 @@ const CustomerInfo = () => {
                   </div>
                 </div>
                 {/* Instructions */}
-                {confirmationData.itemInfos?.HOTEL?.hInfo?.ops &&
-                  confirmationData.itemInfos?.HOTEL?.hInfo?.ops[0]?.inst &&
-                  confirmationData.itemInfos?.HOTEL?.hInfo?.ops?.inst?.length > 0 && (
+                {confirmationData.itemInfos?.HOTEL?.hInfo?.inst?.length ? (
+                  <div>
+                    <h4>Hotel Instructions</h4>
                     <div>
-                      <div className='text-15'>Instructions</div>
-                      <div>
-                        <ul className='list-disc'>
-                          {confirmationData.itemInfos?.HOTEL?.hInfo?.ops[0].inst.map(
-                            (inst, instI) => (
-                              <li className='text-secondary'>
-                                <h5 className='d-inline'>
-                                  <span className='text-black fw-500'>
-                                    {inst?.type &&
-                                      inst.type
-                                        .split('_')
-                                        .map(
-                                          (split) =>
-                                            `${split.charAt(0).toUpperCase()}${split
-                                              .slice(1)
-                                              .toLowerCase()} `
-                                        )}
-                                  </span>{' '}
-                                  : {inst.msg}
-                                </h5>
-                              </li>
-                            )
-                          )}
-                        </ul>
-                      </div>
+                      <ul>
+                        {confirmationData.itemInfos.HOTEL.hInfo.inst.map(
+                          (inst, instI) => (
+                            <li className='text-secondary'>
+                              <span className='d-inline text-18'>
+                                <span className='text-black fw-500'>
+                                  {inst?.type &&
+                                    inst.type
+                                      .split('_')
+                                      .map(
+                                        (split) =>
+                                          `${split.charAt(0).toUpperCase()}${split
+                                            .slice(1)
+                                            .toLowerCase()} `
+                                      )}
+                                </span>{' '}
+                                : {JSONParse(inst.msg)}
+                              </span>
+                            </li>
+                          )
+                        )}
+                      </ul>
                     </div>
-                  )}
+                  </div>
+                ) : (
+                  <></>
+                )}
+                {(confirmationData.itemInfos?.HOTEL?.hInfo?.ops || [{}])[0]?.inst
+                  ?.length ? (
+                  <div>
+                    <h4>Room Instructions</h4>
+                    <div>
+                      <ul>
+                        {confirmationData.itemInfos.HOTEL.hInfo.ops[0].inst.map(
+                          (inst, instI) => (
+                            <li className='text-secondary'>
+                              <span className='d-inline text-18'>
+                                <span className='text-black fw-500'>
+                                  {inst?.type &&
+                                    inst.type
+                                      .split('_')
+                                      .map(
+                                        (split) =>
+                                          `${split.charAt(0).toUpperCase()}${split
+                                            .slice(1)
+                                            .toLowerCase()} `
+                                      )}
+                                </span>{' '}
+                                : {JSONParse(inst.msg)}
+                              </span>
+                            </li>
+                          )
+                        )}
+                      </ul>
+                    </div>
+                  </div>
+                ) : (
+                  <></>
+                )}
                 <div>
-                  <div className='text-15'>Map</div>
                   <div style={{ width: '100%', height: '60vh' }}>
                     <GoogleMapReact
                       bootstrapURLKeys={{ key: process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY }}

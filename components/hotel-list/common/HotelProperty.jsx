@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { DateObject } from 'react-multi-date-picker';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
+import Pluralize from '../../../utils/pluralChecker';
 
 function HotelProperty({ item }) {
   const searchData = useSelector((state) => state.hotelSearch.value.searchData);
@@ -165,14 +166,10 @@ function HotelProperty({ item }) {
                   86400000}{' '}
                 nights,{' '}
                 {totalAdults > 0
-                  ? totalAdults > 1
-                    ? totalAdults + ' Adults'
-                    : totalAdults + ' Adult'
+                  ? totalAdults + Pluralize(' Adult', ' Adults', totalAdults)
                   : ''}
                 {totalChildren > 0
-                  ? totalChildren > 1
-                    ? ', ' + totalChildren + ' Children'
-                    : ', ' + totalChildren + ' Child'
+                  ? ', ' + totalChildren + Pluralize(' Child', ' Children', totalChildren)
                   : ''}
               </div>
               <div className='text-22 lh-12 fw-600 mt-5'>

@@ -1,6 +1,7 @@
 import { auto } from '@popperjs/core';
 import Image from 'next/image';
 import { useSelector } from 'react-redux';
+import Pluralize from '../../utils/pluralChecker';
 
 const AvailableRooms = ({ hotel, onRoomSelect, rooms }) => {
   return (
@@ -123,11 +124,15 @@ const AvailableRooms = ({ hotel, onRoomSelect, rooms }) => {
                             <div className='d-flex gap-1 flex-column'>
                               <span className='text-15 lh-12 fw-500'>
                                 {rooms[hI].adult}{' '}
-                                {rooms[hI].adult > 1 ? 'Adults' : 'Adult'}
+                                {Pluralize('Adult', 'Adults', rooms[hI].adult)}
                                 {rooms[hI].child.length > 0
-                                  ? rooms[hI].child.length > 1
-                                    ? ', ' + rooms[hI].child.length + ' Children'
-                                    : ', ' + rooms[hI].child.length + ' Child'
+                                  ? ', ' +
+                                    rooms[hI].child.length +
+                                    Pluralize(
+                                      ' Child',
+                                      ' Children',
+                                      rooms[hI].child.length
+                                    )
                                   : ''}
                               </span>
                             </div>

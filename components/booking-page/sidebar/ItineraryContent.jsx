@@ -72,21 +72,21 @@ const ItineraryContent = ({ pd, checkIn }) => {
                   ) : (
                     <span>
                       Cancellation between{' '}
-                      <span className='text-primary'>
+                      <span className='text-blue-1'>
                         {new Date(item.fdt).toLocaleString('en-IN', {
                           dateStyle: 'long',
                           timeStyle: 'short',
                         })}
                       </span>{' '}
                       and{' '}
-                      <span className='text-primary'>
+                      <span className='text-blue-1'>
                         {new Date(item.tdt).toLocaleString('en-IN', {
                           dateStyle: 'long',
                           timeStyle: 'short',
                         })}
                       </span>{' '}
                       will cost{' '}
-                      <span className='text-primary'>
+                      <span className='text-danger'>
                         {item.am.toLocaleString('en-IN', {
                           maximumFractionDigits: 2,
                           style: 'currency',

@@ -115,7 +115,6 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
     // Is Domestic
     let isDomestic = true;
     if (destinations?.from && destinations?.to) {
-      console.log('destinations', destinations);
       if (
         destinations?.to?.label?.split('|')?.at(-1) !== 'India' ||
         destinations?.from?.label?.split('|')?.at(-1) !== 'India'
@@ -135,7 +134,6 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
         selectedBookings?.combined?.provider === 'tj' &&
         !lowCostBookings.includes(selectedBookings.combined.segments[0].flight.airline))
     ) {
-      console.log('Amadaeus Detected');
       if (selectedBookings.combined) {
         let toSector = [];
         let fromSector = [];
@@ -374,7 +372,6 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
             travellerInfo.length > 0 &&
             travellerInfo.map((element, index) => (
               <div key={index}>
-                {console.log(element)}
                 <h3 className='mt-20'>{element.aliases[0]}</h3>
                 <div key={index} className='bg-white py-30 px-30 mt-20'>
                   <h4>Frequent Flier</h4>
@@ -653,8 +650,8 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                     </div> */}
                   </div>
                   <div className='d-flex col-12 justify-end'>
-                    <button
-                      className='button -dark-1 px-30 h-50 bg-blue-1 text-white col-md-4'
+                    <a
+                      className='h-50 cursor-pointer text-primary'
                       onClick={async () => {
                         const response = await updateItem('travellers', element.id, {
                           ...element,
@@ -685,8 +682,8 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                         }
                       }}
                     >
-                      Update This Traveller
-                    </button>
+                      Update on Profile
+                    </a>
                   </div>
                 </div>
               </div>

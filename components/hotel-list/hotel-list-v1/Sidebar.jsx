@@ -2,8 +2,10 @@ import PirceSlider from '../sidebar/PirceSlider';
 import PopularFilters from '../sidebar/PopularFilters';
 import RatingsFilter from '../sidebar/RatingsFilter';
 import MaxRatingsFilter from '../sidebar/MaxRatingFilter';
+import { useSelector } from 'react-redux';
 
 const Sidebar = () => {
+  const ratingParams = useSelector((state) => state.hotelSearch.value.ratingParams);
   return (
     <>
       {/* <div className='sidebar__item -no-border position-relative'>
@@ -55,18 +57,14 @@ const Sidebar = () => {
       {/* </div> */}
       {/* End Aminities filter */}
 
-      <div className='sidebar__item'>
-        <h5 className='text-18 fw-500 mb-10'>Minimum Star Rating</h5>
-        <div className='row x-gap-10 y-gap-10 pt-10'>
-          <RatingsFilter />
+      {ratingParams?.length !== 1 && (
+        <div className='sidebar__item'>
+          <h5 className='text-18 fw-500 mb-10'>Star Rating</h5>
+          <div className='row x-gap-10 y-gap-10 pt-10'>
+            <RatingsFilter />
+          </div>
         </div>
-      </div>
-      <div className='sidebar__item'>
-        <h5 className='text-18 fw-500 mb-10'>Maximum Star Rating</h5>
-        <div className='row x-gap-10 y-gap-10 pt-10'>
-          <MaxRatingsFilter />
-        </div>
-      </div>
+      )}
       {/* End rating filter */}
 
       {/* <div className='sidebar__item'>

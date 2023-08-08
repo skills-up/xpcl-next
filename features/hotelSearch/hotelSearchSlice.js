@@ -14,6 +14,7 @@ export const initialState = {
     paginateTotalDataSize: 0,
     ratings: 1,
     maxRatings: 5,
+    ratingParams: [],
     options: null,
     age: { totalAdult: 0, totalChildren: 0 },
     price: { value: { min: 0, max: 0 }, minPrice: 0, maxPrice: 0 },
@@ -47,6 +48,7 @@ const hotelSearchSlice = createSlice({
     setRatings: (state, action) => void (state.value.ratings = action.payload),
     setMaxRatings: (state, action) => void (state.value.maxRatings = action.payload),
     setOptions: (state, action) => void (state.value.options = action.payload),
+    setRatingParams: (state, action) => void (state.value.ratingParams = action.payload),
     setAge: (state, action) => void (state.value.age = action.payload),
     setSort: (state, action) => {
       if (action.payload.key === '_') {
@@ -71,6 +73,7 @@ export const {
   setRatings,
   setOptions,
   setSearchData,
+  setRatingParams,
   setCheckInDate,
   setCheckOutDate,
   setCity,

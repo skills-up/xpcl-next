@@ -2556,6 +2556,15 @@ table.table-6 {
   }
 }
 
+#from-tab,
+#to-tab {
+  scroll-margin-top: 6.5rem;
+}
+
+#selected-bookings {
+  scroll-margin-top: 6rem;
+}
+
 // Amadeus Seatmap
 .amadeus-container {
   .amadeus-table {

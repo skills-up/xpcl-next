@@ -5,6 +5,7 @@ import { DateObject } from 'react-multi-date-picker';
 import { useSelector } from 'react-redux';
 import { customAPICall } from '../../../api/xplorzApi';
 import ItineraryContent from './ItineraryContent';
+import Pluralize from '../../../utils/pluralChecker';
 
 const BookingDetails = ({ PNR }) => {
   const age = useSelector((state) => state.hotelSearch.value.age);
@@ -134,14 +135,10 @@ const BookingDetails = ({ PNR }) => {
             <div className='text-15'>
               {' '}
               {totalAdults > 0
-                ? totalAdults > 1
-                  ? totalAdults + ' Adults'
-                  : totalAdults + ' Adult'
+                ? totalAdults + Pluralize(' Adult', ' Adults', totalAdults)
                 : ''}
               {totalChildren > 0
-                ? totalChildren > 1
-                  ? ', ' + totalChildren + ' Children'
-                  : ', ' + totalChildren + ' Child'
+                ? ', ' + totalChildren + Pluralize(' Child', ' Children', totalChildren)
                 : ''}
             </div>
           </div>

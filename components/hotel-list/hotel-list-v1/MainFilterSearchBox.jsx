@@ -12,6 +12,7 @@ import {
   setInitialState,
   setSearchData,
   setRooms as setRoomsRedux,
+  setRatingParams,
 } from '../../../features/hotelSearch/hotelSearchSlice';
 import { hotelSearchData } from '../../../data/hotelSearchData';
 import { BiPlusMedical, BiTrash } from 'react-icons/bi';
@@ -137,11 +138,16 @@ const MainFilterSearchBox = () => {
         totalAdult += info.numberOfAdults;
         totalChildren += info.numberOfChild;
       }
+      dispatch(setRatingParams(ratingParam));
       dispatch(setCheckInDate(date[0].format('YYYY-MM-DD')));
       dispatch(
         setCheckOutDate(date[1]?.format('YYYY-MM-DD') || date[0]?.format('YYYY-MM-DD'))
       );
-      dispatch(setRoomsRedux(rooms));
+      dispatch(
+        setRoomsRedux([
+          ...rooms.map((el) => ({ ...{ adult: el.adult, child: [...el.child] } })),
+        ])
+      );
       dispatch(setAge({ totalAdult, totalChildren }));
       dispatch(setSearchData(response.data));
       setTimeout(() => {
@@ -206,36 +212,39 @@ const MainFilterSearchBox = () => {
           </div>
           {/* End Location Flying From */}
 
-          <div
-            style={{ border: '1px solid lightgray' }}
-            className='hotel-date-select py-4 d-flex mt-30 rounded-4 gap-1 items-center justify-center'
-          >
-            <div className='text-center'>
-              <label className='text-15 lh-12 fw-500'>
-                Check In - Check Out<span className='text-danger'>*</span>
-              </label>
-              <DatePicker
-                range
-                rangeHover
-                style={{ fontSize: '1rem' }}
-                inputClass='custom_input-picker text-center'
-                containerClassName='custom_container-picker'
-                value={date}
-                onChange={(i) => {
-                  setDate(i);
-                }}
-                numberOfMonths={2}
-                offsetY={10}
-                format='DD MMM YY'
-                minDate={new DateObject()}
-              />
+          <div className=''>
+            <label className='text-15 lh-12 fw-500'>
+              Select Dates<span className='text-danger'>*</span>
+            </label>
+            <div
+              style={{ border: '1px solid lightgray' }}
+              className='hotel-date-select py-4 d-flex rounded-4 gap-1 items-center justify-center'
+            >
+              <div className='text-center'>
+                <span className='text-15 lh-12 fw-500'>Check In - Check Out</span>
+                <DatePicker
+                  range
+                  rangeHover
+                  style={{ fontSize: '1rem' }}
+                  inputClass='custom_input-picker text-center'
+                  containerClassName='custom_container-picker'
+                  value={date}
+                  onChange={(i) => {
+                    setDate(i);
+                  }}
+                  numberOfMonths={2}
+                  offsetY={10}
+                  format='DD MMM YY'
+                  minDate={new DateObject()}
+                />
+              </div>
             </div>
             {/* End Depart */}
           </div>
 
           {/* End Return */}
           <div className='hotel-search-select '>
-            <label className='text-15 lh-12 fw-500'>Specify Ratings (Optional) </label>
+            <label className='text-15 lh-12 fw-500'>Hotel Ratings </label>
             <Select
               options={ratingOptions.map((el) => ({ label: el, value: el }))}
               isMulti

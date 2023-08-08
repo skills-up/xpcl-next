@@ -147,13 +147,13 @@ const PropertyHighlights2 = ({ facilities }) => {
             );
         })}
       </div>
-      <div className='d-flex justify-center mt-20'>
-        <button
-          className='button col-12 h-60 px-24 -dark-1 bg-blue-1 text-white'
+      <div className='d-flex justify-end mt-20'>
+        <a
+          className='px-24 text-primary cursor-pointer'
           onClick={() => setIsLoadMore((prev) => !prev)}
         >
-          {isLoadMore ? 'Show Less' : 'Show More'}
-        </button>
+          {isLoadMore ? 'Show Less' : 'Show More...'}
+        </a>
       </div>
     </>
   );

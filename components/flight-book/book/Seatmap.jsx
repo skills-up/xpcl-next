@@ -744,7 +744,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                               key={travInd}
                             >
                               <span>{trav?.aliases[0]}</span>{' '}
-                              <span className='d-inline-block' style={{ width: '40px' }}>
+                              <span className='d-inline-block' style={{ width: '50px' }}>
                                 - {seatSelected ? seatSelected : 'NA'}
                               </span>
                             </span>
@@ -856,7 +856,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                               <span>{trav?.aliases[0]}</span>{' '}
                               <span
                                 className='text-primary d-inline-block'
-                                style={{ width: '40px' }}
+                                style={{ width: '50px' }}
                               >
                                 - {seatSelected ? seatSelected : 'NA'}
                               </span>
@@ -1232,7 +1232,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                               key={index}
                             >
                               <span>{trav?.aliases[0]}</span>{' '}
-                              <span className='d-inline-block' style={{ width: '40px' }}>
+                              <span className='d-inline-block' style={{ width: '50px' }}>
                                 - {seatSelected ? seatSelected : 'NA'}
                               </span>
                             </span>
@@ -1343,7 +1343,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                               <span>{trav?.aliases[0]}</span>{' '}
                               <span
                                 className='text-primary d-inline-block'
-                                style={{ width: '40px' }}
+                                style={{ width: '50px' }}
                               >
                                 - {seatSelected ? seatSelected : 'NA'}
                               </span>
@@ -2619,7 +2619,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                   let bookingID;
                   let totalAmount;
                   let bookingStatus;
-                  let tempObj = {};
+                  let tempObj = { 'Base Fare': 0, 'Taxes & Fee': 0 };
                   if (seatMap[key]) {
                     if (seatMap[key].provider === 'tj') {
                       bookingID = value.data.order.bookingId;
@@ -2627,7 +2627,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                       bookingStatus = value.data.order.status;
                       tempObj['Base Fare'] =
                         value.data.itemInfos.AIR.totalPriceInfo.totalFareDetail.fC.BF;
-                      tempObj['Special Service Fee (Meals + Seats)'] =
+                      tempObj['Special Service Fee (Meals, Seats, etc.)'] =
                         value.data.itemInfos.AIR.totalPriceInfo.totalFareDetail.fC
                           ?.SSRP || undefined;
                       tempObj['Taxes & Fee'] =
@@ -2639,7 +2639,9 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                       if (value.info.status === 2) bookingStatus = 'SUCCESS';
                       tempObj['Base Fare'] = value.breakdown.journeyTotals.totalAmount;
                       tempObj['Taxes & Fee'] = value.breakdown.journeyTotals.totalTax;
-                      tempObj['Special Service Fee (Meals + Seats)'] =
+                      tempObj['Special Service Fee (Meals, Seats, Infants, etc.)'] =
+                        (value.breakdown.passengerTotals?.infant?.total || 0) +
+                        (value.breakdown.passengerTotals?.infant?.taxes || 0) +
                         (value.breakdown.passengerTotals?.specialServices?.taxes || 0) +
                         (value.breakdown.passengerTotals?.specialServices?.total || 0) +
                         (value.breakdown.passengerTotals?.seats?.taxes || 0) +
@@ -2647,14 +2649,22 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                     } else if (seatMap[key].provider === 'ad') {
                       bookingID =
                         value.pnrHeader.reservationInfo.reservation.controlNumber;
-                      totalAmount =
+                      totalAmount = getArray(
                         value.pricingRecordGroup.productPricingQuotationRecord
-                          .documentDetailsGroup.totalFare.monetaryDetails.amount;
+                      )
+                        .map(
+                          (e) => +e.documentDetailsGroup.totalFare.monetaryDetails.amount
+                        )
+                        .reduce((p, v) => p + v, 0);
+                      console.log('TotalAmt', totalAmount);
                       bookingStatus = 'SUCCESS';
-                      for (let fare of value.tstData.fareData.monetaryInfo) {
-                        if (fare.qualifier === 'F') tempObj['Base Fare'] = +fare.amount;
-                        if (fare.qualifier === 'T') tempObj['Taxes & Fee'] = +fare.amount;
-                      }
+                      for (let tst of getArray(value.tstData))
+                        for (let fare of tst.fareData.monetaryInfo) {
+                          if (fare.qualifier === 'F')
+                            tempObj['Base Fare'] += +fare.amount;
+                          if (fare.qualifier === 'T')
+                            tempObj['Taxes & Fee'] += +fare.amount;
+                        }
                       if (tempObj['Base Fare'] && tempObj['Taxes & Fee'])
                         tempObj['Taxes & Fee'] -= tempObj['Base Fare'];
                     }
