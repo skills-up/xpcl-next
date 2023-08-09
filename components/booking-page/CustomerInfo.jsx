@@ -12,6 +12,7 @@ import GoogleMapReact from 'google-map-react';
 import Pluralize from '../../utils/pluralChecker';
 
 const CustomerInfo = () => {
+  const [isProgress, setIsProgress] = useState(false);
   const [progress, setProgress] = useState(0);
   const router = useRouter();
   const rooms = useSelector((state) => state.hotelSearch.value.rooms);
@@ -77,6 +78,7 @@ const CustomerInfo = () => {
   };
 
   const confirmBooking = async () => {
+    setIsProgress(true);
     let roomwiseGuests = [];
     let currentTime = Date.now();
     for (let room of selectedTravellers) {
@@ -87,6 +89,7 @@ const CustomerInfo = () => {
         let type;
         if (!traveller?.value?.prefix?.value) {
           sendToast('error', 'Each traveller needs to have a Prefix/Title', 4000);
+          setIsProgress(false);
           return;
         } else if (traveller.value?.pan_number) hasPAN = true;
         if (traveller.value?.passport_number) hasPassport = true;
@@ -123,6 +126,7 @@ const CustomerInfo = () => {
           'There should be a PAN number associated to at least 1 traveller in each room',
           10000
         );
+        setIsProgress(false);
         return;
       }
       if (PNR.room.ipm && !hasPassport) {
@@ -131,6 +135,7 @@ const CustomerInfo = () => {
           'There should be a passport number associated to at least 1 traveller in each room',
           4000
         );
+        setIsProgress(false);
         return;
       }
       roomwiseGuests.push(tempArr);
@@ -148,6 +153,7 @@ const CustomerInfo = () => {
       {},
       true
     );
+    setIsProgress(false);
     setProgress(100);
     if (res?.success) {
       const bookingDetails = await customAPICall(
@@ -510,6 +516,7 @@ const CustomerInfo = () => {
               {selectionConfirm && (
                 <div className='d-flex justify-end mt-20'>
                   <button
+                    disabled={isProgress}
                     className='button col-lg-8 col-12 h-60 px-24 -dark-1 bg-blue-1 text-white'
                     onClick={confirmBooking}
                   >
@@ -617,40 +624,16 @@ const CustomerInfo = () => {
                           <div className='ml-20 lg:ml-10 mb-10'>
                             {travDetails.map((traveller, travellerI) => (
                               <>
-                                Traveller {travellerI + 1} -{' '}
-                                <span className='fw-300'>{traveller.aliases[0]}</span>
-                                <div className='ml-20'>
-                                  <div>
-                                    Title:{' '}
-                                    <span className='fw-300'>
-                                      {traveller.prefix?.value}
-                                    </span>
-                                  </div>
-                                  <div>
-                                    First Name:{' '}
-                                    <span className='fw-300'>{traveller.first_name}</span>
-                                  </div>
-                                  <div>
-                                    Last Name:{' '}
-                                    <span className='fw-300'>{traveller.last_name}</span>
-                                  </div>
+                                <span className='fw-500 d-block'>
+                                  {travellerI + 1}. {traveller.prefix?.label}{' '}
+                                  {traveller.aliases[0]}
                                   {PNR.room.ipr && traveller?.pan_number && (
-                                    <div>
-                                      PAN Number:{' '}
-                                      <span className='fw-300'>
-                                        {traveller.pan_number}
-                                      </span>
-                                    </div>
+                                    <> | PAN: {traveller.pan_number}</>
                                   )}
                                   {PNR.room.ipm && traveller?.passport_number && (
-                                    <div className='ml-20'>
-                                      Passport Number:{' '}
-                                      <span className='fw-300'>
-                                        {traveller.passport_number}
-                                      </span>
-                                    </div>
+                                    <> | Passport: {traveller.passport_number}</>
                                   )}
-                                </div>
+                                </span>
                               </>
                             ))}
                           </div>

@@ -12,6 +12,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
   const selectedBookings = useSelector(
     (state) => state.flightSearch.value.selectedBookings
   );
+  const [isProceed, setIsProceed] = useState(false);
   const [progress, setProgress] = useState(0);
   const [frequentFliers, setFrequentFliers] = useState([]);
   const [containsInternational, setContainsInternational] = useState(false);
@@ -101,10 +102,12 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
   };
 
   const onClick = async () => {
+    setIsProceed(true);
     // Checking if each traveller has a prefix
     for (let traveller of travellerInfo) {
       if (!traveller.prefix) {
         sendToast('error', 'Each traveller should have a prefix', 4000);
+        setIsProceed(false);
         return;
       }
     }
@@ -165,10 +168,12 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
             combined: { data: response.data, provider: 'ad' },
           }));
           setCurrentStep(2);
+          setIsProceed(false);
           return;
         } else {
           sendToast('error', 'Error While Creating Booking', 4000);
           router.back();
+          setIsProceed(false);
           return;
         }
       } else {
@@ -202,10 +207,12 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
             combined: null,
           }));
           setCurrentStep(2);
+          setIsProceed(false);
           return;
         } else {
           sendToast('error', 'Error While Creating Booking', 4000);
           router.back();
+          setIsProceed(false);
           return;
         }
       }
@@ -317,6 +324,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
       }
       setProgress(Math.floor((currentAPICalls / totalAPICalls) * 100));
     }
+    setIsProceed(false);
     // If Successful
     if (currentAPICalls === totalAPICalls) setCurrentStep(2);
     else {
@@ -691,6 +699,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
         </div>
         <div className='d-flex col-12 justify-end'>
           <button
+            disabled={isProceed}
             className='button -dark-1 px-30 h-50 bg-blue-1 text-white col-md-4 mt-20'
             onClick={() => onClick()}
           >

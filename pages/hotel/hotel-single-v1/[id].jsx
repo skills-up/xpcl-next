@@ -25,6 +25,7 @@ const HotelSingleV1Dynamic = () => {
   const id = router.query.id;
   const [data, setData] = useState(null);
   const dispatch = useDispatch();
+  const [isProgress, setIsProgress] = useState(false);
   const [images, setImages] = useState([]);
   const [isLoadMore, setIsLoadMore] = useState(false);
   const rooms = useSelector((state) => state.hotelSearch.value.rooms);
@@ -83,6 +84,7 @@ const HotelSingleV1Dynamic = () => {
 
   const onRoomSelect = async (option) => {
     setProgress(50);
+    setIsProgress(true);
     const res = await customAPICall(
       'tj/v1/htl/review',
       'get',
@@ -91,6 +93,7 @@ const HotelSingleV1Dynamic = () => {
       true
     );
     setProgress(100);
+    setIsProgress(false);
     if (res?.success) {
       dispatch(setPNR({ room: option, data: res.data }));
       router.push('/hotel/booking-page');
@@ -216,8 +219,8 @@ const HotelSingleV1Dynamic = () => {
                       {imageIndex !== 5 && (
                         <div key={imageIndex}>
                           <Item
-                            width={450}
-                            height={450}
+                            width={900}
+                            height={650}
                             original={image?.url}
                             thumbnail={image?.url}
                           >
@@ -242,8 +245,8 @@ const HotelSingleV1Dynamic = () => {
                 {images.length > imageNumber && (
                   <div className='d-flex justify-center mt-20'>
                     <Item
-                      width={450}
-                      height={450}
+                      width={900}
+                      height={650}
                       original={images[5]?.url}
                       thumbnail={images[5]?.url}
                     >
@@ -323,6 +326,7 @@ const HotelSingleV1Dynamic = () => {
               {/* End .row */}
               {data.hotel.ops.map((op, opIn) => (
                 <AvailableRooms
+                  isProgress={isProgress}
                   hotel={op}
                   key={opIn}
                   rooms={rooms}

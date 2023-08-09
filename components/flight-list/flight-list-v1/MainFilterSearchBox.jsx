@@ -36,6 +36,7 @@ const MainFilterSearchBox = () => {
   const [clientTravellers, setClientTravellers] = useState([]);
   const [airlines, setAirlines] = useState([]);
   const [progress, setProgress] = useState(0);
+  const [isSearched, setIsSearched] = useState(false);
 
   const dispatch = useDispatch();
   const router = useRouter();
@@ -83,18 +84,26 @@ const MainFilterSearchBox = () => {
     }
   };
 
+  const searchF = () => {
+    setIsSearched(false);
+  };
+
   const search = async () => {
+    setIsSearched(true);
     // Checking if all mandatory fields are filled
     if (!to?.value) {
       sendToast('error', 'Please select your destination', 4000);
+      searchF();
       return;
     }
     if (!from?.value) {
       sendToast('error', 'Please select your departure destination', 4000);
+      searchF();
       return;
     }
     if (!travellers || travellers?.length === 0) {
       sendToast('error', 'Please select travellers', 4000);
+      searchF();
       return;
     }
     // Getting Traveller DOBS
@@ -131,12 +140,14 @@ const MainFilterSearchBox = () => {
       if (ADT > 0) pax['ADT'] = ADT;
       else {
         sendToast('error', 'There must be an Adult traveller', 4000);
+        searchF();
         return;
       }
       if (CHD > 0) pax['CHD'] = CHD;
       if (INF > 0) pax['INF'] = INF;
     } else {
       sendToast('error', 'Error getting traveller details', 4000);
+      searchF();
       return;
     }
     // Resetting Search Data
@@ -273,6 +284,7 @@ const MainFilterSearchBox = () => {
     dispatch(setSearchData(searchData));
     let percentage = (currentCalls / callsCounter) * 100;
     if (percentage === 100) {
+      searchF();
       const el = document.getElementById('flight-properties');
       if (el) {
         setTimeout(() => el.scrollIntoView(), 750);
@@ -512,6 +524,7 @@ const MainFilterSearchBox = () => {
         {/* End search button_item */}
         <div className='button-item pl-20 mt-20 lg:pl-0'>
           <button
+            disabled={isSearched}
             className='d-block mainSearch__submit button -blue-1 py-15 h-60 col-12 rounded-4 bg-dark-3 text-white'
             onClick={search}
           >

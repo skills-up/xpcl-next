@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { useSelector } from 'react-redux';
 import Pluralize from '../../utils/pluralChecker';
 
-const AvailableRooms = ({ hotel, onRoomSelect, rooms }) => {
+const AvailableRooms = ({ hotel, onRoomSelect, rooms, isProgress }) => {
   return (
     <>
       <div className='border-light rounded-4 px-30 py-30 sm:px-20 sm:py-20 mb-20'>
@@ -120,22 +120,17 @@ const AvailableRooms = ({ hotel, onRoomSelect, rooms }) => {
                         )}
                         {/* Sleeps */}
                         {rooms && rooms.length > 0 && (
-                          <div>
-                            <div className='d-flex gap-1 flex-column'>
-                              <span className='text-15 lh-12 fw-500'>
-                                {rooms[hI].adult}{' '}
-                                {Pluralize('Adult', 'Adults', rooms[hI].adult)}
-                                {rooms[hI].child.length > 0
-                                  ? ', ' +
-                                    rooms[hI].child.length +
-                                    Pluralize(
-                                      ' Child',
-                                      ' Children',
-                                      rooms[hI].child.length
-                                    )
-                                  : ''}
-                              </span>
-                            </div>
+                          <div className='d-flex items-center gap-1'>
+                            <div className='icon-man text-24' />
+                            <span className='text-15 lh-12 fw-500'>
+                              {rooms[hI].adult}{' '}
+                              {Pluralize('Adult', 'Adults', rooms[hI].adult)}
+                              {rooms[hI].child.length > 0
+                                ? ', ' +
+                                  rooms[hI].child.length +
+                                  Pluralize(' Child', ' Children', rooms[hI].child.length)
+                                : ''}
+                            </span>
                           </div>
                         )}
                       </div>
@@ -198,6 +193,7 @@ const AvailableRooms = ({ hotel, onRoomSelect, rooms }) => {
           </div>
           <div className='col-lg-6'>
             <button
+              disabled={isProgress}
               onClick={() => onRoomSelect(hotel)}
               className='button h-50 px-24 col-12 -dark-1 bg-blue-1 text-white'
             >

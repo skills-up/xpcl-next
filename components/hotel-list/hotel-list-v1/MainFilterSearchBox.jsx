@@ -28,6 +28,7 @@ const MainFilterSearchBox = () => {
   const [rooms, setRooms] = useState([{ adult: 0, child: [] }]);
   const [ratingParam, setRatingParam] = useState([]);
   const [clientTravellers, setClientTravellers] = useState([]);
+  const [isSearched, setIsSearched] = useState(false);
 
   const ratingOptions = ['1', '2', '3', '4', '5'];
 
@@ -46,11 +47,13 @@ const MainFilterSearchBox = () => {
 
   const onSearch = async (e) => {
     e.preventDefault();
+    setIsSearched(true);
     // Resetting Values
     dispatch(setInitialState());
     // Checks
     if (!location?.value) {
-      sendToast('error', 'Please select Locaiton', 4000);
+      sendToast('error', 'Please select Location', 4000);
+      setIsSearched(false);
       return;
     }
     // Getting Travellers Ages
@@ -108,6 +111,7 @@ const MainFilterSearchBox = () => {
       // }
       if (room.adult === 0) {
         sendToast('error', 'Each room should have an adult', 4000);
+        setIsSearched(false);
         return;
       }
       roomsTemp.push({
@@ -157,6 +161,7 @@ const MainFilterSearchBox = () => {
     } else {
       sendToast('error', 'No Rooms Found', 4000);
     }
+    setIsSearched(false);
     setProgress(100);
   };
 
@@ -349,6 +354,7 @@ const MainFilterSearchBox = () => {
         {/* End search button_item */}
         <div className='button-item pl-20 mt-20 lg:pl-0'>
           <button
+            disabled={isSearched}
             className='d-block mainSearch__submit button -blue-1 py-15 h-60 col-12 rounded-4 bg-dark-3 text-white'
             onClick={onSearch}
           >

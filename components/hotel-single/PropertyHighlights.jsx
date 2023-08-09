@@ -147,14 +147,16 @@ const PropertyHighlights2 = ({ facilities }) => {
             );
         })}
       </div>
-      <div className='d-flex justify-end mt-20'>
-        <a
-          className='px-24 text-primary cursor-pointer'
-          onClick={() => setIsLoadMore((prev) => !prev)}
-        >
-          {isLoadMore ? 'Show Less' : 'Show More...'}
-        </a>
-      </div>
+      {facilities.length > showInOne && (
+        <div className='d-flex justify-end mt-20'>
+          <a
+            className='px-24 text-primary cursor-pointer'
+            onClick={() => setIsLoadMore((prev) => !prev)}
+          >
+            {isLoadMore ? 'Show Less' : 'Show More...'}
+          </a>
+        </div>
+      )}
     </>
   );
 };

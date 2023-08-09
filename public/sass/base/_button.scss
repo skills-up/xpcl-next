@@ -55,6 +55,10 @@ button {
       background-color: var(--color-#{$name}) !important;
       color: white !important;
     }
+    &:disabled {
+      opacity: 75%;
+      pointer-events: none;
+    }
   }
 
   .button.-outline-#{$name} {
