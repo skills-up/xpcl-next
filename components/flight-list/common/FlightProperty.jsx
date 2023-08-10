@@ -267,7 +267,6 @@ function FlightProperty({
                   )}
                   <div className='text-right md:text-left'>
                     <div className='text-18 lh-16 fw-500'>
-                      INR{' '}
                       {element.total.toLocaleString('en-IN', {
                         maximumFractionDigits: 2,
                         style: 'currency',

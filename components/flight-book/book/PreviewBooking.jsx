@@ -18,7 +18,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
   const [containsInternational, setContainsInternational] = useState(false);
   const [travellerInfo, setTravellerInfo] = travellerInfos;
   const returnFlight = useSelector((state) => state.flightSearch.value.returnFlight);
-  const lowCostBookings = ['IX', '6E', 'SG', 'G8', 'I5', 'QP'];
+  const lowCostBookings = ['IX', '6E', 'SG', 'G8', 'I5', 'QP', 'AI'];
   const travellers = useSelector((state) => state.flightSearch.value.travellers);
   const airports = useSelector((state) => state.apis.value.airports);
   const destinations = useSelector((state) => state.flightSearch.value.destinations);
@@ -382,41 +382,6 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
               <div key={index}>
                 <h3 className='mt-20'>{element.aliases[0]}</h3>
                 <div key={index} className='bg-white py-30 px-30 mt-20'>
-                  <h4>Frequent Flier</h4>
-                  <div className='row my-3'>
-                    <div className='row col-12 y-gap-20'>
-                      <div className='col-md-6 form-input-select'>
-                        <label>Frequent Flier Program</label>
-                        <Select
-                          options={frequentFliers.map((el) => ({
-                            value: el.code,
-                            label: el.program,
-                          }))}
-                          value={element.frequentFliers}
-                          onChange={(id) =>
-                            setTravellerInfo((prev) => {
-                              prev[index]['frequentFliers'] = id;
-                              return [...prev];
-                            })
-                          }
-                        />
-                      </div>
-                      <div className='form-input col-md-6 bg-white'>
-                        <input
-                          onChange={(e) =>
-                            setTravellerInfo((prev) => {
-                              prev[index]['membershipID'] = e.target.value;
-                              return [...prev];
-                            })
-                          }
-                          value={element['membershipID']}
-                          placeholder=' '
-                          type='text'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>Membership ID</label>
-                      </div>
-                    </div>
-                  </div>
                   <h4>Traveller</h4>
                   <div className='row my-3'>
                     <div className='row col-12 mb-20 y-gap-20'>
@@ -623,7 +588,42 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                       </div>
                     </>
                   )}
-                  <h4>Miscellaneous Details</h4>
+                  <h4>Frequent Flier</h4>
+                  <div className='row my-3'>
+                    <div className='row col-12 y-gap-20'>
+                      <div className='col-md-6 form-input-select'>
+                        <label>Frequent Flier Program</label>
+                        <Select
+                          options={frequentFliers.map((el) => ({
+                            value: el.code,
+                            label: el.program,
+                          }))}
+                          value={element.frequentFliers}
+                          onChange={(id) =>
+                            setTravellerInfo((prev) => {
+                              prev[index]['frequentFliers'] = id;
+                              return [...prev];
+                            })
+                          }
+                        />
+                      </div>
+                      <div className='form-input col-md-6 bg-white'>
+                        <input
+                          onChange={(e) =>
+                            setTravellerInfo((prev) => {
+                              prev[index]['membershipID'] = e.target.value;
+                              return [...prev];
+                            })
+                          }
+                          value={element['membershipID']}
+                          placeholder=' '
+                          type='text'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>Membership ID</label>
+                      </div>
+                    </div>
+                  </div>
+                  {/* <h4>Miscellaneous Details</h4> */}
                   <div className='row my-1 y-gap-20'>
                     <div className='col-md-6'>
                       <h5 className='fw-500'>Seat Preference: </h5>

@@ -66,14 +66,12 @@ const AddNewClientTraveller = () => {
         client_id: clientID.value,
       });
       if (response?.success) {
-        sendToast('success', 'Created Client Traveller Successfully.', 4000);
+        sendToast('success', 'Created Linked Client Successfully.', 4000);
         router.push('/dashboard/travellers/view/' + router.query.traveller_id);
       } else {
         sendToast(
           'error',
-          response.data?.message ||
-            response.data?.error ||
-            'Failed to Create Client Traveller.',
+          response.data?.message || response.data?.error || 'Failed to Link Client.',
           4000
         );
       }
@@ -84,7 +82,7 @@ const AddNewClientTraveller = () => {
 
   return (
     <>
-      <Seo pageTitle='Add New Client Traveller' />
+      <Seo pageTitle='Link New Client' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -104,10 +102,8 @@ const AddNewClientTraveller = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Add New Client Traveller</h1>
-                  <div className='text-15 text-light-1'>
-                    Create a new client traveller.
-                  </div>
+                  <h1 className='text-30 lh-14 fw-600'>Link New Client</h1>
+                  <div className='text-15 text-light-1'>Link a client.</div>
                 </div>
                 {/* End .col-12 */}
               </div>
@@ -132,7 +128,7 @@ const AddNewClientTraveller = () => {
                         type='submit'
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
                       >
-                        Add Client Traveller
+                        Link Client
                       </button>
                     </div>
                   </form>

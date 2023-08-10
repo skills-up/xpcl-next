@@ -15,7 +15,7 @@ import { BsTrash3 } from 'react-icons/bs';
 import NewFileUploads from '../../../../components/new-file-uploads';
 
 const AddNewTravellers = () => {
-  const [prefix, setPrefix] = useState('');
+  const [prefix, setPrefix] = useState(null);
   const [firstName, setFirstName] = useState('');
   const [middleName, setMiddleName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -52,6 +52,12 @@ const AddNewTravellers = () => {
   const [countryCodeID, setCountryCodeID] = useState(null);
 
   // Options
+  const passportPrefixOptions = [
+    { value: 'MR', label: 'Mr.' },
+    { value: 'MRS', label: 'Mrs.' },
+    { value: 'MSTR', label: 'Mstr.' },
+    { value: 'MS', label: 'Ms.' },
+  ];
   const passportGenderOptions = [
     { value: 'Male', label: 'Male' },
     { value: 'Female', label: 'Female' },
@@ -102,7 +108,7 @@ const AddNewTravellers = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     let passportFormData = new FormData();
-    passportFormData.append('prefix', prefix ?? '');
+    passportFormData.append('prefix', prefix?.value ?? '');
     passportFormData.append('first_name', firstName);
     passportFormData.append('middle_name', middleName ?? '');
     passportFormData.append('last_name', lastName);
@@ -214,16 +220,14 @@ const AddNewTravellers = () => {
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
-                    <div className='col-12'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setPrefix(e.target.value)}
-                          value={prefix}
-                          placeholder=' '
-                          type='text'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>Prefix</label>
-                      </div>
+                    <div className='col-12 form-input-select'>
+                      <label>Prefix</label>
+                      <Select
+                        options={passportPrefixOptions}
+                        value={prefix}
+                        placeholder='Search & Select Prefix'
+                        onChange={(id) => setPrefix(id)}
+                      />
                     </div>
                     <div className='col-12'>
                       <div className='form-input'>

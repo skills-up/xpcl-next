@@ -158,7 +158,7 @@ const ClientTravellers = () => {
             })
           }
         >
-          Add New
+          Link New
         </button>
       </div>
       {/* Data Table */}
