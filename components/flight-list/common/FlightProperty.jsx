@@ -8,7 +8,12 @@ import {
 } from '../../../features/flightSearch/flightSearchSlice';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 
-function FlightProperty({ element, isSelectedBooking = false, currentTab }) {
+function FlightProperty({
+  element,
+  isSelectedBooking = false,
+  currentTab,
+  showPrice = true,
+}) {
   const [expand, setExpand] = useState([]);
   const returnFlight = useSelector((state) => state.flightSearch.value.returnFlight);
   const travellerDOBS = useSelector((state) => state.flightSearch.value.travellerDOBS);
@@ -223,180 +228,185 @@ function FlightProperty({ element, isSelectedBooking = false, currentTab }) {
             </div>
           </div>
           {/* End .col */}
-          <div className='col-md-auto'>
-            <div className='d-flex items-center h-full'>
-              <div className='pl-30 border-left-light h-full md:d-none' />
-              <div>
-                {!isSelectedBooking && (
-                  <button
-                    onClick={async () => {
-                      if (element.type !== 'combined') {
-                        dispatch(
-                          setSelectedBookings({
-                            ...selectedBookings,
-                            ...{ [element.type]: element, combined: null },
-                          })
-                        );
-                        if (!returnFlight) router.push('/flight/book');
-                      } else {
-                        dispatch(
-                          setSelectedBookings({ to: null, from: null, combined: element })
-                        );
-                        router.push('/flight/book');
-                      }
-                    }}
-                    className='button -dark-1 px-30 h-50 bg-blue-1 text-white mb-10'
-                  >
-                    {element.type === 'combined'
-                      ? 'Book Now'
-                      : returnFlight
-                      ? 'Select'
-                      : 'Book Now'}
-                    <div className='icon-arrow-top-right ml-15' />
-                  </button>
-                )}
-                <div className='text-right md:text-left'>
-                  <div className='text-18 lh-16 fw-500'>
-                    INR{' '}
-                    {element.total.toLocaleString('en-IN', {
-                      maximumFractionDigits: 2,
-                      style: 'currency',
-                      currency: 'INR',
-                    })}
+          {showPrice && (
+            <div className='col-md-auto'>
+              <div className='d-flex items-center h-full'>
+                <div className='pl-30 border-left-light h-full md:d-none' />
+                <div>
+                  {!isSelectedBooking && (
+                    <button
+                      onClick={async () => {
+                        if (element.type !== 'combined') {
+                          dispatch(
+                            setSelectedBookings({
+                              ...selectedBookings,
+                              ...{ [element.type]: element, combined: null },
+                            })
+                          );
+                          if (!returnFlight) router.push('/flight/book');
+                        } else {
+                          dispatch(
+                            setSelectedBookings({
+                              to: null,
+                              from: null,
+                              combined: element,
+                            })
+                          );
+                          router.push('/flight/book');
+                        }
+                      }}
+                      className='button -dark-1 px-30 h-50 bg-blue-1 text-white mb-10'
+                    >
+                      {element.type === 'combined'
+                        ? 'Book Now'
+                        : returnFlight
+                        ? 'Select'
+                        : 'Book Now'}
+                      <div className='icon-arrow-top-right ml-15' />
+                    </button>
+                  )}
+                  <div className='text-right md:text-left'>
+                    <div className='text-18 lh-16 fw-500'>
+                      {element.total.toLocaleString('en-IN', {
+                        maximumFractionDigits: 2,
+                        style: 'currency',
+                        currency: 'INR',
+                      })}
+                    </div>
+                    {element.adultPrice > 0 && (
+                      <div className='text-15 lh-16 text-light-1'>
+                        <a
+                          data-tooltip-id={'x_' + element.selectId}
+                          data-tooltip-content={
+                            element.provider === 'tj'
+                              ? `Max Check-In Baggage - ${
+                                  element.prices.prices.ADULT.baggage.checkIn || 'NA'
+                                }\nMax Cabin Baggage - ${
+                                  element.prices.prices.ADULT.baggage.cabin || 'NA'
+                                }\nFree Meal - ${
+                                  element.prices.prices.ADULT.freeMeal ? 'Yes' : 'No'
+                                }\nRefundable - ${
+                                  element.prices.prices.ADULT.refundable ? 'Yes' : 'No'
+                                } `
+                              : undefined
+                          }
+                          data-tooltip-place='top'
+                        >
+                          {travellerDOBS.ADT}x Adult @{' '}
+                          {element.adultPrice.toLocaleString('en-IN', {
+                            maximumFractionDigits: 2,
+                            style: 'currency',
+                            currency: 'INR',
+                          })}
+                        </a>
+                        {element.provider === 'tj' && (
+                          <ReactTooltip
+                            id={'x_' + element.selectId}
+                            render={({ content }) => (
+                              <span>
+                                {content?.split('\n')?.map((el) => (
+                                  <>
+                                    {el}
+                                    <br />
+                                  </>
+                                ))}
+                              </span>
+                            )}
+                          />
+                        )}
+                      </div>
+                    )}
+                    {element.childPrice > 0 && (
+                      <div className='text-15 lh-16 text-light-1'>
+                        <a
+                          data-tooltip-id={'x_' + element.selectId}
+                          data-tooltip-content={
+                            element.provider === 'tj'
+                              ? `Max Check-In Baggage - ${
+                                  element.prices.prices.CHILD.baggage.checkIn || 'NA'
+                                }\nMax Cabin Baggage - ${
+                                  element.prices.prices.CHILD.baggage.cabin || 'NA'
+                                }\nFree Meal - ${
+                                  element.prices.prices.CHILD.freeMeal ? 'Yes' : 'No'
+                                }\nRefundable - ${
+                                  element.prices.prices.CHILD.refundable ? 'Yes' : 'No'
+                                } `
+                              : undefined
+                          }
+                          data-tooltip-place='top'
+                        >
+                          {travellerDOBS.CHD}x Child @{' '}
+                          {element.childPrice.toLocaleString('en-IN', {
+                            maximumFractionDigits: 2,
+                            style: 'currency',
+                            currency: 'INR',
+                          })}
+                        </a>
+                        {element.provider === 'tj' && (
+                          <ReactTooltip
+                            id={'x_' + element.selectId}
+                            render={({ content }) => (
+                              <span>
+                                {content?.split('\n')?.map((el) => (
+                                  <>
+                                    {el}
+                                    <br />
+                                  </>
+                                ))}
+                              </span>
+                            )}
+                          />
+                        )}
+                      </div>
+                    )}
+                    {element.infantPrice > 0 && (
+                      <div className='text-15 lh-16 text-light-1'>
+                        <a
+                          data-tooltip-id={'x_' + element.selectId}
+                          data-tooltip-content={
+                            element.provider === 'tj'
+                              ? `Max Check-In Baggage - ${
+                                  element.prices.prices.INFANT.baggage.checkIn || 'NA'
+                                }\nMax Cabin Baggage - ${
+                                  element.prices.prices.INFANT.baggage.cabin || 'NA'
+                                }\nFree Meal - ${
+                                  element.prices.prices.INFANT.freeMeal ? 'Yes' : 'No'
+                                }\nRefundable - ${
+                                  element.prices.prices.INFANT.refundable ? 'Yes' : 'No'
+                                } `
+                              : undefined
+                          }
+                          data-tooltip-place='top'
+                        >
+                          {travellerDOBS.INF}x Infant @{' '}
+                          {element.infantPrice.toLocaleString('en-IN', {
+                            maximumFractionDigits: 2,
+                            style: 'currency',
+                            currency: 'INR',
+                          })}
+                        </a>
+                        {element.provider === 'tj' && (
+                          <ReactTooltip
+                            id={'x_' + element.selectId}
+                            render={({ content }) => (
+                              <span>
+                                {content?.split('\n')?.map((el) => (
+                                  <>
+                                    {el}
+                                    <br />
+                                  </>
+                                ))}
+                              </span>
+                            )}
+                          />
+                        )}
+                      </div>
+                    )}
                   </div>
-                  {element.adultPrice > 0 && (
-                    <div className='text-15 lh-16 text-light-1'>
-                      <a
-                        data-tooltip-id={'x_' + element.selectId}
-                        data-tooltip-content={
-                          element.provider === 'tj'
-                            ? `Max Check-In Baggage - ${
-                                element.prices.prices.ADULT.baggage.checkIn || 'NA'
-                              }\nMax Cabin Baggage - ${
-                                element.prices.prices.ADULT.baggage.cabin || 'NA'
-                              }\nFree Meal - ${
-                                element.prices.prices.ADULT.freeMeal ? 'Yes' : 'No'
-                              }\nRefundable - ${
-                                element.prices.prices.ADULT.refundable ? 'Yes' : 'No'
-                              } `
-                            : undefined
-                        }
-                        data-tooltip-place='top'
-                      >
-                        {travellerDOBS.ADT}x Adult @{' '}
-                        {element.adultPrice.toLocaleString('en-IN', {
-                          maximumFractionDigits: 2,
-                          style: 'currency',
-                          currency: 'INR',
-                        })}
-                      </a>
-                      {element.provider === 'tj' && (
-                        <ReactTooltip
-                          id={'x_' + element.selectId}
-                          render={({ content }) => (
-                            <span>
-                              {content?.split('\n')?.map((el) => (
-                                <>
-                                  {el}
-                                  <br />
-                                </>
-                              ))}
-                            </span>
-                          )}
-                        />
-                      )}
-                    </div>
-                  )}
-                  {element.childPrice > 0 && (
-                    <div className='text-15 lh-16 text-light-1'>
-                      <a
-                        data-tooltip-id={'x_' + element.selectId}
-                        data-tooltip-content={
-                          element.provider === 'tj'
-                            ? `Max Check-In Baggage - ${
-                                element.prices.prices.CHILD.baggage.checkIn || 'NA'
-                              }\nMax Cabin Baggage - ${
-                                element.prices.prices.CHILD.baggage.cabin || 'NA'
-                              }\nFree Meal - ${
-                                element.prices.prices.CHILD.freeMeal ? 'Yes' : 'No'
-                              }\nRefundable - ${
-                                element.prices.prices.CHILD.refundable ? 'Yes' : 'No'
-                              } `
-                            : undefined
-                        }
-                        data-tooltip-place='top'
-                      >
-                        {travellerDOBS.CHD}x Child @{' '}
-                        {element.childPrice.toLocaleString('en-IN', {
-                          maximumFractionDigits: 2,
-                          style: 'currency',
-                          currency: 'INR',
-                        })}
-                      </a>
-                      {element.provider === 'tj' && (
-                        <ReactTooltip
-                          id={'x_' + element.selectId}
-                          render={({ content }) => (
-                            <span>
-                              {content?.split('\n')?.map((el) => (
-                                <>
-                                  {el}
-                                  <br />
-                                </>
-                              ))}
-                            </span>
-                          )}
-                        />
-                      )}
-                    </div>
-                  )}
-                  {element.infantPrice > 0 && (
-                    <div className='text-15 lh-16 text-light-1'>
-                      <a
-                        data-tooltip-id={'x_' + element.selectId}
-                        data-tooltip-content={
-                          element.provider === 'tj'
-                            ? `Max Check-In Baggage - ${
-                                element.prices.prices.INFANT.baggage.checkIn || 'NA'
-                              }\nMax Cabin Baggage - ${
-                                element.prices.prices.INFANT.baggage.cabin || 'NA'
-                              }\nFree Meal - ${
-                                element.prices.prices.INFANT.freeMeal ? 'Yes' : 'No'
-                              }\nRefundable - ${
-                                element.prices.prices.INFANT.refundable ? 'Yes' : 'No'
-                              } `
-                            : undefined
-                        }
-                        data-tooltip-place='top'
-                      >
-                        {travellerDOBS.INF}x Infant @{' '}
-                        {element.infantPrice.toLocaleString('en-IN', {
-                          maximumFractionDigits: 2,
-                          style: 'currency',
-                          currency: 'INR',
-                        })}
-                      </a>
-                      {element.provider === 'tj' && (
-                        <ReactTooltip
-                          id={'x_' + element.selectId}
-                          render={({ content }) => (
-                            <span>
-                              {content?.split('\n')?.map((el) => (
-                                <>
-                                  {el}
-                                  <br />
-                                </>
-                              ))}
-                            </span>
-                          )}
-                        />
-                      )}
-                    </div>
-                  )}
                 </div>
               </div>
             </div>
-          </div>
+          )}
           {/* End .col-md-auto */}
         </div>
         {/* End .row */}

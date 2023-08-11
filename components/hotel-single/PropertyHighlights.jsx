@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { BiBeer } from 'react-icons/bi';
 import { BsBriefcase, BsCupHot } from 'react-icons/bs';
 import { CgGym } from 'react-icons/cg';
@@ -15,6 +16,8 @@ import { SiAmericanexpress } from 'react-icons/si';
 import { TbHeartbeat, TbSwimming } from 'react-icons/tb';
 
 const PropertyHighlights2 = ({ facilities }) => {
+  const [isLoadMore, setIsLoadMore] = useState(false);
+  const showInOne = 6;
   const iconList = [
     {
       icon: <BsBriefcase className={`mb-5 text-24 text-blue-1`} />,
@@ -126,23 +129,35 @@ const PropertyHighlights2 = ({ facilities }) => {
     },
   ];
   return (
-    <div className='row y-gap-20 pt-30'>
-      {facilities.map((item, index) => {
-        //  Icon Selection
-        let icon = <i className={`icon-award text-24 text-blue-1`} />;
-        for (let ic of iconList)
-          if (ic.text.toLowerCase() === item.toLowerCase()) icon = ic.icon;
-
-        return (
-          <div className='col-xl-2 col-lg-3 col-6' key={index}>
-            <div className='text-center'>
-              {icon}
-              <div className='text-15 lh-1 mt-10'>{item}</div>
-            </div>
-          </div>
-        );
-      })}
-    </div>
+    <>
+      <div className='row y-gap-20 pt-30'>
+        {facilities.map((item, index) => {
+          //  Icon Selection
+          let icon = <i className={`icon-award text-24 text-blue-1`} />;
+          for (let ic of iconList)
+            if (ic.text.toLowerCase() === item.toLowerCase()) icon = ic.icon;
+          if (isLoadMore || (!isLoadMore && index < showInOne))
+            return (
+              <div className='col-xl-2 col-lg-3 col-6' key={index}>
+                <div className='text-center'>
+                  {icon}
+                  <div className='text-15 lh-1 mt-10'>{item}</div>
+                </div>
+              </div>
+            );
+        })}
+      </div>
+      {facilities.length > showInOne && (
+        <div className='d-flex justify-end mt-20'>
+          <a
+            className='px-24 text-primary cursor-pointer'
+            onClick={() => setIsLoadMore((prev) => !prev)}
+          >
+            {isLoadMore ? 'Show Less' : 'Show More...'}
+          </a>
+        </div>
+      )}
+    </>
   );
 };
 

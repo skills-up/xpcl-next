@@ -66,14 +66,14 @@ const UpdateClientTraveller = () => {
         client_id: clientID.value,
       });
       if (response?.success) {
-        sendToast('success', 'Updated Client Traveller Successfully.', 4000);
+        sendToast('success', 'Updated Linked Client Successfully.', 4000);
         router.push('/dashboard/travellers/view/' + router.query.traveller_id);
       } else {
         sendToast(
           'error',
           response.data?.message ||
             response.data?.error ||
-            'Failed to Update Client Traveller.',
+            'Failed to Update Linked Client.',
           4000
         );
       }
@@ -84,7 +84,7 @@ const UpdateClientTraveller = () => {
 
   return (
     <>
-      <Seo pageTitle='Update Client Traveller' />
+      <Seo pageTitle='Update Linked Client' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -104,10 +104,8 @@ const UpdateClientTraveller = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Update Client Traveller</h1>
-                  <div className='text-15 text-light-1'>
-                    Update an existing client traveller.
-                  </div>
+                  <h1 className='text-30 lh-14 fw-600'>Update Linked Client</h1>
+                  <div className='text-15 text-light-1'>Update a linked client.</div>
                 </div>
                 {/* End .col-12 */}
               </div>
@@ -132,7 +130,7 @@ const UpdateClientTraveller = () => {
                         type='submit'
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
                       >
-                        Update Client Traveller
+                        Update Linked Client
                       </button>
                     </div>
                   </form>

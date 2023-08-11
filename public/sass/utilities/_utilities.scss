@@ -858,13 +858,52 @@ $_displays: none, inline-block, block, flex;
   }
 }
 
+// .galleryGrid.-type-1 {
+//   display: grid;
+//   grid-template-columns: 0.24fr 0.24fr 0.24fr 0.24fr;
+//   gap: 10px;
+
+//   @include media-below(lg) {
+//     grid-template-columns: 1fr 1fr 1fr;
+//   }
+
+//   @include media-below(md) {
+//     grid-template-columns: 1fr 1fr;
+//   }
+
+//   @include media-below(sm) {
+//     grid-template-columns: 1fr;
+//   }
+
+//   // > *:nth-child(1) {
+//   //   grid-row: 2 span;
+
+//   //   @include media-below(lg) {
+//   //     grid-row: 1;
+//   //   }
+//   // }
+
+//   img {
+//     width: 100%;
+//     height: 100%;
+//     object-fit: cover;
+
+//     @include media-below(lg) {
+//       width: 100%;
+//     }
+//   }
+// }
+
 .galleryGrid.-type-1 {
   display: grid;
-  grid-template-columns: 0.24fr 0.24fr 0.24fr 0.24fr;
+  grid-template-columns: 0.52fr 0.24fr 0.24fr;
+  grid-template-rows: 1fr 1fr;
   gap: 10px;
-
+  min-height: 0;
+  max-height: 520px;
   @include media-below(lg) {
     grid-template-columns: 1fr 1fr 1fr;
+    max-height: 1060px;
   }
 
   @include media-below(md) {
@@ -875,15 +914,31 @@ $_displays: none, inline-block, block, flex;
     grid-template-columns: 1fr;
   }
 
-  // > *:nth-child(1) {
-  //   grid-row: 2 span;
+  > *:nth-child(even),
+  > *:nth-child(odd) {
+    height: 0px;
+  }
 
-  //   @include media-below(lg) {
-  //     grid-row: 1;
-  //   }
-  // }
+  > *:nth-child(1) {
+    grid-row: 2 span;
+    height: 500px;
+
+    @include media-below(lg) {
+      height: 200px;
+    }
+  }
+  > *:nth-child(2),
+  > *:nth-child(3),
+  > *:nth-child(4),
+  > *:nth-child(5) {
+    height: 245px;
+    @include media-below(lg) {
+      height: 200px;
+    }
+  }
 
   img {
+    z-index: auto;
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -1981,7 +2036,7 @@ table.table-6 {
   top: 0;
   bottom: 40px;
   left: 19px;
-  z-index: -1;
+  z-index: 1;
   border-left: 2px dashed #e5f0fd;
 }
 
@@ -2467,25 +2522,47 @@ table.table-6 {
   }
 }
 
-// Tripjack Seatmap
+// Akasa Seatmap
 .aa-seatmap {
-  tr {
+  .aa-grid {
     display: flex;
-    justify-content: space-evenly;
-    &.extra {
-      // justify-content: space-between;
-    }
-    td {
-      padding: 0;
+    align-items: center;
+    .row-number {
       display: flex;
       align-items: center;
       justify-content: center;
-      min-width: 55px;
       min-height: 55px;
+      min-width: 74px;
       font-size: 1.2rem;
       text-align: center;
     }
   }
+  #seat {
+    position: relative;
+    text-align: center;
+    .seat-img {
+      height: 67px;
+      width: 74px;
+    }
+    span {
+      display: block;
+      position: absolute;
+      max-width: 10px;
+      width: 100%;
+      left: 38%;
+      top: 18.5%;
+      font-size: 0.85rem !important;
+    }
+  }
+}
+
+#from-tab,
+#to-tab {
+  scroll-margin-top: 6.5rem;
+}
+
+#selected-bookings {
+  scroll-margin-top: 6rem;
 }
 
 // Amadeus Seatmap
@@ -2665,11 +2742,20 @@ table.table-6 {
   grid-template-columns: auto auto auto;
   gap: 1rem 0;
   align-items: center;
+  justify-content: space-between;
   @include media-below(lg) {
     padding-top: 1rem;
-    grid-template-columns: auto;
+    grid-template-columns: 100%;
   }
   .hotel-search-select {
+    width: 350px;
+    max-width: 100%;
+    @include media-below(lg) {
+      width: unset;
+      max-width: 100%;
+    }
+  }
+  .hotel-date-select {
     width: 350px;
     max-width: 100%;
     @include media-below(lg) {
@@ -2703,4 +2789,17 @@ table.table-6 {
   @include media-below(lg) {
     scroll-margin-top: 12rem;
   }
+}
+
+.pswp__zoom-wrap {
+  // transform: none !important;
+}
+
+.pswp__img {
+  // position: absolute !important;
+  // left: 0 !important;
+  // top: 0 !important;
+  // transform: translate(55%, 20%);
+  // width: auto !important;
+  // height: auto !important;
 }

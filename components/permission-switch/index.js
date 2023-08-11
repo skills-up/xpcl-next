@@ -14,6 +14,7 @@ const PermissionSwitch = ({
   let selectstandard = {};
   const [_standard, _setStandard] = useState({});
   const [_additional, _setAdditional] = useState([]);
+  const capsWords = ['PDF', 'PNR', 'GST', 'MIS'];
 
   useEffect(() => {
     getPermissions();
@@ -169,9 +170,15 @@ const PermissionSwitch = ({
         <tbody>
           {Object.keys(_standard).map((key) => {
             const perms = _standard[key];
+            let finalEntity = titelize(key);
+            let eStr = '';
+            for (let e of finalEntity.split(' ')) {
+              if (capsWords.includes(e?.toUpperCase())) eStr += e.toUpperCase() + ' ';
+              else eStr += e + ' ';
+            }
             return (
               <tr key={key}>
-                <td>{titelize(key)}</td>
+                <td>{eStr}</td>
                 <td>{perms[0] ? renderSwitch(perms[0], key, 0) : ''}</td>
                 <td>{perms[1] ? renderSwitch(perms[1], key, 1) : ''}</td>
                 <td>{perms[2] ? renderSwitch(perms[2], key, 2) : ''}</td>
@@ -186,13 +193,24 @@ const PermissionSwitch = ({
       <table className='table-6'>
         <tbody>
           {_additional.map((perm, i) => {
-            const [entity, ...permission] = perm.parts;
+            let [entity, ...permission] = perm.parts;
+            console.log('Test', entity, permission);
+            let finalEntity = titelize(entity);
+            let finalPerm = titelize(permission.reverse().join('-'));
+            let eStr = '';
+            let pStr = '';
+            for (let e of finalEntity.split(' ')) {
+              if (capsWords.includes(e?.toUpperCase())) eStr += e.toUpperCase() + ' ';
+              else eStr += e + ' ';
+            }
+            for (let e of finalPerm.split(' ')) {
+              if (capsWords.includes(e?.toUpperCase())) pStr += e.toUpperCase() + ' ';
+              else pStr += e + ' ';
+            }
             return (
               <tr key={perm.parts.join('.')}>
                 <td>
-                  <span className='d-block'>
-                    {titelize(entity) + ' - ' + titelize(permission.reverse().join('-'))}
-                  </span>
+                  <span className='d-block'>{eStr + '- ' + pStr}</span>
                   <span className='d-block text-secondary'>{perm.desc}</span>
                 </td>
                 <td>{renderSwitchAdd(perm, i)}</td>

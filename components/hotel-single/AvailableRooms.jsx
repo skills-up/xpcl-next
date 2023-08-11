@@ -1,8 +1,9 @@
 import { auto } from '@popperjs/core';
 import Image from 'next/image';
 import { useSelector } from 'react-redux';
+import Pluralize from '../../utils/pluralChecker';
 
-const AvailableRooms = ({ hotel, onRoomSelect, rooms }) => {
+const AvailableRooms = ({ hotel, onRoomSelect, rooms, isProgress }) => {
   return (
     <>
       <div className='border-light rounded-4 px-30 py-30 sm:px-20 sm:py-20 mb-20'>
@@ -118,16 +119,20 @@ const AvailableRooms = ({ hotel, onRoomSelect, rooms }) => {
                           </div>
                         )}
                         {/* Sleeps */}
-                        <div>
-                          <div className='d-flex gap-1 text-light-1 flex-column'>
-                            {rooms.length > 0 &&
-                              rooms[hI].travellers.map((t, tI) => (
-                                <div key={tI} className='d-flex gap-2 items-center'>
-                                  <div key={tI} className='icon-man text-24' /> {t.label}
-                                </div>
-                              ))}
+                        {rooms && rooms.length > 0 && (
+                          <div className='d-flex items-center gap-1'>
+                            <div className='icon-man text-24' />
+                            <span className='text-15 lh-12 fw-500'>
+                              {rooms[hI].adult}{' '}
+                              {Pluralize('Adult', 'Adults', rooms[hI].adult)}
+                              {rooms[hI].child.length > 0
+                                ? ', ' +
+                                  rooms[hI].child.length +
+                                  Pluralize(' Child', ' Children', rooms[hI].child.length)
+                                : ''}
+                            </span>
                           </div>
-                        </div>
+                        )}
                       </div>
                     </div>
                     {/* End price features */}
@@ -188,6 +193,7 @@ const AvailableRooms = ({ hotel, onRoomSelect, rooms }) => {
           </div>
           <div className='col-lg-6'>
             <button
+              disabled={isProgress}
               onClick={() => onRoomSelect(hotel)}
               className='button h-50 px-24 col-12 -dark-1 bg-blue-1 text-white'
             >

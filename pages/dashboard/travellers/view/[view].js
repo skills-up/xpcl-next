@@ -239,7 +239,7 @@ const ViewTravellers = () => {
                 />
                 <hr className='my-4' />
                 <div>
-                  <h2 className='mb-3'>Client Travellers</h2>
+                  <h2 className='mb-3'>Linked Clients</h2>
                   <ClientTravellers />
                 </div>
                 <hr className='my-4' />

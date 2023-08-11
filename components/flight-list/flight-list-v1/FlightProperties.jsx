@@ -46,6 +46,7 @@ const FlightProperties = () => {
   const paginateDataPerPage = useSelector(
     (state) => state.flightSearch.value.paginateDataPerPage
   );
+  const returnFlight = useSelector((state) => state.flightSearch.value.returnFlight);
   const destinations = useSelector((state) => state.flightSearch.value.destinations);
   const dispatch = useDispatch();
 
@@ -95,11 +96,11 @@ const FlightProperties = () => {
                 if (key === 'aa') {
                   // infantPrice = val.prices.prices?.CHD?.fare * travellerDOBS.INF;
                   infantPrice = 1500 * travellerDOBS.INF;
-                  childPrice = val.prices.prices?.CHD?.fare * travellerDOBS.CHD;
-                  adultPrice = val.prices.prices?.ADT?.fare * travellerDOBS.ADT;
+                  childPrice = val.prices.prices?.CHD * travellerDOBS.CHD;
+                  adultPrice = val.prices.prices?.ADT * travellerDOBS.ADT;
                   total =
                     (infantPrice > 0 ? infantPrice : 0) +
-                    (childPrice > 0 ? adultPrice : 0) +
+                    (childPrice > 0 ? childPrice : 0) +
                     (adultPrice > 0 ? adultPrice : 0);
                 } else if (key === 'tj') {
                   infantPrice = val.prices.prices?.INFANT?.fare * travellerDOBS.INF;
@@ -107,7 +108,7 @@ const FlightProperties = () => {
                   adultPrice = val.prices.prices?.ADULT?.fare * travellerDOBS.ADT;
                   total =
                     (infantPrice > 0 ? infantPrice : 0) +
-                    (childPrice > 0 ? adultPrice : 0) +
+                    (childPrice > 0 ? childPrice : 0) +
                     (adultPrice > 0 ? adultPrice : 0);
                 }
                 // Overall Duration + Day Difference
@@ -293,7 +294,6 @@ const FlightProperties = () => {
       );
       dispatch(setDepartingFrom(departingFrom));
       dispatch(setArrivingAt(arrivingAt));
-      console.log(temp);
       setToCount(toCount);
       setFromCount(fromCount);
       setCombinedCount(combinedCount);
@@ -307,6 +307,32 @@ const FlightProperties = () => {
       }
     }
   }, [searchData, airlineOrgs]);
+
+  useEffect(() => {
+    if (returnFlight) {
+      // Scroll
+      if (selectedBookings.to && selectedBookings.from) {
+        const el = document.getElementById('selected-bookings');
+        if (el) {
+          el.scrollIntoView();
+        }
+      }
+      // Change Tabs
+      else if (selectedBookings.to && !selectedBookings.from && fromCount > 0) {
+        setCurrentTab('from');
+        const el = document.getElementById('from-tab');
+        if (el) {
+          el.scrollIntoView();
+        }
+      } else if (!selectedBookings.to && selectedBookings.from && toCount > 0) {
+        setCurrentTab('to');
+        const el = document.getElementById('to-tab');
+        if (el) {
+          el.scrollIntoView();
+        }
+      }
+    }
+  }, [selectedBookings]);
 
   useEffect(() => {
     if (manip) {
@@ -419,6 +445,7 @@ const FlightProperties = () => {
         >
           {toCount > 0 && (
             <span
+              id='to-tab'
               onClick={() => setCurrentTab('to')}
               className='d-flex items-center justify-center gap-2'
               style={{
@@ -433,6 +460,7 @@ const FlightProperties = () => {
           )}
           {fromCount > 0 && (
             <span
+              id='from-tab'
               onClick={() => setCurrentTab('from')}
               className='d-flex items-center justify-center gap-2'
               style={{

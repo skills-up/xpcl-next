@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { createItem, customAPICall, getList } from '../../../api/xplorzApi';
+import { createItem, customAPICall, getList, updateItem } from '../../../api/xplorzApi';
 import { sendToast } from '../../../utils/toastify';
 import FlightProperty from '../../flight-list/common/FlightProperty';
 import Select from 'react-select';
@@ -12,22 +12,24 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
   const selectedBookings = useSelector(
     (state) => state.flightSearch.value.selectedBookings
   );
+  const [isProceed, setIsProceed] = useState(false);
   const [progress, setProgress] = useState(0);
   const [frequentFliers, setFrequentFliers] = useState([]);
+  const [containsInternational, setContainsInternational] = useState(false);
   const [travellerInfo, setTravellerInfo] = travellerInfos;
   const returnFlight = useSelector((state) => state.flightSearch.value.returnFlight);
-  const lowCostBookings = ['IX', '6E', 'SG', 'G8', 'I5', 'QP'];
+  const lowCostBookings = ['IX', '6E', 'SG', 'G8', 'I5', 'QP', 'AI'];
   const travellers = useSelector((state) => state.flightSearch.value.travellers);
   const airports = useSelector((state) => state.apis.value.airports);
-  console.log('airports', airports);
   const destinations = useSelector((state) => state.flightSearch.value.destinations);
   const router = useRouter();
   const mealPreferenceOptions = [
-    { value: 'Vegetarian', label: 'Vegetarian' },
-    { value: 'Jain Vegetarian', label: 'Jain Vegetarian' },
-    { value: 'Non Vegetarian', label: 'Non Vegetarian' },
-    { value: 'Lacto Ovo Meal', label: 'Lacto Ovo Meal' },
-    { value: 'Sea Food Meal', label: 'Sea Food Meal' },
+    { value: 'AVML', label: 'Vegetarian' },
+    { value: 'HNML', label: 'Hindi Non Vegetarian' },
+    { value: 'VJML', label: 'Jain Vegetarian' },
+    { value: 'NVML', label: 'Non Vegetarian' },
+    { value: 'VLML', label: 'Lacto Ovo Meal' },
+    { value: 'SFML', label: 'Sea Food Meal' },
   ];
   const seatPreferenceOptions = [
     { value: 'Window', label: 'Window' },
@@ -47,7 +49,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
       (!selectedBookings.to && !selectedBookings.from && !selectedBookings.combined) ||
       !travellers
     ) {
-      console.log('nothing found');
+      router.back();
     }
     getData();
   }, []);
@@ -65,9 +67,6 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
             ...{
               frequentFliers: null,
               membershipID: '',
-              seat_preference: el.seat_preference
-                ? { label: el.seat_preference, value: el.seat_preference }
-                : null,
               trip_meals: { from: null, to: null, combined: null },
               prefix: el.prefix
                 ? el.prefix.toLowerCase() === 'mr'
@@ -83,6 +82,12 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
             },
           }))
         );
+        if (
+          destinations?.to?.label?.split('|')?.at(-1) !== 'India' ||
+          destinations?.from?.label?.split('|')?.at(-1) !== 'India'
+        ) {
+          setContainsInternational(true);
+        }
       } else {
         sendToast('error', 'Failed to fetch traveller details', 4000);
       }
@@ -96,13 +101,13 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
     }
   };
 
-  useEffect(() => console.log('progress', progress), [progress]);
-
   const onClick = async () => {
+    setIsProceed(true);
     // Checking if each traveller has a prefix
     for (let traveller of travellerInfo) {
       if (!traveller.prefix) {
         sendToast('error', 'Each traveller should have a prefix', 4000);
+        setIsProceed(false);
         return;
       }
     }
@@ -132,7 +137,6 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
         selectedBookings?.combined?.provider === 'tj' &&
         !lowCostBookings.includes(selectedBookings.combined.segments[0].flight.airline))
     ) {
-      console.log('Amadaeus Detected');
       if (selectedBookings.combined) {
         let toSector = [];
         let fromSector = [];
@@ -158,17 +162,18 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
           travellers: travellers.map((el) => el.value),
           sectors: [toSector, fromSector],
         });
-        console.log(response);
         if (response?.success) {
           setPNR((prev) => ({
             ...prev,
             combined: { data: response.data, provider: 'ad' },
           }));
           setCurrentStep(2);
+          setIsProceed(false);
           return;
         } else {
           sendToast('error', 'Error While Creating Booking', 4000);
           router.back();
+          setIsProceed(false);
           return;
         }
       } else {
@@ -195,7 +200,6 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
             })),
           ],
         });
-        console.log(response);
         if (response?.success) {
           setPNR((prev) => ({
             from: { data: response.data, provider: 'ad' },
@@ -203,10 +207,12 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
             combined: null,
           }));
           setCurrentStep(2);
+          setIsProceed(false);
           return;
         } else {
           sendToast('error', 'Error While Creating Booking', 4000);
           router.back();
+          setIsProceed(false);
           return;
         }
       }
@@ -265,7 +271,6 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
           {},
           true
         );
-        console.log(response);
         if (response?.success) {
           setPNR((prev) => ({
             ...prev,
@@ -285,7 +290,6 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
             {},
             true
           );
-          console.log(response);
           if (response?.success) {
             setPNR((prev) => ({
               ...prev,
@@ -309,7 +313,6 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
               })),
             ],
           });
-          console.log(response);
           if (response?.success) {
             setPNR((prev) => ({
               ...prev,
@@ -321,6 +324,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
       }
       setProgress(Math.floor((currentAPICalls / totalAPICalls) * 100));
     }
+    setIsProceed(false);
     // If Successful
     if (currentAPICalls === totalAPICalls) setCurrentStep(2);
     else {
@@ -376,42 +380,8 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
             travellerInfo.length > 0 &&
             travellerInfo.map((element, index) => (
               <div key={index}>
-                {console.log(element)}
                 <h3 className='mt-20'>{element.aliases[0]}</h3>
                 <div key={index} className='bg-white py-30 px-30 mt-20'>
-                  <h4>Frequent Flier</h4>
-                  <div className='row my-3 y-gap-20'>
-                    <div className='col-md-6 form-input-select'>
-                      <label>Frequent Flier Program</label>
-                      <Select
-                        options={frequentFliers.map((el) => ({
-                          value: el.code,
-                          label: el.program,
-                        }))}
-                        value={element.frequentFliers}
-                        onChange={(id) =>
-                          setTravellerInfo((prev) => {
-                            prev[index]['frequentFliers'] = id;
-                            return [...prev];
-                          })
-                        }
-                      />
-                    </div>
-                    <div className='form-input col-md-6 bg-white'>
-                      <input
-                        onChange={(e) =>
-                          setTravellerInfo((prev) => {
-                            prev[index]['membershipID'] = e.target.value;
-                            return [...prev];
-                          })
-                        }
-                        value={element['membershipID']}
-                        placeholder=' '
-                        type='text'
-                      />
-                      <label className='lh-1 text-16 text-light-1'>Membership ID</label>
-                    </div>
-                  </div>
                   <h4>Traveller</h4>
                   <div className='row my-3'>
                     <div className='row col-12 mb-20 y-gap-20'>
@@ -513,8 +483,166 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                       </div>
                     </div>
                   </div>
-                  <h4>Miscellaneous Details</h4>
-                  <div className='row my-3 y-gap-20'>
+                  {containsInternational && (
+                    <>
+                      <h4>Passport</h4>
+                      <div className='row my-3'>
+                        <div className='row col-12 y-gap-20'>
+                          <div className='form-input col-md-4 bg-white'>
+                            <input
+                              onChange={(e) =>
+                                setTravellerInfo((prev) => {
+                                  prev[index]['passport_number'] = e.target.value;
+                                  return [...prev];
+                                })
+                              }
+                              value={element['passport_number']}
+                              placeholder=' '
+                              type='text'
+                            />
+                            <label className='lh-1 text-16 text-light-1'>
+                              Passport Number
+                            </label>
+                          </div>
+                          <div className='form-input col-md-4 bg-white'>
+                            <input
+                              onChange={(e) =>
+                                setTravellerInfo((prev) => {
+                                  prev[index]['passport_name'] = e.target.value;
+                                  return [...prev];
+                                })
+                              }
+                              value={element['passport_name']}
+                              placeholder=' '
+                              type='text'
+                            />
+                            <label className='lh-1 text-16 text-light-1'>
+                              Passport Name
+                            </label>
+                          </div>
+                          <div className='form-input col-md-4 bg-white'>
+                            <input
+                              onChange={(e) =>
+                                setTravellerInfo((prev) => {
+                                  prev[index]['passport_issue_place'] = e.target.value;
+                                  return [...prev];
+                                })
+                              }
+                              value={element['passport_issue_place']}
+                              placeholder=' '
+                              type='text'
+                            />
+                            <label className='lh-1 text-16 text-light-1'>
+                              Passport Issue Place
+                            </label>
+                          </div>
+                          <div className='form-datepicker col-md-6'>
+                            <label>Issue Date</label>
+                            <DatePicker
+                              style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
+                              inputClass='custom_input-picker'
+                              containerClassName='custom_container-picker'
+                              value={
+                                new DateObject({
+                                  date: element.passport_issue_date,
+                                  format: 'YYYY-MM-DD',
+                                })
+                              }
+                              onChange={(date) =>
+                                setTravellerInfo((prev) => {
+                                  prev[index]['passport_issue_date'] =
+                                    date.format('YYYY-MM-DD');
+                                  return [...prev];
+                                })
+                              }
+                              numberOfMonths={1}
+                              offsetY={10}
+                              format='DD MMMM YYYY'
+                            />
+                          </div>
+                          <div className='form-datepicker col-md-6'>
+                            <label>Expiry Date</label>
+                            <DatePicker
+                              style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
+                              inputClass='custom_input-picker'
+                              containerClassName='custom_container-picker'
+                              value={
+                                new DateObject({
+                                  date: element.passport_expiry_date,
+                                  format: 'YYYY-MM-DD',
+                                })
+                              }
+                              onChange={(date) =>
+                                setTravellerInfo((prev) => {
+                                  prev[index]['passport_expiry_date'] =
+                                    date.format('YYYY-MM-DD');
+                                  return [...prev];
+                                })
+                              }
+                              numberOfMonths={1}
+                              offsetY={10}
+                              format='DD MMMM YYYY'
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                  <h4>Frequent Flier</h4>
+                  <div className='row my-3'>
+                    <div className='row col-12 y-gap-20'>
+                      <div className='col-md-6 form-input-select'>
+                        <label>Frequent Flier Program</label>
+                        <Select
+                          options={frequentFliers.map((el) => ({
+                            value: el.code,
+                            label: el.program,
+                          }))}
+                          value={element.frequentFliers}
+                          onChange={(id) =>
+                            setTravellerInfo((prev) => {
+                              prev[index]['frequentFliers'] = id;
+                              return [...prev];
+                            })
+                          }
+                        />
+                      </div>
+                      <div className='form-input col-md-6 bg-white'>
+                        <input
+                          onChange={(e) =>
+                            setTravellerInfo((prev) => {
+                              prev[index]['membershipID'] = e.target.value;
+                              return [...prev];
+                            })
+                          }
+                          value={element['membershipID']}
+                          placeholder=' '
+                          type='text'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>Membership ID</label>
+                      </div>
+                    </div>
+                  </div>
+                  {/* <h4>Miscellaneous Details</h4> */}
+                  <div className='row my-1 y-gap-20'>
+                    <div className='col-md-6'>
+                      <h5 className='fw-500'>Seat Preference: </h5>
+                      {element.seat_preference
+                        ? element.seat_preference
+                        : 'No Preference'}
+                    </div>
+                    <div className='col-md-6'>
+                      <h5 className='fw-500'>Meal Preference: </h5>
+                      {element.meal_preference ? (
+                        <>
+                          {mealPreferenceOptions.map((m) => (
+                            <>{m.value === element.meal_preference && <>{m.label}</>}</>
+                          ))}
+                        </>
+                      ) : (
+                        'No Preference'
+                      )}
+                    </div>
                     {/* <div className='col-md-6 form-input-select'>
                       <label>Meal Preference</label>
                       <Select
@@ -528,19 +656,42 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                         }
                       />
                     </div> */}
-                    <div className='col-md-6 form-input-select'>
-                      <label>Seat Preference</label>
-                      <Select
-                        options={seatPreferenceOptions}
-                        value={element.seat_preference}
-                        onChange={(id) =>
-                          setTravellerInfo((prev) => {
-                            prev[index]['seat_preference'] = id;
-                            return [...prev];
-                          })
+                  </div>
+                  <div className='d-flex col-12 justify-end'>
+                    <a
+                      className='h-50 cursor-pointer text-primary'
+                      onClick={async () => {
+                        const response = await updateItem('travellers', element.id, {
+                          ...element,
+                          ...{
+                            prefix: element.prefix.value ? element.prefix.value : null,
+                            first_name: element.first_name,
+                            middle_name: element.middle_name,
+                            last_name: element.last_name,
+                            passport_dob: element.passport_dob,
+                            mobile_phone: element.mobile_phone,
+                            passport_number: element.passport_number,
+                            passport_name: element.passport_name,
+                            passport_issue_place: element.passport_issue_place,
+                            passport_issue_date: element.passport_issue_date,
+                            passport_expiry_date: element.passport_expiry_date,
+                          },
+                        });
+                        if (response.success) {
+                          sendToast('success', 'Traveller updated successfully', 4000);
+                        } else {
+                          sendToast(
+                            'error',
+                            response.data?.error ||
+                              response.data?.message ||
+                              'Error updating traveller',
+                            4000
+                          );
                         }
-                      />
-                    </div>
+                      }}
+                    >
+                      Update on Profile
+                    </a>
                   </div>
                 </div>
               </div>
@@ -548,7 +699,8 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
         </div>
         <div className='d-flex col-12 justify-end'>
           <button
-            className='button -dark-1 px-30 h-50 bg-blue-1 text-white col-4 mt-20'
+            disabled={isProceed}
+            className='button -dark-1 px-30 h-50 bg-blue-1 text-white col-md-4 mt-20'
             onClick={() => onClick()}
           >
             Proceed To Seat Selection

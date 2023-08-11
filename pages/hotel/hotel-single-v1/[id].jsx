@@ -25,11 +25,13 @@ const HotelSingleV1Dynamic = () => {
   const id = router.query.id;
   const [data, setData] = useState(null);
   const dispatch = useDispatch();
+  const [isProgress, setIsProgress] = useState(false);
   const [images, setImages] = useState([]);
   const [isLoadMore, setIsLoadMore] = useState(false);
   const rooms = useSelector((state) => state.hotelSearch.value.rooms);
   const [showMap, setShowMap] = useState(false);
-
+  const imageNumber = 5;
+  const allowedRes = ['XL'];
   useEffect(() => {
     if (id) {
       getHotel();
@@ -67,7 +69,7 @@ const HotelSingleV1Dynamic = () => {
           out.push(e);
         } else if (e.url && e.sz) {
           const curr = e.sz;
-          if (curr === 'Standard') {
+          if (allowedRes.includes(curr)) {
             out.push({ url: e.url, sz: curr });
           }
         }
@@ -82,6 +84,7 @@ const HotelSingleV1Dynamic = () => {
 
   const onRoomSelect = async (option) => {
     setProgress(50);
+    setIsProgress(true);
     const res = await customAPICall(
       'tj/v1/htl/review',
       'get',
@@ -90,6 +93,7 @@ const HotelSingleV1Dynamic = () => {
       true
     );
     setProgress(100);
+    setIsProgress(false);
     if (res?.success) {
       dispatch(setPNR({ room: option, data: res.data }));
       router.push('/hotel/booking-page');
@@ -125,7 +129,9 @@ const HotelSingleV1Dynamic = () => {
                     {/* Hotel Name */}
                     <div className='col-auto'>
                       <h1 className='text-30 sm:text-25 fw-600'>
-                        {data?.hotel?.name.replaceAll('&amp;', '&')}
+                        {data?.hotel?.name
+                          .replaceAll('&amp;', '&')
+                          .replaceAll('&#039;', "'")}
                       </h1>
                     </div>
                     {/* Rating */}
@@ -209,11 +215,12 @@ const HotelSingleV1Dynamic = () => {
                 <div className='galleryGrid -type-1 pt-30'>
                   {images.map((image, imageIndex) => (
                     <>
-                      {((!isLoadMore && imageIndex < 8) || isLoadMore) && (
+                      {/* {((!isLoadMore && imageIndex < imageNumber) || isLoadMore) && ( */}
+                      {imageIndex !== 5 && (
                         <div key={imageIndex}>
                           <Item
-                            width={450}
-                            height={450}
+                            width={900}
+                            height={650}
                             original={image?.url}
                             thumbnail={image?.url}
                           >
@@ -230,21 +237,33 @@ const HotelSingleV1Dynamic = () => {
                           </Item>
                         </div>
                       )}
+                      {/* )} */}
                     </>
                   ))}
                   {/* End .galleryGrid__item */}
                 </div>
+                {images.length > imageNumber && (
+                  <div className='d-flex justify-center mt-20'>
+                    <Item
+                      width={900}
+                      height={650}
+                      original={images[5]?.url}
+                      thumbnail={images[5]?.url}
+                    >
+                      {({ ref, open }) => (
+                        <button
+                          className='btn btn-outline-primary col-12 h-50 px-24 '
+                          ref={ref}
+                          onClick={open}
+                          role='button'
+                        >
+                          Show More
+                        </button>
+                      )}
+                    </Item>
+                  </div>
+                )}
               </Gallery>
-              {images.length > 8 && (
-                <div className='d-flex justify-center mt-20'>
-                  <button
-                    className='button col-12 h-60 px-24 -dark-1 bg-blue-1 text-white'
-                    onClick={() => setIsLoadMore((prev) => !prev)}
-                  >
-                    {isLoadMore ? 'Show Less' : 'Show More'}
-                  </button>
-                </div>
-              )}
             </div>
             {/* End .container */}
           </section>
@@ -307,6 +326,7 @@ const HotelSingleV1Dynamic = () => {
               {/* End .row */}
               {data.hotel.ops.map((op, opIn) => (
                 <AvailableRooms
+                  isProgress={isProgress}
                   hotel={op}
                   key={opIn}
                   rooms={rooms}

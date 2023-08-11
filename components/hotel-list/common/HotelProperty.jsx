@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { DateObject } from 'react-multi-date-picker';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
+import Pluralize from '../../../utils/pluralChecker';
 
 function HotelProperty({ item }) {
   const searchData = useSelector((state) => state.hotelSearch.value.searchData);
@@ -14,8 +15,8 @@ function HotelProperty({ item }) {
   console.log('total', totalChildren, totalAdults);
   const router = useRouter();
   return (
-    <div className='col-12' key={item?.id}>
-      <div className='border-top-light pt-30'>
+    <div className='col-12 bg-white px-20 mb-30 rounded-4 lg:mb-20' key={item?.id}>
+      <div className='pt-30 pb-10'>
         <div className='row x-gap-20 y-gap-20'>
           <div className='col-md-auto'>
             <div className='cardImage ratio ratio-1:1 w-250 md:w-1/1 rounded-4'>
@@ -33,9 +34,14 @@ function HotelProperty({ item }) {
                       if (slide?.url || slide?.tns)
                         return (
                           <SwiperSlide key={i}>
-                            <Image
-                              width={250}
-                              height={250}
+                            <img
+                              style={{
+                                width: '100%',
+                                minHeight: '230px',
+                                objectFit: 'cover',
+                              }}
+                              // width={250}
+                              // height={250}
                               className='rounded-4 col-12 js-lazy'
                               src={slide?.url || slide?.tns}
                               alt='image'
@@ -53,7 +59,7 @@ function HotelProperty({ item }) {
 
           <div className='col-md'>
             <h3 className='text-18 lh-16 fw-500'>
-              {item?.name?.replaceAll('&amp;', '&')}
+              {item?.name?.replaceAll('&amp;', '&').replaceAll('&#039;', "'")}
               <div className='d-flex items-center'>
                 {item?.ad?.city?.name}
                 <div className='d-inline-flex ml-10 items-flex-start'>
@@ -160,14 +166,10 @@ function HotelProperty({ item }) {
                   86400000}{' '}
                 nights,{' '}
                 {totalAdults > 0
-                  ? totalAdults > 1
-                    ? totalAdults + ' Adults'
-                    : totalAdults + ' Adult'
+                  ? totalAdults + Pluralize(' Adult', ' Adults', totalAdults)
                   : ''}
                 {totalChildren > 0
-                  ? totalChildren > 1
-                    ? ', ' + totalChildren + ' Children'
-                    : ', ' + totalChildren + ' Child'
+                  ? ', ' + totalChildren + Pluralize(' Child', ' Children', totalChildren)
                   : ''}
               </div>
               <div className='text-22 lh-12 fw-600 mt-5'>

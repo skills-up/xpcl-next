@@ -698,7 +698,7 @@ const AddNewBooking = () => {
               <div className='py-30 px-30 lg:px-10 rounded-4 bg-white shadow-3'>
                 <div>
                   <form onSubmit={onSubmit} className='col-12 y-gap-20'>
-                    <div className='form-input-select'>
+                    <div className='form-input-select col-lg-4'>
                       <label>
                         Booking Type<span className='text-danger'>*</span>
                       </label>
@@ -709,7 +709,7 @@ const AddNewBooking = () => {
                         onChange={(id) => setBookingType(id)}
                       />
                     </div>
-                    <div className='form-input-select'>
+                    <div className='form-input-select col-lg-4'>
                       <label>
                         Client<span className='text-danger'>*</span>
                       </label>
@@ -721,7 +721,7 @@ const AddNewBooking = () => {
                       />
                     </div>
                     {clientTravellers && clientTravellers.length > 0 && (
-                      <div className='form-input-select'>
+                      <div className='form-input-select col-lg-4'>
                         <label>
                           Client Traveller<span className='text-danger'>*</span>
                         </label>
@@ -733,7 +733,7 @@ const AddNewBooking = () => {
                         />
                       </div>
                     )}
-                    <div className='d-block ml-3 form-datepicker'>
+                    <div className='d-block ml-3 form-datepicker col-lg-4'>
                       <label>
                         Booking Date<span className='text-danger'>*</span>
                       </label>
@@ -748,7 +748,7 @@ const AddNewBooking = () => {
                         format='DD MMMM YYYY'
                       />
                     </div>
-                    <div className='col-12'>
+                    <div className=' col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setTicketNumber(e.target.value)}
@@ -764,7 +764,7 @@ const AddNewBooking = () => {
                       </div>
                     </div>
                     {bookingType?.value === 'Miscellaneous' && (
-                      <div className='col-12'>
+                      <div className='col-lg-4'>
                         <div className='form-input'>
                           <input
                             onChange={(e) => setSector(e.target.value)}
@@ -780,7 +780,7 @@ const AddNewBooking = () => {
                         </div>
                       </div>
                     )}
-                    <div className='col-12'>
+                    <div className=' col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setPNR(e.target.value)}
@@ -795,7 +795,7 @@ const AddNewBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='form-input-select'>
+                    <div className='form-input-select col-lg-4'>
                       <label>Airline</label>
                       <Select
                         options={airlines}
@@ -838,6 +838,18 @@ const AddNewBooking = () => {
                                       From<span className='text-danger'>*</span>
                                     </label>
                                     <WindowedSelect
+                                      filterOption={(candidate, input) => {
+                                        if (input) {
+                                          return (
+                                            candidate.data.iata.toLowerCase() ===
+                                              input.toLowerCase() ||
+                                            candidate.label
+                                              .toLowerCase()
+                                              .includes(input.toLowerCase())
+                                          );
+                                        }
+                                        return true;
+                                      }}
                                       options={airports
                                         .filter((airport) => {
                                           if (
@@ -892,6 +904,18 @@ const AddNewBooking = () => {
                                       To<span className='text-danger'>*</span>
                                     </label>
                                     <WindowedSelect
+                                      filterOption={(candidate, input) => {
+                                        if (input) {
+                                          return (
+                                            candidate.data.iata.toLowerCase() ===
+                                              input.toLowerCase() ||
+                                            candidate.label
+                                              .toLowerCase()
+                                              .includes(input.toLowerCase())
+                                          );
+                                        }
+                                        return true;
+                                      }}
                                       options={airports
                                         .filter((airport) => {
                                           if (
@@ -1044,7 +1068,7 @@ const AddNewBooking = () => {
                         </button>
                       </div>
                     )}
-                    <div className='form-input-select'>
+                    <div className='form-input-select col-lg-4'>
                       <label>
                         Vendor<span className='text-danger'>*</span>
                       </label>
@@ -1055,7 +1079,7 @@ const AddNewBooking = () => {
                         onChange={(id) => setVendorID(id)}
                       />
                     </div>
-                    <div className='col-12'>
+                    <div className=' col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setVendorBaseAmount(e.target.value)}
@@ -1070,7 +1094,7 @@ const AddNewBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setVendorYQAmount(e.target.value)}
@@ -1084,7 +1108,7 @@ const AddNewBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <div className=' col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setVendorTaxAmount(e.target.value)}
@@ -1099,7 +1123,7 @@ const AddNewBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <div className=' col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setVendorGSTAmount(e.target.value)}
@@ -1114,7 +1138,7 @@ const AddNewBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <div className=' col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setVendorMiscChargers(e.target.value)}
@@ -1128,7 +1152,7 @@ const AddNewBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <div className=' col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setVendorTotal(e.target.value)}
@@ -1144,7 +1168,7 @@ const AddNewBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='form-input-select'>
+                    <div className='form-input-select col-lg-4'>
                       <label>Payment Account</label>
                       <Select
                         options={paymentAccounts}
@@ -1153,7 +1177,7 @@ const AddNewBooking = () => {
                         onChange={(id) => setPaymentAccountID(id)}
                       />
                     </div>
-                    <div className='col-12'>
+                    <div className=' col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setPaymentAmount(e.target.value)}
@@ -1167,7 +1191,7 @@ const AddNewBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='form-input-select'>
+                    <div className='form-input-select col-lg-4'>
                       <label>Commission Rule</label>
                       <Select
                         options={commissionRules}
@@ -1176,7 +1200,7 @@ const AddNewBooking = () => {
                         onChange={(id) => setCommissionRuleID(id)}
                       />
                     </div>
-                    <div className='col-12'>
+                    <div className=' col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setIATACommissionPercent(e.target.value)}
@@ -1190,7 +1214,7 @@ const AddNewBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <div className=' col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setPLBCommissionPercent(e.target.value)}
@@ -1260,7 +1284,7 @@ const AddNewBooking = () => {
                         <label className='lh-1 text-16 text-light-1'>Vendor TDS</label>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <div className=' col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setCommissionReceivable(e.target.value)}
@@ -1276,7 +1300,7 @@ const AddNewBooking = () => {
                       </div>
                     </div>
                     {bookingType?.value === 'Miscellaneous' && (
-                      <div className='form-input-select'>
+                      <div className='form-input-select col-lg-4'>
                         <label>Miscellaneous Type</label>
                         <Select
                           options={miscellaneousOptions}
@@ -1286,7 +1310,7 @@ const AddNewBooking = () => {
                         />
                       </div>
                     )}
-                    <div className='form-input-select'>
+                    <div className='form-input-select col-lg-4'>
                       <label>Client Referrer</label>
                       <Select
                         options={clients}
@@ -1295,7 +1319,7 @@ const AddNewBooking = () => {
                         onChange={(id) => setClientReferrerID(id)}
                       />
                     </div>
-                    <div className='col-12'>
+                    <div className=' col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setClientReferralFee(e.target.value)}
@@ -1310,7 +1334,7 @@ const AddNewBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <div className=' col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setClientQuotedAmount(e.target.value)}
@@ -1324,7 +1348,7 @@ const AddNewBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <div className=' col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setClientBaseAmount(e.target.value)}
@@ -1344,7 +1368,7 @@ const AddNewBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <div className=' col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setClientTaxAmount(e.target.value)}

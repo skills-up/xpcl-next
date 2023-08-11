@@ -4,12 +4,15 @@ import { IoMdWarning } from 'react-icons/io';
 import { DateObject } from 'react-multi-date-picker';
 import { useSelector } from 'react-redux';
 import { customAPICall } from '../../../api/xplorzApi';
+import ItineraryContent from './ItineraryContent';
+import Pluralize from '../../../utils/pluralChecker';
 
 const BookingDetails = ({ PNR }) => {
   const age = useSelector((state) => state.hotelSearch.value.age);
   const totalAdults = age.totalAdult;
   const totalChildren = age.totalChildren;
   const [cancellationPolicy, setCancellationPolicy] = useState(null);
+  const [cancellationPolicyOpen, setCancellationPolicyOpen] = useState(false);
   useEffect(() => {
     if (PNR) getCancellationPolicy();
   }, []);
@@ -33,6 +36,7 @@ const BookingDetails = ({ PNR }) => {
         <div className='text-20 fw-500 mb-30'>Your booking details</div>
         <div className='row x-gap-15 y-gap-20'>
           <div className='col-auto'>
+            {console.log('PNR', PNR)}
             <Image
               width={140}
               height={140}
@@ -132,14 +136,10 @@ const BookingDetails = ({ PNR }) => {
             <div className='text-15'>
               {' '}
               {totalAdults > 0
-                ? totalAdults > 1
-                  ? totalAdults + ' Adults'
-                  : totalAdults + ' Adult'
+                ? totalAdults + Pluralize(' Adult', ' Adults', totalAdults)
                 : ''}
               {totalChildren > 0
-                ? totalChildren > 1
-                  ? ', ' + totalChildren + ' Children'
-                  : ', ' + totalChildren + ' Child'
+                ? ', ' + totalChildren + Pluralize(' Child', ' Children', totalChildren)
                 : ''}
             </div>
           </div>
@@ -154,50 +154,43 @@ const BookingDetails = ({ PNR }) => {
                 {PNR.data.conditions.isBA
                   ? 'This booking is refundable, subject to timely cancellation as per '
                   : 'Cancellation for this booking will incur cancellation penalty as per '}
-                <span className='text-primary'>Cancellation Policy</span>.
+                <span>Cancellation Policy</span>.
               </span>
               {/* Cancellation Policy */}
               <div className='bg-light px-10 py-10 mt-10'>
+                <span
+                  className='text-primary cursor-pointer'
+                  onClick={() => setCancellationPolicyOpen((prev) => !prev)}
+                >
+                  <u>Cancellation Policy</u>
+                </span>
                 {cancellationPolicy?.cancellationPolicy?.ifra ? (
-                  <span>
-                    <span className='text-primary'>Cancellation Policy</span> - Full
-                    Refund is available.
-                  </span>
+                  <span> - Full Refund is available.</span>
                 ) : (
                   <span className='d-flex items-center gap-2'>
-                    <IoMdWarning className='text-25 text-warning' />
-                    Refund will include cancellation penalties.
+                    {' '}
+                    <IoMdWarning className='text-25 text-warning' /> Refund will include
+                    cancellation penalties.
                   </span>
                 )}
-                {!cancellationPolicy?.cancellationPolicy?.ifra &&
+                {cancellationPolicyOpen &&
                   cancellationPolicy.cancellationPolicy.pd &&
                   cancellationPolicy.cancellationPolicy.pd.length > 0 && (
-                    <div className='mt-20 ml-5'>
-                      <h5 className='mb-10'>Cancellation Penalty Details</h5>
-                      <ul className='list-disc'>
-                        {cancellationPolicy.cancellationPolicy.pd.map((pd, pdI) => (
-                          <li>
-                            {new Date(pd.fdt).toLocaleString('en-IN', {
-                              dateStyle: 'long',
-                              timeStyle: 'short',
-                            })}{' '}
-                            -{' '}
-                            {new Date(pd.tdt).toLocaleString('en-IN', {
-                              dateStyle: 'long',
-                              timeStyle: 'short',
-                            })}{' '}
-                            :{' '}
-                            <span style={{ fontWeight: 'bold' }}>
-                              {pd.am.toLocaleString('en-IN', {
-                                maximumFractionDigits: 2,
-                                style: 'currency',
-                                currency: 'INR',
-                              })}
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+                    <>
+                      <h5 className='mb-10 mt-20'>Cancellation Penalty Details</h5>
+                      <div className='relative'>
+                        <div className='border-test' />
+                        <div
+                          className='accordion -map row y-gap-20'
+                          id='itineraryContent'
+                        >
+                          <ItineraryContent
+                            checkIn={PNR.data.query.checkinDate}
+                            pd={cancellationPolicy.cancellationPolicy.pd}
+                          />{' '}
+                        </div>
+                      </div>
+                    </>
                   )}
               </div>
             </div>
