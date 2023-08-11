@@ -654,7 +654,6 @@ const ReissueBooking = () => {
                       <Select
                         options={bookingOptions}
                         value={bookingType}
-                        placeholder='Search & Select Booking Type (required)'
                         onChange={(id) => setBookingType(id)}
                       />
                     </div>
@@ -665,7 +664,6 @@ const ReissueBooking = () => {
                       <Select
                         options={clientTravellers}
                         value={clientTravellerID}
-                        placeholder='Search & Select Client Traveller'
                         onChange={(id) => setClientTravellerID(id)}
                       />
                     </div>
@@ -736,7 +734,6 @@ const ReissueBooking = () => {
                       <Select
                         options={airlines}
                         value={airlineID}
-                        placeholder='Search & Select Airline'
                         onChange={(id) => setAirlineID(id)}
                       />
                     </div>
@@ -1011,7 +1008,6 @@ const ReissueBooking = () => {
                       <Select
                         options={vendors}
                         value={vendorID}
-                        placeholder='Search & Select Vendor (required)'
                         onChange={(id) => setVendorID(id)}
                       />
                     </div>
@@ -1123,7 +1119,6 @@ const ReissueBooking = () => {
                       <Select
                         options={paymentAccounts}
                         value={paymentAccountID}
-                        placeholder='Search & Select Payment Account'
                         onChange={(id) => setPaymentAccountID(id)}
                       />
                     </div>
@@ -1146,7 +1141,6 @@ const ReissueBooking = () => {
                       <Select
                         options={commissionRules}
                         value={commissionRuleID}
-                        placeholder='Search & Select Commission Rule'
                         onChange={(id) => setCommissionRuleID(id)}
                       />
                     </div>
@@ -1178,8 +1172,8 @@ const ReissueBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12 row y-gap-20 pr-0'>
-                      <div className='form-input col-lg-4'>
+                    <div className='col-lg-6 row y-gap-20 pr-0'>
+                      <div className='form-input col-lg-6'>
                         <input
                           onChange={(e) => setVendorServiceChargePercent(e.target.value)}
                           value={vendorServiceChargePercent}
@@ -1193,7 +1187,7 @@ const ReissueBooking = () => {
                         </label>
                         <div className='d-flex items-center ml-30'>%</div>
                       </div>
-                      <div className='form-input col-lg-8 pr-0'>
+                      <div className='form-input col-lg-6 pr-30 lg:pr-0'>
                         <input
                           onChange={(e) => setVendorServiceCharges(e.target.value)}
                           value={vendorServiceCharges}
@@ -1207,8 +1201,8 @@ const ReissueBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12 row y-gap-20 pr-0'>
-                      <div className='form-input col-lg-4'>
+                    <div className='col-lg-6 row y-gap-20 pr-0'>
+                      <div className='form-input col-lg-6'>
                         <input
                           onChange={(e) => setVendorTDSPercent(e.target.value)}
                           value={vendorTDSPercent}
@@ -1222,7 +1216,7 @@ const ReissueBooking = () => {
                         </label>
                         <div className='d-flex items-center ml-30'>%</div>
                       </div>
-                      <div className='form-input col-lg-8 pr-0'>
+                      <div className='form-input col-lg-6 pr-0'>
                         <input
                           onChange={(e) => setVendorTDS(e.target.value)}
                           value={vendorTDS}
@@ -1255,7 +1249,6 @@ const ReissueBooking = () => {
                         <Select
                           options={miscellaneousOptions}
                           value={miscellaneousType}
-                          placeholder='Search & Select Miscellaneous Type'
                           onChange={(id) => setMiscellaneousType(id)}
                         />
                       </div>
@@ -1265,7 +1258,6 @@ const ReissueBooking = () => {
                       <Select
                         options={clients}
                         value={clientReferrerID}
-                        placeholder='Search & Select Client Referrer'
                         onChange={(id) => setClientReferrerID(id)}
                       />
                     </div>
@@ -1333,18 +1325,17 @@ const ReissueBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12 row pr-0 y-gap-20 items-center'>
-                      <div className='form-input-select col-lg-4 pr-0'>
+                    <div className='col-lg-6 row pr-0 y-gap-20 items-center'>
+                      <div className='form-input-select col-lg-6 pr-0'>
                         <label>Client GST Percent</label>
                         <Select
                           defaultValue={{ value: 0, label: 'None' }}
                           options={clientGSTOptions}
                           value={clientGSTPercent}
-                          placeholder='Select Client GST Percent'
                           onChange={(id) => setClientGSTPercent(id)}
                         />
                       </div>
-                      <div className='form-input col-lg-8 pr-0'>
+                      <div className='form-input col-lg-6 pr-30 lg:pr-0'>
                         <input
                           onChange={(e) => setClientGSTAmount(e.target.value)}
                           value={clientGSTAmount}
@@ -1359,16 +1350,9 @@ const ReissueBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='d-flex items-center gap-3'>
-                      <ReactSwitch
-                        onChange={() => setIsOffshore((prev) => !prev)}
-                        checked={isOffshore}
-                      />
-                      <label>Is Offshore</label>
-                    </div>
                     {!isOffshore && (
-                      <div className='col-12 row pr-0 y-gap-20 items-center'>
-                        <div className='form-input col-lg-4'>
+                      <div className='col-lg-6 row pr-0 y-gap-20 items-center'>
+                        <div className='form-input col-lg-6'>
                           <input
                             onChange={(e) =>
                               setClientServiceChargePercent(e.target.value)
@@ -1385,7 +1369,7 @@ const ReissueBooking = () => {
                           </label>
                           <span className='d-flex items-center ml-30'>%</span>
                         </div>
-                        <div className='form-input col-lg-8 pr-0'>
+                        <div className='form-input col-lg-6 pr-0'>
                           <input
                             onChange={(e) => setClientServicesCharges(e.target.value)}
                             value={clientServiceCharges}
@@ -1402,6 +1386,13 @@ const ReissueBooking = () => {
                         </div>
                       </div>
                     )}
+                    <div className='d-flex items-center gap-3'>
+                      <ReactSwitch
+                        onChange={() => setIsOffshore((prev) => !prev)}
+                        checked={isOffshore}
+                      />
+                      <label>Is Offshore</label>
+                    </div>
                     <div className='col-12'>
                       <div className='form-input'>
                         <input

@@ -26,8 +26,8 @@ const UpdateTravellers = () => {
   const [passportNumber, setPassportNumber] = useState('');
   const [passportGender, setPassportGender] = useState(null);
   const [passportDOB, setPassportDOB] = useState(new DateObject());
-  const [passportIssueDate, setPassportIssueDate] = useState(new DateObject());
-  const [passportExpiryDate, setPassportExpiryDate] = useState(new DateObject());
+  const [passportIssueDate, setPassportIssueDate] = useState(null);
+  const [passportExpiryDate, setPassportExpiryDate] = useState(null);
   const [passportIssuePlace, setPassportIssuePlace] = useState('');
   const [mobilePhone, setMobilePhone] = useState('');
   const [email, setEmail] = useState('');
@@ -49,7 +49,7 @@ const UpdateTravellers = () => {
   const [panCardScanFile, setPanCardScanFile] = useState(null);
   const [aadhaarCardScanFile, setAadhaarCardScanFile] = useState(null);
   const [aliases, setAliases] = useState([{ value: '' }]);
-  const [vaccinationDates, setVaccinationDates] = useState([new DateObject()]);
+  const [vaccinationDates, setVaccinationDates] = useState([]);
   const [passportScanFiles, setPassportScanFiles] = useState([]);
   const [previousVaccinationCertificate, setPreviousVaccinationCertificate] =
     useState('');
@@ -128,21 +128,24 @@ const UpdateTravellers = () => {
         setLastName(response.data?.last_name ?? '');
         setPassportName(response.data?.passport_name ?? '');
         setPassportNumber(response.data?.passport_number ?? '');
-        setPassportDOB(
-          new DateObject({ date: response.data?.passport_dob, format: 'YYYY-MM-DD' })
-        );
-        setPassportIssueDate(
-          new DateObject({
-            date: response.data?.passport_issue_date,
-            format: 'YYYY-MM-DD',
-          })
-        );
-        setPassportExpiryDate(
-          new DateObject({
-            date: response.data?.passport_expiry_date,
-            format: 'YYYY-MM-DD',
-          })
-        );
+        if (response.data?.passport_dob)
+          setPassportDOB(
+            new DateObject({ date: response.data?.passport_dob, format: 'YYYY-MM-DD' })
+          );
+        if (response.data?.passport_issue_date)
+          setPassportIssueDate(
+            new DateObject({
+              date: response.data?.passport_issue_date,
+              format: 'YYYY-MM-DD',
+            })
+          );
+        if (response.data?.passport_expiry_date)
+          setPassportExpiryDate(
+            new DateObject({
+              date: response.data?.passport_expiry_date,
+              format: 'YYYY-MM-DD',
+            })
+          );
         setPassportIssuePlace(response.data?.passport_issue_place ?? '');
         setMobilePhone(response.data?.mobile_phone ?? '');
         setEmail(response.data?.email_address ?? '');
@@ -200,13 +203,15 @@ const UpdateTravellers = () => {
         }
         setAliases(tempAliasArr);
         // Vaccination Dates
-        let tempVaccinationDateArr = [];
-        for (let value of response.data?.vaccination_dates) {
-          tempVaccinationDateArr.push(
-            new DateObject({ date: value, format: 'YYYY-MM-DD' })
-          );
+        if (response.data?.vaccination_dates) {
+          let tempVaccinationDateArr = [];
+          for (let value of response.data?.vaccination_dates) {
+            tempVaccinationDateArr.push(
+              new DateObject({ date: value, format: 'YYYY-MM-DD' })
+            );
+          }
+          setVaccinationDates(tempVaccinationDateArr);
         }
-        setVaccinationDates(tempVaccinationDateArr);
       } else {
         sendToast(
           'error',
@@ -230,15 +235,22 @@ const UpdateTravellers = () => {
     passportFormData.append('passport_name', passportName ?? '');
     passportFormData.append('passport_number', passportNumber ?? '');
     passportFormData.append('passport_gender', passportGender?.value || '');
-    passportFormData.append('passport_dob', passportDOB.format('YYYY-MM-DD'));
-    passportFormData.append(
-      'passport_issue_date',
-      passportIssueDate.format('YYYY-MM-DD')
-    );
-    passportFormData.append(
-      'passport_expiry_date',
-      passportExpiryDate.format('YYYY-MM-DD')
-    );
+    if (passportDOB)
+      passportFormData.append('passport_dob', passportDOB.format('YYYY-MM-DD'));
+    else {
+      sendToast('error', 'Date of Birth (as on passport) is a mandatory field', 4000);
+      return;
+    }
+    if (passportIssueDate)
+      passportFormData.append(
+        'passport_issue_date',
+        passportIssueDate.format('YYYY-MM-DD')
+      );
+    if (passportExpiryDate)
+      passportFormData.append(
+        'passport_expiry_date',
+        passportExpiryDate.format('YYYY-MM-DD')
+      );
     passportFormData.append('passport_issue_place', passportIssuePlace ?? '');
     passportFormData.append('mobile_phone', mobilePhone ?? '');
     passportFormData.append('email_address', email ?? '');
@@ -288,8 +300,9 @@ const UpdateTravellers = () => {
     } else {
       for (let alias of aliases) passportFormData.append('aliases[]', alias?.value);
     }
-    for (let date of vaccinationDates)
-      passportFormData.append('vaccination_dates[]', date.format('YYYY-MM-DD'));
+    if (vaccinationDates && vaccinationDates.length > 0)
+      for (let date of vaccinationDates)
+        passportFormData.append('vaccination_dates[]', date.format('YYYY-MM-DD'));
     for (let file of passportScanFiles)
       passportFormData.append('passport_scan_files[]', file);
     for (let file of previousPassportScanFiles) {
@@ -346,16 +359,15 @@ const UpdateTravellers = () => {
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
-                    <div className='col-12 form-input-select'>
+                    <div className='col-lg-4 form-input-select'>
                       <label>Prefix</label>
                       <Select
                         options={passportPrefixOptions}
                         value={prefix}
-                        placeholder='Search & Select Prefix'
                         onChange={(id) => setPrefix(id)}
                       />
                     </div>
-                    <div className='col-12'>
+                    <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setFirstName(e.target.value)}
@@ -369,7 +381,7 @@ const UpdateTravellers = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setMiddleName(e.target.value)}
@@ -380,7 +392,7 @@ const UpdateTravellers = () => {
                         <label className='lh-1 text-16 text-light-1'>Middle Name</label>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setLastName(e.target.value)}
@@ -394,7 +406,7 @@ const UpdateTravellers = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setPassportName(e.target.value)}
@@ -404,11 +416,11 @@ const UpdateTravellers = () => {
                           required
                         />
                         <label className='lh-1 text-16 text-light-1'>
-                          Passport Name<span className='text-danger'>*</span>
+                          Name (as on passport)<span className='text-danger'>*</span>
                         </label>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setPassportNumber(e.target.value)}
@@ -421,16 +433,15 @@ const UpdateTravellers = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12 form-input-select'>
+                    <div className='col-lg-4 form-input-select'>
                       <label>Passport Gender</label>
                       <Select
                         options={passportGenderOptions}
                         value={passportGender}
-                        placeholder='Search & Select Passport Gender'
                         onChange={(id) => setPassportGender(id)}
                       />
                     </div>
-                    <div className='col-12 form-input-select'>
+                    <div className='col-lg-4 form-input-select'>
                       <label>Passport Country Code</label>
                       <Select
                         options={countries.map((el) => ({
@@ -438,12 +449,14 @@ const UpdateTravellers = () => {
                           label: `${el.name} (${el.code})`,
                         }))}
                         value={countryCodeID}
-                        placeholder='Search & Select Passport Country Code'
                         onChange={(id) => setCountryCodeID(id)}
                       />
                     </div>
-                    <div className='d-block ml-3 form-datepicker'>
-                      <label>Passport Date Of Birth</label>
+                    <div className='d-block ml-3 form-datepicker col-lg-4'>
+                      <label>
+                        Date Of Birth (as on passport)
+                        <span className='text-danger'>*</span>
+                      </label>
                       <DatePicker
                         style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
                         inputClass='custom_input-picker'
@@ -455,7 +468,7 @@ const UpdateTravellers = () => {
                         format='DD MMMM YYYY'
                       />
                     </div>
-                    <div className='d-block ml-3 form-datepicker'>
+                    <div className='d-block ml-3 form-datepicker col-lg-4'>
                       <label>Passport Issue Date</label>
                       <DatePicker
                         style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
@@ -468,7 +481,7 @@ const UpdateTravellers = () => {
                         format='DD MMMM YYYY'
                       />
                     </div>
-                    <div className='d-block ml-3 form-datepicker'>
+                    <div className='d-block ml-3 form-datepicker col-lg-4'>
                       <label>Passport Expiry Date</label>
                       <DatePicker
                         style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
@@ -481,7 +494,7 @@ const UpdateTravellers = () => {
                         format='DD MMMM YYYY'
                       />
                     </div>
-                    <div className='col-12'>
+                    <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setPassportIssuePlace(e.target.value)}
@@ -494,7 +507,7 @@ const UpdateTravellers = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setMobilePhone(e.target.value)}
@@ -505,7 +518,7 @@ const UpdateTravellers = () => {
                         <label className='lh-1 text-16 text-light-1'>Mobile Phone</label>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setEmail(e.target.value)}
@@ -516,7 +529,7 @@ const UpdateTravellers = () => {
                         <label className='lh-1 text-16 text-light-1'>Email Address</label>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setDomesticAirlinePreference(e.target.value)}
@@ -529,16 +542,15 @@ const UpdateTravellers = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12 form-input-select'>
+                    <div className='col-lg-4 form-input-select'>
                       <label>Domestic Cabin Preference</label>
                       <Select
                         options={cabinPreferenceOptions}
                         value={domesticCabinPreference}
-                        placeholder='Search & Select Domestic Cabin Preference'
                         onChange={(id) => setDomesticCabinPreference(id)}
                       />
                     </div>
-                    <div className='col-12'>
+                    <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) =>
@@ -553,52 +565,47 @@ const UpdateTravellers = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12 form-input-select'>
+                    <div className='col-lg-4 form-input-select'>
                       <label>International Cabin Preference</label>
                       <Select
                         options={cabinPreferenceOptions}
                         value={internationalCabinPreference}
-                        placeholder='Search & Select International Cabin Preference'
                         onChange={(id) => setInternationalCabinPreference(id)}
                       />
                     </div>
-                    <div className='col-12 form-input-select'>
+                    <div className='col-lg-4 form-input-select'>
                       <label>Meal Preference</label>
                       <Select
                         options={mealPreferenceOptions}
                         value={mealPreference}
-                        placeholder='Search & Select Meal Preference'
                         onChange={(id) => setMealPreference(id)}
                       />
                     </div>
-                    <div className='col-12 form-input-select'>
+                    <div className='col-lg-4 form-input-select'>
                       <label>Seat Preference</label>
                       <Select
                         options={seatPreferenceOptions}
                         value={seatPreference}
-                        placeholder='Search & Select Seat Preference'
                         onChange={(id) => setSeatPreference(id)}
                       />
                     </div>
-                    <div className='col-12 form-input-select'>
+                    <div className='col-lg-4 form-input-select'>
                       <label>Cabin Position</label>
                       <Select
                         options={cabinPositionOptions}
                         value={cabinPosition}
-                        placeholder='Search & Select Cabin Position'
                         onChange={(id) => setCabinPosition(id)}
                       />
                     </div>
-                    <div className='col-12 form-input-select'>
+                    <div className='col-lg-4 form-input-select'>
                       <label>Fare Preference</label>
                       <Select
                         options={farePreferenceOptions}
                         value={farePreference}
-                        placeholder='Search & Select Fare Preference'
                         onChange={(id) => setFarePreference(id)}
                       />
                     </div>
-                    <div className='col-12'>
+                    <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setAddress(e.target.value)}
@@ -609,7 +616,7 @@ const UpdateTravellers = () => {
                         <label className='lh-1 text-16 text-light-1'>Address</label>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setMealNotes(e.target.value)}
@@ -620,7 +627,7 @@ const UpdateTravellers = () => {
                         <label className='lh-1 text-16 text-light-1'>Meal Notes</label>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setSeatNotes(e.target.value)}
@@ -631,7 +638,7 @@ const UpdateTravellers = () => {
                         <label className='lh-1 text-16 text-light-1'>Seat Notes</label>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setPanNumber(e.target.value)}
@@ -642,7 +649,7 @@ const UpdateTravellers = () => {
                         <label className='lh-1 text-16 text-light-1'>PAN Number</label>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setAadhaarNumber(e.target.value)}
@@ -656,7 +663,7 @@ const UpdateTravellers = () => {
                       </div>
                     </div>
                     {/* Vaccination Certificate File Upload */}
-                    <div className='col-lg-12'>
+                    <div className='col-lg-4'>
                       <label>Vaccination Certificate File</label>
                       {previousVaccinationCertificate && (
                         <PreviousUploadPictures
@@ -673,7 +680,7 @@ const UpdateTravellers = () => {
                       />
                     </div>
                     {/* PanCard Scan File Upload */}
-                    <div className='col-lg-12'>
+                    <div className='col-lg-4'>
                       <label>PAN Card Scan</label>
                       {previousPanCardScan && (
                         <PreviousUploadPictures
@@ -694,7 +701,7 @@ const UpdateTravellers = () => {
                         }}
                       />
                     )}
-                    <div className='col-lg-12'>
+                    <div className='col-lg-4'>
                       <label>Aadhaar Card Scan Certificate File</label>
                       <NewFileUploads setUploads={setAadhaarCardScanFile} />
                     </div>
