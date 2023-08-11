@@ -25,6 +25,7 @@ const AddNewTravellers = () => {
   const [passportDOB, setPassportDOB] = useState(new DateObject());
   const [passportIssueDate, setPassportIssueDate] = useState(null);
   const [passportExpiryDate, setPassportExpiryDate] = useState(null);
+  const [euBiometrics, setEUBiometrics] = useState(null);
   const [passportIssuePlace, setPassportIssuePlace] = useState('');
   const [mobilePhone, setMobilePhone] = useState('');
   const [email, setEmail] = useState('');
@@ -126,6 +127,8 @@ const AddNewTravellers = () => {
         'passport_issue_date',
         passportIssueDate.format('YYYY-MM-DD')
       );
+    if (euBiometrics)
+      passportFormData.append('last_eu_biometrics', euBiometrics.format('YYYY-MM-DD'));
     if (passportExpiryDate)
       passportFormData.append(
         'passport_expiry_date',
@@ -375,6 +378,19 @@ const AddNewTravellers = () => {
                           Passport Issue Place
                         </label>
                       </div>
+                    </div>
+                    <div className='d-block ml-3 form-datepicker col-lg-4'>
+                      <label>Last EU Biometrics</label>
+                      <DatePicker
+                        style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
+                        inputClass='custom_input-picker'
+                        containerClassName='custom_container-picker'
+                        value={euBiometrics}
+                        onChange={setEUBiometrics}
+                        numberOfMonths={1}
+                        offsetY={10}
+                        format='DD MMMM YYYY'
+                      />
                     </div>
                     <div className='col-lg-4'>
                       <div className='form-input'>

@@ -25,6 +25,7 @@ const AddNewTravellers = () => {
   const [passportDOB, setPassportDOB] = useState(new DateObject());
   const [passportIssueDate, setPassportIssueDate] = useState(null);
   const [passportExpiryDate, setPassportExpiryDate] = useState(null);
+  const [euBiometrics, setEUBiometrics] = useState(null);
   const [passportIssuePlace, setPassportIssuePlace] = useState('');
   const [mobilePhone, setMobilePhone] = useState('');
   const [email, setEmail] = useState('');
@@ -138,6 +139,14 @@ const AddNewTravellers = () => {
               format: 'YYYY-MM-DD',
             })
           );
+        if (response.data?.last_eu_biometrics) {
+          setEUBiometrics(
+            new DateObject({
+              date: response.data?.last_eu_biometrics,
+              format: 'YYYY-MM-DD',
+            })
+          );
+        }
         setPassportIssuePlace(response.data?.passport_issue_place ?? '');
         setMobilePhone(response.data?.mobile_phone ?? '');
         setEmail(response.data?.email_address ?? '');
@@ -228,6 +237,8 @@ const AddNewTravellers = () => {
       sendToast('error', 'Date of Birth (as on passport) is a mandatory field', 4000);
       return;
     }
+    if (euBiometrics)
+      passportFormData.append('last_eu_biometrics', euBiometrics.format('YYYY-MM-DD'));
     if (passportIssueDate)
       passportFormData.append(
         'passport_issue_date',
@@ -482,6 +493,19 @@ const AddNewTravellers = () => {
                           Passport Issue Place
                         </label>
                       </div>
+                    </div>
+                    <div className='d-block ml-3 form-datepicker col-lg-4'>
+                      <label>Last EU Biometrics</label>
+                      <DatePicker
+                        style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
+                        inputClass='custom_input-picker'
+                        containerClassName='custom_container-picker'
+                        value={euBiometrics}
+                        onChange={setEUBiometrics}
+                        numberOfMonths={1}
+                        offsetY={10}
+                        format='DD MMMM YYYY'
+                      />
                     </div>
                     <div className='col-lg-4'>
                       <div className='form-input'>
