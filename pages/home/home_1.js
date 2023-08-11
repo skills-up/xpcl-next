@@ -15,17 +15,8 @@ import Hotels from '../../components/hotels/Hotels';
 import SelectFilter from '../../components/hotels/filter-tabs/SelectFilter';
 
 const Home_1 = () => {
-  return (
+  const Temp = () => (
     <>
-      <Seo pageTitle='Home-1' />
-      {/* End Page Title */}
-
-      <Header1 permaOpaque={false} />
-      {/* End Header 1 */}
-
-      <Hero1 />
-      {/* End Hero 1 */}
-
       <section className='layout-pt-lg layout-pb-md' data-aos='fade-up'>
         <div className='container'>
           <div className='row y-gap-20 justify-between items-end'>
@@ -56,7 +47,6 @@ const Home_1 = () => {
         {/* End .container */}
       </section>
       {/* End Popular Destinations */}
-
       <section className='layout-pt-md layout-pb-md'>
         <div className='container'>
           <div className='row y-gap-20'>
@@ -66,7 +56,6 @@ const Home_1 = () => {
         {/* End .container */}
       </section>
       {/* End AddBanner */}
-
       <section className='layout-pt-md layout-pb-md'>
         <div className='container'>
           <div className='row y-gap-10 justify-between items-end'>
@@ -91,7 +80,6 @@ const Home_1 = () => {
         </div>
       </section>
       {/* Recommended Properties */}
-
       <section className='layout-pt-md layout-pb-lg'>
         <div className='container'>
           <div className='row y-gap-20 justify-between'>
@@ -100,7 +88,6 @@ const Home_1 = () => {
         </div>
       </section>
       {/* Block Guide Section */}
-
       <section className='layout-pt-lg layout-pb-lg bg-blue-2'>
         <div className='container'>
           <div className='row y-gap-40 justify-between'>
@@ -124,7 +111,6 @@ const Home_1 = () => {
         {/* End container */}
       </section>
       {/* End testimonial Section */}
-
       <section className='layout-pt-lg layout-pb-md'>
         <div className='container'>
           <div className='row justify-center text-center'>
@@ -148,7 +134,6 @@ const Home_1 = () => {
         {/* End .container */}
       </section>
       {/* End blog Section */}
-
       <section className='layout-pt-md layout-pb-lg'>
         <div className='container'>
           <div className='row'>
@@ -170,10 +155,21 @@ const Home_1 = () => {
         </div>
       </section>
       {/* End Destination we love Section */}
-
       <CallToActions />
       {/* End Call To Actions Section */}
+    </>
+  );
+  return (
+    <>
+      <Seo pageTitle='Home-1' />
+      {/* End Page Title */}
 
+      <Header1 permaOpaque={false} />
+      {/* End Header 1 */}
+
+      <Hero1 />
+      {/* End Hero 1 */}
+      {/* <Temp /> */}
       <DefaultFooter />
       {/* End Footer Section */}
     </>

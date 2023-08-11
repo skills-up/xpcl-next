@@ -41,7 +41,7 @@ const MainMenu = ({ style = '' }) => {
         </li>
         {/* End home page menu */}
 
-        <li className='menu-item-has-children -has-mega-menu'>
+        {/* <li className='menu-item-has-children -has-mega-menu'>
           <a href='#'>
             <span className='mr-10'>Categories</span>
             <i className='icon icon-chevron-sm-down' />
@@ -49,15 +49,22 @@ const MainMenu = ({ style = '' }) => {
           <div className='mega'>
             <CategoriesMegaMenu />
           </div>
-        </li>
+        </li> */}
         {/* End categories menu items */}
 
-        <li className={router.pathname === '/destinations' ? 'current' : ''}>
+        {/* <li className={router.pathname === '/destinations' ? 'current' : ''}>
           <Link href='/destinations'>Destinations</Link>
-        </li>
-        {/* End Destinatinos single menu */}
+        </li> */}
 
-        <li
+        <li className={router.pathname === '/flight/flight-list-v1' ? 'current' : ''}>
+          <Link href='/flight/flight-list-v1'>Flights</Link>
+        </li>
+
+        <li className={router.pathname === '/hotel/hotel-list-v1' ? 'current' : ''}>
+          <Link href='/hotel/hotel-list-v1'>Hotels</Link>
+        </li>
+
+        {/* <li
           className={`${
             isActiveParentChaild(blogItems, router.asPath) ? 'current' : ''
           } menu-item-has-children`}
@@ -76,10 +83,10 @@ const MainMenu = ({ style = '' }) => {
               </li>
             ))}
           </ul>
-        </li>
+        </li> */}
         {/* End blogIems */}
 
-        <li
+        {/* <li
           className={`${
             isActiveParentChaild(pageItems, router.asPath) ? 'current' : ''
           } menu-item-has-children`}
@@ -98,7 +105,7 @@ const MainMenu = ({ style = '' }) => {
               </li>
             ))}
           </ul>
-        </li>
+        </li> */}
         {/* End pages items */}
 
         <li
