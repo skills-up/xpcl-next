@@ -13,25 +13,31 @@ import Select from 'react-select';
 const AddFrequentFlierProgram = () => {
   const [code, setCode] = useState('');
   const [program, setProgram] = useState('');
-
+  const options = ['Airline', 'Hotel', 'Car Rental', 'Global Entry'];
+  const [type, setType] = useState(null);
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    const response = await createItem('frequent-flier-programs', {
+    if (!type?.value) {
+      sendToast('error', 'Type is mandatory.', 4000);
+      return;
+    }
+    const response = await createItem('travel-membership-programs', {
+      type: type.value,
       code,
       program,
     });
     if (response?.success) {
-      sendToast('success', 'Created Frequent Flier Program Successfully.', 4000);
-      router.push('/dashboard/frequent-flier-programs');
+      sendToast('success', 'Created Travel Membership Program Successfully.', 4000);
+      router.push('/dashboard/travel-membership-programs');
     } else {
       sendToast(
         'error',
         response.data?.message ||
           response.data?.error ||
-          'Failed to Create Frequent Flier Program.',
+          'Failed to Create Travel Membership Program.',
         4000
       );
     }
@@ -39,7 +45,7 @@ const AddFrequentFlierProgram = () => {
 
   return (
     <>
-      <Seo pageTitle='Add New Frequent Flier Program' />
+      <Seo pageTitle='Add New Travel Membership Program' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -59,9 +65,11 @@ const AddFrequentFlierProgram = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Add New Frequent Flier Program</h1>
+                  <h1 className='text-30 lh-14 fw-600'>
+                    Add New Travel Membership Program
+                  </h1>
                   <div className='text-15 text-light-1'>
-                    Create a new frequent flier program.
+                    Create a new travel membership program.
                   </div>
                 </div>
                 {/* End .col-12 */}
@@ -71,6 +79,16 @@ const AddFrequentFlierProgram = () => {
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
+                    <div className='form-input-select col-12'>
+                      <label>
+                        Membership Type<span className='text-danger'>*</span>
+                      </label>
+                      <Select
+                        options={options.map((el) => ({ label: el, value: el }))}
+                        value={type}
+                        onChange={(id) => setType(id)}
+                      />
+                    </div>
                     <div className='col-12'>
                       <div className='form-input'>
                         <input
@@ -105,7 +123,7 @@ const AddFrequentFlierProgram = () => {
                         type='submit'
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
                       >
-                        Add Frequent Flier Program
+                        Add Travel Membership Program
                       </button>
                     </div>
                   </form>

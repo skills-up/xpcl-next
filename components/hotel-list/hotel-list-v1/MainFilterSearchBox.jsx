@@ -25,7 +25,7 @@ const MainFilterSearchBox = () => {
   const dispatch = useDispatch();
   const [location, setLocation] = useState(null);
   const [date, setDate] = useState([new DateObject(), new DateObject().add(1, 'days')]);
-  const [rooms, setRooms] = useState([{ adult: 0, child: [] }]);
+  const [rooms, setRooms] = useState([{ adult: 2, child: [] }]);
   const [ratingParam, setRatingParam] = useState([]);
   const [clientTravellers, setClientTravellers] = useState([]);
   const [isSearched, setIsSearched] = useState(false);

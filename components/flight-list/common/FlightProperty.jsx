@@ -7,12 +7,14 @@ import {
   setSelectedBookings,
 } from '../../../features/flightSearch/flightSearchSlice';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
+import Pluralize from '../../../utils/pluralChecker';
 
 function FlightProperty({
   element,
   isSelectedBooking = false,
   currentTab,
   showPrice = true,
+  alreadyExpanded = false,
 }) {
   const [expand, setExpand] = useState([]);
   const returnFlight = useSelector((state) => state.flightSearch.value.returnFlight);
@@ -31,24 +33,41 @@ function FlightProperty({
   const emailClients = useSelector((state) => state.flightSearch.value.emailClients);
   const router = useRouter();
   const destinations = useSelector((state) => state.flightSearch.value.destinations);
-
+  const [combinedStops, setCombinedStops] = useState({ f: 0, s: 0 });
   useEffect(() => {
     setExpand([]);
   }, [currentTab]);
 
   const [layoffSegment, setLayoffSegment] = useState(null);
 
+  useEffect(() => {
+    if (alreadyExpanded) {
+      setExpand((prev) => [...prev, element.selectId]);
+    }
+  }, [alreadyExpanded]);
+
   // Not all airports have the same ending destination, so in case of combined, we are finding the end airport (used in layoffs)
   // and where the airport ends
   useEffect(() => {
     if (element && element.type === 'combined') {
-      let x = false;
+      let counter = 0;
+      let temp = { f: 0, s: 0 };
+      let segCounter = 0;
       for (let segment of element.segments) {
         if (segment.segmentNo === 0) {
-          if (!x) x = true;
-          else setLayoffSegment(segment.departure.airport.code);
+          counter += 1;
+          if (counter === 2) {
+            setLayoffSegment(segCounter);
+          }
         }
+        if (counter < 2) {
+          temp.f += 1;
+        } else {
+          temp.s += 1;
+        }
+        segCounter += 1;
       }
+      setCombinedStops({ f: temp.f - 1, s: temp.s - 1 });
     }
   }, [element]);
 
@@ -106,7 +125,7 @@ function FlightProperty({
           }
         }}
       >
-        <div className='row y-gap-30 justify-between'>
+        <div className='row y-gap-30 justify-between lg:pr-0'>
           <div
             className='col d-flex flex-column justify-between'
             style={{ minHeight: '200px' }}
@@ -118,91 +137,292 @@ function FlightProperty({
                   alt='image'
                 />
               </div>
-              <div className='col'>
-                <div className='row x-gap-20 items-end'>
-                  <div className='col-auto'>
-                    <div className='lh-15 fw-500'>
-                      {element.provider === 'aa' &&
-                        element.segments[0].departure.time.slice(-8, -3)}
-                      {element.provider === 'tj' &&
-                        element.segments[0].departure.time.slice(-5)}
-                    </div>
-                    <div className='text-15 lh-15 text-light-1'>
-                      {element.segments[0].departure.airport.code}
+              <div className='col y-gap-20 row pr-0'>
+                {/* Not Combined */}
+                <div className='col-12 row pr-0'>
+                  <div className='col'>
+                    <div className='row x-gap-20 items-end'>
+                      <div className='col-auto'>
+                        <div className='lh-15 fw-500'>
+                          {element.provider === 'aa' &&
+                            element.segments[0].departure.time.slice(-8, -3)}
+                          {element.provider === 'tj' &&
+                            element.segments[0].departure.time.slice(-5)}
+                        </div>
+                        <div className='text-15 lh-15 text-light-1'>
+                          {element.segments[0].departure.airport.code}
+                        </div>
+                      </div>
+                      <div className='col text-center'>
+                        <div className='flightLine'>
+                          <div />
+                          <div />
+                        </div>
+                        <div className='text-15 lh-15 text-light-1 mt-10'>
+                          {element.type === 'combined' ? (
+                            combinedStops.f > 0 ? (
+                              <>
+                                {combinedStops.f}{' '}
+                                {Pluralize('Stop', 'Stops', combinedStops.f)} (
+                                {element.segments.map((segmentStop, stopIndex) => {
+                                  if (stopIndex < combinedStops.f) {
+                                    if (stopIndex === combinedStops.f - 1)
+                                      return <>{segmentStop.arrival.airport.code}</>;
+                                    else return <>{segmentStop.arrival.airport.code},</>;
+                                  }
+                                })}
+                                )
+                              </>
+                            ) : (
+                              'Nonstop'
+                            )
+                          ) : element.segments.length > 1 ? (
+                            <>
+                              {element.segments.length - 1}{' '}
+                              {element.segments.length - 1 > 1 ? 'Stops' : 'Stop'} (
+                              {element.segments.map((segmentStop, stopIndex) => {
+                                if (stopIndex + 1 < element.segments.length) {
+                                  if (stopIndex === 0) {
+                                    return <>{segmentStop.arrival.airport.code}</>;
+                                  } else {
+                                    return <>,{segmentStop.arrival.airport.code}</>;
+                                  }
+                                }
+                              })}
+                              )
+                            </>
+                          ) : (
+                            'Nonstop'
+                          )}
+                        </div>
+                      </div>
+                      <div className='col-auto'>
+                        <div className='lh-15 fw-500'>
+                          {element.provider === 'aa' &&
+                            element.segments.at(-1).arrival.time.slice(-8, -3)}
+                          {element.provider === 'tj' &&
+                            (element.type === 'combined' && layoffSegment
+                              ? element.segments[layoffSegment - 1]?.arrival?.time?.slice(
+                                  -5
+                                )
+                              : element.segments.at(-1).arrival.time.slice(-5))}{' '}
+                          {element.type === 'combined' ? (
+                            element.legOneDayDifference > 0 ? (
+                              <span className='text-secondary text-14'>
+                                (
+                                <span className='text-danger'>
+                                  +{element.legOneDayDifference}
+                                </span>
+                                )
+                              </span>
+                            ) : (
+                              <></>
+                            )
+                          ) : element.overallDayDifference > 0 ? (
+                            <span className='text-secondary text-14'>
+                              (
+                              <span className='text-danger'>
+                                +{element.overallDayDifference}
+                              </span>
+                              )
+                            </span>
+                          ) : (
+                            <></>
+                          )}
+                        </div>
+                        <div className='text-15 lh-15 text-light-1'>
+                          {layoffSegment
+                            ? element.segments[layoffSegment - 1]?.arrival?.airport?.code
+                            : element.segments.at(-1).arrival.airport.code}
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <div className='col text-center'>
-                    <div className='flightLine'>
-                      <div />
-                      <div />
-                    </div>
-                    <div className='text-15 lh-15 text-light-1 mt-10'>
-                      {element.segments.length > 1 ? (
+                  <div className='col-md-auto'>
+                    <div className='text-15 text-light-1 px-0' style={{ width: '75px' }}>
+                      {/* Checking Days, Hours, Minutes */}
+                      {element.firstLegDuration > 0 ? (
+                        element.firstLegDuration >= 1440 ? (
+                          <>
+                            {Math.floor(element.firstLegDuration / 24 / 60)}d{' '}
+                            {Math.floor((element.firstLegDuration / 60) % 24)}h{' '}
+                            {element.firstLegDuration % 60}m
+                          </>
+                        ) : (
+                          <>
+                            {Math.floor(element.firstLegDuration / 60) > 0 ? (
+                              <>{Math.floor(element.firstLegDuration / 60)}h</>
+                            ) : (
+                              <></>
+                            )}{' '}
+                            {element.firstLegDuration % 60}m
+                          </>
+                        )
+                      ) : element.totalDuration >= 1440 ? (
                         <>
-                          {element.segments.length - 1}{' '}
-                          {element.segments.length - 1 > 1 ? 'Stops' : 'Stop'} (
-                          {element.segments.map((segmentStop, stopIndex) => {
-                            if (stopIndex + 1 < element.segments.length) {
-                              if (stopIndex === 0) {
-                                return <>{segmentStop.arrival.airport.code}</>;
-                              } else {
-                                return <>,{segmentStop.arrival.airport.code}</>;
-                              }
-                            }
-                          })}
-                          )
+                          {Math.floor(element.totalDuration / 24 / 60)}d{' '}
+                          {Math.floor((element.totalDuration / 60) % 24)}h{' '}
+                          {element.totalDuration % 60}m
                         </>
                       ) : (
-                        'Nonstop'
+                        <>
+                          {Math.floor(element.totalDuration / 60) > 0 ? (
+                            <>{Math.floor(element.totalDuration / 60)}h</>
+                          ) : (
+                            <></>
+                          )}{' '}
+                          {element.totalDuration % 60}m
+                        </>
                       )}
                     </div>
                   </div>
-                  <div className='col-auto'>
-                    <div className='lh-15 fw-500'>
-                      {element.provider === 'aa' &&
-                        element.segments.at(-1).arrival.time.slice(-8, -3)}
-                      {element.provider === 'tj' &&
-                        element.segments.at(-1).arrival.time.slice(-5)}{' '}
-                      {element.overallDayDifference > 0 ? (
-                        <span className='text-secondary text-14'>
-                          (
-                          <span className='text-danger'>
-                            +{element.overallDayDifference}
-                          </span>
+                </div>
+                {/* Combined */}
+                {element.type === 'combined' && layoffSegment && (
+                  <div className='col-12 row pr-0'>
+                    <div className='col'>
+                      <div className='row x-gap-20 items-end'>
+                        <div className='col-auto'>
+                          <div className='lh-15 fw-500'>
+                            {element.provider === 'aa' &&
+                              element.segments[0].departure.time.slice(-8, -3)}
+                            {element.provider === 'tj' &&
+                              (element.type === 'combined' && layoffSegment
+                                ? element.segments[layoffSegment]?.departure?.time?.slice(
+                                    -5
+                                  )
+                                : element.segments[0].departure.time.slice(-5))}
+                          </div>
+                          <div className='text-15 lh-15 text-light-1'>
+                            {element.segments[layoffSegment]?.departure?.airport?.code}
+                          </div>
+                        </div>
+                        <div className='col text-center'>
+                          <div className='flightLine'>
+                            <div />
+                            <div />
+                          </div>
+                          <div className='text-15 lh-15 text-light-1 mt-10'>
+                            {element.type === 'combined' ? (
+                              combinedStops.s > 0 ? (
+                                <>
+                                  {combinedStops.s}{' '}
+                                  {Pluralize('Stop', 'Stops', combinedStops.s)} (
+                                  {element.segments.map((segmentStop, stopIndex) => {
+                                    if (
+                                      stopIndex > combinedStops.f &&
+                                      stopIndex < combinedStops.f + combinedStops.s + 1
+                                    ) {
+                                      if (stopIndex === combinedStops.f + combinedStops.s)
+                                        return <>{segmentStop.arrival.airport.code}</>;
+                                      else
+                                        return <>{segmentStop.arrival.airport.code},</>;
+                                    }
+                                  })}
+                                  )
+                                </>
+                              ) : (
+                                'Nonstop'
+                              )
+                            ) : element.segments.length > 1 ? (
+                              <>
+                                {element.segments.length - 1}{' '}
+                                {element.segments.length - 1 > 1 ? 'Stops' : 'Stop'} (
+                                {element.segments.map((segmentStop, stopIndex) => {
+                                  if (stopIndex + 1 < element.segments.length) {
+                                    if (stopIndex === 0) {
+                                      return <>{segmentStop.arrival.airport.code}</>;
+                                    } else {
+                                      return <>,{segmentStop.arrival.airport.code}</>;
+                                    }
+                                  }
+                                })}
+                                )
+                              </>
+                            ) : (
+                              'Nonstop'
+                            )}
+                          </div>
+                        </div>
+                        <div className='col-auto'>
+                          <div className='lh-15 fw-500'>
+                            {element.provider === 'aa' &&
+                              element.segments.at(-1).arrival.time.slice(-8, -3)}
+                            {element.provider === 'tj' &&
+                              element.segments.at(-1).arrival.time.slice(-5)}{' '}
+                            {element.type === 'combined' ? (
+                              element.legTwoDayDifference > 0 ? (
+                                <span className='text-secondary text-14'>
+                                  (
+                                  <span className='text-danger'>
+                                    +{element.legTwoDayDifference}
+                                  </span>
+                                  )
+                                </span>
+                              ) : (
+                                <></>
+                              )
+                            ) : element.overallDayDifference > 0 ? (
+                              <span className='text-secondary text-14'>
+                                (
+                                <span className='text-danger'>
+                                  +{element.overallDayDifference}
+                                </span>
+                                )
+                              </span>
+                            ) : (
+                              <></>
+                            )}
+                          </div>
+                          <div className='text-15 lh-15 text-light-1'>
+                            {element.segments.at(-1).arrival.airport.code}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className='col-md-auto'>
+                      <div
+                        className='text-15 text-light-1 px-0'
+                        style={{ width: '75px' }}
+                      >
+                        {/* Checking Days, Hours, Minutes */}
+                        {element.secondLegDuration > 0 ? (
+                          element.secondLegDuration >= 1440 ? (
+                            <>
+                              {Math.floor(element.secondLegDuration / 24 / 60)}d{' '}
+                              {Math.floor((element.secondLegDuration / 60) % 24)}h{' '}
+                              {element.secondLegDuration % 60}m
+                            </>
+                          ) : (
+                            <>
+                              {Math.floor(element.secondLegDuration / 60) > 0 ? (
+                                <>{Math.floor(element.secondLegDuration / 60)}h</>
+                              ) : (
+                                <></>
+                              )}{' '}
+                              {element.secondLegDuration % 60}m
+                            </>
                           )
-                        </span>
-                      ) : (
-                        <></>
-                      )}
-                    </div>
-                    <div className='text-15 lh-15 text-light-1'>
-                      {layoffSegment
-                        ? layoffSegment
-                        : element.segments.at(-1).arrival.airport.code}
+                        ) : element.totalDuration >= 1440 ? (
+                          <>
+                            {Math.floor(element.totalDuration / 24 / 60)}d{' '}
+                            {Math.floor((element.totalDuration / 60) % 24)}h{' '}
+                            {element.totalDuration % 60}m
+                          </>
+                        ) : (
+                          <>
+                            {Math.floor(element.totalDuration / 60) > 0 ? (
+                              <>{Math.floor(element.totalDuration / 60)}h</>
+                            ) : (
+                              <></>
+                            )}{' '}
+                            {element.totalDuration % 60}m
+                          </>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
-              <div className='col-md-auto'>
-                <div className='text-15 text-light-1 px-20 md:px-0'>
-                  {/* Checking Days, Hours, Minutes */}
-                  {element.totalDuration >= 1440 ? (
-                    <>
-                      {Math.floor(element.totalDuration / 24 / 60)}d{' '}
-                      {Math.floor((element.totalDuration / 60) % 24)}h{' '}
-                      {element.totalDuration % 60}m
-                    </>
-                  ) : (
-                    <>
-                      {Math.floor(element.totalDuration / 60) > 0 ? (
-                        <>{Math.floor(element.totalDuration / 60)}h</>
-                      ) : (
-                        <></>
-                      )}{' '}
-                      {element.totalDuration % 60}m
-                    </>
-                  )}
-                </div>
+                )}
               </div>
             </div>
             <div className='d-flex justify-center pb-5'>
@@ -409,7 +629,7 @@ function FlightProperty({
           )}
           {/* End .col-md-auto */}
         </div>
-        {/* End .row */}
+        {/* EXPAND */}
         {expand && expand.includes(element.selectId) && (
           <div>
             {element.segments.map((segment, segmentIndex) => {
@@ -616,7 +836,7 @@ function FlightProperty({
                     </div>
                   </div>
                   {segmentIndex + 1 < element.segments.length ? (
-                    segment.arrival.airport.code !== layoffSegment ? (
+                    segmentIndex !== layoffSegment - 1 ? (
                       <span className='ml-10 d-flex items-center gap-2'>
                         <FaRegClock className='text-danger text-20' /> Layover Time -{' '}
                         {layoverTime >= 1440 ? (

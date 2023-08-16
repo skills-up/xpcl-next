@@ -20,7 +20,7 @@ const FrequentFlierProgram = () => {
   }, []);
 
   const getFrequentFlierPrograms = async () => {
-    const response = await getList('frequent-flier-programs');
+    const response = await getList('travel-membership-programs');
     if (response?.success) {
       setFrequestFlierPrograms(response.data);
     } else {
@@ -28,13 +28,17 @@ const FrequentFlierProgram = () => {
         'error',
         response?.data?.message ||
           response?.data?.error ||
-          'Error getting frequent flier programs',
+          'Error getting travel membership programs',
         4000
       );
     }
   };
 
   const columns = [
+    {
+      Header: 'Type',
+      accessor: 'type',
+    },
     {
       Header: 'Code',
       accessor: 'code',
@@ -73,7 +77,7 @@ const FrequentFlierProgram = () => {
                   label: 'View',
                   onClick: () =>
                     window.location.assign(
-                      '/dashboard/frequent-flier-programs/view/' + data.row.original.id
+                      '/dashboard/travel-membership-programs/view/' + data.row.original.id
                     ),
                   icon: <AiOutlineEye />,
                 },
@@ -81,7 +85,7 @@ const FrequentFlierProgram = () => {
                   label: 'Edit',
                   onClick: () =>
                     window.location.assign(
-                      '/dashboard/frequent-flier-programs/edit/' + data.row.original.id
+                      '/dashboard/travel-membership-programs/edit/' + data.row.original.id
                     ),
                   icon: <HiOutlinePencilAlt />,
                 },
@@ -89,7 +93,8 @@ const FrequentFlierProgram = () => {
                   label: 'Clone',
                   onClick: () =>
                     window.location.assign(
-                      '/dashboard/frequent-flier-programs/clone/' + data.row.original.id
+                      '/dashboard/travel-membership-programs/clone/' +
+                        data.row.original.id
                     ),
                   icon: <IoCopyOutline />,
                 },
@@ -114,7 +119,7 @@ const FrequentFlierProgram = () => {
     setIdToDelete(-1);
   };
   const onSubmit = async () => {
-    const response = await deleteItem('frequent-flier-programs', idToDelete);
+    const response = await deleteItem('travel-membership-programs', idToDelete);
     if (response?.success) {
       sendToast('success', 'Deleted successfully', 4000);
       getFrequentFlierPrograms();
@@ -123,7 +128,7 @@ const FrequentFlierProgram = () => {
         'error',
         response.data?.message ||
           response.data?.error ||
-          'Unexpected Error Occurred While Trying to Delete this Frequent Flier Program',
+          'Unexpected Error Occurred While Trying to Delete this Travel Membership Program',
         4000
       );
     }
@@ -136,8 +141,8 @@ const FrequentFlierProgram = () => {
         <ConfirmationModal
           onCancel={onCancel}
           onSubmit={onSubmit}
-          title='Do you really want to delete this Frequent Flier Program?'
-          content='This will permanently delete the frequent flier program. Press OK to confirm.'
+          title='Do you really want to delete this Travel Membership Program?'
+          content='This will permanently delete the travel membership program. Press OK to confirm.'
         />
       )}
       {/* Search Bar + Add New */}
@@ -154,7 +159,7 @@ const FrequentFlierProgram = () => {
         <button
           className='btn btn-primary col-lg-2 col-5'
           onClick={() =>
-            window.location.assign('/dashboard/frequent-flier-programs/add-new')
+            window.location.assign('/dashboard/travel-membership-programs/add-new')
           }
         >
           Add New
@@ -168,6 +173,7 @@ const FrequentFlierProgram = () => {
         data={frequentFlierPrograms.filter(
           (perm) =>
             perm?.code?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            perm?.type?.toLowerCase().includes(searchQuery.toLowerCase()) ||
             perm?.program?.toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />

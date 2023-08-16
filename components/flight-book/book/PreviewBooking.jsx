@@ -93,7 +93,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
       }
     }
     // Frequent Fliers
-    const frequentFliersList = await getList('frequent-flier-programs');
+    const frequentFliersList = await getList('travel-membership-programs');
     if (frequentFliersList?.success) {
       setFrequentFliers(frequentFliersList?.data);
     } else {
@@ -352,7 +352,11 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                 {selectedBookings.to.segments[0].departure.airport.code} &rarr;{' '}
                 {selectedBookings.to.segments.at(-1).arrival.airport.code}
               </h3>
-              <FlightProperty element={selectedBookings.to} isSelectedBooking />
+              <FlightProperty
+                alreadyExpanded
+                element={selectedBookings.to}
+                isSelectedBooking
+              />
             </div>
           )}
           {/* Return */}
@@ -362,14 +366,22 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                 {selectedBookings.from.segments[0].departure.airport.code} &rarr;{' '}
                 {selectedBookings.from.segments.at(-1).arrival.airport.code}
               </h3>
-              <FlightProperty element={selectedBookings.from} isSelectedBooking />
+              <FlightProperty
+                alreadyExpanded
+                element={selectedBookings.from}
+                isSelectedBooking
+              />
             </div>
           )}
           {/* Return */}
           {selectedBookings?.combined && (
             <div className='mt-30'>
               <h3>Round Trip</h3>
-              <FlightProperty element={selectedBookings.combined} isSelectedBooking />
+              <FlightProperty
+                alreadyExpanded
+                element={selectedBookings.combined}
+                isSelectedBooking
+              />
             </div>
           )}
         </div>
@@ -592,7 +604,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                   <div className='row my-3'>
                     <div className='row col-12 y-gap-20'>
                       <div className='col-md-6 form-input-select'>
-                        <label>Frequent Flier Program</label>
+                        <label>Travel Membership Program</label>
                         <Select
                           options={frequentFliers.map((el) => ({
                             value: el.code,

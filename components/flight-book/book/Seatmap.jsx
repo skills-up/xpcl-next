@@ -44,9 +44,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
     { value: 'AVML', label: 'Vegetarian' },
     { value: 'HNML', label: 'Hindi Non Vegetarian' },
     { value: 'VJML', label: 'Jain Vegetarian' },
-    { value: 'NVML', label: 'Non Vegetarian' },
     { value: 'VLML', label: 'Lacto Ovo Meal' },
-    { value: 'SFML', label: 'Sea Food Meal' },
   ];
   const router = useRouter();
 
@@ -2216,14 +2214,15 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
             <div className='row'>
               {/* Seatmaps */}
               <div className='col-md-8'>
-                <h1>Flight Seatmaps (Optional)</h1>
+                <h1 className='mb-20'>Additional Options</h1>
+                {(seatMap?.to || seatMap?.from || seatMap?.combined) && (
+                  <h2>Select seats for your journey</h2>
+                )}
                 {/* To */}
                 {seatMap?.to?.data && (
                   <>
-                    {seatMap.to && seatMap.from && (
-                      <h2 className='mt-20'>Onward Seatmap</h2>
-                    )}
                     <div className='bg-white py-20 px-20 mt-20'>
+                      {seatMap.to && seatMap.from && <h3 className='mb-10'>Onward</h3>}
                       {
                         // TJ
                         seatMap?.to?.provider === 'tj' ? (
@@ -2244,8 +2243,8 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                 {/* From */}
                 {seatMap?.from && (
                   <>
-                    <h2 className='mt-20'>Return Seatmap</h2>
                     <div className='bg-white py-20 px-20 mt-20'>
+                      <h3 className='mb-10'>Return</h3>
                       {
                         // TJ
                         seatMap?.from?.provider === 'tj' ? (
@@ -2266,8 +2265,8 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                 {/* Combined */}
                 {seatMap?.combined && (
                   <>
-                    <h2 className='mt-20'>Onward and Return Trip</h2>
                     <div className='bg-white py-20 px-20 mt-20'>
+                      <h3 className='mb-10'>Onward and Return</h3>
                       {
                         // TJ
                         seatMap?.combined?.provider === 'tj' ? (
@@ -2286,9 +2285,8 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                   </>
                 )}
                 {/* Traveller Meal Preferences + Review */}
-                <h1 className='mt-30'>Review</h1>
+                <h2 className='mt-30'>Select meals for your journey</h2>
                 <div className='mt-10 bg-white px-20 py-20'>
-                  <h3>Select Meals (Optional)</h3>
                   {/* Iterating Over Travellers */}
                   {travellerInfo.map((travl, travlInd) => {
                     const age = (
@@ -2661,8 +2659,8 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                   let totalAmount;
                   let bookingStatus;
                   let tempObj = { 'Base Fare': 0, 'Taxes & Fee': 0 };
-                  if (seatMap[key]) {
-                    if (seatMap[key].provider === 'tj') {
+                  if (PNR[key]) {
+                    if (PNR[key].provider === 'tj') {
                       bookingID = value.data.order.bookingId;
                       totalAmount = value.data.order.amount;
                       bookingStatus =
@@ -2677,7 +2675,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                       tempObj['Taxes & Fee'] =
                         value.data.itemInfos.AIR.totalPriceInfo.totalFareDetail.fC?.TAF ||
                         undefined;
-                    } else if (seatMap[key].provider === 'aa') {
+                    } else if (PNR[key].provider === 'aa') {
                       bookingID = value.recordLocator;
                       totalAmount = value.payments[0].amounts.amount;
                       if (value.info.status === 2) bookingStatus = 'CONFIRMED';
@@ -2690,7 +2688,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                         (value.breakdown.passengerTotals?.specialServices?.total || 0) +
                         (value.breakdown.passengerTotals?.seats?.taxes || 0) +
                         (value.breakdown.passengerTotals?.seats?.total || 0);
-                    } else if (seatMap[key].provider === 'ad') {
+                    } else if (PNR[key].provider === 'ad') {
                       bookingID =
                         value.pnrHeader.reservationInfo.reservation.controlNumber;
                       totalAmount = getArray(
@@ -2700,7 +2698,6 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                           (e) => +e.documentDetailsGroup.totalFare.monetaryDetails.amount
                         )
                         .reduce((p, v) => p + v, 0);
-                      console.log('TotalAmt', totalAmount);
                       bookingStatus = 'CONFIRMED';
                       for (let tst of getArray(value.tstData))
                         for (let fare of tst.fareData.monetaryInfo) {
@@ -2740,6 +2737,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                       </div>
                       <div className='mb-20 border-light mt-20'>
                         <FlightProperty
+                          alreadyExpanded
                           element={selectedBookings[key]}
                           isSelectedBooking
                           showPrice={false}
