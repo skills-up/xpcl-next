@@ -21,9 +21,10 @@ import {
   setTravellers as setTravellersRedux,
 } from '../../../features/flightSearch/flightSearchSlice';
 import { checkUser } from '../../../utils/checkTokenValidity';
+import GuestSearch from './GuestSearch';
 
 const MainFilterSearchBox = () => {
-  const [directFlight, setDirectFlight] = useState(true);
+  const [directFlight, setDirectFlight] = useState(false);
   const [from, setFrom] = useState(null);
   const [to, setTo] = useState(null);
   const [preferredCabin, setPrefferedCabin] = useState(null);
@@ -37,6 +38,11 @@ const MainFilterSearchBox = () => {
   const [airlines, setAirlines] = useState([]);
   const [progress, setProgress] = useState(0);
   const [isSearched, setIsSearched] = useState(false);
+  const [guestCounts, setGuestCounts] = useState({
+    Adults: 2,
+    Children: 0,
+    Infants: 0,
+  });
 
   const dispatch = useDispatch();
   const router = useRouter();
@@ -44,6 +50,7 @@ const MainFilterSearchBox = () => {
   console.log('token', token);
   const airports = useSelector((state) => state.apis.value.airports);
   const client_id = useSelector((state) => state.auth.value.currentOrganization);
+  const travellerDOBS = useSelector((state) => state.flightSearch.value.travellerDOBS);
 
   useEffect(() => {
     // dispatch(setInitialState());
@@ -58,20 +65,21 @@ const MainFilterSearchBox = () => {
   }, []);
 
   const getData = async () => {
-    const clientTravellers = await getList('client-travellers', {
-      client_id,
-    });
+    // const clientTravellers = await getList('client-travellers', {
+    //   client_id,
+    // });
     const airlines = await getList('organizations', { is_airline: 1 });
-    if (clientTravellers?.success && airlines?.success) {
+    // if (clientTravellers?.success && airlines?.success) {
+    if (airlines?.success) {
       dispatch(setAirlineOrgs({ airlineOrgs: airlines.data }));
-      dispatch(setClientTravellersRedux({ clientTravellers: clientTravellers.data }));
-      setClientTravellers(
-        clientTravellers.data.map((element) => ({
-          value: element.id,
-          label: element.traveller_name,
-          traveller_id: element.traveller_id,
-        }))
-      );
+      // dispatch(setClientTravellersRedux({ clientTravellers: clientTravellers.data }));
+      // setClientTravellers(
+      //   clientTravellers.data.map((element) => ({
+      //     value: element.id,
+      //     label: element.traveller_name,
+      //     traveller_id: element.traveller_id,
+      //   }))
+      // );
       setAirlines(
         airlines.data.map((element) => ({
           value: element.id,
@@ -101,55 +109,61 @@ const MainFilterSearchBox = () => {
       searchF();
       return;
     }
-    if (!travellers || travellers?.length === 0) {
-      sendToast('error', 'Please select travellers', 4000);
+    // if (!travellers || travellers?.length === 0) {
+    //   sendToast('error', 'Please select travellers', 4000);
+    //   searchF();
+    //   return;
+    // }
+    if (!guestCounts || guestCounts?.Adults === 0) {
+      sendToast('error', 'One adult passenger is mandatory', 4000);
       searchF();
       return;
     }
     // Getting Traveller DOBS
-    let pax = {};
-    const traveller_ids = travellers.map((el) => el.traveller_id);
-    const travellerDetails = await getList('travellers', { traveller_ids });
-    let ADT = 0;
-    let CHD = 0;
-    let INF = 0;
-    if (travellerDetails?.success) {
-      let currentTime = +Date.now();
-      for (let traveller of travellerDetails.data) {
-        if (traveller?.passport_dob) {
-          const age = (
-            (currentTime -
-              +new DateObject({
-                date: traveller.passport_dob,
-                format: 'YYYY-MM-DD',
-              })
-                .toDate()
-                .getTime()) /
-            31536000000
-          ).toFixed(2);
-          // If below 2 years of age, infant
-          if (age < 2) INF += 1;
-          // If above 2 but below 12, child
-          if (age >= 2 && age < 12) CHD += 1;
-          // If above 12 years, consider adult
-          if (age >= 12) ADT += 1;
-        } else {
-          ADT += 1;
-        }
-      }
-      if (ADT > 0) pax['ADT'] = ADT;
-      else {
-        sendToast('error', 'There must be an Adult traveller', 4000);
-        searchF();
-        return;
-      }
-      if (CHD > 0) pax['CHD'] = CHD;
-      if (INF > 0) pax['INF'] = INF;
-    } else {
-      sendToast('error', 'Error getting traveller details', 4000);
-      searchF();
-      return;
-    }
+    let pax = {
+      ADT: guestCounts.Adults,
+      CHD: guestCounts.Children || undefined,
+      INF: guestCounts.Infants || undefined,
+    };
+    // const traveller_ids = travellers.map((el) => el.traveller_id);
+    // const travellerDetails = await getList('travellers', { traveller_ids });
+    // if (travellerDetails?.success) {
+    //   let currentTime = +Date.now();
+    //   for (let traveller of travellerDetails.data) {
+    //     if (traveller?.passport_dob) {
+    //       const age = (
+    //         (currentTime -
+    //           +new DateObject({
+    //             date: traveller.passport_dob,
+    //             format: 'YYYY-MM-DD',
+    //           })
+    //             .toDate()
+    //             .getTime()) /
+    //         31536000000
+    //       ).toFixed(2);
+    //       // If below 2 years of age, infant
+    //       if (age < 2) INF += 1;
+    //       // If above 2 but below 12, child
+    //       if (age >= 2 && age < 12) CHD += 1;
+    //       // If above 12 years, consider adult
+    //       if (age >= 12) ADT += 1;
+    //     } else {
+    //       ADT += 1;
+    //     }
+    //   }
+    //   if (ADT > 0) pax['ADT'] = ADT;
+    //   else {
+    //     sendToast('error', 'There must be an Adult traveller', 4000);
+    //     searchF();
+    //     return;
+    //   }
+    //   if (CHD > 0) pax['CHD'] = CHD;
+    //   if (INF > 0) pax['INF'] = INF;
+    // } else {
+    //   sendToast('error', 'Error getting traveller details', 4000);
+    //   searchF();
+    //   return;
+    // }
     // Resetting Search Data
     dispatch(setInitialSearchData());
     // Checking for domestic
@@ -205,7 +219,13 @@ const MainFilterSearchBox = () => {
     }
     let currentCalls = 0;
     // Redux Values Update
-    dispatch(setTravellerDOBS({ ADT, CHD, INF }));
+    dispatch(
+      setTravellerDOBS({
+        ADT: guestCounts.Adults,
+        CHD: guestCounts.Children,
+        INF: guestCounts.Infants,
+      })
+    );
     dispatch(setReturnFlightRedux({ returnFlight }));
     dispatch(setTravellersRedux({ travellers }));
     dispatch(
@@ -333,13 +353,14 @@ const MainFilterSearchBox = () => {
             <label>
               Travellers<span className='text-danger'>*</span>
             </label>
-            <Select
+            {/* <Select
               options={clientTravellers}
               value={travellers}
               isMulti
               placeholder='Search..'
               onChange={(values) => setTravellers(values)}
-            />
+            /> */}
+            <GuestSearch guests={[guestCounts, setGuestCounts]} />
           </div>
           <div className='flight-search-select'>
             <label>Airlines</label>
@@ -509,7 +530,7 @@ const MainFilterSearchBox = () => {
 
           {/* End Return */}
 
-          <div>
+          {/* <div>
             <div className='pl-5 d-flex mt-30 gap-2 justify-center lg:mt-0 items-center'>
               <label>Direct Flight</label>
               <ReactSwitch
@@ -517,7 +538,7 @@ const MainFilterSearchBox = () => {
                 checked={directFlight}
               />
             </div>
-          </div>
+          </div> */}
           {/* End guest */}
         </div>
 

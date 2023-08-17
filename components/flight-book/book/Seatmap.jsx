@@ -19,7 +19,7 @@ import { FaMinus, FaPlus } from 'react-icons/fa';
 function Seatmap({ seatMaps, PNRS, travellerInfos }) {
   const [PNR, setPNR] = PNRS;
   const [seatMap, setSeatMap] = seatMaps;
-  const travellers = useSelector((state) => state.flightSearch.value.travellers);
+  // const travellers = useSelector((state) => state.flightSearch.value.travellers);
   const selectedBookings = useSelector(
     (state) => state.flightSearch.value.selectedBookings
   );
@@ -2216,7 +2216,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
               <div className='col-md-8'>
                 <h1 className='mb-20'>Additional Options</h1>
                 {(seatMap?.to || seatMap?.from || seatMap?.combined) && (
-                  <h2>Select seats for your journey</h2>
+                  <h2>Select seats</h2>
                 )}
                 {/* To */}
                 {seatMap?.to?.data && (
@@ -2285,7 +2285,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                   </>
                 )}
                 {/* Traveller Meal Preferences + Review */}
-                <h2 className='mt-30'>Select meals for your journey</h2>
+                <h2 className='mt-30'>Select meals</h2>
                 <div className='mt-10 bg-white px-20 py-20'>
                   {/* Iterating Over Travellers */}
                   {travellerInfo.map((travl, travlInd) => {
