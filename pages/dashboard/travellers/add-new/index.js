@@ -231,6 +231,7 @@ const AddNewTravellers = () => {
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
+                    <h3>Personal Details</h3>
                     <div className='col-12 form-input-select col-lg-4'>
                       <label>Prefix</label>
                       <Select
@@ -278,6 +279,90 @@ const AddNewTravellers = () => {
                         </label>
                       </div>
                     </div>
+                    <div className='col-lg-4'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setMobilePhone(e.target.value)}
+                          value={mobilePhone}
+                          placeholder=' '
+                          type='number'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>Mobile Phone</label>
+                      </div>
+                    </div>
+                    <div className='col-lg-4'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setEmail(e.target.value)}
+                          value={email}
+                          placeholder=' '
+                          type='email'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>Email Address</label>
+                      </div>
+                    </div>
+                    <div className='col-lg-4'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setAddress(e.target.value)}
+                          value={address}
+                          placeholder=' '
+                          type='text'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>Address</label>
+                      </div>
+                    </div>
+                    {/* Aliases */}
+                    <div>
+                      <h5>Aliases</h5>
+                      <div>
+                        {aliases.map((element, index) => (
+                          <div key={index} className='d-flex my-2'>
+                            <div className='form-input'>
+                              <input
+                                value={aliases[index].value}
+                                onChange={(e) => {
+                                  setAliases((prev) => {
+                                    prev[index].value = e.target.value;
+                                    return [...prev];
+                                  });
+                                }}
+                                type='text'
+                                placeholder=' '
+                              />
+                              <label className='lh-1 text-16 text-light-1'>
+                                Add Alias {index + 1}
+                              </label>
+                            </div>
+                            {index !== 0 && (
+                              <button
+                                className='btn btn-outline-danger ml-10 px-20'
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  setAliases((prev) => {
+                                    prev.splice(index, 1);
+                                    return [...prev];
+                                  });
+                                }}
+                              >
+                                <BsTrash3 />
+                              </button>
+                            )}
+                            {index + 1 === aliases?.length && (
+                              <button
+                                className='btn btn-outline-success ml-10 px-20'
+                                onClick={() => {
+                                  setAliases((prev) => [...prev, { value: '' }]);
+                                }}
+                              >
+                                <AiOutlinePlus />
+                              </button>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <h3>Passport Details</h3>
                     <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
@@ -347,7 +432,13 @@ const AddNewTravellers = () => {
                         inputClass='custom_input-picker'
                         containerClassName='custom_container-picker'
                         value={passportIssueDate}
-                        onChange={setPassportIssueDate}
+                        onChange={(d) => {
+                          setPassportIssueDate(d);
+                          if (d)
+                            setPassportExpiryDate(
+                              new DateObject(d.toDate().getTime() + 315569260000)
+                            );
+                        }}
                         numberOfMonths={1}
                         offsetY={10}
                         format='DD MMMM YYYY'
@@ -392,28 +483,7 @@ const AddNewTravellers = () => {
                         format='DD MMMM YYYY'
                       />
                     </div>
-                    <div className='col-lg-4'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setMobilePhone(e.target.value)}
-                          value={mobilePhone}
-                          placeholder=' '
-                          type='number'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>Mobile Phone</label>
-                      </div>
-                    </div>
-                    <div className='col-lg-4'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setEmail(e.target.value)}
-                          value={email}
-                          placeholder=' '
-                          type='email'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>Email Address</label>
-                      </div>
-                    </div>
+                    <h3>Preferences</h3>
                     <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
@@ -493,17 +563,6 @@ const AddNewTravellers = () => {
                     <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
-                          onChange={(e) => setAddress(e.target.value)}
-                          value={address}
-                          placeholder=' '
-                          type='text'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>Address</label>
-                      </div>
-                    </div>
-                    <div className='col-lg-4'>
-                      <div className='form-input'>
-                        <input
                           onChange={(e) => setMealNotes(e.target.value)}
                           value={mealNotes}
                           placeholder=' '
@@ -523,6 +582,7 @@ const AddNewTravellers = () => {
                         <label className='lh-1 text-16 text-light-1'>Seat Notes</label>
                       </div>
                     </div>
+                    <h3>Documents</h3>
                     <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
@@ -547,6 +607,26 @@ const AddNewTravellers = () => {
                         </label>
                       </div>
                     </div>
+                    {/* Vaccination Dates */}
+                    <div className='d-block col-lg-4 ml-3 form-datepicker'>
+                      <label>Vaccination Dates (Upto 3)</label>
+                      <DatePicker
+                        multiple
+                        style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
+                        inputClass='custom_input-picker'
+                        containerClassName='custom_container-picker'
+                        value={vaccinationDates}
+                        onChange={(d) => {
+                          console.log('dates', d, vaccinationDates);
+                          if (d.length <= 3) {
+                            setVaccinationDates(d);
+                          }
+                        }}
+                        numberOfMonths={1}
+                        offsetY={10}
+                        format='DD MMM YYYY'
+                      />
+                    </div>
                     {/* Vaccination Certificate File Upload */}
                     <div className='col-lg-4'>
                       <label>Vaccination Certificate File</label>
@@ -569,73 +649,8 @@ const AddNewTravellers = () => {
                         setUploads={setAadhaarCardScanFile}
                       />
                     </div>
-                    {/* Aliases */}
-                    <div>
-                      <label>Aliases</label>
-                      <div>
-                        {aliases.map((element, index) => (
-                          <div key={index} className='d-flex my-2'>
-                            <div className='form-input'>
-                              <input
-                                value={aliases[index].value}
-                                onChange={(e) => {
-                                  setAliases((prev) => {
-                                    prev[index].value = e.target.value;
-                                    return [...prev];
-                                  });
-                                }}
-                                type='text'
-                                placeholder=' '
-                              />
-                              <label className='lh-1 text-16 text-light-1'>
-                                Add Alias {index + 1}
-                              </label>
-                            </div>
-                            {index !== 0 && (
-                              <button
-                                className='btn btn-outline-danger ml-10 px-20'
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  setAliases((prev) => {
-                                    prev.splice(index, 1);
-                                    return [...prev];
-                                  });
-                                }}
-                              >
-                                <BsTrash3 />
-                              </button>
-                            )}
-                            {index + 1 === aliases?.length && (
-                              <button
-                                className='btn btn-outline-success ml-10 px-20'
-                                onClick={() => {
-                                  setAliases((prev) => [...prev, { value: '' }]);
-                                }}
-                              >
-                                <AiOutlinePlus />
-                              </button>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                    {/* Vaccination Dates */}
-                    <div className='d-block ml-3 form-datepicker'>
-                      <label>Vaccination Dates</label>
-                      <DatePicker
-                        multiple
-                        style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
-                        inputClass='custom_input-picker'
-                        containerClassName='custom_container-picker'
-                        value={vaccinationDates}
-                        onChange={setVaccinationDates}
-                        numberOfMonths={1}
-                        offsetY={10}
-                        format='DD MMMM YYYY'
-                      />
-                    </div>
                     {/* Passport Scan Files Upload */}
-                    <div className='col-lg-6'>
+                    <div className='col-lg-4'>
                       <label>Passport Scan Files</label>
                       <NewFileUploads multiple={true} setUploads={setPassportScanFiles} />
                     </div>

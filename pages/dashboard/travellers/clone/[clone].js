@@ -462,7 +462,13 @@ const AddNewTravellers = () => {
                         inputClass='custom_input-picker'
                         containerClassName='custom_container-picker'
                         value={passportIssueDate}
-                        onChange={setPassportIssueDate}
+                        onChange={(d) => {
+                          setPassportIssueDate(d);
+                          if (d)
+                            setPassportExpiryDate(
+                              new DateObject(d.toDate().getTime() + 315569260000)
+                            );
+                        }}
                         numberOfMonths={1}
                         offsetY={10}
                         format='DD MMMM YYYY'
