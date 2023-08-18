@@ -65,14 +65,14 @@ const MainFilterSearchBox = () => {
   }, []);
 
   const getData = async () => {
-    // const clientTravellers = await getList('client-travellers', {
-    //   client_id,
-    // });
+    const clientTravellers = await getList('client-travellers', {
+      client_id,
+    });
     const airlines = await getList('organizations', { is_airline: 1 });
-    // if (clientTravellers?.success && airlines?.success) {
-    if (airlines?.success) {
+    if (clientTravellers?.success && airlines?.success) {
+      // if (airlines?.success) {
       dispatch(setAirlineOrgs({ airlineOrgs: airlines.data }));
-      // dispatch(setClientTravellersRedux({ clientTravellers: clientTravellers.data }));
+      dispatch(setClientTravellersRedux({ clientTravellers: clientTravellers.data }));
       // setClientTravellers(
       //   clientTravellers.data.map((element) => ({
       //     value: element.id,

@@ -22,7 +22,7 @@ const AddNewTravellers = () => {
   const [passportName, setPassportName] = useState('');
   const [passportNumber, setPassportNumber] = useState('');
   const [passportGender, setPassportGender] = useState(null);
-  const [passportDOB, setPassportDOB] = useState(new DateObject());
+  const [passportDOB, setPassportDOB] = useState(null);
   const [passportIssueDate, setPassportIssueDate] = useState(null);
   const [passportExpiryDate, setPassportExpiryDate] = useState(null);
   const [euBiometrics, setEUBiometrics] = useState(null);
@@ -173,10 +173,7 @@ const AddNewTravellers = () => {
       passportFormData.append('passport_country_code', countryCodeID.value);
     // Aliases
     if (aliases.length === 1 && aliases[0].value.trim().length === 0) {
-      passportFormData.append(
-        'aliases[]',
-        `${firstName} ${middleName.trim().length > 0 ? middleName + ' ' : ''}${lastName}`
-      );
+      passportFormData.append('aliases[]', `${passportName}`);
     } else {
       for (let alias of aliases) passportFormData.append('aliases[]', alias?.value);
     }
@@ -232,7 +229,7 @@ const AddNewTravellers = () => {
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
                     <h3>Personal Details</h3>
-                    <div className='col-12 form-input-select col-lg-4'>
+                    <div className='form-input-select col-lg-2'>
                       <label>Prefix</label>
                       <Select
                         options={passportPrefixOptions}
@@ -250,11 +247,11 @@ const AddNewTravellers = () => {
                           required
                         />
                         <label className='lh-1 text-16 text-light-1'>
-                          First name<span className='text-danger'>*</span>
+                          First Name<span className='text-danger'>*</span>
                         </label>
                       </div>
                     </div>
-                    <div className='col-lg-4'>
+                    <div className='col-lg-2'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setMiddleName(e.target.value)}
@@ -279,7 +276,7 @@ const AddNewTravellers = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-lg-4'>
+                    <div className='col-lg-3'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setMobilePhone(e.target.value)}
@@ -290,7 +287,7 @@ const AddNewTravellers = () => {
                         <label className='lh-1 text-16 text-light-1'>Mobile Phone</label>
                       </div>
                     </div>
-                    <div className='col-lg-4'>
+                    <div className='col-lg-3'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setEmail(e.target.value)}
@@ -301,7 +298,7 @@ const AddNewTravellers = () => {
                         <label className='lh-1 text-16 text-light-1'>Email Address</label>
                       </div>
                     </div>
-                    <div className='col-lg-4'>
+                    <div className='col-lg-6'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setAddress(e.target.value)}
@@ -312,9 +309,130 @@ const AddNewTravellers = () => {
                         <label className='lh-1 text-16 text-light-1'>Address</label>
                       </div>
                     </div>
+                    <h3>Passport Details</h3>
+                    <div className='col-lg-3'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setPassportName(e.target.value)}
+                          value={passportName}
+                          placeholder=' '
+                          type='text'
+                          required
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Name (as on passport)<span className='text-danger'>*</span>
+                        </label>
+                      </div>
+                    </div>
+                    <div className='d-block ml-3 form-datepicker col-lg-3'>
+                      <label>
+                        Date Of Birth (as on passport)
+                        <span className='text-danger'>*</span>
+                      </label>
+                      <DatePicker
+                        style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
+                        inputClass='custom_input-picker'
+                        containerClassName='custom_container-picker'
+                        value={passportDOB}
+                        onChange={setPassportDOB}
+                        numberOfMonths={1}
+                        offsetY={10}
+                        format='DD MMMM YYYY'
+                      />
+                    </div>
+                    <div className='col-lg-3 form-input-select'>
+                      <label>Passport Gender</label>
+                      <Select
+                        options={passportGenderOptions}
+                        value={passportGender}
+                        onChange={(id) => setPassportGender(id)}
+                      />
+                    </div>
+                    <div className='col-lg-3 form-input-select'>
+                      <label>Passport Country</label>
+                      <Select
+                        options={countries.map((el) => ({
+                          value: el.code,
+                          label: `${el.name} (${el.code})`,
+                        }))}
+                        value={countryCodeID}
+                        onChange={(id) => setCountryCodeID(id)}
+                      />
+                    </div>
+                    <div className='col-lg-3'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setPassportNumber(e.target.value)}
+                          value={passportNumber}
+                          placeholder=' '
+                          type='text'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Passport Number
+                        </label>
+                      </div>
+                    </div>
+                    <div className='d-block ml-3 form-datepicker col-lg-3'>
+                      <label>Passport Issue Date</label>
+                      <DatePicker
+                        style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
+                        inputClass='custom_input-picker'
+                        containerClassName='custom_container-picker'
+                        value={passportIssueDate}
+                        onChange={(d) => {
+                          setPassportIssueDate(d);
+                          if (d)
+                            setPassportExpiryDate(
+                              new DateObject(d.toDate().getTime() + 315569260000)
+                            );
+                        }}
+                        numberOfMonths={1}
+                        offsetY={10}
+                        format='DD MMMM YYYY'
+                      />
+                    </div>
+                    <div className='d-block ml-3 form-datepicker col-lg-3'>
+                      <label>Passport Expiry Date</label>
+                      <DatePicker
+                        style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
+                        inputClass='custom_input-picker'
+                        containerClassName='custom_container-picker'
+                        value={passportExpiryDate}
+                        onChange={setPassportExpiryDate}
+                        numberOfMonths={1}
+                        offsetY={10}
+                        format='DD MMMM YYYY'
+                      />
+                    </div>
+                    <div className='col-lg-3'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setPassportIssuePlace(e.target.value)}
+                          value={passportIssuePlace}
+                          placeholder=' '
+                          type='text'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Passport Issue Place
+                        </label>
+                      </div>
+                    </div>
+                    <div className='d-block ml-3 form-datepicker col-lg-3'>
+                      <label>Last EU Biometrics</label>
+                      <DatePicker
+                        style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
+                        inputClass='custom_input-picker'
+                        containerClassName='custom_container-picker'
+                        value={euBiometrics}
+                        onChange={setEUBiometrics}
+                        numberOfMonths={1}
+                        offsetY={10}
+                        format='DD MMMM YYYY'
+                      />
+                    </div>
                     {/* Aliases */}
                     <div>
-                      <h5>Aliases</h5>
+                      <h3>Aliases</h3>
                       <div>
                         {aliases.map((element, index) => (
                           <div key={index} className='d-flex my-2'>
@@ -362,129 +480,8 @@ const AddNewTravellers = () => {
                         ))}
                       </div>
                     </div>
-                    <h3>Passport Details</h3>
-                    <div className='col-lg-4'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setPassportName(e.target.value)}
-                          value={passportName}
-                          placeholder=' '
-                          type='text'
-                          required
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Name (as on passport)<span className='text-danger'>*</span>
-                        </label>
-                      </div>
-                    </div>
-                    <div className='col-lg-4'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setPassportNumber(e.target.value)}
-                          value={passportNumber}
-                          placeholder=' '
-                          type='text'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Passport Number
-                        </label>
-                      </div>
-                    </div>
-                    <div className='col-lg-4 form-input-select'>
-                      <label>Passport Gender</label>
-                      <Select
-                        options={passportGenderOptions}
-                        value={passportGender}
-                        onChange={(id) => setPassportGender(id)}
-                      />
-                    </div>
-                    <div className='col-lg-4 form-input-select'>
-                      <label>Passport Country Code</label>
-                      <Select
-                        options={countries.map((el) => ({
-                          value: el.code,
-                          label: `${el.name} (${el.code})`,
-                        }))}
-                        value={countryCodeID}
-                        onChange={(id) => setCountryCodeID(id)}
-                      />
-                    </div>
-                    <div className='d-block ml-3 form-datepicker col-lg-4'>
-                      <label>
-                        Date Of Birth (as on passport)
-                        <span className='text-danger'>*</span>
-                      </label>
-                      <DatePicker
-                        style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
-                        inputClass='custom_input-picker'
-                        containerClassName='custom_container-picker'
-                        value={passportDOB}
-                        onChange={setPassportDOB}
-                        numberOfMonths={1}
-                        offsetY={10}
-                        format='DD MMMM YYYY'
-                      />
-                    </div>
-                    <div className='d-block ml-3 form-datepicker col-lg-4'>
-                      <label>Passport Issue Date</label>
-                      <DatePicker
-                        style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
-                        inputClass='custom_input-picker'
-                        containerClassName='custom_container-picker'
-                        value={passportIssueDate}
-                        onChange={(d) => {
-                          setPassportIssueDate(d);
-                          if (d)
-                            setPassportExpiryDate(
-                              new DateObject(d.toDate().getTime() + 315569260000)
-                            );
-                        }}
-                        numberOfMonths={1}
-                        offsetY={10}
-                        format='DD MMMM YYYY'
-                      />
-                    </div>
-                    <div className='d-block ml-3 form-datepicker col-lg-4'>
-                      <label>Passport Expiry Date</label>
-                      <DatePicker
-                        style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
-                        inputClass='custom_input-picker'
-                        containerClassName='custom_container-picker'
-                        value={passportExpiryDate}
-                        onChange={setPassportExpiryDate}
-                        numberOfMonths={1}
-                        offsetY={10}
-                        format='DD MMMM YYYY'
-                      />
-                    </div>
-                    <div className='col-lg-4'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setPassportIssuePlace(e.target.value)}
-                          value={passportIssuePlace}
-                          placeholder=' '
-                          type='text'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Passport Issue Place
-                        </label>
-                      </div>
-                    </div>
-                    <div className='d-block ml-3 form-datepicker col-lg-4'>
-                      <label>Last EU Biometrics</label>
-                      <DatePicker
-                        style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
-                        inputClass='custom_input-picker'
-                        containerClassName='custom_container-picker'
-                        value={euBiometrics}
-                        onChange={setEUBiometrics}
-                        numberOfMonths={1}
-                        offsetY={10}
-                        format='DD MMMM YYYY'
-                      />
-                    </div>
                     <h3>Preferences</h3>
-                    <div className='col-lg-4'>
+                    <div className='col-lg-3'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setDomesticAirlinePreference(e.target.value)}
@@ -497,15 +494,7 @@ const AddNewTravellers = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-lg-4 form-input-select'>
-                      <label>Domestic Cabin Preference</label>
-                      <Select
-                        options={cabinPreferenceOptions}
-                        value={domesticCabinPreference}
-                        onChange={(id) => setDomesticCabinPreference(id)}
-                      />
-                    </div>
-                    <div className='col-lg-4'>
+                    <div className='col-lg-3'>
                       <div className='form-input'>
                         <input
                           onChange={(e) =>
@@ -520,7 +509,15 @@ const AddNewTravellers = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-lg-4 form-input-select'>
+                    <div className='col-lg-3 form-input-select'>
+                      <label>Domestic Cabin Preference</label>
+                      <Select
+                        options={cabinPreferenceOptions}
+                        value={domesticCabinPreference}
+                        onChange={(id) => setDomesticCabinPreference(id)}
+                      />
+                    </div>
+                    <div className='col-lg-3 form-input-select'>
                       <label>International Cabin Preference</label>
                       <Select
                         options={cabinPreferenceOptions}
@@ -528,7 +525,7 @@ const AddNewTravellers = () => {
                         onChange={(id) => setInternationalCabinPreference(id)}
                       />
                     </div>
-                    <div className='col-lg-4 form-input-select'>
+                    <div className='col-lg-3 form-input-select'>
                       <label>Meal Preference</label>
                       <Select
                         options={mealPreferenceOptions}
@@ -536,7 +533,7 @@ const AddNewTravellers = () => {
                         onChange={(id) => setMealPreference(id)}
                       />
                     </div>
-                    <div className='col-lg-4 form-input-select'>
+                    <div className='col-lg-3 form-input-select'>
                       <label>Seat Preference</label>
                       <Select
                         options={seatPreferenceOptions}
@@ -544,7 +541,7 @@ const AddNewTravellers = () => {
                         onChange={(id) => setSeatPreference(id)}
                       />
                     </div>
-                    <div className='col-lg-4 form-input-select'>
+                    <div className='col-lg-3 form-input-select'>
                       <label>Cabin Position</label>
                       <Select
                         options={cabinPositionOptions}
@@ -552,7 +549,7 @@ const AddNewTravellers = () => {
                         onChange={(id) => setCabinPosition(id)}
                       />
                     </div>
-                    <div className='col-lg-4 form-input-select'>
+                    <div className='col-lg-3 form-input-select'>
                       <label>Fare Preference</label>
                       <Select
                         options={farePreferenceOptions}
@@ -560,7 +557,7 @@ const AddNewTravellers = () => {
                         onChange={(id) => setFarePreference(id)}
                       />
                     </div>
-                    <div className='col-lg-4'>
+                    <div className='col-lg-6'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setMealNotes(e.target.value)}
@@ -571,7 +568,7 @@ const AddNewTravellers = () => {
                         <label className='lh-1 text-16 text-light-1'>Meal Notes</label>
                       </div>
                     </div>
-                    <div className='col-lg-4'>
+                    <div className='col-lg-6'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setSeatNotes(e.target.value)}
@@ -627,15 +624,6 @@ const AddNewTravellers = () => {
                         format='DD MMM YYYY'
                       />
                     </div>
-                    {/* Vaccination Certificate File Upload */}
-                    <div className='col-lg-4'>
-                      <label>Vaccination Certificate File</label>
-                      <NewFileUploads
-                        fileTypes={['PDF']}
-                        multiple={false}
-                        setUploads={setVaccinationCertificateFile}
-                      />
-                    </div>
                     {/* Pan Card Scan File Upload */}
                     <div className='col-lg-4'>
                       <label>PAN Card Scan File</label>
@@ -647,6 +635,15 @@ const AddNewTravellers = () => {
                       <NewFileUploads
                         multiple={false}
                         setUploads={setAadhaarCardScanFile}
+                      />
+                    </div>
+                    {/* Vaccination Certificate File Upload */}
+                    <div className='col-lg-4'>
+                      <label>Vaccination Certificate File</label>
+                      <NewFileUploads
+                        fileTypes={['PDF']}
+                        multiple={false}
+                        setUploads={setVaccinationCertificateFile}
                       />
                     </div>
                     {/* Passport Scan Files Upload */}

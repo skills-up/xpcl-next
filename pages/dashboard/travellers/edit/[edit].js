@@ -25,7 +25,7 @@ const UpdateTravellers = () => {
   const [passportName, setPassportName] = useState('');
   const [passportNumber, setPassportNumber] = useState('');
   const [passportGender, setPassportGender] = useState(null);
-  const [passportDOB, setPassportDOB] = useState(new DateObject());
+  const [passportDOB, setPassportDOB] = useState(null);
   const [passportIssueDate, setPassportIssueDate] = useState(null);
   const [passportExpiryDate, setPassportExpiryDate] = useState(null);
   const [euBiometrics, setEUBiometrics] = useState(null);
@@ -307,7 +307,7 @@ const UpdateTravellers = () => {
       passportFormData.append('passport_country_code', countryCodeID.value);
     // Aliases
     if (aliases.length === 1 && aliases[0].value.trim().length === 0) {
-      passportFormData.append('aliases[]', null);
+      passportFormData.append('aliases[]', `${passportName}`);
     } else {
       for (let alias of aliases) passportFormData.append('aliases[]', alias?.value);
     }
@@ -388,7 +388,7 @@ const UpdateTravellers = () => {
                           required
                         />
                         <label className='lh-1 text-16 text-light-1'>
-                          First name<span className='text-danger'>*</span>
+                          First Name<span className='text-danger'>*</span>
                         </label>
                       </div>
                     </div>
@@ -453,7 +453,7 @@ const UpdateTravellers = () => {
                       />
                     </div>
                     <div className='col-lg-4 form-input-select'>
-                      <label>Passport Country Code</label>
+                      <label>Passport Country</label>
                       <Select
                         options={countries.map((el) => ({
                           value: el.code,

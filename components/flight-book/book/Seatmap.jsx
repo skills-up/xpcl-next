@@ -25,6 +25,10 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
   );
   const [isProgress, setIsProgress] = useState(false);
   const travellerDOBS = useSelector((state) => state.flightSearch.value.travellerDOBS);
+  const clientTravellers = useSelector(
+    (state) => state.flightSearch.value.clientTravellers
+  );
+  const client_id = useSelector((state) => state.auth.value.currentOrganization);
   const [travellerInfo, setTravellerInfo] = travellerInfos;
   const [progress, setProgress] = useState(0);
   const [alerts, setAlerts] = useState([]);
@@ -430,6 +434,10 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
               }
             }
             if (meals.length > 0) tempObj['meals'] = meals;
+            for (let client of clientTravellers) {
+              if (client.traveller_id === traveller.id)
+                tempObj['client_traveller_id'] = client.id;
+            }
             pax.push(tempObj);
           }
           // Total  Amount (base amt + seats cost + meals cost)
@@ -442,6 +450,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
               pax,
               bookingId: value.data?.bookingId,
               amount: totalCost,
+              client_id,
             },
             {},
             true
@@ -513,47 +522,79 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
           }
           // Seat Bookings (Per Segment Per Traveller)
           let seatTotal = 0;
+          let tempTravellers = [];
           for (let pax of value.data.pax) {
-            for (let seg of seatMap[key].data) {
-              if (seg.seatMap.travellers && seg.seatMap.travellers.length > 0) {
-                for (let traveller of seg.seatMap.travellers) {
-                  if (
-                    traveller.first_name === pax.name.first &&
-                    traveller.last_name === pax.name.last &&
-                    traveller.passport_dob === pax.dob
-                  ) {
-                    const age = (
-                      (Date.now() -
-                        +new DateObject({
-                          date: traveller?.passport_dob,
-                          format: 'YYYY-MM-DD',
-                        })
-                          .toDate()
-                          .getTime()) /
-                      31536000000
-                    ).toFixed(2);
-                    if (age >= 2) {
-                      let seatBooking = await customAPICall(
-                        'aa/v1/seat-reserve',
-                        'post',
-                        {
-                          key: value.data.key,
-                          seatKey: traveller.unitKey,
-                          passengerKey: pax.key,
-                          journeyKey: selectedBookings[key].journeyKey,
-                        },
-                        {},
-                        true
-                      );
-                      if (!seatBooking?.success) {
-                        sendToast('error', 'Error in Seat Booking', 4000);
-                      }
-                      seatTotal += traveller.amount;
-                    }
+            // Travellers
+            for (let traveller of travellerInfo) {
+              if (
+                traveller.first_name === pax.name.first &&
+                traveller.last_name === pax.name.last &&
+                traveller.passport_dob === pax.dob
+              ) {
+                let inf = false;
+                const age = (
+                  (Date.now() -
+                    +new DateObject({
+                      date: traveller?.passport_dob,
+                      format: 'YYYY-MM-DD',
+                    })
+                      .toDate()
+                      .getTime()) /
+                  31536000000
+                ).toFixed(2);
+                if (age < 2) inf = true;
+                for (let client of clientTravellers) {
+                  if (client.traveller_id === traveller.id) {
+                    tempTravellers.push({
+                      passengerKey: inf ? 'INFANT' : pax.key,
+                      client_traveller_id: client.id,
+                    });
                   }
                 }
               }
             }
+            // Seat Reserve
+            if (seatMap[key])
+              for (let seg of seatMap[key].data) {
+                if (seg.seatMap.travellers && seg.seatMap.travellers.length > 0) {
+                  for (let traveller of seg.seatMap.travellers) {
+                    if (
+                      traveller.first_name === pax.name.first &&
+                      traveller.last_name === pax.name.last &&
+                      traveller.passport_dob === pax.dob
+                    ) {
+                      const age = (
+                        (Date.now() -
+                          +new DateObject({
+                            date: traveller?.passport_dob,
+                            format: 'YYYY-MM-DD',
+                          })
+                            .toDate()
+                            .getTime()) /
+                        31536000000
+                      ).toFixed(2);
+                      if (age >= 2) {
+                        let seatBooking = await customAPICall(
+                          'aa/v1/seat-reserve',
+                          'post',
+                          {
+                            key: value.data.key,
+                            seatKey: traveller.unitKey,
+                            passengerKey: pax.key,
+                            journeyKey: selectedBookings[key].journeyKey,
+                          },
+                          {},
+                          true
+                        );
+                        if (!seatBooking?.success) {
+                          sendToast('error', 'Error in Seat Booking', 4000);
+                        }
+                        seatTotal += traveller.amount;
+                      }
+                    }
+                  }
+                }
+              }
           }
           // Final Booking
           let total = selectedBookings[key].total + ssrsTotal + seatTotal;
@@ -562,6 +603,8 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
             'post',
             {
               key: value.data.key,
+              client_id,
+              travellers: tempTravellers,
               // amount: total,
             },
             {},

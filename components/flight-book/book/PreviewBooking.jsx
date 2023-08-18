@@ -19,6 +19,9 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
   const [containsInternational, setContainsInternational] = useState(false);
   const [travellerInfo, setTravellerInfo] = travellerInfos;
   const returnFlight = useSelector((state) => state.flightSearch.value.returnFlight);
+  const clientTravellers = useSelector(
+    (state) => state.flightSearch.value.clientTravellers
+  );
   const [selectedTravellers, setSelectedTravellers] = useState([]);
   const lowCostBookings = ['IX', '6E', 'SG', 'G8', 'I5', 'QP', 'AI'];
   // const travellers = useSelector((state) => state.flightSearch.value.travellers);
@@ -62,35 +65,64 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
   const getData = async () => {
     // Getting Traveller Details
     if (travellerDOBS) {
-      const travellerList = await getList('travellers');
-      if (travellerList?.success) {
-        setTravellers(travellerList.data);
-        // setTravellerInfo(
-        //   travellerList.data.map((el) => ({
-        //     ...el,
-        //     ...{
-        //       frequentFliers: null,
-        //       membershipID: '',
-        //       trip_meals: { from: null, to: null, combined: null },
-        //       prefix: el.prefix
-        //         ? el.prefix.toLowerCase() === 'mr'
-        //           ? { value: 'MR', label: 'Mr.' }
-        //           : el.prefix.toLowerCase() === 'mrs'
-        //           ? { value: 'MRS', label: 'Mrs.' }
-        //           : el.prefix.toLowerCase() === 'mstr'
-        //           ? { value: 'MSTR', label: 'Mstr.' }
-        //           : el.prefix.toLowerCase() === 'ms'
-        //           ? { value: 'MS', label: 'Ms.' }
-        //           : null
-        //         : null,
-        //     },
-        //   }))
-        // );
-        if (
-          destinations?.to?.label?.split('|')?.at(-1) !== 'India' ||
-          destinations?.from?.label?.split('|')?.at(-1) !== 'India'
-        ) {
-          setContainsInternational(true);
+      if (clientTravellers) {
+        const travellerList = await getList('travellers', {
+          traveller_ids: clientTravellers.map((el) => el.traveller_id),
+        });
+        if (travellerList?.success) {
+          setTravellers(
+            travellerList.data.map((el) => ({
+              label: el.aliases[0],
+              value: {
+                ...el,
+                ...{
+                  frequentFliers: null,
+                  membershipID: '',
+                  trip_meals: { from: null, to: null, combined: null },
+                  prefix: el.prefix
+                    ? el.prefix.toLowerCase() === 'mr'
+                      ? { value: 'MR', label: 'Mr.' }
+                      : el.prefix.toLowerCase() === 'mrs'
+                      ? { value: 'MRS', label: 'Mrs.' }
+                      : el.prefix.toLowerCase() === 'mstr'
+                      ? { value: 'MSTR', label: 'Mstr.' }
+                      : el.prefix.toLowerCase() === 'ms'
+                      ? { value: 'MS', label: 'Ms.' }
+                      : null
+                    : null,
+                },
+              },
+            }))
+          );
+          // setTravellerInfo(
+          //   travellerList.data.map((el) => ({
+          //     ...el,
+          //     ...{
+          //       frequentFliers: null,
+          //       membershipID: '',
+          //       trip_meals: { from: null, to: null, combined: null },
+          //       prefix: el.prefix
+          //         ? el.prefix.toLowerCase() === 'mr'
+          //           ? { value: 'MR', label: 'Mr.' }
+          //           : el.prefix.toLowerCase() === 'mrs'
+          //           ? { value: 'MRS', label: 'Mrs.' }
+          //           : el.prefix.toLowerCase() === 'mstr'
+          //           ? { value: 'MSTR', label: 'Mstr.' }
+          //           : el.prefix.toLowerCase() === 'ms'
+          //           ? { value: 'MS', label: 'Ms.' }
+          //           : null
+          //         : null,
+          //     },
+          //   }))
+          // );
+          if (
+            destinations?.to?.label?.split('|')?.at(-1) !== 'India' ||
+            destinations?.from?.label?.split('|')?.at(-1) !== 'India'
+          ) {
+            setContainsInternational(true);
+          }
+        } else {
+          sendToast('error', 'Failed to fetch traveller details', 4000);
         }
       } else {
         sendToast('error', 'Failed to fetch traveller details', 4000);
@@ -398,28 +430,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                 selectedTravellers.length >=
                 travellerDOBS?.ADT + travellerDOBS?.CHD + travellerDOBS?.INF
               }
-              options={travellers.map((el) => ({
-                label: el.aliases[0],
-                value: {
-                  ...el,
-                  ...{
-                    frequentFliers: null,
-                    membershipID: '',
-                    trip_meals: { from: null, to: null, combined: null },
-                    prefix: el.prefix
-                      ? el.prefix.toLowerCase() === 'mr'
-                        ? { value: 'MR', label: 'Mr.' }
-                        : el.prefix.toLowerCase() === 'mrs'
-                        ? { value: 'MRS', label: 'Mrs.' }
-                        : el.prefix.toLowerCase() === 'mstr'
-                        ? { value: 'MSTR', label: 'Mstr.' }
-                        : el.prefix.toLowerCase() === 'ms'
-                        ? { value: 'MS', label: 'Ms.' }
-                        : null
-                      : null,
-                  },
-                },
-              }))}
+              options={travellers}
               isMulti
               value={selectedTravellers}
               onChange={(id) => setSelectedTravellers(id)}
@@ -485,7 +496,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                           : ''
                       }${
                         infants > 0
-                          ? `, ${infants} ${Pluralize('child', 'children', infants)}`
+                          ? `, ${infants} ${Pluralize('infant', 'infants', infants)}`
                           : ''
                       } have been selected.`,
                       10000
