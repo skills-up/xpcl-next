@@ -420,7 +420,7 @@ const MainFilterSearchBox = () => {
               onChange={(values) => setTravellers(values)}
             />
           </div> */}
-          {/* <div className='flight-search-select'>
+          <div className='flight-search-select'>
             <label>Airlines</label>
             <Select
               options={airlines}
@@ -429,7 +429,7 @@ const MainFilterSearchBox = () => {
               placeholder='Search..'
               onChange={(values) => setPreferredAirlines(values)}
             />
-          </div> */}
+          </div>
           <div className='flight-search-select'>
             <WindowedSelect
               filterOption={(candidate, input) => {

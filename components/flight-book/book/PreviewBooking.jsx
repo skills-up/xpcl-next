@@ -174,6 +174,12 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
         selectedBookings?.combined?.provider === 'tj' &&
         !lowCostBookings.includes(selectedBookings.combined.segments[0].flight.airline))
     ) {
+      let travellers = [];
+      for (let client of clientTravellers) {
+        for (let traveller of travellerInfo) {
+          if (client.traveller_id === traveller.id) travellers.push(client.id);
+        }
+      }
       if (selectedBookings.combined) {
         let toSector = [];
         let fromSector = [];
@@ -196,7 +202,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
           }
         }
         let response = await createItem('flights/book', {
-          travellers: travellers.map((el) => el.value),
+          travellers,
           sectors: [toSector, fromSector],
         });
         if (response?.success) {
@@ -215,7 +221,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
         }
       } else {
         let response = await createItem('flights/book', {
-          travellers: travellers.map((el) => el.value),
+          travellers,
           sectors: [
             selectedBookings.to.segments.map((el) => ({
               from: el.departure.airport.code,
