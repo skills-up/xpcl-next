@@ -115,10 +115,17 @@ const FlightProperties = () => {
                     (adultPrice > 0 ? adultPrice : 0);
                 }
                 // Overall Duration + Day Difference
-                let totalDuration =
-                  (new Date(val.segments.at(-1).arrival.time).getTime() -
-                    new Date(val.segments[0].departure.time).getTime()) /
-                  60000;
+                let totalDuration = 0;
+                if (key === 'aa') {
+                  totalDuration =
+                    (new Date(val.segments.at(-1).arrival.timeUtc).getTime() -
+                      new Date(val.segments[0].departure.timeUtc).getTime()) /
+                    60000;
+                } else if (key === 'tj') {
+                  for (let seg of val.segments)
+                    totalDuration +=
+                      seg.journey.duration + (seg.journey?.layoverMins || 0);
+                }
 
                 let departureDay = new Date(val.segments[0].departure.time.slice(0, 10));
                 let arrivalDay = new Date(val.segments.at(-1).arrival.time.slice(0, 10));
@@ -145,6 +152,7 @@ const FlightProperties = () => {
                   for (let seg of val.segments) {
                     if (seg.segmentNo === 0) {
                       counter += 1;
+                      // First + Second Leg Total Duration
                       if (counter === 2) {
                         // Leg Day Differences
                         arrivalDay = new Date(
@@ -182,16 +190,14 @@ const FlightProperties = () => {
                             )) /
                             (1000 * 60 * 60 * 24)
                         );
-                        // First + Second Leg Total Duration
-                        firstLegDuration =
-                          (new Date(val.segments[segCounter - 1].arrival.time).getTime() -
-                            new Date(val.segments[0].departure.time).getTime()) /
-                          60000;
-                        secondLegDuration =
-                          (new Date(val.segments.at(-1).arrival.time).getTime() -
-                            new Date(val.segments[segCounter].departure.time).getTime()) /
-                          60000;
                       }
+                    }
+                    if (counter < 2) {
+                      firstLegDuration +=
+                        seg.journey.duration + (seg.journey?.layoverMins || 0);
+                    } else {
+                      secondLegDuration +=
+                        seg.journey.duration + (seg.journey?.layoverMins || 0);
                     }
                     segCounter += 1;
                   }

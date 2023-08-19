@@ -634,10 +634,13 @@ function FlightProperty({
           <div>
             {element.segments.map((segment, segmentIndex) => {
               // Duration
-              let duration =
-                (new Date(segment.arrival.time).getTime() -
-                  new Date(segment.departure.time).getTime()) /
-                60000;
+              let duration = 0;
+              if (element.provider === 'aa')
+                duration =
+                  (new Date(segment.arrival.timeUtc).getTime() -
+                    new Date(segment.departure.timeUtc).getTime()) /
+                  60000;
+              else if (element.provider === 'tj') duration = segment.journey.duration;
 
               let days, hours, minutes;
               if (duration >= 1440) {

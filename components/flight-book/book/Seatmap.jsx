@@ -46,7 +46,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
       label: 'No Preference',
     },
     { value: 'AVML', label: 'Vegetarian' },
-    { value: 'HNML', label: 'Hindi Non Vegetarian' },
+    { value: 'HNML', label: 'Hindu Non Vegetarian' },
     { value: 'VJML', label: 'Jain Vegetarian' },
     { value: 'VLML', label: 'Lacto Ovo Meal' },
   ];
@@ -438,6 +438,8 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
               if (client.traveller_id === traveller.id)
                 tempObj['client_traveller_id'] = client.id;
             }
+            if (tempObj['code'] !== 'INF')
+              tempObj['quoted_amount'] = traveller?.quoted_amount[key] || undefined;
             pax.push(tempObj);
           }
           // Total  Amount (base amt + seats cost + meals cost)
@@ -451,6 +453,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
               bookingId: value.data?.bookingId,
               amount: totalCost,
               client_id,
+              hide_fare: value.hide_fare,
             },
             {},
             true
@@ -548,6 +551,9 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                     tempTravellers.push({
                       passengerKey: inf ? 'INFANT' : pax.key,
                       client_traveller_id: client.id,
+                      quoted_amount: inf
+                        ? undefined
+                        : traveller?.quoted_amount[key] || undefined,
                     });
                   }
                 }
@@ -605,6 +611,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
               key: value.data.key,
               client_id,
               travellers: tempTravellers,
+              hide_fare: value.hide_fare,
               // amount: total,
             },
             {},
@@ -648,6 +655,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
           // Finalize Booking
           const frequentFliers = [];
           const mealRequests = [];
+          const travellers = [];
           for (let traveller of travellerInfo) {
             // Getting PAX
             let paxRef;
@@ -656,6 +664,27 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                 paxRef = trav.paxRef;
               }
             }
+            if (paxRef)
+              for (let client of clientTravellers) {
+                if (client.traveller_id === traveller.id) {
+                  const age = (
+                    (Date.now() -
+                      +new DateObject({
+                        date: traveller?.passport_dob,
+                        format: 'YYYY-MM-DD',
+                      })
+                        .toDate()
+                        .getTime()) /
+                    31536000000
+                  ).toFixed(2);
+                  travellers.push({
+                    paxRef,
+                    client_traveller_id: client.id,
+                    quoted_amount:
+                      age >= 2 ? traveller?.quoted_amount[key] || undefined : undefined,
+                  });
+                }
+              }
             // FF
             if (
               traveller?.frequentFliers?.value &&
@@ -714,6 +743,9 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
             seatRequested,
             frequentFliers,
             mealRequests,
+            client_id,
+            hide_fare: value.hide_fare,
+            travellers,
           });
           if (booking?.success) {
             bookingTemp[key] = booking.data;
@@ -2618,6 +2650,84 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
               {/* Booking Details */}
               <div className='col-md-4 mt-20'>
                 <div className='col-12 px-30 py-30 border-light rounded-4 bg-white'>
+                  {client_id === 1 && (
+                    <div className='mb-20'>
+                      <h4 className='mb-10'>Invoice Details</h4>
+                      {PNR &&
+                        Object.entries(PNR).map(([key, value], i) => {
+                          if (value)
+                            return (
+                              <>
+                                <div className='text-20 fw-500'>
+                                  {key === 'to'
+                                    ? 'Onward Trip'
+                                    : key === 'from'
+                                    ? 'Return Trip'
+                                    : 'Onward & Return Trip'}
+                                </div>
+                                <div className='form-checkbox d-flex items-center'>
+                                  <input
+                                    type='checkbox'
+                                    name='name'
+                                    checked={value.hide_fare}
+                                    onClick={() => {
+                                      setPNR((prev) => {
+                                        prev[key].hide_fare = !prev[key].hide_fare;
+                                        return { ...prev };
+                                      });
+                                    }}
+                                  />
+                                  <div className='form-checkbox__mark'>
+                                    <div className='form-checkbox__icon icon-check' />
+                                  </div>
+                                  <div className='ml-10'>Hide Fare</div>
+                                </div>
+                                {travellerInfo.map((traveller, index) => {
+                                  const age = (
+                                    (Date.now() -
+                                      +new DateObject({
+                                        date: traveller?.passport_dob,
+                                        format: 'YYYY-MM-DD',
+                                      })
+                                        .toDate()
+                                        .getTime()) /
+                                    31536000000
+                                  ).toFixed(2);
+                                  if (age >= 2)
+                                    return (
+                                      <div>
+                                        <span className='d-block fw-500'>
+                                          {traveller.aliases[0]}
+                                        </span>
+                                        <div className='mb-10'>
+                                          <div className='form-input'>
+                                            <input
+                                              onChange={(e) =>
+                                                setTravellerInfo((prev) => {
+                                                  prev[index].quoted_amount[key] =
+                                                    e.target.value;
+                                                  return [...prev];
+                                                })
+                                              }
+                                              value={traveller.quoted_amount[key]}
+                                              placeholder=' '
+                                              type='number'
+                                              required
+                                            />
+                                            <label className='lh-1 text-16 text-light-1'>
+                                              Quoted Amount
+                                            </label>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    );
+                                })}
+                              </>
+                            );
+                        })}
+                      <div className='border-top-light mt-30 mb-20' />
+                    </div>
+                  )}
                   <div className='text-20 fw-500 mb-15'>Your booking details</div>
                   <div className='row x-gap-15'>
                     <h4 className='mb-10'>Travellers</h4>

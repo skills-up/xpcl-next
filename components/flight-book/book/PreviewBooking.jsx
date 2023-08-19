@@ -76,6 +76,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
               value: {
                 ...el,
                 ...{
+                  quoted_amount: { from: 0, to: 0, combined: 0 },
                   frequentFliers: null,
                   membershipID: '',
                   trip_meals: { from: null, to: null, combined: null },
@@ -201,7 +202,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
         if (response?.success) {
           setPNR((prev) => ({
             ...prev,
-            combined: { data: response.data, provider: 'ad' },
+            combined: { data: response.data, ...{ provider: 'ad', hide_fare: false } },
           }));
           setCurrentStep(2);
           setIsProceed(false);
@@ -310,7 +311,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
         if (response?.success) {
           setPNR((prev) => ({
             ...prev,
-            [key]: { data: response.data, provider: 'aa' },
+            [key]: { data: response.data, ...{ provider: 'aa', hide_fare: false } },
           }));
           currentAPICalls += 1;
         }
@@ -329,14 +330,20 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
           if (response?.success) {
             setPNR((prev) => ({
               ...prev,
-              [key]: { data: response.data, provider: 'tj' },
+              [key]: { data: response.data, ...{ provider: 'tj', hide_fare: false } },
             }));
             currentAPICalls += 1;
           }
         } else {
           // AD
+          let travellers = [];
+          for (let client of clientTravellers) {
+            for (let traveller of travellerInfo) {
+              if (client.traveller_id === traveller.id) travellers.push(client.id);
+            }
+          }
           response = await createItem('flights/book', {
-            travellers: travellers.map((el) => el.value),
+            travellers,
             sectors: [
               value.segments.map((el) => ({
                 from: el.departure.airport.code,
@@ -352,7 +359,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
           if (response?.success) {
             setPNR((prev) => ({
               ...prev,
-              [key]: { data: response.data, provider: 'ad' },
+              [key]: { data: response.data, ...{ provider: 'ad', hide_fare: false } },
             }));
             currentAPICalls += 1;
           }
