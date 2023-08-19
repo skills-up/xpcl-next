@@ -102,7 +102,7 @@ const GuestSearch = ({ guests, cabins }) => {
             {guestCounts.Infants > 0 && (
               <>
                 , {guestCounts.Infants}{' '}
-                {Pluralize(' Child', 'Children', guestCounts.Infants)}
+                {Pluralize(' Infant', 'Infants', guestCounts.Infants)}
               </>
             )}
             <>, {preferredCabin?.value}</>
