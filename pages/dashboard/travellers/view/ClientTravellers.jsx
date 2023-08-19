@@ -42,8 +42,8 @@ const ClientTravellers = () => {
 
   const columns = [
     {
-      Header: 'Client ID',
-      accessor: 'client_id',
+      Header: 'Client Name',
+      accessor: 'client_name',
     },
     {
       Header: 'Actions',

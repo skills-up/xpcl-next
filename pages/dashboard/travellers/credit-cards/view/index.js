@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import { deleteItem, getItem } from '../../../../../api/xplorzApi';
 import ViewTable from '../../../../../components/view-table';
 import { BsEye } from 'react-icons/bs';
+import { DateObject } from 'react-multi-date-picker';
 
 const ViewCreditCards = () => {
   const [creditCard, setCreditCard] = useState([]);
@@ -98,9 +99,10 @@ const ViewCreditCards = () => {
         }
         delete data['traveller_id'];
         if (data.expiry_date) {
-          data.expiry_date = new Date(data.expiry_date).toLocaleString('en-IN', {
-            dateStyle: 'medium',
-          });
+          data.expiry_date = new DateObject({
+            date: data.expiry_date,
+            format: 'YYYY-MM-DD',
+          }).format('MMMM YYYY');
         }
         setCreditCard(data);
       } else {

@@ -3,12 +3,15 @@ import { useDispatch } from 'react-redux';
 import { store } from '../../../app/store';
 import { setTravellerDOBS } from '../../../features/flightSearch/flightSearchSlice';
 import Pluralize from '../../../utils/pluralChecker';
+import { FaUserTie } from 'react-icons/fa';
 
 const counters = [
   { name: 'Adults', defaultValue: 2 },
   { name: 'Children', defaultValue: 0 },
   { name: 'Infants', defaultValue: 0 },
 ];
+
+const cabinOptions = ['Economy', 'Premium Economy', 'Business', 'First'];
 
 const Counter = ({ name, defaultValue, onCounterChange }) => {
   const [count, setCount] = useState(defaultValue);
@@ -67,13 +70,15 @@ const Counter = ({ name, defaultValue, onCounterChange }) => {
   );
 };
 
-const GuestSearch = ({ guests }) => {
+const GuestSearch = ({ guests, cabins }) => {
+  console.log('cabin', cabins);
   const [guestCounts, setGuestCounts] = guests;
+  const [preferredCabin, setPrefferedCabin] = cabins;
   const handleCounterChange = (name, value) => {
     setGuestCounts((prevState) => ({ ...prevState, [name]: value }));
   };
   return (
-    <div className='searchMenu-guests px-20 py-10  lg:py-20 lg:px-0 js-form-dd bg-white position-relative'>
+    <div className='searchMenu-guests px-20 lg:px-0 js-form-dd bg-white position-relative'>
       <div
         data-bs-toggle='dropdown'
         data-bs-auto-close='outside'
@@ -81,17 +86,37 @@ const GuestSearch = ({ guests }) => {
         data-bs-offset='0,22'
       >
         {/* <h4 className='text-15 fw-500 ls-2 lh-16'>Travellers</h4> */}
-        <div className='text-15 text-light-1 ls-2 lh-16'>
-          <span className='js-count-adult'>{guestCounts.Adults}</span>{' '}
-          {Pluralize('Adult', 'Adults', guestCounts.Adults)} -{' '}
-          <span className='js-count-child'>{guestCounts.Children}</span> Childeren -{' '}
-          <span className='js-count-room'>{guestCounts.Infants}</span> Infants
+        <div className='text-18 d-flex gap-2 items-center cursor-pointer'>
+          {/* Adult */}
+          <FaUserTie className='text-25' />
+          <span className='js-count-adult'>
+            {guestCounts.Adults} {Pluralize('Adult', 'Adults', guestCounts.Adults)}
+            {/* Children */}
+            {guestCounts.Children > 0 && (
+              <>
+                , {guestCounts.Children}{' '}
+                {Pluralize(' Child', 'Children', guestCounts.Children)}
+              </>
+            )}
+            {/* Infants */}
+            {guestCounts.Infants > 0 && (
+              <>
+                , {guestCounts.Infants}{' '}
+                {Pluralize(' Child', 'Children', guestCounts.Infants)}
+              </>
+            )}
+            <>, {preferredCabin?.value}</>
+          </span>
+          <i className='icon icon-chevron-sm-down text-7' />
         </div>
       </div>
       {/* End guest */}
 
-      <div className='shadow-2 dropdown-menu min-width-400'>
-        <div className='bg-white px-30 py-30 rounded-4 counter-box'>
+      <div className='shadow-2 dropdown-menu min-width-450'>
+        <div
+          className='bg-white px-30 py-30 rounded-4 counter-box'
+          style={{ zIndex: '6' }}
+        >
           {counters.map((counter) => (
             <Counter
               key={counter.name}
@@ -100,6 +125,18 @@ const GuestSearch = ({ guests }) => {
               onCounterChange={handleCounterChange}
             />
           ))}
+          <div className='row y-gap-20'>
+            {cabinOptions.map((opt, optIn) => (
+              <div
+                className={`button -blue-1 bg-blue-1-05 mx-1 col-auto text-blue-1 py-5 px-20 rounded-100  cursor-pointer ${
+                  preferredCabin?.value === opt ? 'active' : ''
+                }`}
+                onClick={() => setPrefferedCabin({ value: opt })}
+              >
+                {opt}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

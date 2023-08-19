@@ -22,18 +22,22 @@ import {
 } from '../../../features/flightSearch/flightSearchSlice';
 import { checkUser } from '../../../utils/checkTokenValidity';
 import GuestSearch from './GuestSearch';
+import FilterSelect from './FilterSelect';
+import { MdFlightLand, MdFlightTakeoff } from 'react-icons/md';
+import { TbArrowsExchange2 } from 'react-icons/tb';
+import { SlCalender } from 'react-icons/sl';
+import { RiArrowRightLine, RiArrowLeftRightFill } from 'react-icons/ri';
 
 const MainFilterSearchBox = () => {
   const [directFlight, setDirectFlight] = useState(false);
   const [from, setFrom] = useState(null);
   const [to, setTo] = useState(null);
-  const [preferredCabin, setPrefferedCabin] = useState(null);
+  const [preferredCabin, setPrefferedCabin] = useState({ value: 'Economy' });
   const [travellers, setTravellers] = useState([]);
   const [preferredAirlines, setPreferredAirlines] = useState([]);
   const [departDate, setDepartDate] = useState(new DateObject());
   const [returnDate, setReturnDate] = useState(new DateObject());
   const [returnFlight, setReturnFlight] = useState(true);
-  const cabinOptions = ['Economy', 'Premium Economy', 'Business', 'First'];
   const [clientTravellers, setClientTravellers] = useState([]);
   const [airlines, setAirlines] = useState([]);
   const [progress, setProgress] = useState(0);
@@ -327,9 +331,64 @@ const MainFilterSearchBox = () => {
         progress={progress}
         onLoaderFinished={() => setProgress(0)}
       />
-      <div className='border-light rounded-4 pr-20 py-20 lg:px-20 lg:pt-5 lg:pb-20 mt-15'>
+      <div className='border-light rounded-4 pr-20 py-20 lg:px-10 lg:pt-5 lg:pb-20 mt-15'>
         <div className='flight-search pl-20 lg:pl-0'>
-          <div className='d-flex items-center gap-2 justify-center mt-30 lg:mt-0'>
+          {/* Round Trip */}
+          <div className='row items-center y-gap-10'>
+            <div className='col-lg-2 ml-6 d-flex justify-center items-center'>
+              <div className='dropdown js-dropdown'>
+                <div
+                  className='dropdown__button d-flex items-center text-15'
+                  data-bs-toggle='dropdown'
+                  data-bs-auto-close='true'
+                  data-bs-offset='0,0'
+                >
+                  <span className='js-dropdown-title text-18 d-flex items-center gap-2'>
+                    {returnFlight ? (
+                      <RiArrowLeftRightFill className='text-25 mb-1' />
+                    ) : (
+                      <RiArrowRightLine className='text-25 mb-1' />
+                    )}{' '}
+                    {returnFlight ? 'Round Trip' : 'One Way'}
+                  </span>
+                  <i className='icon icon-chevron-sm-down text-7 ml-10' />
+                </div>
+                <div className='toggle-element -dropdown js-click-dropdown dropdown-menu'>
+                  <div className='text-14 y-gap-15 js-dropdown-list'>
+                    <div>
+                      <div>
+                        <div
+                          role='button'
+                          className={`${
+                            !returnFlight ? 'text-blue-1 ' : ''
+                          }d-block js-dropdown-link`}
+                          onClick={() => setReturnFlight(false)}
+                        >
+                          One Way
+                        </div>
+                      </div>
+                      <div
+                        role='button'
+                        className={`mt-10 ${
+                          returnFlight ? 'text-blue-1 ' : ''
+                        }d-block js-dropdown-link`}
+                        onClick={() => setReturnFlight(true)}
+                      >
+                        Round Trip
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className='col-lg-auto d-flex justify-center items-center'>
+              <GuestSearch
+                guests={[guestCounts, setGuestCounts]}
+                cabins={[preferredCabin, setPrefferedCabin]}
+              />
+            </div>
+          </div>
+          {/* <div className='d-flex items-center gap-2 justify-center mt-30 lg:mt-0'>
             <label>One Way</label>
             <ReactSwitch
               onChange={() => setReturnFlight((prev) => !prev)}
@@ -339,8 +398,8 @@ const MainFilterSearchBox = () => {
               offColor='#080'
             />
             <label>Return Trip</label>
-          </div>
-          <div className='flight-search-select'>
+          </div> */}
+          {/* <div className='flight-search-select'>
             <label>Preferred Cabin</label>
             <Select
               options={cabinOptions.map((el) => ({ label: el, value: el }))}
@@ -348,21 +407,20 @@ const MainFilterSearchBox = () => {
               placeholder='Search..'
               onChange={(id) => setPrefferedCabin(id)}
             />
-          </div>
-          <div className='flight-search-select'>
+          </div> */}
+          {/* <div className='flight-search-select'>
             <label>
               Travellers<span className='text-danger'>*</span>
             </label>
-            {/* <Select
+            <Select
               options={clientTravellers}
               value={travellers}
               isMulti
               placeholder='Search..'
               onChange={(values) => setTravellers(values)}
-            /> */}
-            <GuestSearch guests={[guestCounts, setGuestCounts]} />
-          </div>
-          <div className='flight-search-select'>
+            />
+          </div> */}
+          {/* <div className='flight-search-select'>
             <label>Airlines</label>
             <Select
               options={airlines}
@@ -371,11 +429,8 @@ const MainFilterSearchBox = () => {
               placeholder='Search..'
               onChange={(values) => setPreferredAirlines(values)}
             />
-          </div>
+          </div> */}
           <div className='flight-search-select'>
-            <label>
-              From<span className='text-danger'>*</span>
-            </label>
             <WindowedSelect
               filterOption={(candidate, input) => {
                 if (input) {
@@ -419,19 +474,13 @@ const MainFilterSearchBox = () => {
               onChange={(id) => setFrom(id)}
               placeholder={
                 <>
-                  Search..
-                  <br />
-                  <br />
+                  <span className='d-flex items-center gap-2'>
+                    <MdFlightTakeoff className='text-25 mb-1' /> Where From?
+                  </span>
                 </>
               }
+              className='col-lg-6 col-12'
             />
-          </div>
-          {/* End Location Flying From */}
-
-          <div className='flight-search-select'>
-            <label>
-              To<span className='text-danger'>*</span>
-            </label>
             <WindowedSelect
               filterOption={(candidate, input) => {
                 if (input) {
@@ -442,11 +491,12 @@ const MainFilterSearchBox = () => {
                 }
                 return true;
               }}
+              className='to col-lg-6 col-12'
               placeholder={
                 <>
-                  Search..
-                  <br />
-                  <br />
+                  <span className='d-flex items-center gap-2'>
+                    <MdFlightLand className='text-25' /> Where To?
+                  </span>
                 </>
               }
               options={airports.map((airport) => ({
@@ -481,56 +531,56 @@ const MainFilterSearchBox = () => {
               value={to}
               onChange={(id) => setTo(id)}
             />
+            <TbArrowsExchange2 className='exchange-icon' />
           </div>
-          {/* End Location Flying To */}
-
-          <div
-            style={{ border: '1px solid lightgray' }}
-            className='flight-search-select rounded-4 mt-30 py-4 d-flex items-center justify-center gap-1 lg:mt-0 lg:pl-5 '
-          >
-            <div className='text-center'>
-              <label>
-                Depart Date<span className='text-danger'>*</span>
-              </label>
-              <DatePicker
-                style={{ fontSize: '1rem' }}
-                inputClass='custom_input-picker text-center'
-                containerClassName='custom_container-picker'
-                value={departDate}
-                onChange={(i) => {
-                  setDepartDate(i);
-                  if (returnDate.valueOf() < i.valueOf()) setReturnDate(i);
-                }}
-                numberOfMonths={1}
-                offsetY={10}
-                format='DD MMM YYYY'
-                minDate={new DateObject()}
-              />
-            </div>
-            {/* End Depart */}
-            {returnFlight && (
+          <div className='row px-15'>
+            {/* End Location Flying To */}
+            <div
+              className='flight-date-picker col-lg-7'
+              style={{ border: '1px solid lightgray' }}
+            >
               <div className='text-center'>
-                <label>
-                  Return Date<span className='text-danger'>*</span>
+                <label className='d-flex gap-2 items-center'>
+                  <SlCalender className='text-20 mb-1' /> Depart
                 </label>
                 <DatePicker
                   style={{ fontSize: '1rem' }}
                   inputClass='custom_input-picker text-center'
                   containerClassName='custom_container-picker'
-                  value={returnDate}
-                  onChange={setReturnDate}
+                  value={departDate}
+                  onChange={(i) => {
+                    setDepartDate(i);
+                    if (returnDate.valueOf() < i.valueOf()) setReturnDate(i);
+                  }}
                   numberOfMonths={1}
                   offsetY={10}
                   format='DD MMM YYYY'
-                  minDate={departDate}
+                  minDate={new DateObject()}
                 />
               </div>
-            )}
-          </div>
-
-          {/* End Return */}
-
-          {/* <div>
+              {returnFlight && <hr />}
+              {/* End Depart */}
+              {returnFlight && (
+                <div className='text-center'>
+                  <label className='d-flex gap-2 items-center'>
+                    <SlCalender className='text-20 mb-1' /> Return
+                  </label>
+                  <DatePicker
+                    style={{ fontSize: '1rem' }}
+                    inputClass='custom_input-picker text-center'
+                    containerClassName='custom_container-picker'
+                    value={returnDate}
+                    onChange={setReturnDate}
+                    numberOfMonths={1}
+                    offsetY={10}
+                    format='DD MMM YYYY'
+                    minDate={departDate}
+                  />
+                </div>
+              )}
+            </div>
+            {/* End Return */}
+            {/* <div>
             <div className='pl-5 d-flex mt-30 gap-2 justify-center lg:mt-0 items-center'>
               <label>Direct Flight</label>
               <ReactSwitch
@@ -538,20 +588,21 @@ const MainFilterSearchBox = () => {
                 checked={directFlight}
               />
             </div>
-          </div> */}
-          {/* End guest */}
-        </div>
+            </div> */}
+            {/* End guest */}
 
-        {/* End search button_item */}
-        <div className='button-item pl-20 mt-20 lg:pl-0'>
-          <button
-            disabled={isSearched}
-            className='d-block mainSearch__submit button -blue-1 py-15 h-60 col-12 rounded-4 bg-dark-3 text-white'
-            onClick={search}
-          >
-            <i className='icon-search text-20 mr-10' />
-            Search
-          </button>
+            {/* End search button_item */}
+            <div className='button-item pl-20 lg:pl-0 col-lg-5 lg:pr-0 lg:mt-15'>
+              <button
+                disabled={isSearched}
+                className='mainSearch__submit button -blue-1 py-15 h-60 col-12 rounded-4 bg-dark-3 text-white d-flex items-center'
+                onClick={search}
+              >
+                <i className='icon-search text-18 mr-10 mb-1' />
+                <span className='text-18'>Search</span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
       {/* End .mainSearch */}

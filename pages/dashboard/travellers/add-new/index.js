@@ -158,8 +158,30 @@ const AddNewTravellers = () => {
     passportFormData.append('cabin_position', cabinPosition?.value ?? '');
     passportFormData.append('fare_preference', farePreference?.value ?? '');
     passportFormData.append('address', address ?? '');
-    passportFormData.append('meal_notes', mealNotes ?? '');
-    passportFormData.append('seat_notes', seatNotes ?? '');
+    let meal_str = '';
+    let seat_str = '';
+    if (mealNotes.trim().length > 0) {
+      let arr = mealNotes.split(' ');
+      for (let i = 0; i < arr.length; i++) {
+        if (i + 1 < arr.length) {
+          meal_str += (arr[i] ? arr[i].at(0).toUpperCase() + arr[i].slice(1) : '') + ' ';
+        } else {
+          meal_str += arr[i] ? arr[i].at(0).toUpperCase() + arr[i].slice(1) : '';
+        }
+      }
+    }
+    if (seatNotes.trim().length > 0) {
+      let arr = seatNotes.split(' ');
+      for (let i = 0; i < arr.length; i++) {
+        if (i + 1 < arr.length) {
+          seat_str += (arr[i] ? arr[i].at(0).toUpperCase() + arr[i].slice(1) : '') + ' ';
+        } else {
+          seat_str += arr[i] ? arr[i].at(0).toUpperCase() + arr[i].slice(1) : '';
+        }
+      }
+    }
+    passportFormData.append('meal_notes', meal_str ?? '');
+    passportFormData.append('seat_notes', seat_str ?? '');
     passportFormData.append('pan_number', panNumber ?? '');
     passportFormData.append('aadhaar_number', aadhaarNumber ?? '');
     passportFormData.append(
@@ -186,7 +208,7 @@ const AddNewTravellers = () => {
     const response = await createItem('travellers', passportFormData);
     if (response?.success) {
       sendToast('success', 'Created Traveller Successfully.', 4000);
-      router.push('/dashboard/travellers');
+      router.push('/dashboard/travellers/view/' + response.data.id);
     } else {
       sendToast(
         'error',
@@ -284,7 +306,9 @@ const AddNewTravellers = () => {
                           placeholder=' '
                           type='number'
                         />
-                        <label className='lh-1 text-16 text-light-1'>Mobile Phone</label>
+                        <label className='lh-1 text-16 text-light-1'>
+                          Mobile Phone (with Country Code)
+                        </label>
                       </div>
                     </div>
                     <div className='col-lg-3'>
@@ -560,6 +584,7 @@ const AddNewTravellers = () => {
                     <div className='col-lg-6'>
                       <div className='form-input'>
                         <input
+                          style={{ textTransform: 'capitalize' }}
                           onChange={(e) => setMealNotes(e.target.value)}
                           value={mealNotes}
                           placeholder=' '
@@ -571,6 +596,7 @@ const AddNewTravellers = () => {
                     <div className='col-lg-6'>
                       <div className='form-input'>
                         <input
+                          style={{ textTransform: 'capitalize' }}
                           onChange={(e) => setSeatNotes(e.target.value)}
                           value={seatNotes}
                           placeholder=' '

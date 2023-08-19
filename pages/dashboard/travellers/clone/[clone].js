@@ -273,8 +273,30 @@ const AddNewTravellers = () => {
     passportFormData.append('cabin_position', cabinPosition?.value ?? '');
     passportFormData.append('fare_preference', farePreference?.value ?? '');
     passportFormData.append('address', address ?? '');
-    passportFormData.append('meal_notes', mealNotes ?? '');
-    passportFormData.append('seat_notes', seatNotes ?? '');
+    let meal_str = '';
+    let seat_str = '';
+    if (mealNotes.trim().length > 0) {
+      let arr = mealNotes.split(' ');
+      for (let i = 0; i < arr.length; i++) {
+        if (i + 1 < arr.length) {
+          meal_str += (arr[i] ? arr[i].at(0).toUpperCase() + arr[i].slice(1) : '') + ' ';
+        } else {
+          meal_str += arr[i] ? arr[i].at(0).toUpperCase() + arr[i].slice(1) : '';
+        }
+      }
+    }
+    if (seatNotes.trim().length > 0) {
+      let arr = seatNotes.split(' ');
+      for (let i = 0; i < arr.length; i++) {
+        if (i + 1 < arr.length) {
+          seat_str += (arr[i] ? arr[i].at(0).toUpperCase() + arr[i].slice(1) : '') + ' ';
+        } else {
+          seat_str += arr[i] ? arr[i].at(0).toUpperCase() + arr[i].slice(1) : '';
+        }
+      }
+    }
+    passportFormData.append('meal_notes', meal_str ?? '');
+    passportFormData.append('seat_notes', seat_str ?? '');
     passportFormData.append('pan_number', panNumber ?? '');
     passportFormData.append('aadhaar_number', aadhaarNumber ?? '');
     passportFormData.append(
@@ -301,7 +323,7 @@ const AddNewTravellers = () => {
     const response = await createItem('travellers', passportFormData);
     if (response?.success) {
       sendToast('success', 'Created Traveller Successfully.', 4000);
-      router.push('/dashboard/travellers');
+      router.push('/dashboard/travellers/view/' + response.data.id);
     } else {
       sendToast(
         'error',
@@ -343,7 +365,8 @@ const AddNewTravellers = () => {
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
-                    <div className='col-lg-4 form-input-select'>
+                    <h3>Personal Details</h3>
+                    <div className='col-lg-2 form-input-select'>
                       <label>Prefix</label>
                       <Select
                         options={passportPrefixOptions}
@@ -365,7 +388,7 @@ const AddNewTravellers = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-lg-4'>
+                    <div className='col-lg-2'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setMiddleName(e.target.value)}
@@ -390,7 +413,43 @@ const AddNewTravellers = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-lg-4'>
+                    <div className='col-lg-3'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setMobilePhone(e.target.value)}
+                          value={mobilePhone}
+                          placeholder=' '
+                          type='number'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Mobile Phone (with Country Code)
+                        </label>
+                      </div>
+                    </div>
+                    <div className='col-lg-3'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setEmail(e.target.value)}
+                          value={email}
+                          placeholder=' '
+                          type='email'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>Email Address</label>
+                      </div>
+                    </div>
+                    <div className='col-lg-6'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setAddress(e.target.value)}
+                          value={address}
+                          placeholder=' '
+                          type='text'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>Address</label>
+                      </div>
+                    </div>
+                    <h3>Passport Details</h3>
+                    <div className='col-lg-3'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setPassportName(e.target.value)}
@@ -404,39 +463,7 @@ const AddNewTravellers = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-lg-4'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setPassportNumber(e.target.value)}
-                          value={passportNumber}
-                          placeholder=' '
-                          type='text'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Passport Number
-                        </label>
-                      </div>
-                    </div>
-                    <div className='col-lg-4 form-input-select'>
-                      <label>Passport Gender</label>
-                      <Select
-                        options={passportGenderOptions}
-                        value={passportGender}
-                        onChange={(id) => setPassportGender(id)}
-                      />
-                    </div>
-                    <div className='col-lg-4 form-input-select'>
-                      <label>Passport Country</label>
-                      <Select
-                        options={countries.map((el) => ({
-                          value: el.code,
-                          label: `${el.name} (${el.code})`,
-                        }))}
-                        value={countryCodeID}
-                        onChange={(id) => setCountryCodeID(id)}
-                      />
-                    </div>
-                    <div className='d-block ml-3 form-datepicker col-lg-4'>
+                    <div className='d-block ml-3 form-datepicker col-lg-3'>
                       <label>
                         Date Of Birth (as on passport)
                         <span className='text-danger'>*</span>
@@ -452,7 +479,39 @@ const AddNewTravellers = () => {
                         format='DD MMMM YYYY'
                       />
                     </div>
-                    <div className='d-block ml-3 form-datepicker col-lg-4'>
+                    <div className='col-lg-3 form-input-select'>
+                      <label>Passport Gender</label>
+                      <Select
+                        options={passportGenderOptions}
+                        value={passportGender}
+                        onChange={(id) => setPassportGender(id)}
+                      />
+                    </div>
+                    <div className='col-lg-3 form-input-select'>
+                      <label>Passport Country</label>
+                      <Select
+                        options={countries.map((el) => ({
+                          value: el.code,
+                          label: `${el.name} (${el.code})`,
+                        }))}
+                        value={countryCodeID}
+                        onChange={(id) => setCountryCodeID(id)}
+                      />
+                    </div>
+                    <div className='col-lg-3'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setPassportNumber(e.target.value)}
+                          value={passportNumber}
+                          placeholder=' '
+                          type='text'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Passport Number
+                        </label>
+                      </div>
+                    </div>
+                    <div className='d-block ml-3 form-datepicker col-lg-3'>
                       <label>Passport Issue Date</label>
                       <DatePicker
                         style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
@@ -471,7 +530,7 @@ const AddNewTravellers = () => {
                         format='DD MMMM YYYY'
                       />
                     </div>
-                    <div className='d-block ml-3 form-datepicker col-lg-4'>
+                    <div className='d-block ml-3 form-datepicker col-lg-3'>
                       <label>Passport Expiry Date</label>
                       <DatePicker
                         style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
@@ -484,7 +543,7 @@ const AddNewTravellers = () => {
                         format='DD MMMM YYYY'
                       />
                     </div>
-                    <div className='col-lg-4'>
+                    <div className='col-lg-3'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setPassportIssuePlace(e.target.value)}
@@ -497,7 +556,7 @@ const AddNewTravellers = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='d-block ml-3 form-datepicker col-lg-4'>
+                    <div className='d-block ml-3 form-datepicker col-lg-3'>
                       <label>Last EU Biometrics</label>
                       <DatePicker
                         style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
@@ -510,186 +569,9 @@ const AddNewTravellers = () => {
                         format='DD MMMM YYYY'
                       />
                     </div>
-                    <div className='col-lg-4'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setMobilePhone(e.target.value)}
-                          value={mobilePhone}
-                          placeholder=' '
-                          type='number'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>Mobile Phone</label>
-                      </div>
-                    </div>
-                    <div className='col-lg-4'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setEmail(e.target.value)}
-                          value={email}
-                          placeholder=' '
-                          type='email'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>Email Address</label>
-                      </div>
-                    </div>
-                    <div className='col-lg-4'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setDomesticAirlinePreference(e.target.value)}
-                          value={domesticAirlinePreference}
-                          placeholder=' '
-                          type='text'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Domestic Airline Preference
-                        </label>
-                      </div>
-                    </div>
-                    <div className='col-lg-4 form-input-select'>
-                      <label>Domestic Cabin Preference</label>
-                      <Select
-                        options={cabinPreferenceOptions}
-                        value={domesticCabinPreference}
-                        placeholder='Search & Select Domestic Cabin Preference'
-                        onChange={(id) => setDomesticCabinPreference(id)}
-                      />
-                    </div>
-                    <div className='col-lg-4'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) =>
-                            setInternationalAirlinePreference(e.target.value)
-                          }
-                          value={internationalAirlinePreference}
-                          placeholder=' '
-                          type='text'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          International Airline Preference
-                        </label>
-                      </div>
-                    </div>
-                    <div className='col-lg-4 form-input-select'>
-                      <label>International Cabin Preference</label>
-                      <Select
-                        options={cabinPreferenceOptions}
-                        value={internationalCabinPreference}
-                        onChange={(id) => setInternationalCabinPreference(id)}
-                      />
-                    </div>
-                    <div className='col-lg-4 form-input-select'>
-                      <label>Meal Preference</label>
-                      <Select
-                        options={mealPreferenceOptions}
-                        value={mealPreference}
-                        onChange={(id) => setMealPreference(id)}
-                      />
-                    </div>
-                    <div className='col-lg-4 form-input-select'>
-                      <label>Seat Preference</label>
-                      <Select
-                        options={seatPreferenceOptions}
-                        value={seatPreference}
-                        onChange={(id) => setSeatPreference(id)}
-                      />
-                    </div>
-                    <div className='col-lg-4 form-input-select'>
-                      <label>Cabin Position</label>
-                      <Select
-                        options={cabinPositionOptions}
-                        value={cabinPosition}
-                        onChange={(id) => setCabinPosition(id)}
-                      />
-                    </div>
-                    <div className='col-lg-4 form-input-select'>
-                      <label>Fare Preference</label>
-                      <Select
-                        options={farePreferenceOptions}
-                        value={farePreference}
-                        onChange={(id) => setFarePreference(id)}
-                      />
-                    </div>
-                    <div className='col-lg-4'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setAddress(e.target.value)}
-                          value={address}
-                          placeholder=' '
-                          type='text'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>Address</label>
-                      </div>
-                    </div>
-                    <div className='col-lg-4'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setMealNotes(e.target.value)}
-                          value={mealNotes}
-                          placeholder=' '
-                          type='text'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>Meal Notes</label>
-                      </div>
-                    </div>
-                    <div className='col-lg-4'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setSeatNotes(e.target.value)}
-                          value={seatNotes}
-                          placeholder=' '
-                          type='text'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>Seat Notes</label>
-                      </div>
-                    </div>
-                    <div className='col-lg-4'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setPanNumber(e.target.value)}
-                          value={panNumber}
-                          placeholder=' '
-                          type='text'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>PAN Number</label>
-                      </div>
-                    </div>
-                    <div className='col-lg-4'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setAadhaarNumber(e.target.value)}
-                          value={aadhaarNumber}
-                          placeholder=' '
-                          type='number'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Aadhaar Number
-                        </label>
-                      </div>
-                    </div>
-                    {/* Vaccination Certificate File Upload */}
-                    <div className='col-lg-4'>
-                      <label>Vaccination Certificate File</label>
-                      <NewFileUploads
-                        multiple={false}
-                        setUploads={setVaccinationCertificateFile}
-                      />
-                    </div>
-                    {/* Pan Card Scan File Upload */}
-                    <div className='col-lg-4'>
-                      <label>PAN Card Scan File</label>
-                      <NewFileUploads multiple={false} setUploads={setPanCardScanFile} />
-                    </div>
-                    {/* Aadhaar Card Scan File Upload */}
-                    <div className='col-lg-4'>
-                      <label>Aadhaar Card Scan Certificate File</label>
-                      <NewFileUploads
-                        multiple={false}
-                        setUploads={setAadhaarCardScanFile}
-                      />
-                    </div>
                     {/* Aliases */}
                     <div>
-                      <label>Aliases</label>
+                      <h3>Aliases</h3>
                       <div>
                         {aliases.map((element, index) => (
                           <div key={index} className='d-flex my-2'>
@@ -737,9 +619,135 @@ const AddNewTravellers = () => {
                         ))}
                       </div>
                     </div>
+                    <h3>Preferences</h3>
+                    <div className='col-lg-3'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setDomesticAirlinePreference(e.target.value)}
+                          value={domesticAirlinePreference}
+                          placeholder=' '
+                          type='text'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Domestic Airline Preference
+                        </label>
+                      </div>
+                    </div>
+                    <div className='col-lg-3'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) =>
+                            setInternationalAirlinePreference(e.target.value)
+                          }
+                          value={internationalAirlinePreference}
+                          placeholder=' '
+                          type='text'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          International Airline Preference
+                        </label>
+                      </div>
+                    </div>
+                    <div className='col-lg-3 form-input-select'>
+                      <label>Domestic Cabin Preference</label>
+                      <Select
+                        options={cabinPreferenceOptions}
+                        value={domesticCabinPreference}
+                        onChange={(id) => setDomesticCabinPreference(id)}
+                      />
+                    </div>
+                    <div className='col-lg-3 form-input-select'>
+                      <label>International Cabin Preference</label>
+                      <Select
+                        options={cabinPreferenceOptions}
+                        value={internationalCabinPreference}
+                        onChange={(id) => setInternationalCabinPreference(id)}
+                      />
+                    </div>
+                    <div className='col-lg-3 form-input-select'>
+                      <label>Meal Preference</label>
+                      <Select
+                        options={mealPreferenceOptions}
+                        value={mealPreference}
+                        onChange={(id) => setMealPreference(id)}
+                      />
+                    </div>
+                    <div className='col-lg-3 form-input-select'>
+                      <label>Seat Preference</label>
+                      <Select
+                        options={seatPreferenceOptions}
+                        value={seatPreference}
+                        onChange={(id) => setSeatPreference(id)}
+                      />
+                    </div>
+                    <div className='col-lg-3 form-input-select'>
+                      <label>Cabin Position</label>
+                      <Select
+                        options={cabinPositionOptions}
+                        value={cabinPosition}
+                        onChange={(id) => setCabinPosition(id)}
+                      />
+                    </div>
+                    <div className='col-lg-3 form-input-select'>
+                      <label>Fare Preference</label>
+                      <Select
+                        options={farePreferenceOptions}
+                        value={farePreference}
+                        onChange={(id) => setFarePreference(id)}
+                      />
+                    </div>
+                    <div className='col-lg-6'>
+                      <div className='form-input'>
+                        <input
+                          style={{ textTransform: 'capitalize' }}
+                          onChange={(e) => setMealNotes(e.target.value)}
+                          value={mealNotes}
+                          placeholder=' '
+                          type='text'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>Meal Notes</label>
+                      </div>
+                    </div>
+                    <div className='col-lg-6'>
+                      <div className='form-input'>
+                        <input
+                          style={{ textTransform: 'capitalize' }}
+                          onChange={(e) => setSeatNotes(e.target.value)}
+                          value={seatNotes}
+                          placeholder=' '
+                          type='text'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>Seat Notes</label>
+                      </div>
+                    </div>
+                    <h3>Documents</h3>
+                    <div className='col-lg-4'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setPanNumber(e.target.value)}
+                          value={panNumber}
+                          placeholder=' '
+                          type='text'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>PAN Number</label>
+                      </div>
+                    </div>
+                    <div className='col-lg-4'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setAadhaarNumber(e.target.value)}
+                          value={aadhaarNumber}
+                          placeholder=' '
+                          type='number'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Aadhaar Number
+                        </label>
+                      </div>
+                    </div>
                     {/* Vaccination Dates */}
-                    <div className='d-block ml-3 form-datepicker'>
-                      <label>Vaccination Dates</label>
+                    <div className='d-block ml-3 form-datepicker col-lg-4'>
+                      <label>Vaccination Dates (Upto 3)</label>
                       <DatePicker
                         multiple
                         style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
@@ -752,8 +760,30 @@ const AddNewTravellers = () => {
                         format='DD MMMM YYYY'
                       />
                     </div>
+                    {/* Pan Card Scan File Upload */}
+                    <div className='col-lg-4'>
+                      <label>PAN Card Scan File</label>
+                      <NewFileUploads multiple={false} setUploads={setPanCardScanFile} />
+                    </div>
+                    {/* Aadhaar Card Scan File Upload */}
+                    <div className='col-lg-4'>
+                      <label>Aadhaar Card Scan Certificate File</label>
+                      <NewFileUploads
+                        multiple={false}
+                        setUploads={setAadhaarCardScanFile}
+                      />
+                    </div>
+                    {/* Vaccination Certificate File Upload */}
+                    <div className='col-lg-4'>
+                      <label>Vaccination Certificate File</label>
+                      <NewFileUploads
+                        fileTypes={['PDF']}
+                        multiple={false}
+                        setUploads={setVaccinationCertificateFile}
+                      />
+                    </div>
                     {/* Passport Scan Files Upload */}
-                    <div className='col-lg-6'>
+                    <div className='col-lg-4'>
                       <label>Passport Scan Files</label>
                       <NewFileUploads multiple={true} setUploads={setPassportScanFiles} />
                     </div>
