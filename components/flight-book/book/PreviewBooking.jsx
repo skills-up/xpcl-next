@@ -7,6 +7,7 @@ import FlightProperty from '../../flight-list/common/FlightProperty';
 import Select from 'react-select';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 import LoadingBar from 'react-top-loading-bar';
+import Pluralize from '../../../utils/pluralChecker';
 
 function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
   const selectedBookings = useSelector(
@@ -18,11 +19,18 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
   const [containsInternational, setContainsInternational] = useState(false);
   const [travellerInfo, setTravellerInfo] = travellerInfos;
   const returnFlight = useSelector((state) => state.flightSearch.value.returnFlight);
+  const clientTravellers = useSelector(
+    (state) => state.flightSearch.value.clientTravellers
+  );
+  const [selectedTravellers, setSelectedTravellers] = useState([]);
   const lowCostBookings = ['IX', '6E', 'SG', 'G8', 'I5', 'QP', 'AI'];
-  const travellers = useSelector((state) => state.flightSearch.value.travellers);
+  // const travellers = useSelector((state) => state.flightSearch.value.travellers);
+  const travellerDOBS = useSelector((state) => state.flightSearch.value.travellerDOBS);
+  const [travellers, setTravellers] = useState([]);
   const airports = useSelector((state) => state.apis.value.airports);
   const destinations = useSelector((state) => state.flightSearch.value.destinations);
   const router = useRouter();
+  const [selectionConfirm, setSelectionConfirm] = useState(false);
   const mealPreferenceOptions = [
     { value: 'AVML', label: 'Vegetarian' },
     { value: 'HNML', label: 'Hindi Non Vegetarian' },
@@ -47,7 +55,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
   useEffect(() => {
     if (
       (!selectedBookings.to && !selectedBookings.from && !selectedBookings.combined) ||
-      !travellers
+      !travellerDOBS
     ) {
       router.back();
     }
@@ -56,44 +64,73 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
 
   const getData = async () => {
     // Getting Traveller Details
-    if (travellers) {
-      const travellerList = await getList('travellers', {
-        traveller_ids: travellers.map((el) => el?.traveller_id),
-      });
-      if (travellerList?.success) {
-        setTravellerInfo(
-          travellerList.data.map((el) => ({
-            ...el,
-            ...{
-              frequentFliers: null,
-              membershipID: '',
-              trip_meals: { from: null, to: null, combined: null },
-              prefix: el.prefix
-                ? el.prefix.toLowerCase() === 'mr'
-                  ? { value: 'MR', label: 'Mr.' }
-                  : el.prefix.toLowerCase() === 'mrs'
-                  ? { value: 'MRS', label: 'Mrs.' }
-                  : el.prefix.toLowerCase() === 'mstr'
-                  ? { value: 'MSTR', label: 'Mstr.' }
-                  : el.prefix.toLowerCase() === 'ms'
-                  ? { value: 'MS', label: 'Ms.' }
-                  : null
-                : null,
-            },
-          }))
-        );
-        if (
-          destinations?.to?.label?.split('|')?.at(-1) !== 'India' ||
-          destinations?.from?.label?.split('|')?.at(-1) !== 'India'
-        ) {
-          setContainsInternational(true);
+    if (travellerDOBS) {
+      if (clientTravellers) {
+        const travellerList = await getList('travellers', {
+          traveller_ids: clientTravellers.map((el) => el.traveller_id),
+        });
+        if (travellerList?.success) {
+          setTravellers(
+            travellerList.data.map((el) => ({
+              label: el.aliases[0],
+              value: {
+                ...el,
+                ...{
+                  quoted_amount: { from: 0, to: 0, combined: 0 },
+                  frequentFliers: null,
+                  membershipID: '',
+                  trip_meals: { from: null, to: null, combined: null },
+                  prefix: el.prefix
+                    ? el.prefix.toLowerCase() === 'mr'
+                      ? { value: 'MR', label: 'Mr.' }
+                      : el.prefix.toLowerCase() === 'mrs'
+                      ? { value: 'MRS', label: 'Mrs.' }
+                      : el.prefix.toLowerCase() === 'mstr'
+                      ? { value: 'MSTR', label: 'Mstr.' }
+                      : el.prefix.toLowerCase() === 'ms'
+                      ? { value: 'MS', label: 'Ms.' }
+                      : null
+                    : null,
+                },
+              },
+            }))
+          );
+          // setTravellerInfo(
+          //   travellerList.data.map((el) => ({
+          //     ...el,
+          //     ...{
+          //       frequentFliers: null,
+          //       membershipID: '',
+          //       trip_meals: { from: null, to: null, combined: null },
+          //       prefix: el.prefix
+          //         ? el.prefix.toLowerCase() === 'mr'
+          //           ? { value: 'MR', label: 'Mr.' }
+          //           : el.prefix.toLowerCase() === 'mrs'
+          //           ? { value: 'MRS', label: 'Mrs.' }
+          //           : el.prefix.toLowerCase() === 'mstr'
+          //           ? { value: 'MSTR', label: 'Mstr.' }
+          //           : el.prefix.toLowerCase() === 'ms'
+          //           ? { value: 'MS', label: 'Ms.' }
+          //           : null
+          //         : null,
+          //     },
+          //   }))
+          // );
+          if (
+            destinations?.to?.label?.split('|')?.at(-1) !== 'India' ||
+            destinations?.from?.label?.split('|')?.at(-1) !== 'India'
+          ) {
+            setContainsInternational(true);
+          }
+        } else {
+          sendToast('error', 'Failed to fetch traveller details', 4000);
         }
       } else {
         sendToast('error', 'Failed to fetch traveller details', 4000);
       }
     }
     // Frequent Fliers
-    const frequentFliersList = await getList('frequent-flier-programs');
+    const frequentFliersList = await getList('travel-membership-programs');
     if (frequentFliersList?.success) {
       setFrequentFliers(frequentFliersList?.data);
     } else {
@@ -137,6 +174,12 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
         selectedBookings?.combined?.provider === 'tj' &&
         !lowCostBookings.includes(selectedBookings.combined.segments[0].flight.airline))
     ) {
+      let travellers = [];
+      for (let client of clientTravellers) {
+        for (let traveller of travellerInfo) {
+          if (client.traveller_id === traveller.id) travellers.push(client.id);
+        }
+      }
       if (selectedBookings.combined) {
         let toSector = [];
         let fromSector = [];
@@ -159,13 +202,13 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
           }
         }
         let response = await createItem('flights/book', {
-          travellers: travellers.map((el) => el.value),
+          travellers,
           sectors: [toSector, fromSector],
         });
         if (response?.success) {
           setPNR((prev) => ({
             ...prev,
-            combined: { data: response.data, provider: 'ad' },
+            combined: { data: response.data, ...{ provider: 'ad', hide_fare: false } },
           }));
           setCurrentStep(2);
           setIsProceed(false);
@@ -178,7 +221,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
         }
       } else {
         let response = await createItem('flights/book', {
-          travellers: travellers.map((el) => el.value),
+          travellers,
           sectors: [
             selectedBookings.to.segments.map((el) => ({
               from: el.departure.airport.code,
@@ -274,7 +317,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
         if (response?.success) {
           setPNR((prev) => ({
             ...prev,
-            [key]: { data: response.data, provider: 'aa' },
+            [key]: { data: response.data, ...{ provider: 'aa', hide_fare: false } },
           }));
           currentAPICalls += 1;
         }
@@ -293,14 +336,20 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
           if (response?.success) {
             setPNR((prev) => ({
               ...prev,
-              [key]: { data: response.data, provider: 'tj' },
+              [key]: { data: response.data, ...{ provider: 'tj', hide_fare: false } },
             }));
             currentAPICalls += 1;
           }
         } else {
           // AD
+          let travellers = [];
+          for (let client of clientTravellers) {
+            for (let traveller of travellerInfo) {
+              if (client.traveller_id === traveller.id) travellers.push(client.id);
+            }
+          }
           response = await createItem('flights/book', {
-            travellers: travellers.map((el) => el.value),
+            travellers,
             sectors: [
               value.segments.map((el) => ({
                 from: el.departure.airport.code,
@@ -316,7 +365,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
           if (response?.success) {
             setPNR((prev) => ({
               ...prev,
-              [key]: { data: response.data, provider: 'ad' },
+              [key]: { data: response.data, ...{ provider: 'ad', hide_fare: false } },
             }));
             currentAPICalls += 1;
           }
@@ -352,7 +401,11 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                 {selectedBookings.to.segments[0].departure.airport.code} &rarr;{' '}
                 {selectedBookings.to.segments.at(-1).arrival.airport.code}
               </h3>
-              <FlightProperty element={selectedBookings.to} isSelectedBooking />
+              <FlightProperty
+                alreadyExpanded
+                element={selectedBookings.to}
+                isSelectedBooking
+              />
             </div>
           )}
           {/* Return */}
@@ -362,288 +415,398 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                 {selectedBookings.from.segments[0].departure.airport.code} &rarr;{' '}
                 {selectedBookings.from.segments.at(-1).arrival.airport.code}
               </h3>
-              <FlightProperty element={selectedBookings.from} isSelectedBooking />
+              <FlightProperty
+                alreadyExpanded
+                element={selectedBookings.from}
+                isSelectedBooking
+              />
             </div>
           )}
           {/* Return */}
           {selectedBookings?.combined && (
             <div className='mt-30'>
               <h3>Round Trip</h3>
-              <FlightProperty element={selectedBookings.combined} isSelectedBooking />
+              <FlightProperty
+                alreadyExpanded
+                element={selectedBookings.combined}
+                isSelectedBooking
+              />
             </div>
           )}
         </div>
+        {/* Selection */}
+        {!selectionConfirm && (
+          <div className='mt-30'>
+            <h3 className='mb-10'>Select Passengers</h3>
+            <Select
+              isOptionDisabled={() =>
+                selectedTravellers.length >=
+                travellerDOBS?.ADT + travellerDOBS?.CHD + travellerDOBS?.INF
+              }
+              options={travellers}
+              isMulti
+              value={selectedTravellers}
+              onChange={(id) => setSelectedTravellers(id)}
+            />
+            <div className='d-flex justify-end mt-20'>
+              <button
+                className='button col-lg-5 col-12 h-50 px-24 -dark-1 bg-blue-1 text-white'
+                onClick={async () => {
+                  // Check if all the rooms have correct travellers
+                  let adults = 0;
+                  let children = 0;
+                  let infants = 0;
+                  let currentTime = Date.now();
+                  for (let traveller of selectedTravellers) {
+                    if (traveller?.value) {
+                      const age = (
+                        (currentTime -
+                          +new DateObject({
+                            date: traveller.value.passport_dob,
+                            format: 'YYYY-MM-DD',
+                          })
+                            .toDate()
+                            .getTime()) /
+                        31536000000
+                      ).toFixed(2);
+                      if (age < 2) infants += 1;
+                      // If below 12 and above 2, child
+                      if (age >= 2 && age < 12) children += 1;
+                      // If above 12 years, consider adult
+                      if (age >= 12) adults += 1;
+                    }
+                  }
+                  if (
+                    adults !== travellerDOBS.ADT ||
+                    children !== travellerDOBS.CHD ||
+                    infants !== travellerDOBS.INF
+                  ) {
+                    sendToast(
+                      'error',
+                      `Flight searches were for ${travellerDOBS.ADT} ${Pluralize(
+                        'adult',
+                        'adults',
+                        travellerDOBS.ADT
+                      )}${
+                        travellerDOBS.CHD > 0
+                          ? `, ${travellerDOBS.CHD} ${Pluralize(
+                              'child',
+                              'children',
+                              travellerDOBS.CHD
+                            )}`
+                          : ''
+                      }${
+                        travellerDOBS.INF > 0
+                          ? `, ${travellerDOBS.INF} ${Pluralize(
+                              'child',
+                              'children',
+                              travellerDOBS.INF
+                            )}`
+                          : ''
+                      }, whereas ${adults} ${Pluralize('adult', 'adults', adults)}${
+                        children > 0
+                          ? `, ${children} ${Pluralize('child', 'children', children)}`
+                          : ''
+                      }${
+                        infants > 0
+                          ? `, ${infants} ${Pluralize('infant', 'infants', infants)}`
+                          : ''
+                      } have been selected.`,
+                      10000
+                    );
+                    return;
+                  }
+                  setTravellerInfo(selectedTravellers.map((el) => el?.value));
+                  setSelectionConfirm(true);
+                  setTimeout(() => {
+                    const elem = document.getElementById('traveller-details');
+                    if (elem) elem.scrollIntoView();
+                  }, [450]);
+                }}
+              >
+                Confirm Passengers
+              </button>
+            </div>
+          </div>
+        )}
         {/* Traveller Details */}
-        <div className='mt-20'>
-          <h1>Traveller Details</h1>
-          {travellerInfo &&
-            travellerInfo.length > 0 &&
-            travellerInfo.map((element, index) => (
-              <div key={index}>
-                <h3 className='mt-20'>{element.aliases[0]}</h3>
-                <div key={index} className='bg-white py-30 px-30 mt-20'>
-                  <h4>Traveller</h4>
-                  <div className='row my-3'>
-                    <div className='row col-12 mb-20 y-gap-20'>
-                      <div className='col-md-3 form-input-select'>
-                        <label>Prefix</label>
-                        <Select
-                          options={passportPrefixOptions}
-                          value={element.prefix}
-                          onChange={(id) =>
-                            setTravellerInfo((prev) => {
-                              prev[index]['prefix'] = id;
-                              return [...prev];
-                            })
-                          }
-                        />
-                      </div>
-                      <div className='form-input col-md-3 bg-white'>
-                        <input
-                          onChange={(e) =>
-                            setTravellerInfo((prev) => {
-                              prev[index]['first_name'] = e.target.value;
-                              return [...prev];
-                            })
-                          }
-                          value={element['first_name']}
-                          placeholder=' '
-                          type='text'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>First Name</label>
-                      </div>
-                      <div className='form-input col-md-3 bg-white'>
-                        <input
-                          onChange={(e) =>
-                            setTravellerInfo((prev) => {
-                              prev[index]['middle_name'] = e.target.value;
-                              return [...prev];
-                            })
-                          }
-                          value={element['middle_name']}
-                          placeholder=' '
-                          type='text'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>Middle Name</label>
-                      </div>
-                      <div className='form-input col-md-3 bg-white'>
-                        <input
-                          onChange={(e) =>
-                            setTravellerInfo((prev) => {
-                              prev[index]['last_name'] = e.target.value;
-                              return [...prev];
-                            })
-                          }
-                          value={element['last_name']}
-                          placeholder=' '
-                          type='text'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>Last Name</label>
-                      </div>
-                    </div>
-                    <div className='row col-12 y-gap-20'>
-                      <div className='form-datepicker col-md-6'>
-                        <label>Date of Birth</label>
-                        <DatePicker
-                          style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
-                          inputClass='custom_input-picker'
-                          containerClassName='custom_container-picker'
-                          value={
-                            new DateObject({
-                              date: element.passport_dob,
-                              format: 'YYYY-MM-DD',
-                            })
-                          }
-                          onChange={(date) =>
-                            setTravellerInfo((prev) => {
-                              prev[index]['passport_dob'] = date.format('YYYY-MM-DD');
-                              return [...prev];
-                            })
-                          }
-                          numberOfMonths={1}
-                          offsetY={10}
-                          format='DD MMMM YYYY'
-                        />
-                      </div>
-                      <div className='form-input col-md-6 bg-white'>
-                        <input
-                          onChange={(e) =>
-                            setTravellerInfo((prev) => {
-                              prev[index]['mobile_phone'] = e.target.value;
-                              return [...prev];
-                            })
-                          }
-                          value={element['mobile_phone']}
-                          placeholder=' '
-                          type='number'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Mobile Phone No.
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                  {containsInternational && (
-                    <>
-                      <h4>Passport</h4>
-                      <div className='row my-3'>
-                        <div className='row col-12 y-gap-20'>
-                          <div className='form-input col-md-4 bg-white'>
-                            <input
-                              onChange={(e) =>
-                                setTravellerInfo((prev) => {
-                                  prev[index]['passport_number'] = e.target.value;
-                                  return [...prev];
-                                })
-                              }
-                              value={element['passport_number']}
-                              placeholder=' '
-                              type='text'
-                            />
-                            <label className='lh-1 text-16 text-light-1'>
-                              Passport Number
-                            </label>
-                          </div>
-                          <div className='form-input col-md-4 bg-white'>
-                            <input
-                              onChange={(e) =>
-                                setTravellerInfo((prev) => {
-                                  prev[index]['passport_name'] = e.target.value;
-                                  return [...prev];
-                                })
-                              }
-                              value={element['passport_name']}
-                              placeholder=' '
-                              type='text'
-                            />
-                            <label className='lh-1 text-16 text-light-1'>
-                              Passport Name
-                            </label>
-                          </div>
-                          <div className='form-input col-md-4 bg-white'>
-                            <input
-                              onChange={(e) =>
-                                setTravellerInfo((prev) => {
-                                  prev[index]['passport_issue_place'] = e.target.value;
-                                  return [...prev];
-                                })
-                              }
-                              value={element['passport_issue_place']}
-                              placeholder=' '
-                              type='text'
-                            />
-                            <label className='lh-1 text-16 text-light-1'>
-                              Passport Issue Place
-                            </label>
-                          </div>
-                          <div className='form-datepicker col-md-6'>
-                            <label>Issue Date</label>
-                            <DatePicker
-                              style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
-                              inputClass='custom_input-picker'
-                              containerClassName='custom_container-picker'
-                              value={
-                                new DateObject({
-                                  date: element.passport_issue_date,
-                                  format: 'YYYY-MM-DD',
-                                })
-                              }
-                              onChange={(date) =>
-                                setTravellerInfo((prev) => {
-                                  prev[index]['passport_issue_date'] =
-                                    date.format('YYYY-MM-DD');
-                                  return [...prev];
-                                })
-                              }
-                              numberOfMonths={1}
-                              offsetY={10}
-                              format='DD MMMM YYYY'
-                            />
-                          </div>
-                          <div className='form-datepicker col-md-6'>
-                            <label>Expiry Date</label>
-                            <DatePicker
-                              style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
-                              inputClass='custom_input-picker'
-                              containerClassName='custom_container-picker'
-                              value={
-                                new DateObject({
-                                  date: element.passport_expiry_date,
-                                  format: 'YYYY-MM-DD',
-                                })
-                              }
-                              onChange={(date) =>
-                                setTravellerInfo((prev) => {
-                                  prev[index]['passport_expiry_date'] =
-                                    date.format('YYYY-MM-DD');
-                                  return [...prev];
-                                })
-                              }
-                              numberOfMonths={1}
-                              offsetY={10}
-                              format='DD MMMM YYYY'
-                            />
-                          </div>
+        {selectionConfirm && (
+          <div
+            className='mt-20'
+            id='traveller-details'
+            style={{ scrollMarginTop: '5.5rem' }}
+          >
+            <h1>Traveller Details</h1>
+            {travellerInfo &&
+              travellerInfo.length > 0 &&
+              travellerInfo.map((element, index) => (
+                <div key={index}>
+                  <h3 className='mt-20'>{element.aliases[0]}</h3>
+                  <div key={index} className='bg-white py-30 px-30 mt-20'>
+                    <h4>Traveller</h4>
+                    <div className='row my-3'>
+                      <div className='row col-12 mb-20 y-gap-20'>
+                        <div className='col-md-3 form-input-select'>
+                          <label>Prefix</label>
+                          <Select
+                            options={passportPrefixOptions}
+                            value={element.prefix}
+                            onChange={(id) =>
+                              setTravellerInfo((prev) => {
+                                prev[index]['prefix'] = id;
+                                return [...prev];
+                              })
+                            }
+                          />
+                        </div>
+                        <div className='form-input col-md-3 bg-white'>
+                          <input
+                            onChange={(e) =>
+                              setTravellerInfo((prev) => {
+                                prev[index]['first_name'] = e.target.value;
+                                return [...prev];
+                              })
+                            }
+                            value={element['first_name']}
+                            placeholder=' '
+                            type='text'
+                          />
+                          <label className='lh-1 text-16 text-light-1'>First Name</label>
+                        </div>
+                        <div className='form-input col-md-3 bg-white'>
+                          <input
+                            onChange={(e) =>
+                              setTravellerInfo((prev) => {
+                                prev[index]['middle_name'] = e.target.value;
+                                return [...prev];
+                              })
+                            }
+                            value={element['middle_name']}
+                            placeholder=' '
+                            type='text'
+                          />
+                          <label className='lh-1 text-16 text-light-1'>Middle Name</label>
+                        </div>
+                        <div className='form-input col-md-3 bg-white'>
+                          <input
+                            onChange={(e) =>
+                              setTravellerInfo((prev) => {
+                                prev[index]['last_name'] = e.target.value;
+                                return [...prev];
+                              })
+                            }
+                            value={element['last_name']}
+                            placeholder=' '
+                            type='text'
+                          />
+                          <label className='lh-1 text-16 text-light-1'>Last Name</label>
                         </div>
                       </div>
-                    </>
-                  )}
-                  <h4>Frequent Flier</h4>
-                  <div className='row my-3'>
-                    <div className='row col-12 y-gap-20'>
-                      <div className='col-md-6 form-input-select'>
-                        <label>Frequent Flier Program</label>
-                        <Select
-                          options={frequentFliers.map((el) => ({
-                            value: el.code,
-                            label: el.program,
-                          }))}
-                          value={element.frequentFliers}
-                          onChange={(id) =>
-                            setTravellerInfo((prev) => {
-                              prev[index]['frequentFliers'] = id;
-                              return [...prev];
-                            })
-                          }
-                        />
+                      <div className='row col-12 y-gap-20'>
+                        <div className='form-datepicker col-md-6'>
+                          <label>Date of Birth</label>
+                          <DatePicker
+                            style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
+                            inputClass='custom_input-picker'
+                            containerClassName='custom_container-picker'
+                            value={
+                              new DateObject({
+                                date: element.passport_dob,
+                                format: 'YYYY-MM-DD',
+                              })
+                            }
+                            onChange={(date) =>
+                              setTravellerInfo((prev) => {
+                                prev[index]['passport_dob'] = date.format('YYYY-MM-DD');
+                                return [...prev];
+                              })
+                            }
+                            numberOfMonths={1}
+                            offsetY={10}
+                            format='DD MMMM YYYY'
+                          />
+                        </div>
+                        <div className='form-input col-md-6 bg-white'>
+                          <input
+                            onChange={(e) =>
+                              setTravellerInfo((prev) => {
+                                prev[index]['mobile_phone'] = e.target.value;
+                                return [...prev];
+                              })
+                            }
+                            value={element['mobile_phone']}
+                            placeholder=' '
+                            type='number'
+                          />
+                          <label className='lh-1 text-16 text-light-1'>
+                            Mobile Phone No.
+                          </label>
+                        </div>
                       </div>
-                      <div className='form-input col-md-6 bg-white'>
-                        <input
-                          onChange={(e) =>
-                            setTravellerInfo((prev) => {
-                              prev[index]['membershipID'] = e.target.value;
-                              return [...prev];
-                            })
-                          }
-                          value={element['membershipID']}
-                          placeholder=' '
-                          type='text'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>Membership ID</label>
+                    </div>
+                    {containsInternational && (
+                      <>
+                        <h4>Passport</h4>
+                        <div className='row my-3'>
+                          <div className='row col-12 y-gap-20'>
+                            <div className='form-input col-md-4 bg-white'>
+                              <input
+                                onChange={(e) =>
+                                  setTravellerInfo((prev) => {
+                                    prev[index]['passport_number'] = e.target.value;
+                                    return [...prev];
+                                  })
+                                }
+                                value={element['passport_number']}
+                                placeholder=' '
+                                type='text'
+                              />
+                              <label className='lh-1 text-16 text-light-1'>
+                                Passport Number
+                              </label>
+                            </div>
+                            <div className='form-input col-md-4 bg-white'>
+                              <input
+                                onChange={(e) =>
+                                  setTravellerInfo((prev) => {
+                                    prev[index]['passport_name'] = e.target.value;
+                                    return [...prev];
+                                  })
+                                }
+                                value={element['passport_name']}
+                                placeholder=' '
+                                type='text'
+                              />
+                              <label className='lh-1 text-16 text-light-1'>
+                                Passport Name
+                              </label>
+                            </div>
+                            <div className='form-input col-md-4 bg-white'>
+                              <input
+                                onChange={(e) =>
+                                  setTravellerInfo((prev) => {
+                                    prev[index]['passport_issue_place'] = e.target.value;
+                                    return [...prev];
+                                  })
+                                }
+                                value={element['passport_issue_place']}
+                                placeholder=' '
+                                type='text'
+                              />
+                              <label className='lh-1 text-16 text-light-1'>
+                                Passport Issue Place
+                              </label>
+                            </div>
+                            <div className='form-datepicker col-md-6'>
+                              <label>Issue Date</label>
+                              <DatePicker
+                                style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
+                                inputClass='custom_input-picker'
+                                containerClassName='custom_container-picker'
+                                value={
+                                  new DateObject({
+                                    date: element.passport_issue_date,
+                                    format: 'YYYY-MM-DD',
+                                  })
+                                }
+                                onChange={(date) =>
+                                  setTravellerInfo((prev) => {
+                                    prev[index]['passport_issue_date'] =
+                                      date.format('YYYY-MM-DD');
+                                    return [...prev];
+                                  })
+                                }
+                                numberOfMonths={1}
+                                offsetY={10}
+                                format='DD MMMM YYYY'
+                              />
+                            </div>
+                            <div className='form-datepicker col-md-6'>
+                              <label>Expiry Date</label>
+                              <DatePicker
+                                style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
+                                inputClass='custom_input-picker'
+                                containerClassName='custom_container-picker'
+                                value={
+                                  new DateObject({
+                                    date: element.passport_expiry_date,
+                                    format: 'YYYY-MM-DD',
+                                  })
+                                }
+                                onChange={(date) =>
+                                  setTravellerInfo((prev) => {
+                                    prev[index]['passport_expiry_date'] =
+                                      date.format('YYYY-MM-DD');
+                                    return [...prev];
+                                  })
+                                }
+                                numberOfMonths={1}
+                                offsetY={10}
+                                format='DD MMMM YYYY'
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                    <h4>Frequent Flier</h4>
+                    <div className='row my-3'>
+                      <div className='row col-12 y-gap-20'>
+                        <div className='col-md-6 form-input-select'>
+                          <label>Travel Membership Program</label>
+                          <Select
+                            options={frequentFliers.map((el) => ({
+                              value: el.code,
+                              label: el.program,
+                            }))}
+                            value={element.frequentFliers}
+                            onChange={(id) =>
+                              setTravellerInfo((prev) => {
+                                prev[index]['frequentFliers'] = id;
+                                return [...prev];
+                              })
+                            }
+                          />
+                        </div>
+                        <div className='form-input col-md-6 bg-white'>
+                          <input
+                            onChange={(e) =>
+                              setTravellerInfo((prev) => {
+                                prev[index]['membershipID'] = e.target.value;
+                                return [...prev];
+                              })
+                            }
+                            value={element['membershipID']}
+                            placeholder=' '
+                            type='text'
+                          />
+                          <label className='lh-1 text-16 text-light-1'>
+                            Membership ID
+                          </label>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  {/* <h4>Miscellaneous Details</h4> */}
-                  <div className='row my-1 y-gap-20'>
-                    <div className='col-md-6'>
-                      <h5 className='fw-500'>Seat Preference: </h5>
-                      {element.seat_preference
-                        ? element.seat_preference
-                        : 'No Preference'}
-                    </div>
-                    <div className='col-md-6'>
-                      <h5 className='fw-500'>Meal Preference: </h5>
-                      {element.meal_preference ? (
-                        <>
-                          {mealPreferenceOptions.map((m) => (
-                            <>{m.value === element.meal_preference && <>{m.label}</>}</>
-                          ))}
-                        </>
-                      ) : (
-                        'No Preference'
-                      )}
-                    </div>
-                    {/* <div className='col-md-6 form-input-select'>
+                    {/* <h4>Miscellaneous Details</h4> */}
+                    <div className='row my-1 y-gap-20'>
+                      <div className='col-md-6'>
+                        <h5 className='fw-500'>Seat Preference: </h5>
+                        {element.seat_preference
+                          ? element.seat_preference
+                          : 'No Preference'}
+                      </div>
+                      <div className='col-md-6'>
+                        <h5 className='fw-500'>Meal Preference: </h5>
+                        {element.meal_preference ? (
+                          <>
+                            {mealPreferenceOptions.map((m) => (
+                              <>{m.value === element.meal_preference && <>{m.label}</>}</>
+                            ))}
+                          </>
+                        ) : (
+                          'No Preference'
+                        )}
+                      </div>
+                      {/* <div className='col-md-6 form-input-select'>
                       <label>Meal Preference</label>
                       <Select
                         options={mealPreferenceOptions}
@@ -656,56 +819,59 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                         }
                       />
                     </div> */}
-                  </div>
-                  <div className='d-flex col-12 justify-end'>
-                    <a
-                      className='h-50 cursor-pointer text-primary'
-                      onClick={async () => {
-                        const response = await updateItem('travellers', element.id, {
-                          ...element,
-                          ...{
-                            prefix: element.prefix.value ? element.prefix.value : null,
-                            first_name: element.first_name,
-                            middle_name: element.middle_name,
-                            last_name: element.last_name,
-                            passport_dob: element.passport_dob,
-                            mobile_phone: element.mobile_phone,
-                            passport_number: element.passport_number,
-                            passport_name: element.passport_name,
-                            passport_issue_place: element.passport_issue_place,
-                            passport_issue_date: element.passport_issue_date,
-                            passport_expiry_date: element.passport_expiry_date,
-                          },
-                        });
-                        if (response.success) {
-                          sendToast('success', 'Traveller updated successfully', 4000);
-                        } else {
-                          sendToast(
-                            'error',
-                            response.data?.error ||
-                              response.data?.message ||
-                              'Error updating traveller',
-                            4000
-                          );
-                        }
-                      }}
-                    >
-                      Update on Profile
-                    </a>
+                    </div>
+                    <div className='d-flex col-12 justify-end'>
+                      <a
+                        className='h-50 cursor-pointer text-primary'
+                        onClick={async () => {
+                          const response = await updateItem('travellers', element.id, {
+                            ...element,
+                            ...{
+                              prefix: element.prefix.value ? element.prefix.value : null,
+                              first_name: element.first_name,
+                              middle_name: element.middle_name,
+                              last_name: element.last_name,
+                              passport_dob: element.passport_dob,
+                              mobile_phone: element.mobile_phone,
+                              passport_number: element.passport_number,
+                              passport_name: element.passport_name,
+                              passport_issue_place: element.passport_issue_place,
+                              passport_issue_date: element.passport_issue_date,
+                              passport_expiry_date: element.passport_expiry_date,
+                            },
+                          });
+                          if (response.success) {
+                            sendToast('success', 'Traveller updated successfully', 4000);
+                          } else {
+                            sendToast(
+                              'error',
+                              response.data?.error ||
+                                response.data?.message ||
+                                'Error updating traveller',
+                              4000
+                            );
+                          }
+                        }}
+                      >
+                        Update on Profile
+                      </a>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-        </div>
-        <div className='d-flex col-12 justify-end'>
-          <button
-            disabled={isProceed}
-            className='button -dark-1 px-30 h-50 bg-blue-1 text-white col-md-4 mt-20'
-            onClick={() => onClick()}
-          >
-            Proceed To Seat Selection
-          </button>
-        </div>
+              ))}
+          </div>
+        )}
+        {selectionConfirm && (
+          <div className='d-flex col-12 justify-end'>
+            <button
+              disabled={isProceed}
+              className='button -dark-1 px-30 h-50 bg-blue-1 text-white col-md-4 mt-20'
+              onClick={() => onClick()}
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );

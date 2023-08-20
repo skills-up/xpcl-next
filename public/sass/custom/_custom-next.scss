@@ -165,6 +165,12 @@
     min-width: 350px;
   }
 }
+.min-width-450 {
+  min-width: 450px;
+  @media (max-width: 575px) {
+    min-width: 350px;
+  }
+}
 
 // react multi date picker
 .custom_container-picker {

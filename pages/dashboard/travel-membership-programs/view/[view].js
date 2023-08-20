@@ -18,13 +18,13 @@ const ViewFrequentFlierProgram = () => {
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
   useEffect(() => {
-    // Getting particular frequent flier program
+    // Getting particular travel membership program
     getFrequentFlierProgram();
   }, [router.isReady]);
 
   const getFrequentFlierProgram = async () => {
     if (router.query.view) {
-      const response = await getItem('frequent-flier-programs', router.query.view);
+      const response = await getItem('travel-membership-programs', router.query.view);
       if (response?.success) {
         let data = response.data;
         // Converting time columns
@@ -67,9 +67,9 @@ const ViewFrequentFlierProgram = () => {
           'error',
           response.data?.message ||
             response.data?.error ||
-            'Could Not Fetch The Requested Frequent Flier Program.'
+            'Could Not Fetch The Requested Travel Membership Program.'
         );
-        router.push('/dashboard/frequent-flier-programs');
+        router.push('/dashboard/travel-membership-programs');
       }
     }
   };
@@ -79,16 +79,16 @@ const ViewFrequentFlierProgram = () => {
     setIdToDelete(-1);
   };
   const onSubmit = async () => {
-    const response = await deleteItem('frequent-flier-programs', idToDelete);
+    const response = await deleteItem('travel-membership-programs', idToDelete);
     if (response?.success) {
       sendToast('success', 'Deleted successfully', 4000);
-      router.push('/dashboard/frequent-flier-programs');
+      router.push('/dashboard/travel-membership-programs');
     } else {
       sendToast(
         'error',
         response.data?.message ||
           response.data?.error ||
-          'Unexpected Error Occurred While Trying to Delete this Frequent Flier Program',
+          'Unexpected Error Occurred While Trying to Delete this Travel Membership Program',
         4000
       );
     }
@@ -97,7 +97,7 @@ const ViewFrequentFlierProgram = () => {
 
   return (
     <>
-      <Seo pageTitle='View Frequent Flier Program' />
+      <Seo pageTitle='View Travel Membership Program' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -117,9 +117,9 @@ const ViewFrequentFlierProgram = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>View Frequent Flier Program</h1>
+                  <h1 className='text-30 lh-14 fw-600'>View Travel Membership Program</h1>
                   <div className='text-15 text-light-1'>
-                    Get extended details of a frequent flier program.
+                    Get extended details of a travel membership program.
                   </div>
                 </div>
                 {/* End .col-12 */}
@@ -131,15 +131,15 @@ const ViewFrequentFlierProgram = () => {
                   <ConfirmationModal
                     onCancel={onCancel}
                     onSubmit={onSubmit}
-                    title='Do you really want to delete this Frequent Flier Program?'
-                    content='This will permanently delete the frequent flier program. Press OK to confirm.'
+                    title='Do you really want to delete this Travel Membership Program?'
+                    content='This will permanently delete the travel membership program. Press OK to confirm.'
                   />
                 )}
                 <ViewTable
                   data={frequentFlierProgram}
                   onEdit={() =>
                     router.push(
-                      '/dashboard/frequent-flier-programs/edit/' + router.query.view
+                      '/dashboard/travel-membership-programs/edit/' + router.query.view
                     )
                   }
                   onDelete={() => {

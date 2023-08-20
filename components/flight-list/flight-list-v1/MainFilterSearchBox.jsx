@@ -21,22 +21,32 @@ import {
   setTravellers as setTravellersRedux,
 } from '../../../features/flightSearch/flightSearchSlice';
 import { checkUser } from '../../../utils/checkTokenValidity';
+import GuestSearch from './GuestSearch';
+import FilterSelect from './FilterSelect';
+import { MdFlightLand, MdFlightTakeoff } from 'react-icons/md';
+import { TbArrowsExchange2 } from 'react-icons/tb';
+import { SlCalender } from 'react-icons/sl';
+import { RiArrowRightLine, RiArrowLeftRightFill } from 'react-icons/ri';
 
 const MainFilterSearchBox = () => {
-  const [directFlight, setDirectFlight] = useState(true);
+  const [directFlight, setDirectFlight] = useState(false);
   const [from, setFrom] = useState(null);
   const [to, setTo] = useState(null);
-  const [preferredCabin, setPrefferedCabin] = useState(null);
+  const [preferredCabin, setPrefferedCabin] = useState({ value: 'Economy' });
   const [travellers, setTravellers] = useState([]);
   const [preferredAirlines, setPreferredAirlines] = useState([]);
   const [departDate, setDepartDate] = useState(new DateObject());
   const [returnDate, setReturnDate] = useState(new DateObject());
   const [returnFlight, setReturnFlight] = useState(true);
-  const cabinOptions = ['Economy', 'Premium Economy', 'Business', 'First'];
   const [clientTravellers, setClientTravellers] = useState([]);
   const [airlines, setAirlines] = useState([]);
   const [progress, setProgress] = useState(0);
   const [isSearched, setIsSearched] = useState(false);
+  const [guestCounts, setGuestCounts] = useState({
+    Adults: 2,
+    Children: 0,
+    Infants: 0,
+  });
 
   const dispatch = useDispatch();
   const router = useRouter();
@@ -44,6 +54,7 @@ const MainFilterSearchBox = () => {
   console.log('token', token);
   const airports = useSelector((state) => state.apis.value.airports);
   const client_id = useSelector((state) => state.auth.value.currentOrganization);
+  const travellerDOBS = useSelector((state) => state.flightSearch.value.travellerDOBS);
 
   useEffect(() => {
     // dispatch(setInitialState());
@@ -63,15 +74,16 @@ const MainFilterSearchBox = () => {
     });
     const airlines = await getList('organizations', { is_airline: 1 });
     if (clientTravellers?.success && airlines?.success) {
+      // if (airlines?.success) {
       dispatch(setAirlineOrgs({ airlineOrgs: airlines.data }));
       dispatch(setClientTravellersRedux({ clientTravellers: clientTravellers.data }));
-      setClientTravellers(
-        clientTravellers.data.map((element) => ({
-          value: element.id,
-          label: element.traveller_name,
-          traveller_id: element.traveller_id,
-        }))
-      );
+      // setClientTravellers(
+      //   clientTravellers.data.map((element) => ({
+      //     value: element.id,
+      //     label: element.traveller_name,
+      //     traveller_id: element.traveller_id,
+      //   }))
+      // );
       setAirlines(
         airlines.data.map((element) => ({
           value: element.id,
@@ -101,55 +113,61 @@ const MainFilterSearchBox = () => {
       searchF();
       return;
     }
-    if (!travellers || travellers?.length === 0) {
-      sendToast('error', 'Please select travellers', 4000);
+    // if (!travellers || travellers?.length === 0) {
+    //   sendToast('error', 'Please select travellers', 4000);
+    //   searchF();
+    //   return;
+    // }
+    if (!guestCounts || guestCounts?.Adults === 0) {
+      sendToast('error', 'One adult passenger is mandatory', 4000);
       searchF();
       return;
     }
     // Getting Traveller DOBS
-    let pax = {};
-    const traveller_ids = travellers.map((el) => el.traveller_id);
-    const travellerDetails = await getList('travellers', { traveller_ids });
-    let ADT = 0;
-    let CHD = 0;
-    let INF = 0;
-    if (travellerDetails?.success) {
-      let currentTime = +Date.now();
-      for (let traveller of travellerDetails.data) {
-        if (traveller?.passport_dob) {
-          const age = (
-            (currentTime -
-              +new DateObject({
-                date: traveller.passport_dob,
-                format: 'YYYY-MM-DD',
-              })
-                .toDate()
-                .getTime()) /
-            31536000000
-          ).toFixed(2);
-          // If below 2 years of age, infant
-          if (age < 2) INF += 1;
-          // If above 2 but below 12, child
-          if (age >= 2 && age < 12) CHD += 1;
-          // If above 12 years, consider adult
-          if (age >= 12) ADT += 1;
-        } else {
-          ADT += 1;
-        }
-      }
-      if (ADT > 0) pax['ADT'] = ADT;
-      else {
-        sendToast('error', 'There must be an Adult traveller', 4000);
-        searchF();
-        return;
-      }
-      if (CHD > 0) pax['CHD'] = CHD;
-      if (INF > 0) pax['INF'] = INF;
-    } else {
-      sendToast('error', 'Error getting traveller details', 4000);
-      searchF();
-      return;
-    }
+    let pax = {
+      ADT: guestCounts.Adults,
+      CHD: guestCounts.Children || undefined,
+      INF: guestCounts.Infants || undefined,
+    };
+    // const traveller_ids = travellers.map((el) => el.traveller_id);
+    // const travellerDetails = await getList('travellers', { traveller_ids });
+    // if (travellerDetails?.success) {
+    //   let currentTime = +Date.now();
+    //   for (let traveller of travellerDetails.data) {
+    //     if (traveller?.passport_dob) {
+    //       const age = (
+    //         (currentTime -
+    //           +new DateObject({
+    //             date: traveller.passport_dob,
+    //             format: 'YYYY-MM-DD',
+    //           })
+    //             .toDate()
+    //             .getTime()) /
+    //         31536000000
+    //       ).toFixed(2);
+    //       // If below 2 years of age, infant
+    //       if (age < 2) INF += 1;
+    //       // If above 2 but below 12, child
+    //       if (age >= 2 && age < 12) CHD += 1;
+    //       // If above 12 years, consider adult
+    //       if (age >= 12) ADT += 1;
+    //     } else {
+    //       ADT += 1;
+    //     }
+    //   }
+    //   if (ADT > 0) pax['ADT'] = ADT;
+    //   else {
+    //     sendToast('error', 'There must be an Adult traveller', 4000);
+    //     searchF();
+    //     return;
+    //   }
+    //   if (CHD > 0) pax['CHD'] = CHD;
+    //   if (INF > 0) pax['INF'] = INF;
+    // } else {
+    //   sendToast('error', 'Error getting traveller details', 4000);
+    //   searchF();
+    //   return;
+    // }
     // Resetting Search Data
     dispatch(setInitialSearchData());
     // Checking for domestic
@@ -205,7 +223,13 @@ const MainFilterSearchBox = () => {
     }
     let currentCalls = 0;
     // Redux Values Update
-    dispatch(setTravellerDOBS({ ADT, CHD, INF }));
+    dispatch(
+      setTravellerDOBS({
+        ADT: guestCounts.Adults,
+        CHD: guestCounts.Children,
+        INF: guestCounts.Infants,
+      })
+    );
     dispatch(setReturnFlightRedux({ returnFlight }));
     dispatch(setTravellersRedux({ travellers }));
     dispatch(
@@ -307,9 +331,64 @@ const MainFilterSearchBox = () => {
         progress={progress}
         onLoaderFinished={() => setProgress(0)}
       />
-      <div className='border-light rounded-4 pr-20 py-20 lg:px-20 lg:pt-5 lg:pb-20 mt-15'>
+      <div className='border-light rounded-4 pr-20 py-20 lg:px-10 lg:pt-5 lg:pb-20 mt-15'>
         <div className='flight-search pl-20 lg:pl-0'>
-          <div className='d-flex items-center gap-2 justify-center mt-30 lg:mt-0'>
+          {/* Round Trip */}
+          <div className='row items-center y-gap-10'>
+            <div className='col-lg-2 ml-6 d-flex justify-center items-center'>
+              <div className='dropdown js-dropdown'>
+                <div
+                  className='dropdown__button d-flex items-center text-15'
+                  data-bs-toggle='dropdown'
+                  data-bs-auto-close='true'
+                  data-bs-offset='0,0'
+                >
+                  <span className='js-dropdown-title text-18 d-flex items-center gap-2'>
+                    {returnFlight ? (
+                      <RiArrowLeftRightFill className='text-25 mb-1' />
+                    ) : (
+                      <RiArrowRightLine className='text-25 mb-1' />
+                    )}{' '}
+                    {returnFlight ? 'Round Trip' : 'One Way'}
+                  </span>
+                  <i className='icon icon-chevron-sm-down text-7 ml-10' />
+                </div>
+                <div className='toggle-element -dropdown js-click-dropdown dropdown-menu'>
+                  <div className='text-14 y-gap-15 js-dropdown-list'>
+                    <div>
+                      <div>
+                        <div
+                          role='button'
+                          className={`${
+                            !returnFlight ? 'text-blue-1 ' : ''
+                          }d-block js-dropdown-link`}
+                          onClick={() => setReturnFlight(false)}
+                        >
+                          One Way
+                        </div>
+                      </div>
+                      <div
+                        role='button'
+                        className={`mt-10 ${
+                          returnFlight ? 'text-blue-1 ' : ''
+                        }d-block js-dropdown-link`}
+                        onClick={() => setReturnFlight(true)}
+                      >
+                        Round Trip
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className='col-lg-auto d-flex justify-center items-center'>
+              <GuestSearch
+                guests={[guestCounts, setGuestCounts]}
+                cabins={[preferredCabin, setPrefferedCabin]}
+              />
+            </div>
+          </div>
+          {/* <div className='d-flex items-center gap-2 justify-center mt-30 lg:mt-0'>
             <label>One Way</label>
             <ReactSwitch
               onChange={() => setReturnFlight((prev) => !prev)}
@@ -319,8 +398,8 @@ const MainFilterSearchBox = () => {
               offColor='#080'
             />
             <label>Return Trip</label>
-          </div>
-          <div className='flight-search-select'>
+          </div> */}
+          {/* <div className='flight-search-select'>
             <label>Preferred Cabin</label>
             <Select
               options={cabinOptions.map((el) => ({ label: el, value: el }))}
@@ -328,8 +407,8 @@ const MainFilterSearchBox = () => {
               placeholder='Search..'
               onChange={(id) => setPrefferedCabin(id)}
             />
-          </div>
-          <div className='flight-search-select'>
+          </div> */}
+          {/* <div className='flight-search-select'>
             <label>
               Travellers<span className='text-danger'>*</span>
             </label>
@@ -340,8 +419,8 @@ const MainFilterSearchBox = () => {
               placeholder='Search..'
               onChange={(values) => setTravellers(values)}
             />
-          </div>
-          <div className='flight-search-select'>
+          </div> */}
+          {/* <div className='flight-search-select'>
             <label>Airlines</label>
             <Select
               options={airlines}
@@ -350,11 +429,8 @@ const MainFilterSearchBox = () => {
               placeholder='Search..'
               onChange={(values) => setPreferredAirlines(values)}
             />
-          </div>
+          </div> */}
           <div className='flight-search-select'>
-            <label>
-              From<span className='text-danger'>*</span>
-            </label>
             <WindowedSelect
               filterOption={(candidate, input) => {
                 if (input) {
@@ -398,19 +474,13 @@ const MainFilterSearchBox = () => {
               onChange={(id) => setFrom(id)}
               placeholder={
                 <>
-                  Search..
-                  <br />
-                  <br />
+                  <span className='d-flex items-center gap-2'>
+                    <MdFlightTakeoff className='text-25 mb-1' /> Where From?
+                  </span>
                 </>
               }
+              className='col-lg-6 col-12'
             />
-          </div>
-          {/* End Location Flying From */}
-
-          <div className='flight-search-select'>
-            <label>
-              To<span className='text-danger'>*</span>
-            </label>
             <WindowedSelect
               filterOption={(candidate, input) => {
                 if (input) {
@@ -421,11 +491,12 @@ const MainFilterSearchBox = () => {
                 }
                 return true;
               }}
+              className='to col-lg-6 col-12'
               placeholder={
                 <>
-                  Search..
-                  <br />
-                  <br />
+                  <span className='d-flex items-center gap-2'>
+                    <MdFlightLand className='text-25' /> Where To?
+                  </span>
                 </>
               }
               options={airports.map((airport) => ({
@@ -460,56 +531,56 @@ const MainFilterSearchBox = () => {
               value={to}
               onChange={(id) => setTo(id)}
             />
+            <TbArrowsExchange2 className='exchange-icon' />
           </div>
-          {/* End Location Flying To */}
-
-          <div
-            style={{ border: '1px solid lightgray' }}
-            className='flight-search-select rounded-4 mt-30 py-4 d-flex items-center justify-center gap-1 lg:mt-0 lg:pl-5 '
-          >
-            <div className='text-center'>
-              <label>
-                Depart Date<span className='text-danger'>*</span>
-              </label>
-              <DatePicker
-                style={{ fontSize: '1rem' }}
-                inputClass='custom_input-picker text-center'
-                containerClassName='custom_container-picker'
-                value={departDate}
-                onChange={(i) => {
-                  setDepartDate(i);
-                  if (returnDate.valueOf() < i.valueOf()) setReturnDate(i);
-                }}
-                numberOfMonths={1}
-                offsetY={10}
-                format='DD MMM YYYY'
-                minDate={new DateObject()}
-              />
-            </div>
-            {/* End Depart */}
-            {returnFlight && (
+          <div className='row px-15'>
+            {/* End Location Flying To */}
+            <div
+              className='flight-date-picker col-lg-7'
+              style={{ border: '1px solid lightgray' }}
+            >
               <div className='text-center'>
-                <label>
-                  Return Date<span className='text-danger'>*</span>
+                <label className='d-flex gap-2 items-center'>
+                  <SlCalender className='text-20 mb-1' /> Depart
                 </label>
                 <DatePicker
                   style={{ fontSize: '1rem' }}
                   inputClass='custom_input-picker text-center'
                   containerClassName='custom_container-picker'
-                  value={returnDate}
-                  onChange={setReturnDate}
+                  value={departDate}
+                  onChange={(i) => {
+                    setDepartDate(i);
+                    if (returnDate.valueOf() < i.valueOf()) setReturnDate(i);
+                  }}
                   numberOfMonths={1}
                   offsetY={10}
                   format='DD MMM YYYY'
-                  minDate={departDate}
+                  minDate={new DateObject()}
                 />
               </div>
-            )}
-          </div>
-
-          {/* End Return */}
-
-          <div>
+              {returnFlight && <hr />}
+              {/* End Depart */}
+              {returnFlight && (
+                <div className='text-center'>
+                  <label className='d-flex gap-2 items-center'>
+                    <SlCalender className='text-20 mb-1' /> Return
+                  </label>
+                  <DatePicker
+                    style={{ fontSize: '1rem' }}
+                    inputClass='custom_input-picker text-center'
+                    containerClassName='custom_container-picker'
+                    value={returnDate}
+                    onChange={setReturnDate}
+                    numberOfMonths={1}
+                    offsetY={10}
+                    format='DD MMM YYYY'
+                    minDate={departDate}
+                  />
+                </div>
+              )}
+            </div>
+            {/* End Return */}
+            {/* <div>
             <div className='pl-5 d-flex mt-30 gap-2 justify-center lg:mt-0 items-center'>
               <label>Direct Flight</label>
               <ReactSwitch
@@ -517,20 +588,21 @@ const MainFilterSearchBox = () => {
                 checked={directFlight}
               />
             </div>
-          </div>
-          {/* End guest */}
-        </div>
+            </div> */}
+            {/* End guest */}
 
-        {/* End search button_item */}
-        <div className='button-item pl-20 mt-20 lg:pl-0'>
-          <button
-            disabled={isSearched}
-            className='d-block mainSearch__submit button -blue-1 py-15 h-60 col-12 rounded-4 bg-dark-3 text-white'
-            onClick={search}
-          >
-            <i className='icon-search text-20 mr-10' />
-            Search
-          </button>
+            {/* End search button_item */}
+            <div className='button-item pl-20 lg:pl-0 col-lg-5 lg:pr-0 lg:mt-15'>
+              <button
+                disabled={isSearched}
+                className='mainSearch__submit button -blue-1 py-15 h-60 col-12 rounded-4 bg-dark-3 text-white d-flex items-center'
+                onClick={search}
+              >
+                <i className='icon-search text-18 mr-10 mb-1' />
+                <span className='text-18'>Search</span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
       {/* End .mainSearch */}

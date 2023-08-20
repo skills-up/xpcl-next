@@ -203,8 +203,8 @@ const Sidebar = () => {
           href: '/dashboard/calendar-templates',
         },
         {
-          title: 'Frequent Flier Programs',
-          href: '/dashboard/frequent-flier-programs',
+          title: 'Travel Membership Programs',
+          href: '/dashboard/travel-membership-programs',
         },
         {
           title: 'Visa Requirement Docs',

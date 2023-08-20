@@ -2454,21 +2454,105 @@ table.table-6 {
 }
 
 .flight-search {
-  display: grid;
-  grid-template-columns: auto auto auto auto;
+  display: flex;
+  flex-direction: column;
   gap: 1rem 0;
-  align-items: center;
-  @include media-below(lg) {
-    padding-top: 1rem;
-    grid-template-columns: auto;
+  .flight-date-picker {
+    display: flex;
+    align-items: center;
+    height: 60px;
+    justify-content: space-evenly;
+    > div {
+      display: flex;
+    }
+    hr {
+      border-top: 1px solid gray;
+      width: 50px;
+      rotate: 90deg;
+      opacity: 50%;
+    }
+    .rmdp-container {
+      margin-top: 0.1rem;
+    }
+    @include media-below(lg) {
+      height: 110px;
+      hr {
+        rotate: unset;
+        width: 90%;
+        margin: 0;
+      }
+      justify-content: space-evenly;
+      flex-direction: column;
+    }
   }
   .flight-search-select {
-    width: 300px;
-    max-width: 100%;
-    @include media-below(lg) {
-      width: unset;
-      max-width: 100%;
+    position: relative;
+    .exchange-icon {
+      position: absolute;
+      z-index: 5;
+      border: 2px solid #3554d1;
+      color: #3554d1;
+      border-radius: 50%;
+      font-size: 2.5rem;
+      background-color: white;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
+    width: 100%;
+    display: flex;
+    border: 1px solid lightgray;
+    .css-1fdsijx-ValueContainer {
+      height: 60px;
+      padding-left: 1rem;
+      padding-right: 1.5rem;
+    }
+    .css-13cymwt-control {
+      cursor: pointer;
+      outline: none;
+      box-shadow: none;
+      border: none;
+    }
+    .css-1hb7zxy-IndicatorsContainer {
+      display: none;
+    }
+    .to {
+      .css-13cymwt-control {
+        outline: none;
+        border-radius: 0;
+        box-shadow: none;
+        border-left: 1px solid lightgray;
+      }
+      .css-1fdsijx-ValueContainer {
+        padding-left: 2rem;
+      }
+    }
+    @include media-below(lg) {
+      display: flex;
+      flex-direction: column;
+      .exchange-icon {
+        font-size: 2.25rem;
+      }
+      .to {
+        .css-13cymwt-control {
+          border-left: none;
+          border-top: 1px solid lightgray;
+        }
+        .css-1fdsijx-ValueContainer {
+          padding-left: 0.5rem;
+        }
+      }
+      .css-1fdsijx-ValueContainer {
+        height: 70px;
+        padding: 1rem 0.5rem;
+      }
+    }
+    // width: 300px;
+    // max-width: 100%;
+    // @include media-below(lg) {
+    //   width: unset;
+    //   max-width: 100%;
+    // }
   }
 }
 

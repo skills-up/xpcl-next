@@ -19,12 +19,16 @@ import { FaMinus, FaPlus } from 'react-icons/fa';
 function Seatmap({ seatMaps, PNRS, travellerInfos }) {
   const [PNR, setPNR] = PNRS;
   const [seatMap, setSeatMap] = seatMaps;
-  const travellers = useSelector((state) => state.flightSearch.value.travellers);
+  // const travellers = useSelector((state) => state.flightSearch.value.travellers);
   const selectedBookings = useSelector(
     (state) => state.flightSearch.value.selectedBookings
   );
   const [isProgress, setIsProgress] = useState(false);
   const travellerDOBS = useSelector((state) => state.flightSearch.value.travellerDOBS);
+  const clientTravellers = useSelector(
+    (state) => state.flightSearch.value.clientTravellers
+  );
+  const client_id = useSelector((state) => state.auth.value.currentOrganization);
   const [travellerInfo, setTravellerInfo] = travellerInfos;
   const [progress, setProgress] = useState(0);
   const [alerts, setAlerts] = useState([]);
@@ -42,11 +46,9 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
       label: 'No Preference',
     },
     { value: 'AVML', label: 'Vegetarian' },
-    { value: 'HNML', label: 'Hindi Non Vegetarian' },
+    { value: 'HNML', label: 'Hindu Non Vegetarian' },
     { value: 'VJML', label: 'Jain Vegetarian' },
-    { value: 'NVML', label: 'Non Vegetarian' },
     { value: 'VLML', label: 'Lacto Ovo Meal' },
-    { value: 'SFML', label: 'Sea Food Meal' },
   ];
   const router = useRouter();
 
@@ -432,6 +434,12 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
               }
             }
             if (meals.length > 0) tempObj['meals'] = meals;
+            for (let client of clientTravellers) {
+              if (client.traveller_id === traveller.id)
+                tempObj['client_traveller_id'] = client.id;
+            }
+            if (tempObj['code'] !== 'INF')
+              tempObj['quoted_amount'] = traveller?.quoted_amount[key] || undefined;
             pax.push(tempObj);
           }
           // Total  Amount (base amt + seats cost + meals cost)
@@ -444,6 +452,8 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
               pax,
               bookingId: value.data?.bookingId,
               amount: totalCost,
+              client_id,
+              hide_fare: value.hide_fare,
             },
             {},
             true
@@ -515,47 +525,82 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
           }
           // Seat Bookings (Per Segment Per Traveller)
           let seatTotal = 0;
+          let tempTravellers = [];
           for (let pax of value.data.pax) {
-            for (let seg of seatMap[key].data) {
-              if (seg.seatMap.travellers && seg.seatMap.travellers.length > 0) {
-                for (let traveller of seg.seatMap.travellers) {
-                  if (
-                    traveller.first_name === pax.name.first &&
-                    traveller.last_name === pax.name.last &&
-                    traveller.passport_dob === pax.dob
-                  ) {
-                    const age = (
-                      (Date.now() -
-                        +new DateObject({
-                          date: traveller?.passport_dob,
-                          format: 'YYYY-MM-DD',
-                        })
-                          .toDate()
-                          .getTime()) /
-                      31536000000
-                    ).toFixed(2);
-                    if (age >= 2) {
-                      let seatBooking = await customAPICall(
-                        'aa/v1/seat-reserve',
-                        'post',
-                        {
-                          key: value.data.key,
-                          seatKey: traveller.unitKey,
-                          passengerKey: pax.key,
-                          journeyKey: selectedBookings[key].journeyKey,
-                        },
-                        {},
-                        true
-                      );
-                      if (!seatBooking?.success) {
-                        sendToast('error', 'Error in Seat Booking', 4000);
-                      }
-                      seatTotal += traveller.amount;
-                    }
+            // Travellers
+            for (let traveller of travellerInfo) {
+              if (
+                traveller.first_name === pax.name.first &&
+                traveller.last_name === pax.name.last &&
+                traveller.passport_dob === pax.dob
+              ) {
+                let inf = false;
+                const age = (
+                  (Date.now() -
+                    +new DateObject({
+                      date: traveller?.passport_dob,
+                      format: 'YYYY-MM-DD',
+                    })
+                      .toDate()
+                      .getTime()) /
+                  31536000000
+                ).toFixed(2);
+                if (age < 2) inf = true;
+                for (let client of clientTravellers) {
+                  if (client.traveller_id === traveller.id) {
+                    tempTravellers.push({
+                      passengerKey: inf ? 'INFANT' : pax.key,
+                      client_traveller_id: client.id,
+                      quoted_amount: inf
+                        ? undefined
+                        : traveller?.quoted_amount[key] || undefined,
+                    });
                   }
                 }
               }
             }
+            // Seat Reserve
+            if (seatMap[key])
+              for (let seg of seatMap[key].data) {
+                if (seg.seatMap.travellers && seg.seatMap.travellers.length > 0) {
+                  for (let traveller of seg.seatMap.travellers) {
+                    if (
+                      traveller.first_name === pax.name.first &&
+                      traveller.last_name === pax.name.last &&
+                      traveller.passport_dob === pax.dob
+                    ) {
+                      const age = (
+                        (Date.now() -
+                          +new DateObject({
+                            date: traveller?.passport_dob,
+                            format: 'YYYY-MM-DD',
+                          })
+                            .toDate()
+                            .getTime()) /
+                        31536000000
+                      ).toFixed(2);
+                      if (age >= 2) {
+                        let seatBooking = await customAPICall(
+                          'aa/v1/seat-reserve',
+                          'post',
+                          {
+                            key: value.data.key,
+                            seatKey: traveller.unitKey,
+                            passengerKey: pax.key,
+                            journeyKey: selectedBookings[key].journeyKey,
+                          },
+                          {},
+                          true
+                        );
+                        if (!seatBooking?.success) {
+                          sendToast('error', 'Error in Seat Booking', 4000);
+                        }
+                        seatTotal += traveller.amount;
+                      }
+                    }
+                  }
+                }
+              }
           }
           // Final Booking
           let total = selectedBookings[key].total + ssrsTotal + seatTotal;
@@ -564,6 +609,9 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
             'post',
             {
               key: value.data.key,
+              client_id,
+              travellers: tempTravellers,
+              hide_fare: value.hide_fare,
               // amount: total,
             },
             {},
@@ -607,6 +655,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
           // Finalize Booking
           const frequentFliers = [];
           const mealRequests = [];
+          const travellers = [];
           for (let traveller of travellerInfo) {
             // Getting PAX
             let paxRef;
@@ -615,6 +664,27 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                 paxRef = trav.paxRef;
               }
             }
+            if (paxRef)
+              for (let client of clientTravellers) {
+                if (client.traveller_id === traveller.id) {
+                  const age = (
+                    (Date.now() -
+                      +new DateObject({
+                        date: traveller?.passport_dob,
+                        format: 'YYYY-MM-DD',
+                      })
+                        .toDate()
+                        .getTime()) /
+                    31536000000
+                  ).toFixed(2);
+                  travellers.push({
+                    paxRef,
+                    client_traveller_id: client.id,
+                    quoted_amount:
+                      age >= 2 ? traveller?.quoted_amount[key] || undefined : undefined,
+                  });
+                }
+              }
             // FF
             if (
               traveller?.frequentFliers?.value &&
@@ -673,6 +743,9 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
             seatRequested,
             frequentFliers,
             mealRequests,
+            client_id,
+            hide_fare: value.hide_fare,
+            travellers,
           });
           if (booking?.success) {
             bookingTemp[key] = booking.data;
@@ -2216,14 +2289,15 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
             <div className='row'>
               {/* Seatmaps */}
               <div className='col-md-8'>
-                <h1>Flight Seatmaps (Optional)</h1>
+                <h1 className='mb-20'>Additional Options</h1>
+                {(seatMap?.to || seatMap?.from || seatMap?.combined) && (
+                  <h2>Select seats</h2>
+                )}
                 {/* To */}
                 {seatMap?.to?.data && (
                   <>
-                    {seatMap.to && seatMap.from && (
-                      <h2 className='mt-20'>Onward Seatmap</h2>
-                    )}
                     <div className='bg-white py-20 px-20 mt-20'>
+                      {seatMap.to && seatMap.from && <h3 className='mb-10'>Onward</h3>}
                       {
                         // TJ
                         seatMap?.to?.provider === 'tj' ? (
@@ -2244,8 +2318,8 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                 {/* From */}
                 {seatMap?.from && (
                   <>
-                    <h2 className='mt-20'>Return Seatmap</h2>
                     <div className='bg-white py-20 px-20 mt-20'>
+                      <h3 className='mb-10'>Return</h3>
                       {
                         // TJ
                         seatMap?.from?.provider === 'tj' ? (
@@ -2266,8 +2340,8 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                 {/* Combined */}
                 {seatMap?.combined && (
                   <>
-                    <h2 className='mt-20'>Onward and Return Trip</h2>
                     <div className='bg-white py-20 px-20 mt-20'>
+                      <h3 className='mb-10'>Onward and Return</h3>
                       {
                         // TJ
                         seatMap?.combined?.provider === 'tj' ? (
@@ -2286,9 +2360,8 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                   </>
                 )}
                 {/* Traveller Meal Preferences + Review */}
-                <h1 className='mt-30'>Review</h1>
+                <h2 className='mt-30'>Select meals</h2>
                 <div className='mt-10 bg-white px-20 py-20'>
-                  <h3>Select Meals (Optional)</h3>
                   {/* Iterating Over Travellers */}
                   {travellerInfo.map((travl, travlInd) => {
                     const age = (
@@ -2308,256 +2381,291 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                           <h4>{travl.aliases[0]}</h4>
                           {/* Iterating Over PNRS to get the segments */}
                           <div className='row'>
-                            {Object.entries(PNR).map(([key, value], index) => (
-                              <>
-                                {value && (
-                                  <div key={index} className='col-lg-7'>
-                                    {/* TJ */}
-                                    {value.provider === 'tj' &&
-                                      value.data?.data?.tripInfos?.map(
-                                        (tripInf, tripInd) => (
+                            {Object.entries(PNR).map(([key, value], index) => {
+                              let amadeusLabel = <></>;
+                              if (value && value.provider === 'ad') {
+                                if (selectedBookings[key].type === 'combined') {
+                                  let counter = 0;
+                                  for (let seg of selectedBookings[key].segments) {
+                                    if (seg.segmentNo === 0) {
+                                      counter += 1;
+                                      if (counter === 2) {
+                                        amadeusLabel = (
                                           <>
-                                            {tripInf?.sI?.map((element, ind) => (
-                                              <>
-                                                {element?.ssrInfo?.MEAL ? (
-                                                  <div
-                                                    className='form-input-select mt-10'
-                                                    key={ind}
-                                                  >
-                                                    <label>
-                                                      {element.da.code} &rarr;{' '}
-                                                      {element.aa.code}
-                                                    </label>
-                                                    <Select
-                                                      options={[
-                                                        {
+                                            {
+                                              selectedBookings[key].segments[0].departure
+                                                .airport.code
+                                            }{' '}
+                                            &rarr; {seg.departure.airport.code} &rarr;{' '}
+                                            {
+                                              selectedBookings[key].segments.at(-1)
+                                                .arrival.airport.code
+                                            }
+                                          </>
+                                        );
+                                      }
+                                    }
+                                  }
+                                } else {
+                                  amadeusLabel = (
+                                    <>
+                                      {Object.values(value.data.segments)[0].from} &rarr;{' '}
+                                      {Object.values(value.data.segments).at(-1).to}
+                                    </>
+                                  );
+                                }
+                              }
+                              return (
+                                <>
+                                  {value && (
+                                    <div key={index} className='col-lg-7'>
+                                      {/* TJ */}
+                                      {value.provider === 'tj' &&
+                                        value.data?.data?.tripInfos?.map(
+                                          (tripInf, tripInd) => (
+                                            <>
+                                              {tripInf?.sI?.map((element, ind) => (
+                                                <>
+                                                  {element?.ssrInfo?.MEAL ? (
+                                                    <div
+                                                      className='form-input-select mt-10'
+                                                      key={ind}
+                                                    >
+                                                      <label>
+                                                        {element.da.code} &rarr;{' '}
+                                                        {element.aa.code}
+                                                      </label>
+                                                      <Select
+                                                        options={[
+                                                          {
+                                                            value: {
+                                                              id: element.id,
+                                                            },
+                                                            label: 'No Preference',
+                                                          },
+                                                          ...element?.ssrInfo?.MEAL?.map(
+                                                            (el) => ({
+                                                              value: {
+                                                                ...el,
+                                                                id: element.id,
+                                                              },
+                                                              label:
+                                                                el.desc +
+                                                                (el?.amount
+                                                                  ? ' - ' +
+                                                                    el.amount.toLocaleString(
+                                                                      'en-IN',
+                                                                      {
+                                                                        maximumFractionDigits: 2,
+                                                                        style: 'currency',
+                                                                        currency: 'INR',
+                                                                      }
+                                                                    )
+                                                                  : ''),
+                                                            })
+                                                          ),
+                                                        ]}
+                                                        defaultValue={{
                                                           value: {
                                                             id: element.id,
                                                           },
                                                           label: 'No Preference',
-                                                        },
-                                                        ...element?.ssrInfo?.MEAL?.map(
-                                                          (el) => ({
-                                                            value: {
-                                                              ...el,
-                                                              id: element.id,
-                                                            },
-                                                            label:
-                                                              el.desc +
-                                                              (el?.amount
-                                                                ? ' - ' +
-                                                                  el.amount.toLocaleString(
-                                                                    'en-IN',
-                                                                    {
-                                                                      maximumFractionDigits: 2,
-                                                                      style: 'currency',
-                                                                      currency: 'INR',
-                                                                    }
-                                                                  )
-                                                                : ''),
-                                                          })
-                                                        ),
-                                                      ]}
-                                                      defaultValue={{
-                                                        value: {
-                                                          id: element.id,
-                                                        },
-                                                        label: 'No Preference',
-                                                      }}
-                                                      // value={element.seat_preference}
-                                                      onChange={(id) =>
-                                                        setTravellerInfo((prev) => {
-                                                          for (let traveller of prev) {
-                                                            if (
-                                                              traveller.id === travl.id
-                                                            ) {
+                                                        }}
+                                                        // value={element.seat_preference}
+                                                        onChange={(id) =>
+                                                          setTravellerInfo((prev) => {
+                                                            for (let traveller of prev) {
                                                               if (
-                                                                traveller.trip_meals[key]
+                                                                traveller.id === travl.id
                                                               ) {
-                                                                let exists = false;
-                                                                for (
-                                                                  let i = 0;
-                                                                  i <
+                                                                if (
                                                                   traveller.trip_meals[
                                                                     key
-                                                                  ].length;
-                                                                  i++
+                                                                  ]
                                                                 ) {
-                                                                  if (
-                                                                    element.id ===
+                                                                  let exists = false;
+                                                                  for (
+                                                                    let i = 0;
+                                                                    i <
                                                                     traveller.trip_meals[
                                                                       key
-                                                                    ][i].value.id
+                                                                    ].length;
+                                                                    i++
                                                                   ) {
+                                                                    if (
+                                                                      element.id ===
+                                                                      traveller
+                                                                        .trip_meals[key][
+                                                                        i
+                                                                      ].value.id
+                                                                    ) {
+                                                                      traveller.trip_meals[
+                                                                        key
+                                                                      ][i] = id;
+                                                                      exists = true;
+                                                                    }
+                                                                  }
+                                                                  if (!exists) {
                                                                     traveller.trip_meals[
                                                                       key
-                                                                    ][i] = id;
-                                                                    exists = true;
+                                                                    ].push(id);
                                                                   }
-                                                                }
-                                                                if (!exists) {
+                                                                } else {
                                                                   traveller.trip_meals[
                                                                     key
-                                                                  ].push(id);
+                                                                  ] = [id];
                                                                 }
-                                                              } else {
-                                                                traveller.trip_meals[
-                                                                  key
-                                                                ] = [id];
                                                               }
                                                             }
-                                                          }
-                                                          return [...prev];
-                                                        })
-                                                      }
-                                                    />
-                                                  </div>
-                                                ) : (
-                                                  <></>
-                                                )}
-                                              </>
-                                            ))}
-                                          </>
-                                        )
-                                      )}
-                                    {/* AA */}
-                                    {value.provider === 'aa' &&
-                                      value.data?.ssr?.legSsrs?.map((element, ind) => (
-                                        <>
-                                          {element ? (
-                                            <div
-                                              className='form-input-select mt-10'
-                                              key={ind}
-                                            >
-                                              <label>
-                                                {element.legDetails.origin} &rarr;{' '}
-                                                {element.legDetails.destination}
-                                              </label>
-                                              <Select
-                                                options={[
-                                                  {
+                                                            return [...prev];
+                                                          })
+                                                        }
+                                                      />
+                                                    </div>
+                                                  ) : (
+                                                    <></>
+                                                  )}
+                                                </>
+                                              ))}
+                                            </>
+                                          )
+                                        )}
+                                      {/* AA */}
+                                      {value.provider === 'aa' &&
+                                        value.data?.ssr?.legSsrs?.map((element, ind) => (
+                                          <>
+                                            {element ? (
+                                              <div
+                                                className='form-input-select mt-10'
+                                                key={ind}
+                                              >
+                                                <label>
+                                                  {element.legDetails.origin} &rarr;{' '}
+                                                  {element.legDetails.destination}
+                                                </label>
+                                                <Select
+                                                  options={[
+                                                    {
+                                                      value: {
+                                                        legKey: element.legKey,
+                                                      },
+                                                      label: 'No Preference',
+                                                    },
+                                                    ...element?.ssrs
+                                                      .filter((el) => el.ssrType === 2)
+                                                      .map((el) => ({
+                                                        value: {
+                                                          ...el,
+                                                          legKey: element.legKey,
+                                                        },
+                                                        label:
+                                                          el.name +
+                                                          ' - ' +
+                                                          Object.values(
+                                                            el.passengersAvailability
+                                                          )[0].price.toLocaleString(
+                                                            'en-IN',
+                                                            {
+                                                              maximumFractionDigits: 2,
+                                                              style: 'currency',
+                                                              currency: 'INR',
+                                                            }
+                                                          ),
+                                                      })),
+                                                  ]}
+                                                  defaultValue={{
                                                     value: {
                                                       legKey: element.legKey,
                                                     },
                                                     label: 'No Preference',
-                                                  },
-                                                  ...element?.ssrs
-                                                    .filter((el) => el.ssrType === 2)
-                                                    .map((el) => ({
-                                                      value: {
-                                                        ...el,
-                                                        legKey: element.legKey,
-                                                      },
-                                                      label:
-                                                        el.name +
-                                                        ' - ' +
-                                                        Object.values(
-                                                          el.passengersAvailability
-                                                        )[0].price.toLocaleString(
-                                                          'en-IN',
-                                                          {
-                                                            maximumFractionDigits: 2,
-                                                            style: 'currency',
-                                                            currency: 'INR',
-                                                          }
-                                                        ),
-                                                    })),
-                                                ]}
-                                                defaultValue={{
-                                                  value: {
-                                                    legKey: element.legKey,
-                                                  },
-                                                  label: 'No Preference',
-                                                }}
-                                                // value={element.seat_preference}
-                                                onChange={(id) =>
-                                                  setTravellerInfo((prev) => {
-                                                    for (let traveller of prev) {
-                                                      if (traveller.id === travl.id) {
-                                                        if (traveller.trip_meals[key]) {
-                                                          let exists = false;
-                                                          for (
-                                                            let i = 0;
-                                                            i <
-                                                            traveller.trip_meals[key]
-                                                              .length;
-                                                            i++
-                                                          ) {
-                                                            if (
-                                                              element.legKey ===
-                                                              traveller.trip_meals[key][i]
-                                                                .value.legKey
+                                                  }}
+                                                  // value={element.seat_preference}
+                                                  onChange={(id) =>
+                                                    setTravellerInfo((prev) => {
+                                                      for (let traveller of prev) {
+                                                        if (traveller.id === travl.id) {
+                                                          if (traveller.trip_meals[key]) {
+                                                            let exists = false;
+                                                            for (
+                                                              let i = 0;
+                                                              i <
+                                                              traveller.trip_meals[key]
+                                                                .length;
+                                                              i++
                                                             ) {
-                                                              traveller.trip_meals[key][
-                                                                i
-                                                              ] = id;
-                                                              exists = true;
+                                                              if (
+                                                                element.legKey ===
+                                                                traveller.trip_meals[key][
+                                                                  i
+                                                                ].value.legKey
+                                                              ) {
+                                                                traveller.trip_meals[key][
+                                                                  i
+                                                                ] = id;
+                                                                exists = true;
+                                                              }
                                                             }
+                                                            if (!exists) {
+                                                              traveller.trip_meals[
+                                                                key
+                                                              ].push(id);
+                                                            }
+                                                          } else {
+                                                            traveller.trip_meals[key] = [
+                                                              id,
+                                                            ];
                                                           }
-                                                          if (!exists) {
-                                                            traveller.trip_meals[
-                                                              key
-                                                            ].push(id);
-                                                          }
-                                                        } else {
-                                                          traveller.trip_meals[key] = [
-                                                            id,
-                                                          ];
                                                         }
                                                       }
-                                                    }
-                                                    return [...prev];
-                                                  })
-                                                }
-                                              />
-                                            </div>
-                                          ) : (
-                                            <></>
-                                          )}
-                                        </>
-                                      ))}
-                                    {/* AD */}
-                                    {value.provider === 'ad' && (
-                                      <div className='form-input-select mt-10'>
-                                        <label>
-                                          {Object.values(value.data.segments)[0].from}{' '}
-                                          &rarr;{' '}
-                                          {Object.values(value.data.segments).at(-1).to}
-                                        </label>
-                                        <Select
-                                          options={amadeusMealOptions}
-                                          defaultValue={
-                                            travl.meal_preference
-                                              ? amadeusMealOptions.map((meal) => {
-                                                  if (
-                                                    meal.value === travl.meal_preference
-                                                  ) {
-                                                    return meal;
+                                                      return [...prev];
+                                                    })
                                                   }
-                                                })
-                                              : {
-                                                  value: '_',
-                                                  label: 'No Preference',
+                                                />
+                                              </div>
+                                            ) : (
+                                              <></>
+                                            )}
+                                          </>
+                                        ))}
+                                      {/* AD */}
+                                      {value.provider === 'ad' && (
+                                        <div className='form-input-select mt-10'>
+                                          <label>{amadeusLabel}</label>
+                                          <Select
+                                            options={amadeusMealOptions}
+                                            defaultValue={
+                                              travl.meal_preference
+                                                ? amadeusMealOptions.map((meal) => {
+                                                    if (
+                                                      meal.value === travl.meal_preference
+                                                    ) {
+                                                      return meal;
+                                                    }
+                                                  })
+                                                : {
+                                                    value: '_',
+                                                    label: 'No Preference',
+                                                  }
+                                            }
+                                            // value={element.seat_preference}
+                                            onChange={(id) =>
+                                              setTravellerInfo((prev) => {
+                                                for (let traveller of prev) {
+                                                  if (traveller.id === travl.id) {
+                                                    traveller.trip_meals[key] = [id];
+                                                  }
                                                 }
-                                          }
-                                          // value={element.seat_preference}
-                                          onChange={(id) =>
-                                            setTravellerInfo((prev) => {
-                                              for (let traveller of prev) {
-                                                if (traveller.id === travl.id) {
-                                                  traveller.trip_meals[key] = [id];
-                                                }
-                                              }
-                                              return [...prev];
-                                            })
-                                          }
-                                        />
-                                      </div>
-                                    )}
-                                  </div>
-                                )}
-                              </>
-                            ))}
+                                                return [...prev];
+                                              })
+                                            }
+                                          />
+                                        </div>
+                                      )}
+                                    </div>
+                                  )}
+                                </>
+                              );
+                            })}
                           </div>
                         </div>
                       );
@@ -2577,6 +2685,84 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
               {/* Booking Details */}
               <div className='col-md-4 mt-20'>
                 <div className='col-12 px-30 py-30 border-light rounded-4 bg-white'>
+                  {client_id === 1 && (
+                    <div className='mb-20'>
+                      <h4 className='mb-10'>Invoice Details</h4>
+                      {PNR &&
+                        Object.entries(PNR).map(([key, value], i) => {
+                          if (value)
+                            return (
+                              <>
+                                <div className='text-20 fw-500'>
+                                  {key === 'to'
+                                    ? 'Onward Trip'
+                                    : key === 'from'
+                                    ? 'Return Trip'
+                                    : 'Onward & Return Trip'}
+                                </div>
+                                <div className='form-checkbox d-flex items-center'>
+                                  <input
+                                    type='checkbox'
+                                    name='name'
+                                    checked={value.hide_fare}
+                                    onClick={() => {
+                                      setPNR((prev) => {
+                                        prev[key].hide_fare = !prev[key].hide_fare;
+                                        return { ...prev };
+                                      });
+                                    }}
+                                  />
+                                  <div className='form-checkbox__mark'>
+                                    <div className='form-checkbox__icon icon-check' />
+                                  </div>
+                                  <div className='ml-10'>Hide Fare</div>
+                                </div>
+                                {travellerInfo.map((traveller, index) => {
+                                  const age = (
+                                    (Date.now() -
+                                      +new DateObject({
+                                        date: traveller?.passport_dob,
+                                        format: 'YYYY-MM-DD',
+                                      })
+                                        .toDate()
+                                        .getTime()) /
+                                    31536000000
+                                  ).toFixed(2);
+                                  if (age >= 2)
+                                    return (
+                                      <div>
+                                        <span className='d-block fw-500'>
+                                          {traveller.aliases[0]}
+                                        </span>
+                                        <div className='mb-10'>
+                                          <div className='form-input'>
+                                            <input
+                                              onChange={(e) =>
+                                                setTravellerInfo((prev) => {
+                                                  prev[index].quoted_amount[key] =
+                                                    e.target.value;
+                                                  return [...prev];
+                                                })
+                                              }
+                                              value={traveller.quoted_amount[key]}
+                                              placeholder=' '
+                                              type='number'
+                                              required
+                                            />
+                                            <label className='lh-1 text-16 text-light-1'>
+                                              Quoted Amount
+                                            </label>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    );
+                                })}
+                              </>
+                            );
+                        })}
+                      <div className='border-top-light mt-30 mb-20' />
+                    </div>
+                  )}
                   <div className='text-20 fw-500 mb-15'>Your booking details</div>
                   <div className='row x-gap-15'>
                     <h4 className='mb-10'>Travellers</h4>
@@ -2661,8 +2847,8 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                   let totalAmount;
                   let bookingStatus;
                   let tempObj = { 'Base Fare': 0, 'Taxes & Fee': 0 };
-                  if (seatMap[key]) {
-                    if (seatMap[key].provider === 'tj') {
+                  if (PNR[key]) {
+                    if (PNR[key].provider === 'tj') {
                       bookingID = value.data.order.bookingId;
                       totalAmount = value.data.order.amount;
                       bookingStatus =
@@ -2677,7 +2863,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                       tempObj['Taxes & Fee'] =
                         value.data.itemInfos.AIR.totalPriceInfo.totalFareDetail.fC?.TAF ||
                         undefined;
-                    } else if (seatMap[key].provider === 'aa') {
+                    } else if (PNR[key].provider === 'aa') {
                       bookingID = value.recordLocator;
                       totalAmount = value.payments[0].amounts.amount;
                       if (value.info.status === 2) bookingStatus = 'CONFIRMED';
@@ -2690,7 +2876,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                         (value.breakdown.passengerTotals?.specialServices?.total || 0) +
                         (value.breakdown.passengerTotals?.seats?.taxes || 0) +
                         (value.breakdown.passengerTotals?.seats?.total || 0);
-                    } else if (seatMap[key].provider === 'ad') {
+                    } else if (PNR[key].provider === 'ad') {
                       bookingID =
                         value.pnrHeader.reservationInfo.reservation.controlNumber;
                       totalAmount = getArray(
@@ -2700,7 +2886,6 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                           (e) => +e.documentDetailsGroup.totalFare.monetaryDetails.amount
                         )
                         .reduce((p, v) => p + v, 0);
-                      console.log('TotalAmt', totalAmount);
                       bookingStatus = 'CONFIRMED';
                       for (let tst of getArray(value.tstData))
                         for (let fare of tst.fareData.monetaryInfo) {
@@ -2740,6 +2925,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                       </div>
                       <div className='mb-20 border-light mt-20'>
                         <FlightProperty
+                          alreadyExpanded
                           element={selectedBookings[key]}
                           isSelectedBooking
                           showPrice={false}

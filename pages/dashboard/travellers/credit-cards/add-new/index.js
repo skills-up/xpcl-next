@@ -113,6 +113,7 @@ const AddNewCreditCard = () => {
                         Expiry Date<span className='text-danger'>*</span>
                       </label>
                       <DatePicker
+                        onlyMonthPicker
                         style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
                         inputClass='custom_input-picker'
                         containerClassName='custom_container-picker'
@@ -120,7 +121,7 @@ const AddNewCreditCard = () => {
                         onChange={setExpiryDate}
                         numberOfMonths={1}
                         offsetY={10}
-                        format='DD MMMM YYYY'
+                        format='MMMM YYYY'
                       />
                     </div>
 

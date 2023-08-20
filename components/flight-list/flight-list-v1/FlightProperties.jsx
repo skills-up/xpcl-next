@@ -43,6 +43,9 @@ const FlightProperties = () => {
   const paginateDataNumber = useSelector(
     (state) => state.flightSearch.value.paginateDataNumber
   );
+  const paginateTotalDataSize = useSelector(
+    (state) => state.flightSearch.value.paginateTotalDataSize
+  );
   const paginateDataPerPage = useSelector(
     (state) => state.flightSearch.value.paginateDataPerPage
   );
@@ -112,10 +115,17 @@ const FlightProperties = () => {
                     (adultPrice > 0 ? adultPrice : 0);
                 }
                 // Overall Duration + Day Difference
-                let totalDuration =
-                  (new Date(val.segments.at(-1).arrival.time).getTime() -
-                    new Date(val.segments[0].departure.time).getTime()) /
-                  60000;
+                let totalDuration = 0;
+                if (key === 'aa') {
+                  totalDuration =
+                    (new Date(val.segments.at(-1).arrival.timeUtc).getTime() -
+                      new Date(val.segments[0].departure.timeUtc).getTime()) /
+                    60000;
+                } else if (key === 'tj') {
+                  for (let seg of val.segments)
+                    totalDuration +=
+                      seg.journey.duration + (seg.journey?.layoverMins || 0);
+                }
 
                 let departureDay = new Date(val.segments[0].departure.time.slice(0, 10));
                 let arrivalDay = new Date(val.segments.at(-1).arrival.time.slice(0, 10));
@@ -132,20 +142,98 @@ const FlightProperties = () => {
                     )) /
                     (1000 * 60 * 60 * 24)
                 );
+                let legOneDayDifference = 0;
+                let legTwoDayDifference = 0;
+                let firstLegDuration = 0;
+                let secondLegDuration = 0;
+                if (secondKey === 'combined') {
+                  let segCounter = 0;
+                  let counter = 0;
+                  for (let seg of val.segments) {
+                    if (seg.segmentNo === 0) {
+                      counter += 1;
+                      // First + Second Leg Total Duration
+                      if (counter === 2) {
+                        // Leg Day Differences
+                        arrivalDay = new Date(
+                          val.segments[segCounter - 1].arrival.time.slice(0, 10)
+                        );
+                        legOneDayDifference = Math.floor(
+                          (Date.UTC(
+                            arrivalDay.getFullYear(),
+                            arrivalDay.getMonth(),
+                            arrivalDay.getDate()
+                          ) -
+                            Date.UTC(
+                              departureDay.getFullYear(),
+                              departureDay.getMonth(),
+                              departureDay.getDate()
+                            )) /
+                            (1000 * 60 * 60 * 24)
+                        );
+                        departureDay = new Date(
+                          val.segments[segCounter].departure.time.slice(0, 10)
+                        );
+                        arrivalDay = new Date(
+                          val.segments.at(-1).arrival.time.slice(0, 10)
+                        );
+                        legTwoDayDifference = Math.floor(
+                          (Date.UTC(
+                            arrivalDay.getFullYear(),
+                            arrivalDay.getMonth(),
+                            arrivalDay.getDate()
+                          ) -
+                            Date.UTC(
+                              departureDay.getFullYear(),
+                              departureDay.getMonth(),
+                              departureDay.getDate()
+                            )) /
+                            (1000 * 60 * 60 * 24)
+                        );
+                      }
+                    }
+                    if (counter < 2) {
+                      firstLegDuration +=
+                        seg.journey.duration + (seg.journey?.layoverMins || 0);
+                    } else {
+                      secondLegDuration +=
+                        seg.journey.duration + (seg.journey?.layoverMins || 0);
+                    }
+                    segCounter += 1;
+                  }
+                }
                 // Setting from and combined count
                 if (secondKey === 'to') toCount += 1;
                 if (secondKey === 'from') fromCount += 1;
                 if (secondKey === 'combined') combinedCount += 1;
                 /* Sorting */
                 // Stops
-                if (val.segments.length > 1) {
-                  if (val.segments.length > 2)
-                    stops[`${val.segments.length - 1} Stops`]
-                      ? (stops[`${val.segments.length - 1} Stops`] += 1)
-                      : (stops[`${val.segments.length - 1} Stops`] = 1);
-                  else stops['1 Stop'] ? (stops['1 Stop'] += 1) : (stops['1 Stop'] = 1);
+                if (secondKey === 'combined') {
+                  let s = 0;
+                  for (let seg of val.segments) {
+                    if (seg.segmentNo !== 0) {
+                      s += 1;
+                    }
+                  }
+                  if (s > 0) {
+                    if (s > 1)
+                      stops[`${s} Stops`]
+                        ? (stops[`${s} Stops`] += 1)
+                        : (stops[`${s} Stops`] = 1);
+                    else stops['1 Stop'] ? (stops['1 Stop'] += 1) : (stops['1 Stop'] = 1);
+                  } else {
+                    stops['Nonstop'] ? (stops['Nonstop'] += 1) : (stops['Nonstop'] = 1);
+                  }
                 } else {
-                  stops['Nonstop'] ? (stops['Nonstop'] += 1) : (stops['Nonstop'] = 1);
+                  if (val.segments.length > 1) {
+                    if (val.segments.length > 2)
+                      stops[`${val.segments.length - 1} Stops`]
+                        ? (stops[`${val.segments.length - 1} Stops`] += 1)
+                        : (stops[`${val.segments.length - 1} Stops`] = 1);
+                    else stops['1 Stop'] ? (stops['1 Stop'] += 1) : (stops['1 Stop'] = 1);
+                  } else {
+                    stops['Nonstop'] ? (stops['Nonstop'] += 1) : (stops['Nonstop'] = 1);
+                  }
                 }
                 // Cabin
                 if (key === 'aa') {
@@ -224,9 +312,13 @@ const FlightProperties = () => {
                     provider: key,
                     selectId: `collapse_${counter}`,
                     type: secondKey,
+                    legOneDayDifference,
+                    legTwoDayDifference,
                     total,
                     childPrice,
                     infantPrice,
+                    firstLegDuration,
+                    secondLegDuration,
                     adultPrice,
                     totalDuration,
                     overallDayDifference,
@@ -364,12 +456,28 @@ const FlightProperties = () => {
     if (el.type === currentTab) {
       // Filters:
       // Filter By Stops
-      if (el.segments.length === 1) {
-        if (!stops['Nonstop']?.value) return false;
-      } else if (el.segments.length === 2) {
-        if (!stops['1 Stop']?.value) return false;
+      if (el.type === 'combined') {
+        let s = 0;
+        for (let seg of el.segments) {
+          if (seg.segmentNo !== 0) {
+            s += 1;
+          }
+        }
+        if (s === 0) {
+          if (!stops['Nonstop']?.value) return false;
+        } else if (s === 1) {
+          if (!stops['1 Stop']?.value) return false;
+        } else {
+          if (!stops[`${s} Stops`]?.value) return false;
+        }
       } else {
-        if (!stops[`${el.segments.length - 1} Stops`]?.value) return false;
+        if (el.segments.length === 1) {
+          if (!stops['Nonstop']?.value) return false;
+        } else if (el.segments.length === 2) {
+          if (!stops['1 Stop']?.value) return false;
+        } else {
+          if (!stops[`${el.segments.length - 1} Stops`]?.value) return false;
+        }
       }
       // Filter By Cabin
       if (el.provider === 'aa') {
