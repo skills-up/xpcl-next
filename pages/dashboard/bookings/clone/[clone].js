@@ -697,7 +697,8 @@ const AddNewBooking = () => {
 
               <div className='py-30 px-30 lg:px-10 rounded-4 bg-white shadow-3'>
                 <div>
-                  <form onSubmit={onSubmit} className='col-12 y-gap-20'>
+                  <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
+                    <h3>Basic Details</h3>
                     <div className='form-input-select col-lg-4'>
                       <label>
                         Booking Type<span className='text-danger'>*</span>
@@ -801,7 +802,7 @@ const AddNewBooking = () => {
                     {/* Booking Sectors */}
                     {bookingType?.value !== 'Miscellaneous' && (
                       <div>
-                        <label className='d-block'>Add Booking Sectors</label>
+                        <h4 className='d-block'>Add Booking Sectors</h4>
                         <div>
                           {bookingSectors.map((element, index) => {
                             return (
@@ -1062,6 +1063,7 @@ const AddNewBooking = () => {
                         </button>
                       </div>
                     )}
+                    <h3>Supplier Details</h3>
                     <div className='form-input-select col-lg-4'>
                       <label>
                         Vendor<span className='text-danger'>*</span>
@@ -1300,6 +1302,7 @@ const AddNewBooking = () => {
                         />
                       </div>
                     )}
+                    <h3>Client Details</h3>
                     <div className='form-input-select col-lg-4'>
                       <label>Client Referrer</label>
                       <Select

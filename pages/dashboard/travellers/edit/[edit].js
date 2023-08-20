@@ -333,9 +333,14 @@ const UpdateTravellers = () => {
     } else {
       for (let alias of aliases) passportFormData.append('aliases[]', alias?.value);
     }
-    if (vaccinationDates && vaccinationDates.length > 0)
+    if (vaccinationDates && vaccinationDates.length > 0) {
+      if (vaccinationDates.length > 3) {
+        sendToast('error', 'Max 3 Vaccination Dates are allowed', 4000);
+        return;
+      }
       for (let date of vaccinationDates)
         passportFormData.append('vaccination_dates[]', date.format('YYYY-MM-DD'));
+    }
     for (let file of passportScanFiles)
       passportFormData.append('passport_scan_files[]', file);
     for (let file of previousPassportScanFiles) {
