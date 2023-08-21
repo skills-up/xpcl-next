@@ -6,7 +6,7 @@ import Pluralize from '../../../utils/pluralChecker';
 import { FaUserTie } from 'react-icons/fa';
 
 const counters = [
-  { name: 'Adults', defaultValue: 2 },
+  { name: 'Adults', defaultValue: 1 },
   { name: 'Children', defaultValue: 0 },
   { name: 'Infants', defaultValue: 0 },
 ];

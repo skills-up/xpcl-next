@@ -297,12 +297,12 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                 }
                 // FF
                 if (
-                  traveller?.frequentFliers?.value &&
-                  traveller.membershipID.trim().length > 0
+                  traveller?.frequentFliers[key]?.program?.value?.code &&
+                  traveller?.frequentFliers[key]?.membershipID.trim().length > 0
                 ) {
                   tempObj['ff'] = {
-                    code: traveller.frequentFliers.value,
-                    number: traveller.membershipID,
+                    code: traveller.frequentFliers[key].program.value.code,
+                    number: traveller.frequentFliers[key].membershipID,
                   };
                 }
                 travellersTemp.push(tempObj);
@@ -687,13 +687,13 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
               }
             // FF
             if (
-              traveller?.frequentFliers?.value &&
-              traveller.membershipID.trim().length > 0
+              traveller?.frequentFliers[key]?.program?.value?.code &&
+              traveller?.frequentFliers[key]?.membershipID.trim().length > 0
             ) {
               frequentFliers.push({
                 paxRef,
-                code: traveller.frequentFliers.value,
-                number: traveller.membershipID,
+                code: traveller.frequentFliers[key].program.value.code,
+                number: traveller.frequentFliers[key].membershipID,
               });
             }
             // Meals

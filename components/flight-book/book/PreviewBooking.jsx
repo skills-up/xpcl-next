@@ -62,6 +62,8 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
     getData();
   }, []);
 
+  useEffect(() => console.log('traveller', travellerInfo), [travellerInfo]);
+
   const getData = async () => {
     // Getting Traveller Details
     if (travellerDOBS) {
@@ -71,29 +73,36 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
         });
         if (travellerList?.success) {
           setTravellers(
-            travellerList.data.map((el) => ({
-              label: el.aliases[0],
-              value: {
-                ...el,
-                ...{
-                  quoted_amount: { from: 0, to: 0, combined: 0 },
-                  frequentFliers: null,
-                  membershipID: '',
-                  trip_meals: { from: null, to: null, combined: null },
-                  prefix: el.prefix
-                    ? el.prefix.toLowerCase() === 'mr'
-                      ? { value: 'MR', label: 'Mr.' }
-                      : el.prefix.toLowerCase() === 'mrs'
-                      ? { value: 'MRS', label: 'Mrs.' }
-                      : el.prefix.toLowerCase() === 'mstr'
-                      ? { value: 'MSTR', label: 'Mstr.' }
-                      : el.prefix.toLowerCase() === 'ms'
-                      ? { value: 'MS', label: 'Ms.' }
-                      : null
-                    : null,
+            travellerList.data.map((el) => {
+              let ff = {};
+              for (let [key, value] of Object.entries(selectedBookings)) {
+                ff[key] = value ? { program: null, membershipID: '' } : null;
+              }
+              return {
+                label: el.aliases[0],
+                value: {
+                  ...el,
+                  ...{
+                    quoted_amount: { from: 0, to: 0, combined: 0 },
+                    frequentFliers: ff,
+                    // frequentFliers: null,
+                    // membershipID: '',
+                    trip_meals: { from: null, to: null, combined: null },
+                    prefix: el.prefix
+                      ? el.prefix.toLowerCase() === 'mr'
+                        ? { value: 'MR', label: 'Mr.' }
+                        : el.prefix.toLowerCase() === 'mrs'
+                        ? { value: 'MRS', label: 'Mrs.' }
+                        : el.prefix.toLowerCase() === 'mstr'
+                        ? { value: 'MSTR', label: 'Mstr.' }
+                        : el.prefix.toLowerCase() === 'ms'
+                        ? { value: 'MS', label: 'Ms.' }
+                        : null
+                      : null,
+                  },
                 },
-              },
-            }))
+              };
+            })
           );
           // setTravellerInfo(
           //   travellerList.data.map((el) => ({
@@ -134,7 +143,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
     if (frequentFliersList?.success) {
       setFrequentFliers(frequentFliersList?.data);
     } else {
-      sendToast('error', 'Failed to fetch frequent fliers', 4000);
+      sendToast('error', 'Failed to fetch travel membership programs', 4000);
     }
   };
 
@@ -146,6 +155,22 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
         sendToast('error', 'Each traveller should have a prefix', 4000);
         setIsProceed(false);
         return;
+      }
+      for (let [key, value] of Object.entries(traveller.frequentFliers)) {
+        if (value) {
+          if (
+            (value.program && value.membershipID.trim().length < 1) ||
+            (!value.program && value.membershipID.trim().length >= 1)
+          ) {
+            sendToast(
+              'error',
+              'Travel Membership Program & Membership ID should both be empty or selected.',
+              8000
+            );
+            setIsProceed(false);
+            return;
+          }
+        }
       }
     }
     // Total API Calls to succeed, we check this by checking if selectedbookings.from has a value
@@ -438,94 +463,140 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
         {!selectionConfirm && (
           <div className='mt-30'>
             <h3 className='mb-10'>Select Passengers</h3>
-            <Select
-              isOptionDisabled={() =>
-                selectedTravellers.length >=
-                travellerDOBS?.ADT + travellerDOBS?.CHD + travellerDOBS?.INF
-              }
-              options={travellers}
-              isMulti
-              value={selectedTravellers}
-              onChange={(id) => setSelectedTravellers(id)}
-            />
-            <div className='d-flex justify-end mt-20'>
-              <button
-                className='button col-lg-5 col-12 h-50 px-24 -dark-1 bg-blue-1 text-white'
-                onClick={async () => {
-                  // Check if all the rooms have correct travellers
-                  let adults = 0;
-                  let children = 0;
-                  let infants = 0;
-                  let currentTime = Date.now();
-                  for (let traveller of selectedTravellers) {
-                    if (traveller?.value) {
-                      const age = (
-                        (currentTime -
-                          +new DateObject({
-                            date: traveller.value.passport_dob,
-                            format: 'YYYY-MM-DD',
-                          })
-                            .toDate()
-                            .getTime()) /
-                        31536000000
-                      ).toFixed(2);
-                      if (age < 2) infants += 1;
-                      // If below 12 and above 2, child
-                      if (age >= 2 && age < 12) children += 1;
-                      // If above 12 years, consider adult
-                      if (age >= 12) adults += 1;
+            <div className='row items-center'>
+              <Select
+                className='col-lg-8'
+                isOptionDisabled={() =>
+                  selectedTravellers.length >=
+                  travellerDOBS?.ADT + travellerDOBS?.CHD + travellerDOBS?.INF
+                }
+                options={travellers}
+                isMulti
+                value={selectedTravellers}
+                onChange={(id) => setSelectedTravellers(id)}
+              />
+              <div className='col-lg-4 d-flex justify-end'>
+                <button
+                  style={{ height: '43px' }}
+                  className='button col-12 px-24 -dark-1 bg-blue-1 text-white'
+                  onClick={async () => {
+                    // Check if all the rooms have correct travellers
+                    let adults = 0;
+                    let children = 0;
+                    let infants = 0;
+                    let currentTime = Date.now();
+                    for (let traveller of selectedTravellers) {
+                      if (traveller?.value) {
+                        const age = (
+                          (currentTime -
+                            +new DateObject({
+                              date: traveller.value.passport_dob,
+                              format: 'YYYY-MM-DD',
+                            })
+                              .toDate()
+                              .getTime()) /
+                          31536000000
+                        ).toFixed(2);
+                        if (age < 2) infants += 1;
+                        // If below 12 and above 2, child
+                        if (age >= 2 && age < 12) children += 1;
+                        // If above 12 years, consider adult
+                        if (age >= 12) adults += 1;
+                      }
                     }
-                  }
-                  if (
-                    adults !== travellerDOBS.ADT ||
-                    children !== travellerDOBS.CHD ||
-                    infants !== travellerDOBS.INF
-                  ) {
-                    sendToast(
-                      'error',
-                      `Flight searches were for ${travellerDOBS.ADT} ${Pluralize(
-                        'adult',
-                        'adults',
-                        travellerDOBS.ADT
-                      )}${
-                        travellerDOBS.CHD > 0
-                          ? `, ${travellerDOBS.CHD} ${Pluralize(
-                              'child',
-                              'children',
-                              travellerDOBS.CHD
-                            )}`
-                          : ''
-                      }${
-                        travellerDOBS.INF > 0
-                          ? `, ${travellerDOBS.INF} ${Pluralize(
-                              'child',
-                              'children',
-                              travellerDOBS.INF
-                            )}`
-                          : ''
-                      }, whereas ${adults} ${Pluralize('adult', 'adults', adults)}${
-                        children > 0
-                          ? `, ${children} ${Pluralize('child', 'children', children)}`
-                          : ''
-                      }${
-                        infants > 0
-                          ? `, ${infants} ${Pluralize('infant', 'infants', infants)}`
-                          : ''
-                      } have been selected.`,
-                      10000
-                    );
-                    return;
-                  }
-                  setTravellerInfo(selectedTravellers.map((el) => el?.value));
-                  setSelectionConfirm(true);
-                  setTimeout(() => {
-                    const elem = document.getElementById('traveller-details');
-                    if (elem) elem.scrollIntoView();
-                  }, [450]);
-                }}
-              >
-                Confirm Passengers
-              </button>
+                    if (
+                      adults !== travellerDOBS.ADT ||
+                      children !== travellerDOBS.CHD ||
+                      infants !== travellerDOBS.INF
+                    ) {
+                      sendToast(
+                        'error',
+                        `Flight searches were for ${travellerDOBS.ADT} ${Pluralize(
+                          'adult',
+                          'adults',
+                          travellerDOBS.ADT
+                        )}${
+                          travellerDOBS.CHD > 0
+                            ? `, ${travellerDOBS.CHD} ${Pluralize(
+                                'child',
+                                'children',
+                                travellerDOBS.CHD
+                              )}`
+                            : ''
+                        }${
+                          travellerDOBS.INF > 0
+                            ? `, ${travellerDOBS.INF} ${Pluralize(
+                                'child',
+                                'children',
+                                travellerDOBS.INF
+                              )}`
+                            : ''
+                        }, whereas ${adults} ${Pluralize('adult', 'adults', adults)}${
+                          children > 0
+                            ? `, ${children} ${Pluralize('child', 'children', children)}`
+                            : ''
+                        }${
+                          infants > 0
+                            ? `, ${infants} ${Pluralize('infant', 'infants', infants)}`
+                            : ''
+                        } have been selected.`,
+                        10000
+                      );
+                      return;
+                    }
+                    // TODO set progress
+
+                    // Getting Travel Membership Programs -> Setting them per leg
+                    let temp = [];
+                    for (let traveller of selectedTravellers.map((el) => el?.value)) {
+                      let res = await getList('travel-memberships', {
+                        traveller_id: traveller.id,
+                      });
+                      let tempObj = {};
+                      if (res?.success) {
+                        // Iterating Over Bookings
+                        for (let [key, value] of Object.entries(selectedBookings)) {
+                          if (value)
+                            // Iterating over travel memberships
+                            for (let membership of res.data) {
+                              if (
+                                value.segments[0].flight.airline === membership.provider
+                              ) {
+                                // Iterating Over Travel Membership Programs
+                                for (let opt of frequentFliers) {
+                                  if (
+                                    opt.code === membership.provider &&
+                                    opt.type === membership.membership_type
+                                  ) {
+                                    tempObj[key] = {
+                                      program: {
+                                        value: opt,
+                                        label: opt.program + ' (' + opt.code + ')',
+                                      },
+                                      membershipID: membership.number,
+                                    };
+                                  }
+                                }
+                              }
+                            }
+                        }
+                      }
+                      temp.push({
+                        ...traveller,
+                        frequentFliers: { ...traveller.frequentFliers, ...tempObj },
+                      });
+                    }
+                    setTravellerInfo(temp);
+                    setSelectionConfirm(true);
+                    setTimeout(() => {
+                      const elem = document.getElementById('traveller-details');
+                      if (elem) elem.scrollIntoView();
+                    }, [450]);
+                  }}
+                >
+                  Confirm Passengers
+                </button>
+              </div>
             </div>
           </div>
         )}
@@ -749,42 +820,69 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                         </div>
                       </>
                     )}
-                    <h4>Frequent Flier</h4>
+                    <h4>Travel Membership</h4>
                     <div className='row my-3'>
-                      <div className='row col-12 y-gap-20'>
-                        <div className='col-md-6 form-input-select'>
-                          <label>Travel Membership Program</label>
-                          <Select
-                            options={frequentFliers.map((el) => ({
-                              value: el.code,
-                              label: el.program,
-                            }))}
-                            value={element.frequentFliers}
-                            onChange={(id) =>
-                              setTravellerInfo((prev) => {
-                                prev[index]['frequentFliers'] = id;
-                                return [...prev];
-                              })
-                            }
-                          />
-                        </div>
-                        <div className='form-input col-md-6 bg-white'>
-                          <input
-                            onChange={(e) =>
-                              setTravellerInfo((prev) => {
-                                prev[index]['membershipID'] = e.target.value;
-                                return [...prev];
-                              })
-                            }
-                            value={element['membershipID']}
-                            placeholder=' '
-                            type='text'
-                          />
-                          <label className='lh-1 text-16 text-light-1'>
-                            Membership ID
-                          </label>
-                        </div>
-                      </div>
+                      {element.frequentFliers &&
+                        Object.entries(element.frequentFliers).map(
+                          ([key, value], ffI) => (
+                            <>
+                              {value && (
+                                <>
+                                  {(element.frequentFliers['from'] ||
+                                    element.frequentFliers['combined']) && (
+                                    <h5 className='mb-10'>
+                                      {key === 'to'
+                                        ? element.frequentFliers['from']
+                                          ? 'Onward Trip'
+                                          : ''
+                                        : key === 'from'
+                                        ? 'Return Trip'
+                                        : 'Onward & Return Trip'}
+                                    </h5>
+                                  )}
+                                  <div className='row col-12 y-gap-20'>
+                                    <div className='col-md-6 form-input-select'>
+                                      <label>Travel Membership Program</label>
+                                      <Select
+                                        options={frequentFliers.map((el) => ({
+                                          value: el,
+                                          label: el.program + ' (' + el.code + ')',
+                                        }))}
+                                        value={element.frequentFliers[key]?.program}
+                                        onChange={(id) =>
+                                          setTravellerInfo((prev) => {
+                                            prev[index]['frequentFliers'][key][
+                                              'program'
+                                            ] = id;
+                                            return [...prev];
+                                          })
+                                        }
+                                      />
+                                    </div>
+                                    <div className='form-input col-md-6 bg-white'>
+                                      <input
+                                        onChange={(e) =>
+                                          setTravellerInfo((prev) => {
+                                            prev[index]['frequentFliers'][key][
+                                              'membershipID'
+                                            ] = e.target.value;
+                                            return [...prev];
+                                          })
+                                        }
+                                        value={element.frequentFliers[key]?.membershipID}
+                                        placeholder=' '
+                                        type='text'
+                                      />
+                                      <label className='lh-1 text-16 text-light-1'>
+                                        Membership ID
+                                      </label>
+                                    </div>
+                                  </div>
+                                </>
+                              )}
+                            </>
+                          )
+                        )}
                     </div>
                     {/* <h4>Miscellaneous Details</h4> */}
                     <div className='row my-1 y-gap-20'>
@@ -824,6 +922,109 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                       <a
                         className='h-50 cursor-pointer text-primary'
                         onClick={async () => {
+                          // Getting Travel Memberships
+                          let res = await getList('travel-memberships', {
+                            traveller_id: element.id,
+                          });
+                          if (res?.success)
+                            for (let [key, value] of Object.entries(
+                              element.frequentFliers
+                            )) {
+                              if (value) {
+                                if (
+                                  (value.program &&
+                                    value.membershipID.trim().length < 1) ||
+                                  (!value.program &&
+                                    value.membershipID.trim().length >= 1)
+                                ) {
+                                  sendToast(
+                                    'error',
+                                    `Did not update Traveller Membership for ${
+                                      key === 'to'
+                                        ? 'Onward Trip'
+                                        : key === 'from'
+                                        ? 'Return Trip'
+                                        : 'Onward & Return Trip'
+                                    }, both fields need to be empty or filled.`,
+                                    8000
+                                  );
+                                } else if (
+                                  value.program &&
+                                  value.membershipID.trim().length >= 1
+                                ) {
+                                  // Checking if values already exist
+                                  let exists = false;
+                                  for (let opt of res?.data) {
+                                    if (
+                                      opt.provider === value.program?.value?.code &&
+                                      opt.membership_type === value.program?.value?.type
+                                    ) {
+                                      exists = true;
+                                      // Updating When MembershipID are different
+                                      if (opt.number !== value.membershipID) {
+                                        let upd = await updateItem(
+                                          'travel-memberships',
+                                          opt.id,
+                                          {
+                                            ...opt,
+                                            number: value.membershipID,
+                                          }
+                                        );
+                                        if (!upd?.success) {
+                                          sendToast(
+                                            'error',
+                                            `Error updating Traveller Membership for ${
+                                              key === 'to'
+                                                ? 'Onward Trip'
+                                                : key === 'from'
+                                                ? 'Return Trip'
+                                                : 'Onward & Return Trip'
+                                            }.`,
+                                            4000,
+                                            false
+                                          );
+                                        }
+                                      }
+                                    }
+                                  }
+                                  // If not updating, adding one
+                                  if (!exists) {
+                                    let obj = {
+                                      traveller_id: element.id,
+                                      number: value.membershipID,
+                                      provider: value.program?.value?.code,
+                                      membership_type: value.program?.value?.type,
+                                      username: '',
+                                      password: '',
+                                    };
+                                    let cr = await createItem('travel-memberships', obj);
+                                    if (!cr?.success) {
+                                      sendToast(
+                                        'error',
+                                        `Error creating Traveller Membership for ${
+                                          key === 'to'
+                                            ? 'Onward Trip'
+                                            : key === 'from'
+                                            ? 'Return Trip'
+                                            : 'Onward & Return Trip'
+                                        }.`,
+                                        4000,
+                                        false
+                                      );
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          else {
+                            sendToast(
+                              'error',
+                              'Error fetching travel memberships',
+                              5000,
+                              false
+                            );
+                          }
+                          // Updating Traveller
                           const response = await updateItem('travellers', element.id, {
                             ...element,
                             ...{
@@ -841,14 +1042,20 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                             },
                           });
                           if (response.success) {
-                            sendToast('success', 'Traveller updated successfully', 4000);
+                            sendToast(
+                              'success',
+                              'Traveller updated successfully',
+                              4000,
+                              false
+                            );
                           } else {
                             sendToast(
                               'error',
                               response.data?.error ||
                                 response.data?.message ||
                                 'Error updating traveller',
-                              4000
+                              4000,
+                              false
                             );
                           }
                         }}

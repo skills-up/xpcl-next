@@ -43,7 +43,7 @@ const MainFilterSearchBox = () => {
   const [progress, setProgress] = useState(0);
   const [isSearched, setIsSearched] = useState(false);
   const [guestCounts, setGuestCounts] = useState({
-    Adults: 2,
+    Adults: 1,
     Children: 0,
     Infants: 0,
   });
