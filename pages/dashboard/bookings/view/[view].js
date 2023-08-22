@@ -252,7 +252,7 @@ const ViewBooking = () => {
         'error',
         response.data?.message ||
           response.data?.error ||
-          'Unexpected Error Occurred While Trying to Delete this Booking',
+          'Unexpected Error Occurred While Trying to Delete this Invoice',
         4000
       );
     }
@@ -261,7 +261,7 @@ const ViewBooking = () => {
 
   return (
     <>
-      <Seo pageTitle='View Booking' />
+      <Seo pageTitle='View Invoice' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -282,10 +282,10 @@ const ViewBooking = () => {
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
                   <h1 className='text-30 lh-14 fw-600'>
-                    View Booking - {booking?.number}
+                    View Invoice - {booking?.number}
                   </h1>
                   <div className='text-15 text-light-1'>
-                    Get extended details of a booking.
+                    Get extended details of an invoice.
                   </div>
                 </div>
                 {/* End .col-12 */}
@@ -297,8 +297,8 @@ const ViewBooking = () => {
                   <ConfirmationModal
                     onCancel={onCancel}
                     onSubmit={onSubmit}
-                    title='Do you really want to delete this booking?'
-                    content='This will permanently delete the booking. Press OK to confirm.'
+                    title='Do you really want to delete this invoice?'
+                    content='This will permanently delete the invoice. Press OK to confirm.'
                   />
                 )}
                 <ViewTable

@@ -430,7 +430,7 @@ const UpdateBooking = () => {
     }
     const response = await updateItem('bookings', router.query.edit, editData);
     if (response?.success) {
-      sendToast('success', 'Updated Booking Successfully.', 4000);
+      sendToast('success', 'Updated Invoice Successfully.', 4000);
       router.push('/dashboard/bookings');
     } else {
       if (response.data?.errors) {
@@ -446,7 +446,7 @@ const UpdateBooking = () => {
       } else {
         sendToast(
           'error',
-          response.data?.message || response.data?.error || 'Failed to Create Booking.',
+          response.data?.message || response.data?.error || 'Failed to Update Invoice.',
           4000
         );
       }
@@ -683,7 +683,7 @@ const UpdateBooking = () => {
 
   return (
     <>
-      <Seo pageTitle='Add New Booking' />
+      <Seo pageTitle='Update Invoice' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -703,8 +703,8 @@ const UpdateBooking = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Update Booking - {number}</h1>
-                  <div className='text-15 text-light-1'>Update an existing booking.</div>
+                  <h1 className='text-30 lh-14 fw-600'>Update Invoice - {number}</h1>
+                  <div className='text-15 text-light-1'>Update an existing invoice.</div>
                 </div>
                 {/* End .col-12 */}
               </div>
@@ -1576,7 +1576,7 @@ const UpdateBooking = () => {
                         type='submit'
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
                       >
-                        Update Booking
+                        Update Invoice
                       </button>
                     </div>
                   </form>

@@ -395,7 +395,7 @@ const ReissueBooking = () => {
       sector: bookingType.value === 'Miscellaneous' ? sector : undefined,
     });
     if (response?.success) {
-      sendToast('success', 'Reissued Booking Successfully.', 4000);
+      sendToast('success', 'Reissued Invoice Successfully.', 4000);
       router.push('/dashboard/bookings');
     } else {
       if (response.data?.errors) {
@@ -411,7 +411,7 @@ const ReissueBooking = () => {
       } else {
         sendToast(
           'error',
-          response.data?.message || response.data?.error || 'Failed to Create Booking.',
+          response.data?.message || response.data?.error || 'Failed to Reissue Invoice.',
           4000
         );
       }
@@ -624,7 +624,7 @@ const ReissueBooking = () => {
 
   return (
     <>
-      <Seo pageTitle='Reissue Booking' />
+      <Seo pageTitle='Reissue Invoice' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -644,8 +644,8 @@ const ReissueBooking = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Reissue Booking</h1>
-                  <div className='text-15 text-light-1'>Reissue an existing booking.</div>
+                  <h1 className='text-30 lh-14 fw-600'>Reissue Invoice</h1>
+                  <div className='text-15 text-light-1'>Reissue an existing invoice.</div>
                 </div>
                 {/* End .col-12 */}
               </div>
@@ -1499,7 +1499,7 @@ const ReissueBooking = () => {
                         type='submit'
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
                       >
-                        Reissue Booking
+                        Reissue Invoice
                       </button>
                     </div>
                   </form>

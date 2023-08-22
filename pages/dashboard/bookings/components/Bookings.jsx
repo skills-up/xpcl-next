@@ -113,7 +113,7 @@ const Bookings = () => {
         'error',
         response.data?.message ||
           response.data?.error ||
-          'Unexpected Error Occurred While Trying to Delete this Booking',
+          'Unexpected Error Occurred While Trying to Delete this Invoice',
         4000
       );
     }
@@ -126,8 +126,8 @@ const Bookings = () => {
         <ConfirmationModal
           onCancel={onCancel}
           onSubmit={onSubmit}
-          title='Do you really want to delete this booking?'
-          content='This will permanently delete the booking. Press OK to confirm.'
+          title='Do you really want to delete this invoice?'
+          content='This will permanently delete the invoice. Press OK to confirm.'
         />
       )}
       {/* Search Bar + Add New */}
@@ -151,7 +151,7 @@ const Bookings = () => {
       {/* Data Table */}
       <Datatable
         downloadCSV
-        CSVName='Bookings.csv'
+        CSVName='Invoices.csv'
         columns={columns}
         data={bookings.filter(
           (perm) =>

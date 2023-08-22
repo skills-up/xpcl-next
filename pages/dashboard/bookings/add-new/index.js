@@ -253,7 +253,7 @@ const AddNewBooking = () => {
       sector: bookingType.value === 'Miscellaneous' ? sector : undefined,
     });
     if (response?.success) {
-      sendToast('success', 'Created Booking Successfully.', 4000);
+      sendToast('success', 'Created Invoice Successfully.', 4000);
       router.push('/dashboard/bookings');
     } else {
       if (response.data?.errors) {
@@ -269,7 +269,7 @@ const AddNewBooking = () => {
       } else {
         sendToast(
           'error',
-          response.data?.message || response.data?.error || 'Failed to Create Booking.',
+          response.data?.message || response.data?.error || 'Failed to Create Invoice.',
           4000
         );
       }
@@ -506,7 +506,7 @@ const AddNewBooking = () => {
 
   return (
     <>
-      <Seo pageTitle='Add New Booking' />
+      <Seo pageTitle='Add New Invoice' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -526,8 +526,8 @@ const AddNewBooking = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Add New Booking</h1>
-                  <div className='text-15 text-light-1'>Create a new booking.</div>
+                  <h1 className='text-30 lh-14 fw-600'>Add New Invoice</h1>
+                  <div className='text-15 text-light-1'>Create a new invoice.</div>
                 </div>
                 {/* End .col-12 */}
               </div>
@@ -1376,7 +1376,7 @@ const AddNewBooking = () => {
                         type='submit'
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
                       >
-                        Add Booking
+                        Add Invoice
                       </button>
                     </div>
                   </form>
