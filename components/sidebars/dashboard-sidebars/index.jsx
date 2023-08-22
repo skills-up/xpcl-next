@@ -79,9 +79,6 @@ const Sidebar = () => {
       links: [
         { title: 'Book Hotels', href: '/hotel/hotel-list-v1' },
         { title: 'Book Flights', href: '/flight/flight-list-v1' },
-        { title: 'Bookings', href: '/dashboard/bookings' },
-        { title: 'Refunds', href: '/dashboard/refunds' },
-        { title: 'Partial Refunds', href: '/dashboard/partial-refunds' },
         { title: 'Traveller Profiles', href: '/dashboard/travellers' },
         {
           title: 'Visa Requirements',
@@ -94,14 +91,24 @@ const Sidebar = () => {
       title: 'Accounting',
       permissions: [],
       links: [
+        { title: 'Invoicing', href: '/dashboard/bookings' },
+        { title: 'Refunds', href: '/dashboard/refunds' },
+        { title: 'Partial Refunds', href: '/dashboard/partial-refunds' },
         {
-          title: 'Transactions (Payments / Receipts / Vouchers)',
+          title: 'Transactions',
           href: '/dashboard/payment-receipts',
         },
         {
-          title: 'Vendor Commission Invoices',
+          title: 'Vendor Invoicing',
           href: '/dashboard/vendor-commission-invoices',
         },
+      ],
+    },
+    {
+      icon: '/img/dashboard/sidebar/booking.svg',
+      title: 'MIS / Reports / Admin',
+      permissions: [],
+      links: [
         {
           title: 'Account Categories',
           href: '/dashboard/account-categories',
@@ -110,13 +117,6 @@ const Sidebar = () => {
           title: 'Accounts',
           href: '/dashboard/accounts',
         },
-      ],
-    },
-    {
-      icon: '/img/dashboard/sidebar/booking.svg',
-      title: 'MIS/Reports',
-      permissions: [],
-      links: [
         {
           title: 'Journals',
           href: '/dashboard/journals',

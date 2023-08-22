@@ -18,6 +18,7 @@ const ViewTable = ({ data, onEdit, onDelete, extraButtons = undefined }) => {
     'GSTN',
     'PDF',
     'HSN',
+    'PNR',
   ];
 
   return (
