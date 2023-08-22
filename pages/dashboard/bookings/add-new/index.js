@@ -540,6 +540,16 @@ const AddNewBooking = () => {
                         onChange={(id) => setBookingType(id)}
                       />
                     </div>
+                    {bookingType?.value === 'Miscellaneous' && (
+                      <div className='form-input-select col-lg-4'>
+                        <label>Miscellaneous Type</label>
+                        <Select
+                          options={miscellaneousOptions}
+                          value={miscellaneousType}
+                          onChange={(id) => setMiscellaneousType(id)}
+                        />
+                      </div>
+                    )}
                     <div className='form-input-select col-lg-4'>
                       <label>
                         Client<span className='text-danger'>*</span>
@@ -667,11 +677,11 @@ const AddNewBooking = () => {
                                       filterOption={(candidate, input) => {
                                         if (input) {
                                           return (
-                                            candidate.data.iata.toLowerCase() ===
+                                            candidate?.data?.iata?.toLowerCase() ===
                                               input.toLowerCase() ||
-                                            candidate.label
-                                              .toLowerCase()
-                                              .includes(input.toLowerCase())
+                                            candidate?.label
+                                              ?.toLowerCase()
+                                              ?.includes(input?.toLowerCase())
                                           );
                                         }
                                         return true;
@@ -733,11 +743,11 @@ const AddNewBooking = () => {
                                       filterOption={(candidate, input) => {
                                         if (input) {
                                           return (
-                                            candidate.data.iata.toLowerCase() ===
+                                            candidate?.data?.iata?.toLowerCase() ===
                                               input.toLowerCase() ||
-                                            candidate.label
-                                              .toLowerCase()
-                                              .includes(input.toLowerCase())
+                                            candidate?.label
+                                              ?.toLowerCase()
+                                              ?.includes(input?.toLowerCase())
                                           );
                                         }
                                         return true;
@@ -1124,16 +1134,6 @@ const AddNewBooking = () => {
                         </label>
                       </div>
                     </div>
-                    {bookingType?.value === 'Miscellaneous' && (
-                      <div className='form-input-select col-lg-4'>
-                        <label>Miscellaneous Type</label>
-                        <Select
-                          options={miscellaneousOptions}
-                          value={miscellaneousType}
-                          onChange={(id) => setMiscellaneousType(id)}
-                        />
-                      </div>
-                    )}
                     <div className='form-input-select col-lg-4'>
                       <label>Client Referrer</label>
                       <Select
