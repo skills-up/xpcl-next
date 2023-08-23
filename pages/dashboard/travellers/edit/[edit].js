@@ -474,7 +474,7 @@ const UpdateTravellers = () => {
                           placeholder=' '
                           type='number'
                         />
-                        <label className='lh-1 text-16 text-light-1'>
+                        <label className='lh-1 text-15 text-light-1'>
                           Mobile Phone (with Country Code)
                         </label>
                       </div>
@@ -516,8 +516,8 @@ const UpdateTravellers = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='d-block ml-3 form-datepicker col-lg-3'>
-                      <label>
+                    <div className='d-block ml-3 form-datepicker-alternate col-lg-3'>
+                      <label className='text-15'>
                         Date Of Birth (as on passport)
                         <span className='text-danger'>*</span>
                       </label>

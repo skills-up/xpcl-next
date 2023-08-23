@@ -44,7 +44,13 @@ const AddNewOrganization = () => {
       setCalenderTemplates(
         calenderTemplates.data.map((element) => ({
           value: element.id,
-          label: element.name,
+          label: element?.image_url ? (
+            <span>
+              {element.name} <img src={element.image_url} />
+            </span>
+          ) : (
+            <span>{element.name}</span>
+          ),
         }))
       );
     } else {

@@ -1332,6 +1332,25 @@ $_displays: none, inline-block, block, flex;
   }
 }
 
+.form-datepicker-alternate {
+  position: relative;
+  .custom_container-picker {
+    border: 1px solid lightgray;
+    min-height: 70px;
+    padding-top: 2rem;
+    border-radius: 5px;
+    .custom_input-picker {
+      color: black !important;
+    }
+  }
+  label {
+    position: absolute;
+    padding: 7px 10px 0;
+    color: var(--color-light-1);
+    font-size: var(--text-16);
+  }
+}
+
 .sidebar.-blog {
   > * + * {
     padding-top: 30px;
