@@ -59,12 +59,35 @@ const AddNewOrganization = () => {
           setCalenderTemplates(
             calenderTemplates.data.map((element) => ({
               value: element.id,
-              label: element.name,
+              label: element?.image_url ? (
+                <span>
+                  {element.name}{' '}
+                  <img
+                    style={{ height: '288px', maxWidth: '200px' }}
+                    src={element.image_url}
+                  />
+                </span>
+              ) : (
+                <span>{element.name}</span>
+              ),
             }))
           );
           for (let calendar of calenderTemplates.data) {
             if (calendar.id === response.data.calendar_template_id) {
-              setCalenderTemplateID({ value: calendar.id, label: calendar.name });
+              setCalenderTemplateID({
+                value: calendar.id,
+                label: calendar?.image_url ? (
+                  <span>
+                    {calendar.name}{' '}
+                    <img
+                      style={{ height: '288px', maxWidth: '200px' }}
+                      src={calendar.image_url}
+                    />
+                  </span>
+                ) : (
+                  <span>{calendar.name}</span>
+                ),
+              });
             }
           }
           // Setting types

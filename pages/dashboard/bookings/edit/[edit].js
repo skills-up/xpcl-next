@@ -1272,7 +1272,24 @@ const UpdateBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-4' />
+                    {bookingType?.value === 'Miscellaneous' ? (
+                      <div className='col-lg-4'>
+                        <div className='form-input'>
+                          <input
+                            onChange={(e) => setIATACommissionPercent(e.target.value)}
+                            value={IATACommissionPercent}
+                            placeholder=' '
+                            type='number'
+                            onWheel={(e) => e.target.blur()}
+                          />
+                          <label className='lh-1 text-16 text-light-1'>
+                            Vendor Commission Percent
+                          </label>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className='col-4' />
+                    )}
                     {bookingType?.value !== 'Miscellaneous' && (
                       <>
                         <div className='form-input-select col-lg-4'>

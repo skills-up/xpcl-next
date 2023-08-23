@@ -46,7 +46,11 @@ const AddNewOrganization = () => {
           value: element.id,
           label: element?.image_url ? (
             <span>
-              {element.name} <img src={element.image_url} />
+              {element.name}{' '}
+              <img
+                style={{ height: '288px', maxWidth: '200px' }}
+                src={element.image_url}
+              />
             </span>
           ) : (
             <span>{element.name}</span>
