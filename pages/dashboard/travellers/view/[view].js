@@ -147,6 +147,28 @@ const ViewTravellers = () => {
             </ul>
           );
         }
+        if (data.domestic_airline_preference) {
+          data.domestic_airline_preference = (
+            <ul className='ml-20'>
+              {data.domestic_airline_preference.map((opt, index) => (
+                <li style={{ listStyleType: 'disc' }} key={index}>
+                  {opt}
+                </li>
+              ))}
+            </ul>
+          );
+        }
+        if (data.international_airline_preference) {
+          data.international_airline_preference = (
+            <ul className='ml-20'>
+              {data.international_airline_preference.map((opt, index) => (
+                <li style={{ listStyleType: 'disc' }} key={index}>
+                  {opt}
+                </li>
+              ))}
+            </ul>
+          );
+        }
         if (data.client_travellers) {
           delete data['client_travellers'];
         }
