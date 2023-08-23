@@ -56,16 +56,18 @@ const TravelVisas = () => {
     {
       Header: 'Issue Date',
       accessor: 'issue_date',
-      Cell: (data) => new Date(data.row.original.issue_date).toLocaleString('en-IN', {
-        dateStyle: 'medium',
-     }),
+      Cell: (data) =>
+        new Date(data.row.original.issue_date).toLocaleString('en-IN', {
+          dateStyle: 'medium',
+        }),
     },
     {
       Header: 'Expiry Date',
       accessor: 'expiry_date',
-      Cell: (data) => new Date(data.row.original.expiry_date).toLocaleString('en-IN', {
-        dateStyle: 'medium',
-     }),
+      Cell: (data) =>
+        new Date(data.row.original.expiry_date).toLocaleString('en-IN', {
+          dateStyle: 'medium',
+        }),
     },
     {
       Header: 'Actions',
@@ -185,6 +187,7 @@ const TravelVisas = () => {
       </div>
       {/* Data Table */}
       <Datatable
+        dataFiltering
         downloadCSV
         CSVName='TravelVisas.csv'
         columns={columns}

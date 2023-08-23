@@ -105,6 +105,10 @@ const ViewTravellers = () => {
             dateStyle: 'medium',
           });
         }
+        if (data.prefix) {
+          data.prefix =
+            data.prefix.charAt(0).toUpperCase() + data.prefix.slice(1).toLowerCase();
+        }
         if (data.passport_issue_date) {
           data.passport_issue_date = new Date(data.passport_issue_date).toLocaleString(
             'en-IN',

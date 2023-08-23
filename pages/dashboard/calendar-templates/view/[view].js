@@ -59,6 +59,13 @@ const ViewCalendarTemplate = () => {
             </a>
           );
         }
+        if (data.image_url) {
+          data.image_url = (
+            <a href={data.image_url} target='_blank'>
+              {data.image_url.split('/').at(-1)}
+            </a>
+          );
+        }
         delete data['created_at'];
         delete data['updated_at'];
         setCalendarTemplate(data);

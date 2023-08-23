@@ -9,12 +9,14 @@ import { useEffect, useState } from 'react';
 import { createItem, getItem, getList } from '../../../../api/xplorzApi';
 import ReactSwitch from 'react-switch';
 import Select from 'react-select';
+import NewFileUploads from '../../../../components/new-file-uploads';
 
 const AddCalenderTemplate = () => {
   const [name, setName] = useState('');
   const [location, setLocation] = useState('');
   const [description, setDescription] = useState('');
   const [summary, setSummary] = useState('');
+  const [imageFile, setImageFile] = useState(null);
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -46,13 +48,14 @@ const AddCalenderTemplate = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    // Checking if account id is not null
-    const response = await createItem('calendar-templates', {
-      name,
-      location,
-      description,
-      summary,
-    });
+    let formData = new FormData();
+    formData.append('name', name ?? '');
+    formData.append('location', location ?? '');
+    formData.append('description', description ?? '');
+    formData.append('summary', summary ?? '');
+    if (imageFile) formData.append('image_file', imageFile ?? '');
+    // Final Call
+    const response = await createItem('calendar-templates', formData);
     if (response?.success) {
       sendToast('success', 'Created Calendar Template Successfully.', 4000);
       router.push('/dashboard/calendar-templates');
@@ -150,6 +153,14 @@ const AddCalenderTemplate = () => {
                         />
                         <label className='lh-1 text-16 text-light-1'>Summary</label>
                       </div>
+                    </div>
+                    <div className='col-lg-4'>
+                      <label>Upload Image</label>
+                      <NewFileUploads
+                        multiple={false}
+                        fileTypes={['PNG', 'JPG', 'JPEG']}
+                        setUploads={setImageFile}
+                      />
                     </div>
                     <div className='d-inline-block'>
                       <button

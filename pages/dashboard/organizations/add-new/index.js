@@ -21,6 +21,8 @@ const AddNewOrganization = () => {
   const [gstn, setGstn] = useState('');
   const [useGstn, setUseGstn] = useState(false);
   const [type, setType] = useState(null);
+  const [vendorServicePercent, setVendorServicePercent] = useState(0);
+  const [vendorTDSPercent, setVendorTDSPercent] = useState(0);
   const [farePercent, setFarePercent] = useState(0);
   const options = [
     { value: 'Client', label: 'Client' },
@@ -69,6 +71,8 @@ const AddNewOrganization = () => {
       use_gstn: useGstn,
       type: type?.value,
       fare_percent: farePercent,
+      vendor_service_charge_percentage: vendorServicePercent,
+      vendor_tds_percentage: vendorTDSPercent,
     });
     if (response?.success) {
       sendToast('success', 'Created Organization Successfully.', 4000);
@@ -216,6 +220,32 @@ const AddNewOrganization = () => {
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Markup Percent
+                        </label>
+                      </div>
+                    </div>
+                    <div className='col-12'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setVendorServicePercent(e.target.value)}
+                          value={vendorServicePercent}
+                          placeholder=' '
+                          type='number'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Vendor Service Charge Percent
+                        </label>
+                      </div>
+                    </div>
+                    <div className='col-12'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setVendorTDSPercent(e.target.value)}
+                          value={vendorTDSPercent}
+                          placeholder=' '
+                          type='number'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Vendor TDS Percent
                         </label>
                       </div>
                     </div>

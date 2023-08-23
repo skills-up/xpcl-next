@@ -644,7 +644,10 @@ const ReissueBooking = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Reissue Invoice</h1>
+                  <h1 className='text-30 lh-14 fw-600'>
+                    Reissue{bookingType?.value ? ' ' + bookingType?.value + ' ' : ' '}
+                    Invoice
+                  </h1>
                   <div className='text-15 text-light-1'>Reissue an existing invoice.</div>
                 </div>
                 {/* End .col-12 */}
@@ -658,7 +661,7 @@ const ReissueBooking = () => {
                     className='row col-12 y-gap-20 lg:pr-0 lg:ml-0'
                   >
                     <h3>Basic Details</h3>
-                    <div className=' col-lg-12'>
+                    {/* <div className=' col-lg-12'>
                       <div className='form-input'>
                         <input
                           value={bookingType?.label}
@@ -668,7 +671,7 @@ const ReissueBooking = () => {
                         />
                         <label className='lh-1 text-16 text-light-1'>Booking Type</label>
                       </div>
-                    </div>
+                    </div> */}
                     <div className='d-block ml-3 form-datepicker col-lg-4'>
                       <label>
                         Booking Date<span className='text-danger'>*</span>

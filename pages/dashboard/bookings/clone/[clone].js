@@ -695,7 +695,10 @@ const AddNewBooking = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Add New Invoice</h1>
+                  <h1 className='text-30 lh-14 fw-600'>
+                    Add New{bookingType?.value ? ' ' + bookingType?.value + ' ' : ' '}
+                    Invoice
+                  </h1>
                   <div className='text-15 text-light-1'>Create a new invoice.</div>
                 </div>
                 {/* End .col-12 */}
@@ -709,7 +712,7 @@ const AddNewBooking = () => {
                     className='row col-12 y-gap-20 lg:pr-0 lg:ml-0'
                   >
                     <h3>Basic Details</h3>
-                    <div className='form-input-select col-lg-12'>
+                    {/* <div className='form-input-select col-lg-12'>
                       <label>
                         Booking Type<span className='text-danger'>*</span>
                       </label>
@@ -718,7 +721,7 @@ const AddNewBooking = () => {
                         value={bookingType}
                         onChange={(id) => setBookingType(id)}
                       />
-                    </div>
+                    </div> */}
                     <div className='d-block ml-3 form-datepicker col-lg-4'>
                       <label>
                         Booking Date<span className='text-danger'>*</span>

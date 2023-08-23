@@ -99,8 +99,8 @@ const AddNewBooking = () => {
   const [clientOrgs, setClientOrgs] = useState([]);
 
   const [xplorzGSTFocused, setXplorzGSTFocused] = useState(false);
-  const [vendorGSTFocused, setVendorGSTFocused] = useState(false);
-  const [vendorTDSPercentFocused, setVendorTDSPercentFocused] = useState(false);
+  const [vendorGSTFocused, setVendorGSTFocused] = useState(true);
+  const [vendorTDSPercentFocused, setVendorTDSPercentFocused] = useState(true);
   const [clientBaseAmountFocused, setClientBaseAmountFocused] = useState(false);
 
   const airports = useSelector((state) => state.apis.value.airports);
@@ -109,10 +109,30 @@ const AddNewBooking = () => {
   const permissions = useSelector((state) => state.auth.value.permissions);
 
   useEffect(() => {
-    getData();
-  }, []);
+    if (router.isReady) getData();
+  }, [router.isReady]);
 
   const getData = async () => {
+    const bType = router.query?.type;
+    if (bType) {
+      if (bType === 'domestic') {
+        setBookingType({
+          value: 'Domestic Flight Ticket',
+          label: 'Domestic Flight Ticket',
+        });
+      } else if (bType === 'international') {
+        setBookingType({
+          value: 'International Flight Ticket',
+          label: 'International Flight Ticket',
+        });
+      } else if (bType === 'misc') {
+        setBookingType({ value: 'Miscellaneous', label: 'Miscellaneous' });
+      } else {
+        router.back();
+      }
+    } else {
+      router.back();
+    }
     const vendors = await getList('organizations', { is_vendor: 1 });
     const clientOrgs = await getList('organizations', { is_client: 1 });
     const commissionRules = await getList('commission-rules');
@@ -135,6 +155,8 @@ const AddNewBooking = () => {
       );
       setVendors(
         vendors.data.map((element) => ({
+          vendor_service_charge_percentage: element?.vendor_service_charge_percentage,
+          vendor_tds_percentage: element?.vendor_tds_percentage,
           value: element.id,
           label: element.name,
         }))
@@ -307,6 +329,13 @@ const AddNewBooking = () => {
   //       if (vendorID.value === airline.value) setAirlineID(vendorID);
   // }, [vendorID]);
 
+  useEffect(() => {
+    if (vendorID?.value) {
+      setVendorServiceChargePercent(vendorID?.vendor_service_charge_percentage);
+      setVendorTDSPercent(vendorID?.vendor_tds_percentage);
+    }
+  }, [vendorID]);
+
   // Booking Type Changes
   useEffect(() => {
     // Client Service Charge Percent
@@ -367,6 +396,7 @@ const AddNewBooking = () => {
 
   useEffect(() => {
     if (vendorGSTFocused) {
+      console.log('yes1', grossCommission);
       setVendorServiceCharges(
         Number((+grossCommission * +vendorServiceChargePercent) / 100).toFixed(4)
       );
@@ -375,6 +405,7 @@ const AddNewBooking = () => {
 
   useEffect(() => {
     if (!vendorGSTFocused) {
+      console.log('yes2', grossCommission);
       setVendorServiceChargePercent(
         Number((100 * +vendorServiceCharges) / +grossCommission).toFixed(4)
       );
@@ -526,7 +557,10 @@ const AddNewBooking = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Add New Invoice</h1>
+                  <h1 className='text-30 lh-14 fw-600'>
+                    Add New{bookingType?.value ? ' ' + bookingType?.value + ' ' : ' '}
+                    Invoice
+                  </h1>
                   <div className='text-15 text-light-1'>Create a new invoice.</div>
                 </div>
                 {/* End .col-12 */}
@@ -540,7 +574,7 @@ const AddNewBooking = () => {
                     className='row col-12 y-gap-20 lg:pr-0 lg:ml-0'
                   >
                     <h3>Basic Details</h3>
-                    <div className='form-input-select col-lg-12'>
+                    {/* <div className='form-input-select col-lg-12'>
                       <label>
                         Booking Type<span className='text-danger'>*</span>
                       </label>
@@ -549,7 +583,7 @@ const AddNewBooking = () => {
                         value={bookingType}
                         onChange={(id) => setBookingType(id)}
                       />
-                    </div>
+                    </div> */}
                     <div className='d-block ml-3 form-datepicker col-lg-4'>
                       <label>
                         Booking Date<span className='text-danger'>*</span>

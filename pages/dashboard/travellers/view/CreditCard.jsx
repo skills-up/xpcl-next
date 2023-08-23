@@ -52,10 +52,11 @@ const CreditCards = () => {
     {
       Header: 'Expiry Date',
       accessor: 'expiry_date',
-      Cell: (data) => new Date(data.row.original.expiry_date).toLocaleString('en-IN', {
-         month: '2-digit',
-         year: '2-digit',
-      }),
+      Cell: (data) =>
+        new Date(data.row.original.expiry_date).toLocaleString('en-IN', {
+          month: '2-digit',
+          year: '2-digit',
+        }),
     },
     {
       Header: 'Actions',
@@ -175,6 +176,7 @@ const CreditCards = () => {
       </div>
       {/* Data Table */}
       <Datatable
+        dataFiltering
         downloadCSV
         CSVName='CreditCards.csv'
         columns={columns}
