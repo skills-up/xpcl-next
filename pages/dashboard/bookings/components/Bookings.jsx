@@ -8,6 +8,7 @@ import { AiOutlineEye } from 'react-icons/ai';
 import { HiOutlinePencilAlt } from 'react-icons/hi';
 import { BsTrash3 } from 'react-icons/bs';
 import { IoCopyOutline } from 'react-icons/io5';
+import { useRouter } from 'next/router';
 
 const Bookings = () => {
   const [bookings, setBookings] = useState([]);
@@ -113,12 +114,14 @@ const Bookings = () => {
         'error',
         response.data?.message ||
           response.data?.error ||
-          'Unexpected Error Occurred While Trying to Delete this Booking',
+          'Unexpected Error Occurred While Trying to Delete this Invoice',
         4000
       );
     }
     onCancel();
   };
+
+  const router = useRouter();
 
   return (
     <div className='col-12'>
@@ -126,13 +129,13 @@ const Bookings = () => {
         <ConfirmationModal
           onCancel={onCancel}
           onSubmit={onSubmit}
-          title='Do you really want to delete this booking?'
-          content='This will permanently delete the booking. Press OK to confirm.'
+          title='Do you really want to delete this invoice?'
+          content='This will permanently delete the invoice. Press OK to confirm.'
         />
       )}
       {/* Search Bar + Add New */}
-      <div className='row mb-3 items-center justify-between mr-4'>
-        <div className='col-lg-10 col-7'>
+      <div className='row mb-3 y-gap-10 items-center justify-between mr-4 lg:pr-0 lg:mr-0'>
+        <div className='col-lg-3'>
           <input
             type='text'
             className='d-block form-control'
@@ -141,17 +144,50 @@ const Bookings = () => {
             value={searchQuery}
           />
         </div>
-        <button
-          className='btn btn-primary col-lg-2 col-5'
-          onClick={() => window.location.assign('/dashboard/bookings/add-new')}
-        >
-          Add New
-        </button>
+        <div className='col-lg-3'>
+          <button
+            className='btn btn-primary col-12'
+            onClick={() =>
+              router.push({
+                pathname: '/dashboard/bookings/add-new',
+                query: { type: 'domestic' },
+              })
+            }
+          >
+            Add Domestic
+          </button>
+        </div>
+        <div className='col-lg-3'>
+          <button
+            className='btn btn-primary col-12'
+            onClick={() =>
+              router.push({
+                pathname: '/dashboard/bookings/add-new',
+                query: { type: 'international' },
+              })
+            }
+          >
+            Add International
+          </button>
+        </div>
+        <div className='col-lg-3'>
+          <button
+            className='btn btn-primary  col-12'
+            onClick={() =>
+              router.push({
+                pathname: '/dashboard/bookings/add-new',
+                query: { type: 'misc' },
+              })
+            }
+          >
+            Add Miscellaneous
+          </button>
+        </div>{' '}
       </div>
       {/* Data Table */}
       <Datatable
         downloadCSV
-        CSVName='Bookings.csv'
+        CSVName='Invoices.csv'
         columns={columns}
         data={bookings.filter(
           (perm) =>

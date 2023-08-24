@@ -1233,7 +1233,7 @@ $_displays: none, inline-block, block, flex;
   label {
     position: absolute;
     top: 0;
-    top: 26px;
+    top: 23px;
     padding: 0 15px;
     pointer-events: none;
     font-size: 14px;
@@ -1245,8 +1245,8 @@ $_displays: none, inline-block, block, flex;
     border: 1px solid var(--color-border);
     border-radius: 4px;
     padding: 0 15px;
-    padding-top: 25px;
-    min-height: 70px;
+    padding-top: 35px;
+    min-height: 74px;
     transition: all 0.2s $easeOutQuart;
 
     &:focus {
@@ -1296,6 +1296,21 @@ $_displays: none, inline-block, block, flex;
   .css-1nmdiq5-menu {
     z-index: 10;
   }
+
+  .small {
+    .css-13cymwt-control,
+    .css-t3ipsp-control {
+      height: 50px;
+      min-height: unset;
+      position: relative;
+    }
+    .css-1jqq78o-placeholder,
+    .css-qbdosj-Input,
+    .css-166bipr-Input,
+    .css-1dimb5e-singleValue {
+      padding-top: unset;
+    }
+  }
 }
 
 .form-datepicker {
@@ -1314,6 +1329,25 @@ $_displays: none, inline-block, block, flex;
     padding: 7px 10px 0;
     color: var(--color-light-1);
     font-size: var(--text-16) !important;
+  }
+}
+
+.form-datepicker-alternate {
+  position: relative;
+  .custom_container-picker {
+    border: 1px solid lightgray;
+    min-height: 70px;
+    padding-top: 2rem;
+    border-radius: 5px;
+    .custom_input-picker {
+      color: black !important;
+    }
+  }
+  label {
+    position: absolute;
+    padding: 7px 10px 0;
+    color: var(--color-light-1);
+    font-size: var(--text-16);
   }
 }
 
@@ -1522,6 +1556,28 @@ table.table-3 {
     tbody > tr {
       border-top: none;
       border-bottom: 1px dashed var(--color-border);
+    }
+  }
+}
+
+div.gst-mis {
+  table.table-3 {
+    td,
+    th {
+      min-width: unset;
+    }
+    tbody {
+      tr {
+        &:nth-child(even) {
+          background-color: #f5f5f5;
+        }
+      }
+    }
+    tfoot,
+    thead {
+      tr {
+        background-color: #eee;
+      }
     }
   }
 }
@@ -2438,14 +2494,14 @@ table.table-6 {
         &.top {
           font-weight: 700;
           cursor: pointer;
-          background-color: rgb(39, 53, 211);
-          color: white;
+          background-color: #ccc;
+          // color: white;
         }
         &.member {
-          background-color: rgb(230, 230, 230);
+          // background-color: rgb(230, 230, 230);
         }
         &.net-cash {
-          background-color: rgb(245, 245, 245);
+          background-color: #999;
           font-weight: 700;
         }
       }

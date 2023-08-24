@@ -14,7 +14,7 @@ const index = () => {
 
   return (
     <>
-      <Seo pageTitle='Bookings' />
+      <Seo pageTitle='Invoicing' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -34,8 +34,8 @@ const index = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Bookings</h1>
-                  <div className='text-15 text-light-1'>Manage Bookings.</div>
+                  <h1 className='text-30 lh-14 fw-600'>Invoicing</h1>
+                  <div className='text-15 text-light-1'>Manage invoices.</div>
                 </div>
                 {/* End .col-12 */}
               </div>

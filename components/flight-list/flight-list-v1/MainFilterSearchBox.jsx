@@ -531,7 +531,7 @@ const MainFilterSearchBox = () => {
               value={to}
               onChange={(id) => setTo(id)}
             />
-            <TbArrowsExchange2 className='exchange-icon' />
+            {/* <TbArrowsExchange2 className='exchange-icon' /> */}
           </div>
           <div className='row px-15'>
             {/* End Location Flying To */}

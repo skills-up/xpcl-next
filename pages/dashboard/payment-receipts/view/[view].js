@@ -64,6 +64,8 @@ const ViewPaymentReceipts = () => {
         }
         delete data['created_at'];
         delete data['updated_at'];
+        delete data['payment_itc'];
+        delete data['payment_tds'];
         if (data?.organization_name && data?.organization_id) {
           data.organization_name = (
             <a href={'/dashboard/organizations/view/' + data.organization_id}>

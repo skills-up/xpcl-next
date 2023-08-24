@@ -15,6 +15,7 @@ const AddNewAccounts = () => {
   const [accountCategoryID, setAccountCategoryID] = useState(null);
   const [name, setName] = useState('');
   const [year, setYear] = useState('');
+  const [isBankCash, setIsBankCash] = useState(false);
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -29,6 +30,7 @@ const AddNewAccounts = () => {
       if (response?.success) {
         setName(response.data?.name);
         setYear(response.data?.year);
+        setIsBankCash(response.data?.is_bank_cash);
 
         const accountCategories = await getList('account-categories');
         if (accountCategories?.success) {
@@ -68,6 +70,7 @@ const AddNewAccounts = () => {
       name,
       account_category_id: accountCategoryID?.value || null,
       year: parseInt(year),
+      is_bank_cash: isBankCash,
     });
     if (response?.success) {
       sendToast('success', 'Created Account Successfully.', 4000);
@@ -147,6 +150,13 @@ const AddNewAccounts = () => {
                         />
                         <label className='lh-1 text-16 text-light-1'>Year</label>
                       </div>
+                    </div>
+                    <div className='d-flex items-center gap-3'>
+                      <ReactSwitch
+                        onChange={() => setIsBankCash((prev) => !prev)}
+                        checked={isBankCash}
+                      />
+                      <label>Is Bank / Cash Account</label>
                     </div>
                     <div className='d-inline-block'>
                       <button

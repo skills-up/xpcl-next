@@ -18,30 +18,30 @@ import WindowedSelect from 'react-windowed-select';
 const ReissueBooking = () => {
   const [ticketNumber, setTicketNumber] = useState('');
   const [pnr, setPNR] = useState('');
-  const [vendorBaseAmount, setVendorBaseAmount] = useState('');
-  const [vendorYQAmount, setVendorYQAmount] = useState('');
-  const [vendorTaxAmount, setVendorTaxAmount] = useState('');
-  const [vendorGSTAmount, setVendorGSTAmount] = useState('');
-  const [vendorMiscCharges, setVendorMiscChargers] = useState('');
-  const [vendorTotal, setVendorTotal] = useState('');
+  const [vendorBaseAmount, setVendorBaseAmount] = useState(0);
+  const [vendorYQAmount, setVendorYQAmount] = useState(0);
+  const [vendorTaxAmount, setVendorTaxAmount] = useState(0);
+  const [vendorGSTAmount, setVendorGSTAmount] = useState(0);
+  const [vendorMiscCharges, setVendorMiscChargers] = useState(0);
+  const [vendorTotal, setVendorTotal] = useState(0);
   const [IATACommissionPercent, setIATACommissionPercent] = useState('');
   const [plbCommissionPercent, setPLBCommissionPercent] = useState('');
-  const [vendorServiceCharges, setVendorServiceCharges] = useState('');
-  const [vendorTDS, setVendorTDS] = useState('');
-  const [commissionReceivable, setCommissionReceivable] = useState('');
-  const [paymentAmount, setPaymentAmount] = useState(0);
-  const [clientReferralFee, setClientReferralFee] = useState(0);
-  const [clientBaseAmount, setClientBaseAmount] = useState('');
-  const [clientTaxAmount, setClientTaxAmount] = useState('');
-  const [clientGSTAmount, setClientGSTAmount] = useState('');
-  const [clientServiceCharges, setClientServicesCharges] = useState('');
-  const [clientTotal, setClientTotal] = useState('');
-  const [reissuePenalty, setReissuePenalty] = useState('');
+  const [vendorServiceCharges, setVendorServiceCharges] = useState(0);
+  const [vendorTDS, setVendorTDS] = useState(0);
+  const [commissionReceivable, setCommissionReceivable] = useState(0);
+  const [paymentAmount, setPaymentAmount] = useState('');
+  const [clientReferralFee, setClientReferralFee] = useState('');
+  const [clientBaseAmount, setClientBaseAmount] = useState(0);
+  const [clientTaxAmount, setClientTaxAmount] = useState(0);
+  const [clientGSTAmount, setClientGSTAmount] = useState(0);
+  const [clientServiceCharges, setClientServicesCharges] = useState(0);
+  const [clientTotal, setClientTotal] = useState(0);
+  const [reissuePenalty, setReissuePenalty] = useState(0);
   const [sector, setSector] = useState('');
   const [bookingSectors, setBookingSectors] = useState([]);
   const [isOffshore, setIsOffshore] = useState(false);
   const [grossCommission, setGrossCommission] = useState(0);
-  const [clientQuotedAmount, setClientQuotedAmount] = useState('');
+  const [clientQuotedAmount, setClientQuotedAmount] = useState(0);
 
   // Percentages
   const [vendorServiceChargePercent, setVendorServiceChargePercent] = useState(18);
@@ -104,6 +104,7 @@ const ReissueBooking = () => {
   const airports = useSelector((state) => state.apis.value.airports);
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
+  const permissions = useSelector((state) => state.auth.value.permissions);
 
   useEffect(() => {
     getData();
@@ -292,7 +293,7 @@ const ReissueBooking = () => {
                 date: bookSec.travel_date,
                 format: 'YYYY-MM-DD',
               }),
-              travel_time: bookSec?.travel_time,
+              travel_time: bookSec?.travel_time.slice(0, -3),
               details: bookSec?.details,
               booking_class: tempBookingClass,
             });
@@ -350,31 +351,33 @@ const ReissueBooking = () => {
       ticket_number: ticketNumber,
       pnr,
       vendor_id: vendorID.value,
-      vendor_base_amount: vendorBaseAmount,
-      vendor_yq_amount: vendorYQAmount,
-      vendor_tax_amount: vendorTaxAmount,
-      vendor_gst_amount: vendorGSTAmount,
-      vendor_misc_charges: vendorMiscCharges,
-      vendor_total: vendorTotal,
+      vendor_base_amount: vendorBaseAmount || 0,
+      vendor_yq_amount: vendorYQAmount || 0,
+      vendor_tax_amount: vendorTaxAmount || 0,
+      vendor_gst_amount: vendorGSTAmount || 0,
+      vendor_misc_charges: vendorMiscCharges || 0,
+      vendor_total: vendorTotal || 0,
       commission_rule_id: commissionRuleID?.value,
-      iata_commission_percent: IATACommissionPercent,
-      plb_commission_percent: plbCommissionPercent,
-      vendor_service_charges: vendorServiceCharges,
-      vendor_tds: vendorTDS,
+      iata_commission_percent: IATACommissionPercent || 0,
+      plb_commission_percent: plbCommissionPercent || 0,
+      vendor_service_charges: vendorServiceCharges || 0,
+      vendor_tds: vendorTDS || 0,
       commission_receivable: commissionReceivable,
       airline_id: airlineID?.value,
       miscellaneous_type: miscellaneousType?.value,
       payment_account_id: paymentAccountID?.value,
-      payment_amount: +paymentAmount ? paymentAmount : undefined,
+      payment_amount: +paymentAmount ? paymentAmount || undefined : undefined,
       client_referrer_id: clientReferrerID?.value,
-      client_referral_fee: +clientReferralFee ? clientReferralFee : undefined,
-      client_base_amount: clientBaseAmount,
-      client_tax_amount: clientTaxAmount,
-      client_gst_amount: clientGSTAmount,
-      client_service_charges: isOffshore ? 0 : clientServiceCharges,
-      client_total: clientTotal,
+      client_referral_fee: +clientReferralFee
+        ? clientReferralFee || undefined
+        : undefined,
+      client_base_amount: clientBaseAmount || 0,
+      client_tax_amount: clientTaxAmount || 0,
+      client_gst_amount: clientGSTAmount || 0,
+      client_service_charges: isOffshore ? 0 : clientServiceCharges || 0,
+      client_total: clientTotal || 0,
       original_booking_id: router.query.reissue,
-      reissue_penalty: reissuePenalty,
+      reissue_penalty: reissuePenalty || 0,
       client_traveller_id: clientTravellerID?.value,
       booking_sectors:
         bookingType.value === 'Miscellaneous'
@@ -383,7 +386,9 @@ const ReissueBooking = () => {
               from_airport_id: element['from_airport_id']?.value,
               to_airport_id: element['to_airport_id']?.value,
               travel_date: element['travel_date']?.format('YYYY-MM-DD'),
-              travel_time: element['travel_time'],
+              travel_time: element['travel_time']
+                ? element['travel_time'] + ':00'
+                : element['travel_time'],
               details:
                 element['details'].trim().length > 0 ? element['details'] : undefined,
               booking_class: element['booking_class']?.value,
@@ -392,7 +397,7 @@ const ReissueBooking = () => {
       sector: bookingType.value === 'Miscellaneous' ? sector : undefined,
     });
     if (response?.success) {
-      sendToast('success', 'Reissued Booking Successfully.', 4000);
+      sendToast('success', 'Reissued Invoice Successfully.', 4000);
       router.push('/dashboard/bookings');
     } else {
       if (response.data?.errors) {
@@ -408,7 +413,7 @@ const ReissueBooking = () => {
       } else {
         sendToast(
           'error',
-          response.data?.message || response.data?.error || 'Failed to Create Booking.',
+          response.data?.message || response.data?.error || 'Failed to Reissue Invoice.',
           4000
         );
       }
@@ -425,7 +430,7 @@ const ReissueBooking = () => {
   // Booking Type Changes
   useEffect(() => {
     // Client Service Charge Percent
-    if (clientServiceCharges.trim().length === 0 || +clientServiceCharges === 0) {
+    if (+clientServiceCharges === 0 || clientServiceCharges.trim().length === 0) {
       if (bookingType?.value === 'Domestic Flight Ticket')
         setClientServiceChargePercent(0.9);
       else setClientServiceChargePercent(1.8);
@@ -511,7 +516,8 @@ const ReissueBooking = () => {
   }, [grossCommission, vendorServiceCharges, vendorTDS]);
 
   useEffect(() => {
-    setPaymentAmount(Number(+vendorTotal - +vendorMiscCharges));
+    if (paymentAccountID?.value)
+      setPaymentAmount(Number(+vendorTotal - +vendorMiscCharges));
   }, [paymentAccountID, vendorTotal, vendorMiscCharges]);
 
   // Vendor Commission Receivable Total
@@ -540,14 +546,17 @@ const ReissueBooking = () => {
     }
   };
 
+  useEffect(() => {
+    if (vendorTaxAmount) setClientTaxAmount(vendorTaxAmount);
+  }, [vendorTaxAmount]);
+
   // Client Calculations
   useEffect(() => {
     if (xplorzGSTFocused) {
-      setClientServicesCharges(
-        Number(
-          ((+clientBaseAmount + +clientReferralFee) * +clientServiceChargePercent) / 100
-        ).toFixed(0)
-      );
+      let temp = Number(
+        ((+clientBaseAmount + +clientReferralFee) * +clientServiceChargePercent) / 100
+      ).toFixed(0);
+      if (temp && temp !== 'NaN') setClientServicesCharges(temp);
     }
   }, [clientServiceChargePercent, clientReferralFee, clientBaseAmount]);
 
@@ -617,7 +626,7 @@ const ReissueBooking = () => {
 
   return (
     <>
-      <Seo pageTitle='Reissue Booking' />
+      <Seo pageTitle='Reissue Invoice' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -637,8 +646,11 @@ const ReissueBooking = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Reissue Booking</h1>
-                  <div className='text-15 text-light-1'>Reissue an existing booking.</div>
+                  <h1 className='text-30 lh-14 fw-600'>
+                    Reissue{bookingType?.value ? ' ' + bookingType?.value + ' ' : ' '}
+                    Invoice
+                  </h1>
+                  <div className='text-15 text-light-1'>Reissue an existing invoice.</div>
                 </div>
                 {/* End .col-12 */}
               </div>
@@ -646,38 +658,22 @@ const ReissueBooking = () => {
 
               <div className='py-30 px-30 lg:px-10 rounded-4 bg-white shadow-3'>
                 <div>
-                  <form onSubmit={onSubmit} className='col-12 y-gap-20 row'>
+                  <form
+                    onSubmit={onSubmit}
+                    className='row col-12 y-gap-20 lg:pr-0 lg:ml-0'
+                  >
                     <h3>Basic Details</h3>
-                    <div className='form-input-select col-lg-4'>
-                      <label>
-                        Booking Type<span className='text-danger'>*</span>
-                      </label>
-                      <Select
-                        options={bookingOptions}
-                        value={bookingType}
-                        onChange={(id) => setBookingType(id)}
-                      />
-                    </div>
-                    {bookingType?.value === 'Miscellaneous' && (
-                      <div className='form-input-select col-lg-4'>
-                        <label>Miscellaneous Type</label>
-                        <Select
-                          options={miscellaneousOptions}
-                          value={miscellaneousType}
-                          onChange={(id) => setMiscellaneousType(id)}
+                    {/* <div className=' col-lg-12'>
+                      <div className='form-input'>
+                        <input
+                          value={bookingType?.label}
+                          disabled
+                          placeholder=' '
+                          type='text'
                         />
+                        <label className='lh-1 text-16 text-light-1'>Booking Type</label>
                       </div>
-                    )}
-                    <div className='form-input-select col-lg-4'>
-                      <label>
-                        Client Traveller<span className='text-danger'>*</span>
-                      </label>
-                      <Select
-                        options={clientTravellers}
-                        value={clientTravellerID}
-                        onChange={(id) => setClientTravellerID(id)}
-                      />
-                    </div>
+                    </div> */}
                     <div className='d-block ml-3 form-datepicker col-lg-4'>
                       <label>
                         Booking Date<span className='text-danger'>*</span>
@@ -693,6 +689,36 @@ const ReissueBooking = () => {
                         format='DD MMMM YYYY'
                       />
                     </div>
+                    <div className='form-input-select col-lg-4'>
+                      <label>
+                        Traveller Name<span className='text-danger'>*</span>
+                      </label>
+                      <Select
+                        options={clientTravellers}
+                        value={clientTravellerID}
+                        onChange={(id) => setClientTravellerID(id)}
+                      />
+                    </div>
+                    {bookingType?.value === 'Miscellaneous' && (
+                      <div className='form-input-select col-lg-4'>
+                        <label>Type</label>
+                        <Select
+                          options={miscellaneousOptions}
+                          value={miscellaneousType}
+                          onChange={(id) => setMiscellaneousType(id)}
+                        />
+                      </div>
+                    )}
+                    {bookingType?.value !== 'Miscellaneous' && (
+                      <div className='form-input-select col-lg-4'>
+                        <label>Airline</label>
+                        <Select
+                          options={airlines}
+                          value={airlineID}
+                          onChange={(id) => setAirlineID(id)}
+                        />
+                      </div>
+                    )}
                     <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
@@ -740,277 +766,297 @@ const ReissueBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='form-input-select col-lg-4'>
-                      <label>Airline</label>
-                      <Select
-                        options={airlines}
-                        value={airlineID}
-                        onChange={(id) => setAirlineID(id)}
-                      />
-                    </div>
                     {/* Booking Sectors */}
                     {bookingType?.value !== 'Miscellaneous' && (
-                      <div>
-                        <h4 className='d-block'>Add Booking Sectors</h4>
-                        <div>
-                          {bookingSectors.map((element, index) => {
-                            return (
-                              <div
-                                className='d-flex flex-column mx-1 bg-light my-4 py-20 pb-40 px-30 md:px-10 md:py-10'
-                                key={index}
-                              >
-                                <div className='d-flex justify-between'>
-                                  <div>{index + 1}.</div>
-                                  <span
-                                    className='pb-10'
-                                    onClick={() =>
-                                      setBookingSectors((prev) => {
-                                        prev.splice(index, 1);
-                                        return [...prev];
-                                      })
-                                    }
-                                  >
-                                    <BsTrash3
-                                      className='text-danger'
-                                      style={{ fontSize: '1.5rem', cursor: 'pointer' }}
-                                    />
-                                  </span>
-                                </div>
-                                <div className='d-flex row y-gap-20 md:flex-column items-center justify-between'>
-                                  <div className='form-input-select col-md-6'>
-                                    <label>
-                                      From<span className='text-danger'>*</span>
-                                    </label>
-                                    <WindowedSelect
-                                      filterOption={(candidate, input) => {
-                                        if (input) {
-                                          return (
-                                            candidate?.data?.iata?.toLowerCase() ===
-                                              input.toLowerCase() ||
-                                            candidate?.label
-                                              ?.toLowerCase()
-                                              ?.includes(input?.toLowerCase())
-                                          );
-                                        }
-                                        return true;
-                                      }}
-                                      options={airports
-                                        .filter((airport) => {
-                                          if (
-                                            bookingType?.value ===
-                                            'Domestic Flight Ticket'
-                                          ) {
-                                            return airport.country_name === 'India';
-                                          } else {
-                                            return true;
-                                          }
-                                        })
-                                        .map((airport) => ({
-                                          value: airport.id,
-                                          label: `|${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
-                                        }))}
-                                      formatOptionLabel={(opt) => {
-                                        const [_, iata_code, city, name, country_name] =
-                                          opt.label.split('|');
-                                        return (
-                                          <div key={iata_code}>
-                                            <div
-                                              className='d-flex justify-between align-items-center'
-                                              style={{ fontSize: '1rem' }}
-                                            >
-                                              <span>
-                                                {city} (<strong>{iata_code}</strong>)
-                                              </span>
-                                              <div
-                                                style={{
-                                                  fontSize: 'small',
-                                                  fontStyle: 'italic',
-                                                }}
-                                              >
-                                                {country_name}
-                                              </div>
-                                            </div>
-                                            <small>{name}</small>
-                                          </div>
-                                        );
-                                      }}
-                                      value={element['from_airport_id']}
-                                      onChange={(id) =>
+                      <div className='pl-20 pr-10'>
+                        <div className='bg-light px-20 py-10 lg:px-10'>
+                          <h4 className='d-block'>Add Booking Sectors</h4>
+                          <div>
+                            {bookingSectors.map((element, index) => {
+                              return (
+                                <div
+                                  className='d-flex flex-column mx-1 bg-light my-4 py-20 pb-40 px-30 md:px-10 md:py-10'
+                                  key={index}
+                                >
+                                  <div className='d-flex justify-between'>
+                                    <div>{index + 1}.</div>
+                                    <span
+                                      className='pb-10'
+                                      onClick={() =>
                                         setBookingSectors((prev) => {
-                                          prev[index]['from_airport_id'] = id;
+                                          prev.splice(index, 1);
                                           return [...prev];
                                         })
                                       }
-                                    />
+                                    >
+                                      <BsTrash3
+                                        className='text-danger'
+                                        style={{ fontSize: '1.5rem', cursor: 'pointer' }}
+                                      />
+                                    </span>
                                   </div>
-                                  <div className='form-input-select col-md-6'>
-                                    <label>
-                                      To<span className='text-danger'>*</span>
-                                    </label>
-                                    <WindowedSelect
-                                      filterOption={(candidate, input) => {
-                                        if (input) {
-                                          return (
-                                            candidate?.data?.iata?.toLowerCase() ===
-                                              input.toLowerCase() ||
-                                            candidate?.label
-                                              ?.toLowerCase()
-                                              ?.includes(input?.toLowerCase())
-                                          );
-                                        }
-                                        return true;
-                                      }}
-                                      options={airports
-                                        .filter((airport) => {
-                                          if (
-                                            bookingType?.value ===
-                                            'Domestic Flight Ticket'
-                                          ) {
-                                            return airport.country_name === 'India';
-                                          } else {
-                                            return true;
+                                  <div className='d-flex row y-gap-20 md:flex-column items-center justify-between'>
+                                    <div className='form-input-select col-md-6'>
+                                      <label>
+                                        From<span className='text-danger'>*</span>
+                                      </label>
+                                      <WindowedSelect
+                                        filterOption={(candidate, input) => {
+                                          if (input) {
+                                            return (
+                                              candidate?.data?.iata?.toLowerCase() ===
+                                                input.toLowerCase() ||
+                                              candidate?.label
+                                                ?.toLowerCase()
+                                                ?.includes(input?.toLowerCase())
+                                            );
                                           }
-                                        })
-                                        .map((airport) => ({
-                                          value: airport.id,
-                                          label: `|${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
-                                        }))}
-                                      formatOptionLabel={(opt) => {
-                                        const [_, iata_code, city, name, country_name] =
-                                          opt.label.split('|');
-                                        return (
-                                          <div key={iata_code}>
-                                            <div
-                                              className='d-flex justify-between align-items-center'
-                                              style={{ fontSize: '1rem' }}
-                                            >
-                                              <span>
-                                                {city} (<strong>{iata_code}</strong>)
-                                              </span>
+                                          return true;
+                                        }}
+                                        options={airports
+                                          .filter((airport) => {
+                                            if (
+                                              bookingType?.value ===
+                                              'Domestic Flight Ticket'
+                                            ) {
+                                              return airport.country_name === 'India';
+                                            } else {
+                                              return true;
+                                            }
+                                          })
+                                          .map((airport) => ({
+                                            value: airport.id,
+                                            label: `|${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
+                                          }))}
+                                        formatOptionLabel={(opt) => {
+                                          const [_, iata_code, city, name, country_name] =
+                                            opt.label.split('|');
+                                          return (
+                                            <div key={iata_code}>
                                               <div
-                                                style={{
-                                                  fontSize: 'small',
-                                                  fontStyle: 'italic',
-                                                }}
+                                                className='d-flex justify-between align-items-center'
+                                                style={{ fontSize: '1rem' }}
                                               >
-                                                {country_name}
+                                                <span>
+                                                  {city} (<strong>{iata_code}</strong>)
+                                                </span>
+                                                <div
+                                                  style={{
+                                                    fontSize: 'small',
+                                                    fontStyle: 'italic',
+                                                  }}
+                                                >
+                                                  {country_name}
+                                                </div>
                                               </div>
+                                              <small>{name}</small>
                                             </div>
-                                            <small>{name}</small>
-                                          </div>
-                                        );
-                                      }}
-                                      value={element['to_airport_id']}
-                                      onChange={(id) =>
-                                        setBookingSectors((prev) => {
-                                          prev[index]['to_airport_id'] = id;
-                                          return [...prev];
-                                        })
-                                      }
-                                    />
-                                  </div>
-                                  <div className='col-md-6 col-lg-3 form-datepicker'>
-                                    <label>
-                                      Date<span className='text-danger'>*</span>
-                                    </label>
-                                    <DatePicker
-                                      style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
-                                      inputClass='custom_input-picker'
-                                      containerClassName='custom_container-picker'
-                                      value={element['travel_date']}
-                                      onChange={(date) => {
-                                        setBookingSectors((prev) => {
-                                          prev[index]['travel_date'] = date;
-                                          return [...prev];
-                                        });
-                                      }}
-                                      numberOfMonths={1}
-                                      offsetY={10}
-                                      format='DD MMMM YYYY'
-                                    />
-                                  </div>
-                                  <div className='col-md-6 col-lg-3'>
-                                    <div className='form-input bg-white'>
-                                      <input
-                                        onChange={(e) =>
+                                          );
+                                        }}
+                                        value={element['from_airport_id']}
+                                        onChange={(id) =>
                                           setBookingSectors((prev) => {
-                                            prev[index]['travel_time'] = e.target.value;
+                                            prev[index]['from_airport_id'] = id;
                                             return [...prev];
                                           })
                                         }
-                                        value={element['travel_time']}
-                                        placeholder=' '
-                                        type='time'
-                                        step={30}
                                       />
-                                      <label className='lh-1 text-16 text-light-1'>
-                                        Travel Time
-                                      </label>
                                     </div>
-                                  </div>
-                                  <div className='col-md-6 col-lg-3'>
-                                    <div className='form-input bg-white'>
-                                      <input
-                                        onChange={(e) =>
+                                    <div className='form-input-select col-md-6'>
+                                      <label>
+                                        To<span className='text-danger'>*</span>
+                                      </label>
+                                      <WindowedSelect
+                                        filterOption={(candidate, input) => {
+                                          if (input) {
+                                            return (
+                                              candidate?.data?.iata?.toLowerCase() ===
+                                                input.toLowerCase() ||
+                                              candidate?.label
+                                                ?.toLowerCase()
+                                                ?.includes(input?.toLowerCase())
+                                            );
+                                          }
+                                          return true;
+                                        }}
+                                        options={airports
+                                          .filter((airport) => {
+                                            if (
+                                              bookingType?.value ===
+                                              'Domestic Flight Ticket'
+                                            ) {
+                                              return airport.country_name === 'India';
+                                            } else {
+                                              return true;
+                                            }
+                                          })
+                                          .map((airport) => ({
+                                            value: airport.id,
+                                            label: `|${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
+                                          }))}
+                                        formatOptionLabel={(opt) => {
+                                          const [_, iata_code, city, name, country_name] =
+                                            opt.label.split('|');
+                                          return (
+                                            <div key={iata_code}>
+                                              <div
+                                                className='d-flex justify-between align-items-center'
+                                                style={{ fontSize: '1rem' }}
+                                              >
+                                                <span>
+                                                  {city} (<strong>{iata_code}</strong>)
+                                                </span>
+                                                <div
+                                                  style={{
+                                                    fontSize: 'small',
+                                                    fontStyle: 'italic',
+                                                  }}
+                                                >
+                                                  {country_name}
+                                                </div>
+                                              </div>
+                                              <small>{name}</small>
+                                            </div>
+                                          );
+                                        }}
+                                        value={element['to_airport_id']}
+                                        onChange={(id) =>
                                           setBookingSectors((prev) => {
-                                            prev[index]['details'] = e.target.value;
+                                            prev[index]['to_airport_id'] = id;
                                             return [...prev];
                                           })
                                         }
-                                        value={element['details']}
-                                        placeholder=' '
-                                        type='text'
                                       />
-                                      <label className='lh-1 text-16 text-light-1'>
-                                        Details
+                                    </div>
+                                    <div className='col-md-6 col-lg-3 form-datepicker'>
+                                      <label>
+                                        Date<span className='text-danger'>*</span>
                                       </label>
+                                      <DatePicker
+                                        style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
+                                        inputClass='custom_input-picker'
+                                        containerClassName='custom_container-picker'
+                                        value={element['travel_date']}
+                                        onChange={(date) => {
+                                          setBookingSectors((prev) => {
+                                            prev[index]['travel_date'] = date;
+                                            return [...prev];
+                                          });
+                                        }}
+                                        numberOfMonths={1}
+                                        offsetY={10}
+                                        format='DD MMMM YYYY'
+                                      />
+                                    </div>
+                                    <div className='col-md-6 col-lg-3'>
+                                      <div className='form-input bg-white'>
+                                        <input
+                                          onChange={(e) =>
+                                            setBookingSectors((prev) => {
+                                              prev[index]['travel_time'] = e.target.value;
+                                              return [...prev];
+                                            })
+                                          }
+                                          value={element['travel_time']}
+                                          placeholder=' '
+                                          type='time'
+                                        />
+                                        <label className='lh-1 text-16 text-light-1'>
+                                          Travel Time
+                                        </label>
+                                      </div>
+                                    </div>
+                                    <div className='col-md-6 col-lg-3'>
+                                      <div className='form-input bg-white'>
+                                        <input
+                                          onChange={(e) =>
+                                            setBookingSectors((prev) => {
+                                              prev[index]['details'] = e.target.value;
+                                              return [...prev];
+                                            })
+                                          }
+                                          value={element['details']}
+                                          placeholder=' '
+                                          type='text'
+                                        />
+                                        <label className='lh-1 text-16 text-light-1'>
+                                          Details
+                                        </label>
+                                      </div>
+                                    </div>
+                                    <div className='col-md-6 col-lg-3 pb-3 form-input-select'>
+                                      <label>Booking Class</label>
+                                      <Select
+                                        options={bookingClassOptions}
+                                        value={element['booking_class']}
+                                        onChange={(id) =>
+                                          setBookingSectors((prev) => {
+                                            prev[index]['booking_class'] = id;
+                                            return [...prev];
+                                          })
+                                        }
+                                      />
                                     </div>
                                   </div>
-                                  <div className='col-md-6 col-lg-3 pb-3 form-input-select'>
-                                    <label>Booking Class</label>
-                                    <Select
-                                      options={bookingClassOptions}
-                                      value={element['booking_class']}
-                                      onChange={(id) =>
-                                        setBookingSectors((prev) => {
-                                          prev[index]['booking_class'] = id;
-                                          return [...prev];
-                                        })
-                                      }
-                                    />
-                                  </div>
                                 </div>
-                              </div>
-                            );
-                          })}
+                              );
+                            })}
+                          </div>
+                          <button
+                            className='btn btn-success my-2 d-flex items-center gap-2'
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setBookingSectors((prev) => {
+                                let fromAirportID = null;
+                                if (prev.length > 0) {
+                                  if (prev.at(-1)?.to_airport_id)
+                                    fromAirportID = prev.at(-1)?.to_airport_id;
+                                }
+                                return [
+                                  ...prev,
+                                  {
+                                    from_airport_id: fromAirportID,
+                                    to_airport_id: null,
+                                    travel_date: new DateObject(),
+                                    travel_time: '',
+                                    details: '',
+                                    booking_class: null,
+                                  },
+                                ];
+                              });
+                            }}
+                          >
+                            <BiPlusMedical /> Add Booking Sector
+                          </button>
                         </div>
-                        <button
-                          className='btn btn-success my-2 d-flex items-center gap-2'
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setBookingSectors((prev) => {
-                              let fromAirportID = null;
-                              if (prev.length > 0) {
-                                if (prev.at(-1)?.to_airport_id)
-                                  fromAirportID = prev.at(-1)?.to_airport_id;
-                              }
-                              return [
-                                ...prev,
-                                {
-                                  from_airport_id: fromAirportID,
-                                  to_airport_id: null,
-                                  travel_date: new DateObject(),
-                                  travel_time: '',
-                                  details: '',
-                                  booking_class: null,
-                                },
-                              ];
-                            });
-                          }}
-                        >
-                          <BiPlusMedical /> Add Booking Sector
-                        </button>
                       </div>
+                    )}
+                    {permissions.includes('view-client-referrer') && (
+                      <>
+                        <div className='form-input-select col-lg-4'>
+                          <label>Client Referrer</label>
+                          <Select
+                            options={clients}
+                            value={clientReferrerID}
+                            onChange={(id) => setClientReferrerID(id)}
+                          />
+                        </div>
+                        <div className='col-lg-4'>
+                          <div className='form-input'>
+                            <input
+                              onChange={(e) => setClientReferralFee(e.target.value)}
+                              value={clientReferralFee}
+                              placeholder=' '
+                              type='number'
+                              onWheel={(e) => e.target.blur()}
+                              onFocus={() => setXplorzGSTFocused(true)}
+                            />
+                            <label className='lh-1 text-16 text-light-1'>
+                              Client Referral Fee
+                            </label>
+                          </div>
+                        </div>
+                      </>
                     )}
                     <h3>Supplier Details</h3>
                     <div className='form-input-select col-lg-4'>
@@ -1120,12 +1166,14 @@ const ReissueBooking = () => {
                           onWheel={(e) => e.target.blur()}
                           disabled
                           required
+                          className='bg-light'
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Vendor Total<span className='text-danger'>*</span>
                         </label>
                       </div>
                     </div>
+                    <div className='col-4' />
                     <div className='form-input-select col-lg-4'>
                       <label>Payment Account</label>
                       <Select
@@ -1148,99 +1196,153 @@ const ReissueBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='form-input-select col-lg-4'>
-                      <label>Commission Rule</label>
-                      <Select
-                        options={commissionRules}
-                        value={commissionRuleID}
-                        onChange={(id) => setCommissionRuleID(id)}
-                      />
-                    </div>
-                    <div className='col-lg-4'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setIATACommissionPercent(e.target.value)}
-                          value={IATACommissionPercent}
-                          placeholder=' '
-                          type='number'
-                          onWheel={(e) => e.target.blur()}
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          IATA Commission Percent
-                        </label>
+                    {bookingType?.value === 'Miscellaneous' ? (
+                      <div className='col-lg-4'>
+                        <div className='form-input'>
+                          <input
+                            onChange={(e) => setIATACommissionPercent(e.target.value)}
+                            value={IATACommissionPercent}
+                            placeholder=' '
+                            type='number'
+                            onWheel={(e) => e.target.blur()}
+                          />
+                          <label className='lh-1 text-16 text-light-1'>
+                            Vendor Commission Percent
+                          </label>
+                        </div>
                       </div>
-                    </div>
-                    <div className='col-lg-4'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setPLBCommissionPercent(e.target.value)}
-                          value={plbCommissionPercent}
-                          placeholder=' '
-                          type='number'
-                          onWheel={(e) => e.target.blur()}
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          PLB Commission Percent
-                        </label>
-                      </div>
-                    </div>
-                    <div className='col-lg-6 row y-gap-20 pr-0'>
-                      <div className='form-input col-lg-6'>
-                        <input
-                          onChange={(e) => setVendorServiceChargePercent(e.target.value)}
-                          value={vendorServiceChargePercent}
-                          placeholder=' '
-                          type='number'
-                          onWheel={(e) => e.target.blur()}
-                          onFocus={() => setVendorGSTFocused(true)}
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Vendor Service Charge Percent
-                        </label>
-                        <div className='d-flex items-center ml-30'>%</div>
-                      </div>
-                      <div className='form-input col-lg-6 pr-30 lg:pr-0'>
-                        <input
-                          onChange={(e) => setVendorServiceCharges(e.target.value)}
-                          value={vendorServiceCharges}
-                          placeholder=' '
-                          type='number'
-                          onWheel={(e) => e.target.blur()}
-                          onFocus={() => setVendorGSTFocused(false)}
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
+                    ) : (
+                      <div className='col-4' />
+                    )}
+                    {bookingType?.value !== 'Miscellaneous' && (
+                      <>
+                        <div className='form-input-select col-lg-4'>
+                          <label>Commission Rule</label>
+                          <Select
+                            options={commissionRules}
+                            value={commissionRuleID}
+                            onChange={(id) => setCommissionRuleID(id)}
+                          />
+                        </div>
+                        <div className='col-lg-4'>
+                          <div className='form-input'>
+                            <input
+                              onChange={(e) => setIATACommissionPercent(e.target.value)}
+                              value={IATACommissionPercent}
+                              placeholder=' '
+                              type='number'
+                              onWheel={(e) => e.target.blur()}
+                            />
+                            <label className='lh-1 text-16 text-light-1'>
+                              IATA Commission Percent
+                            </label>
+                          </div>
+                        </div>
+                        <div className='col-lg-4'>
+                          <div className='form-input'>
+                            <input
+                              onChange={(e) => setPLBCommissionPercent(e.target.value)}
+                              value={plbCommissionPercent}
+                              placeholder=' '
+                              type='number'
+                              onWheel={(e) => e.target.blur()}
+                            />
+                            <label className='lh-1 text-16 text-light-1'>
+                              PLB Commission Percent
+                            </label>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                    <div className='col-lg-4 pr-0'>
+                      <div className='row'>
+                        <label className='col-12 fw-500 mb-4'>
                           Vendor Service Charges
                         </label>
+                        <div className='form-input col-4'>
+                          <input
+                            style={{
+                              height: '50px',
+                              minHeight: 'unset',
+                              paddingTop: 'unset',
+                              backgroundColor: '#ffe',
+                            }}
+                            onChange={(e) =>
+                              setVendorServiceChargePercent(e.target.value)
+                            }
+                            value={vendorServiceChargePercent}
+                            type='number'
+                            placeholder=' '
+                            onWheel={(e) => e.target.blur()}
+                            onFocus={() => setVendorGSTFocused(true)}
+                          />
+                          <label className='lh-1 text-16 text-light-1'></label>
+                          <div className='d-flex items-center ml-10'>%</div>
+                        </div>
+                        <div className='d-flex col-8 items-center gap-2 pr-30 lg:pr-0'>
+                          <label>Amount</label>
+                          <div className='form-input'>
+                            <input
+                              style={{
+                                height: '50px',
+                                minHeight: 'unset',
+                                paddingTop: 'unset',
+                              }}
+                              onChange={(e) => setVendorServiceCharges(e.target.value)}
+                              value={vendorServiceCharges}
+                              placeholder=' '
+                              type='number'
+                              onWheel={(e) => e.target.blur()}
+                              onFocus={() => setVendorGSTFocused(false)}
+                            />
+                            <label className='lh-1 text-16 text-light-1'></label>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                    <div className='col-lg-6 row y-gap-20 pr-0'>
-                      <div className='form-input col-lg-6'>
-                        <input
-                          onChange={(e) => setVendorTDSPercent(e.target.value)}
-                          value={vendorTDSPercent}
-                          placeholder=' '
-                          type='number'
-                          onWheel={(e) => e.target.blur()}
-                          onFocus={() => setVendorTDSPercentFocused(true)}
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Vendor TDS Percent
-                        </label>
-                        <div className='d-flex items-center ml-30'>%</div>
-                      </div>
-                      <div className='form-input col-lg-6 pr-0'>
-                        <input
-                          onChange={(e) => setVendorTDS(e.target.value)}
-                          value={vendorTDS}
-                          placeholder=' '
-                          type='number'
-                          onWheel={(e) => e.target.blur()}
-                          onFocus={() => setVendorTDSPercentFocused(false)}
-                        />
-                        <label className='lh-1 text-16 text-light-1'>Vendor TDS</label>
+                    <div className='col-lg-4 pr-0'>
+                      <div className='row'>
+                        <label className='col-12 fw-500 mb-4'>Vendor TDS Amount</label>
+                        <div className='form-input col-4'>
+                          <input
+                            style={{
+                              height: '50px',
+                              minHeight: 'unset',
+                              paddingTop: 'unset',
+                              backgroundColor: '#ffe',
+                            }}
+                            onChange={(e) => setVendorTDSPercent(e.target.value)}
+                            value={vendorTDSPercent}
+                            placeholder=' '
+                            type='number'
+                            onWheel={(e) => e.target.blur()}
+                            onFocus={() => setVendorTDSPercentFocused(true)}
+                          />
+                          <label className='lh-1 text-16 text-light-1'></label>
+                          <div className='d-flex items-center ml-10'>%</div>
+                        </div>
+                        <div className='d-flex gap-2 items-center col-8 pr-30 lg:pr-0'>
+                          <label>Amount</label>
+                          <div className='form-input'>
+                            <input
+                              style={{
+                                height: '50px',
+                                minHeight: 'unset',
+                                paddingTop: 'unset',
+                              }}
+                              onChange={(e) => setVendorTDS(e.target.value)}
+                              value={vendorTDS}
+                              placeholder=' '
+                              type='number'
+                              onWheel={(e) => e.target.blur()}
+                              onFocus={() => setVendorTDSPercentFocused(false)}
+                            />
+                            <label className='lh-1 text-16 text-light-1'></label>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                    <div className='col-lg-4'>
+                    <div className='col-lg-4 pt-20'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setCommissionReceivable(e.target.value)}
@@ -1249,6 +1351,7 @@ const ReissueBooking = () => {
                           type='number'
                           onWheel={(e) => e.target.blur()}
                           disabled
+                          className='bg-light'
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Commission Receivable
@@ -1256,29 +1359,6 @@ const ReissueBooking = () => {
                       </div>
                     </div>
                     <h3>Client Details</h3>
-                    <div className='form-input-select col-lg-4'>
-                      <label>Client Referrer</label>
-                      <Select
-                        options={clients}
-                        value={clientReferrerID}
-                        onChange={(id) => setClientReferrerID(id)}
-                      />
-                    </div>
-                    <div className='col-lg-4'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setClientReferralFee(e.target.value)}
-                          value={clientReferralFee}
-                          placeholder=' '
-                          type='number'
-                          onWheel={(e) => e.target.blur()}
-                          onFocus={() => setXplorzGSTFocused(true)}
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Client Referral Fee
-                        </label>
-                      </div>
-                    </div>
                     <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
@@ -1287,6 +1367,7 @@ const ReissueBooking = () => {
                           placeholder=' '
                           type='number'
                           onWheel={(e) => e.target.blur()}
+                          onFocus={() => setXplorzGSTFocused(true)}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Client Quoted Amount
@@ -1328,75 +1409,89 @@ const ReissueBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-lg-6 row pr-0 y-gap-20 items-center'>
-                      <div className='form-input-select col-lg-6 pr-0'>
-                        <label>Client GST Percent</label>
-                        <Select
-                          defaultValue={{ value: 0, label: 'None' }}
-                          options={clientGSTOptions}
-                          value={clientGSTPercent}
-                          onChange={(id) => setClientGSTPercent(id)}
-                        />
-                      </div>
-                      <div className='form-input col-lg-6 pr-30 lg:pr-0'>
-                        <input
-                          onChange={(e) => setClientGSTAmount(e.target.value)}
-                          value={clientGSTAmount}
-                          placeholder=' '
-                          type='number'
-                          onWheel={(e) => e.target.blur()}
-                          required
-                          disabled
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Client GST Amount<span className='text-danger'>*</span>
-                        </label>
+                    <div className='col-lg-4 pr-0'>
+                      <div className='row'>
+                        <label className='col-12 fw-500 mb-4'>Client GST Amount</label>
+                        <div className='form-input-select col-6'>
+                          <label></label>
+                          <Select
+                            className='small'
+                            onChange={(id) => setClientGSTPercent(id)}
+                            defaultValue={{ value: 0, label: 'None' }}
+                            options={clientGSTOptions}
+                            value={clientGSTPercent}
+                          />
+                        </div>
+                        <div className='form-input col-lg-6 pr-30 lg:pr-0'>
+                          <input
+                            style={{
+                              height: '50px',
+                              minHeight: 'unset',
+                              paddingTop: 'unset',
+                            }}
+                            onChange={(e) => setClientGSTAmount(e.target.value)}
+                            value={clientGSTAmount}
+                            placeholder=' '
+                            type='number'
+                            onWheel={(e) => e.target.blur()}
+                            required
+                            disabled
+                            className='bg-light'
+                          />
+                          <label className='lh-1 text-16 text-light-1'></label>
+                        </div>
                       </div>
                     </div>
                     {!isOffshore && (
-                      <div className='col-lg-6 row pr-0 y-gap-20 items-center'>
-                        <div className='form-input col-lg-6'>
-                          <input
-                            onChange={(e) =>
-                              setClientServiceChargePercent(e.target.value)
-                            }
-                            value={clientServiceChargePercent}
-                            placeholder=' '
-                            onFocus={() => setXplorzGSTFocused(true)}
-                            type='number'
-                            onWheel={(e) => e.target.blur()}
-                            required
-                          />
-                          <label className='lh-1 text-16 text-light-1'>
-                            Xplorz GST Percent<span className='text-danger'>*</span>
-                          </label>
-                          <span className='d-flex items-center ml-30'>%</span>
-                        </div>
-                        <div className='form-input col-lg-6 pr-0'>
-                          <input
-                            onChange={(e) => setClientServicesCharges(e.target.value)}
-                            value={clientServiceCharges}
-                            placeholder=' '
-                            type='number'
-                            onWheel={(e) => e.target.blur()}
-                            required
-                            onFocus={() => setXplorzGSTFocused(false)}
-                            onBlur={() => setXplorzGSTFocused(true)}
-                          />
-                          <label className='lh-1 text-16 text-light-1'>
-                            Client Services Charges<span className='text-danger'>*</span>
-                          </label>
+                      <div className='col-lg-4 pr-0'>
+                        <div className='row'>
+                          <label className='col-12 fw-500 mb-4'>Xplorz GST Amount</label>
+                          <div className='form-input col-4'>
+                            <input
+                              onChange={(e) =>
+                                setClientServiceChargePercent(e.target.value)
+                              }
+                              style={{
+                                height: '50px',
+                                minHeight: 'unset',
+                                paddingTop: 'unset',
+                                backgroundColor: '#ffe',
+                              }}
+                              value={clientServiceChargePercent}
+                              placeholder=' '
+                              onFocus={() => setXplorzGSTFocused(true)}
+                              type='number'
+                              onWheel={(e) => e.target.blur()}
+                              required
+                            />
+                            <label className='lh-1 text-16 text-light-1'></label>
+                            <span className='d-flex items-center ml-10'>%</span>
+                          </div>
+                          <div className='d-flex gap-2 items-center col-8 pr-30 lg:pr-0'>
+                            <label>Amount</label>
+                            <div className='form-input'>
+                              <input
+                                style={{
+                                  height: '50px',
+                                  minHeight: 'unset',
+                                  paddingTop: 'unset',
+                                }}
+                                onChange={(e) => setClientServicesCharges(e.target.value)}
+                                value={clientServiceCharges}
+                                placeholder=' '
+                                type='number'
+                                onWheel={(e) => e.target.blur()}
+                                required
+                                onFocus={() => setXplorzGSTFocused(false)}
+                                onBlur={() => setXplorzGSTFocused(true)}
+                              />
+                              <label className='lh-1 text-16 text-light-1'></label>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     )}
-                    <div className='d-flex items-center gap-3'>
-                      <ReactSwitch
-                        onChange={() => setIsOffshore((prev) => !prev)}
-                        checked={isOffshore}
-                      />
-                      <label>Is Offshore</label>
-                    </div>
-                    <div className='col-12'>
+                    <div className='col-lg-4 pt-20'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setClientTotal(e.target.value)}
@@ -1406,18 +1501,26 @@ const ReissueBooking = () => {
                           onWheel={(e) => e.target.blur()}
                           required
                           disabled
+                          className='bg-light'
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Client Total<span className='text-danger'>*</span>
                         </label>
                       </div>
                     </div>
+                    <div className='d-flex items-center gap-3'>
+                      <ReactSwitch
+                        onChange={() => setIsOffshore((prev) => !prev)}
+                        checked={isOffshore}
+                      />
+                      <label>Is Offshore</label>
+                    </div>
                     <div className='d-inline-block'>
                       <button
                         type='submit'
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
                       >
-                        Reissue Booking
+                        Reissue Invoice
                       </button>
                     </div>
                   </form>

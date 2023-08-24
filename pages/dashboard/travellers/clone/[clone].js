@@ -29,10 +29,11 @@ const AddNewTravellers = () => {
   const [passportIssuePlace, setPassportIssuePlace] = useState('');
   const [mobilePhone, setMobilePhone] = useState('');
   const [email, setEmail] = useState('');
-  const [domesticAirlinePreference, setDomesticAirlinePreference] = useState('');
+  const [domesticAirlinePreference, setDomesticAirlinePreference] = useState([]);
   const [domesticCabinPreference, setDomesticCabinPreference] = useState(null);
-  const [internationalAirlinePreference, setInternationalAirlinePreference] =
-    useState('');
+  const [internationalAirlinePreference, setInternationalAirlinePreference] = useState(
+    []
+  );
   const [internationalCabinPreference, setInternationalCabinPreference] = useState(null);
   const [mealPreference, setMealPreference] = useState(null);
   const [seatPreference, setSeatPreference] = useState(null);
@@ -51,6 +52,7 @@ const AddNewTravellers = () => {
   const [passportScanFiles, setPassportScanFiles] = useState([]);
   const [countries, setCountries] = useState([]);
   const [countryCodeID, setCountryCodeID] = useState(null);
+  const [airlines, setAirlines] = useState([]);
 
   // Options
   const passportPrefixOptions = [
@@ -105,10 +107,13 @@ const AddNewTravellers = () => {
       if (response?.success) {
         // Countries
         let countries = await getList('countries');
-        if (countries?.success) {
+        let airlines = await getList('organizations', { is_airline: 1 });
+        if (countries?.success && airlines?.success) {
           setCountries(countries.data);
+          setAirlines(airlines.data.map((el) => ({ label: el.name, value: el.code })));
         } else {
-          sendToast('error', 'Error Getting Country Data', 4000);
+          sendToast('error', 'Error Getting Data', 4000);
+          router.back();
         }
 
         // Setting previous values
@@ -150,10 +155,28 @@ const AddNewTravellers = () => {
         setPassportIssuePlace(response.data?.passport_issue_place ?? '');
         setMobilePhone(response.data?.mobile_phone ?? '');
         setEmail(response.data?.email_address ?? '');
-        setDomesticAirlinePreference(response.data?.domestic_airline_preference ?? '');
-        setInternationalAirlinePreference(
-          response?.data.international_airline_preference ?? ''
-        );
+        if (
+          response.data?.domestic_airline_preference &&
+          response.data?.domestic_airline_preference?.length > 0
+        ) {
+          let tempDomestic = [];
+          for (let pref of response.data?.domestic_airline_preference)
+            for (let airline of airlines.data)
+              if (pref === airline.code)
+                tempDomestic.push({ label: airline.name, value: airline.code });
+          setDomesticAirlinePreference(tempDomestic);
+        }
+        if (
+          response.data?.international_airline_preference &&
+          response.data?.international_airline_preference?.length > 0
+        ) {
+          let tempInternational = [];
+          for (let pref of response.data?.international_airline_preference)
+            for (let airline of airlines.data)
+              if (pref === airline.code)
+                tempInternational.push({ label: airline.name, value: airline.code });
+          setInternationalAirlinePreference(tempInternational);
+        }
         setAddress(response.data?.address ?? '');
         setMealNotes(response.data?.meal_notes ?? '');
         setSeatNotes(response.data?.seat_notes ?? '');
@@ -252,17 +275,15 @@ const AddNewTravellers = () => {
     passportFormData.append('passport_issue_place', passportIssuePlace ?? '');
     passportFormData.append('mobile_phone', mobilePhone ?? '');
     passportFormData.append('email_address', email ?? '');
-    passportFormData.append(
-      'domestic_airline_preference',
-      domesticAirlinePreference ?? ''
-    );
+    if (domesticAirlinePreference && domesticAirlinePreference.length > 0)
+      for (let pref of domesticAirlinePreference)
+        passportFormData.append('domestic_airline_preference[]', pref?.value ?? '');
+    if (internationalAirlinePreference && internationalAirlinePreference.length > 0)
+      for (let pref of internationalAirlinePreference)
+        passportFormData.append('international_airline_preference[]', pref?.value ?? '');
     passportFormData.append(
       'domestic_cabin_preference',
       domesticCabinPreference?.value ?? ''
-    );
-    passportFormData.append(
-      'international_airline_preference',
-      internationalAirlinePreference ?? ''
     );
     passportFormData.append(
       'international_cabin_preference',
@@ -427,7 +448,7 @@ const AddNewTravellers = () => {
                           placeholder=' '
                           type='number'
                         />
-                        <label className='lh-1 text-16 text-light-1'>
+                        <label className='lh-1 text-15 text-light-1'>
                           Mobile Phone (with Country Code)
                         </label>
                       </div>
@@ -469,8 +490,8 @@ const AddNewTravellers = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='d-block ml-3 form-datepicker col-lg-3'>
-                      <label>
+                    <div className='d-block ml-3 form-datepicker-alternate col-lg-3'>
+                      <label className='text-15'>
                         Date Of Birth (as on passport)
                         <span className='text-danger'>*</span>
                       </label>
@@ -626,33 +647,23 @@ const AddNewTravellers = () => {
                       </div>
                     </div>
                     <h3>Preferences</h3>
-                    <div className='col-lg-3'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setDomesticAirlinePreference(e.target.value)}
-                          value={domesticAirlinePreference}
-                          placeholder=' '
-                          type='text'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Domestic Airline Preference
-                        </label>
-                      </div>
+                    <div className='form-input-select col-lg-3'>
+                      <label>Domestic Airline Preference</label>
+                      <Select
+                        isMulti
+                        options={airlines}
+                        value={domesticAirlinePreference}
+                        onChange={setDomesticAirlinePreference}
+                      />
                     </div>
-                    <div className='col-lg-3'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) =>
-                            setInternationalAirlinePreference(e.target.value)
-                          }
-                          value={internationalAirlinePreference}
-                          placeholder=' '
-                          type='text'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          International Airline Preference
-                        </label>
-                      </div>
+                    <div className='form-input-select col-lg-3'>
+                      <label>International Airline Preference</label>
+                      <Select
+                        isMulti
+                        options={airlines}
+                        value={internationalAirlinePreference}
+                        onChange={setInternationalAirlinePreference}
+                      />
                     </div>
                     <div className='col-lg-3 form-input-select'>
                       <label>Domestic Cabin Preference</label>

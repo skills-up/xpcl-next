@@ -21,6 +21,8 @@ const AddNewOrganization = () => {
   const [gstn, setGstn] = useState('');
   const [useGstn, setUseGstn] = useState(false);
   const [type, setType] = useState(null);
+  const [vendorServicePercent, setVendorServicePercent] = useState(0);
+  const [vendorTDSPercent, setVendorTDSPercent] = useState(0);
   const [farePercent, setFarePercent] = useState(0);
   const options = [
     { value: 'Client', label: 'Client' },
@@ -49,18 +51,43 @@ const AddNewOrganization = () => {
         setGstn(response.data?.gstn);
         setUseGstn(response.data?.use_gstn);
         setFarePercent(response.data?.fare_percent);
+        setVendorServicePercent(response.data?.vendor_service_charge_percentage);
+        setVendorTDSPercent(response.data?.vendor_tds_percentage);
 
         const calenderTemplates = await getList('calendar-templates');
         if (calenderTemplates?.success) {
           setCalenderTemplates(
             calenderTemplates.data.map((element) => ({
               value: element.id,
-              label: element.name,
+              label: element?.image_url ? (
+                <span>
+                  {element.name}{' '}
+                  <img
+                    style={{ height: '288px', maxWidth: '200px' }}
+                    src={element.image_url}
+                  />
+                </span>
+              ) : (
+                <span>{element.name}</span>
+              ),
             }))
           );
           for (let calendar of calenderTemplates.data) {
             if (calendar.id === response.data.calendar_template_id) {
-              setCalenderTemplateID({ value: calendar.id, label: calendar.name });
+              setCalenderTemplateID({
+                value: calendar.id,
+                label: calendar?.image_url ? (
+                  <span>
+                    {calendar.name}{' '}
+                    <img
+                      style={{ height: '288px', maxWidth: '200px' }}
+                      src={calendar.image_url}
+                    />
+                  </span>
+                ) : (
+                  <span>{calendar.name}</span>
+                ),
+              });
             }
           }
           // Setting types
@@ -102,6 +129,8 @@ const AddNewOrganization = () => {
       use_gstn: useGstn,
       type: type?.value,
       fare_percent: farePercent,
+      vendor_service_charge_percentage: vendorServicePercent,
+      vendor_tds_percentage: vendorTDSPercent,
     });
     if (response?.success) {
       sendToast('success', 'Created Organization Successfully.', 4000);
@@ -249,6 +278,32 @@ const AddNewOrganization = () => {
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Markup Percent
+                        </label>
+                      </div>
+                    </div>
+                    <div className='col-12'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setVendorServicePercent(e.target.value)}
+                          value={vendorServicePercent}
+                          placeholder=' '
+                          type='number'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Vendor Service Charge Percent
+                        </label>
+                      </div>
+                    </div>
+                    <div className='col-12'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setVendorTDSPercent(e.target.value)}
+                          value={vendorTDSPercent}
+                          placeholder=' '
+                          type='number'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Vendor TDS Percent
                         </label>
                       </div>
                     </div>

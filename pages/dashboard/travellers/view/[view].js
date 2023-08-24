@@ -105,6 +105,10 @@ const ViewTravellers = () => {
             dateStyle: 'medium',
           });
         }
+        if (data.prefix) {
+          data.prefix =
+            data.prefix.charAt(0).toUpperCase() + data.prefix.slice(1).toLowerCase();
+        }
         if (data.passport_issue_date) {
           data.passport_issue_date = new Date(data.passport_issue_date).toLocaleString(
             'en-IN',
@@ -138,6 +142,28 @@ const ViewTravellers = () => {
               {Object.values(data.aliases).map((alias, index) => (
                 <li style={{ listStyleType: 'disc' }} key={index}>
                   {alias}
+                </li>
+              ))}
+            </ul>
+          );
+        }
+        if (data.domestic_airline_preference) {
+          data.domestic_airline_preference = (
+            <ul className='ml-20'>
+              {data.domestic_airline_preference.map((opt, index) => (
+                <li style={{ listStyleType: 'disc' }} key={index}>
+                  {opt}
+                </li>
+              ))}
+            </ul>
+          );
+        }
+        if (data.international_airline_preference) {
+          data.international_airline_preference = (
+            <ul className='ml-20'>
+              {data.international_airline_preference.map((opt, index) => (
+                <li style={{ listStyleType: 'disc' }} key={index}>
+                  {opt}
                 </li>
               ))}
             </ul>
