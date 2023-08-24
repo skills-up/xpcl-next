@@ -1560,6 +1560,28 @@ table.table-3 {
   }
 }
 
+div.gst-mis {
+  table.table-3 {
+    td,
+    th {
+      min-width: unset;
+    }
+    tbody {
+      tr {
+        &:nth-child(even) {
+          background-color: #f5f5f5;
+        }
+      }
+    }
+    tfoot,
+    thead {
+      tr {
+        background-color: #eee;
+      }
+    }
+  }
+}
+
 table.no-min-height {
   min-height: unset;
 }
@@ -2472,14 +2494,14 @@ table.table-6 {
         &.top {
           font-weight: 700;
           cursor: pointer;
-          background-color: rgb(39, 53, 211);
-          color: white;
+          background-color: #ccc;
+          // color: white;
         }
         &.member {
-          background-color: rgb(230, 230, 230);
+          // background-color: rgb(230, 230, 230);
         }
         &.net-cash {
-          background-color: rgb(245, 245, 245);
+          background-color: #999;
           font-weight: 700;
         }
       }

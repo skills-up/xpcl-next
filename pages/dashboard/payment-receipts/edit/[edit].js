@@ -54,6 +54,16 @@ const UpdatePaymentReceipt = () => {
     getData();
   }, [router.isReady]);
 
+  useEffect(() => {
+    if (itcObj?.gstn) {
+      if (itcObj.gstn.slice(0, 2) === '27') {
+        setItcObj((prev) => ({ ...prev, igst: '' }));
+      } else {
+        setItcObj((prev) => ({ ...prev, ...{ cgst: '', sgst: '' } }));
+      }
+    }
+  }, [itcObj.gstn]);
+
   const getData = async () => {
     if (router.query.edit) {
       const response = await getItem('payment-receipts', router.query.edit);
@@ -151,13 +161,25 @@ const UpdatePaymentReceipt = () => {
     if (tempTDSObj['account_id']?.value)
       tempTDSObj['account_id'] = tempTDSObj['account_id']?.value;
     const response = await updateItem('payment-receipts', router.query.edit, {
-      organization_id: organizationID?.value,
+      // organization_id: organizationID?.value,
       dr_account_id: drAccountID.value,
       cr_account_id: crAccountID.value,
       date: date.format('YYYY-MM-DD'),
       amount,
       narration,
-      itc: type.value === 'Payment' ? (itc ? itcObj : null) : null,
+      itc:
+        type.value === 'Payment'
+          ? itc
+            ? {
+                ...itcObj,
+                ...{
+                  igst: itcObj?.igst || 0,
+                  cgst: itcObj?.cgst || 0,
+                  sgst: itcObj?.sgst || 0,
+                },
+              }
+            : null
+          : null,
       tds: type.value === 'Payment' ? (tds ? tempTDSObj : null) : null,
     });
     if (response?.success) {
@@ -225,7 +247,7 @@ const UpdatePaymentReceipt = () => {
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
-                    {type?.value !== 'Voucher' && (
+                    {/* {type?.value !== 'Voucher' && (
                       <div className='form-input-select'>
                         <label>Organization</label>
                         <Select
@@ -235,7 +257,7 @@ const UpdatePaymentReceipt = () => {
                           onChange={(id) => setOrganizationID(id)}
                         />
                       </div>
-                    )}
+                    )} */}
                     <div className='form-input-select'>
                       <label>
                         Debit Account<span className='text-danger'>*</span>
@@ -335,7 +357,9 @@ const UpdatePaymentReceipt = () => {
                               placeholder=' '
                               type='text'
                             />
-                            <label className='lh-1 text-16 text-light-1'>Name</label>
+                            <label className='lh-1 text-16 text-light-1'>
+                              Name<span className='text-danger'>*</span>
+                            </label>
                           </div>
                         </div>
                         <div className='col-3 pr-0'>
@@ -348,20 +372,9 @@ const UpdatePaymentReceipt = () => {
                               placeholder=' '
                               type='text'
                             />
-                            <label className='lh-1 text-16 text-light-1'>GSTN</label>
-                          </div>
-                        </div>
-                        <div className='col-2 pr-0'>
-                          <div className='form-input'>
-                            <input
-                              onChange={(e) =>
-                                setItcObj((prev) => ({ ...prev, igst: e.target.value }))
-                              }
-                              value={itcObj.igst}
-                              placeholder=' '
-                              type='number'
-                            />
-                            <label className='lh-1 text-16 text-light-1'>IGST</label>
+                            <label className='lh-1 text-16 text-light-1'>
+                              GSTN<span className='text-danger'>*</span>
+                            </label>
                           </div>
                         </div>
                         <div className='col-2 pr-0'>
@@ -373,8 +386,16 @@ const UpdatePaymentReceipt = () => {
                               value={itcObj.cgst}
                               placeholder=' '
                               type='number'
+                              disabled={
+                                itcObj.gstn ? itcObj.gstn.slice(0, 2) !== '27' : false
+                              }
                             />
-                            <label className='lh-1 text-16 text-light-1'>CGST</label>
+                            <label className='lh-1 text-16 text-light-1'>
+                              CGST
+                              {itcObj.gstn && itcObj.gstn.slice(0, 2) === '27' && (
+                                <span className='text-danger'>*</span>
+                              )}
+                            </label>
                           </div>
                         </div>
                         <div className='col-2 pr-0'>
@@ -386,8 +407,37 @@ const UpdatePaymentReceipt = () => {
                               value={itcObj.sgst}
                               placeholder=' '
                               type='number'
+                              disabled={
+                                itcObj.gstn ? itcObj.gstn.slice(0, 2) !== '27' : false
+                              }
                             />
-                            <label className='lh-1 text-16 text-light-1'>SGST</label>
+                            <label className='lh-1 text-16 text-light-1'>
+                              SGST
+                              {itcObj.gstn && itcObj.gstn.slice(0, 2) === '27' && (
+                                <span className='text-danger'>*</span>
+                              )}
+                            </label>
+                          </div>
+                        </div>
+                        <div className='col-2 pr-0'>
+                          <div className='form-input'>
+                            <input
+                              onChange={(e) =>
+                                setItcObj((prev) => ({ ...prev, igst: e.target.value }))
+                              }
+                              value={itcObj.igst}
+                              placeholder=' '
+                              type='number'
+                              disabled={
+                                itcObj.gstn ? itcObj.gstn.slice(0, 2) === '27' : false
+                              }
+                            />
+                            <label className='lh-1 text-16 text-light-1'>
+                              IGST
+                              {itcObj.gstn && itcObj.gstn.slice(0, 2) !== '27' && (
+                                <span className='text-danger'>*</span>
+                              )}
+                            </label>
                           </div>
                         </div>
                       </div>
@@ -414,7 +464,9 @@ const UpdatePaymentReceipt = () => {
                               placeholder=' '
                               type='text'
                             />
-                            <label className='lh-1 text-16 text-light-1'>Name</label>
+                            <label className='lh-1 text-16 text-light-1'>
+                              Name<span className='text-danger'>*</span>
+                            </label>
                           </div>
                         </div>
                         <div className='col-3 pr-0'>
@@ -427,11 +479,15 @@ const UpdatePaymentReceipt = () => {
                               placeholder=' '
                               type='text'
                             />
-                            <label className='lh-1 text-16 text-light-1'>PAN</label>
+                            <label className='lh-1 text-16 text-light-1'>
+                              PAN<span className='text-danger'>*</span>
+                            </label>
                           </div>
                         </div>
-                        <div className='col-3 pr-0 pb-1 form-input-select'>
-                          <label>Account</label>
+                        <div className='col-4 pr-0 pb-1 form-input-select'>
+                          <label>
+                            Account<span className='text-danger'>*</span>
+                          </label>
                           <Select
                             options={tdsAccounts}
                             value={tdsObj.account_id}
@@ -451,7 +507,9 @@ const UpdatePaymentReceipt = () => {
                               placeholder=' '
                               type='number'
                             />
-                            <label className='lh-1 text-16 text-light-1'>Amount</label>
+                            <label className='lh-1 text-16 text-light-1'>
+                              Amount<span className='text-danger'>*</span>
+                            </label>
                           </div>
                         </div>
                       </div>
