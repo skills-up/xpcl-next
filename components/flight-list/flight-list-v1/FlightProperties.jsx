@@ -210,20 +210,38 @@ const FlightProperties = () => {
                 // Stops
                 if (secondKey === 'combined') {
                   let s = 0;
+                  let firstLeg = -1;
+                  let secLeg = -1;
                   for (let seg of val.segments) {
-                    if (seg.segmentNo !== 0) {
+                    if (seg.segmentNo === 0) {
                       s += 1;
                     }
+                    if (s === 1) {
+                      firstLeg += 1;
+                    } else if (s === 2) {
+                      secLeg += 1;
+                    }
                   }
-                  if (s > 0) {
-                    if (s > 1)
-                      stops[`${s} Stops`]
-                        ? (stops[`${s} Stops`] += 1)
-                        : (stops[`${s} Stops`] = 1);
+                  if (firstLeg > 0) {
+                    if (firstLeg > 1)
+                      stops[`${firstLeg} Stops`]
+                        ? (stops[`${firstLeg} Stops`] += 1)
+                        : (stops[`${firstLeg} Stops`] = 1);
                     else stops['1 Stop'] ? (stops['1 Stop'] += 1) : (stops['1 Stop'] = 1);
                   } else {
                     stops['Nonstop'] ? (stops['Nonstop'] += 1) : (stops['Nonstop'] = 1);
                   }
+                  if (firstLeg !== secLeg)
+                    if (secLeg > 0) {
+                      if (secLeg > 1)
+                        stops[`${secLeg} Stops`]
+                          ? (stops[`${secLeg} Stops`] += 1)
+                          : (stops[`${secLeg} Stops`] = 1);
+                      else
+                        stops['1 Stop'] ? (stops['1 Stop'] += 1) : (stops['1 Stop'] = 1);
+                    } else {
+                      stops['Nonstop'] ? (stops['Nonstop'] += 1) : (stops['Nonstop'] = 1);
+                    }
                 } else {
                   if (val.segments.length > 1) {
                     if (val.segments.length > 2)
@@ -334,6 +352,14 @@ const FlightProperties = () => {
       for (let [key, value] of Object.entries(stops)) {
         stops[key] = { number: value, value: true };
       }
+      let tempStops = {};
+      if (stops['Nonstop']) tempStops['Nonstop'] = stops['Nonstop'];
+      if (stops['1 Stop']) tempStops['1 Stop'] = stops['1 Stop'];
+      let tempNum = [2, 3, 4, 5, 6, 7, 8, 9];
+      for (let num of tempNum) {
+        if (stops[`${num} Stops`]) tempStops[`${num} Stops`] = stops[`${num} Stops`];
+      }
+
       // Manipulating Cabins
       for (let [key, value] of Object.entries(cabins)) {
         cabins[key] = { number: value, value: true };
@@ -376,7 +402,7 @@ const FlightProperties = () => {
           }
         }
       }
-      dispatch(setStops(stops));
+      dispatch(setStops(tempStops));
       dispatch(setCabins(cabins));
       dispatch(setAirlines(airlines));
       dispatch(setDepartTimes(departTimes));
@@ -458,18 +484,34 @@ const FlightProperties = () => {
       // Filter By Stops
       if (el.type === 'combined') {
         let s = 0;
+        let firstLeg = -1;
+        let secLeg = -1;
         for (let seg of el.segments) {
-          if (seg.segmentNo !== 0) {
+          if (seg.segmentNo === 0) {
             s += 1;
           }
+          if (s === 1) {
+            firstLeg += 1;
+          } else if (s === 2) {
+            secLeg += 1;
+          }
         }
-        if (s === 0) {
-          if (!stops['Nonstop']?.value) return false;
-        } else if (s === 1) {
-          if (!stops['1 Stop']?.value) return false;
+        let totalFalse = 0;
+        if (secLeg === 0) {
+          if (!stops['Nonstop']?.value) totalFalse += 1;
+        } else if (secLeg === 1) {
+          if (!stops['1 Stop']?.value) totalFalse += 1;
         } else {
-          if (!stops[`${s} Stops`]?.value) return false;
+          if (!stops[`${secLeg} Stops`]?.value) totalFalse += 1;
         }
+        if (firstLeg === 0) {
+          if (!stops['Nonstop']?.value) totalFalse += 1;
+        } else if (firstLeg === 1) {
+          if (!stops['1 Stop']?.value) totalFalse += 1;
+        } else {
+          if (!stops[`${firstLeg} Stops`]?.value) totalFalse += 1;
+        }
+        if (totalFalse === 2) return false;
       } else {
         if (el.segments.length === 1) {
           if (!stops['Nonstop']?.value) return false;

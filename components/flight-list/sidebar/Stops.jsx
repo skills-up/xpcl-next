@@ -4,7 +4,7 @@ import { setStops } from '../../../features/flightSearch/flightSearchSlice';
 const Stops = () => {
   const dispatch = useDispatch();
   const stops = useSelector((state) => state.flightSearch.value.stops);
-
+  console.log('stops', stops);
   return (
     <>
       {stops &&

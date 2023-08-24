@@ -88,7 +88,7 @@ const GuestSearch = ({ guests, cabins }) => {
         {/* <h4 className='text-15 fw-500 ls-2 lh-16'>Travellers</h4> */}
         <div className='text-18 d-flex gap-2 items-center cursor-pointer'>
           {/* Adult */}
-          <FaUserTie className='text-25' />
+          {/* <FaUserTie className='text-25' /> */}
           <span className='js-count-adult'>
             {guestCounts.Adults} {Pluralize('Adult', 'Adults', guestCounts.Adults)}
             {/* Children */}
@@ -128,7 +128,7 @@ const GuestSearch = ({ guests, cabins }) => {
           <div className='row y-gap-20'>
             {cabinOptions.map((opt, optIn) => (
               <div
-                className={`button -blue-1 bg-blue-1-05 mx-1 col-auto text-blue-1 py-5 px-20 rounded-100  cursor-pointer ${
+                className={`button -blue-1 bg-blue-1-05 mb-1 mx-1 col-auto text-blue-1 py-5 px-20 rounded-100  cursor-pointer ${
                   preferredCabin?.value === opt ? 'active' : ''
                 }`}
                 onClick={() => setPrefferedCabin({ value: opt })}

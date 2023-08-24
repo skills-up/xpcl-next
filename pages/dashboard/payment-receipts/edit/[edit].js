@@ -21,6 +21,7 @@ const UpdatePaymentReceipt = () => {
   const [narration, setNarration] = useState('');
   const [accounts, setAccounts] = useState([]);
   const [organizations, setOrganizations] = useState([]);
+  const [bankCashAccounts, setBankCashAccounts] = useState([]);
   const [tdsAccounts, setTDSAccounts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [itc, setItc] = useState(false);
@@ -65,9 +66,21 @@ const UpdatePaymentReceipt = () => {
         const organizations = await getList('organizations');
         const accounts = await getList('accounts');
         const tdsAccounts = await getList('accounts', { category: 'TDS Deductions' });
-        if (accounts?.success && organizations?.success && tdsAccounts.success) {
+        const bankCashAccounts = await getList('accounts', { is_bank_cash: 1 });
+        if (
+          accounts?.success &&
+          organizations?.success &&
+          tdsAccounts?.success &&
+          bankCashAccounts?.success
+        ) {
           setAccounts(
             accounts.data.map((element) => ({ value: element.id, label: element.name }))
+          );
+          setBankCashAccounts(
+            bankCashAccounts.data.map((element) => ({
+              value: element.id,
+              label: element.name,
+            }))
           );
           setOrganizations(
             organizations.data.map((element) => ({
@@ -228,9 +241,13 @@ const UpdatePaymentReceipt = () => {
                         Debit Account<span className='text-danger'>*</span>
                       </label>
                       <Select
-                        options={accounts.filter(
-                          (acc) => acc?.value !== crAccountID?.value
-                        )}
+                        options={
+                          type?.value === 'Payment'
+                            ? bankCashAccounts.filter(
+                                (acc) => acc?.value !== crAccountID?.value
+                              )
+                            : accounts.filter((acc) => acc?.value !== crAccountID?.value)
+                        }
                         value={drAccountID}
                         placeholder='Search & Select Debit Account (required)'
                         onChange={(id) => setDrAccountID(id)}
@@ -241,9 +258,13 @@ const UpdatePaymentReceipt = () => {
                         Credit Account<span className='text-danger'>*</span>
                       </label>
                       <Select
-                        options={accounts.filter(
-                          (acc) => acc?.value !== drAccountID?.value
-                        )}
+                        options={
+                          type?.value === 'Receipt'
+                            ? bankCashAccounts.filter(
+                                (acc) => acc?.value !== crAccountID?.value
+                              )
+                            : accounts.filter((acc) => acc?.value !== crAccountID?.value)
+                        }
                         value={crAccountID}
                         placeholder='Search & Select Credit Account (required)'
                         onChange={(id) => setCrAccountID(id)}
