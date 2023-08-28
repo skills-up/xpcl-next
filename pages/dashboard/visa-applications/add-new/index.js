@@ -68,7 +68,7 @@ const AddNewVisaRequirements = () => {
     });
     if (response?.success) {
       sendToast('success', 'Created Visa application Successfully.', 4000);
-      router.push('/dashboard/visa-applications');
+      router.push('/dashboard/visa-applications/edit/' + response.data.id);
     } else {
       sendToast(
         'error',

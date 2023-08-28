@@ -189,9 +189,12 @@ const AddNewVisaRequirements = () => {
                           onChange={(e) => setPhotoCount(e.target.value)}
                           value={photoCount}
                           placeholder=' '
-                          type='text'
+                          type='number'
+                          required
                         />
-                        <label className='lh-1 text-16 text-light-1'>Photo Count</label>
+                        <label className='lh-1 text-16 text-light-1'>
+                          Photo Count<span className='text-danger'>*</span>
+                        </label>
                       </div>
                     </div>
                     <div className='col-12'>

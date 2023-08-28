@@ -1,16 +1,15 @@
+import { useRouter } from 'next/router';
+import { Fragment, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { createItem, getItem, getList } from '../../../../api/xplorzApi';
 import Seo from '../../../../components/common/Seo';
 import Footer from '../../../../components/footer/dashboard-footer';
 import Header from '../../../../components/header/dashboard-header';
-import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
-import { useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
-import { sendToast } from '../../../../utils/toastify';
-import { Fragment, useEffect, useState } from 'react';
-import { createItem, getItem, getList, updateItem } from '../../../../api/xplorzApi';
-import ReactSwitch from 'react-switch';
-import Select from 'react-select';
-import PreviousUploadPictures from '../../../../components/previous-file-uploads';
 import NewFileUploads from '../../../../components/new-file-uploads';
+import PreviousUploadPictures from '../../../../components/previous-file-uploads';
+import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
+import { sendToast } from '../../../../utils/toastify';
+import { saveAs } from 'file-saver';
 
 const UpdateVisaApplications = () => {
   const [visaRequirement, setVisaRequirement] = useState(null);
@@ -73,21 +72,21 @@ const UpdateVisaApplications = () => {
         setSteps(temp);
         // Setting previous values
         let personalParse, financialParse, supportingParse;
-        try {
-          personalParse = JSON.parse(response.data?.personal_docs_scans);
-        } catch (err) {
-          personalParse = response.data?.personal_docs_scans;
-        }
-        try {
-          financialParse = JSON.parse(response.data?.financial_docs_scans);
-        } catch (err) {
-          financialParse = response.data?.financial_docs_scans;
-        }
-        try {
-          supportingParse = JSON.parse(response.data?.supporting_docs_scans);
-        } catch (err) {
-          supportingParse = response.data?.supporting_docs_scans;
-        }
+        // try {
+        //   personalParse = JSON.parse(response.data?.personal_docs_scans);
+        // } catch (err) {
+        personalParse = response.data?.personal_docs_scans;
+        // }
+        // try {
+        // financialParse = JSON.parse(response.data?.financial_docs_scans);
+        // } catch (err) {
+        financialParse = response.data?.financial_docs_scans;
+        // }
+        // try {
+        // supportingParse = JSON.parse(response.data?.supporting_docs_scans);
+        // } catch (err) {
+        supportingParse = response.data?.supporting_docs_scans;
+        // }
         setVisaRequirement(response.data?.visa_requirement);
         setPreviousPersonalDocReqs(personalParse);
         setPreviousFinancialDocReqs(financialParse);
@@ -137,20 +136,36 @@ const UpdateVisaApplications = () => {
     let visaFormData = new FormData();
     visaFormData.append('photo_scan', previousPhotoSample ?? '');
     if (photoSample) visaFormData.append('photo_scan_file', photoSample ?? '');
-    visaFormData.append(
-      'personal_docs_scans',
-      JSON.stringify(previousPersonalDocReqs) ?? ''
-    );
+    // visaFormData.append(
+    //   'personal_docs_scans',
+    //   previousPersonalDocReqs ?? '' //? JSON.stringify(previousPersonalDocReqs) : ''
+    // );
 
-    visaFormData.append(
-      'financial_docs_scans',
-      JSON.stringify(previousFinancialDocReqs) ?? ''
-    );
-
-    visaFormData.append(
-      'supporting_docs_scans',
-      JSON.stringify(previousSupportingDocReqs) ?? ''
-    );
+    // visaFormData.append(
+    //   'financial_docs_scans',
+    //   previousFinancialDocReqs ?? '' //? JSON.stringify(previousFinancialDocReqs) : ''
+    // );
+    if (previousPersonalDocReqs) {
+      for (let [key, value] of Object.entries(previousPersonalDocReqs))
+        visaFormData.append(
+          `personal_docs_scans[${key}]`,
+          value //?? JSON.stringify(previousSupportingDocReqs) : ''
+        );
+    }
+    if (previousFinancialDocReqs) {
+      for (let [key, value] of Object.entries(previousFinancialDocReqs))
+        visaFormData.append(
+          `financial_docs_scans[${key}]`,
+          value //?? JSON.stringify(previousSupportingDocReqs) : ''
+        );
+    }
+    if (previousSupportingDocReqs) {
+      for (let [key, value] of Object.entries(previousSupportingDocReqs))
+        visaFormData.append(
+          `supporting_docs_scans[${key}]`,
+          value //?? JSON.stringify(previousSupportingDocReqs) : ''
+        );
+    }
     for (let [key, value] of Object.entries(personalDocsReqs))
       if (value) visaFormData.append(`personal_docs_scan_files[${key}]`, value);
     for (let [key, value] of Object.entries(financialDocsReqs))
@@ -378,6 +393,15 @@ const UpdateVisaApplications = () => {
                             }}
                           />
                         )}
+                        <button
+                          type='button'
+                          onClick={() => {
+                            for (let url of previousVisaFormFiles) {
+                            }
+                          }}
+                        >
+                          Download
+                        </button>
                         <NewFileUploads multiple={true} setUploads={setVisaFormFiles} />
                       </div>
                     )}

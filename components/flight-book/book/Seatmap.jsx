@@ -454,6 +454,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
               amount: totalCost,
               client_id,
               hide_fare: value.hide_fare,
+              email_travellers: value.email_travellers,
             },
             {},
             true
@@ -612,6 +613,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
               client_id,
               travellers: tempTravellers,
               hide_fare: value.hide_fare,
+              email_travellers: value.email_travellers,
               // amount: total,
             },
             {},
@@ -745,6 +747,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
             mealRequests,
             client_id,
             hide_fare: value.hide_fare,
+            email_travellers: value.email_travellers,
             travellers,
           });
           if (booking?.success) {
@@ -2716,6 +2719,24 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                     <div className='form-checkbox__icon icon-check' />
                                   </div>
                                   <div className='ml-10'>Hide Fare</div>
+                                </div>
+                                <div className='form-checkbox d-flex items-center'>
+                                  <input
+                                    type='checkbox'
+                                    name='name'
+                                    checked={value.email_travellers}
+                                    onClick={() => {
+                                      setPNR((prev) => {
+                                        prev[key].email_travellers =
+                                          !prev[key].email_travellers;
+                                        return { ...prev };
+                                      });
+                                    }}
+                                  />
+                                  <div className='form-checkbox__mark'>
+                                    <div className='form-checkbox__icon icon-check' />
+                                  </div>
+                                  <div className='ml-10'>Email Travellers</div>
                                 </div>
                                 {travellerInfo.map((traveller, index) => {
                                   const age = (

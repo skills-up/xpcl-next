@@ -10,12 +10,15 @@ import { useEffect, useState } from 'react';
 import { createItem, deleteItem, getItem } from '../../../../api/xplorzApi';
 import ViewTable from '../../../../components/view-table';
 import Select from 'react-select';
+import NewFileUploads from '../../../../components/new-file-uploads';
 
 const ViewVisaApplications = () => {
   const [visaApplications, setVisaApplications] = useState([]);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
   const [status, setStatus] = useState(null);
+  const [noteImage, setNoteImage] = useState([]);
+  const [note, setNote] = useState('');
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -23,6 +26,7 @@ const ViewVisaApplications = () => {
     // Getting particular visa applications
     getVisaApplications();
   }, [router.isReady]);
+  const client_id = useSelector((state) => state.auth.value.currentOrganization);
 
   const getVisaApplications = async () => {
     if (router.query.view) {
@@ -176,6 +180,26 @@ const ViewVisaApplications = () => {
     onCancel();
   };
 
+  const submitNote = async () => {
+    if (note.trim().length < 1) {
+      sendToast('error', 'You need to add a note body', 4000);
+      return;
+    }
+    let visaFormData = new FormData();
+    if (noteImage) {
+      for (let image of noteImage) visaFormData.append(`attachment_files[]`, image);
+    }
+    visaFormData.append('body', note);
+    visaFormData.append('visa_application_id', router.query.view);
+    const response = await createItem('visa-application-notes', visaFormData);
+    if (response?.success) {
+      sendToast('success', 'Added note successfully', 4000);
+      getVisaApplications();
+    } else {
+      sendToast('error', 'Error adding note', 4000);
+    }
+  };
+
   return (
     <>
       <Seo pageTitle='Visa Application' />
@@ -225,6 +249,7 @@ const ViewVisaApplications = () => {
                       ? 'Business Travel'
                       : 'Tourism',
                     traveller: visaApplications?.traveller?.passport_name,
+                    status: visaApplications?.status,
                   }}
                   onEdit={() =>
                     router.push('/dashboard/visa-applications/edit/' + router.query.view)
@@ -337,44 +362,70 @@ const ViewVisaApplications = () => {
                 )}
                 <h4 className='mt-10'>Notes</h4>
                 <div className='form-input my-2'>
-                  <textarea required rows={4} defaultValue={''} />
+                  <textarea
+                    rows={4}
+                    value={note}
+                    onChange={(e) => setNote(e.target.value)}
+                  />
                   <label className='lh-1 text-16 text-light-1'>Note Content</label>
                 </div>
-                <button className='button h-40 px-24 -dark-1 bg-blue-1 text-white'>
+                <div className='col-12 mb-10'>
+                  {/* <label className='lh-1 text-16 text-light-1'>{key}</label>
+                  {previousSupportingDocReqs && (
+                    <PreviousUploadPictures
+                      data={[previousSupportingDocReqs[key]]}
+                      onDeleteClick={() => {
+                        setPreviousSupportingDocReqs((prev) => {
+                          delete prev[key];
+                          return { ...prev };
+                        });
+                      }}
+                    />
+                  )} */}
+                  <NewFileUploads multiple={true} setUploads={setNoteImage} />
+                </div>
+                <button
+                  onClick={submitNote}
+                  className='button h-40 px-24 -dark-1 bg-blue-1 text-white'
+                >
                   Add Note
                 </button>
                 {/* Add Note */}
-                <h4 className='mt-10'>Update Status</h4>
-                <div className='form-input-select mt-10'>
-                  <label>Status</label>
-                  <Select
-                    defaultValue={status}
-                    options={[
-                      'Pending',
-                      'Query',
-                      'Replied',
-                      'Processing',
-                      'Processed',
-                    ].map((el) => ({ label: el, value: el }))}
-                    value={status}
-                    onChange={(id) => setStatus(id)}
-                  />
-                </div>
-                <button
-                  onClick={async () => {
-                    if (status?.value) {
-                      const response = await createItem(
-                        'visa-applications/' + router.query.view + '/status',
-                        { status: status.value }
-                      );
-                      if (response?.success)
-                        sendToast('success', 'Status updated successfully', 4000);
-                    }
-                  }}
-                  className='button h-40 mt-10 px-24 -dark-1 bg-blue-1 text-white'
-                >
-                  Update Status
-                </button>
+                {client_id === 1 && (
+                  <>
+                    <h4 className='mt-10'>Update Status</h4>
+                    <div className='form-input-select mt-10'>
+                      <label>Status</label>
+                      <Select
+                        defaultValue={status}
+                        options={[
+                          'Pending',
+                          'Query',
+                          'Replied',
+                          'Processing',
+                          'Processed',
+                        ].map((el) => ({ label: el, value: el }))}
+                        value={status}
+                        onChange={(id) => setStatus(id)}
+                      />
+                    </div>
+                    <button
+                      onClick={async () => {
+                        if (status?.value) {
+                          const response = await createItem(
+                            'visa-applications/' + router.query.view + '/status',
+                            { status: status.value }
+                          );
+                          if (response?.success)
+                            sendToast('success', 'Status updated successfully', 4000);
+                        }
+                      }}
+                      className='button h-40 mt-10 px-24 -dark-1 bg-blue-1 text-white'
+                    >
+                      Update Status
+                    </button>
+                  </>
+                )}
               </div>
             </div>
             <Footer />
