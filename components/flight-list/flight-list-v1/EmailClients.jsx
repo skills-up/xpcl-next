@@ -573,6 +573,7 @@ function EmailClients() {
                   value={markup}
                   placeholder=' '
                   type='number'
+                  onWheel={(e) => e.target.blur()}
                 />
                 <label className='lh-1 text-16 text-light-1'>
                   Mark-Up<span className='text-danger'>*</span>
@@ -899,6 +900,7 @@ function EmailClients() {
                             value={element['price']}
                             placeholder=' '
                             type='number'
+                            onWheel={(e) => e.target.blur()}
                           />
                           <label className='lh-1 text-16 text-light-1'>
                             Price<span className='text-danger'>*</span>

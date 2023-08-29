@@ -175,6 +175,7 @@ const UpdateRefund = () => {
                           value={airlineCancellationCharges}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           required
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -190,6 +191,7 @@ const UpdateRefund = () => {
                           value={vendorServiceFee}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           required
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -204,6 +206,7 @@ const UpdateRefund = () => {
                           value={clientCancellationCharges}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           required
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -219,6 +222,7 @@ const UpdateRefund = () => {
                           value={refundAmount}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           required
                         />
                         <label className='lh-1 text-16 text-light-1'>

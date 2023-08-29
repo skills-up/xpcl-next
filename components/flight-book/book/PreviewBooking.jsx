@@ -720,6 +720,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                             value={element['mobile_phone']}
                             placeholder=' '
                             type='number'
+                            onWheel={(e) => e.target.blur()}
                           />
                           <label className='lh-1 text-16 text-light-1'>
                             Mobile Phone No.

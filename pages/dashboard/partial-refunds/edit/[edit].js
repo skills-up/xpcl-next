@@ -430,7 +430,7 @@ const UpdatePartialRefund = () => {
                           onChange={(e) => setVendorBaseAmount(e.target.value)}
                           value={vendorBaseAmount}
                           placeholder=' '
-                          type='number'
+                          type= 'number' onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Vendor Base Amount
@@ -443,7 +443,7 @@ const UpdatePartialRefund = () => {
                           onChange={(e) => setVendorYQAmount(e.target.value)}
                           value={vendorYQAmount}
                           placeholder=' '
-                          type='number'
+                          type= 'number' onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Vendor YQ Amount
@@ -456,7 +456,7 @@ const UpdatePartialRefund = () => {
                           onChange={(e) => setVendorTaxAmount(e.target.value)}
                           value={vendorTaxAmount}
                           placeholder=' '
-                          type='number'
+                          type= 'number' onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Vendor Tax Amount
@@ -469,7 +469,7 @@ const UpdatePartialRefund = () => {
                           onChange={(e) => setVendorGSTAmount(e.target.value)}
                           value={vendorGSTAmount}
                           placeholder=' '
-                          type='number'
+                          type= 'number' onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Vendor GST Amount
@@ -482,7 +482,7 @@ const UpdatePartialRefund = () => {
                           onChange={(e) => setVendorTotal(e.target.value)}
                           value={vendorTotal}
                           placeholder=' '
-                          type='number'
+                          type= 'number' onWheel={(e) => e.target.blur()}
                           disabled
                         />
                         <label className='lh-1 text-16 text-light-1'>Vendor Total</label>
@@ -503,7 +503,7 @@ const UpdatePartialRefund = () => {
                           onChange={(e) => setIATACommissionPercent(e.target.value)}
                           value={IATACommissionPercent}
                           placeholder=' '
-                          type='number'
+                          type= 'number' onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           IATA Commission Percent
@@ -516,7 +516,7 @@ const UpdatePartialRefund = () => {
                           onChange={(e) => setPLBCommissionPercent(e.target.value)}
                           value={plbCommissionPercent}
                           placeholder=' '
-                          type='number'
+                          type= 'number' onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           PLB Commission Percent
@@ -529,7 +529,7 @@ const UpdatePartialRefund = () => {
                           onChange={(e) => setVendorServiceChargePercent(e.target.value)}
                           value={vendorServiceChargePercent}
                           placeholder=' '
-                          type='number'
+                          type= 'number' onWheel={(e) => e.target.blur()}
                           onFocus={() => setVendorGSTFocused(true)}
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -542,7 +542,7 @@ const UpdatePartialRefund = () => {
                           onChange={(e) => setVendorServiceCharges(e.target.value)}
                           value={vendorServiceCharges}
                           placeholder=' '
-                          type='number'
+                          type= 'number' onWheel={(e) => e.target.blur()}
                           onFocus={() => setVendorGSTFocused(false)}
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -556,7 +556,7 @@ const UpdatePartialRefund = () => {
                           onChange={(e) => setVendorTDSPercent(e.target.value)}
                           value={vendorTDSPercent}
                           placeholder=' '
-                          type='number'
+                          type= 'number' onWheel={(e) => e.target.blur()}
                           onFocus={() => setVendorTDSPercentFocused(true)}
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -569,7 +569,7 @@ const UpdatePartialRefund = () => {
                           onChange={(e) => setVendorTDS(e.target.value)}
                           value={vendorTDS}
                           placeholder=' '
-                          type='number'
+                          type= 'number' onWheel={(e) => e.target.blur()}
                           onFocus={() => setVendorTDSPercentFocused(false)}
                         />
                         <label className='lh-1 text-16 text-light-1'>Vendor TDS</label>
@@ -581,7 +581,7 @@ const UpdatePartialRefund = () => {
                           onChange={(e) => setCommissionReceivable(e.target.value)}
                           value={commissionReceivable}
                           placeholder=' '
-                          type='number'
+                          type= 'number' onWheel={(e) => e.target.blur()}
                           disabled
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -604,7 +604,7 @@ const UpdatePartialRefund = () => {
                           onChange={(e) => setClientReferralFee(e.target.value)}
                           value={clientReferralFee}
                           placeholder=' '
-                          type='number'
+                          type= 'number' onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Client Referral Fee
@@ -617,7 +617,7 @@ const UpdatePartialRefund = () => {
                           onChange={(e) => setClientBaseAmount(e.target.value)}
                           value={clientBaseAmount}
                           placeholder=' '
-                          type='number'
+                          type= 'number' onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Client Base Amount
@@ -630,7 +630,7 @@ const UpdatePartialRefund = () => {
                           onChange={(e) => setClientTaxAmount(e.target.value)}
                           value={clientTaxAmount}
                           placeholder=' '
-                          type='number'
+                          type= 'number' onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Client Tax Amount
@@ -643,7 +643,7 @@ const UpdatePartialRefund = () => {
                           onChange={(e) => setClientGSTAmount(e.target.value)}
                           value={clientGSTAmount}
                           placeholder=' '
-                          type='number'
+                          type= 'number' onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Client GST Amount
@@ -657,7 +657,7 @@ const UpdatePartialRefund = () => {
                           value={clientServiceChargePercent}
                           placeholder=' '
                           onFocus={() => setXplorzGSTFocused(true)}
-                          type='number'
+                          type= 'number' onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Xplorz GST Percent
@@ -669,7 +669,7 @@ const UpdatePartialRefund = () => {
                           onChange={(e) => setClientServicesCharges(e.target.value)}
                           value={clientServiceCharges}
                           placeholder=' '
-                          type='number'
+                          type= 'number' onWheel={(e) => e.target.blur()}
                           onFocus={() => setXplorzGSTFocused(false)}
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -683,7 +683,7 @@ const UpdatePartialRefund = () => {
                           onChange={(e) => setClientTotal(e.target.value)}
                           value={clientTotal}
                           placeholder=' '
-                          type='number'
+                          type= 'number' onWheel={(e) => e.target.blur()}
                           disabled
                         />
                         <label className='lh-1 text-16 text-light-1'>Client Total</label>

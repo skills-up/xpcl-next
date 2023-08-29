@@ -118,6 +118,7 @@ const Journals = () => {
                 value={totalTaxExpenses}
                 placeholder=' '
                 type='number'
+                onWheel={(e) => e.target.blur()}
               />
               <label className='lh-1 text-16 text-light-1'>Tax Expenses</label>
             </div>
@@ -138,6 +139,7 @@ const Journals = () => {
                       value={element.amount}
                       placeholder=' '
                       type='number'
+                      onWheel={(e) => e.target.blur()}
                     />
                     <label className='lh-1 text-16 text-light-1'>
                       {element.name} (Value:{' '}

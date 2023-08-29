@@ -136,6 +136,7 @@ const AddNewAirlineOrganizations = () => {
                           value={markupPercent}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           required
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -150,6 +151,7 @@ const AddNewAirlineOrganizations = () => {
                           value={markupAmount}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Markup Amount<span className='text-danger'>*</span>

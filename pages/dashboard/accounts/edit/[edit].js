@@ -146,6 +146,7 @@ const UpdateAccounts = () => {
                           value={year}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>Year</label>
                       </div>

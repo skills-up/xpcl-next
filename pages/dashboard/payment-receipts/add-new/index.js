@@ -202,40 +202,6 @@ const AddNewPaymentReceipt = () => {
                         />
                       </div>
                     )} */}
-                    <div className='form-input-select'>
-                      <label>
-                        Debit Account<span className='text-danger'>*</span>
-                      </label>
-                      <Select
-                        options={
-                          type?.value === 'Payment'
-                            ? bankCashAccounts.filter(
-                                (acc) => acc?.value !== crAccountID?.value
-                              )
-                            : accounts.filter((acc) => acc?.value !== crAccountID?.value)
-                        }
-                        value={drAccountID}
-                        placeholder='Search & Select Debit Account (required)'
-                        onChange={(id) => setDrAccountID(id)}
-                      />
-                    </div>
-                    <div className='form-input-select'>
-                      <label>
-                        Credit Account<span className='text-danger'>*</span>
-                      </label>
-                      <Select
-                        options={
-                          type?.value === 'Receipt'
-                            ? bankCashAccounts.filter(
-                                (acc) => acc?.value !== crAccountID?.value
-                              )
-                            : accounts.filter((acc) => acc?.value !== crAccountID?.value)
-                        }
-                        value={crAccountID}
-                        placeholder='Search & Select Credit Account (required)'
-                        onChange={(id) => setCrAccountID(id)}
-                      />
-                    </div>
                     <div className='d-block ml-3 form-datepicker'>
                       <label>
                         Date<span className='text-danger'>*</span>
@@ -258,12 +224,57 @@ const AddNewPaymentReceipt = () => {
                           value={amount}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           required
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Amount<span className='text-danger'>*</span>
                         </label>
                       </div>
+                    </div>
+                    <div className='form-input-select'>
+                      <label>
+                        {type?.value === 'Payment'
+                          ? 'Paid To'
+                          : type?.value === 'Receipt'
+                          ? 'Received In'
+                          : 'Debit Account'}
+                        <span className='text-danger'>*</span>
+                      </label>
+                      <Select
+                        options={
+                          type?.value === 'Receipt'
+                            ? bankCashAccounts.filter(
+                                (acc) => acc?.value !== crAccountID?.value
+                              )
+                            : accounts.filter((acc) => acc?.value !== crAccountID?.value)
+                        }
+                        value={drAccountID}
+                        placeholder='Search & Select Debit Account (required)'
+                        onChange={(id) => setDrAccountID(id)}
+                      />
+                    </div>
+                    <div className='form-input-select'>
+                      <label>
+                        {type?.value === 'Payment'
+                          ? 'Paid From'
+                          : type?.value === 'Receipt'
+                          ? 'Received From'
+                          : 'Credit Account'}
+                        <span className='text-danger'>*</span>
+                      </label>
+                      <Select
+                        options={
+                          type?.value === 'Payment'
+                            ? bankCashAccounts.filter(
+                                (acc) => acc?.value !== crAccountID?.value
+                              )
+                            : accounts.filter((acc) => acc?.value !== crAccountID?.value)
+                        }
+                        value={crAccountID}
+                        placeholder='Search & Select Credit Account (required)'
+                        onChange={(id) => setCrAccountID(id)}
+                      />
                     </div>
                     <div className='col-12'>
                       <div className='form-input'>
@@ -330,6 +341,7 @@ const AddNewPaymentReceipt = () => {
                               value={itcObj.cgst}
                               placeholder=' '
                               type='number'
+                              onWheel={(e) => e.target.blur()}
                               disabled={
                                 itcObj.gstn ? itcObj.gstn.slice(0, 2) !== '27' : false
                               }
@@ -351,6 +363,7 @@ const AddNewPaymentReceipt = () => {
                               value={itcObj.sgst}
                               placeholder=' '
                               type='number'
+                              onWheel={(e) => e.target.blur()}
                               disabled={
                                 itcObj.gstn ? itcObj.gstn.slice(0, 2) !== '27' : false
                               }
@@ -372,6 +385,7 @@ const AddNewPaymentReceipt = () => {
                               value={itcObj.igst}
                               placeholder=' '
                               type='number'
+                              onWheel={(e) => e.target.blur()}
                               disabled={
                                 itcObj.gstn ? itcObj.gstn.slice(0, 2) === '27' : false
                               }
@@ -449,6 +463,7 @@ const AddNewPaymentReceipt = () => {
                               value={tdsObj.amount}
                               placeholder=' '
                               type='number'
+                              onWheel={(e) => e.target.blur()}
                             />
                             <label className='lh-1 text-16 text-light-1'>
                               Amount<span className='text-danger'>*</span>

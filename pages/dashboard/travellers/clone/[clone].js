@@ -447,6 +447,7 @@ const AddNewTravellers = () => {
                           value={mobilePhone}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-15 text-light-1'>
                           Mobile Phone (with Country Code)
@@ -756,6 +757,7 @@ const AddNewTravellers = () => {
                           value={aadhaarNumber}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Aadhaar Number

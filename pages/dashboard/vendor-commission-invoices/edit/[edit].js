@@ -223,6 +223,7 @@ const UpdateVendorCommissionInvoice = () => {
                           value={commission}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           required
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -237,6 +238,7 @@ const UpdateVendorCommissionInvoice = () => {
                           value={igst}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>IGST</label>
                       </div>
@@ -248,6 +250,7 @@ const UpdateVendorCommissionInvoice = () => {
                           value={cgst}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>CGST</label>
                       </div>
@@ -259,6 +262,7 @@ const UpdateVendorCommissionInvoice = () => {
                           value={sgst}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>SGST</label>
                       </div>
@@ -270,6 +274,7 @@ const UpdateVendorCommissionInvoice = () => {
                           value={tds}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>TDS</label>
                       </div>

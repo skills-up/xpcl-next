@@ -227,6 +227,7 @@ const AddNewOrganization = () => {
                           value={farePercent}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Markup Percent
@@ -240,6 +241,7 @@ const AddNewOrganization = () => {
                           value={vendorServicePercent}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Vendor Service Charge Percent
@@ -253,6 +255,7 @@ const AddNewOrganization = () => {
                           value={vendorTDSPercent}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Vendor TDS Percent
