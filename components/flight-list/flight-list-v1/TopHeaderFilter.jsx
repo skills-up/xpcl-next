@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { BsFillArrowDownCircleFill, BsSend } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -17,6 +17,28 @@ const TopHeaderFilter = () => {
   const emailClientMode = useSelector(
     (state) => state.flightSearch.value.emailClientMode
   );
+  const wrapperRef = useRef(null);
+  const stopButtonRef = useRef(null);
+
+  useEffect(() => {
+    if (wrapperRef && stopButtonRef) {
+      function handleClickOutside(event) {
+        if (
+          wrapperRef.current &&
+          !wrapperRef.current.contains(event.target) &&
+          !stopButtonRef.current.contains(event.target)
+        ) {
+          if (openSort) setOpenSort(false);
+        }
+      }
+      // Bind the event listener
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        // Unbind the event listener on clean up
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }
+  }, [wrapperRef, stopButtonRef]);
 
   return (
     <>
@@ -32,6 +54,7 @@ const TopHeaderFilter = () => {
           <div className='row x-gap-20 y-gap-20'>
             <div className='col-auto flight-search-sort-container'>
               <button
+                ref={stopButtonRef}
                 className='button -blue-1 h-40 px-20 rounded-100 bg-blue-1-05 text-15 text-blue-1'
                 onClick={() => setOpenSort((prev) => !prev)}
               >
@@ -39,7 +62,7 @@ const TopHeaderFilter = () => {
                 Sort
               </button>
               {openSort && (
-                <div className='flight-search-sort bg-white px-15 py-20'>
+                <div ref={wrapperRef} className='flight-search-sort bg-white px-15 py-20'>
                   <h5 className='d-flex items-center justify-between text-18 fw-500 mb-10'>
                     <span>Sort</span>
                     <span className='text-primary text-25 pr-10 pb-2'>

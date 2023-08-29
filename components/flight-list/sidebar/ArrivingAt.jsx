@@ -7,6 +7,36 @@ const ArrivingAt = () => {
 
   return (
     <>
+      <div className='row mb-3'>
+        <div className='col-6'>
+          <button
+            className='btn col-12 btn-outline-primary text-15'
+            onClick={() => {
+              let temp = {};
+              for (let [key, value] of Object.entries(arrivingAt)) {
+                temp[key] = { ...value, value: true };
+              }
+              dispatch(setArrivingAt(temp));
+            }}
+          >
+            Check All
+          </button>
+        </div>
+        <div className='col-6'>
+          <button
+            className='btn col-12 btn-outline-primary text-15'
+            onClick={() => {
+              let temp = {};
+              for (let [key, value] of Object.entries(arrivingAt)) {
+                temp[key] = { ...value, value: false };
+              }
+              dispatch(setArrivingAt(temp));
+            }}
+          >
+            Uncheck All
+          </button>
+        </div>
+      </div>
       {arrivingAt &&
         Object.entries(arrivingAt).map(([key, value], index) => (
           <div className='row y-gap-10 items-center justify-between'>

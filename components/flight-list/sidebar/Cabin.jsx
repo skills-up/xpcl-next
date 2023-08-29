@@ -7,6 +7,36 @@ const Cabin = () => {
 
   return (
     <>
+      <div className='row mb-3'>
+        <div className='col-6'>
+          <button
+            className='btn col-12 btn-outline-primary text-15'
+            onClick={() => {
+              let temp = {};
+              for (let [key, value] of Object.entries(cabins)) {
+                temp[key] = { ...value, value: true };
+              }
+              dispatch(setCabins(temp));
+            }}
+          >
+            Check All
+          </button>
+        </div>
+        <div className='col-6'>
+          <button
+            className='btn col-12 btn-outline-primary text-15'
+            onClick={() => {
+              let temp = {};
+              for (let [key, value] of Object.entries(cabins)) {
+                temp[key] = { ...value, value: false };
+              }
+              dispatch(setCabins(temp));
+            }}
+          >
+            Uncheck All
+          </button>
+        </div>
+      </div>
       {cabins &&
         Object.entries(cabins).map(([key, value], index) => (
           <div className='row y-gap-10 items-center justify-between'>

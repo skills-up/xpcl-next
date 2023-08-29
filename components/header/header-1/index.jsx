@@ -34,9 +34,7 @@ const Header1 = ({ permaOpaque = true }) => {
   return (
     <>
       <header
-        className={`header ${
-          permaOpaque ? 'bg-dark-3 is-sticky' : navbar ? 'bg-dark-3 is-sticky' : ''
-        }`}
+        className={`header -dashboard ${navbar ? 'is-sticky bg-white' : 'bg-white'}`}
       >
         <div className='header__container px-30 sm:px-20'>
           <div className='row justify-between items-center'>
@@ -50,7 +48,7 @@ const Header1 = ({ permaOpaque = true }) => {
 
                 <div className='header-menu'>
                   <div className='header-menu__content'>
-                    <MainMenu style='text-white' />
+                    <MainMenu style='text-dark-1' />
                   </div>
                 </div>
                 {/* End header-menu */}
@@ -74,12 +72,14 @@ const Header1 = ({ permaOpaque = true }) => {
 
                 {/* Start btn-group */}
                 <div className='d-flex items-center ml-20 is-menu-opened-hide md:d-none'>
-                  <Link
-                    href='/dashboard'
-                    className='button px-30 fw-400 text-14 -white bg-white h-50 text-dark-1'
-                  >
-                    Dashboard
-                  </Link>
+                  {token !== '' && (
+                    <Link
+                      href='/dashboard'
+                      className='button px-30 fw-400 text-14 -white bg-blue-1 h-50 text-white'
+                    >
+                      Dashboard
+                    </Link>
+                  )}
                   <button
                     onClick={async () => {
                       if (token === '') {
@@ -96,7 +96,7 @@ const Header1 = ({ permaOpaque = true }) => {
                         }
                       }
                     }}
-                    className='button px-30 fw-400 text-14 border-white -outline-white h-50 text-white ml-20'
+                    className='button px-30 fw-400 text-14 border-primary -outline-white h-50 text-blue-1 ml-20'
                   >
                     {token === '' ? 'Sign In' : 'Logout'}
                   </button>
@@ -104,13 +104,15 @@ const Header1 = ({ permaOpaque = true }) => {
                 {/* End btn-group */}
 
                 {/* Start mobile menu icon */}
-                <div className='d-none xl:d-flex x-gap-20 items-center pl-30 text-white'>
-                  <div>
-                    <Link
-                      href='/others-pages/login'
-                      className='d-flex items-center icon-user text-inherit text-22'
-                    />
-                  </div>
+                <div className='d-none xl:d-flex x-gap-20 items-center pl-30'>
+                  {token !== '' && (
+                    <div>
+                      <Link
+                        href='/dashboard'
+                        className='d-flex items-center icon-user text-inherit text-22'
+                      />
+                    </div>
+                  )}
                   <div>
                     <button
                       className='d-flex items-center icon-menu text-inherit text-20'

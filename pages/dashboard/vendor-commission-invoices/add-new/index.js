@@ -78,6 +78,15 @@ const AddNewVendorCommissionInvoice = () => {
     }
   };
 
+  useEffect(() => {
+    if (commission) {
+      setTds(+commission * 0.05);
+      setSgst(+commission * (gstn.startsWith('27') ? 0.09 : 0));
+      setCgst(+commission * (gstn.startsWith('27') ? 0.09 : 0));
+      setIgst(+commission * (gstn.startsWith('27') ? 0 : 0.18));
+    }
+  }, [commission]);
+
   return (
     <>
       <Seo pageTitle='Add New Vendor Commission Invoice' />

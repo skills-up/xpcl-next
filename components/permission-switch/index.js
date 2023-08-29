@@ -194,7 +194,6 @@ const PermissionSwitch = ({
         <tbody>
           {_additional.map((perm, i) => {
             let [entity, ...permission] = perm.parts;
-            console.log('Test', entity, permission);
             let finalEntity = titelize(entity);
             let finalPerm = titelize(permission.reverse().join('-'));
             let eStr = '';

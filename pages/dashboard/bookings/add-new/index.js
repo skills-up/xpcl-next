@@ -396,7 +396,6 @@ const AddNewBooking = () => {
 
   useEffect(() => {
     if (vendorGSTFocused) {
-      console.log('yes1', grossCommission);
       setVendorServiceCharges(
         Number((+grossCommission * +vendorServiceChargePercent) / 100).toFixed(4)
       );
@@ -405,7 +404,6 @@ const AddNewBooking = () => {
 
   useEffect(() => {
     if (!vendorGSTFocused) {
-      console.log('yes2', grossCommission);
       setVendorServiceChargePercent(
         Number((100 * +vendorServiceCharges) / +grossCommission).toFixed(4)
       );

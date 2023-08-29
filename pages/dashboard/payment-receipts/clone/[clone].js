@@ -147,10 +147,6 @@ const AddNewPaymentReceipt = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    if (!type?.value) {
-      sendToast('error', 'You must select a Receipt Type', 4000);
-      return;
-    }
     if (!crAccountID?.value) {
       sendToast('error', 'You must select a Credit Account', 4000);
       return;
@@ -159,7 +155,17 @@ const AddNewPaymentReceipt = () => {
       sendToast('error', 'You must select a Debit Account', 4000);
       return;
     }
-
+    if (tds && !tdsObj.pan.match(/[A-Z]{5}[0-9]{4}[A-Z]{1}$/)) {
+      sendToast('error', 'PAN format is invalid', 4000);
+      return;
+    }
+    if (
+      itc &&
+      !itcObj.gstn.match(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/)
+    ) {
+      sendToast('error', 'GSTN format is invalid', 4000);
+      return;
+    }
     const tempTDSObj = tdsObj;
     if (tempTDSObj['account_id']?.value)
       tempTDSObj['account_id'] = tempTDSObj['account_id']?.value;

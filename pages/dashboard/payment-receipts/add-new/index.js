@@ -47,7 +47,6 @@ const AddNewPaymentReceipt = () => {
   }, [router.isReady]);
 
   useEffect(() => {
-    console.log('test');
     if (itcObj?.gstn) {
       if (itcObj.gstn.slice(0, 2) === '27') {
         setItcObj((prev) => ({ ...prev, igst: '' }));
@@ -56,6 +55,14 @@ const AddNewPaymentReceipt = () => {
       }
     }
   }, [itcObj.gstn]);
+
+  useEffect(() => {
+    if (itcObj.cgst && itc) setItcObj((prev) => ({ ...prev, sgst: prev.cgst }));
+  }, [itcObj.cgst]);
+
+  useEffect(() => {
+    if (itcObj.sgst && itc) setItcObj((prev) => ({ ...prev, cgst: prev.sgst }));
+  }, [itcObj.sgst]);
 
   const getData = async () => {
     setType({ value: router.query.type });
@@ -103,7 +110,17 @@ const AddNewPaymentReceipt = () => {
       sendToast('error', 'You must select a Debit Account', 4000);
       return;
     }
-
+    if (tds && !tdsObj.pan.match(/[A-Z]{5}[0-9]{4}[A-Z]{1}$/)) {
+      sendToast('error', 'PAN format is invalid', 4000);
+      return;
+    }
+    if (
+      itc &&
+      !itcObj.gstn.match(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/)
+    ) {
+      sendToast('error', 'GSTN format is invalid', 4000);
+      return;
+    }
     const tempTDSObj = tdsObj;
     if (tempTDSObj['account_id']?.value)
       tempTDSObj['account_id'] = tempTDSObj['account_id']?.value;
