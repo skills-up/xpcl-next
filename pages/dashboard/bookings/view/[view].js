@@ -188,6 +188,7 @@ const ViewBooking = () => {
         delete data['original_booking_number'];
         delete data['original_booking_id'];
         delete data['sectors'];
+        delete data['sector'];
         delete data['reissued_booking'];
         delete data['partial_refund'];
         delete data['refund'];

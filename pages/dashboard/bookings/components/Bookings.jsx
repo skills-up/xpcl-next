@@ -15,15 +15,18 @@ const Bookings = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
+  const [orgs, setOrgs] = useState([]);
 
   useEffect(() => {
     getBookings();
   }, []);
 
   const getBookings = async () => {
+    const orgs = await getList('organizations');
     const response = await getList('bookings');
-    if (response?.success) {
-      setBookings(response.data);
+    if (response?.success && orgs?.success) {
+      setBookings(response.data?.reverse());
+      setOrgs(orgs.data);
     } else {
       sendToast(
         'error',
@@ -35,20 +38,50 @@ const Bookings = () => {
 
   const columns = [
     {
-      Header: 'Number',
+      Header: 'Invoice Number',
       accessor: 'number',
     },
     {
-      Header: 'Booking Type',
-      accessor: 'booking_type',
+      Header: 'Client Name',
+      Cell: (data) => {
+        return (
+          <span>
+            {orgs
+              .filter((el) => el.id === data.row.original.client_id)
+              .map((el) => `${el.name}`)}
+          </span>
+        );
+      },
+    },
+    {
+      Header: 'Passenger Name',
+      accessor: 'client_traveller_name',
     },
     {
       Header: 'Status',
       accessor: 'status',
     },
     {
+      Header: 'Airline',
+      accessor: 'airline_name',
+    },
+    {
       Header: 'Payment Account Name',
       accessor: 'payment_account_name',
+    },
+    {
+      Header: 'Amount',
+      Cell: (data) => {
+        return (
+          <span>
+            {(+data.row.original.client_total).toLocaleString('en-IN', {
+              maximumFractionDigits: 2,
+              style: 'currency',
+              currency: 'INR',
+            })}
+          </span>
+        );
+      },
     },
     {
       Header: 'Actions',

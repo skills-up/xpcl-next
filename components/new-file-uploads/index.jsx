@@ -5,6 +5,7 @@ import PreviousUploadPictures from '../previous-file-uploads';
 const NewFileUploads = ({
   multiple = false,
   setUploads,
+  obj = null,
   fileTypes = ['JPG', 'PNG', 'PDF', 'JPEG'],
 }) => {
   const [newUrls, setNewUrls] = useState([]);
@@ -23,7 +24,12 @@ const NewFileUploads = ({
       return multiple ? [...prev, ...urls] : urls;
     });
     setUploads((prev) => {
-      return multiple ? [...prev, ...uploads] : file;
+      if (!obj) {
+        return multiple ? [...prev, ...uploads] : file;
+      } else {
+        prev[obj] = multiple ? [...prev[obj], ...uploads] : file;
+        return { ...prev };
+      }
     });
   };
 
@@ -41,11 +47,20 @@ const NewFileUploads = ({
             return [...prev];
           });
           setUploads((prev) => {
-            if (multiple) {
-              prev.splice(index, 1);
-              return [...prev];
+            if (!obj) {
+              if (multiple) {
+                prev.splice(index, 1);
+                return [...prev];
+              }
+              return null;
+            } else {
+              if (multiple) {
+                prev[obj].splice(index, 1);
+              } else {
+                prev[obj] = null;
+              }
+              return { ...prev };
             }
-            return null;
           });
         }}
       />

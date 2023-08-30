@@ -57,7 +57,7 @@ const MainFilterSearchBox = () => {
   const travellerDOBS = useSelector((state) => state.flightSearch.value.travellerDOBS);
 
   useEffect(() => {
-    // dispatch(setInitialState());
+    dispatch(setInitialState());
     if (token !== '') {
       checkUser(router, dispatch);
       checkAirportCache(dispatch);

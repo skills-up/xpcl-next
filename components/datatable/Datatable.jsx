@@ -264,6 +264,7 @@ const Datatable = ({
               <b>
                 <input
                   type='number'
+                  onWheel={(e) => e.target.blur()}
                   value={pageIndex + 1}
                   onChange={(e) => {
                     gotoPage(parseInt(e.target.value) - 1);

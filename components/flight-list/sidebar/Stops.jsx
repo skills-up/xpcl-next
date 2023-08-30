@@ -4,9 +4,38 @@ import { setStops } from '../../../features/flightSearch/flightSearchSlice';
 const Stops = () => {
   const dispatch = useDispatch();
   const stops = useSelector((state) => state.flightSearch.value.stops);
-  console.log('stops', stops);
   return (
     <>
+      <div className='row mb-3'>
+        <div className='col-6'>
+          <button
+            className='btn col-12 btn-outline-primary text-15'
+            onClick={() => {
+              let temp = {};
+              for (let [key, value] of Object.entries(stops)) {
+                temp[key] = { ...value, value: true };
+              }
+              dispatch(setStops(temp));
+            }}
+          >
+            Check All
+          </button>
+        </div>
+        <div className='col-6'>
+          <button
+            className='btn col-12 btn-outline-primary text-15'
+            onClick={() => {
+              let temp = {};
+              for (let [key, value] of Object.entries(stops)) {
+                temp[key] = { ...value, value: false };
+              }
+              dispatch(setStops(temp));
+            }}
+          >
+            Uncheck All
+          </button>
+        </div>
+      </div>
       {stops &&
         Object.entries(stops).map(([key, value], index) => (
           <div className='row y-gap-10 items-center justify-between'>

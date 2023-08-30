@@ -14,8 +14,15 @@ const AddNewAccounts = () => {
   const [accountCategories, setAccountCategories] = useState([]);
   const [accountCategoryID, setAccountCategoryID] = useState(null);
   const [name, setName] = useState('');
-  const [year, setYear] = useState('');
+  const [year, setYear] = useState({ label: 'None', value: '' });
   const [isBankCash, setIsBankCash] = useState(false);
+
+  const yearOptions = [
+    { label: 'None', value: '' },
+    { label: '2022', value: '2022' },
+    { label: '2023', value: '2023' },
+    { label: '2024', value: '2024' },
+  ];
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -45,7 +52,7 @@ const AddNewAccounts = () => {
     const response = await createItem('accounts', {
       name,
       account_category_id: accountCategoryID?.value || null,
-      year: parseInt(year),
+      year: year?.value,
       is_bank_cash: isBankCash,
     });
     if (response?.success) {
@@ -115,16 +122,13 @@ const AddNewAccounts = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setYear(e.target.value)}
-                          value={year}
-                          placeholder=' '
-                          type='number'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>Year</label>
-                      </div>
+                    <div className='form-input-select'>
+                      <label>Year</label>
+                      <Select
+                        options={yearOptions}
+                        value={year}
+                        onChange={(id) => setYear(id)}
+                      />
                     </div>
                     <div className='d-flex items-center gap-3'>
                       <ReactSwitch

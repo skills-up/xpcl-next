@@ -262,6 +262,7 @@ const Datatable = ({
               <b>
                 <input
                   type='number'
+                  onWheel={(e) => e.target.blur()}
                   value={fullData?.current_page}
                   onChange={async (e) => {
                     const value = +e.target.value;

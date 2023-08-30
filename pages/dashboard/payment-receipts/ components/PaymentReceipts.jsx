@@ -34,7 +34,7 @@ const PaymentReceipts = () => {
   const getPaymentReceipts = async () => {
     const response = await getList('payment-receipts');
     if (response?.success) {
-      setPaymentReceipts(response.data);
+      setPaymentReceipts(response.data?.reverse());
     } else {
       sendToast(
         'error',
@@ -69,16 +69,26 @@ const PaymentReceipts = () => {
       accessor: 'type',
     },
     {
-      Header: 'Debit From',
+      Header: 'Debit',
       accessor: 'dr_account_name',
     },
     {
-      Header: 'Credit To',
+      Header: 'Credit',
       accessor: 'cr_account_name',
     },
     {
       Header: 'Amount',
-      accessor: 'amount',
+      Cell: (data) => {
+        return (
+          <span>
+            {(+data.row.original.amount).toLocaleString('en-IN', {
+              maximumFractionDigits: 2,
+              style: 'currency',
+              currency: 'INR',
+            })}
+          </span>
+        );
+      },
     },
     {
       Header: 'Actions',

@@ -9,26 +9,26 @@ import { HiOutlinePencilAlt } from 'react-icons/hi';
 import { BsTrash3 } from 'react-icons/bs';
 import { IoCopyOutline } from 'react-icons/io5';
 
-const VisaRequirements = () => {
-  const [visaRequirements, setVisaRequirements] = useState([]);
+const VisaApplications = () => {
+  const [visaApplications, setVisaApplications] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
 
   useEffect(() => {
-    getVisaRequirements();
+    getVisaApplications();
   }, []);
 
-  const getVisaRequirements = async () => {
-    const response = await getList('visa-requirements');
+  const getVisaApplications = async () => {
+    const response = await getList('visa-applications');
     if (response?.success) {
-      setVisaRequirements(response.data);
+      setVisaApplications(response.data);
     } else {
       sendToast(
         'error',
         response?.data?.message ||
           response?.data?.error ||
-          'Error getting visa requirements',
+          'Error getting visa applications',
         4000
       );
     }
@@ -37,16 +37,16 @@ const VisaRequirements = () => {
   const columns = [
     {
       Header: 'Country',
-      accessor: 'country_name',
+      accessor: 'visa_requirement.country_name',
     },
+    // {
+    //   Header: 'Purpose',
+    //   accessor: 'business_travel',
+    //   Cell: (data) => (data.row.original.business_travel ? 'Business' : 'Tourist'),
+    // },
     {
-      Header: 'Purpose',
-      accessor: 'business_travel',
-      Cell: (data) => (data.row.original.business_travel ? 'Business' : 'Tourist'),
-    },
-    {
-      Header: 'Consulate City',
-      accessor: 'consulate_city',
+      Header: 'Status',
+      accessor: 'status',
     },
     {
       Header: 'Last Updated At',
@@ -78,7 +78,7 @@ const VisaRequirements = () => {
                   label: 'View',
                   onClick: () =>
                     window.location.assign(
-                      '/dashboard/visa-requirements/view/' + data.row.original.id
+                      '/dashboard/visa-applications/view/' + data.row.original.id
                     ),
                   icon: <AiOutlineEye />,
                 },
@@ -86,7 +86,7 @@ const VisaRequirements = () => {
                   label: 'Edit',
                   onClick: () =>
                     window.location.assign(
-                      '/dashboard/visa-requirements/edit/' + data.row.original.id
+                      '/dashboard/visa-applications/edit/' + data.row.original.id
                     ),
                   icon: <HiOutlinePencilAlt />,
                 },
@@ -94,7 +94,7 @@ const VisaRequirements = () => {
                   label: 'Clone',
                   onClick: () =>
                     window.location.assign(
-                      '/dashboard/visa-requirements/clone/' + data.row.original.id
+                      '/dashboard/visa-applications/clone/' + data.row.original.id
                     ),
                   icon: <IoCopyOutline />,
                 },
@@ -119,16 +119,16 @@ const VisaRequirements = () => {
     setIdToDelete(-1);
   };
   const onSubmit = async () => {
-    const response = await deleteItem('visa-requirements', idToDelete);
+    const response = await deleteItem('visa-applications', idToDelete);
     if (response?.success) {
       sendToast('success', 'Deleted successfully', 4000);
-      getVisaRequirements();
+      getVisaApplications();
     } else {
       sendToast(
         'error',
         response.data?.message ||
           response.data?.error ||
-          'Unexpected Error Occurred While Trying to Delete this Visa Requirement',
+          'Unexpected Error Occurred While Trying to Delete this Visa application',
         4000
       );
     }
@@ -141,8 +141,8 @@ const VisaRequirements = () => {
         <ConfirmationModal
           onCancel={onCancel}
           onSubmit={onSubmit}
-          title='Do you really want to delete this visa requirements?'
-          content='This will permanently delete the visa requirements. Press OK to confirm.'
+          title='Do you really want to delete this visa applications?'
+          content='This will permanently delete the visa applications. Press OK to confirm.'
         />
       )}
       {/* Search Bar + Add New */}
@@ -158,7 +158,7 @@ const VisaRequirements = () => {
         </div>
         <button
           className='btn btn-primary col-lg-2 col-5'
-          onClick={() => window.location.assign('/dashboard/visa-requirements/add-new')}
+          onClick={() => window.location.assign('/dashboard/visa-applications/add-new')}
         >
           Add New
         </button>
@@ -166,22 +166,19 @@ const VisaRequirements = () => {
       {/* Data Table */}
       <Datatable
         downloadCSV
-        CSVName='VisaRequirements.csv'
+        CSVName='VisaApplications.csv'
         columns={columns}
-        data={visaRequirements.filter(
+        data={visaApplications.filter(
           (perm) =>
-            perm?.country_name
+            perm?.visa_requirement?.country_name
               ?.toString()
               ?.toLowerCase()
               ?.includes(searchQuery.toLowerCase()) ||
-            perm?.consulate_city
-              ?.toString()
-              ?.toLowerCase()
-              ?.includes(searchQuery.toLowerCase())
+            perm?.status?.toString()?.toLowerCase()?.includes(searchQuery.toLowerCase())
         )}
       />
     </div>
   );
 };
 
-export default VisaRequirements;
+export default VisaApplications;

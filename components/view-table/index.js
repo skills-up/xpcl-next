@@ -2,7 +2,13 @@ import { isValidElement, useEffect } from 'react';
 import { BsTrash3 } from 'react-icons/bs';
 import { HiOutlinePencilAlt } from 'react-icons/hi';
 
-const ViewTable = ({ data, onEdit, onDelete, extraButtons = undefined }) => {
+const ViewTable = ({
+  data,
+  onEdit,
+  onDelete,
+  extraButtons = undefined,
+  showButtons = true,
+}) => {
   const wordsToUpperCase = [
     'GST',
     'YQ',
@@ -61,35 +67,37 @@ const ViewTable = ({ data, onEdit, onDelete, extraButtons = undefined }) => {
           })}
         </tbody>
       </table>
-      <div className='mt-15 d-flex gap-2'>
-        <button
-          className='btn btn-primary d-flex items-center gap-1'
-          type='button'
-          onClick={onEdit}
-        >
-          <HiOutlinePencilAlt /> Edit
-        </button>
-        <button
-          className='btn btn-danger d-flex items-center gap-1'
-          type='button'
-          onClick={onDelete}
-        >
-          <BsTrash3 /> Delete
-        </button>
-        {extraButtons &&
-          extraButtons.map((element, index) => {
-            return (
-              <button
-                key={index}
-                onClick={element?.onClick}
-                className={`${element?.classNames} btn d-flex items-center gap-1`}
-                style={element?.style}
-              >
-                {element?.icon} {element?.text}
-              </button>
-            );
-          })}
-      </div>
+      {showButtons && (
+        <div className='mt-15 d-flex gap-2'>
+          <button
+            className='btn btn-primary d-flex items-center gap-1'
+            type='button'
+            onClick={onEdit}
+          >
+            <HiOutlinePencilAlt /> Edit
+          </button>
+          <button
+            className='btn btn-danger d-flex items-center gap-1'
+            type='button'
+            onClick={onDelete}
+          >
+            <BsTrash3 /> Delete
+          </button>
+          {extraButtons &&
+            extraButtons.map((element, index) => {
+              return (
+                <button
+                  key={index}
+                  onClick={element?.onClick}
+                  className={`${element?.classNames} btn d-flex items-center gap-1`}
+                  style={element?.style}
+                >
+                  {element?.icon} {element?.text}
+                </button>
+              );
+            })}
+        </div>
+      )}
     </div>
   );
 };

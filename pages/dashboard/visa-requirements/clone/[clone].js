@@ -147,7 +147,7 @@ const AddNewVisaRequirements = () => {
           return;
         }
         let visaFormData = new FormData();
-        visaFormData.append('country_name', countryID.value);
+        visaFormData.append('country_name', countryID.label);
         visaFormData.append('business_travel', businessTravel ? 1 : 0);
         visaFormData.append('consulate_city', consulateCity ?? '');
         visaFormData.append('photo_count', photoCount ?? '');
@@ -261,9 +261,13 @@ const AddNewVisaRequirements = () => {
                           onChange={(e) => setPhotoCount(e.target.value)}
                           value={photoCount}
                           placeholder=' '
-                          type='text'
+                          type='number'
+                          onWheel={(e) => e.target.blur()}
+                          required
                         />
-                        <label className='lh-1 text-16 text-light-1'>Photo Count</label>
+                        <label className='lh-1 text-16 text-light-1'>
+                          Photo Count<span className='text-danger'>*</span>
+                        </label>
                       </div>
                     </div>
                     <div className='col-12'>

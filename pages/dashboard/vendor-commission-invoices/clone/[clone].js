@@ -24,6 +24,7 @@ const AddNewVendorCommissionInvoice = () => {
   const [cgst, setCgst] = useState('');
   const [sgst, setSgst] = useState('');
   const [tds, setTds] = useState('');
+  const [loaded, setLoaded] = useState(false);
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -31,6 +32,15 @@ const AddNewVendorCommissionInvoice = () => {
   useEffect(() => {
     getData();
   }, [router.isReady]);
+
+  useEffect(() => {
+    if (commission && loaded) {
+      setTds(+commission * 0.05);
+      setSgst(+commission * (gstn.startsWith('27') ? 0.09 : 0));
+      setCgst(+commission * (gstn.startsWith('27') ? 0.09 : 0));
+      setIgst(+commission * (gstn.startsWith('27') ? 0 : 0.18));
+    }
+  }, [commission]);
 
   const getData = async () => {
     if (router.query.clone) {
@@ -56,6 +66,8 @@ const AddNewVendorCommissionInvoice = () => {
           for (let vendor of vendors.data)
             if (vendor.id === response.data.vendor_id)
               setVendorID({ value: vendor.id, label: vendor.name });
+
+          setTimeout(() => setLoaded(true), 1000);
         } else {
           sendToast('error', 'Unable to fetch required data', 4000);
           router.push('/dashboard/vendor-commission-invoices');
@@ -221,6 +233,7 @@ const AddNewVendorCommissionInvoice = () => {
                           value={commission}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           required
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -235,6 +248,7 @@ const AddNewVendorCommissionInvoice = () => {
                           value={igst}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>IGST</label>
                       </div>
@@ -246,6 +260,7 @@ const AddNewVendorCommissionInvoice = () => {
                           value={cgst}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>CGST</label>
                       </div>
@@ -257,6 +272,7 @@ const AddNewVendorCommissionInvoice = () => {
                           value={sgst}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>SGST</label>
                       </div>
@@ -268,6 +284,7 @@ const AddNewVendorCommissionInvoice = () => {
                           value={tds}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>TDS</label>
                       </div>

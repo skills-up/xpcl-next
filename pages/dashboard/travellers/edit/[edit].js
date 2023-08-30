@@ -473,6 +473,7 @@ const UpdateTravellers = () => {
                           value={mobilePhone}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-15 text-light-1'>
                           Mobile Phone (with Country Code)
@@ -782,6 +783,7 @@ const UpdateTravellers = () => {
                           value={aadhaarNumber}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Aadhaar Number

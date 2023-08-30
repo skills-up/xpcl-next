@@ -140,7 +140,7 @@ function FlightProperty({
               <div className='col y-gap-20 row pr-0'>
                 {/* Not Combined */}
                 <div className='col-12 row pr-0'>
-                  <div className='col'>
+                  <div className='col pr-0'>
                     <div className='row x-gap-20 items-end'>
                       <div className='col-auto'>
                         <div className='lh-15 fw-500'>
@@ -197,7 +197,7 @@ function FlightProperty({
                         </div>
                       </div>
                       <div className='col-auto'>
-                        <div className='lh-15 fw-500'>
+                        <div className='lh-15 fw-500' style={{ width: '75px' }}>
                           {element.provider === 'aa' &&
                             element.segments.at(-1).arrival.time.slice(-8, -3)}
                           {element.provider === 'tj' &&
@@ -280,7 +280,7 @@ function FlightProperty({
                 {/* Combined */}
                 {element.type === 'combined' && layoffSegment && (
                   <div className='col-12 row pr-0'>
-                    <div className='col'>
+                    <div className='col pr-0'>
                       <div className='row x-gap-20 items-end'>
                         <div className='col-auto'>
                           <div className='lh-15 fw-500'>
@@ -345,7 +345,7 @@ function FlightProperty({
                           </div>
                         </div>
                         <div className='col-auto'>
-                          <div className='lh-15 fw-500'>
+                          <div className='lh-15 fw-500' style={{ width: '75px' }}>
                             {element.provider === 'aa' &&
                               element.segments.at(-1).arrival.time.slice(-8, -3)}
                             {element.provider === 'tj' &&

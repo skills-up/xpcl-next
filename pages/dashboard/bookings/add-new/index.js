@@ -396,7 +396,6 @@ const AddNewBooking = () => {
 
   useEffect(() => {
     if (vendorGSTFocused) {
-      console.log('yes1', grossCommission);
       setVendorServiceCharges(
         Number((+grossCommission * +vendorServiceChargePercent) / 100).toFixed(4)
       );
@@ -405,7 +404,6 @@ const AddNewBooking = () => {
 
   useEffect(() => {
     if (!vendorGSTFocused) {
-      console.log('yes2', grossCommission);
       setVendorServiceChargePercent(
         Number((100 * +vendorServiceCharges) / +grossCommission).toFixed(4)
       );
@@ -853,6 +851,11 @@ const AddNewBooking = () => {
                                         Date<span className='text-danger'>*</span>
                                       </label>
                                       <DatePicker
+                                        minDate={
+                                          index > 0
+                                            ? bookingSectors[index - 1].travel_date
+                                            : undefined
+                                        }
                                         style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
                                         inputClass='custom_input-picker'
                                         containerClassName='custom_container-picker'
@@ -928,16 +931,19 @@ const AddNewBooking = () => {
                               e.preventDefault();
                               setBookingSectors((prev) => {
                                 let fromAirportID = null;
+                                let dateObj = new DateObject();
                                 if (prev.length > 0) {
                                   if (prev.at(-1)?.to_airport_id)
                                     fromAirportID = prev.at(-1)?.to_airport_id;
+                                  if (prev.at(-1)?.travel_date)
+                                    dateObj = prev.at(-1).travel_date;
                                 }
                                 return [
                                   ...prev,
                                   {
                                     from_airport_id: fromAirportID,
                                     to_airport_id: null,
-                                    travel_date: new DateObject(),
+                                    travel_date: dateObj,
                                     travel_time: '',
                                     details: '',
                                     booking_class: null,
@@ -1178,8 +1184,8 @@ const AddNewBooking = () => {
                             }
                             value={vendorServiceChargePercent}
                             type='number'
-                            placeholder=' '
                             onWheel={(e) => e.target.blur()}
+                            placeholder=' '
                             onFocus={() => setVendorGSTFocused(true)}
                           />
                           <label className='lh-1 text-16 text-light-1'></label>

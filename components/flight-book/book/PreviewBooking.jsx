@@ -233,7 +233,10 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
         if (response?.success) {
           setPNR((prev) => ({
             ...prev,
-            combined: { data: response.data, ...{ provider: 'ad', hide_fare: false } },
+            combined: {
+              data: response.data,
+              ...{ provider: 'ad', hide_fare: false, email_travellers: false },
+            },
           }));
           setCurrentStep(2);
           setIsProceed(false);
@@ -342,7 +345,10 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
         if (response?.success) {
           setPNR((prev) => ({
             ...prev,
-            [key]: { data: response.data, ...{ provider: 'aa', hide_fare: false } },
+            [key]: {
+              data: response.data,
+              ...{ provider: 'aa', hide_fare: false, email_travellers: false },
+            },
           }));
           currentAPICalls += 1;
         }
@@ -361,7 +367,10 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
           if (response?.success) {
             setPNR((prev) => ({
               ...prev,
-              [key]: { data: response.data, ...{ provider: 'tj', hide_fare: false } },
+              [key]: {
+                data: response.data,
+                ...{ provider: 'tj', hide_fare: false, email_travellers: false },
+              },
             }));
             currentAPICalls += 1;
           }
@@ -390,7 +399,10 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
           if (response?.success) {
             setPNR((prev) => ({
               ...prev,
-              [key]: { data: response.data, ...{ provider: 'ad', hide_fare: false } },
+              [key]: {
+                data: response.data,
+                ...{ provider: 'ad', hide_fare: false, email_travellers: false },
+              },
             }));
             currentAPICalls += 1;
           }
@@ -708,6 +720,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                             value={element['mobile_phone']}
                             placeholder=' '
                             type='number'
+                            onWheel={(e) => e.target.blur()}
                           />
                           <label className='lh-1 text-16 text-light-1'>
                             Mobile Phone No.

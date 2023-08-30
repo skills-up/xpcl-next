@@ -146,6 +146,7 @@ const UpdateCreditCard = () => {
                             value={number}
                             placeholder=' '
                             type='number'
+                            onWheel={(e) => e.target.blur()}
                             required
                           />
                           <label className='lh-1 text-16 text-light-1'>

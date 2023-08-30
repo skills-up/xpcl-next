@@ -122,7 +122,6 @@ const Journals = () => {
       transactionFeeTotal.igst += +tf.igst;
     }
     for (let service of Object.values(data.services)) {
-      console.log('Services', service);
       if (service.gstn) {
         servicesTotal.d_r_amount += +service.D_amount;
         servicesTotal.i_r_amount += +service.I_amount;

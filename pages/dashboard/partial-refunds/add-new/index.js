@@ -397,6 +397,7 @@ const AddNewPartialRefund = () => {
                           value={vendorBaseAmount}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Vendor Base Amount
@@ -410,6 +411,7 @@ const AddNewPartialRefund = () => {
                           value={vendorYQAmount}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Vendor YQ Amount
@@ -423,6 +425,7 @@ const AddNewPartialRefund = () => {
                           value={vendorTaxAmount}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Vendor Tax Amount
@@ -436,6 +439,7 @@ const AddNewPartialRefund = () => {
                           value={vendorGSTAmount}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Vendor GST Amount
@@ -449,6 +453,7 @@ const AddNewPartialRefund = () => {
                           value={vendorTotal}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           disabled
                         />
                         <label className='lh-1 text-16 text-light-1'>Vendor Total</label>
@@ -470,6 +475,7 @@ const AddNewPartialRefund = () => {
                           value={IATACommissionPercent}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           IATA Commission Percent
@@ -483,6 +489,7 @@ const AddNewPartialRefund = () => {
                           value={plbCommissionPercent}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           PLB Commission Percent
@@ -496,6 +503,7 @@ const AddNewPartialRefund = () => {
                           value={vendorServiceChargePercent}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           onFocus={() => setVendorGSTFocused(true)}
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -509,6 +517,7 @@ const AddNewPartialRefund = () => {
                           value={vendorServiceCharges}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           onFocus={() => setVendorGSTFocused(false)}
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -523,6 +532,7 @@ const AddNewPartialRefund = () => {
                           value={vendorTDSPercent}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           onFocus={() => setVendorTDSPercentFocused(true)}
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -536,6 +546,7 @@ const AddNewPartialRefund = () => {
                           value={vendorTDS}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           onFocus={() => setVendorTDSPercentFocused(false)}
                         />
                         <label className='lh-1 text-16 text-light-1'>Vendor TDS</label>
@@ -548,6 +559,7 @@ const AddNewPartialRefund = () => {
                           value={commissionReceivable}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           disabled
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -571,6 +583,7 @@ const AddNewPartialRefund = () => {
                           value={clientReferralFee}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Client Referral Fee
@@ -584,6 +597,7 @@ const AddNewPartialRefund = () => {
                           value={clientBaseAmount}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Client Base Amount
@@ -597,6 +611,7 @@ const AddNewPartialRefund = () => {
                           value={clientTaxAmount}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Client Tax Amount
@@ -610,6 +625,7 @@ const AddNewPartialRefund = () => {
                           value={clientGSTAmount}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Client GST Amount
@@ -624,6 +640,7 @@ const AddNewPartialRefund = () => {
                           placeholder=' '
                           onFocus={() => setXplorzGSTFocused(true)}
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Xplorz GST Percent
@@ -636,6 +653,7 @@ const AddNewPartialRefund = () => {
                           value={clientServiceCharges}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           onFocus={() => setXplorzGSTFocused(false)}
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -650,6 +668,7 @@ const AddNewPartialRefund = () => {
                           value={clientTotal}
                           placeholder=' '
                           type='number'
+                          onWheel={(e) => e.target.blur()}
                           disabled
                         />
                         <label className='lh-1 text-16 text-light-1'>Client Total</label>
