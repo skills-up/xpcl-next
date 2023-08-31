@@ -711,7 +711,7 @@ const AddNewBooking = () => {
                 <div>
                   <form
                     onSubmit={onSubmit}
-                    className='row col-12 y-gap-20 lg:pr-0 lg:ml-0'
+                    className='row col-12 y-gap-15 lg:pr-0 lg:ml-0'
                   >
                     <h3>Basic Details</h3>
                     {/* <div className='form-input-select col-lg-12'>
@@ -835,28 +835,12 @@ const AddNewBooking = () => {
                             {bookingSectors.map((element, index) => {
                               return (
                                 <div
-                                  className='d-flex flex-column mx-1 bg-light my-4 py-20 pb-40 px-30 md:px-10 md:py-10'
+                                  className='booking-sectors mx-1 pr-10 bg-light items-center my-3 lg:pr-0'
                                   key={index}
                                 >
-                                  <div className='d-flex justify-between'>
-                                    <div>{index + 1}.</div>
-                                    <span
-                                      className='pb-10'
-                                      onClick={() =>
-                                        setBookingSectors((prev) => {
-                                          prev.splice(index, 1);
-                                          return [...prev];
-                                        })
-                                      }
-                                    >
-                                      <BsTrash3
-                                        className='text-danger'
-                                        style={{ fontSize: '1.5rem', cursor: 'pointer' }}
-                                      />
-                                    </span>
-                                  </div>
-                                  <div className='d-flex row y-gap-20 md:flex-column items-center justify-between'>
-                                    <div className='form-input-select col-md-6'>
+                                  <div>{index + 1}.</div>
+                                  <div className='d-flex row y-gap-10 col-12 lg:pr-0 md:flex-column items-center justify-between'>
+                                    <div className='form-input-select col-md-2'>
                                       <label>
                                         From<span className='text-danger'>*</span>
                                       </label>
@@ -922,7 +906,7 @@ const AddNewBooking = () => {
                                         }
                                       />
                                     </div>
-                                    <div className='form-input-select col-md-6'>
+                                    <div className='form-input-select col-md-2'>
                                       <label>
                                         To<span className='text-danger'>*</span>
                                       </label>
@@ -988,7 +972,7 @@ const AddNewBooking = () => {
                                         }
                                       />
                                     </div>
-                                    <div className='col-md-6 col-lg-3 form-datepicker'>
+                                    <div className='col-md-2 form-datepicker'>
                                       <label>
                                         Date<span className='text-danger'>*</span>
                                       </label>
@@ -1000,7 +984,7 @@ const AddNewBooking = () => {
                                         }
                                         style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
                                         inputClass='custom_input-picker'
-                                        containerClassName='custom_container-picker'
+                                        containerClassName='custom_container-picker bg-white'
                                         value={element['travel_date']}
                                         onChange={(date) => {
                                           setBookingSectors((prev) => {
@@ -1013,7 +997,7 @@ const AddNewBooking = () => {
                                         format='DD MMMM YYYY'
                                       />
                                     </div>
-                                    <div className='col-md-6 col-lg-3'>
+                                    <div className='col-md-2'>
                                       <div className='form-input bg-white'>
                                         <input
                                           onChange={(e) =>
@@ -1031,7 +1015,7 @@ const AddNewBooking = () => {
                                         </label>
                                       </div>
                                     </div>
-                                    <div className='col-md-6 col-lg-3'>
+                                    <div className='col-md-2'>
                                       <div className='form-input bg-white'>
                                         <input
                                           onChange={(e) =>
@@ -1049,7 +1033,7 @@ const AddNewBooking = () => {
                                         </label>
                                       </div>
                                     </div>
-                                    <div className='col-md-6 col-lg-3 pb-3 form-input-select'>
+                                    <div className='col-md-2 form-input-select'>
                                       <label>Booking Class</label>
                                       <Select
                                         options={bookingClassOptions}
@@ -1062,6 +1046,22 @@ const AddNewBooking = () => {
                                         }
                                       />
                                     </div>
+                                  </div>
+                                  <div>
+                                    <span
+                                      className='pb-10'
+                                      onClick={() =>
+                                        setBookingSectors((prev) => {
+                                          prev.splice(index, 1);
+                                          return [...prev];
+                                        })
+                                      }
+                                    >
+                                      <BsTrash3
+                                        className='text-danger'
+                                        style={{ fontSize: '1.5rem', cursor: 'pointer' }}
+                                      />
+                                    </span>
                                   </div>
                                 </div>
                               );
@@ -1396,7 +1396,7 @@ const AddNewBooking = () => {
                         </div>
                       </div>
                     </div>
-                    <div className='col-lg-4 pt-20'>
+                    <div className='col-lg-4 pt-35 lg:pt-10'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setCommissionReceivable(e.target.value)}
@@ -1545,7 +1545,7 @@ const AddNewBooking = () => {
                         </div>
                       </div>
                     )}
-                    <div className='col-lg-4 pt-20'>
+                    <div className='col-lg-4 pt-35 lg:pt-10'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setClientTotal(e.target.value)}
