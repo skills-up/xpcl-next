@@ -187,7 +187,6 @@ const Datatable = ({
           <tbody {...getTableBodyProps()}>
             {page.map((row, i) => {
               prepareRow(row);
-              console.log('data', row);
               return (
                 <tr key={i} {...row.getRowProps()}>
                   {row.cells.map((cell, index) => {
@@ -198,7 +197,6 @@ const Datatable = ({
                             rowClick && rowClick(row);
                           }
                           if (viewLink && cell.column.Header !== 'Actions') {
-                            console.log('header', cell.column.Header);
                             router.push(viewLink + '/view/' + row.original.id);
                           }
                         }}

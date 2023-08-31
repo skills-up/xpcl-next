@@ -97,8 +97,8 @@ const ReissueBooking = () => {
   const [clientTravellers, setClientTravellers] = useState([]);
 
   const [xplorzGSTFocused, setXplorzGSTFocused] = useState(false);
-  const [vendorGSTFocused, setVendorGSTFocused] = useState(false);
-  const [vendorTDSPercentFocused, setVendorTDSPercentFocused] = useState(false);
+  const [vendorGSTFocused, setVendorGSTFocused] = useState(true);
+  const [vendorTDSPercentFocused, setVendorTDSPercentFocused] = useState(true);
   const [clientBaseAmountFocused, setClientBaseAmountFocused] = useState(false);
 
   const airports = useSelector((state) => state.apis.value.airports);
@@ -122,8 +122,8 @@ const ReissueBooking = () => {
         // setVendorMiscChargers(response.data.vendor_misc_charges);
         // setVendorYQAmount(response.data.vendor_yq_amount);
         // setVendorTotal(response.data.vendor_total);
-        // setIATACommissionPercent(response.data.iata_commission_percent);
-        // setPLBCommissionPercent(response.data.plb_commission_percent);
+        setIATACommissionPercent(response.data.iata_commission_percent);
+        setPLBCommissionPercent(response.data.plb_commission_percent);
         // setVendorServiceCharges(response.data.vendor_service_charges);
         // setVendorTDS(response.data.vendor_tds);
         // setCommissionReceivable(response.data.commission_receivable);
@@ -145,28 +145,28 @@ const ReissueBooking = () => {
         // );
 
         // Client GST Percent
-        if (
-          Number(
-            (
-              (+response.data.client_gst_amount * 100) /
-              +response.data.client_base_amount
-            ).toFixed(0)
-          ) === 5
-        )
-          setClientGSTPercent({ value: '5% of Base', label: '5% of Base' });
-        else if (
-          Number(
-            (
-              (+response.data.client_gst_amount * 100) /
-              +response.data.client_base_amount
-            ).toFixed(0)
-          ) === 12
-        )
-          setClientGSTPercent({ value: '12% of Base', label: '12% of Base' });
-        else if (response.data.client_gst_amount === 0)
-          setClientGSTPercent({ value: 'None', label: 'None' });
-        else if (response.data.client_gst_amount === response.data.vendor_gst_amount)
-          setClientGSTAmount({ value: 'Vendor GST', label: 'Vendor GST' });
+        // if (
+        //   Number(
+        //     (
+        //       (+response.data.client_gst_amount * 100) /
+        //       +response.data.client_base_amount
+        //     ).toFixed(0)
+        //   ) === 5
+        // )
+        //   setClientGSTPercent({ value: '5% of Base', label: '5% of Base' });
+        // else if (
+        //   Number(
+        //     (
+        //       (+response.data.client_gst_amount * 100) /
+        //       +response.data.client_base_amount
+        //     ).toFixed(0)
+        //   ) === 12
+        // )
+        //   setClientGSTPercent({ value: '12% of Base', label: '12% of Base' });
+        // else if (response.data.client_gst_amount === 0)
+        //   setClientGSTPercent({ value: 'None', label: 'None' });
+        // else if (response.data.client_gst_amount === response.data.vendor_gst_amount)
+        //   setClientGSTPercent({ value: 'Vendor GST', label: 'Vendor GST' });
 
         const vendors = await getList('organizations', { is_vendor: 1 });
         const commissionRules = await getList('commission-rules');
@@ -184,8 +184,11 @@ const ReissueBooking = () => {
           clients?.success &&
           clientTravellers?.success
         ) {
+          console.log('vendors', vendors.data);
           setVendors(
             vendors.data.map((element) => ({
+              vendor_service_charge_percentage: element?.vendor_service_charge_percentage,
+              vendor_tds_percentage: element?.vendor_tds_percentage,
               value: element.id,
               label: element.name,
             }))
@@ -230,7 +233,13 @@ const ReissueBooking = () => {
           // Setting Vendor ID
           for (let vendor of vendors.data)
             if (vendor.id === response.data.vendor_id)
-              setVendorID({ value: vendor.id, label: vendor.name });
+              setVendorID({
+                vendor_service_charge_percentage:
+                  vendor?.vendor_service_charge_percentage,
+                vendor_tds_percentage: vendor?.vendor_tds_percentage,
+                value: vendor.id,
+                label: vendor.name,
+              });
           // Setting Commission ID
           for (let comm of commissionRules.data)
             if (comm.id === response.data.commission_rule_id)
@@ -427,6 +436,13 @@ const ReissueBooking = () => {
   //       if (vendorID.value === airline.value) setAirlineID(vendorID);
   // }, [vendorID]);
 
+  useEffect(() => {
+    if (vendorID?.value) {
+      setVendorServiceChargePercent(vendorID?.vendor_service_charge_percentage);
+      setVendorTDSPercent(vendorID?.vendor_tds_percentage);
+    }
+  }, [vendorID]);
+
   // Booking Type Changes
   useEffect(() => {
     // Client Service Charge Percent
@@ -450,6 +466,7 @@ const ReissueBooking = () => {
       vendorTaxAmount,
       vendorGSTAmount,
       vendorMiscCharges,
+      reissuePenalty,
     ]
   );
 
@@ -457,11 +474,12 @@ const ReissueBooking = () => {
   const updateVendorTotal = () => {
     setVendorTotal(
       Number(
-        +vendorBaseAmount +
-          +vendorYQAmount +
-          +vendorTaxAmount +
-          +vendorGSTAmount +
-          +vendorMiscCharges
+        (+vendorBaseAmount || 0) +
+          (+vendorYQAmount || 0) +
+          (+vendorTaxAmount || 0) +
+          (+vendorGSTAmount || 0) +
+          (+vendorMiscCharges || 0) +
+          (+reissuePenalty || 0)
       )
     );
   };
@@ -471,7 +489,9 @@ const ReissueBooking = () => {
     if (vendorTDSPercentFocused) {
       setVendorTDS(
         Number(
-          ((+grossCommission - +vendorServiceCharges) * +vendorTDSPercent) / 100
+          (((+grossCommission || 0) - (+vendorServiceCharges || 0)) *
+            (+vendorTDSPercent || 0)) /
+            100
         ).toFixed(4)
       );
     }
@@ -480,7 +500,9 @@ const ReissueBooking = () => {
   useEffect(() => {
     if (!vendorTDSPercentFocused) {
       setVendorTDSPercent(
-        Number((100 * vendorTDS) / (+grossCommission - +vendorServiceCharges)).toFixed(4)
+        Number(
+          (100 * vendorTDS) / ((+grossCommission || 0) - (+vendorServiceCharges || 0))
+        ).toFixed(4)
       );
     }
   }, [vendorTDS, grossCommission]);
@@ -488,7 +510,9 @@ const ReissueBooking = () => {
   useEffect(() => {
     if (vendorGSTFocused) {
       setVendorServiceCharges(
-        Number((+grossCommission * +vendorServiceChargePercent) / 100).toFixed(4)
+        Number(
+          ((+grossCommission || 0) * (+vendorServiceChargePercent || 0)) / 100
+        ).toFixed(4)
       );
     }
   }, [vendorServiceChargePercent, grossCommission]);
@@ -496,7 +520,7 @@ const ReissueBooking = () => {
   useEffect(() => {
     if (!vendorGSTFocused) {
       setVendorServiceChargePercent(
-        Number((100 * +vendorServiceCharges) / +grossCommission).toFixed(4)
+        Number((100 * (+vendorServiceCharges || 0)) / (+grossCommission || 0)).toFixed(4)
       );
     }
   }, [vendorServiceCharges, grossCommission]);
@@ -517,32 +541,34 @@ const ReissueBooking = () => {
 
   useEffect(() => {
     if (paymentAccountID?.value)
-      setPaymentAmount(Number(+vendorTotal - +vendorMiscCharges));
+      setPaymentAmount(Number((+vendorTotal || 0) - (+vendorMiscCharges || 0)));
   }, [paymentAccountID, vendorTotal, vendorMiscCharges]);
 
   // Vendor Commission Receivable Total
   const updateVendorCommission = () => {
     setCommissionReceivable(
-      Math.round(+grossCommission - +vendorTDS - +vendorServiceCharges)
+      Math.round(
+        (+grossCommission || 0) - (+vendorTDS || 0) - (+vendorServiceCharges || 0)
+      )
     );
   };
 
   const calculateGrossCommission = () => {
     if (commissionRuleID) {
       const iata_comm = Number(
-        (+IATACommissionPercent *
-          (+commissionRuleID.iata_basic * +vendorBaseAmount +
-            +commissionRuleID.iata_yq * +vendorYQAmount)) /
+        ((+IATACommissionPercent || 0) *
+          ((+commissionRuleID.iata_basic || 0) * (+vendorBaseAmount || 0) +
+            (+commissionRuleID.iata_yq || 0) * (+vendorYQAmount || 0))) /
           100
       ).toFixed(4);
       const plb_comm = Number(
-        (+plbCommissionPercent *
-          (+commissionRuleID.plb_basic * +vendorBaseAmount +
-            +commissionRuleID.plb_yq * +vendorYQAmount -
+        ((+plbCommissionPercent || 0) *
+          ((+commissionRuleID.plb_basic || 0) * (+vendorBaseAmount || 0) +
+            (+commissionRuleID.plb_yq || 0) * (+vendorYQAmount || 0) -
             iata_comm)) /
           100
       ).toFixed(4);
-      setGrossCommission(Number(+plb_comm + +iata_comm));
+      setGrossCommission(Number((+plb_comm || 0) + (+iata_comm || 0)));
     }
   };
 
@@ -554,7 +580,9 @@ const ReissueBooking = () => {
   useEffect(() => {
     if (xplorzGSTFocused) {
       let temp = Number(
-        ((+clientBaseAmount + +clientReferralFee) * +clientServiceChargePercent) / 100
+        (((+clientBaseAmount || 0) + (+clientReferralFee || 0)) *
+          (+clientServiceChargePercent || 0)) /
+          100
       ).toFixed(0);
       if (temp && temp !== 'NaN') setClientServicesCharges(temp);
     }
@@ -564,7 +592,8 @@ const ReissueBooking = () => {
     if (!xplorzGSTFocused) {
       setClientServiceChargePercent(
         Number(
-          (100 * +clientServiceCharges) / (+clientBaseAmount + +clientReferralFee)
+          (100 * (+clientServiceCharges || 0)) /
+            ((+clientBaseAmount || 0) + (+clientReferralFee || 0))
         ).toFixed(4)
       );
     }
@@ -587,11 +616,19 @@ const ReissueBooking = () => {
         setClientGSTAmount(+vendorGSTAmount);
       else if (clientGSTPercent.label === '5% of Base') {
         setClientGSTAmount(
-          Number(((+clientQuotedAmount - +clientTaxAmount) * (5 / 100)).toFixed(4))
+          Number(
+            (((+clientQuotedAmount || 0) - (+clientTaxAmount || 0)) * (5 / 100)).toFixed(
+              4
+            )
+          )
         );
       } else if (clientGSTPercent.label === '12% of Base') {
         setClientGSTAmount(
-          Number(((+clientQuotedAmount - +clientTaxAmount) * (12 / 100)).toFixed(4))
+          Number(
+            (((+clientQuotedAmount || 0) - (+clientTaxAmount || 0)) * (12 / 100)).toFixed(
+              4
+            )
+          )
         );
       }
     }
@@ -599,7 +636,9 @@ const ReissueBooking = () => {
 
   useEffect(() => {
     if (clientBaseAmountFocused)
-      setClientQuotedAmount(+clientBaseAmount + +clientTaxAmount + +clientGSTAmount);
+      setClientQuotedAmount(
+        (+clientBaseAmount || 0) + (+clientTaxAmount || 0) + (+clientGSTAmount || 0)
+      );
   }, [clientBaseAmount]);
 
   useEffect(() => {
@@ -609,17 +648,19 @@ const ReissueBooking = () => {
   // Client Total
   const updateClientBase = () => {
     if (+clientQuotedAmount > 0)
-      setClientBaseAmount(+clientQuotedAmount - +clientTaxAmount - +clientGSTAmount);
+      setClientBaseAmount(
+        (+clientQuotedAmount || 0) - (+clientTaxAmount || 0) - (+clientGSTAmount || 0)
+      );
   };
 
   const updateClientTotal = () => {
     setClientTotal(
       Number(
-        +clientBaseAmount +
-          +clientGSTAmount +
-          +clientTaxAmount +
-          +clientServiceCharges +
-          +clientReferralFee
+        (+clientBaseAmount || 0) +
+          (+clientGSTAmount || 0) +
+          (+clientTaxAmount || 0) +
+          (+clientServiceCharges || 0) +
+          (+clientReferralFee || 0)
       )
     );
   };
