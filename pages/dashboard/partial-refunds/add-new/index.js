@@ -60,8 +60,8 @@ const AddNewPartialRefund = () => {
   const [clientAccounts, setClientAccounts] = useState([]);
 
   const [xplorzGSTFocused, setXplorzGSTFocused] = useState(false);
-  const [vendorGSTFocused, setVendorGSTFocused] = useState(true);
-  const [vendorTDSPercentFocused, setVendorTDSPercentFocused] = useState(true);
+  const [vendorGSTFocused, setVendorGSTFocused] = useState(false);
+  const [vendorTDSPercentFocused, setVendorTDSPercentFocused] = useState(false);
   const [clientBaseAmountFocused, setClientBaseAmountFocused] = useState(false);
 
   const clientGSTOptions = [
@@ -142,9 +142,37 @@ const AddNewPartialRefund = () => {
       setVendorTDS(bookingData.data.vendor_tds);
       setClientReferralFee(bookingData.data.client_referral_fee);
       setClientBaseAmount(bookingData.data.client_base_amount);
-      setClientTaxAmount(bookingData.data.client_tax_amount);
       setClientGSTAmount(bookingData.data.client_gst_amount);
       setClientServicesCharges(bookingData.data.client_service_charges);
+      setClientQuotedAmount(
+        +bookingData.data.client_base_amount +
+          +bookingData.data.client_tax_amount +
+          +bookingData.data.client_gst_amount
+      );
+      // Setting Client GST Percent
+      if (
+        Number(
+          (
+            (+bookingData.data.client_gst_amount * 100) /
+            +bookingData.data.client_base_amount
+          ).toFixed(0)
+        ) === 5
+      )
+        setClientGSTPercent({ value: '5% of Base', label: '5% of Base' });
+      else if (
+        Number(
+          (
+            (+bookingData.data.client_gst_amount * 100) /
+            +bookingData.data.client_base_amount
+          ).toFixed(0)
+        ) === 12
+      )
+        setClientGSTPercent({ value: '12% of Base', label: '12% of Base' });
+      else if (bookingData.data.client_gst_amount === 0)
+        setClientGSTPercent({ value: 'None', label: 'None' });
+      else if (bookingData.data.client_gst_amount === bookingData.data.vendor_gst_amount)
+        setClientGSTPercent({ value: 'Vendor GST', label: 'Vendor GST' });
+
       for (let vendor of vendors.data)
         if (vendor.id === bookingData.data.vendor_id)
           setVendorID({ value: vendor.id, label: vendor.name });
@@ -164,11 +192,18 @@ const AddNewPartialRefund = () => {
       for (let ref of clients.data)
         if (ref.id === bookingData.data.client_referrer_id)
           setClientReferrerID({ value: ref.id, label: ref.name });
+      setTimeout(() => {
+        setClientTaxAmount(bookingData.data.client_tax_amount);
+      }, 1000);
     } else {
       sendToast('error', 'Unable to fetch required data', 4000);
       router.push('/dashboard/partial-refunds');
     }
   };
+
+  useEffect(() => {
+    console.log('test', clientGSTAmount, clientBaseAmount);
+  }, [clientGSTAmount, clientBaseAmount]);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -368,6 +403,7 @@ const AddNewPartialRefund = () => {
       else if (clientGSTPercent.label === 'Vendor GST')
         setClientGSTAmount(+vendorGSTAmount);
       else if (clientGSTPercent.label === '5% of Base') {
+        console.log('yes', clientQuotedAmount, clientTaxAmount);
         setClientGSTAmount(
           Number(
             (((+clientQuotedAmount || 0) - (+clientTaxAmount || 0)) * (5 / 100)).toFixed(
@@ -491,6 +527,7 @@ const AddNewPartialRefund = () => {
                           placeholder=' '
                           type='number'
                           onWheel={(e) => e.target.blur()}
+                          onFocus={() => setXplorzGSTFocused(true)}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Client Referral Fee
@@ -747,6 +784,11 @@ const AddNewPartialRefund = () => {
                           placeholder=' '
                           type='number'
                           onWheel={(e) => e.target.blur()}
+                          onFocus={() => {
+                            setClientBaseAmountFocused(true);
+                            setXplorzGSTFocused(true);
+                          }}
+                          onBlur={() => setClientBaseAmountFocused(false)}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Client Base Amount
@@ -838,6 +880,7 @@ const AddNewPartialRefund = () => {
                               type='number'
                               onWheel={(e) => e.target.blur()}
                               onFocus={() => setXplorzGSTFocused(false)}
+                              onBlur={() => setXplorzGSTFocused(true)}
                             />
                             <label className='lh-1 text-16 text-light-1'></label>
                           </div>

@@ -6,16 +6,16 @@ import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { sendToast } from '../../../../utils/toastify';
 import { useEffect, useState } from 'react';
-import { createItem, getItem, getList, updateItem } from '../../../../api/xplorzApi';
+import { createItem, getList } from '../../../../api/xplorzApi';
 import ReactSwitch from 'react-switch';
-import Select from 'react-select';
+import Select, { createFilter } from 'react-select';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 import { BiPlusMedical } from 'react-icons/bi';
 import { store } from '../../../../app/store';
 import { BsTrash3 } from 'react-icons/bs';
 import WindowedSelect from 'react-windowed-select';
 
-const UpdateBooking = () => {
+const AddNewBooking = () => {
   const [ticketNumber, setTicketNumber] = useState('');
   const [pnr, setPNR] = useState('');
   const [vendorBaseAmount, setVendorBaseAmount] = useState(0);
@@ -36,14 +36,12 @@ const UpdateBooking = () => {
   const [clientGSTAmount, setClientGSTAmount] = useState(0);
   const [clientServiceCharges, setClientServicesCharges] = useState(0);
   const [clientTotal, setClientTotal] = useState(0);
-  const [reissuePenalty, setReissuePenalty] = useState(0);
+  const [reissuePenalty, setReissuePenalty] = useState('');
   const [sector, setSector] = useState('');
-  const [originalBookingID, setOriginalBookingID] = useState(null);
   const [bookingSectors, setBookingSectors] = useState([]);
   const [grossCommission, setGrossCommission] = useState(0);
   const [isOffshore, setIsOffshore] = useState(false);
   const [clientQuotedAmount, setClientQuotedAmount] = useState(0);
-  const [number, setNumber] = useState('');
 
   // Percentages
   const [vendorServiceChargePercent, setVendorServiceChargePercent] = useState(18);
@@ -101,10 +99,9 @@ const UpdateBooking = () => {
   const [clientOrgs, setClientOrgs] = useState([]);
 
   const [xplorzGSTFocused, setXplorzGSTFocused] = useState(false);
-  const [vendorGSTFocused, setVendorGSTFocused] = useState(false);
-  const [vendorTDSPercentFocused, setVendorTDSPercentFocused] = useState(false);
+  const [vendorGSTFocused, setVendorGSTFocused] = useState(true);
+  const [vendorTDSPercentFocused, setVendorTDSPercentFocused] = useState(true);
   const [clientBaseAmountFocused, setClientBaseAmountFocused] = useState(false);
-  const [clientTravellerFirstCheck, setClientTravellerFirstCheck] = useState(false);
 
   const airports = useSelector((state) => state.apis.value.airports);
   const token = useSelector((state) => state.auth.value.token);
@@ -112,236 +109,89 @@ const UpdateBooking = () => {
   const permissions = useSelector((state) => state.auth.value.permissions);
 
   useEffect(() => {
-    getData();
+    if (router.isReady) getData();
   }, [router.isReady]);
 
   const getData = async () => {
-    if (router.query.edit) {
-      const response = await getItem('bookings', router.query.edit);
-      if (response?.success) {
-        setTicketNumber(response.data.ticket_number);
-        setPNR(response.data.pnr);
-        setVendorBaseAmount(response.data.vendor_base_amount);
-        setVendorTaxAmount(response.data.vendor_tax_amount);
-        setVendorGSTAmount(response.data.vendor_gst_amount);
-        setVendorMiscChargers(response.data.vendor_misc_charges);
-        setVendorYQAmount(response.data.vendor_yq_amount);
-        setVendorTotal(response.data.vendor_total);
-        setIATACommissionPercent(response.data.iata_commission_percent);
-        setPLBCommissionPercent(response.data.plb_commission_percent);
-        setVendorServiceCharges(response.data.vendor_service_charges);
-        setVendorTDS(response.data.vendor_tds);
-        setCommissionReceivable(response.data.commission_receivable);
-        setClientReferralFee(response.data.client_referral_fee);
-        setClientBaseAmount(response.data.client_base_amount);
-        setClientGSTAmount(response.data.client_gst_amount);
-        setClientServicesCharges(response.data.client_service_charges);
-        setClientTotal(response.data.client_total);
-        setSector(response.data.sector);
-        setOriginalBookingID(response.data?.original_booking_id);
-        setReissuePenalty(response.data?.reissue_penalty);
-        setBookingDate(
-          new DateObject({ date: response.data.booking_date, format: 'YYYY-MM-DD' })
-        );
-        setIsOffshore(response.data?.is_offshore);
-        setClientQuotedAmount(
-          +response.data.client_base_amount +
-            +response.data.client_tax_amount +
-            +response.data.client_gst_amount
-        );
-        setNumber(response.data.number);
-
-        // Client GST Percent
-        if (
-          Number(
-            (
-              (+response.data.client_gst_amount * 100) /
-              +response.data.client_base_amount
-            ).toFixed(0)
-          ) === 5
-        )
-          setClientGSTPercent({ value: '5% of Base', label: '5% of Base' });
-        else if (
-          Number(
-            (
-              (+response.data.client_gst_amount * 100) /
-              +response.data.client_base_amount
-            ).toFixed(0)
-          ) === 12
-        )
-          setClientGSTPercent({ value: '12% of Base', label: '12% of Base' });
-        else if (response.data.client_gst_amount === 0)
-          setClientGSTPercent({ value: 'None', label: 'None' });
-        else if (response.data.client_gst_amount === response.data.vendor_gst_amount)
-          setClientGSTPercent({ value: 'Vendor GST', label: 'Vendor GST' });
-
-        const vendors = await getList('organizations', { is_vendor: 1 });
-        const commissionRules = await getList('commission-rules');
-        const airlines = await getList('organizations', { is_airline: 1 });
-        const paymentAccounts = await getList('accounts', { category: 'Credit Cards' });
-        const clients = await getList('accounts', { category: 'Referrers' });
-        const clientOrgs = await getList('organizations', { is_client: 1 });
-        const clientTravellers = await getList('client-travellers', {
-          client_id: response.data?.client_id,
+    const bType = router.query?.type;
+    if (bType) {
+      if (bType === 'domestic') {
+        setBookingType({
+          value: 'Domestic Flight Ticket',
+          label: 'Domestic Flight Ticket',
         });
-        if (
-          vendors?.success &&
-          commissionRules?.success &&
-          airlines?.success &&
-          paymentAccounts?.success &&
-          clients?.success &&
-          clientOrgs?.success &&
-          clientTravellers?.success
-        ) {
-          setVendors(
-            vendors.data.map((element) => ({
-              value: element.id,
-              label: element.name,
-            }))
-          );
-          setCommissionRules(
-            commissionRules.data.map((element) => ({
-              value: element.id,
-              label: element.name,
-              iata_basic: element.iata_basic,
-              iata_yq: element.iata_yq,
-              plb_basic: element.plb_basic,
-              plb_yq: element.plb_yq,
-            }))
-          );
-          setAirlines(
-            airlines.data.map((element) => ({
-              value: element.id,
-              label: element.name,
-            }))
-          );
-          setPaymentAccounts(
-            paymentAccounts.data.map((element) => ({
-              value: element.id,
-              label: element.name,
-            }))
-          );
-          setClients(
-            clients.data.map((element) => ({
-              value: element.id,
-              label: element.name,
-            }))
-          );
-          setClientOrgs(
-            clientOrgs.data.map((element) => ({
-              value: element.id,
-              label: element.name,
-            }))
-          );
-          setClientTravellers(
-            clientTravellers.data.map((element) => ({
-              value: element.id,
-              label: element.traveller_name,
-            }))
-          );
-          // Setting Booking Type
-          for (let option of bookingOptions)
-            if (option.value === response.data.booking_type) setBookingType(option);
-          // Setting Vendor ID
-          for (let vendor of vendors.data)
-            if (vendor.id === response.data.vendor_id)
-              setVendorID({ value: vendor.id, label: vendor.name });
-          // Setting Commission ID
-          for (let comm of commissionRules.data)
-            if (comm.id === response.data.commission_rule_id)
-              setCommissionRuleID({
-                value: comm.id,
-                label: comm.name,
-                iata_basic: comm.iata_basic,
-                iata_yq: comm.iata_yq,
-                plb_basic: comm.plb_basic,
-                plb_yq: comm.plb_yq,
-              });
-          // Set Airline ID
-          for (let airline of airlines.data)
-            if (airline.id === response.data.airline_id)
-              setAirlineID({ value: airline.id, label: airline.name });
-          // Misc Type
-          for (let misc of miscellaneousOptions)
-            if (misc.value === response.data.miscellaneous_type)
-              setMiscellaneousType(misc);
-          // Payment Account ID
-          for (let acc of paymentAccounts.data)
-            if (acc.id === response.data.payment_account_id)
-              setPaymentAccountID({ value: acc.id, label: acc.name });
-          // Client Referrer ID
-          for (let client of clients.data)
-            if (client.id === response.data.client_referrer_id)
-              setClientReferrerID({ value: client.id, label: client.name });
-          // Client Org IDS
-          for (let client of clientOrgs.data) {
-            if (client.id === response.data.client_id)
-              setClientID({
-                value: client.id,
-                label: client.name,
-              });
-          }
-          // Client Traveller IDS
-          for (let client of clientTravellers.data) {
-            if (client.id === response.data.client_traveller_id)
-              setClientTravellerID({
-                value: client.id,
-                label: client.traveller_name,
-              });
-          }
-          // Client Booking Sectors
-          const tempBookingSectors = [];
-          for (let bookSec of response.data.sectors) {
-            let tempFromAirportID, tempToAirportID, tempBookingClass;
-            for (let airport of airports) {
-              if (airport.id === bookSec.from_airport_id) {
-                tempFromAirportID = {
-                  value: airport.id,
-                  label: `${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
-                };
-              }
-              if (airport.id === bookSec.to_airport_id) {
-                tempToAirportID = {
-                  value: airport.id,
-                  label: `${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
-                };
-              }
-            }
-            for (let opt of bookingClassOptions)
-              if (opt.value === bookSec?.booking_class) tempBookingClass = opt;
-            tempBookingSectors.push({
-              from_airport_id: tempFromAirportID,
-              to_airport_id: tempToAirportID,
-              travel_date: new DateObject({
-                date: bookSec.travel_date,
-                format: 'YYYY-MM-DD',
-              }),
-              travel_time: bookSec?.travel_time.slice(0, -3),
-              details: bookSec?.details,
-              booking_class: tempBookingClass,
-            });
-          }
-          setBookingSectors(tempBookingSectors);
-          // Set Payment Amount + First Client Traveller Check
-          setTimeout(() => {
-            setPaymentAmount(response.data.payment_amount);
-            setClientTravellerFirstCheck(true);
-            setClientTaxAmount(response.data.client_tax_amount);
-          }, 1000);
-        } else {
-          sendToast('error', 'Unable to fetch required data', 4000);
-          router.push('/dashboard/bookings');
-        }
+      } else if (bType === 'international') {
+        setBookingType({
+          value: 'International Flight Ticket',
+          label: 'International Flight Ticket',
+        });
+      } else if (bType === 'misc') {
+        setBookingType({ value: 'Miscellaneous', label: 'Miscellaneous' });
       } else {
-        sendToast(
-          'error',
-          response.data?.message ||
-            response.data?.error ||
-            'Unable to fetch required data',
-          4000
-        );
-        router.push('/dashboard/bookings');
+        router.back();
       }
+    } else {
+      router.back();
+    }
+    const vendors = await getList('organizations', { is_vendor: 1 });
+    const clientOrgs = await getList('organizations', { is_client: 1 });
+    const commissionRules = await getList('commission-rules');
+    const airlines = await getList('organizations', { is_airline: 1 });
+    const paymentAccounts = await getList('accounts', { category: 'Credit Cards' });
+    const clients = await getList('accounts', { category: 'Referrers' });
+    if (
+      vendors?.success &&
+      commissionRules?.success &&
+      airlines?.success &&
+      paymentAccounts?.success &&
+      clients?.success &&
+      clientOrgs?.success
+    ) {
+      setClientOrgs(
+        clientOrgs.data.map((element) => ({
+          value: element.id,
+          label: element.name,
+        }))
+      );
+      setVendors(
+        vendors.data.map((element) => ({
+          vendor_service_charge_percentage: element?.vendor_service_charge_percentage,
+          vendor_tds_percentage: element?.vendor_tds_percentage,
+          value: element.id,
+          label: element.name,
+        }))
+      );
+      setCommissionRules(
+        commissionRules.data.map((element) => ({
+          value: element.id,
+          label: element.name,
+          iata_basic: element.iata_basic,
+          iata_yq: element.iata_yq,
+          plb_basic: element.plb_basic,
+          plb_yq: element.plb_yq,
+        }))
+      );
+      setAirlines(
+        airlines.data.map((element) => ({
+          value: element.id,
+          label: element.name,
+        }))
+      );
+      setPaymentAccounts(
+        paymentAccounts.data.map((element) => ({
+          value: element.id,
+          label: element.name,
+        }))
+      );
+      setClients(
+        clients.data.map((element) => ({
+          value: element.id,
+          label: element.name,
+        }))
+      );
+    } else {
+      sendToast('error', 'Unable to fetch required data', 4000);
+      router.push('/dashboard/bookings');
     }
   };
 
@@ -376,9 +226,9 @@ const UpdateBooking = () => {
       }
     }
     // Adding response
-    const editData = {
+    const response = await createItem('bookings', {
       booking_type: bookingType.value,
-      client_id: clientID.value,
+      client_id: clientID?.value,
       booking_date: bookingDate.format('YYYY-MM-DD'),
       ticket_number: ticketNumber,
       pnr,
@@ -416,23 +266,16 @@ const UpdateBooking = () => {
               from_airport_id: element['from_airport_id']?.value,
               to_airport_id: element['to_airport_id']?.value,
               travel_date: element['travel_date']?.format('YYYY-MM-DD'),
-              travel_time: element['travel_time']
-                ? element['travel_time'] + ':00'
-                : element['travel_time'],
+              travel_time: element['travel_time'] + ':00',
               details:
                 element['details'].trim().length > 0 ? element['details'] : undefined,
               booking_class: element['booking_class']?.value,
             })),
       is_offshore: isOffshore,
       sector: bookingType.value === 'Miscellaneous' ? sector : undefined,
-    };
-    if (originalBookingID) {
-      editData['original_booking_id'] = originalBookingID;
-      editData['reissue_penalty'] = reissuePenalty || 0;
-    }
-    const response = await updateItem('bookings', router.query.edit, editData);
+    });
     if (response?.success) {
-      sendToast('success', 'Updated Invoice Successfully.', 4000);
+      sendToast('success', 'Created Invoice Successfully.', 4000);
       router.push('/dashboard/bookings');
     } else {
       if (response.data?.errors) {
@@ -448,7 +291,7 @@ const UpdateBooking = () => {
       } else {
         sendToast(
           'error',
-          response.data?.message || response.data?.error || 'Failed to Update Invoice.',
+          response.data?.message || response.data?.error || 'Failed to Create Invoice.',
           4000
         );
       }
@@ -457,7 +300,7 @@ const UpdateBooking = () => {
 
   // Client Traveller List
   useEffect(() => {
-    if (clientID?.value && clientTravellerFirstCheck) {
+    if (clientID?.value) {
       getClientTravellers();
     }
   }, [clientID]);
@@ -486,6 +329,13 @@ const UpdateBooking = () => {
   //       if (vendorID.value === airline.value) setAirlineID(vendorID);
   // }, [vendorID]);
 
+  useEffect(() => {
+    if (vendorID?.value) {
+      setVendorServiceChargePercent(vendorID?.vendor_service_charge_percentage);
+      setVendorTDSPercent(vendorID?.vendor_tds_percentage);
+    }
+  }, [vendorID]);
+
   // Booking Type Changes
   useEffect(() => {
     // Client Service Charge Percent
@@ -507,7 +357,6 @@ const UpdateBooking = () => {
       vendorBaseAmount,
       vendorYQAmount,
       vendorTaxAmount,
-      reissuePenalty,
       vendorGSTAmount,
       vendorMiscCharges,
     ]
@@ -521,8 +370,7 @@ const UpdateBooking = () => {
           (+vendorYQAmount || 0) +
           (+vendorTaxAmount || 0) +
           (+vendorGSTAmount || 0) +
-          (+vendorMiscCharges || 0) +
-          (+reissuePenalty || 0)
+          (+vendorMiscCharges || 0)
       )
     );
   };
@@ -595,7 +443,7 @@ const UpdateBooking = () => {
       )
     );
   };
-
+  // Checkpoint
   const calculateGrossCommission = () => {
     if (commissionRuleID) {
       const iata_comm = Number(
@@ -658,7 +506,6 @@ const UpdateBooking = () => {
       else if (clientGSTPercent.label === 'Vendor GST')
         setClientGSTAmount(+vendorGSTAmount);
       else if (clientGSTPercent.label === '5% of Base') {
-        console.log('yes', clientQuotedAmount, clientTaxAmount);
         setClientGSTAmount(
           Number(
             (((+clientQuotedAmount || 0) - (+clientTaxAmount || 0)) * (5 / 100)).toFixed(
@@ -679,7 +526,6 @@ const UpdateBooking = () => {
   }, [clientGSTPercent]);
 
   useEffect(() => {
-    console.log('base', clientBaseAmount, clientQuotedAmount);
     if (clientBaseAmountFocused)
       setClientQuotedAmount(
         (+clientBaseAmount || 0) + (+clientTaxAmount || 0) + (+clientGSTAmount || 0)
@@ -712,7 +558,7 @@ const UpdateBooking = () => {
 
   return (
     <>
-      <Seo pageTitle='Update Invoice' />
+      <Seo pageTitle='Add New Invoice' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -733,10 +579,10 @@ const UpdateBooking = () => {
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
                   <h1 className='text-30 lh-14 fw-600'>
-                    Update{bookingType?.value ? ' ' + bookingType?.value + ' ' : ' '}
-                    Invoice - {number}
+                    Add New{bookingType?.value ? ' ' + bookingType?.value + ' ' : ' '}
+                    Invoice
                   </h1>
-                  <div className='text-15 text-light-1'>Update an existing invoice.</div>
+                  <div className='text-15 text-light-1'>Create a new invoice.</div>
                 </div>
                 {/* End .col-12 */}
               </div>
@@ -749,17 +595,15 @@ const UpdateBooking = () => {
                     className='row col-12 y-gap-15 lg:pr-0 lg:ml-0'
                   >
                     <h3>Basic Details</h3>
-                    {/* <div className=' col-lg-12'>
-                      <div className='form-input'>
-                        <input
-                          className='pt-35'
-                          value={bookingType?.label}
-                          disabled
-                          placeholder=' '
-                          type='text'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>Booking Type</label>
-                      </div>
+                    {/* <div className='form-input-select col-lg-12'>
+                      <label>
+                        Booking Type<span className='text-danger'>*</span>
+                      </label>
+                      <Select
+                        options={bookingOptions}
+                        value={bookingType}
+                        onChange={(id) => setBookingType(id)}
+                      />
                     </div> */}
                     <div className='d-block ml-3 form-datepicker col-lg-4'>
                       <label>
@@ -832,7 +676,7 @@ const UpdateBooking = () => {
                       </div>
                     </div>
                     {bookingType?.value === 'Miscellaneous' && (
-                      <div className=' col-lg-4'>
+                      <div className='col-lg-4'>
                         <div className='form-input'>
                           <input
                             onChange={(e) => setSector(e.target.value)}
@@ -1174,7 +1018,7 @@ const UpdateBooking = () => {
                         onChange={(id) => setVendorID(id)}
                       />
                     </div>
-                    <div className='col-lg-4'>
+                    <div className=' col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setVendorBaseAmount(e.target.value)}
@@ -1247,31 +1091,15 @@ const UpdateBooking = () => {
                         </label>
                       </div>
                     </div>
-                    {originalBookingID && (
-                      <div className='col-lg-4'>
-                        <div className='form-input'>
-                          <input
-                            onChange={(e) => setReissuePenalty(e.target.value)}
-                            value={reissuePenalty}
-                            placeholder=' '
-                            type='number'
-                            onWheel={(e) => e.target.blur()}
-                          />
-                          <label className='lh-1 text-16 text-light-1'>
-                            Reissue Penalty
-                          </label>
-                        </div>
-                      </div>
-                    )}
                     <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
+                          className='bg-light'
                           onChange={(e) => setVendorTotal(e.target.value)}
                           value={vendorTotal}
                           placeholder=' '
                           type='number'
                           onWheel={(e) => e.target.blur()}
-                          className='bg-light'
                           disabled
                           required
                         />
@@ -1280,11 +1108,7 @@ const UpdateBooking = () => {
                         </label>
                       </div>
                     </div>
-                    {originalBookingID ? (
-                      <div className='col-4' />
-                    ) : (
-                      <div className='col-8' />
-                    )}
+                    <div className='col-8' />
                     <div className='form-input-select col-lg-4'>
                       <label>Payment Account</label>
                       <Select
@@ -1545,9 +1369,9 @@ const UpdateBooking = () => {
                             placeholder=' '
                             type='number'
                             onWheel={(e) => e.target.blur()}
-                            className='bg-light'
                             required
                             disabled
+                            className='bg-light'
                           />
                           <label className='lh-1 text-16 text-light-1'></label>
                         </div>
@@ -1631,7 +1455,7 @@ const UpdateBooking = () => {
                         type='submit'
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
                       >
-                        Update Invoice
+                        Add Invoice
                       </button>
                     </div>
                   </form>
@@ -1650,4 +1474,4 @@ const UpdateBooking = () => {
   );
 };
 
-export default UpdateBooking;
+export default AddNewBooking;
