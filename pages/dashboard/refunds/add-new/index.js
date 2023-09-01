@@ -21,6 +21,8 @@ const AddNewRefund = () => {
   const [refundAmount, setRefundAmount] = useState('');
   const [reason, setReason] = useState('');
   const [bookingData, setBookingData] = useState(null);
+  const [paymentAccounts, setPaymentAccounts] = useState([]);
+  const [paymentAccountID, setPaymentAccountID] = useState(null);
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -35,13 +37,33 @@ const AddNewRefund = () => {
   }, [router.isReady]);
 
   const getData = async () => {
-    const accounts = await getList('accounts');
+    const paymentAccounts = await getList('accounts', { category: 'Credit Cards' });
+    const accounts = await getList('organizations', { is_client: 1 });
     const bookingData = await getItem('bookings', router.query.booking_id);
-    if (accounts?.success && bookingData?.success) {
+    if (accounts?.success && bookingData?.success && paymentAccounts?.success) {
       setAccounts(
-        accounts.data.map((element) => ({ value: element.id, label: element.name }))
+        accounts.data.map((element) => ({
+          value: element.account_id,
+          label: element.name,
+        }))
+      );
+      setPaymentAccounts(
+        paymentAccounts.data.map((element) => ({
+          value: element.id,
+          label: element.name,
+        }))
       );
       setBookingData(bookingData.data);
+      // Setting Payment Account
+      for (let opt of paymentAccounts.data) {
+        if (opt.id === bookingData.data.payment_account_id)
+          setPaymentAccountID({ label: opt.name, value: opt.id });
+      }
+      // Setting Refund To Account
+      for (let opt of accounts.data) {
+        if (opt.id === bookingData.data.client_id)
+          setAccountID({ label: opt.name, value: opt.account_id });
+      }
     } else {
       sendToast('error', 'Unable to fetch required data', 4000);
       router.push('/dashboard/refunds');
@@ -51,17 +73,18 @@ const AddNewRefund = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     if (!accountID?.value) {
-      sendToast('error', 'You must select an Account', 4000);
+      sendToast('error', 'You must select a Refund To Account', 4000);
       return;
     }
     const response = await createItem('refunds', {
       booking_id: router.query.booking_id,
       refund_date: refundDate.format('YYYY-MM-DD'),
-      account_id: accountID.value,
-      airline_cancellation_charges: airlineCancellationCharges,
-      vendor_service_fee: vendorServiceFee,
-      client_cancellation_charges: clientCancellationCharges,
-      refund_amount: refundAmount,
+      refund_to_account_id: accountID.value,
+      airline_cancellation_charges: airlineCancellationCharges || 0,
+      vendor_service_fee: vendorServiceFee || 0,
+      client_cancellation_charges: clientCancellationCharges || 0,
+      payment_account_id: paymentAccountID?.value || undefined,
+      refund_amount: +refundAmount === 0 ? undefined : refundAmount || undefined,
       reason,
     });
     if (response?.success) {
@@ -78,11 +101,11 @@ const AddNewRefund = () => {
 
   // Calculation
   useEffect(() => {
-    if (bookingData) {
-      const payment = +bookingData?.vendor_total || bookingData?.payment_amount;
-      setRefundAmount(+payment - +airlineCancellationCharges);
+    if (bookingData && paymentAccountID) {
+      const payment = bookingData?.payment_amount;
+      if (payment) setRefundAmount((+payment || 0) - (+airlineCancellationCharges || 0));
     }
-  }, [bookingData, airlineCancellationCharges]);
+  }, [bookingData, airlineCancellationCharges, paymentAccountID]);
 
   return (
     <>
@@ -116,7 +139,7 @@ const AddNewRefund = () => {
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
-                    <div className='d-block ml-3 form-datepicker'>
+                    <div className='d-block col-lg-4 ml-3 form-datepicker'>
                       <label>
                         Refund Date<span className='text-danger'>*</span>
                       </label>
@@ -131,18 +154,25 @@ const AddNewRefund = () => {
                         format='DD MMMM YYYY'
                       />
                     </div>
-                    <div className='form-input-select'>
+                    <div className='form-input-select col-lg-4'>
                       <label>
-                        Account<span className='text-danger'>*</span>
+                        Refund To<span className='text-danger'>*</span>
                       </label>
                       <Select
                         options={accounts}
                         value={accountID}
-                        placeholder='Search & Select Account (required)'
                         onChange={(id) => setAccountID(id)}
                       />
                     </div>
-                    <div className='col-12'>
+                    <div className='form-input-select col-lg-4'>
+                      <label>Payment Account</label>
+                      <Select
+                        options={paymentAccounts}
+                        value={paymentAccountID}
+                        onChange={(id) => setPaymentAccountID(id)}
+                      />
+                    </div>
+                    <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setAirlineCancellationCharges(e.target.value)}
@@ -150,15 +180,13 @@ const AddNewRefund = () => {
                           placeholder=' '
                           type='number'
                           onWheel={(e) => e.target.blur()}
-                          required
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Airline Cancellation Charges
-                          <span className='text-danger'>*</span>
                         </label>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setVendorServiceFee(e.target.value)}
@@ -166,14 +194,13 @@ const AddNewRefund = () => {
                           placeholder=' '
                           type='number'
                           onWheel={(e) => e.target.blur()}
-                          required
                         />
                         <label className='lh-1 text-16 text-light-1'>
-                          Vendor Service Fee<span className='text-danger'>*</span>
+                          Vendor Service Fee
                         </label>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <div className=' col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setClientCancellationCharges(e.target.value)}
@@ -181,30 +208,29 @@ const AddNewRefund = () => {
                           placeholder=' '
                           type='number'
                           onWheel={(e) => e.target.blur()}
-                          required
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Client Cancellation Charges
-                          <span className='text-danger'>*</span>
                         </label>
                       </div>
                     </div>
-                    <div className='col-12'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setRefundAmount(e.target.value)}
-                          value={refundAmount}
-                          placeholder=' '
-                          type='number'
-                          onWheel={(e) => e.target.blur()}
-                          required
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Refund Amount<span className='text-danger'>*</span>
-                        </label>
+                    {bookingData && paymentAccountID && (
+                      <div className=' col-lg-4'>
+                        <div className='form-input'>
+                          <input
+                            onChange={(e) => setRefundAmount(e.target.value)}
+                            value={refundAmount}
+                            placeholder=' '
+                            type='number'
+                            onWheel={(e) => e.target.blur()}
+                          />
+                          <label className='lh-1 text-16 text-light-1'>
+                            Refund Amount
+                          </label>
+                        </div>
                       </div>
-                    </div>
-                    <div className='col-12'>
+                    )}
+                    <div className=' col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setReason(e.target.value)}

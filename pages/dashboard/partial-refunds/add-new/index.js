@@ -12,34 +12,36 @@ import Select from 'react-select';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 
 const AddNewPartialRefund = () => {
-  const [vendorBaseAmount, setVendorBaseAmount] = useState('');
-  const [vendorYQAmount, setVendorYQAmount] = useState('');
-  const [vendorTaxAmount, setVendorTaxAmount] = useState('');
-  const [vendorGSTAmount, setVendorGSTAmount] = useState('');
-  const [vendorTotal, setVendorTotal] = useState('');
+  const [vendorBaseAmount, setVendorBaseAmount] = useState(0);
+  const [vendorYQAmount, setVendorYQAmount] = useState(0);
+  const [vendorTaxAmount, setVendorTaxAmount] = useState(0);
+  const [vendorGSTAmount, setVendorGSTAmount] = useState(0);
+  const [vendorTotal, setVendorTotal] = useState(0);
   const [IATACommissionPercent, setIATACommissionPercent] = useState('');
   const [plbCommissionPercent, setPLBCommissionPercent] = useState('');
-  const [vendorServiceCharges, setVendorServiceCharges] = useState('');
-  const [vendorTDS, setVendorTDS] = useState('');
-  const [commissionReceivable, setCommissionReceivable] = useState('');
+  const [vendorServiceCharges, setVendorServiceCharges] = useState(0);
+  const [vendorTDS, setVendorTDS] = useState(0);
+  const [commissionReceivable, setCommissionReceivable] = useState(0);
   const [clientReferralFee, setClientReferralFee] = useState(0);
-  const [clientBaseAmount, setClientBaseAmount] = useState('');
-  const [clientTaxAmount, setClientTaxAmount] = useState('');
-  const [clientGSTAmount, setClientGSTAmount] = useState('');
-  const [clientServiceCharges, setClientServicesCharges] = useState('');
-  const [clientTotal, setClientTotal] = useState('');
-  const [airlineCancellationCharges, setAirlineCancellationCharges] = useState('');
-  const [clientCancellationCharges, setClientCancellationCharges] = useState('');
-  const [vendorServiceFee, setVendorServiceFee] = useState('');
+  const [clientBaseAmount, setClientBaseAmount] = useState(0);
+  const [clientTaxAmount, setClientTaxAmount] = useState(0);
+  const [clientGSTAmount, setClientGSTAmount] = useState(0);
+  const [clientServiceCharges, setClientServicesCharges] = useState(0);
+  const [clientTotal, setClientTotal] = useState(0);
+  const [airlineCancellationCharges, setAirlineCancellationCharges] = useState(0);
+  const [clientCancellationCharges, setClientCancellationCharges] = useState(0);
+  const [vendorServiceFee, setVendorServiceFee] = useState(0);
   const [refundAmount, setRefundAmount] = useState('');
   const [reason, setReason] = useState('');
   const [grossCommission, setGrossCommission] = useState(0);
   const [bookingData, setBookingData] = useState(null);
+  const [clientQuotedAmount, setClientQuotedAmount] = useState(0);
 
   // Percentages
   const [vendorServiceChargePercent, setVendorServiceChargePercent] = useState(18);
   const [vendorTDSPercent, setVendorTDSPercent] = useState(5);
   const [clientServiceChargePercent, setClientServiceChargePercent] = useState(0);
+  const [clientGSTPercent, setClientGSTPercent] = useState(null);
 
   // Dates
   const [refundDate, setRefundDate] = useState(new DateObject());
@@ -49,15 +51,25 @@ const AddNewPartialRefund = () => {
   const [commissionRuleID, setCommissionRuleID] = useState(null);
   const [clientReferrerID, setClientReferrerID] = useState(null);
   const [accountID, setAccountID] = useState(null);
+  const [clientAccountID, setClientAccountID] = useState(null);
 
   const [vendors, setVendors] = useState([]);
   const [commissionRules, setCommissionRules] = useState([]);
   const [clients, setClients] = useState([]);
   const [accounts, setAccounts] = useState([]);
+  const [clientAccounts, setClientAccounts] = useState([]);
 
   const [xplorzGSTFocused, setXplorzGSTFocused] = useState(false);
-  const [vendorGSTFocused, setVendorGSTFocused] = useState(false);
-  const [vendorTDSPercentFocused, setVendorTDSPercentFocused] = useState(false);
+  const [vendorGSTFocused, setVendorGSTFocused] = useState(true);
+  const [vendorTDSPercentFocused, setVendorTDSPercentFocused] = useState(true);
+  const [clientBaseAmountFocused, setClientBaseAmountFocused] = useState(false);
+
+  const clientGSTOptions = [
+    { value: 'None', label: 'None' },
+    { value: 'Vendor GST', label: 'Vendor GST' },
+    { value: '5% of Base', label: '5% of Base' },
+    { value: '12% of Base', label: '12% of Base' },
+  ];
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -72,7 +84,8 @@ const AddNewPartialRefund = () => {
   }, [router.isReady]);
 
   const getData = async () => {
-    const accounts = await getList('accounts');
+    const clientAccounts = await getList('organizations', { is_client: 1 });
+    const accounts = await getList('accounts', { category: 'Credit Cards' });
     const vendors = await getList('organizations', { is_vendor: 1 });
     const commissionRules = await getList('commission-rules');
     const clients = await getList('accounts', { category: 'Referrers' });
@@ -83,8 +96,15 @@ const AddNewPartialRefund = () => {
       vendors?.success &&
       commissionRules?.success &&
       clients?.success &&
-      bookingData?.success
+      bookingData?.success &&
+      clientAccounts?.success
     ) {
+      setClientAccounts(
+        clientAccounts.data.map((element) => ({
+          value: element.account_id,
+          label: element.name,
+        }))
+      );
       setAccounts(
         accounts.data.map((element) => ({ value: element.id, label: element.name }))
       );
@@ -138,6 +158,9 @@ const AddNewPartialRefund = () => {
             plb_basic: cr.plb_basic,
             plb_yq: cr.plb_yq,
           });
+      for (let opt of clientAccounts.data)
+        if (opt.id === bookingData.data.client_id)
+          setClientAccountID({ label: opt.name, value: opt.account_id });
       for (let ref of clients.data)
         if (ref.id === bookingData.data.client_referrer_id)
           setClientReferrerID({ value: ref.id, label: ref.name });
@@ -183,7 +206,8 @@ const AddNewPartialRefund = () => {
       vendor_service_fee: vendorServiceFee,
       client_cancellation_charges: clientCancellationCharges,
       refund_amount: refundAmount,
-      account_id: accountID.value,
+      payment_account_id: accountID.value,
+      refund_to_account_id: clientAccountID?.value,
       reason,
     });
     if (response?.success) {
@@ -209,7 +233,12 @@ const AddNewPartialRefund = () => {
   // Vendor Total
   const updateVendorTotal = () => {
     setVendorTotal(
-      Number(+vendorBaseAmount + +vendorYQAmount + +vendorTaxAmount + +vendorGSTAmount)
+      Number(
+        (+vendorBaseAmount || 0) +
+          (+vendorYQAmount || 0) +
+          (+vendorTaxAmount || 0) +
+          (+vendorGSTAmount || 0)
+      )
     );
   };
 
@@ -218,7 +247,9 @@ const AddNewPartialRefund = () => {
     if (vendorTDSPercentFocused) {
       setVendorTDS(
         Number(
-          ((+grossCommission - +vendorServiceCharges) * +vendorTDSPercent) / 100
+          (((+grossCommission || 0) - (+vendorServiceCharges || 0)) *
+            (+vendorTDSPercent || 0)) /
+            100
         ).toFixed(4)
       );
     }
@@ -227,7 +258,9 @@ const AddNewPartialRefund = () => {
   useEffect(() => {
     if (!vendorTDSPercentFocused) {
       setVendorTDSPercent(
-        Number((100 * vendorTDS) / (+grossCommission - +vendorServiceCharges)).toFixed(4)
+        Number(
+          (100 * vendorTDS) / ((+grossCommission || 0) - (+vendorServiceCharges || 0))
+        ).toFixed(4)
       );
     }
   }, [vendorTDS, grossCommission]);
@@ -235,7 +268,9 @@ const AddNewPartialRefund = () => {
   useEffect(() => {
     if (vendorGSTFocused) {
       setVendorServiceCharges(
-        Number((+grossCommission * +vendorServiceChargePercent) / 100).toFixed(4)
+        Number(
+          ((+grossCommission || 0) * (+vendorServiceChargePercent || 0)) / 100
+        ).toFixed(4)
       );
     }
   }, [vendorServiceChargePercent, grossCommission]);
@@ -243,7 +278,7 @@ const AddNewPartialRefund = () => {
   useEffect(() => {
     if (!vendorGSTFocused) {
       setVendorServiceChargePercent(
-        Number((100 * +vendorServiceCharges) / +grossCommission).toFixed(4)
+        Number((100 * (+vendorServiceCharges || 0)) / (+grossCommission || 0)).toFixed(4)
       );
     }
   }, [vendorServiceCharges, grossCommission]);
@@ -265,37 +300,44 @@ const AddNewPartialRefund = () => {
   // Vendor Commission Receivable Total
   const updateVendorCommission = () => {
     setCommissionReceivable(
-      Math.round(+grossCommission - +vendorTDS - +vendorServiceCharges)
+      Math.round(
+        (+grossCommission || 0) - (+vendorTDS || 0) - (+vendorServiceCharges || 0)
+      )
     );
   };
 
   const calculateGrossCommission = () => {
     if (commissionRuleID) {
       const iata_comm = Number(
-        (+IATACommissionPercent *
-          (+commissionRuleID.iata_basic * +vendorBaseAmount +
-            +commissionRuleID.iata_yq * +vendorYQAmount)) /
+        ((+IATACommissionPercent || 0) *
+          ((+commissionRuleID.iata_basic || 0) * (+vendorBaseAmount || 0) +
+            (+commissionRuleID.iata_yq || 0) * (+vendorYQAmount || 0))) /
           100
       ).toFixed(4);
       const plb_comm = Number(
-        (+plbCommissionPercent *
-          (+commissionRuleID.plb_basic * +vendorBaseAmount +
-            +commissionRuleID.plb_yq * +vendorYQAmount -
+        ((+plbCommissionPercent || 0) *
+          ((+commissionRuleID.plb_basic || 0) * (+vendorBaseAmount || 0) +
+            (+commissionRuleID.plb_yq || 0) * (+vendorYQAmount || 0) -
             iata_comm)) /
           100
       ).toFixed(4);
-      setGrossCommission(Number(+plb_comm + +iata_comm));
+      setGrossCommission(Number((+plb_comm || 0) + (+iata_comm || 0)));
     }
   };
+
+  useEffect(() => {
+    if (vendorTaxAmount) setClientTaxAmount(vendorTaxAmount);
+  }, [vendorTaxAmount]);
 
   // Client Calculations
   useEffect(() => {
     if (xplorzGSTFocused) {
-      setClientServicesCharges(
-        Number(
-          ((+clientBaseAmount + +clientReferralFee) * +clientServiceChargePercent) / 100
-        ).toFixed(0)
-      );
+      let temp = Number(
+        (((+clientBaseAmount || 0) + (+clientReferralFee || 0)) *
+          (+clientServiceChargePercent || 0)) /
+          100
+      ).toFixed(0);
+      if (temp && temp !== 'NaN') setClientServicesCharges(temp);
     }
   }, [clientServiceChargePercent, clientReferralFee, clientBaseAmount]);
 
@@ -303,7 +345,8 @@ const AddNewPartialRefund = () => {
     if (!xplorzGSTFocused) {
       setClientServiceChargePercent(
         Number(
-          (100 * +clientServiceCharges) / (+clientBaseAmount + +clientReferralFee)
+          (100 * (+clientServiceCharges || 0)) /
+            ((+clientBaseAmount || 0) + (+clientReferralFee || 0))
         ).toFixed(4)
       );
     }
@@ -319,15 +362,58 @@ const AddNewPartialRefund = () => {
     clientBaseAmount,
   ]);
 
+  useEffect(() => {
+    if (clientGSTPercent?.value !== null && clientGSTPercent?.value !== undefined) {
+      if (clientGSTPercent.label === 'None') setClientGSTAmount(0);
+      else if (clientGSTPercent.label === 'Vendor GST')
+        setClientGSTAmount(+vendorGSTAmount);
+      else if (clientGSTPercent.label === '5% of Base') {
+        setClientGSTAmount(
+          Number(
+            (((+clientQuotedAmount || 0) - (+clientTaxAmount || 0)) * (5 / 100)).toFixed(
+              4
+            )
+          )
+        );
+      } else if (clientGSTPercent.label === '12% of Base') {
+        setClientGSTAmount(
+          Number(
+            (((+clientQuotedAmount || 0) - (+clientTaxAmount || 0)) * (12 / 100)).toFixed(
+              4
+            )
+          )
+        );
+      }
+    }
+  }, [clientGSTPercent]);
+
+  useEffect(() => {
+    if (clientBaseAmountFocused)
+      setClientQuotedAmount(
+        (+clientBaseAmount || 0) + (+clientTaxAmount || 0) + (+clientGSTAmount || 0)
+      );
+  }, [clientBaseAmount]);
+
+  useEffect(() => {
+    if (!clientBaseAmountFocused) updateClientBase();
+  }, [clientTaxAmount, clientGSTAmount, clientQuotedAmount]);
+
   // Client Total
+  const updateClientBase = () => {
+    if (+clientQuotedAmount > 0)
+      setClientBaseAmount(
+        (+clientQuotedAmount || 0) - (+clientTaxAmount || 0) - (+clientGSTAmount || 0)
+      );
+  };
+
   const updateClientTotal = () => {
     setClientTotal(
       Number(
-        +clientBaseAmount +
-          +clientGSTAmount +
-          +clientTaxAmount +
-          +clientServiceCharges +
-          +clientReferralFee
+        (+clientBaseAmount || 0) +
+          (+clientGSTAmount || 0) +
+          (+clientTaxAmount || 0) +
+          (+clientServiceCharges || 0) +
+          (+clientReferralFee || 0)
       )
     );
   };
@@ -363,8 +449,8 @@ const AddNewPartialRefund = () => {
 
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
-                  <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
-                    <div className='d-block ml-3 form-datepicker'>
+                  <form onSubmit={onSubmit} className='row col-12 y-gap-15'>
+                    <div className='d-block ml-3 col-lg-4 form-datepicker'>
                       <label>
                         Refund Date<span className='text-danger'>*</span>
                       </label>
@@ -379,195 +465,16 @@ const AddNewPartialRefund = () => {
                         format='DD MMMM YYYY'
                       />
                     </div>
-                    <div className='form-input-select'>
-                      <label>
-                        Vendor<span className='text-danger'>*</span>
-                      </label>
+                    <div className='form-input-select col-lg-4'>
+                      <label>Refund To</label>
                       <Select
-                        options={vendors}
-                        value={vendorID}
-                        placeholder='Search & Select Vendor (required)'
-                        onChange={(id) => setVendorID(id)}
+                        options={clientAccounts}
+                        value={clientAccountID}
+                        onChange={(id) => setClientAccountID(id)}
                       />
                     </div>
-                    <div className='col-12'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setVendorBaseAmount(e.target.value)}
-                          value={vendorBaseAmount}
-                          placeholder=' '
-                          type='number'
-                          onWheel={(e) => e.target.blur()}
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Vendor Base Amount
-                        </label>
-                      </div>
-                    </div>
-                    <div className='col-12'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setVendorYQAmount(e.target.value)}
-                          value={vendorYQAmount}
-                          placeholder=' '
-                          type='number'
-                          onWheel={(e) => e.target.blur()}
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Vendor YQ Amount
-                        </label>
-                      </div>
-                    </div>
-                    <div className='col-12'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setVendorTaxAmount(e.target.value)}
-                          value={vendorTaxAmount}
-                          placeholder=' '
-                          type='number'
-                          onWheel={(e) => e.target.blur()}
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Vendor Tax Amount
-                        </label>
-                      </div>
-                    </div>
-                    <div className='col-12'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setVendorGSTAmount(e.target.value)}
-                          value={vendorGSTAmount}
-                          placeholder=' '
-                          type='number'
-                          onWheel={(e) => e.target.blur()}
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Vendor GST Amount
-                        </label>
-                      </div>
-                    </div>
-                    <div className='col-12'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setVendorTotal(e.target.value)}
-                          value={vendorTotal}
-                          placeholder=' '
-                          type='number'
-                          onWheel={(e) => e.target.blur()}
-                          disabled
-                        />
-                        <label className='lh-1 text-16 text-light-1'>Vendor Total</label>
-                      </div>
-                    </div>
-                    <div className='form-input-select'>
-                      <label>Commission Rule</label>
-                      <Select
-                        options={commissionRules}
-                        value={commissionRuleID}
-                        placeholder='Search & Select Commission Rule'
-                        onChange={(id) => setCommissionRuleID(id)}
-                      />
-                    </div>
-                    <div className='col-12'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setIATACommissionPercent(e.target.value)}
-                          value={IATACommissionPercent}
-                          placeholder=' '
-                          type='number'
-                          onWheel={(e) => e.target.blur()}
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          IATA Commission Percent
-                        </label>
-                      </div>
-                    </div>
-                    <div className='col-12'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setPLBCommissionPercent(e.target.value)}
-                          value={plbCommissionPercent}
-                          placeholder=' '
-                          type='number'
-                          onWheel={(e) => e.target.blur()}
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          PLB Commission Percent
-                        </label>
-                      </div>
-                    </div>
-                    <div className='col-12 row pr-0'>
-                      <div className='form-input col-4'>
-                        <input
-                          onChange={(e) => setVendorServiceChargePercent(e.target.value)}
-                          value={vendorServiceChargePercent}
-                          placeholder=' '
-                          type='number'
-                          onWheel={(e) => e.target.blur()}
-                          onFocus={() => setVendorGSTFocused(true)}
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Vendor Service Charge Percent
-                        </label>
-                        <div className='d-flex items-center ml-30'>%</div>
-                      </div>
-                      <div className='form-input col-8 pr-0'>
-                        <input
-                          onChange={(e) => setVendorServiceCharges(e.target.value)}
-                          value={vendorServiceCharges}
-                          placeholder=' '
-                          type='number'
-                          onWheel={(e) => e.target.blur()}
-                          onFocus={() => setVendorGSTFocused(false)}
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Vendor Service Charges
-                        </label>
-                      </div>
-                    </div>
-                    <div className='col-12 row pr-0'>
-                      <div className='form-input col-4'>
-                        <input
-                          onChange={(e) => setVendorTDSPercent(e.target.value)}
-                          value={vendorTDSPercent}
-                          placeholder=' '
-                          type='number'
-                          onWheel={(e) => e.target.blur()}
-                          onFocus={() => setVendorTDSPercentFocused(true)}
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Vendor TDS Percent
-                        </label>
-                        <div className='d-flex items-center ml-30'>%</div>
-                      </div>
-                      <div className='form-input col-8 pr-0'>
-                        <input
-                          onChange={(e) => setVendorTDS(e.target.value)}
-                          value={vendorTDS}
-                          placeholder=' '
-                          type='number'
-                          onWheel={(e) => e.target.blur()}
-                          onFocus={() => setVendorTDSPercentFocused(false)}
-                        />
-                        <label className='lh-1 text-16 text-light-1'>Vendor TDS</label>
-                      </div>
-                    </div>
-                    <div className='col-12'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setCommissionReceivable(e.target.value)}
-                          value={commissionReceivable}
-                          placeholder=' '
-                          type='number'
-                          onWheel={(e) => e.target.blur()}
-                          disabled
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Commission Receivable
-                        </label>
-                      </div>
-                    </div>
-                    <div className='form-input-select'>
+                    <h2>Refund Amount Classification</h2>
+                    <div className='form-input-select col-lg-4'>
                       <label>Client Referrer</label>
                       <Select
                         options={clients}
@@ -576,7 +483,7 @@ const AddNewPartialRefund = () => {
                         onChange={(id) => setClientReferrerID(id)}
                       />
                     </div>
-                    <div className='col-12'>
+                    <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setClientReferralFee(e.target.value)}
@@ -590,7 +497,249 @@ const AddNewPartialRefund = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <h3>Supplier Details</h3>
+                    <div className='form-input-select col-lg-4 '>
+                      <label>
+                        Vendor<span className='text-danger'>*</span>
+                      </label>
+                      <Select
+                        options={vendors}
+                        value={vendorID}
+                        placeholder='Search & Select Vendor (required)'
+                        onChange={(id) => setVendorID(id)}
+                      />
+                    </div>
+                    <div className='col-lg-4 '>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setVendorBaseAmount(e.target.value)}
+                          value={vendorBaseAmount}
+                          placeholder=' '
+                          type='number'
+                          onWheel={(e) => e.target.blur()}
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Vendor Base Amount
+                        </label>
+                      </div>
+                    </div>
+                    <div className='col-lg-4 '>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setVendorYQAmount(e.target.value)}
+                          value={vendorYQAmount}
+                          placeholder=' '
+                          type='number'
+                          onWheel={(e) => e.target.blur()}
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Vendor YQ Amount
+                        </label>
+                      </div>
+                    </div>
+                    <div className='col-lg-4'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setVendorTaxAmount(e.target.value)}
+                          value={vendorTaxAmount}
+                          placeholder=' '
+                          type='number'
+                          onWheel={(e) => e.target.blur()}
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Vendor Tax Amount
+                        </label>
+                      </div>
+                    </div>
+                    <div className='col-lg-4'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setVendorGSTAmount(e.target.value)}
+                          value={vendorGSTAmount}
+                          placeholder=' '
+                          type='number'
+                          onWheel={(e) => e.target.blur()}
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Vendor GST Amount
+                        </label>
+                      </div>
+                    </div>
+                    <div className='col-lg-4'>
+                      <div className='form-input'>
+                        <input
+                          className='bg-light'
+                          onChange={(e) => setVendorTotal(e.target.value)}
+                          value={vendorTotal}
+                          placeholder=' '
+                          type='number'
+                          onWheel={(e) => e.target.blur()}
+                          disabled
+                          required
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Vendor Total<span className='text-danger'>*</span>
+                        </label>
+                      </div>
+                    </div>
+                    <div className='form-input-select col-lg-4'>
+                      <label>Commission Rule</label>
+                      <Select
+                        options={commissionRules}
+                        value={commissionRuleID}
+                        placeholder='Search & Select Commission Rule'
+                        onChange={(id) => setCommissionRuleID(id)}
+                      />
+                    </div>
+                    <div className='col-lg-4'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setIATACommissionPercent(e.target.value)}
+                          value={IATACommissionPercent}
+                          placeholder=' '
+                          type='number'
+                          onWheel={(e) => e.target.blur()}
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          IATA Commission Percent
+                        </label>
+                      </div>
+                    </div>
+                    <div className='col-lg-4'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setPLBCommissionPercent(e.target.value)}
+                          value={plbCommissionPercent}
+                          placeholder=' '
+                          type='number'
+                          onWheel={(e) => e.target.blur()}
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          PLB Commission Percent
+                        </label>
+                      </div>
+                    </div>
+                    <div className='col-lg-4 pr-0'>
+                      <div className='row'>
+                        <label className='col-12 fw-500 mb-4'>
+                          Vendor Service Charges
+                        </label>
+                        <div className='form-input col-4'>
+                          <input
+                            style={{
+                              height: '50px',
+                              minHeight: 'unset',
+                              paddingTop: 'unset',
+                              backgroundColor: '#ffe',
+                            }}
+                            onChange={(e) =>
+                              setVendorServiceChargePercent(e.target.value)
+                            }
+                            value={vendorServiceChargePercent}
+                            placeholder=' '
+                            type='number'
+                            onWheel={(e) => e.target.blur()}
+                            onFocus={() => setVendorGSTFocused(true)}
+                          />
+                          <label className='lh-1 text-16 text-light-1'></label>
+                          <div className='d-flex items-center ml-10'>%</div>
+                        </div>{' '}
+                        <div className='d-flex col-8 items-center gap-2 pr-30 lg:pr-0'>
+                          <label>Amount</label>
+                          <div className='form-input'>
+                            <input
+                              style={{
+                                height: '50px',
+                                minHeight: 'unset',
+                                paddingTop: 'unset',
+                              }}
+                              onChange={(e) => setVendorServiceCharges(e.target.value)}
+                              value={vendorServiceCharges}
+                              placeholder=' '
+                              type='number'
+                              onWheel={(e) => e.target.blur()}
+                              onFocus={() => setVendorGSTFocused(false)}
+                            />
+                            <label className='lh-1 text-16 text-light-1'></label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className='col-lg-4 pr-0'>
+                      <div className='row'>
+                        <label className='col-12 fw-500 mb-4'>Vendor TDS Amount</label>
+                        <div className='form-input col-4'>
+                          <input
+                            style={{
+                              height: '50px',
+                              minHeight: 'unset',
+                              paddingTop: 'unset',
+                              backgroundColor: '#ffe',
+                            }}
+                            onChange={(e) => setVendorTDSPercent(e.target.value)}
+                            value={vendorTDSPercent}
+                            placeholder=' '
+                            type='number'
+                            onWheel={(e) => e.target.blur()}
+                            onFocus={() => setVendorTDSPercentFocused(true)}
+                          />
+                          <label className='lh-1 text-16 text-light-1'></label>
+                          <div className='d-flex items-center ml-10'>%</div>
+                        </div>
+                        <div className='d-flex col-8 items-center gap-2 pr-30 lg:pr-0'>
+                          <label>Amount</label>
+                          <div className='form-input'>
+                            <input
+                              style={{
+                                height: '50px',
+                                minHeight: 'unset',
+                                paddingTop: 'unset',
+                              }}
+                              onChange={(e) => setVendorTDS(e.target.value)}
+                              value={vendorTDS}
+                              placeholder=' '
+                              type='number'
+                              onWheel={(e) => e.target.blur()}
+                              onFocus={() => setVendorTDSPercentFocused(false)}
+                            />
+                            <label className='lh-1 text-16 text-light-1'></label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className='col-lg-4 pt-35 lg:pt-10'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setCommissionReceivable(e.target.value)}
+                          value={commissionReceivable}
+                          placeholder=' '
+                          type='number'
+                          onWheel={(e) => e.target.blur()}
+                          disabled
+                          className='bg-light'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Commission Receivable
+                        </label>
+                      </div>
+                    </div>
+                    <h3>Client Details</h3>
+                    <div className='col-lg-4'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setClientQuotedAmount(e.target.value)}
+                          value={clientQuotedAmount}
+                          placeholder=' '
+                          type='number'
+                          onWheel={(e) => e.target.blur()}
+                          onFocus={() => setXplorzGSTFocused(true)}
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Client Quoted Amount
+                        </label>
+                      </div>
+                    </div>
+                    <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setClientBaseAmount(e.target.value)}
@@ -604,7 +753,7 @@ const AddNewPartialRefund = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setClientTaxAmount(e.target.value)}
@@ -618,50 +767,84 @@ const AddNewPartialRefund = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setClientGSTAmount(e.target.value)}
-                          value={clientGSTAmount}
-                          placeholder=' '
-                          type='number'
-                          onWheel={(e) => e.target.blur()}
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Client GST Amount
-                        </label>
+                    <div className='col-lg-4 pr-0'>
+                      <div className='row'>
+                        <label className='col-12 fw-500 mb-4'>Client GST Amount</label>
+                        <div className='form-input-select col-6'>
+                          <label></label>
+                          <Select
+                            className='small'
+                            onChange={(id) => setClientGSTPercent(id)}
+                            defaultValue={{ value: 0, label: 'None' }}
+                            options={clientGSTOptions}
+                            value={clientGSTPercent}
+                          />
+                        </div>
+                        <div className='form-input col-lg-6 pr-30 lg:pr-0'>
+                          <input
+                            style={{
+                              height: '50px',
+                              minHeight: 'unset',
+                              paddingTop: 'unset',
+                            }}
+                            onChange={(e) => setClientGSTAmount(e.target.value)}
+                            value={clientGSTAmount}
+                            placeholder=' '
+                            type='number'
+                            onWheel={(e) => e.target.blur()}
+                            required
+                            disabled
+                            className='bg-light'
+                          />
+                          <label className='lh-1 text-16 text-light-1'></label>
+                        </div>
                       </div>
                     </div>
-                    <div className='col-12 row pr-0 items-center'>
-                      <div className='form-input col-4'>
-                        <input
-                          onChange={(e) => setClientServiceChargePercent(e.target.value)}
-                          value={clientServiceChargePercent}
-                          placeholder=' '
-                          onFocus={() => setXplorzGSTFocused(true)}
-                          type='number'
-                          onWheel={(e) => e.target.blur()}
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Xplorz GST Percent
-                        </label>
-                        <span className='d-flex items-center ml-30'>%</span>
-                      </div>
-                      <div className='form-input col-8 pr-0'>
-                        <input
-                          onChange={(e) => setClientServicesCharges(e.target.value)}
-                          value={clientServiceCharges}
-                          placeholder=' '
-                          type='number'
-                          onWheel={(e) => e.target.blur()}
-                          onFocus={() => setXplorzGSTFocused(false)}
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Client Services Charges
-                        </label>
+                    <div className='col-lg-4 pr-0'>
+                      <div className='row'>
+                        <label className='col-12 fw-500 mb-4'>Xplorz GST Amount</label>
+                        <div className='form-input col-4'>
+                          <input
+                            style={{
+                              height: '50px',
+                              minHeight: 'unset',
+                              paddingTop: 'unset',
+                              backgroundColor: '#ffe',
+                            }}
+                            onChange={(e) =>
+                              setClientServiceChargePercent(e.target.value)
+                            }
+                            value={clientServiceChargePercent}
+                            placeholder=' '
+                            onFocus={() => setXplorzGSTFocused(true)}
+                            type='number'
+                            onWheel={(e) => e.target.blur()}
+                          />
+                          <label className='lh-1 text-16 text-light-1'></label>
+                          <span className='d-flex items-center ml-10'>%</span>
+                        </div>
+                        <div className='d-flex col-8 items-center gap-2 pr-30 lg:pr-0'>
+                          <label>Amount</label>
+                          <div className='form-input'>
+                            <input
+                              style={{
+                                height: '50px',
+                                minHeight: 'unset',
+                                paddingTop: 'unset',
+                              }}
+                              onChange={(e) => setClientServicesCharges(e.target.value)}
+                              value={clientServiceCharges}
+                              placeholder=' '
+                              type='number'
+                              onWheel={(e) => e.target.blur()}
+                              onFocus={() => setXplorzGSTFocused(false)}
+                            />
+                            <label className='lh-1 text-16 text-light-1'></label>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <div className='col-lg-4 pt-35 lg:pt-10'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setClientTotal(e.target.value)}
@@ -669,12 +852,16 @@ const AddNewPartialRefund = () => {
                           placeholder=' '
                           type='number'
                           onWheel={(e) => e.target.blur()}
+                          required
                           disabled
+                          className='bg-light'
                         />
-                        <label className='lh-1 text-16 text-light-1'>Client Total</label>
+                        <label className='lh-1 text-16 text-light-1'>
+                          Client Total<span className='text-danger'>*</span>
+                        </label>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setAirlineCancellationCharges(e.target.value)}
@@ -687,7 +874,7 @@ const AddNewPartialRefund = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setVendorServiceFee(e.target.value)}
@@ -700,7 +887,7 @@ const AddNewPartialRefund = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setClientCancellationCharges(e.target.value)}
@@ -713,18 +900,7 @@ const AddNewPartialRefund = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setRefundAmount(e.target.value)}
-                          value={refundAmount}
-                          placeholder=' '
-                          type='text'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>Refund Amount</label>
-                      </div>
-                    </div>
-                    <div className='form-input-select'>
+                    <div className='form-input-select col-lg-4'>
                       <label>
                         Payment Refunded To<span className='text-danger'>*</span>
                       </label>
@@ -735,7 +911,18 @@ const AddNewPartialRefund = () => {
                         onChange={(id) => setAccountID(id)}
                       />
                     </div>
-                    <div className='col-12'>
+                    <div className='col-lg-4'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setRefundAmount(e.target.value)}
+                          value={refundAmount}
+                          placeholder=' '
+                          type='text'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>Refund Amount</label>
+                      </div>
+                    </div>
+                    <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setReason(e.target.value)}
