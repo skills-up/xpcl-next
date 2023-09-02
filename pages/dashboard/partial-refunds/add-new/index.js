@@ -35,6 +35,7 @@ const AddNewPartialRefund = () => {
   const [reason, setReason] = useState('');
   const [grossCommission, setGrossCommission] = useState(0);
   const [bookingData, setBookingData] = useState(null);
+  const [refundBookingData, setRefundBookingData] = useState(null);
   const [clientQuotedAmount, setClientQuotedAmount] = useState(0);
   const [isOffshore, setIsOffshore] = useState(false);
 
@@ -53,6 +54,8 @@ const AddNewPartialRefund = () => {
   const [clientReferrerID, setClientReferrerID] = useState(null);
   const [accountID, setAccountID] = useState(null);
   const [clientAccountID, setClientAccountID] = useState(null);
+
+  const [loaded, setLoaded] = useState(false);
 
   const [vendors, setVendors] = useState([]);
   const [commissionRules, setCommissionRules] = useState([]);
@@ -94,6 +97,7 @@ const AddNewPartialRefund = () => {
     const commissionRules = await getList('commission-rules');
     const clients = await getList('accounts', { category: 'Referrers' });
     const bookingData = await getItem('bookings', router.query.booking_id);
+    let refundData;
     if (
       accounts?.success &&
       vendors?.success &&
@@ -102,6 +106,14 @@ const AddNewPartialRefund = () => {
       bookingData?.success &&
       clientAccounts?.success
     ) {
+      if (bookingData?.data?.original_booking_id) {
+        refundData = await getItem('bookings', bookingData.data.original_booking_id);
+        if (refundData?.success) {
+          setRefundBookingData(refundData.data);
+        } else {
+          sendToast('error');
+        }
+      }
       setClientAccounts(
         clientAccounts.data.map((element) => ({
           value: element.account_id,
@@ -135,24 +147,72 @@ const AddNewPartialRefund = () => {
       );
       setBookingData(bookingData.data);
       // Prefilling
-      setVendorBaseAmount(bookingData.data.vendor_base_amount);
-      setVendorYQAmount(bookingData.data.vendor_yq_amount);
-      setVendorTaxAmount(bookingData.data.vendor_tax_amount);
-      setVendorGSTAmount(bookingData.data.vendor_gst_amount);
-      setIATACommissionPercent(bookingData.data.iata_commission_percent);
-      setPLBCommissionPercent(bookingData.data.plb_commission_percent);
-      setVendorServiceCharges(bookingData.data.vendor_service_charges);
-      setVendorTDS(bookingData.data.vendor_tds);
-      setClientReferralFee(bookingData.data.client_referral_fee);
-      setClientBaseAmount(bookingData.data.client_base_amount);
+      setVendorBaseAmount(
+        (+bookingData.data.vendor_base_amount || 0) +
+          (+refundData?.data?.vendor_base_amount || 0)
+      );
+      setVendorYQAmount(
+        (+bookingData.data.vendor_yq_amount || 0) +
+          (+refundData?.data?.vendor_yq_amount || 0)
+      );
+      setVendorTaxAmount(
+        (+bookingData.data.vendor_tax_amount || 0) +
+          (+refundData?.data?.vendor_tax_amount || 0)
+      );
+      setVendorGSTAmount(
+        (+bookingData.data.vendor_gst_amount || 0) +
+          (+refundData?.data?.vendor_gst_amount || 0)
+      );
+      setIATACommissionPercent(
+        (+bookingData.data.iata_commission_percent || 0) +
+          (+refundData?.data?.iata_commission_percent || 0)
+      );
+      setPLBCommissionPercent(
+        (+bookingData.data.plb_commission_percent || 0) +
+          (+refundData?.data?.plb_commission_percent || 0)
+      );
+      setVendorServiceCharges(
+        (+bookingData.data.vendor_service_charges || 0) +
+          (+refundData?.data?.vendor_service_charges || 0)
+      );
+      setVendorTDS(
+        Number(
+          (
+            (+bookingData.data.vendor_tds || 0) + (+refundData?.data?.vendor_tds || 0)
+          ).toFixed(4)
+        )
+      );
+      setClientReferralFee(
+        (+bookingData.data.client_referral_fee || 0) +
+          (+refundData?.data?.client_referral_fee || 0)
+      );
+      setClientBaseAmount(
+        (+bookingData.data.client_base_amount || 0) +
+          (+refundData?.data?.client_base_amount || 0)
+      );
       setIsOffshore(bookingData.data.is_offshore);
-      setClientGSTAmount(bookingData.data.client_gst_amount);
-      setClientServicesCharges(bookingData.data.client_service_charges);
-      setClientTaxAmount(bookingData.data.client_tax_amount);
+      setClientGSTAmount(
+        (+bookingData.data.client_gst_amount || 0) +
+          (+refundData?.data?.client_gst_amount || 0)
+      );
+      setClientServicesCharges(
+        (+bookingData.data.client_service_charges || 0) +
+          (+refundData?.data?.client_service_charges || 0)
+      );
+      setClientTaxAmount(
+        (+bookingData.data.client_tax_amount || 0) +
+          (+refundData?.data?.client_tax_amount || 0)
+      );
+      setVendorTotal(
+        (+bookingData.data.vendor_total || 0) + (+refundData?.data?.vendor_total || 0)
+      );
       setClientQuotedAmount(
-        +bookingData.data.client_base_amount +
-          +bookingData.data.client_tax_amount +
-          +bookingData.data.client_gst_amount
+        (+bookingData?.data?.client_base_amount || 0) +
+          (+bookingData?.data?.client_tax_amount || 0) +
+          (+bookingData?.data?.client_gst_amount || 0) +
+          (+refundData?.data?.client_base_amount || 0) +
+          (+refundData?.data?.client_tax_amount || 0) +
+          (+refundData?.data?.client_gst_amount || 0)
       );
       // Setting Client GST Percent
       if (
@@ -205,6 +265,9 @@ const AddNewPartialRefund = () => {
       for (let ref of clients.data)
         if (ref.id === bookingData.data.client_referrer_id)
           setClientReferrerID({ value: ref.id, label: ref.name });
+      setTimeout(() => {
+        setLoaded(true);
+      }, 1000);
     } else {
       sendToast('error', 'Unable to fetch required data', 4000);
       router.push('/dashboard/partial-refunds');
@@ -269,10 +332,11 @@ const AddNewPartialRefund = () => {
   // Calculation
   useEffect(() => {
     if (bookingData && accountID) {
-      const payment = bookingData?.payment_amount;
+      const payment =
+        (+bookingData?.payment_amount || 0) + (+refundBookingData?.payment_amount || 0);
       if (payment) setRefundAmount((+payment || 0) - (+airlineCancellationCharges || 0));
     }
-  }, [bookingData, airlineCancellationCharges, accountID]);
+  }, [bookingData, airlineCancellationCharges, accountID, refundBookingData]);
 
   // Offshore
   useEffect(() => {
@@ -298,14 +362,15 @@ const AddNewPartialRefund = () => {
   );
 
   const updateVendorTotal = () => {
-    let vendorTotal = Number(
-      (+vendorBaseAmount || 0) +
-        (+vendorYQAmount || 0) +
-        (+vendorTaxAmount || 0) +
-        (+vendorGSTAmount || 0)
-    );
-    setVendorTotal(vendorTotal);
-    // Updating
+    if (loaded) {
+      let vendorTotal = Number(
+        (+vendorBaseAmount || 0) +
+          (+vendorYQAmount || 0) +
+          (+vendorTaxAmount || 0) +
+          (+vendorGSTAmount || 0)
+      );
+      setVendorTotal(vendorTotal);
+    }
   };
 
   const updateVendorTDS = (grossCommission, vendorServiceCharges, vendorTDSPercent) => {

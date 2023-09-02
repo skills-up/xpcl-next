@@ -35,6 +35,7 @@ const AddNewPartialRefund = () => {
   const [reason, setReason] = useState('');
   const [grossCommission, setGrossCommission] = useState(0);
   const [bookingData, setBookingData] = useState(null);
+  const [refundBookingData, setRefundBookingData] = useState(null);
   const [clientQuotedAmount, setClientQuotedAmount] = useState(0);
   const [isOffshore, setIsOffshore] = useState(false);
 
@@ -82,14 +83,12 @@ const AddNewPartialRefund = () => {
 
   useEffect(() => {
     if (router.isReady) {
-      console.log('query', router.query.edit);
       getData();
     }
   }, [router.isReady]);
 
   const getData = async () => {
     if (router.query.edit) {
-      console.log('query', router.query.edit);
       const response = await getItem('partial-refunds', router.query.edit);
       if (response?.success) {
         const clientAccounts = await getList('organizations', { is_client: 1 });
@@ -98,6 +97,7 @@ const AddNewPartialRefund = () => {
         const commissionRules = await getList('commission-rules');
         const clients = await getList('accounts', { category: 'Referrers' });
         const bookingData = await getItem('bookings', response.data.booking_id);
+        let refundData;
         if (
           accounts?.success &&
           vendors?.success &&
@@ -106,6 +106,14 @@ const AddNewPartialRefund = () => {
           bookingData?.success &&
           clientAccounts?.success
         ) {
+          if (bookingData?.data?.original_booking_id) {
+            refundData = await getItem('bookings', bookingData.data.original_booking_id);
+            if (refundData?.success) {
+              setRefundBookingData(refundData.data);
+            } else {
+              sendToast('error');
+            }
+          }
           setClientAccounts(
             clientAccounts.data.map((element) => ({
               value: element.account_id,
@@ -158,6 +166,7 @@ const AddNewPartialRefund = () => {
           setIsOffshore(response.data?.is_offshore);
           setClientServicesCharges(response.data.client_service_charges);
           setClientTaxAmount(response.data.client_tax_amount);
+          setVendorTotal(response.data.vendor_total);
           setClientQuotedAmount(
             +response.data.client_base_amount +
               +response.data.client_tax_amount +
@@ -291,11 +300,12 @@ const AddNewPartialRefund = () => {
   useEffect(() => {
     if (loaded)
       if (bookingData && accountID) {
-        const payment = bookingData?.payment_amount;
+        const payment =
+          (+bookingData?.payment_amount || 0) + (+refundBookingData?.payment_amount || 0);
         if (payment)
           setRefundAmount((+payment || 0) - (+airlineCancellationCharges || 0));
       }
-  }, [bookingData, airlineCancellationCharges, accountID]);
+  }, [bookingData, airlineCancellationCharges, accountID, refundBookingData]);
 
   // Offshore
   useEffect(() => {
@@ -321,14 +331,15 @@ const AddNewPartialRefund = () => {
   );
 
   const updateVendorTotal = () => {
-    let vendorTotal = Number(
-      (+vendorBaseAmount || 0) +
-        (+vendorYQAmount || 0) +
-        (+vendorTaxAmount || 0) +
-        (+vendorGSTAmount || 0)
-    );
-    setVendorTotal(vendorTotal);
-    // Updating
+    if (loaded) {
+      let vendorTotal = Number(
+        (+vendorBaseAmount || 0) +
+          (+vendorYQAmount || 0) +
+          (+vendorTaxAmount || 0) +
+          (+vendorGSTAmount || 0)
+      );
+      setVendorTotal(vendorTotal);
+    }
   };
 
   const updateVendorTDS = (grossCommission, vendorServiceCharges, vendorTDSPercent) => {

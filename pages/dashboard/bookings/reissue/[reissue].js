@@ -1696,7 +1696,7 @@ const ReissueBooking = () => {
                         type='submit'
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
                       >
-                        Update Invoice
+                        Reissue Invoice
                       </button>
                     </div>
                   </form>
