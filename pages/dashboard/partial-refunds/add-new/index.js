@@ -36,6 +36,7 @@ const AddNewPartialRefund = () => {
   const [grossCommission, setGrossCommission] = useState(0);
   const [bookingData, setBookingData] = useState(null);
   const [clientQuotedAmount, setClientQuotedAmount] = useState(0);
+  const [isOffshore, setIsOffshore] = useState(false);
 
   // Percentages
   const [vendorServiceChargePercent, setVendorServiceChargePercent] = useState(18);
@@ -64,6 +65,9 @@ const AddNewPartialRefund = () => {
   const [vendorTDSPercentFocused, setVendorTDSPercentFocused] = useState(false);
   const [clientBaseAmountFocused, setClientBaseAmountFocused] = useState(false);
 
+  // Checks
+  const [grossFirstTime, setGrossFirstTime] = useState(false);
+
   const clientGSTOptions = [
     { value: 'None', label: 'None' },
     { value: 'Vendor GST', label: 'Vendor GST' },
@@ -90,7 +94,6 @@ const AddNewPartialRefund = () => {
     const commissionRules = await getList('commission-rules');
     const clients = await getList('accounts', { category: 'Referrers' });
     const bookingData = await getItem('bookings', router.query.booking_id);
-
     if (
       accounts?.success &&
       vendors?.success &&
@@ -142,8 +145,10 @@ const AddNewPartialRefund = () => {
       setVendorTDS(bookingData.data.vendor_tds);
       setClientReferralFee(bookingData.data.client_referral_fee);
       setClientBaseAmount(bookingData.data.client_base_amount);
+      setIsOffshore(bookingData.data.is_offshore);
       setClientGSTAmount(bookingData.data.client_gst_amount);
       setClientServicesCharges(bookingData.data.client_service_charges);
+      setClientTaxAmount(bookingData.data.client_tax_amount);
       setClientQuotedAmount(
         +bookingData.data.client_base_amount +
           +bookingData.data.client_tax_amount +
@@ -173,9 +178,11 @@ const AddNewPartialRefund = () => {
       else if (bookingData.data.client_gst_amount === bookingData.data.vendor_gst_amount)
         setClientGSTPercent({ value: 'Vendor GST', label: 'Vendor GST' });
 
+      // Setting Vendor
       for (let vendor of vendors.data)
         if (vendor.id === bookingData.data.vendor_id)
           setVendorID({ value: vendor.id, label: vendor.name });
+      //  Commission Rule
       for (let cr of commissionRules.data)
         if (cr.id === bookingData.data.commission_rule_id)
           setCommissionRuleID({
@@ -186,24 +193,23 @@ const AddNewPartialRefund = () => {
             plb_basic: cr.plb_basic,
             plb_yq: cr.plb_yq,
           });
+      // Setting Refund To Acc
       for (let opt of clientAccounts.data)
         if (opt.id === bookingData.data.client_id)
           setClientAccountID({ label: opt.name, value: opt.account_id });
+      // Setting Payment Refunded To Acc
+      for (let opt of accounts.data)
+        if (opt.id === bookingData.data.payment_account_id)
+          setAccountID({ label: opt.name, value: opt.id });
+      // Setting Client Referrer
       for (let ref of clients.data)
         if (ref.id === bookingData.data.client_referrer_id)
           setClientReferrerID({ value: ref.id, label: ref.name });
-      setTimeout(() => {
-        setClientTaxAmount(bookingData.data.client_tax_amount);
-      }, 1000);
     } else {
       sendToast('error', 'Unable to fetch required data', 4000);
       router.push('/dashboard/partial-refunds');
     }
   };
-
-  useEffect(() => {
-    console.log('test', clientGSTAmount, clientBaseAmount);
-  }, [clientGSTAmount, clientBaseAmount]);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -219,31 +225,32 @@ const AddNewPartialRefund = () => {
       booking_id: router.query.booking_id,
       refund_date: refundDate.format('YYYY-MM-DD'),
       vendor_id: vendorID.value,
-      vendor_base_amount: vendorBaseAmount,
-      vendor_yq_amount: vendorYQAmount,
-      vendor_tax_amount: vendorTaxAmount,
-      vendor_gst_amount: vendorGSTAmount,
-      vendor_total: vendorTotal,
+      vendor_base_amount: vendorBaseAmount || 0,
+      vendor_yq_amount: vendorYQAmount || 0,
+      vendor_tax_amount: vendorTaxAmount || 0,
+      vendor_gst_amount: vendorGSTAmount || 0,
+      vendor_total: vendorTotal || 0,
       commission_rule_id: commissionRuleID?.value,
-      iata_commission_percent: IATACommissionPercent,
-      plb_commission_percent: plbCommissionPercent,
-      vendor_service_charges: vendorServiceCharges,
-      vendor_tds: vendorTDS,
+      iata_commission_percent: IATACommissionPercent || 0,
+      plb_commission_percent: plbCommissionPercent || 0,
+      vendor_service_charges: vendorServiceCharges || 0,
+      vendor_tds: vendorTDS || 0,
       commission_receivable: commissionReceivable,
       client_referrer_id: clientReferrerID?.value,
-      client_referral_fee: clientReferralFee,
-      client_base_amount: clientBaseAmount,
-      client_tax_amount: clientTaxAmount,
-      client_gst_amount: clientGSTAmount,
-      client_service_charges: clientServiceCharges,
-      client_total: clientTotal,
-      airline_cancellation_charges: airlineCancellationCharges,
-      vendor_service_fee: vendorServiceFee,
-      client_cancellation_charges: clientCancellationCharges,
-      refund_amount: refundAmount,
-      payment_account_id: accountID.value,
-      refund_to_account_id: clientAccountID?.value,
+      client_referral_fee: clientReferralFee || 0,
+      client_base_amount: clientBaseAmount || 0,
+      client_tax_amount: clientTaxAmount || 0,
+      client_gst_amount: clientGSTAmount || 0,
+      client_service_charges: isOffshore ? 0 : clientServiceCharges || 0,
+      client_total: clientTotal || 0,
+      airline_cancellation_charges: airlineCancellationCharges || 0,
+      vendor_service_fee: vendorServiceFee || 0,
+      client_cancellation_charges: clientCancellationCharges || 0,
+      refund_amount: +refundAmount === 0 ? undefined : refundAmount || undefined,
+      payment_account_id: accountID?.value || undefined,
+      refund_to_account_id: clientAccountID?.value || undefined,
       reason,
+      is_offshore: isOffshore,
     });
     if (response?.success) {
       sendToast('success', 'Created Partial Refund Successfully.', 4000);
@@ -259,64 +266,98 @@ const AddNewPartialRefund = () => {
     }
   };
 
+  // Calculation
+  useEffect(() => {
+    if (bookingData && accountID) {
+      const payment = bookingData?.payment_amount;
+      if (payment) setRefundAmount((+payment || 0) - (+airlineCancellationCharges || 0));
+    }
+  }, [bookingData, airlineCancellationCharges, accountID]);
+
+  // Offshore
+  useEffect(() => {
+    if (isOffshore) {
+      setClientServiceChargePercent(0);
+      setClientServicesCharges(0);
+    }
+  }, [isOffshore]);
+
+  useEffect(() => {
+    if (vendorID?.value) {
+      setVendorServiceChargePercent(vendorID?.vendor_service_charge_percentage);
+      setVendorTDSPercent(vendorID?.vendor_tds_percentage);
+    }
+  }, [vendorID]);
+
   // Vendor Calculations
+
+  // Vendor Total
   useEffect(
     () => updateVendorTotal(),
     [vendorBaseAmount, vendorYQAmount, vendorTaxAmount, vendorGSTAmount]
   );
 
-  // Vendor Total
   const updateVendorTotal = () => {
-    setVendorTotal(
-      Number(
-        (+vendorBaseAmount || 0) +
-          (+vendorYQAmount || 0) +
-          (+vendorTaxAmount || 0) +
-          (+vendorGSTAmount || 0)
-      )
+    let vendorTotal = Number(
+      (+vendorBaseAmount || 0) +
+        (+vendorYQAmount || 0) +
+        (+vendorTaxAmount || 0) +
+        (+vendorGSTAmount || 0)
     );
+    setVendorTotal(vendorTotal);
+    // Updating
   };
 
-  // Vendor Commission Receivable
-  useEffect(() => {
+  const updateVendorTDS = (grossCommission, vendorServiceCharges, vendorTDSPercent) => {
     if (vendorTDSPercentFocused) {
-      setVendorTDS(
-        Number(
-          (((+grossCommission || 0) - (+vendorServiceCharges || 0)) *
-            (+vendorTDSPercent || 0)) /
-            100
-        ).toFixed(4)
-      );
+      let vendorTDS = Number(
+        (((+grossCommission || 0) - (+vendorServiceCharges || 0)) *
+          (+vendorTDSPercent || 0)) /
+          100
+      ).toFixed(4);
+      setVendorTDS(vendorTDS);
     }
-  }, [vendorTDSPercent, grossCommission]);
+  };
 
-  useEffect(() => {
-    if (!vendorTDSPercentFocused) {
+  const updateVendorTDSPercent = (vendorTDS, grossCommission, vendorServiceCharges) => {
+    if (!vendorTDSPercentFocused)
       setVendorTDSPercent(
         Number(
           (100 * vendorTDS) / ((+grossCommission || 0) - (+vendorServiceCharges || 0))
         ).toFixed(4)
       );
-    }
-  }, [vendorTDS, grossCommission]);
+  };
 
-  useEffect(() => {
+  const updateVendorServiceCharges = (grossCommission, vendorServiceChargePercent) => {
     if (vendorGSTFocused) {
-      setVendorServiceCharges(
-        Number(
-          ((+grossCommission || 0) * (+vendorServiceChargePercent || 0)) / 100
-        ).toFixed(4)
-      );
+      let vendorServiceCharges = Number(
+        ((+grossCommission || 0) * (+vendorServiceChargePercent || 0)) / 100
+      ).toFixed(4);
+      setVendorServiceCharges(vendorServiceCharges);
+      // Update
+      updateVendorTDS(grossCommission, vendorServiceCharges, vendorTDSPercent);
     }
-  }, [vendorServiceChargePercent, grossCommission]);
+  };
 
-  useEffect(() => {
-    if (!vendorGSTFocused) {
+  const updateVendorServiceChargePercent = (vendorServiceCharges, grossCommission) => {
+    if (!vendorGSTFocused)
       setVendorServiceChargePercent(
         Number((100 * (+vendorServiceCharges || 0)) / (+grossCommission || 0)).toFixed(4)
       );
-    }
-  }, [vendorServiceCharges, grossCommission]);
+  };
+
+  // Vendor Commission Receivable Total
+  useEffect(() => {
+    updateVendorCommission();
+  }, [grossCommission, vendorServiceCharges, vendorTDS]);
+
+  const updateVendorCommission = () => {
+    setCommissionReceivable(
+      Math.round(
+        (+grossCommission || 0) - (+vendorTDS || 0) - (+vendorServiceCharges || 0)
+      )
+    );
+  };
 
   useEffect(() => {
     calculateGrossCommission();
@@ -327,19 +368,6 @@ const AddNewPartialRefund = () => {
     vendorBaseAmount,
     vendorYQAmount,
   ]);
-
-  useEffect(() => {
-    updateVendorCommission();
-  }, [grossCommission, vendorServiceCharges, vendorTDS]);
-
-  // Vendor Commission Receivable Total
-  const updateVendorCommission = () => {
-    setCommissionReceivable(
-      Math.round(
-        (+grossCommission || 0) - (+vendorTDS || 0) - (+vendorServiceCharges || 0)
-      )
-    );
-  };
 
   const calculateGrossCommission = () => {
     if (commissionRuleID) {
@@ -356,36 +384,117 @@ const AddNewPartialRefund = () => {
             iata_comm)) /
           100
       ).toFixed(4);
-      setGrossCommission(Number((+plb_comm || 0) + (+iata_comm || 0)));
+      let grossCommission = Number((+plb_comm || 0) + (+iata_comm || 0));
+      setGrossCommission(grossCommission);
+      // Calls after gross commission is updated
+      if (grossFirstTime) {
+        updateVendorTDS(grossCommission, vendorServiceCharges, vendorTDSPercent);
+        updateVendorTDSPercent(vendorTDS, grossCommission, vendorServiceCharges);
+        updateVendorServiceCharges(grossCommission, vendorServiceChargePercent);
+        updateVendorServiceChargePercent(vendorServiceCharges, grossCommission);
+      } else {
+        updateVendorTDSPercent(vendorTDS, grossCommission, vendorServiceCharges);
+        updateVendorServiceChargePercent(vendorServiceCharges, grossCommission);
+        updateSetClientServiceChargePercent(
+          clientServiceCharges,
+          clientBaseAmount,
+          clientReferralFee
+        );
+        setVendorGSTFocused(true);
+        setVendorTDSPercentFocused(true);
+        setGrossFirstTime(true);
+      }
     }
   };
 
-  useEffect(() => {
-    if (vendorTaxAmount) setClientTaxAmount(vendorTaxAmount);
-  }, [vendorTaxAmount]);
-
   // Client Calculations
-  useEffect(() => {
-    if (xplorzGSTFocused) {
-      let temp = Number(
-        (((+clientBaseAmount || 0) + (+clientReferralFee || 0)) *
-          (+clientServiceChargePercent || 0)) /
-          100
-      ).toFixed(0);
-      if (temp && temp !== 'NaN') setClientServicesCharges(temp);
-    }
-  }, [clientServiceChargePercent, clientReferralFee, clientBaseAmount]);
 
-  useEffect(() => {
-    if (!xplorzGSTFocused) {
-      setClientServiceChargePercent(
-        Number(
-          (100 * (+clientServiceCharges || 0)) /
-            ((+clientBaseAmount || 0) + (+clientReferralFee || 0))
-        ).toFixed(4)
+  const updateClientTaxAmount = (vendorTaxAmount) => {
+    if (vendorTaxAmount) {
+      setClientTaxAmount(vendorTaxAmount);
+      // Updating
+      updateClientBase(clientQuotedAmount, vendorTaxAmount, clientGSTAmount);
+    }
+  };
+
+  const updateSetClientServiceCharges = (
+    clientBaseAmount,
+    clientReferralFee,
+    clientServiceChargePercent
+  ) => {
+    let clientServiceCharges = Number(
+      (((+clientBaseAmount || 0) + (+clientReferralFee || 0)) *
+        (+clientServiceChargePercent || 0)) /
+        100
+    ).toFixed(0);
+    if (clientServiceCharges && clientServiceCharges !== 'NaN') {
+      setClientServicesCharges(clientServiceCharges);
+    }
+  };
+
+  const updateSetClientServiceChargePercent = (
+    clientServiceCharges,
+    clientBaseAmount,
+    clientReferralFee
+  ) => {
+    setClientServiceChargePercent(
+      Number(
+        (100 * (+clientServiceCharges || 0)) /
+          ((+clientBaseAmount || 0) + (+clientReferralFee || 0))
+      ).toFixed(4)
+    );
+  };
+
+  const updateClientGSTAmount = (
+    clientGSTPercent,
+    vendorGSTAmount,
+    clientQuotedAmount,
+    clientTaxAmount
+  ) => {
+    if (clientGSTPercent?.value !== null && clientGSTPercent?.value !== undefined) {
+      let clientGSTAmount = '';
+      if (clientGSTPercent?.label === 'None') clientGSTAmount = 0;
+      else if (clientGSTPercent?.label === 'Vendor GST')
+        clientGSTAmount = +vendorGSTAmount;
+      else if (clientGSTPercent?.label === '5% of Base') {
+        clientGSTAmount = Number(
+          (((+clientQuotedAmount || 0) - (+clientTaxAmount || 0)) * (5 / 100)).toFixed(4)
+        );
+      } else if (clientGSTPercent?.label === '12% of Base') {
+        clientGSTAmount = Number(
+          (((+clientQuotedAmount || 0) - (+clientTaxAmount || 0)) * (12 / 100)).toFixed(4)
+        );
+      }
+      setClientGSTAmount(clientGSTAmount);
+      // Updating Base Amount
+      updateClientBase(clientQuotedAmount, clientTaxAmount, clientGSTAmount);
+    }
+  };
+
+  const updateClientQuotedAmount = (
+    clientBaseAmount,
+    clientTaxAmount,
+    clientGSTAmount
+  ) => {
+    setClientQuotedAmount(
+      (+clientBaseAmount || 0) + (+clientTaxAmount || 0) + (+clientGSTAmount || 0)
+    );
+  };
+
+  // Client Total
+  const updateClientBase = (clientQuotedAmount, clientTaxAmount, clientGSTAmount) => {
+    if (+clientQuotedAmount > 0) {
+      let clientBaseAmount =
+        (+clientQuotedAmount || 0) - (+clientTaxAmount || 0) - (+clientGSTAmount || 0);
+      setClientBaseAmount(clientBaseAmount);
+      // Updating
+      updateSetClientServiceCharges(
+        clientBaseAmount,
+        clientReferralFee,
+        clientServiceChargePercent
       );
     }
-  }, [clientServiceCharges]);
+  };
 
   useEffect(() => {
     updateClientTotal();
@@ -396,51 +505,6 @@ const AddNewPartialRefund = () => {
     clientReferralFee,
     clientBaseAmount,
   ]);
-
-  useEffect(() => {
-    if (clientGSTPercent?.value !== null && clientGSTPercent?.value !== undefined) {
-      if (clientGSTPercent.label === 'None') setClientGSTAmount(0);
-      else if (clientGSTPercent.label === 'Vendor GST')
-        setClientGSTAmount(+vendorGSTAmount);
-      else if (clientGSTPercent.label === '5% of Base') {
-        console.log('yes', clientQuotedAmount, clientTaxAmount);
-        setClientGSTAmount(
-          Number(
-            (((+clientQuotedAmount || 0) - (+clientTaxAmount || 0)) * (5 / 100)).toFixed(
-              4
-            )
-          )
-        );
-      } else if (clientGSTPercent.label === '12% of Base') {
-        setClientGSTAmount(
-          Number(
-            (((+clientQuotedAmount || 0) - (+clientTaxAmount || 0)) * (12 / 100)).toFixed(
-              4
-            )
-          )
-        );
-      }
-    }
-  }, [clientGSTPercent]);
-
-  useEffect(() => {
-    if (clientBaseAmountFocused)
-      setClientQuotedAmount(
-        (+clientBaseAmount || 0) + (+clientTaxAmount || 0) + (+clientGSTAmount || 0)
-      );
-  }, [clientBaseAmount]);
-
-  useEffect(() => {
-    if (!clientBaseAmountFocused) updateClientBase();
-  }, [clientTaxAmount, clientGSTAmount, clientQuotedAmount]);
-
-  // Client Total
-  const updateClientBase = () => {
-    if (+clientQuotedAmount > 0)
-      setClientBaseAmount(
-        (+clientQuotedAmount || 0) - (+clientTaxAmount || 0) - (+clientGSTAmount || 0)
-      );
-  };
 
   const updateClientTotal = () => {
     setClientTotal(
@@ -522,7 +586,14 @@ const AddNewPartialRefund = () => {
                     <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
-                          onChange={(e) => setClientReferralFee(e.target.value)}
+                          onChange={(e) => {
+                            setClientReferralFee(e.target.value);
+                            updateSetClientServiceCharges(
+                              clientBaseAmount,
+                              e.target.value,
+                              clientServiceChargePercent
+                            );
+                          }}
                           value={clientReferralFee}
                           placeholder=' '
                           type='number'
@@ -577,7 +648,10 @@ const AddNewPartialRefund = () => {
                     <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
-                          onChange={(e) => setVendorTaxAmount(e.target.value)}
+                          onChange={(e) => {
+                            setVendorTaxAmount(e.target.value);
+                            updateClientTaxAmount(e.target.value);
+                          }}
                           value={vendorTaxAmount}
                           placeholder=' '
                           type='number'
@@ -669,9 +743,10 @@ const AddNewPartialRefund = () => {
                               paddingTop: 'unset',
                               backgroundColor: '#ffe',
                             }}
-                            onChange={(e) =>
-                              setVendorServiceChargePercent(e.target.value)
-                            }
+                            onChange={(e) => {
+                              setVendorServiceChargePercent(e.target.value);
+                              updateVendorServiceCharges(grossCommission, e.target.value);
+                            }}
                             value={vendorServiceChargePercent}
                             placeholder=' '
                             type='number'
@@ -690,7 +765,13 @@ const AddNewPartialRefund = () => {
                                 minHeight: 'unset',
                                 paddingTop: 'unset',
                               }}
-                              onChange={(e) => setVendorServiceCharges(e.target.value)}
+                              onChange={(e) => {
+                                setVendorServiceCharges(e.target.value);
+                                updateVendorServiceChargePercent(
+                                  e.target.value,
+                                  grossCommission
+                                );
+                              }}
                               value={vendorServiceCharges}
                               placeholder=' '
                               type='number'
@@ -713,7 +794,14 @@ const AddNewPartialRefund = () => {
                               paddingTop: 'unset',
                               backgroundColor: '#ffe',
                             }}
-                            onChange={(e) => setVendorTDSPercent(e.target.value)}
+                            onChange={(e) => {
+                              setVendorTDSPercent(e.target.value);
+                              updateVendorTDS(
+                                grossCommission,
+                                vendorServiceCharges,
+                                e.target.value
+                              );
+                            }}
                             value={vendorTDSPercent}
                             placeholder=' '
                             type='number'
@@ -732,7 +820,14 @@ const AddNewPartialRefund = () => {
                                 minHeight: 'unset',
                                 paddingTop: 'unset',
                               }}
-                              onChange={(e) => setVendorTDS(e.target.value)}
+                              onChange={(e) => {
+                                setVendorTDS(e.target.value);
+                                updateVendorTDSPercent(
+                                  e.target.value,
+                                  grossCommission,
+                                  vendorServiceCharges
+                                );
+                              }}
                               value={vendorTDS}
                               placeholder=' '
                               type='number'
@@ -764,7 +859,14 @@ const AddNewPartialRefund = () => {
                     <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
-                          onChange={(e) => setClientQuotedAmount(e.target.value)}
+                          onChange={(e) => {
+                            setClientQuotedAmount(e.target.value);
+                            updateClientBase(
+                              e.target.value,
+                              clientTaxAmount,
+                              clientGSTAmount
+                            );
+                          }}
                           value={clientQuotedAmount}
                           placeholder=' '
                           type='number'
@@ -779,7 +881,19 @@ const AddNewPartialRefund = () => {
                     <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
-                          onChange={(e) => setClientBaseAmount(e.target.value)}
+                          onChange={(e) => {
+                            setClientBaseAmount(e.target.value);
+                            updateSetClientServiceCharges(
+                              e.target.value,
+                              clientReferralFee,
+                              clientServiceChargePercent
+                            );
+                            updateClientQuotedAmount(
+                              e.target.value,
+                              clientTaxAmount,
+                              clientGSTAmount
+                            );
+                          }}
                           value={clientBaseAmount}
                           placeholder=' '
                           type='number'
@@ -798,7 +912,14 @@ const AddNewPartialRefund = () => {
                     <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
-                          onChange={(e) => setClientTaxAmount(e.target.value)}
+                          onChange={(e) => {
+                            setClientTaxAmount(e.target.value);
+                            updateClientBase(
+                              clientQuotedAmount,
+                              e.target.value,
+                              clientGSTAmount
+                            );
+                          }}
                           value={clientTaxAmount}
                           placeholder=' '
                           type='number'
@@ -816,7 +937,15 @@ const AddNewPartialRefund = () => {
                           <label></label>
                           <Select
                             className='small'
-                            onChange={(id) => setClientGSTPercent(id)}
+                            onChange={(id) => {
+                              setClientGSTPercent(id);
+                              updateClientGSTAmount(
+                                id,
+                                vendorGSTAmount,
+                                clientQuotedAmount,
+                                clientTaxAmount
+                              );
+                            }}
                             defaultValue={{ value: 0, label: 'None' }}
                             options={clientGSTOptions}
                             value={clientGSTPercent}
@@ -829,7 +958,14 @@ const AddNewPartialRefund = () => {
                               minHeight: 'unset',
                               paddingTop: 'unset',
                             }}
-                            onChange={(e) => setClientGSTAmount(e.target.value)}
+                            onChange={(e) => {
+                              setClientGSTAmount(e.target.value);
+                              updateClientBase(
+                                clientQuotedAmount,
+                                clientTaxAmount,
+                                e.target.value
+                              );
+                            }}
                             value={clientGSTAmount}
                             placeholder=' '
                             type='number'
@@ -842,51 +978,65 @@ const AddNewPartialRefund = () => {
                         </div>
                       </div>
                     </div>
-                    <div className='col-lg-4 pr-0'>
-                      <div className='row'>
-                        <label className='col-12 fw-500 mb-4'>Xplorz GST Amount</label>
-                        <div className='form-input col-4'>
-                          <input
-                            style={{
-                              height: '50px',
-                              minHeight: 'unset',
-                              paddingTop: 'unset',
-                              backgroundColor: '#ffe',
-                            }}
-                            onChange={(e) =>
-                              setClientServiceChargePercent(e.target.value)
-                            }
-                            value={clientServiceChargePercent}
-                            placeholder=' '
-                            onFocus={() => setXplorzGSTFocused(true)}
-                            type='number'
-                            onWheel={(e) => e.target.blur()}
-                          />
-                          <label className='lh-1 text-16 text-light-1'></label>
-                          <span className='d-flex items-center ml-10'>%</span>
-                        </div>
-                        <div className='d-flex col-8 items-center gap-2 pr-30 lg:pr-0'>
-                          <label>Amount</label>
-                          <div className='form-input'>
+                    {!isOffshore && (
+                      <div className='col-lg-4 pr-0'>
+                        <div className='row'>
+                          <label className='col-12 fw-500 mb-4'>Xplorz GST Amount</label>
+                          <div className='form-input col-4'>
                             <input
                               style={{
                                 height: '50px',
                                 minHeight: 'unset',
                                 paddingTop: 'unset',
+                                backgroundColor: '#ffe',
                               }}
-                              onChange={(e) => setClientServicesCharges(e.target.value)}
-                              value={clientServiceCharges}
+                              onChange={(e) => {
+                                setClientServiceChargePercent(e.target.value);
+                                updateSetClientServiceCharges(
+                                  clientBaseAmount,
+                                  clientReferralFee,
+                                  e.target.value
+                                );
+                              }}
+                              value={clientServiceChargePercent}
                               placeholder=' '
+                              onFocus={() => setXplorzGSTFocused(true)}
                               type='number'
                               onWheel={(e) => e.target.blur()}
-                              onFocus={() => setXplorzGSTFocused(false)}
-                              onBlur={() => setXplorzGSTFocused(true)}
                             />
                             <label className='lh-1 text-16 text-light-1'></label>
+                            <span className='d-flex items-center ml-10'>%</span>
+                          </div>
+                          <div className='d-flex col-8 items-center gap-2 pr-30 lg:pr-0'>
+                            <label>Amount</label>
+                            <div className='form-input'>
+                              <input
+                                style={{
+                                  height: '50px',
+                                  minHeight: 'unset',
+                                  paddingTop: 'unset',
+                                }}
+                                onChange={(e) => {
+                                  setClientServicesCharges(e.target.value);
+                                  updateSetClientServiceChargePercent(
+                                    e.target.value,
+                                    clientBaseAmount,
+                                    clientReferralFee
+                                  );
+                                }}
+                                value={clientServiceCharges}
+                                placeholder=' '
+                                type='number'
+                                onWheel={(e) => e.target.blur()}
+                                onFocus={() => setXplorzGSTFocused(false)}
+                                onBlur={() => setXplorzGSTFocused(true)}
+                              />
+                              <label className='lh-1 text-16 text-light-1'></label>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
+                    )}
                     <div className='col-lg-4 pt-35 lg:pt-10'>
                       <div className='form-input'>
                         <input
@@ -903,6 +1053,13 @@ const AddNewPartialRefund = () => {
                           Client Total<span className='text-danger'>*</span>
                         </label>
                       </div>
+                    </div>
+                    <div className='d-flex items-center gap-3'>
+                      <ReactSwitch
+                        onChange={() => setIsOffshore((prev) => !prev)}
+                        checked={isOffshore}
+                      />
+                      <label>Is Offshore</label>
                     </div>
                     <div className='col-lg-4'>
                       <div className='form-input'>
