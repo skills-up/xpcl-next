@@ -356,13 +356,18 @@ const AddNewBooking = () => {
   // the states they are updating are depedency in the copy file
 
   // Vendor Total
-  const updateVendorTotal = (
-    vendorBaseAmount,
-    vendorYQAmount,
-    vendorTaxAmount,
-    vendorGSTAmount,
-    vendorMiscCharges
-  ) => {
+  useEffect(
+    () => updateVendorTotal(),
+    [
+      vendorBaseAmount,
+      vendorYQAmount,
+      vendorTaxAmount,
+      vendorGSTAmount,
+      vendorMiscCharges,
+    ]
+  );
+
+  const updateVendorTotal = () => {
     let vendorTotal = Number(
       (+vendorBaseAmount || 0) +
         (+vendorYQAmount || 0) +
@@ -376,43 +381,100 @@ const AddNewBooking = () => {
   };
 
   const updateVendorTDS = (grossCommission, vendorServiceCharges, vendorTDSPercent) => {
-    let vendorTDS = Number(
-      (((+grossCommission || 0) - (+vendorServiceCharges || 0)) *
-        (+vendorTDSPercent || 0)) /
-        100
-    ).toFixed(4);
-    setVendorTDS(vendorTDS);
-    // Updating
-    updateVendorCommission(grossCommission, vendorTDS, vendorServiceCharges);
+    if (vendorTDSPercentFocused) {
+      console.log('vendor', grossCommission, vendorServiceCharges, vendorTDSPercent);
+      let vendorTDS = Number(
+        (((+grossCommission || 0) - (+vendorServiceCharges || 0)) *
+          (+vendorTDSPercent || 0)) /
+          100
+      ).toFixed(4);
+      setVendorTDS(vendorTDS);
+    }
   };
 
   const updateVendorTDSPercent = (vendorTDS, grossCommission, vendorServiceCharges) => {
-    setVendorTDSPercent(
-      Number(
-        (100 * vendorTDS) / ((+grossCommission || 0) - (+vendorServiceCharges || 0))
-      ).toFixed(4)
-    );
+    if (!vendorTDSPercentFocused)
+      setVendorTDSPercent(
+        Number(
+          (100 * vendorTDS) / ((+grossCommission || 0) - (+vendorServiceCharges || 0))
+        ).toFixed(4)
+      );
   };
 
   const updateVendorServiceCharges = (grossCommission, vendorServiceChargePercent) => {
-    let vendorServiceCharges = Number(
-      ((+grossCommission || 0) * (+vendorServiceChargePercent || 0)) / 100
-    ).toFixed(4);
-    setVendorServiceCharges(vendorServiceCharges);
-    // Updating
-    updateVendorCommission(grossCommission, vendorTDS, vendorServiceCharges);
+    if (vendorGSTFocused) {
+      let vendorServiceCharges = Number(
+        ((+grossCommission || 0) * (+vendorServiceChargePercent || 0)) / 100
+      ).toFixed(4);
+      setVendorServiceCharges(vendorServiceCharges);
+      // Update
+      updateVendorTDS(grossCommission, vendorServiceCharges, vendorTDSPercent);
+    }
   };
 
   const updateVendorServiceChargePercent = (vendorServiceCharges, grossCommission) => {
-    setVendorServiceChargePercent(
-      Number((100 * (+vendorServiceCharges || 0)) / (+grossCommission || 0)).toFixed(4)
-    );
+    if (!vendorGSTFocused)
+      setVendorServiceChargePercent(
+        Number((100 * (+vendorServiceCharges || 0)) / (+grossCommission || 0)).toFixed(4)
+      );
   };
 
   const updatePaymentAmount = (paymentAccountID, vendorTotal, vendorMiscCharges) => {
     if (paymentAccountID?.value)
       setPaymentAmount(Number((+vendorTotal || 0) - (+vendorMiscCharges || 0)));
   };
+
+  // Vendor Commission Receivable Total
+  useEffect(() => {
+    updateVendorCommission();
+  }, [grossCommission, vendorServiceCharges, vendorTDS]);
+
+  const updateVendorCommission = () => {
+    console.log('commission', grossCommission, vendorTDS, vendorServiceCharges);
+    setCommissionReceivable(
+      Math.round(
+        (+grossCommission || 0) - (+vendorTDS || 0) - (+vendorServiceCharges || 0)
+      )
+    );
+  };
+
+  useEffect(() => {
+    calculateGrossCommission();
+  }, [
+    commissionRuleID,
+    IATACommissionPercent,
+    plbCommissionPercent,
+    vendorBaseAmount,
+    vendorYQAmount,
+  ]);
+
+  const calculateGrossCommission = () => {
+    if (commissionRuleID) {
+      const iata_comm = Number(
+        ((+IATACommissionPercent || 0) *
+          ((+commissionRuleID.iata_basic || 0) * (+vendorBaseAmount || 0) +
+            (+commissionRuleID.iata_yq || 0) * (+vendorYQAmount || 0))) /
+          100
+      ).toFixed(4);
+      const plb_comm = Number(
+        ((+plbCommissionPercent || 0) *
+          ((+commissionRuleID.plb_basic || 0) * (+vendorBaseAmount || 0) +
+            (+commissionRuleID.plb_yq || 0) * (+vendorYQAmount || 0) -
+            iata_comm)) /
+          100
+      ).toFixed(4);
+      let grossCommission = Number((+plb_comm || 0) + (+iata_comm || 0));
+      console.log('gross', grossCommission, iata_comm, plb_comm);
+      setGrossCommission(grossCommission);
+      // Calls after gross commission is updated
+      updateVendorTDS(grossCommission, vendorServiceCharges, vendorTDSPercent);
+      updateVendorTDSPercent(vendorTDS, grossCommission, vendorServiceCharges);
+      updateVendorServiceCharges(grossCommission, vendorServiceChargePercent);
+      updateVendorServiceChargePercent(vendorServiceCharges, grossCommission);
+    }
+  };
+
+  // Client Calculations
 
   const updateClientTaxAmount = (vendorTaxAmount) => {
     if (vendorTaxAmount) setClientTaxAmount(vendorTaxAmount);
@@ -428,16 +490,9 @@ const AddNewBooking = () => {
         (+clientServiceChargePercent || 0)) /
         100
     ).toFixed(0);
-    if (clientServiceCharges && clientServiceCharges !== 'NaN')
+    if (clientServiceCharges && clientServiceCharges !== 'NaN') {
       setClientServicesCharges(clientServiceCharges);
-    // Updating
-    updateClientTotal(
-      clientServiceCharges,
-      clientTaxAmount,
-      clientGSTAmount,
-      clientReferralFee,
-      clientBaseAmount
-    );
+    }
   };
 
   const updateSetClientServiceChargePercent = (
@@ -474,14 +529,6 @@ const AddNewBooking = () => {
         );
       }
       setClientGSTAmount(clientGSTAmount);
-      // Updating
-      updateClientTotal(
-        clientBaseAmount,
-        clientGSTAmount,
-        clientTaxAmount,
-        clientServiceCharges,
-        clientReferralFee
-      );
     }
   };
 
@@ -495,62 +542,42 @@ const AddNewBooking = () => {
     );
   };
 
-  // Vendor Commission Receivable Total
-  const updateVendorCommission = (grossCommission, vendorTDS, vendorServiceCharges) => {
-    setCommissionReceivable(
-      Math.round(
-        (+grossCommission || 0) - (+vendorTDS || 0) - (+vendorServiceCharges || 0)
-      )
-    );
-  };
-
-  const calculateGrossCommission = (
-    commissionRuleID,
-    IATACommissionPercent,
-    plbCommissionPercent,
-    vendorBaseAmount,
-    vendorYQAmount
-  ) => {
-    if (commissionRuleID) {
-      const iata_comm = Number(
-        ((+IATACommissionPercent || 0) *
-          ((+commissionRuleID.iata_basic || 0) * (+vendorBaseAmount || 0) +
-            (+commissionRuleID.iata_yq || 0) * (+vendorYQAmount || 0))) /
-          100
-      ).toFixed(4);
-      const plb_comm = Number(
-        ((+plbCommissionPercent || 0) *
-          ((+commissionRuleID.plb_basic || 0) * (+vendorBaseAmount || 0) +
-            (+commissionRuleID.plb_yq || 0) * (+vendorYQAmount || 0) -
-            iata_comm)) /
-          100
-      ).toFixed(4);
-      let grossCommission = Number((+plb_comm || 0) + (+iata_comm || 0));
-      setGrossCommission(grossCommission);
-      // Calls after gross commission is updated
-      updateVendorTDS(grossCommission, vendorServiceCharges, vendorTDSPercent);
-      updateVendorTDSPercent(vendorTDS, grossCommission, vendorServiceCharges);
-      updateVendorServiceCharges(grossCommission, vendorServiceChargePercent);
-      updateVendorServiceChargePercent(vendorServiceCharges, grossCommission);
-      updateVendorCommission(grossCommission, vendorTDS, vendorServiceCharges);
+  // Client Total
+  const updateClientBase = (clientQuotedAmount, clientTaxAmount, clientGSTAmount) => {
+    console.log('base tax', clientTaxAmount);
+    if (+clientQuotedAmount > 0) {
+      let clientBaseAmount =
+        (+clientQuotedAmount || 0) - (+clientTaxAmount || 0) - (+clientGSTAmount || 0);
+      setClientBaseAmount(clientBaseAmount);
+      // Updating
+      updateSetClientServiceCharges(
+        clientBaseAmount,
+        clientReferralFee,
+        clientServiceChargePercent
+      );
     }
   };
 
-  // Client Total
-  const updateClientBase = (clientQuotedAmount, clientTaxAmount, clientGSTAmount) => {
-    if (+clientQuotedAmount > 0)
-      setClientBaseAmount(
-        (+clientQuotedAmount || 0) - (+clientTaxAmount || 0) - (+clientGSTAmount || 0)
-      );
-  };
-
-  const updateClientTotal = (
-    clientBaseAmount,
-    clientGSTAmount,
-    clientTaxAmount,
+  useEffect(() => {
+    updateClientTotal();
+  }, [
     clientServiceCharges,
-    clientReferralFee
-  ) => {
+    clientTaxAmount,
+    clientGSTAmount,
+    clientReferralFee,
+    clientBaseAmount,
+  ]);
+
+  const updateClientTotal = () => {
+    console.log(
+      'test',
+      clientBaseAmount,
+      clientGSTAmount,
+      clientTaxAmount,
+      clientServiceCharges,
+      clientReferralFee
+    );
+
     setClientTotal(
       Number(
         (+clientBaseAmount || 0) +
@@ -1008,13 +1035,6 @@ const AddNewBooking = () => {
                                   e.target.value,
                                   clientServiceChargePercent
                                 );
-                                updateClientTotal(
-                                  clientBaseAmount,
-                                  clientGSTAmount,
-                                  clientTaxAmount,
-                                  clientServiceCharges,
-                                  e.target.value
-                                );
                               }}
                               value={clientReferralFee}
                               placeholder=' '
@@ -1045,20 +1065,6 @@ const AddNewBooking = () => {
                         <input
                           onChange={(e) => {
                             setVendorBaseAmount(e.target.value);
-                            updateVendorTotal(
-                              e.target.value,
-                              vendorYQAmount,
-                              vendorTaxAmount,
-                              vendorGSTAmount,
-                              vendorMiscCharges
-                            );
-                            calculateGrossCommission(
-                              commissionRuleID,
-                              IATACommissionPercent,
-                              plbCommissionPercent,
-                              e.target.value,
-                              vendorYQAmount
-                            );
                           }}
                           value={vendorBaseAmount}
                           placeholder=' '
@@ -1076,20 +1082,6 @@ const AddNewBooking = () => {
                         <input
                           onChange={(e) => {
                             setVendorYQAmount(e.target.value);
-                            updateVendorTotal(
-                              vendorBaseAmount,
-                              e.target.value,
-                              vendorTaxAmount,
-                              vendorGSTAmount,
-                              vendorMiscCharges
-                            );
-                            calculateGrossCommission(
-                              commissionRuleID,
-                              IATACommissionPercent,
-                              plbCommissionPercent,
-                              vendorBaseAmount,
-                              e.target.value
-                            );
                           }}
                           value={vendorYQAmount}
                           placeholder=' '
@@ -1106,13 +1098,6 @@ const AddNewBooking = () => {
                         <input
                           onChange={(e) => {
                             setVendorTaxAmount(e.target.value);
-                            updateVendorTotal(
-                              vendorBaseAmount,
-                              vendorYQAmount,
-                              e.target.value,
-                              vendorGSTAmount,
-                              vendorMiscCharges
-                            );
                             updateClientTaxAmount(e.target.value);
                           }}
                           value={vendorTaxAmount}
@@ -1131,13 +1116,6 @@ const AddNewBooking = () => {
                         <input
                           onChange={(e) => {
                             setVendorGSTAmount(e.target.value);
-                            updateVendorTotal(
-                              vendorBaseAmount,
-                              vendorYQAmount,
-                              vendorTaxAmount,
-                              e.target.value,
-                              vendorMiscCharges
-                            );
                           }}
                           value={vendorGSTAmount}
                           placeholder=' '
@@ -1155,13 +1133,6 @@ const AddNewBooking = () => {
                         <input
                           onChange={(e) => {
                             setVendorMiscChargers(e.target.value);
-                            updateVendorTotal(
-                              vendorBaseAmount,
-                              vendorYQAmount,
-                              vendorTaxAmount,
-                              vendorGSTAmount,
-                              e.target.value
-                            );
                             updatePaymentAmount(
                               paymentAccountID,
                               vendorTotal,
@@ -1248,13 +1219,6 @@ const AddNewBooking = () => {
                             value={commissionRuleID}
                             onChange={(id) => {
                               setCommissionRuleID(id);
-                              calculateGrossCommission(
-                                id,
-                                IATACommissionPercent,
-                                plbCommissionPercent,
-                                vendorBaseAmount,
-                                vendorYQAmount
-                              );
                             }}
                           />
                         </div>
@@ -1263,13 +1227,6 @@ const AddNewBooking = () => {
                             <input
                               onChange={(e) => {
                                 setIATACommissionPercent(e.target.value);
-                                calculateGrossCommission(
-                                  commissionRuleID,
-                                  e.target.value,
-                                  plbCommissionPercent,
-                                  vendorBaseAmount,
-                                  vendorYQAmount
-                                );
                               }}
                               value={IATACommissionPercent}
                               placeholder=' '
@@ -1286,13 +1243,6 @@ const AddNewBooking = () => {
                             <input
                               onChange={(e) => {
                                 setPLBCommissionPercent(e.target.value);
-                                calculateGrossCommission(
-                                  commissionRuleID,
-                                  IATACommissionPercent,
-                                  e.target.value,
-                                  vendorBaseAmount,
-                                  vendorYQAmount
-                                );
                               }}
                               value={plbCommissionPercent}
                               placeholder=' '
@@ -1343,11 +1293,6 @@ const AddNewBooking = () => {
                               }}
                               onChange={(e) => {
                                 setVendorServiceCharges(e.target.value);
-                                updateVendorCommission(
-                                  grossCommission,
-                                  vendorTDS,
-                                  e.target.value
-                                );
                                 updateVendorServiceChargePercent(
                                   e.target.value,
                                   grossCommission
@@ -1403,11 +1348,6 @@ const AddNewBooking = () => {
                               }}
                               onChange={(e) => {
                                 setVendorTDS(e.target.value);
-                                updateVendorCommission(
-                                  grossCommission,
-                                  e.target.value,
-                                  vendorServiceCharges
-                                );
                                 updateVendorTDSPercent(
                                   e.target.value,
                                   grossCommission,
@@ -1474,13 +1414,6 @@ const AddNewBooking = () => {
                               clientReferralFee,
                               clientServiceChargePercent
                             );
-                            updateClientTotal(
-                              e.target.value,
-                              clientGSTAmount,
-                              clientTaxAmount,
-                              clientServiceCharges,
-                              clientReferralFee
-                            );
                             updateClientQuotedAmount(
                               e.target.value,
                               clientTaxAmount,
@@ -1508,13 +1441,6 @@ const AddNewBooking = () => {
                         <input
                           onChange={(e) => {
                             setClientTaxAmount(e.target.value);
-                            updateClientTotal(
-                              clientBaseAmount,
-                              clientGSTAmount,
-                              e.target.value,
-                              clientServiceCharges,
-                              clientReferralFee
-                            );
                             updateClientBase(
                               clientQuotedAmount,
                               e.target.value,
@@ -1562,13 +1488,6 @@ const AddNewBooking = () => {
                             }}
                             onChange={(e) => {
                               setClientGSTAmount(e.target.value);
-                              updateClientTotal(
-                                clientBaseAmount,
-                                e.target.value,
-                                clientTaxAmount,
-                                clientServiceCharges,
-                                clientReferralFee
-                              );
                               updateClientBase(
                                 clientQuotedAmount,
                                 clientTaxAmount,
@@ -1631,13 +1550,6 @@ const AddNewBooking = () => {
                                   updateSetClientServiceChargePercent(
                                     e.target.value,
                                     clientBaseAmount,
-                                    clientReferralFee
-                                  );
-                                  updateClientTotal(
-                                    clientBaseAmount,
-                                    clientGSTAmount,
-                                    clientTaxAmount,
-                                    e.target.value,
                                     clientReferralFee
                                   );
                                 }}
