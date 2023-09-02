@@ -21,6 +21,7 @@ const UpdateRefund = () => {
   const [refundAmount, setRefundAmount] = useState('');
   const [reason, setReason] = useState('');
   const [bookingData, setBookingData] = useState(null);
+  const [refundBookingData, setRefundBookingData] = useState(null);
   const [paymentAccounts, setPaymentAccounts] = useState([]);
   const [paymentAccountID, setPaymentAccountID] = useState(null);
   const [loaded, setLoaded] = useState(false);
@@ -53,7 +54,16 @@ const UpdateRefund = () => {
         const paymentAccounts = await getList('accounts', { category: 'Credit Cards' });
         const accounts = await getList('organizations', { is_client: 1 });
         const bookingData = await getItem('bookings', response.data.booking_id);
+        let refundData;
         if (accounts?.success && bookingData?.success && paymentAccounts?.success) {
+          if (bookingData?.data?.original_booking_id) {
+            refundData = await getItem('bookings', bookingData.data.original_booking_id);
+            if (refundData?.success) {
+              setRefundBookingData(refundData.data);
+            } else {
+              sendToast('error');
+            }
+          }
           setAccounts(
             accounts.data.map((element) => ({
               value: element.account_id,
@@ -128,11 +138,12 @@ const UpdateRefund = () => {
   useEffect(() => {
     if (loaded)
       if (bookingData && paymentAccountID) {
-        const payment = bookingData?.payment_amount;
+        const payment =
+          (+bookingData?.payment_amount || 0) + (+refundBookingData?.payment_amount || 0);
         if (payment)
           setRefundAmount((+payment || 0) - (+airlineCancellationCharges || 0));
       }
-  }, [bookingData, airlineCancellationCharges, paymentAccountID]);
+  }, [bookingData, airlineCancellationCharges, paymentAccountID, refundBookingData]);
 
   return (
     <>
