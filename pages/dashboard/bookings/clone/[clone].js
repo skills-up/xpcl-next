@@ -101,9 +101,12 @@ const AddNewBooking = () => {
 
   const [xplorzGSTFocused, setXplorzGSTFocused] = useState(false);
   const [vendorGSTFocused, setVendorGSTFocused] = useState(false);
-  const [vendorTDSPercentFocused, setVendorTDSPercentFocused] = useState(true);
+  const [vendorTDSPercentFocused, setVendorTDSPercentFocused] = useState(false);
   const [clientBaseAmountFocused, setClientBaseAmountFocused] = useState(false);
+
+  // Checks
   const [clientTravellerFirstCheck, setClientTravellerFirstCheck] = useState(false);
+  const [grossFirstTime, setGrossFirstTime] = useState(false);
 
   const airports = useSelector((state) => state.apis.value.airports);
   const token = useSelector((state) => state.auth.value.token);
@@ -139,6 +142,8 @@ const AddNewBooking = () => {
         setSector(response.data.sector);
         setOriginalBookingID(response.data?.original_booking_id);
         setReissuePenalty(response.data?.reissue_penalty);
+        setPaymentAmount(response.data.payment_amount);
+        setClientTaxAmount(response.data.client_tax_amount);
         setBookingDate(
           new DateObject({ date: response.data.booking_date, format: 'YYYY-MM-DD' })
         );
@@ -148,6 +153,7 @@ const AddNewBooking = () => {
             +response.data.client_tax_amount +
             +response.data.client_gst_amount
         );
+
         // Client GST Percent
         if (
           Number(
@@ -187,11 +193,13 @@ const AddNewBooking = () => {
           airlines?.success &&
           paymentAccounts?.success &&
           clients?.success &&
-          clientTravellers?.success &&
-          clientOrgs?.success
+          clientOrgs?.success &&
+          clientTravellers?.success
         ) {
           setVendors(
             vendors.data.map((element) => ({
+              vendor_service_charge_percentage: element?.vendor_service_charge_percentage,
+              vendor_tds_percentage: element?.vendor_tds_percentage,
               value: element.id,
               label: element.name,
             }))
@@ -242,7 +250,13 @@ const AddNewBooking = () => {
           // Setting Vendor ID
           for (let vendor of vendors.data)
             if (vendor.id === response.data.vendor_id)
-              setVendorID({ value: vendor.id, label: vendor.name });
+              setVendorID({
+                vendor_service_charge_percentage:
+                  vendor?.vendor_service_charge_percentage,
+                vendor_tds_percentage: vendor?.vendor_tds_percentage,
+                value: vendor.id,
+                label: vendor.name,
+              });
           // Setting Commission ID
           for (let comm of commissionRules.data)
             if (comm.id === response.data.commission_rule_id)
@@ -321,9 +335,7 @@ const AddNewBooking = () => {
           setBookingSectors(tempBookingSectors);
           // Set Payment Amount + First Client Traveller Check
           setTimeout(() => {
-            setPaymentAmount(response.data.payment_amount);
             setClientTravellerFirstCheck(true);
-            setClientTaxAmount(response.data.client_tax_amount);
           }, 1000);
         } else {
           sendToast('error', 'Unable to fetch required data', 4000);
@@ -341,7 +353,6 @@ const AddNewBooking = () => {
       }
     }
   };
-
   const onSubmit = async (e) => {
     e.preventDefault();
     // Checking if required values arent null
@@ -471,6 +482,14 @@ const AddNewBooking = () => {
     }
   };
 
+  // Offshore
+  useEffect(() => {
+    if (isOffshore) {
+      setClientServiceChargePercent(0);
+      setClientServicesCharges(0);
+    }
+  }, [isOffshore]);
+
   // // If vendor is an airline, setting airline automatically
   // useEffect(() => {
   //   if (vendorID?.value)
@@ -478,14 +497,22 @@ const AddNewBooking = () => {
   //       if (vendorID.value === airline.value) setAirlineID(vendorID);
   // }, [vendorID]);
 
+  useEffect(() => {
+    if (vendorID?.value) {
+      setVendorServiceChargePercent(vendorID?.vendor_service_charge_percentage);
+      setVendorTDSPercent(vendorID?.vendor_tds_percentage);
+    }
+  }, [vendorID]);
+
   // Booking Type Changes
   useEffect(() => {
     // Client Service Charge Percent
-    if (+clientServiceCharges === 0 || clientServiceCharges.trim().length === 0) {
-      if (bookingType?.value === 'Domestic Flight Ticket')
+    if (bookingType?.value)
+      if (bookingType.value === 'Domestic Flight Ticket') {
         setClientServiceChargePercent(0.9);
-      else setClientServiceChargePercent(1.8);
-    }
+      } else {
+        setClientServiceChargePercent(1.8);
+      }
     // If misc remove booking sectors
     // If not remove misc type
     if (bookingType?.value === 'Miscellaneous') setBookingSectors([]);
@@ -493,6 +520,8 @@ const AddNewBooking = () => {
   }, [bookingType]);
 
   // Vendor Calculations
+
+  // Vendor Total
   useEffect(
     () => updateVendorTotal(),
     [
@@ -504,59 +533,74 @@ const AddNewBooking = () => {
     ]
   );
 
-  // Vendor Total
   const updateVendorTotal = () => {
-    setVendorTotal(
-      Number(
-        (+vendorBaseAmount || 0) +
-          (+vendorYQAmount || 0) +
-          (+vendorTaxAmount || 0) +
-          (+vendorGSTAmount || 0) +
-          (+vendorMiscCharges || 0)
-      )
+    let vendorTotal = Number(
+      (+vendorBaseAmount || 0) +
+        (+vendorYQAmount || 0) +
+        (+vendorTaxAmount || 0) +
+        (+vendorGSTAmount || 0) +
+        (+vendorMiscCharges || 0)
     );
+    setVendorTotal(vendorTotal);
+    // Updating
+    updatePaymentAmount(paymentAccountID, vendorTotal, vendorMiscCharges);
   };
 
-  // Vendor Commission Receivable
-  useEffect(() => {
+  const updateVendorTDS = (grossCommission, vendorServiceCharges, vendorTDSPercent) => {
     if (vendorTDSPercentFocused) {
-      setVendorTDS(
-        Number(
-          (((+grossCommission || 0) - (+vendorServiceCharges || 0)) *
-            (+vendorTDSPercent || 0)) /
-            100
-        ).toFixed(4)
-      );
+      let vendorTDS = Number(
+        (((+grossCommission || 0) - (+vendorServiceCharges || 0)) *
+          (+vendorTDSPercent || 0)) /
+          100
+      ).toFixed(4);
+      setVendorTDS(vendorTDS);
     }
-  }, [vendorTDSPercent, grossCommission]);
+  };
 
-  useEffect(() => {
-    if (!vendorTDSPercentFocused) {
+  const updateVendorTDSPercent = (vendorTDS, grossCommission, vendorServiceCharges) => {
+    if (!vendorTDSPercentFocused)
       setVendorTDSPercent(
         Number(
           (100 * vendorTDS) / ((+grossCommission || 0) - (+vendorServiceCharges || 0))
         ).toFixed(4)
       );
-    }
-  }, [vendorTDS, grossCommission]);
+  };
 
-  useEffect(() => {
+  const updateVendorServiceCharges = (grossCommission, vendorServiceChargePercent) => {
     if (vendorGSTFocused) {
-      setVendorServiceCharges(
-        Number(
-          ((+grossCommission || 0) * (+vendorServiceChargePercent || 0)) / 100
-        ).toFixed(4)
-      );
+      let vendorServiceCharges = Number(
+        ((+grossCommission || 0) * (+vendorServiceChargePercent || 0)) / 100
+      ).toFixed(4);
+      setVendorServiceCharges(vendorServiceCharges);
+      // Update
+      updateVendorTDS(grossCommission, vendorServiceCharges, vendorTDSPercent);
     }
-  }, [vendorServiceChargePercent, grossCommission]);
+  };
 
-  useEffect(() => {
-    if (!vendorGSTFocused) {
+  const updateVendorServiceChargePercent = (vendorServiceCharges, grossCommission) => {
+    if (!vendorGSTFocused)
       setVendorServiceChargePercent(
         Number((100 * (+vendorServiceCharges || 0)) / (+grossCommission || 0)).toFixed(4)
       );
-    }
-  }, [vendorServiceCharges, grossCommission]);
+  };
+
+  const updatePaymentAmount = (paymentAccountID, vendorTotal, vendorMiscCharges) => {
+    if (paymentAccountID?.value)
+      setPaymentAmount(Number((+vendorTotal || 0) - (+vendorMiscCharges || 0)));
+  };
+
+  // Vendor Commission Receivable Total
+  useEffect(() => {
+    updateVendorCommission();
+  }, [grossCommission, vendorServiceCharges, vendorTDS]);
+
+  const updateVendorCommission = () => {
+    setCommissionReceivable(
+      Math.round(
+        (+grossCommission || 0) - (+vendorTDS || 0) - (+vendorServiceCharges || 0)
+      )
+    );
+  };
 
   useEffect(() => {
     calculateGrossCommission();
@@ -567,24 +611,6 @@ const AddNewBooking = () => {
     vendorBaseAmount,
     vendorYQAmount,
   ]);
-
-  useEffect(() => {
-    updateVendorCommission();
-  }, [grossCommission, vendorServiceCharges, vendorTDS]);
-
-  useEffect(() => {
-    if (paymentAccountID?.value)
-      setPaymentAmount(Number((+vendorTotal || 0) - (+vendorMiscCharges || 0)));
-  }, [paymentAccountID, vendorTotal, vendorMiscCharges]);
-
-  // Vendor Commission Receivable Total
-  const updateVendorCommission = () => {
-    setCommissionReceivable(
-      Math.round(
-        (+grossCommission || 0) - (+vendorTDS || 0) - (+vendorServiceCharges || 0)
-      )
-    );
-  };
 
   const calculateGrossCommission = () => {
     if (commissionRuleID) {
@@ -601,36 +627,117 @@ const AddNewBooking = () => {
             iata_comm)) /
           100
       ).toFixed(4);
-      setGrossCommission(Number((+plb_comm || 0) + (+iata_comm || 0)));
+      let grossCommission = Number((+plb_comm || 0) + (+iata_comm || 0));
+      setGrossCommission(grossCommission);
+      // Calls after gross commission is updated
+      if (grossFirstTime) {
+        updateVendorTDS(grossCommission, vendorServiceCharges, vendorTDSPercent);
+        updateVendorTDSPercent(vendorTDS, grossCommission, vendorServiceCharges);
+        updateVendorServiceCharges(grossCommission, vendorServiceChargePercent);
+        updateVendorServiceChargePercent(vendorServiceCharges, grossCommission);
+      } else {
+        updateVendorTDSPercent(vendorTDS, grossCommission, vendorServiceCharges);
+        updateVendorServiceChargePercent(vendorServiceCharges, grossCommission);
+        updateSetClientServiceChargePercent(
+          clientServiceCharges,
+          clientBaseAmount,
+          clientReferralFee
+        );
+        setVendorGSTFocused(true);
+        setVendorTDSPercentFocused(true);
+        setGrossFirstTime(true);
+      }
     }
   };
 
-  useEffect(() => {
-    if (vendorTaxAmount) setClientTaxAmount(vendorTaxAmount);
-  }, [vendorTaxAmount]);
-
   // Client Calculations
-  useEffect(() => {
-    if (xplorzGSTFocused) {
-      let temp = Number(
-        (((+clientBaseAmount || 0) + (+clientReferralFee || 0)) *
-          (+clientServiceChargePercent || 0)) /
-          100
-      ).toFixed(0);
-      if (temp && temp !== 'NaN') setClientServicesCharges(temp);
-    }
-  }, [clientServiceChargePercent, clientReferralFee, clientBaseAmount]);
 
-  useEffect(() => {
-    if (!xplorzGSTFocused) {
-      setClientServiceChargePercent(
-        Number(
-          (100 * (+clientServiceCharges || 0)) /
-            ((+clientBaseAmount || 0) + (+clientReferralFee || 0))
-        ).toFixed(4)
+  const updateClientTaxAmount = (vendorTaxAmount) => {
+    if (vendorTaxAmount) {
+      setClientTaxAmount(vendorTaxAmount);
+      // Updating
+      updateClientBase(clientQuotedAmount, vendorTaxAmount, clientGSTAmount);
+    }
+  };
+
+  const updateSetClientServiceCharges = (
+    clientBaseAmount,
+    clientReferralFee,
+    clientServiceChargePercent
+  ) => {
+    let clientServiceCharges = Number(
+      (((+clientBaseAmount || 0) + (+clientReferralFee || 0)) *
+        (+clientServiceChargePercent || 0)) /
+        100
+    ).toFixed(0);
+    if (clientServiceCharges && clientServiceCharges !== 'NaN') {
+      setClientServicesCharges(clientServiceCharges);
+    }
+  };
+
+  const updateSetClientServiceChargePercent = (
+    clientServiceCharges,
+    clientBaseAmount,
+    clientReferralFee
+  ) => {
+    setClientServiceChargePercent(
+      Number(
+        (100 * (+clientServiceCharges || 0)) /
+          ((+clientBaseAmount || 0) + (+clientReferralFee || 0))
+      ).toFixed(4)
+    );
+  };
+
+  const updateClientGSTAmount = (
+    clientGSTPercent,
+    vendorGSTAmount,
+    clientQuotedAmount,
+    clientTaxAmount
+  ) => {
+    if (clientGSTPercent?.value !== null && clientGSTPercent?.value !== undefined) {
+      let clientGSTAmount = '';
+      if (clientGSTPercent?.label === 'None') clientGSTAmount = 0;
+      else if (clientGSTPercent?.label === 'Vendor GST')
+        clientGSTAmount = +vendorGSTAmount;
+      else if (clientGSTPercent?.label === '5% of Base') {
+        clientGSTAmount = Number(
+          (((+clientQuotedAmount || 0) - (+clientTaxAmount || 0)) * (5 / 100)).toFixed(4)
+        );
+      } else if (clientGSTPercent?.label === '12% of Base') {
+        clientGSTAmount = Number(
+          (((+clientQuotedAmount || 0) - (+clientTaxAmount || 0)) * (12 / 100)).toFixed(4)
+        );
+      }
+      setClientGSTAmount(clientGSTAmount);
+      // Updating Base Amount
+      updateClientBase(clientQuotedAmount, clientTaxAmount, clientGSTAmount);
+    }
+  };
+
+  const updateClientQuotedAmount = (
+    clientBaseAmount,
+    clientTaxAmount,
+    clientGSTAmount
+  ) => {
+    setClientQuotedAmount(
+      (+clientBaseAmount || 0) + (+clientTaxAmount || 0) + (+clientGSTAmount || 0)
+    );
+  };
+
+  // Client Total
+  const updateClientBase = (clientQuotedAmount, clientTaxAmount, clientGSTAmount) => {
+    if (+clientQuotedAmount > 0) {
+      let clientBaseAmount =
+        (+clientQuotedAmount || 0) - (+clientTaxAmount || 0) - (+clientGSTAmount || 0);
+      setClientBaseAmount(clientBaseAmount);
+      // Updating
+      updateSetClientServiceCharges(
+        clientBaseAmount,
+        clientReferralFee,
+        clientServiceChargePercent
       );
     }
-  }, [clientServiceCharges]);
+  };
 
   useEffect(() => {
     updateClientTotal();
@@ -641,49 +748,6 @@ const AddNewBooking = () => {
     clientReferralFee,
     clientBaseAmount,
   ]);
-
-  useEffect(() => {
-    if (clientGSTPercent?.value !== null && clientGSTPercent?.value !== undefined) {
-      if (clientGSTPercent.label === 'None') setClientGSTAmount(0);
-      else if (clientGSTPercent.label === 'Vendor GST')
-        setClientGSTAmount(+vendorGSTAmount);
-      else if (clientGSTPercent.label === '5% of Base') {
-        setClientGSTAmount(
-          Number(
-            (((+clientQuotedAmount || 0) - (+clientTaxAmount || 0)) * (5 / 100)).toFixed(
-              4
-            )
-          )
-        );
-      } else if (clientGSTPercent.label === '12% of Base') {
-        setClientGSTAmount(
-          Number(
-            (((+clientQuotedAmount || 0) - (+clientTaxAmount || 0)) * (12 / 100)).toFixed(
-              4
-            )
-          )
-        );
-      }
-    }
-  }, [clientGSTPercent]);
-  useEffect(() => {
-    if (clientBaseAmountFocused)
-      setClientQuotedAmount(
-        (+clientBaseAmount || 0) + (+clientTaxAmount || 0) + (+clientGSTAmount || 0)
-      );
-  }, [clientBaseAmount]);
-
-  useEffect(() => {
-    if (!clientBaseAmountFocused) updateClientBase();
-  }, [clientTaxAmount, clientGSTAmount, clientQuotedAmount]);
-
-  // Client Total
-  const updateClientBase = () => {
-    if (+clientQuotedAmount > 0)
-      setClientBaseAmount(
-        (+clientQuotedAmount || 0) - (+clientTaxAmount || 0) - (+clientGSTAmount || 0)
-      );
-  };
 
   const updateClientTotal = () => {
     setClientTotal(
@@ -801,7 +865,7 @@ const AddNewBooking = () => {
                         />
                       </div>
                     )}
-                    <div className=' col-lg-4'>
+                    <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setTicketNumber(e.target.value)}
@@ -833,7 +897,7 @@ const AddNewBooking = () => {
                         </div>
                       </div>
                     )}
-                    <div className=' col-lg-4'>
+                    <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setPNR(e.target.value)}
@@ -1128,13 +1192,22 @@ const AddNewBooking = () => {
                           <Select
                             options={clients}
                             value={clientReferrerID}
-                            onChange={(id) => setClientReferrerID(id)}
+                            onChange={(id) => {
+                              setClientReferrerID(id);
+                            }}
                           />
                         </div>
-                        <div className=' col-lg-4'>
+                        <div className='col-lg-4'>
                           <div className='form-input'>
                             <input
-                              onChange={(e) => setClientReferralFee(e.target.value)}
+                              onChange={(e) => {
+                                setClientReferralFee(e.target.value);
+                                updateSetClientServiceCharges(
+                                  clientBaseAmount,
+                                  e.target.value,
+                                  clientServiceChargePercent
+                                );
+                              }}
                               value={clientReferralFee}
                               placeholder=' '
                               type='number'
@@ -1162,7 +1235,9 @@ const AddNewBooking = () => {
                     <div className=' col-lg-4'>
                       <div className='form-input'>
                         <input
-                          onChange={(e) => setVendorBaseAmount(e.target.value)}
+                          onChange={(e) => {
+                            setVendorBaseAmount(e.target.value);
+                          }}
                           value={vendorBaseAmount}
                           placeholder=' '
                           type='number'
@@ -1177,7 +1252,9 @@ const AddNewBooking = () => {
                     <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
-                          onChange={(e) => setVendorYQAmount(e.target.value)}
+                          onChange={(e) => {
+                            setVendorYQAmount(e.target.value);
+                          }}
                           value={vendorYQAmount}
                           placeholder=' '
                           type='number'
@@ -1188,10 +1265,13 @@ const AddNewBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className=' col-lg-4'>
+                    <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
-                          onChange={(e) => setVendorTaxAmount(e.target.value)}
+                          onChange={(e) => {
+                            setVendorTaxAmount(e.target.value);
+                            updateClientTaxAmount(e.target.value);
+                          }}
                           value={vendorTaxAmount}
                           placeholder=' '
                           type='number'
@@ -1203,10 +1283,12 @@ const AddNewBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className=' col-lg-4'>
+                    <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
-                          onChange={(e) => setVendorGSTAmount(e.target.value)}
+                          onChange={(e) => {
+                            setVendorGSTAmount(e.target.value);
+                          }}
                           value={vendorGSTAmount}
                           placeholder=' '
                           type='number'
@@ -1218,10 +1300,17 @@ const AddNewBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className=' col-lg-4'>
+                    <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
-                          onChange={(e) => setVendorMiscChargers(e.target.value)}
+                          onChange={(e) => {
+                            setVendorMiscChargers(e.target.value);
+                            updatePaymentAmount(
+                              paymentAccountID,
+                              vendorTotal,
+                              e.target.value
+                            );
+                          }}
                           value={vendorMiscCharges}
                           placeholder=' '
                           type='number'
@@ -1232,16 +1321,16 @@ const AddNewBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className=' col-lg-4'>
+                    <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
+                          className='bg-light'
                           onChange={(e) => setVendorTotal(e.target.value)}
                           value={vendorTotal}
                           placeholder=' '
                           type='number'
                           onWheel={(e) => e.target.blur()}
                           disabled
-                          className='bg-light'
                           required
                         />
                         <label className='lh-1 text-16 text-light-1'>
@@ -1255,10 +1344,13 @@ const AddNewBooking = () => {
                       <Select
                         options={paymentAccounts}
                         value={paymentAccountID}
-                        onChange={(id) => setPaymentAccountID(id)}
+                        onChange={(id) => {
+                          setPaymentAccountID(id);
+                          updatePaymentAmount(id, vendorTotal, vendorMiscCharges);
+                        }}
                       />
                     </div>
-                    <div className=' col-lg-4'>
+                    <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setPaymentAmount(e.target.value)}
@@ -1297,13 +1389,17 @@ const AddNewBooking = () => {
                           <Select
                             options={commissionRules}
                             value={commissionRuleID}
-                            onChange={(id) => setCommissionRuleID(id)}
+                            onChange={(id) => {
+                              setCommissionRuleID(id);
+                            }}
                           />
                         </div>
                         <div className='col-lg-4'>
                           <div className='form-input'>
                             <input
-                              onChange={(e) => setIATACommissionPercent(e.target.value)}
+                              onChange={(e) => {
+                                setIATACommissionPercent(e.target.value);
+                              }}
                               value={IATACommissionPercent}
                               placeholder=' '
                               type='number'
@@ -1317,7 +1413,9 @@ const AddNewBooking = () => {
                         <div className='col-lg-4'>
                           <div className='form-input'>
                             <input
-                              onChange={(e) => setPLBCommissionPercent(e.target.value)}
+                              onChange={(e) => {
+                                setPLBCommissionPercent(e.target.value);
+                              }}
                               value={plbCommissionPercent}
                               placeholder=' '
                               type='number'
@@ -1343,9 +1441,10 @@ const AddNewBooking = () => {
                               paddingTop: 'unset',
                               backgroundColor: '#ffe',
                             }}
-                            onChange={(e) =>
-                              setVendorServiceChargePercent(e.target.value)
-                            }
+                            onChange={(e) => {
+                              setVendorServiceChargePercent(e.target.value);
+                              updateVendorServiceCharges(grossCommission, e.target.value);
+                            }}
                             value={vendorServiceChargePercent}
                             type='number'
                             onWheel={(e) => e.target.blur()}
@@ -1364,7 +1463,13 @@ const AddNewBooking = () => {
                                 minHeight: 'unset',
                                 paddingTop: 'unset',
                               }}
-                              onChange={(e) => setVendorServiceCharges(e.target.value)}
+                              onChange={(e) => {
+                                setVendorServiceCharges(e.target.value);
+                                updateVendorServiceChargePercent(
+                                  e.target.value,
+                                  grossCommission
+                                );
+                              }}
                               value={vendorServiceCharges}
                               placeholder=' '
                               type='number'
@@ -1387,7 +1492,14 @@ const AddNewBooking = () => {
                               paddingTop: 'unset',
                               backgroundColor: '#ffe',
                             }}
-                            onChange={(e) => setVendorTDSPercent(e.target.value)}
+                            onChange={(e) => {
+                              setVendorTDSPercent(e.target.value);
+                              updateVendorTDS(
+                                grossCommission,
+                                vendorServiceCharges,
+                                e.target.value
+                              );
+                            }}
                             value={vendorTDSPercent}
                             placeholder=' '
                             type='number'
@@ -1406,7 +1518,14 @@ const AddNewBooking = () => {
                                 minHeight: 'unset',
                                 paddingTop: 'unset',
                               }}
-                              onChange={(e) => setVendorTDS(e.target.value)}
+                              onChange={(e) => {
+                                setVendorTDS(e.target.value);
+                                updateVendorTDSPercent(
+                                  e.target.value,
+                                  grossCommission,
+                                  vendorServiceCharges
+                                );
+                              }}
                               value={vendorTDS}
                               placeholder=' '
                               type='number'
@@ -1435,10 +1554,17 @@ const AddNewBooking = () => {
                       </div>
                     </div>
                     <h3>Client Details</h3>
-                    <div className=' col-lg-4'>
+                    <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
-                          onChange={(e) => setClientQuotedAmount(e.target.value)}
+                          onChange={(e) => {
+                            setClientQuotedAmount(e.target.value);
+                            updateClientBase(
+                              e.target.value,
+                              clientTaxAmount,
+                              clientGSTAmount
+                            );
+                          }}
                           value={clientQuotedAmount}
                           placeholder=' '
                           type='number'
@@ -1450,10 +1576,22 @@ const AddNewBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className=' col-lg-4'>
+                    <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
-                          onChange={(e) => setClientBaseAmount(e.target.value)}
+                          onChange={(e) => {
+                            setClientBaseAmount(e.target.value);
+                            updateSetClientServiceCharges(
+                              e.target.value,
+                              clientReferralFee,
+                              clientServiceChargePercent
+                            );
+                            updateClientQuotedAmount(
+                              e.target.value,
+                              clientTaxAmount,
+                              clientGSTAmount
+                            );
+                          }}
                           value={clientBaseAmount}
                           placeholder=' '
                           type='number'
@@ -1470,10 +1608,17 @@ const AddNewBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className=' col-lg-4'>
+                    <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
-                          onChange={(e) => setClientTaxAmount(e.target.value)}
+                          onChange={(e) => {
+                            setClientTaxAmount(e.target.value);
+                            updateClientBase(
+                              clientQuotedAmount,
+                              e.target.value,
+                              clientGSTAmount
+                            );
+                          }}
                           value={clientTaxAmount}
                           placeholder=' '
                           type='number'
@@ -1492,7 +1637,15 @@ const AddNewBooking = () => {
                           <label></label>
                           <Select
                             className='small'
-                            onChange={(id) => setClientGSTPercent(id)}
+                            onChange={(id) => {
+                              setClientGSTPercent(id);
+                              updateClientGSTAmount(
+                                id,
+                                vendorGSTAmount,
+                                clientQuotedAmount,
+                                clientTaxAmount
+                              );
+                            }}
                             defaultValue={{ value: 0, label: 'None' }}
                             options={clientGSTOptions}
                             value={clientGSTPercent}
@@ -1505,14 +1658,21 @@ const AddNewBooking = () => {
                               minHeight: 'unset',
                               paddingTop: 'unset',
                             }}
-                            onChange={(e) => setClientGSTAmount(e.target.value)}
+                            onChange={(e) => {
+                              setClientGSTAmount(e.target.value);
+                              updateClientBase(
+                                clientQuotedAmount,
+                                clientTaxAmount,
+                                e.target.value
+                              );
+                            }}
                             value={clientGSTAmount}
                             placeholder=' '
-                            className='bg-light'
                             type='number'
                             onWheel={(e) => e.target.blur()}
                             required
                             disabled
+                            className='bg-light'
                           />
                           <label className='lh-1 text-16 text-light-1'></label>
                         </div>
@@ -1524,9 +1684,14 @@ const AddNewBooking = () => {
                           <label className='col-12 fw-500 mb-4'>Xplorz GST Amount</label>
                           <div className='form-input col-4'>
                             <input
-                              onChange={(e) =>
-                                setClientServiceChargePercent(e.target.value)
-                              }
+                              onChange={(e) => {
+                                setClientServiceChargePercent(e.target.value);
+                                updateSetClientServiceCharges(
+                                  clientBaseAmount,
+                                  clientReferralFee,
+                                  e.target.value
+                                );
+                              }}
                               style={{
                                 height: '50px',
                                 minHeight: 'unset',
@@ -1552,7 +1717,14 @@ const AddNewBooking = () => {
                                   minHeight: 'unset',
                                   paddingTop: 'unset',
                                 }}
-                                onChange={(e) => setClientServicesCharges(e.target.value)}
+                                onChange={(e) => {
+                                  setClientServicesCharges(e.target.value);
+                                  updateSetClientServiceChargePercent(
+                                    e.target.value,
+                                    clientBaseAmount,
+                                    clientReferralFee
+                                  );
+                                }}
                                 value={clientServiceCharges}
                                 placeholder=' '
                                 type='number'

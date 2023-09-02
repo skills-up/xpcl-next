@@ -322,6 +322,14 @@ const AddNewBooking = () => {
     }
   };
 
+  // Offshore
+  useEffect(() => {
+    if (isOffshore) {
+      setClientServiceChargePercent(0);
+      setClientServicesCharges(0);
+    }
+  }, [isOffshore]);
+
   // // If vendor is an airline, setting airline automatically
   // useEffect(() => {
   //   if (vendorID?.value)
@@ -339,11 +347,13 @@ const AddNewBooking = () => {
   // Booking Type Changes
   useEffect(() => {
     // Client Service Charge Percent
-    if (+clientServiceCharges === 0 || clientServiceCharges.trim().length === 0) {
-      if (bookingType?.value === 'Domestic Flight Ticket')
+    // Client Service Charge Percent
+    if (bookingType?.value)
+      if (bookingType?.value === 'Domestic Flight Ticket') {
         setClientServiceChargePercent(0.9);
-      else setClientServiceChargePercent(1.8);
-    }
+      } else {
+        setClientServiceChargePercent(1.8);
+      }
     // If misc remove booking sectors
     // If not remove misc type
     if (bookingType?.value === 'Miscellaneous') setBookingSectors([]);
@@ -351,9 +361,6 @@ const AddNewBooking = () => {
   }, [bookingType]);
 
   // Vendor Calculations
-
-  // TODO go through each update function one by one and check
-  // the states they are updating are depedency in the copy file
 
   // Vendor Total
   useEffect(
@@ -382,7 +389,6 @@ const AddNewBooking = () => {
 
   const updateVendorTDS = (grossCommission, vendorServiceCharges, vendorTDSPercent) => {
     if (vendorTDSPercentFocused) {
-      console.log('vendor', grossCommission, vendorServiceCharges, vendorTDSPercent);
       let vendorTDS = Number(
         (((+grossCommission || 0) - (+vendorServiceCharges || 0)) *
           (+vendorTDSPercent || 0)) /
@@ -430,7 +436,6 @@ const AddNewBooking = () => {
   }, [grossCommission, vendorServiceCharges, vendorTDS]);
 
   const updateVendorCommission = () => {
-    console.log('commission', grossCommission, vendorTDS, vendorServiceCharges);
     setCommissionReceivable(
       Math.round(
         (+grossCommission || 0) - (+vendorTDS || 0) - (+vendorServiceCharges || 0)
@@ -464,7 +469,6 @@ const AddNewBooking = () => {
           100
       ).toFixed(4);
       let grossCommission = Number((+plb_comm || 0) + (+iata_comm || 0));
-      console.log('gross', grossCommission, iata_comm, plb_comm);
       setGrossCommission(grossCommission);
       // Calls after gross commission is updated
       updateVendorTDS(grossCommission, vendorServiceCharges, vendorTDSPercent);
@@ -477,7 +481,11 @@ const AddNewBooking = () => {
   // Client Calculations
 
   const updateClientTaxAmount = (vendorTaxAmount) => {
-    if (vendorTaxAmount) setClientTaxAmount(vendorTaxAmount);
+    if (vendorTaxAmount) {
+      setClientTaxAmount(vendorTaxAmount);
+      // Updating
+      updateClientBase(clientQuotedAmount, vendorTaxAmount, clientGSTAmount);
+    }
   };
 
   const updateSetClientServiceCharges = (
@@ -529,6 +537,8 @@ const AddNewBooking = () => {
         );
       }
       setClientGSTAmount(clientGSTAmount);
+      // Updating Base Amount
+      updateClientBase(clientQuotedAmount, clientTaxAmount, clientGSTAmount);
     }
   };
 
@@ -544,7 +554,6 @@ const AddNewBooking = () => {
 
   // Client Total
   const updateClientBase = (clientQuotedAmount, clientTaxAmount, clientGSTAmount) => {
-    console.log('base tax', clientTaxAmount);
     if (+clientQuotedAmount > 0) {
       let clientBaseAmount =
         (+clientQuotedAmount || 0) - (+clientTaxAmount || 0) - (+clientGSTAmount || 0);
@@ -569,15 +578,6 @@ const AddNewBooking = () => {
   ]);
 
   const updateClientTotal = () => {
-    console.log(
-      'test',
-      clientBaseAmount,
-      clientGSTAmount,
-      clientTaxAmount,
-      clientServiceCharges,
-      clientReferralFee
-    );
-
     setClientTotal(
       Number(
         (+clientBaseAmount || 0) +
