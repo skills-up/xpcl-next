@@ -154,30 +154,40 @@ const AddNewPartialRefund = () => {
           );
           setBookingData(bookingData.data);
           // Prefilling
-          setAirlineCancellationCharges(response.data.airline_cancellation_charges);
-          setRefundAmount(response.data.refund_amount);
-          setVendorServiceFee(response.data.vendor_service_fee);
-          setClientCancellationCharges(response.data.client_cancellation_charges);
-          setVendorBaseAmount(response.data.vendor_base_amount);
-          setVendorYQAmount(response.data.vendor_yq_amount);
-          setVendorTaxAmount(response.data.vendor_tax_amount);
-          setVendorGSTAmount(response.data.vendor_gst_amount);
+          setAirlineCancellationCharges(
+            (+response.data.airline_cancellation_charges || 0).toFixed(0)
+          );
+          setRefundAmount((+response.data.refund_amount || 0).toFixed(0));
+          setVendorServiceFee((+response.data.vendor_service_fee || 0).toFixed(0));
+          setClientCancellationCharges(
+            (+response.data.client_cancellation_charges || 0).toFixed(0)
+          );
+          setVendorBaseAmount((+response.data.vendor_base_amount || 0).toFixed(0));
+          setVendorYQAmount((+response.data.vendor_yq_amount || 0).toFixed(0));
+          setVendorTaxAmount((+response.data.vendor_tax_amount || 0).toFixed(0));
+          setVendorGSTAmount((+response.data.vendor_gst_amount || 0).toFixed(0));
           setIATACommissionPercent(response.data.iata_commission_percent);
           setPLBCommissionPercent(response.data.plb_commission_percent);
-          setVendorServiceCharges(response.data.vendor_service_charges);
-          setVendorTDS(response.data.vendor_tds);
-          setClientReferralFee(response.data.client_referral_fee);
+          setVendorServiceCharges(
+            (+response.data.vendor_service_charges || 0).toFixed(0)
+          );
+          setVendorTDS((+response.data.vendor_tds || 0).toFixed(0));
+          setClientReferralFee((+response.data.client_referral_fee || 0).toFixed(0));
           setReason(response.data.reason);
-          setClientBaseAmount(response.data.client_base_amount);
-          setClientGSTAmount(response.data.client_gst_amount);
+          setClientBaseAmount((+response.data.client_base_amount || 0).toFixed(0));
+          setClientGSTAmount((+response.data.client_gst_amount || 0).toFixed(0));
           setIsOffshore(response.data?.is_offshore);
-          setClientServicesCharges(response.data.client_service_charges);
-          setClientTaxAmount(response.data.client_tax_amount);
-          setVendorTotal(response.data.vendor_total);
+          setClientServicesCharges(
+            (+response.data.client_service_charges || 0).toFixed(0)
+          );
+          setClientTaxAmount((+response.data.client_tax_amount || 0).toFixed(0));
+          setVendorTotal((+response.data.vendor_total || 0).toFixed(0));
           setClientQuotedAmount(
-            +response.data.client_base_amount +
+            (
+              +response.data.client_base_amount +
               +response.data.client_tax_amount +
               +response.data.client_gst_amount
+            ).toFixed(0)
           );
           // Setting Client GST Percent
           if (
@@ -358,7 +368,7 @@ const AddNewPartialRefund = () => {
         (((+grossCommission || 0) - (+vendorServiceCharges || 0)) *
           (+vendorTDSPercent || 0)) /
           100
-      ).toFixed(4);
+      ).toFixed(0);
       setVendorTDS(vendorTDS);
     }
   };
@@ -368,7 +378,7 @@ const AddNewPartialRefund = () => {
       setVendorTDSPercent(
         Number(
           (100 * vendorTDS) / ((+grossCommission || 0) - (+vendorServiceCharges || 0))
-        ).toFixed(4)
+        ).toFixed(1)
       );
   };
 
@@ -376,7 +386,7 @@ const AddNewPartialRefund = () => {
     if (vendorGSTFocused) {
       let vendorServiceCharges = Number(
         ((+grossCommission || 0) * (+vendorServiceChargePercent || 0)) / 100
-      ).toFixed(4);
+      ).toFixed(0);
       setVendorServiceCharges(vendorServiceCharges);
       // Update
       updateVendorTDS(grossCommission, vendorServiceCharges, vendorTDSPercent);
@@ -386,7 +396,7 @@ const AddNewPartialRefund = () => {
   const updateVendorServiceChargePercent = (vendorServiceCharges, grossCommission) => {
     if (!vendorGSTFocused)
       setVendorServiceChargePercent(
-        Number((100 * (+vendorServiceCharges || 0)) / (+grossCommission || 0)).toFixed(4)
+        Number((100 * (+vendorServiceCharges || 0)) / (+grossCommission || 0)).toFixed(1)
       );
   };
 
@@ -420,13 +430,13 @@ const AddNewPartialRefund = () => {
         bookingType?.value === 'Miscellaneous'
           ? Number(
               ((+IATACommissionPercent || 0) * (+vendorBaseAmount || 0)) / 100
-            ).toFixed(4)
+            ).toFixed(0)
           : Number(
               ((+IATACommissionPercent || 0) *
                 ((+commissionRuleID.iata_basic || 0) * (+vendorBaseAmount || 0) +
                   (+commissionRuleID.iata_yq || 0) * (+vendorYQAmount || 0))) /
                 100
-            ).toFixed(4);
+            ).toFixed(0);
       const plb_comm =
         bookingType?.value === 'Miscellaneous'
           ? 0
@@ -436,7 +446,7 @@ const AddNewPartialRefund = () => {
                   (+commissionRuleID.plb_yq || 0) * (+vendorYQAmount || 0) -
                   iata_comm)) /
                 100
-            ).toFixed(4);
+            ).toFixed(0);
       let grossCommission = Number((+plb_comm || 0) + (+iata_comm || 0));
       setGrossCommission(grossCommission);
       // Calls after gross commission is updated
@@ -494,7 +504,7 @@ const AddNewPartialRefund = () => {
       Number(
         (100 * (+clientServiceCharges || 0)) /
           ((+clientBaseAmount || 0) + (+clientReferralFee || 0))
-      ).toFixed(4)
+      ).toFixed(1)
     );
   };
 
@@ -511,11 +521,11 @@ const AddNewPartialRefund = () => {
         clientGSTAmount = +vendorGSTAmount;
       else if (clientGSTPercent?.label === '5% of Base') {
         clientGSTAmount = Number(
-          (((+clientQuotedAmount || 0) - (+clientTaxAmount || 0)) * (5 / 100)).toFixed(4)
+          (((+clientQuotedAmount || 0) - (+clientTaxAmount || 0)) * (5 / 100)).toFixed(0)
         );
       } else if (clientGSTPercent?.label === '12% of Base') {
         clientGSTAmount = Number(
-          (((+clientQuotedAmount || 0) - (+clientTaxAmount || 0)) * (12 / 100)).toFixed(4)
+          (((+clientQuotedAmount || 0) - (+clientTaxAmount || 0)) * (12 / 100)).toFixed(0)
         );
       }
       setClientGSTAmount(clientGSTAmount);
