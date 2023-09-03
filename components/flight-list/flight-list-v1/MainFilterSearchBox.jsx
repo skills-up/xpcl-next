@@ -212,7 +212,7 @@ const MainFilterSearchBox = () => {
         {
           from: to?.iata,
           to: from?.iata,
-          date: returnDate.format('YYYY-MM-DD'),
+          date: returnDate?.format('YYYY-MM-DD'),
         },
       ],
     };
@@ -321,7 +321,7 @@ const MainFilterSearchBox = () => {
   useEffect(() => console.log('sd', searchData), [searchData]);
 
   return (
-    <>
+    <div className='col-lg-6'>
       {/* <div className='row y-gap-20 items-center'>
         <FilterSelect />
       </div> */}
@@ -335,7 +335,7 @@ const MainFilterSearchBox = () => {
         <div className='flight-search pl-20 lg:pl-0'>
           {/* Round Trip */}
           <div className='row items-center y-gap-10'>
-            <div className='col-lg-2 ml-6 d-flex justify-center items-center'>
+            <div className='col-lg-3 ml-6 d-flex justify-center items-center'>
               <div className='dropdown js-dropdown'>
                 <div
                   className='dropdown__button d-flex items-center text-15'
@@ -343,7 +343,7 @@ const MainFilterSearchBox = () => {
                   data-bs-auto-close='true'
                   data-bs-offset='0,0'
                 >
-                  <span className='js-dropdown-title text-18 d-flex items-center gap-2'>
+                  <span className='js-dropdown-title text-16 d-flex items-center gap-2'>
                     {returnFlight ? (
                       <RiArrowLeftRightFill className='text-25 mb-1' />
                     ) : (
@@ -446,29 +446,43 @@ const MainFilterSearchBox = () => {
                 label: `|${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
                 iata: airport.iata_code,
               }))}
-              formatOptionLabel={(opt) => {
+              formatOptionLabel={(opt, { context }) => {
                 const [_, iata_code, city, name, country_name] = opt.label.split('|');
-                return (
-                  <div key={iata_code}>
-                    <div
-                      className='d-flex justify-between align-items-center'
-                      style={{ fontSize: '1rem' }}
-                    >
-                      <span>
-                        {city} (<strong>{iata_code}</strong>)
-                      </span>
+                if (context === 'value')
+                  return (
+                    <div key={iata_code}>
                       <div
-                        style={{
-                          fontSize: 'small',
-                          fontStyle: 'italic',
-                        }}
+                        className='d-flex justify-between align-items-center'
+                        style={{ fontSize: '1rem' }}
                       >
-                        {country_name}
+                        <span>
+                          <strong>{iata_code}</strong> <small>({country_name})</small>
+                        </span>
                       </div>
                     </div>
-                    <small>{name}</small>
-                  </div>
-                );
+                  );
+                else
+                  return (
+                    <div key={iata_code}>
+                      <div
+                        className='d-flex justify-between align-items-center'
+                        style={{ fontSize: '1rem' }}
+                      >
+                        <span>
+                          {city} (<strong>{iata_code}</strong>)
+                        </span>
+                        <div
+                          style={{
+                            fontSize: 'small',
+                            fontStyle: 'italic',
+                          }}
+                        >
+                          {country_name}
+                        </div>
+                      </div>
+                      <small>{name}</small>
+                    </div>
+                  );
               }}
               value={from}
               onChange={(id) => setFrom(id)}
@@ -504,29 +518,43 @@ const MainFilterSearchBox = () => {
                 label: `|${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
                 iata: airport.iata_code,
               }))}
-              formatOptionLabel={(opt) => {
+              formatOptionLabel={(opt, { context }) => {
                 const [_, iata_code, city, name, country_name] = opt.label.split('|');
-                return (
-                  <div key={iata_code}>
-                    <div
-                      className='d-flex justify-between align-items-center'
-                      style={{ fontSize: '1rem' }}
-                    >
-                      <span>
-                        {city} (<strong>{iata_code}</strong>)
-                      </span>
+                if (context === 'value')
+                  return (
+                    <div key={iata_code}>
                       <div
-                        style={{
-                          fontSize: 'small',
-                          fontStyle: 'italic',
-                        }}
+                        className='d-flex justify-between align-items-center'
+                        style={{ fontSize: '1rem' }}
                       >
-                        {country_name}
+                        <span>
+                          <strong>{iata_code}</strong> <small>({country_name})</small>
+                        </span>
                       </div>
                     </div>
-                    <small>{name}</small>
-                  </div>
-                );
+                  );
+                else
+                  return (
+                    <div key={iata_code}>
+                      <div
+                        className='d-flex justify-between align-items-center'
+                        style={{ fontSize: '1rem' }}
+                      >
+                        <span>
+                          {city} (<strong>{iata_code}</strong>)
+                        </span>
+                        <div
+                          style={{
+                            fontSize: 'small',
+                            fontStyle: 'italic',
+                          }}
+                        >
+                          {country_name}
+                        </div>
+                      </div>
+                      <small>{name}</small>
+                    </div>
+                  );
               }}
               value={to}
               onChange={(id) => setTo(id)}
@@ -540,9 +568,11 @@ const MainFilterSearchBox = () => {
               style={{ border: '1px solid lightgray' }}
             >
               <div className='text-center'>
-                <label className='d-flex gap-2 items-center'>
-                  <SlCalender className='text-20 mb-1' /> Depart
-                </label>
+                {!departDate && (
+                  <label className='d-flex gap-2 items-center'>
+                    <SlCalender className='text-20 mb-1' /> Depart
+                  </label>
+                )}
                 <DatePicker
                   style={{ fontSize: '1rem' }}
                   inputClass='custom_input-picker text-center'
@@ -550,7 +580,7 @@ const MainFilterSearchBox = () => {
                   value={departDate}
                   onChange={(i) => {
                     setDepartDate(i);
-                    if (returnDate.valueOf() < i.valueOf()) setReturnDate(i);
+                    if (returnDate?.valueOf() < i?.valueOf()) setReturnDate(i);
                   }}
                   numberOfMonths={1}
                   offsetY={10}
@@ -562,9 +592,11 @@ const MainFilterSearchBox = () => {
               {/* End Depart */}
               {returnFlight && (
                 <div className='text-center'>
-                  <label className='d-flex gap-2 items-center'>
-                    <SlCalender className='text-20 mb-1' /> Return
-                  </label>
+                  {!returnDate && (
+                    <label className='d-flex gap-2 items-center'>
+                      <SlCalender className='text-20 mb-1' /> Return
+                    </label>
+                  )}
                   <DatePicker
                     style={{ fontSize: '1rem' }}
                     inputClass='custom_input-picker text-center'
@@ -606,7 +638,7 @@ const MainFilterSearchBox = () => {
         </div>
       </div>
       {/* End .mainSearch */}
-    </>
+    </div>
   );
 };
 

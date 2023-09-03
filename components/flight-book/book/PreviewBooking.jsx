@@ -538,8 +538,8 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                         }${
                           travellerDOBS.INF > 0
                             ? `, ${travellerDOBS.INF} ${Pluralize(
-                                'child',
-                                'children',
+                                'infant',
+                                'infants',
                                 travellerDOBS.INF
                               )}`
                             : ''

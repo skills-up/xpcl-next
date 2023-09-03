@@ -1,41 +1,49 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { setCabins } from '../../../features/flightSearch/flightSearchSlice';
+import { useState } from 'react';
 
 const Cabin = () => {
   const dispatch = useDispatch();
   const cabins = useSelector((state) => state.flightSearch.value.cabins);
+  const [checkAll, setCheckAll] = useState(false);
 
   return (
     <>
       <div className='row mb-3'>
-        <div className='col-6'>
-          <button
-            className='btn col-12 btn-outline-primary text-15'
-            onClick={() => {
-              let temp = {};
-              for (let [key, value] of Object.entries(cabins)) {
-                temp[key] = { ...value, value: true };
-              }
-              dispatch(setCabins(temp));
-            }}
-          >
-            Check All
-          </button>
-        </div>
-        <div className='col-6'>
-          <button
-            className='btn col-12 btn-outline-primary text-15'
-            onClick={() => {
-              let temp = {};
-              for (let [key, value] of Object.entries(cabins)) {
-                temp[key] = { ...value, value: false };
-              }
-              dispatch(setCabins(temp));
-            }}
-          >
-            Uncheck All
-          </button>
-        </div>
+        {checkAll && (
+          <div className='col-12'>
+            <button
+              className='btn col-12 btn-outline-primary text-15'
+              onClick={() => {
+                let temp = {};
+                for (let [key, value] of Object.entries(cabins)) {
+                  temp[key] = { ...value, value: true };
+                }
+                dispatch(setCabins(temp));
+                setCheckAll((prev) => !prev);
+              }}
+            >
+              Check All
+            </button>
+          </div>
+        )}
+        {!checkAll && (
+          <div className='col-12'>
+            <button
+              className='btn col-12 btn-outline-primary text-15'
+              onClick={() => {
+                let temp = {};
+                for (let [key, value] of Object.entries(cabins)) {
+                  temp[key] = { ...value, value: false };
+                }
+                dispatch(setCabins(temp));
+                setCheckAll((prev) => !prev);
+              }}
+            >
+              Uncheck All
+            </button>
+          </div>
+        )}
       </div>
       {cabins &&
         Object.entries(cabins).map(([key, value], index) => (

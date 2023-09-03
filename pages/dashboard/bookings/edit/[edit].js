@@ -312,13 +312,13 @@ const UpdateBooking = () => {
               if (airport.id === bookSec.from_airport_id) {
                 tempFromAirportID = {
                   value: airport.id,
-                  label: `${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
+                  label: `|${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
                 };
               }
               if (airport.id === bookSec.to_airport_id) {
                 tempToAirportID = {
                   value: airport.id,
-                  label: `${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
+                  label: `|${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
                 };
               }
             }
@@ -938,7 +938,7 @@ const UpdateBooking = () => {
                     {/* Booking Sectors */}
                     {bookingType?.value !== 'Miscellaneous' && (
                       <div className='pl-20 pr-10'>
-                        <div className='bg-light px-20 py-10 lg:px-10'>
+                        <div className='bg-light pl-20 pr-40 py-10 lg:px-10'>
                           <h4 className='d-block'>Add Booking Sectors</h4>
                           <div>
                             {bookingSectors.map((element, index) => {
@@ -948,7 +948,7 @@ const UpdateBooking = () => {
                                   key={index}
                                 >
                                   <div>{index + 1}.</div>
-                                  <div className='d-flex row y-gap-10 col-12 lg:pr-0 md:flex-column items-center justify-between'>
+                                  <div className='d-flex row y-gap-10 x-gap-15 col-12 lg:pr-0 md:flex-column items-center justify-between'>
                                     <div className='form-input-select col-md-2'>
                                       <label>
                                         From<span className='text-danger'>*</span>
@@ -981,30 +981,45 @@ const UpdateBooking = () => {
                                             value: airport.id,
                                             label: `|${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
                                           }))}
-                                        formatOptionLabel={(opt) => {
+                                        formatOptionLabel={(opt, { context }) => {
                                           const [_, iata_code, city, name, country_name] =
                                             opt.label.split('|');
-                                          return (
-                                            <div key={iata_code}>
-                                              <div
-                                                className='d-flex justify-between align-items-center'
-                                                style={{ fontSize: '1rem' }}
-                                              >
-                                                <span>
-                                                  {city} (<strong>{iata_code}</strong>)
-                                                </span>
+                                          if (context === 'value')
+                                            return (
+                                              <div key={iata_code}>
                                                 <div
-                                                  style={{
-                                                    fontSize: 'small',
-                                                    fontStyle: 'italic',
-                                                  }}
+                                                  className='d-flex justify-between align-items-center'
+                                                  style={{ fontSize: '1rem' }}
                                                 >
-                                                  {country_name}
+                                                  <span>
+                                                    <strong>{iata_code}</strong>{' '}
+                                                    <small>({country_name})</small>
+                                                  </span>
                                                 </div>
                                               </div>
-                                              <small>{name}</small>
-                                            </div>
-                                          );
+                                            );
+                                          else
+                                            return (
+                                              <div key={iata_code}>
+                                                <div
+                                                  className='d-flex justify-between align-items-center'
+                                                  style={{ fontSize: '1rem' }}
+                                                >
+                                                  <span>
+                                                    {city} (<strong>{iata_code}</strong>)
+                                                  </span>
+                                                  <div
+                                                    style={{
+                                                      fontSize: 'small',
+                                                      fontStyle: 'italic',
+                                                    }}
+                                                  >
+                                                    {country_name}
+                                                  </div>
+                                                </div>
+                                                <small>{name}</small>
+                                              </div>
+                                            );
                                         }}
                                         value={element['from_airport_id']}
                                         onChange={(id) =>
@@ -1047,30 +1062,45 @@ const UpdateBooking = () => {
                                             value: airport.id,
                                             label: `|${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
                                           }))}
-                                        formatOptionLabel={(opt) => {
+                                        formatOptionLabel={(opt, { context }) => {
                                           const [_, iata_code, city, name, country_name] =
                                             opt.label.split('|');
-                                          return (
-                                            <div key={iata_code}>
-                                              <div
-                                                className='d-flex justify-between align-items-center'
-                                                style={{ fontSize: '1rem' }}
-                                              >
-                                                <span>
-                                                  {city} (<strong>{iata_code}</strong>)
-                                                </span>
+                                          if (context === 'value')
+                                            return (
+                                              <div key={iata_code}>
                                                 <div
-                                                  style={{
-                                                    fontSize: 'small',
-                                                    fontStyle: 'italic',
-                                                  }}
+                                                  className='d-flex justify-between align-items-center'
+                                                  style={{ fontSize: '1rem' }}
                                                 >
-                                                  {country_name}
+                                                  <span>
+                                                    <strong>{iata_code}</strong>{' '}
+                                                    <small>({country_name})</small>
+                                                  </span>
                                                 </div>
                                               </div>
-                                              <small>{name}</small>
-                                            </div>
-                                          );
+                                            );
+                                          else
+                                            return (
+                                              <div key={iata_code}>
+                                                <div
+                                                  className='d-flex justify-between align-items-center'
+                                                  style={{ fontSize: '1rem' }}
+                                                >
+                                                  <span>
+                                                    {city} (<strong>{iata_code}</strong>)
+                                                  </span>
+                                                  <div
+                                                    style={{
+                                                      fontSize: 'small',
+                                                      fontStyle: 'italic',
+                                                    }}
+                                                  >
+                                                    {country_name}
+                                                  </div>
+                                                </div>
+                                                <small>{name}</small>
+                                              </div>
+                                            );
                                         }}
                                         value={element['to_airport_id']}
                                         onChange={(id) =>
@@ -1103,7 +1133,7 @@ const UpdateBooking = () => {
                                         }}
                                         numberOfMonths={1}
                                         offsetY={10}
-                                        format='DD MMMM YYYY'
+                                        format='DD MMM YYYY'
                                       />
                                     </div>
                                     <div className='col-md-2'>

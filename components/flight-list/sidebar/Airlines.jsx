@@ -1,41 +1,49 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { setAirlines } from '../../../features/flightSearch/flightSearchSlice';
+import { useState } from 'react';
 
 const Airlines = () => {
   const dispatch = useDispatch();
   const airlines = useSelector((state) => state.flightSearch.value.airlines);
+  const [checkAll, setCheckAll] = useState(false);
 
   return (
     <>
       <div className='row mb-3'>
-        <div className='col-6'>
-          <button
-            className='btn col-12 btn-outline-primary text-15'
-            onClick={() => {
-              let temp = {};
-              for (let [key, value] of Object.entries(airlines)) {
-                temp[key] = { ...value, value: true };
-              }
-              dispatch(setAirlines(temp));
-            }}
-          >
-            Check All
-          </button>
-        </div>
-        <div className='col-6'>
-          <button
-            className='btn col-12 btn-outline-primary text-15'
-            onClick={() => {
-              let temp = {};
-              for (let [key, value] of Object.entries(airlines)) {
-                temp[key] = { ...value, value: false };
-              }
-              dispatch(setAirlines(temp));
-            }}
-          >
-            Uncheck All
-          </button>
-        </div>
+        {checkAll && (
+          <div className='col-12'>
+            <button
+              className='btn col-12 btn-outline-primary text-15'
+              onClick={() => {
+                let temp = {};
+                for (let [key, value] of Object.entries(airlines)) {
+                  temp[key] = { ...value, value: true };
+                }
+                dispatch(setAirlines(temp));
+                setCheckAll((prev) => !prev);
+              }}
+            >
+              Check All
+            </button>
+          </div>
+        )}
+        {!checkAll && (
+          <div className='col-12'>
+            <button
+              className='btn col-12 btn-outline-primary text-15'
+              onClick={() => {
+                let temp = {};
+                for (let [key, value] of Object.entries(airlines)) {
+                  temp[key] = { ...value, value: false };
+                }
+                dispatch(setAirlines(temp));
+                setCheckAll((prev) => !prev);
+              }}
+            >
+              Uncheck All
+            </button>
+          </div>
+        )}
       </div>
       {airlines &&
         Object.entries(airlines).map(([key, value], index) => (
