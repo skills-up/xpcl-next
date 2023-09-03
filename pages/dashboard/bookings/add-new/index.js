@@ -381,7 +381,7 @@ const AddNewBooking = () => {
         (+vendorTaxAmount || 0) +
         (+vendorGSTAmount || 0) +
         (+vendorMiscCharges || 0)
-    );
+    ).toFixed(0);
     setVendorTotal(vendorTotal);
     // Updating
     updatePaymentAmount(paymentAccountID, vendorTotal, vendorMiscCharges);
@@ -393,7 +393,7 @@ const AddNewBooking = () => {
         (((+grossCommission || 0) - (+vendorServiceCharges || 0)) *
           (+vendorTDSPercent || 0)) /
           100
-      ).toFixed(0);
+      ).toFixed(2);
       setVendorTDS(vendorTDS);
     }
   };
@@ -403,7 +403,7 @@ const AddNewBooking = () => {
       setVendorTDSPercent(
         Number(
           (100 * vendorTDS) / ((+grossCommission || 0) - (+vendorServiceCharges || 0))
-        ).toFixed(1)
+        ).toFixed(2)
       );
   };
 
@@ -411,7 +411,7 @@ const AddNewBooking = () => {
     if (vendorGSTFocused) {
       let vendorServiceCharges = Number(
         ((+grossCommission || 0) * (+vendorServiceChargePercent || 0)) / 100
-      ).toFixed(0);
+      ).toFixed(2);
       setVendorServiceCharges(vendorServiceCharges);
       // Update
       updateVendorTDS(grossCommission, vendorServiceCharges, vendorTDSPercent);
@@ -421,7 +421,7 @@ const AddNewBooking = () => {
   const updateVendorServiceChargePercent = (vendorServiceCharges, grossCommission) => {
     if (!vendorGSTFocused)
       setVendorServiceChargePercent(
-        Number((100 * (+vendorServiceCharges || 0)) / (+grossCommission || 0)).toFixed(1)
+        Number((100 * (+vendorServiceCharges || 0)) / (+grossCommission || 0)).toFixed(2)
       );
   };
 
@@ -505,7 +505,7 @@ const AddNewBooking = () => {
       (((+clientBaseAmount || 0) + (+clientReferralFee || 0)) *
         (+clientServiceChargePercent || 0)) /
         100
-    ).toFixed(0);
+    ).toFixed(2);
     if (clientServiceCharges && clientServiceCharges !== 'NaN') {
       setClientServicesCharges(clientServiceCharges);
     }
@@ -520,7 +520,7 @@ const AddNewBooking = () => {
       Number(
         (100 * (+clientServiceCharges || 0)) /
           ((+clientBaseAmount || 0) + (+clientReferralFee || 0))
-      ).toFixed(1)
+      ).toFixed(2)
     );
   };
 
@@ -593,7 +593,7 @@ const AddNewBooking = () => {
           (+clientTaxAmount || 0) +
           (+clientServiceCharges || 0) +
           (+clientReferralFee || 0)
-      )
+      ).toFixed(0)
     );
   };
 

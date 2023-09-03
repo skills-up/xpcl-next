@@ -132,13 +132,13 @@ const UpdateBooking = () => {
         setVendorTotal((+response.data.vendor_total || 0).toFixed(0));
         setIATACommissionPercent(response.data.iata_commission_percent);
         setPLBCommissionPercent(response.data.plb_commission_percent);
-        setVendorServiceCharges((+response.data.vendor_service_charges || 0).toFixed(0));
-        setVendorTDS((+response.data.vendor_tds || 0).toFixed(0));
+        setVendorServiceCharges((+response.data.vendor_service_charges || 0).toFixed(2));
+        setVendorTDS((+response.data.vendor_tds || 0).toFixed(2));
         setCommissionReceivable((+response.data.commission_receivable || 0).toFixed(0));
         setClientReferralFee((+response.data.client_referral_fee || 0).toFixed(0));
         setClientBaseAmount((+response.data.client_base_amount || 0).toFixed(0));
         setClientGSTAmount((+response.data.client_gst_amount || 0).toFixed(0));
-        setClientServicesCharges((+response.data.client_service_charges || 0).toFixed(0));
+        setClientServicesCharges((+response.data.client_service_charges || 0).toFixed(2));
         setClientTotal((+response.data.client_total || 0).toFixed(0));
         setSector(response.data.sector);
         setOriginalBookingID(response.data?.original_booking_id);
@@ -552,7 +552,7 @@ const UpdateBooking = () => {
         (+vendorGSTAmount || 0) +
         (+reissuePenalty || 0) +
         (+vendorMiscCharges || 0)
-    );
+    ).toFixed(0);
     setVendorTotal(vendorTotal);
     // Updating
     updatePaymentAmount(paymentAccountID, vendorTotal, vendorMiscCharges);
@@ -564,7 +564,7 @@ const UpdateBooking = () => {
         (((+grossCommission || 0) - (+vendorServiceCharges || 0)) *
           (+vendorTDSPercent || 0)) /
           100
-      ).toFixed(0);
+      ).toFixed(2);
       setVendorTDS(vendorTDS);
     }
   };
@@ -574,7 +574,7 @@ const UpdateBooking = () => {
       setVendorTDSPercent(
         Number(
           (100 * vendorTDS) / ((+grossCommission || 0) - (+vendorServiceCharges || 0))
-        ).toFixed(1)
+        ).toFixed(2)
       );
   };
 
@@ -582,7 +582,7 @@ const UpdateBooking = () => {
     if (vendorGSTFocused) {
       let vendorServiceCharges = Number(
         ((+grossCommission || 0) * (+vendorServiceChargePercent || 0)) / 100
-      ).toFixed(0);
+      ).toFixed(2);
       setVendorServiceCharges(vendorServiceCharges);
       // Update
       updateVendorTDS(grossCommission, vendorServiceCharges, vendorTDSPercent);
@@ -592,7 +592,7 @@ const UpdateBooking = () => {
   const updateVendorServiceChargePercent = (vendorServiceCharges, grossCommission) => {
     if (!vendorGSTFocused)
       setVendorServiceChargePercent(
-        Number((100 * (+vendorServiceCharges || 0)) / (+grossCommission || 0)).toFixed(1)
+        Number((100 * (+vendorServiceCharges || 0)) / (+grossCommission || 0)).toFixed(2)
       );
   };
 
@@ -690,7 +690,7 @@ const UpdateBooking = () => {
       (((+clientBaseAmount || 0) + (+clientReferralFee || 0)) *
         (+clientServiceChargePercent || 0)) /
         100
-    ).toFixed(0);
+    ).toFixed(2);
     if (clientServiceCharges && clientServiceCharges !== 'NaN') {
       setClientServicesCharges(clientServiceCharges);
     }
@@ -705,7 +705,7 @@ const UpdateBooking = () => {
       Number(
         (100 * (+clientServiceCharges || 0)) /
           ((+clientBaseAmount || 0) + (+clientReferralFee || 0))
-      ).toFixed(1)
+      ).toFixed(2)
     );
   };
 
@@ -778,7 +778,7 @@ const UpdateBooking = () => {
           (+clientTaxAmount || 0) +
           (+clientServiceCharges || 0) +
           (+clientReferralFee || 0)
-      )
+      ).toFixed(0)
     );
   };
 

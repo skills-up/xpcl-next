@@ -487,7 +487,7 @@ const ReissueBooking = () => {
         (+vendorGSTAmount || 0) +
         (+reissuePenalty || 0) +
         (+vendorMiscCharges || 0)
-    );
+    ).toFixed(0);
     setVendorTotal(vendorTotal);
     // Updating
     updatePaymentAmount(paymentAccountID, vendorTotal, vendorMiscCharges);
@@ -499,7 +499,7 @@ const ReissueBooking = () => {
         (((+grossCommission || 0) - (+vendorServiceCharges || 0)) *
           (+vendorTDSPercent || 0)) /
           100
-      ).toFixed(0);
+      ).toFixed(2);
       setVendorTDS(vendorTDS);
     }
   };
@@ -509,7 +509,7 @@ const ReissueBooking = () => {
       setVendorTDSPercent(
         Number(
           (100 * vendorTDS) / ((+grossCommission || 0) - (+vendorServiceCharges || 0))
-        ).toFixed(1)
+        ).toFixed(2)
       );
   };
 
@@ -517,7 +517,7 @@ const ReissueBooking = () => {
     if (vendorGSTFocused) {
       let vendorServiceCharges = Number(
         ((+grossCommission || 0) * (+vendorServiceChargePercent || 0)) / 100
-      ).toFixed(0);
+      ).toFixed(2);
       setVendorServiceCharges(vendorServiceCharges);
       // Update
       updateVendorTDS(grossCommission, vendorServiceCharges, vendorTDSPercent);
@@ -527,7 +527,7 @@ const ReissueBooking = () => {
   const updateVendorServiceChargePercent = (vendorServiceCharges, grossCommission) => {
     if (!vendorGSTFocused)
       setVendorServiceChargePercent(
-        Number((100 * (+vendorServiceCharges || 0)) / (+grossCommission || 0)).toFixed(1)
+        Number((100 * (+vendorServiceCharges || 0)) / (+grossCommission || 0)).toFixed(2)
       );
   };
 
@@ -612,7 +612,7 @@ const ReissueBooking = () => {
       (((+clientBaseAmount || 0) + (+clientReferralFee || 0)) *
         (+clientServiceChargePercent || 0)) /
         100
-    ).toFixed(0);
+    ).toFixed(2);
     if (clientServiceCharges && clientServiceCharges !== 'NaN') {
       setClientServicesCharges(clientServiceCharges);
     }
@@ -627,7 +627,7 @@ const ReissueBooking = () => {
       Number(
         (100 * (+clientServiceCharges || 0)) /
           ((+clientBaseAmount || 0) + (+clientReferralFee || 0))
-      ).toFixed(1)
+      ).toFixed(2)
     );
   };
 
@@ -700,7 +700,7 @@ const ReissueBooking = () => {
           (+clientTaxAmount || 0) +
           (+clientServiceCharges || 0) +
           (+clientReferralFee || 0)
-      )
+      ).toFixed(0)
     );
   };
 

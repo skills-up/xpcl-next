@@ -24,7 +24,7 @@ const Refunds = () => {
   const getRefunds = async () => {
     const response = await getList('refunds');
     if (response?.success) {
-      setRefunds(response.data);
+      setRefunds(response.data.reverse());
     } else {
       sendToast(
         'error',
