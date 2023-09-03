@@ -21,6 +21,10 @@ const UpdateRefund = () => {
   const [refundAmount, setRefundAmount] = useState('');
   const [reason, setReason] = useState('');
   const [bookingData, setBookingData] = useState(null);
+  const [refundBookingData, setRefundBookingData] = useState(null);
+  const [paymentAccounts, setPaymentAccounts] = useState([]);
+  const [paymentAccountID, setPaymentAccountID] = useState(null);
+  const [loaded, setLoaded] = useState(false);
   const [number, setNumber] = useState('');
 
   const token = useSelector((state) => state.auth.value.token);
@@ -47,17 +51,44 @@ const UpdateRefund = () => {
         setReason(response.data?.reason);
         setNumber(response.data.number);
 
-        const bookingData = await getItem('bookings', response.data?.booking_id);
-        const accounts = await getList('accounts');
-        if (accounts?.success && bookingData?.success) {
+        const paymentAccounts = await getList('accounts', { category: 'Credit Cards' });
+        const accounts = await getList('organizations', { is_client: 1 });
+        const bookingData = await getItem('bookings', response.data.booking_id);
+        let refundData;
+        if (accounts?.success && bookingData?.success && paymentAccounts?.success) {
+          if (bookingData?.data?.original_booking_id) {
+            refundData = await getItem('bookings', bookingData.data.original_booking_id);
+            if (refundData?.success) {
+              setRefundBookingData(refundData.data);
+            } else {
+              sendToast('error');
+            }
+          }
           setAccounts(
-            accounts.data.map((element) => ({ value: element.id, label: element.name }))
+            accounts.data.map((element) => ({
+              value: element.account_id,
+              label: element.name,
+            }))
+          );
+          setPaymentAccounts(
+            paymentAccounts.data.map((element) => ({
+              value: element.id,
+              label: element.name,
+            }))
           );
           setBookingData(bookingData.data);
-          // Setting Account ID
+          // Setting Payment Account
+          for (let opt of paymentAccounts.data) {
+            if (opt.id === response.data.payment_account_id)
+              setPaymentAccountID({ label: opt.name, value: opt.id });
+          }
+          // Setting Refund To Account
           for (let account of accounts.data)
-            if (account.id === response.data.account_id)
-              setAccountID({ value: account.id, label: account.name });
+            if (account.account_id === response.data.refund_to_account_id)
+              setAccountID({ value: account.account_id, label: account.name });
+          setTimeout(() => {
+            setLoaded(true);
+          }, 1000);
         } else {
           sendToast('error', 'Unable to fetch required data', 4000);
           router.push('/dashboard/refunds');
@@ -83,11 +114,12 @@ const UpdateRefund = () => {
     }
     const response = await updateItem('refunds', router.query.edit, {
       refund_date: refundDate.format('YYYY-MM-DD'),
-      account_id: accountID.value,
-      airline_cancellation_charges: airlineCancellationCharges,
-      vendor_service_fee: vendorServiceFee,
-      client_cancellation_charges: clientCancellationCharges,
-      refund_amount: refundAmount,
+      refund_to_account_id: accountID.value,
+      airline_cancellation_charges: airlineCancellationCharges || 0,
+      vendor_service_fee: vendorServiceFee || 0,
+      client_cancellation_charges: clientCancellationCharges || 0,
+      payment_account_id: paymentAccountID?.value || undefined,
+      refund_amount: +refundAmount === 0 ? undefined : refundAmount || undefined,
       reason,
     });
     if (response?.success) {
@@ -104,11 +136,14 @@ const UpdateRefund = () => {
 
   // Calculation
   useEffect(() => {
-    if (bookingData) {
-      const payment = +bookingData?.vendor_total || bookingData?.payment_amount;
-      setRefundAmount(+payment - +airlineCancellationCharges);
-    }
-  }, [bookingData, airlineCancellationCharges]);
+    if (loaded)
+      if (bookingData && paymentAccountID) {
+        const payment =
+          (+bookingData?.payment_amount || 0) + (+refundBookingData?.payment_amount || 0);
+        if (payment)
+          setRefundAmount((+payment || 0) - (+airlineCancellationCharges || 0));
+      }
+  }, [bookingData, airlineCancellationCharges, paymentAccountID, refundBookingData]);
 
   return (
     <>
@@ -142,7 +177,7 @@ const UpdateRefund = () => {
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
-                    <div className='d-block ml-3 form-datepicker'>
+                    <div className='d-block col-lg-4 ml-3 form-datepicker'>
                       <label>
                         Refund Date<span className='text-danger'>*</span>
                       </label>
@@ -157,18 +192,25 @@ const UpdateRefund = () => {
                         format='DD MMMM YYYY'
                       />
                     </div>
-                    <div className='form-input-select'>
+                    <div className='form-input-select col-lg-4'>
                       <label>
-                        Account<span className='text-danger'>*</span>
+                        Refund To<span className='text-danger'>*</span>
                       </label>
                       <Select
                         options={accounts}
                         value={accountID}
-                        placeholder='Search & Select Account (required)'
                         onChange={(id) => setAccountID(id)}
                       />
                     </div>
-                    <div className='col-12'>
+                    <div className='form-input-select col-lg-4'>
+                      <label>Payment Account</label>
+                      <Select
+                        options={paymentAccounts}
+                        value={paymentAccountID}
+                        onChange={(id) => setPaymentAccountID(id)}
+                      />
+                    </div>
+                    <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setAirlineCancellationCharges(e.target.value)}
@@ -176,15 +218,13 @@ const UpdateRefund = () => {
                           placeholder=' '
                           type='number'
                           onWheel={(e) => e.target.blur()}
-                          required
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Airline Cancellation Charges
-                          <span className='text-danger'>*</span>
                         </label>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setVendorServiceFee(e.target.value)}
@@ -192,14 +232,13 @@ const UpdateRefund = () => {
                           placeholder=' '
                           type='number'
                           onWheel={(e) => e.target.blur()}
-                          required
                         />
                         <label className='lh-1 text-16 text-light-1'>
-                          Vendor Service Fee<span className='text-danger'>*</span>
+                          Vendor Service Fee
                         </label>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setClientCancellationCharges(e.target.value)}
@@ -207,31 +246,29 @@ const UpdateRefund = () => {
                           placeholder=' '
                           type='number'
                           onWheel={(e) => e.target.blur()}
-                          required
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Client Cancellation Charges
-                          <span className='text-danger'>*</span>
                         </label>
                       </div>
                     </div>
-                    <div className='col-12'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setRefundAmount(e.target.value)}
-                          value={refundAmount}
-                          placeholder=' '
-                          type='number'
-                          onWheel={(e) => e.target.blur()}
-                          required
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Refund Amount<span className='text-danger'>*</span>
-                        </label>
+                    {bookingData && paymentAccountID && (
+                      <div className='col-lg-4'>
+                        <div className='form-input'>
+                          <input
+                            onChange={(e) => setRefundAmount(e.target.value)}
+                            value={refundAmount}
+                            placeholder=' '
+                            type='number'
+                            onWheel={(e) => e.target.blur()}
+                          />
+                          <label className='lh-1 text-16 text-light-1'>
+                            Refund Amount
+                          </label>
+                        </div>
                       </div>
-                    </div>
-
-                    <div className='col-12'>
+                    )}
+                    <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setReason(e.target.value)}

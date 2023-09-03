@@ -42,6 +42,14 @@ const Bookings = () => {
       accessor: 'number',
     },
     {
+      Header: 'Ticket Number',
+      accessor: 'ticket_number',
+    },
+    {
+      Header: 'Sector',
+      accessor: 'sector',
+    },
+    {
       Header: 'Client Name',
       Cell: (data) => {
         return (
@@ -58,19 +66,28 @@ const Bookings = () => {
       accessor: 'client_traveller_name',
     },
     {
-      Header: 'Status',
-      accessor: 'status',
+      Header: 'Airline / Type',
+      accessor: 'airline_name',
     },
     {
-      Header: 'Airline',
-      accessor: 'airline_name',
+      Header: 'Booking Date',
+      Cell: (data) => {
+        return (
+          <span>
+            {data.row?.original?.booking_date?.toLocaleString('en-IN', {
+              dateStyle: 'medium',
+              timeStyle: 'short',
+            })}
+          </span>
+        );
+      },
     },
     {
       Header: 'Payment Account Name',
       accessor: 'payment_account_name',
     },
     {
-      Header: 'Amount',
+      Header: 'Client Total',
       Cell: (data) => {
         return (
           <span>
@@ -82,6 +99,10 @@ const Bookings = () => {
           </span>
         );
       },
+    },
+    {
+      Header: 'Status',
+      accessor: 'status',
     },
     {
       Header: 'Actions',
@@ -219,6 +240,7 @@ const Bookings = () => {
       </div>
       {/* Data Table */}
       <Datatable
+        viewLink={'/dashboard/bookings'}
         downloadCSV
         CSVName='Invoices.csv'
         columns={columns}

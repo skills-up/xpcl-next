@@ -2259,10 +2259,10 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                     +a.alert.oldFare > +a.alert.newFare ? 'bg-success' : 'bg-danger'
                   } mb-10 px-20 py-10 text-white`}
                 >
-                  <h4>Fair Change Alert</h4>
+                  <h4>Fare Change Alert</h4>
                   <ul className='list-disc'>
                     <li key={aIndex}>
-                      The fair for your{' '}
+                      The fare for your{' '}
                       <span style={{ fontWeight: 'bold' }}>
                         {a.type === 'to'
                           ? 'Onward'

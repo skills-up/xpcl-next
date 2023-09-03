@@ -192,11 +192,7 @@ const ViewRefunds = () => {
                   data={refund}
                   onEdit={() =>
                     router.push({
-                      pathname: '/dashboard/bookings/refunds/edit',
-                      query: {
-                        booking_id: router.query.booking_id,
-                        edit: router.query.view,
-                      },
+                      pathname: '/dashboard/partial-refunds/edit/' + router.query.view,
                     })
                   }
                   onDelete={() => {

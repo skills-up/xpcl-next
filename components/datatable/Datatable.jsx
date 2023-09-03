@@ -13,6 +13,7 @@ import { FiDownload } from 'react-icons/fi';
 import { jsonToCSV } from 'react-papaparse';
 import { sendToast } from '../../utils/toastify';
 import { downloadCSV as CSVDownloader } from '../../utils/fileDownloader';
+import { useRouter } from 'next/router';
 
 const IndeterminateCheckbox = forwardRef(({ indeterminate, ...rest }, ref) => {
   const defaultRef = React.useRef();
@@ -44,6 +45,7 @@ const Datatable = ({
   _pageSize = 10,
   _pageIndex = 0,
   dataFiltering = false,
+  viewLink = null,
 }) => {
   const [totalItems, SetTotalItems] = useState(0);
   let {
@@ -114,7 +116,7 @@ const Datatable = ({
     canNextPage = pageIndex < pageOptions.length - 1;
     canPreviousPage = pageIndex > 0;
   }
-
+  const router = useRouter();
   useEffect(() => {
     if (_rowCount !== undefined) SetTotalItems(_rowCount);
     else {
@@ -186,13 +188,16 @@ const Datatable = ({
             {page.map((row, i) => {
               prepareRow(row);
               return (
-                <tr {...row.getRowProps()}>
+                <tr key={i} {...row.getRowProps()}>
                   {row.cells.map((cell, index) => {
                     return (
                       <td
                         onClick={() => {
                           if (index == 0) {
                             rowClick && rowClick(row);
+                          }
+                          if (viewLink && cell.column.Header !== 'Actions') {
+                            router.push(viewLink + '/view/' + row.original.id);
                           }
                         }}
                         {...cell.getCellProps()}
@@ -204,7 +209,11 @@ const Datatable = ({
                                 verticalAlign: 'top',
                               }
                         }
-                        className={'max-w-xs break-all text-xs'}
+                        className={`${
+                          viewLink && cell.column.Header !== 'Actions'
+                            ? 'cursor-pointer'
+                            : ''
+                        } max-w-xs break-all text-xs`}
                       >
                         {cell.render('Cell')}
                       </td>
