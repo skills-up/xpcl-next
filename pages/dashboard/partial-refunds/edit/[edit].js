@@ -38,6 +38,7 @@ const AddNewPartialRefund = () => {
   const [refundBookingData, setRefundBookingData] = useState(null);
   const [clientQuotedAmount, setClientQuotedAmount] = useState(0);
   const [isOffshore, setIsOffshore] = useState(false);
+  const [bookingType, setBookingType] = useState(null);
 
   // Percentages
   const [vendorServiceChargePercent, setVendorServiceChargePercent] = useState(18);
@@ -76,6 +77,12 @@ const AddNewPartialRefund = () => {
     { value: 'Vendor GST', label: 'Vendor GST' },
     { value: '5% of Base', label: '5% of Base' },
     { value: '12% of Base', label: '12% of Base' },
+  ];
+  // Dropdown Options
+  const bookingOptions = [
+    { value: 'Domestic Flight Ticket', label: 'Domestic Flight Ticket' },
+    { value: 'International Flight Ticket', label: 'International Flight Ticket' },
+    { value: 'Miscellaneous', label: 'Miscellaneous' },
   ];
 
   const token = useSelector((state) => state.auth.value.token);
@@ -177,7 +184,7 @@ const AddNewPartialRefund = () => {
             Number(
               (
                 (+response.data.client_gst_amount * 100) /
-                +response.data.client_base_amount
+                (+response.data.client_base_amount + +response.data.client_gst_amount)
               ).toFixed(0)
             ) === 5
           )
@@ -186,7 +193,7 @@ const AddNewPartialRefund = () => {
             Number(
               (
                 (+response.data.client_gst_amount * 100) /
-                +response.data.client_base_amount
+                (+response.data.client_base_amount + +response.data.client_gst_amount)
               ).toFixed(0)
             ) === 12
           )
@@ -211,6 +218,9 @@ const AddNewPartialRefund = () => {
                 plb_basic: cr.plb_basic,
                 plb_yq: cr.plb_yq,
               });
+          // Booking Type
+          for (let option of bookingOptions)
+            if (option.value === bookingData.data.booking_type) setBookingType(option);
           // Setting Refund To Acc
           for (let opt of clientAccounts.data)
             if (opt.account_id === response.data.refund_to_account_id)
@@ -401,23 +411,32 @@ const AddNewPartialRefund = () => {
     plbCommissionPercent,
     vendorBaseAmount,
     vendorYQAmount,
+    bookingType,
   ]);
 
   const calculateGrossCommission = () => {
-    if (commissionRuleID) {
-      const iata_comm = Number(
-        ((+IATACommissionPercent || 0) *
-          ((+commissionRuleID.iata_basic || 0) * (+vendorBaseAmount || 0) +
-            (+commissionRuleID.iata_yq || 0) * (+vendorYQAmount || 0))) /
-          100
-      ).toFixed(4);
-      const plb_comm = Number(
-        ((+plbCommissionPercent || 0) *
-          ((+commissionRuleID.plb_basic || 0) * (+vendorBaseAmount || 0) +
-            (+commissionRuleID.plb_yq || 0) * (+vendorYQAmount || 0) -
-            iata_comm)) /
-          100
-      ).toFixed(4);
+    if (commissionRuleID || bookingType?.value === 'Miscellaneous') {
+      const iata_comm =
+        bookingType?.value === 'Miscellaneous'
+          ? Number(
+              ((+IATACommissionPercent || 0) * (+vendorBaseAmount || 0)) / 100
+            ).toFixed(4)
+          : Number(
+              ((+IATACommissionPercent || 0) *
+                ((+commissionRuleID.iata_basic || 0) * (+vendorBaseAmount || 0) +
+                  (+commissionRuleID.iata_yq || 0) * (+vendorYQAmount || 0))) /
+                100
+            ).toFixed(4);
+      const plb_comm =
+        bookingType?.value === 'Miscellaneous'
+          ? 0
+          : Number(
+              ((+plbCommissionPercent || 0) *
+                ((+commissionRuleID.plb_basic || 0) * (+vendorBaseAmount || 0) +
+                  (+commissionRuleID.plb_yq || 0) * (+vendorYQAmount || 0) -
+                  iata_comm)) /
+                100
+            ).toFixed(4);
       let grossCommission = Number((+plb_comm || 0) + (+iata_comm || 0));
       setGrossCommission(grossCommission);
       // Calls after gross commission is updated
@@ -669,20 +688,22 @@ const AddNewPartialRefund = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-lg-4 '>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setVendorYQAmount(e.target.value)}
-                          value={vendorYQAmount}
-                          placeholder=' '
-                          type='number'
-                          onWheel={(e) => e.target.blur()}
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Vendor YQ Amount
-                        </label>
+                    {bookingType?.value !== 'Miscellaneous' && (
+                      <div className='col-lg-4 '>
+                        <div className='form-input'>
+                          <input
+                            onChange={(e) => setVendorYQAmount(e.target.value)}
+                            value={vendorYQAmount}
+                            placeholder=' '
+                            type='number'
+                            onWheel={(e) => e.target.blur()}
+                          />
+                          <label className='lh-1 text-16 text-light-1'>
+                            Vendor YQ Amount
+                          </label>
+                        </div>
                       </div>
-                    </div>
+                    )}
                     <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
@@ -731,43 +752,64 @@ const AddNewPartialRefund = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='form-input-select col-lg-4'>
-                      <label>Commission Rule</label>
-                      <Select
-                        options={commissionRules}
-                        value={commissionRuleID}
-                        placeholder='Search & Select Commission Rule'
-                        onChange={(id) => setCommissionRuleID(id)}
-                      />
-                    </div>
-                    <div className='col-lg-4'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setIATACommissionPercent(e.target.value)}
-                          value={IATACommissionPercent}
-                          placeholder=' '
-                          type='number'
-                          onWheel={(e) => e.target.blur()}
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          IATA Commission Percent
-                        </label>
+                    {bookingType?.value === 'Miscellaneous' && (
+                      <div className='col-lg-4'>
+                        <div className='form-input'>
+                          <input
+                            onChange={(e) => setIATACommissionPercent(e.target.value)}
+                            value={IATACommissionPercent}
+                            placeholder=' '
+                            type='number'
+                            onWheel={(e) => e.target.blur()}
+                          />
+                          <label className='lh-1 text-16 text-light-1'>
+                            Vendor Commission Percent
+                          </label>
+                        </div>
                       </div>
-                    </div>
-                    <div className='col-lg-4'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setPLBCommissionPercent(e.target.value)}
-                          value={plbCommissionPercent}
-                          placeholder=' '
-                          type='number'
-                          onWheel={(e) => e.target.blur()}
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          PLB Commission Percent
-                        </label>
-                      </div>
-                    </div>
+                    )}
+                    {bookingType?.value !== 'Miscellaneous' && (
+                      <>
+                        <div className='form-input-select col-lg-4'>
+                          <label>Commission Rule</label>
+                          <Select
+                            options={commissionRules}
+                            value={commissionRuleID}
+                            onChange={(id) => setCommissionRuleID(id)}
+                          />
+                        </div>
+                        <div className='col-lg-4'>
+                          <div className='form-input'>
+                            <input
+                              onChange={(e) => setIATACommissionPercent(e.target.value)}
+                              value={IATACommissionPercent}
+                              placeholder=' '
+                              type='number'
+                              onWheel={(e) => e.target.blur()}
+                            />
+                            <label className='lh-1 text-16 text-light-1'>
+                              IATA Commission Percent
+                            </label>
+                          </div>
+                        </div>
+                        <div className='col-lg-4'>
+                          <div className='form-input'>
+                            <input
+                              onChange={(e) => {
+                                setPLBCommissionPercent(e.target.value);
+                              }}
+                              value={plbCommissionPercent}
+                              placeholder=' '
+                              type='number'
+                              onWheel={(e) => e.target.blur()}
+                            />
+                            <label className='lh-1 text-16 text-light-1'>
+                              PLB Commission Percent
+                            </label>
+                          </div>
+                        </div>
+                      </>
+                    )}
                     <div className='col-lg-4 pr-0'>
                       <div className='row'>
                         <label className='col-12 fw-500 mb-4'>

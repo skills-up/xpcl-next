@@ -159,7 +159,7 @@ const AddNewBooking = () => {
           Number(
             (
               (+response.data.client_gst_amount * 100) /
-              +response.data.client_base_amount
+              (+response.data.client_base_amount + +response.data.client_gst_amount)
             ).toFixed(0)
           ) === 5
         )
@@ -168,7 +168,7 @@ const AddNewBooking = () => {
           Number(
             (
               (+response.data.client_gst_amount * 100) /
-              +response.data.client_base_amount
+              (+response.data.client_base_amount + +response.data.client_gst_amount)
             ).toFixed(0)
           ) === 12
         )
@@ -610,23 +610,32 @@ const AddNewBooking = () => {
     plbCommissionPercent,
     vendorBaseAmount,
     vendorYQAmount,
+    bookingType,
   ]);
 
   const calculateGrossCommission = () => {
-    if (commissionRuleID) {
-      const iata_comm = Number(
-        ((+IATACommissionPercent || 0) *
-          ((+commissionRuleID.iata_basic || 0) * (+vendorBaseAmount || 0) +
-            (+commissionRuleID.iata_yq || 0) * (+vendorYQAmount || 0))) /
-          100
-      ).toFixed(4);
-      const plb_comm = Number(
-        ((+plbCommissionPercent || 0) *
-          ((+commissionRuleID.plb_basic || 0) * (+vendorBaseAmount || 0) +
-            (+commissionRuleID.plb_yq || 0) * (+vendorYQAmount || 0) -
-            iata_comm)) /
-          100
-      ).toFixed(4);
+    if (commissionRuleID || bookingType?.value === 'Miscellaneous') {
+      const iata_comm =
+        bookingType?.value === 'Miscellaneous'
+          ? Number(
+              ((+IATACommissionPercent || 0) * (+vendorBaseAmount || 0)) / 100
+            ).toFixed(4)
+          : Number(
+              ((+IATACommissionPercent || 0) *
+                ((+commissionRuleID.iata_basic || 0) * (+vendorBaseAmount || 0) +
+                  (+commissionRuleID.iata_yq || 0) * (+vendorYQAmount || 0))) /
+                100
+            ).toFixed(4);
+      const plb_comm =
+        bookingType?.value === 'Miscellaneous'
+          ? 0
+          : Number(
+              ((+plbCommissionPercent || 0) *
+                ((+commissionRuleID.plb_basic || 0) * (+vendorBaseAmount || 0) +
+                  (+commissionRuleID.plb_yq || 0) * (+vendorYQAmount || 0) -
+                  iata_comm)) /
+                100
+            ).toFixed(4);
       let grossCommission = Number((+plb_comm || 0) + (+iata_comm || 0));
       setGrossCommission(grossCommission);
       // Calls after gross commission is updated
@@ -1249,22 +1258,24 @@ const AddNewBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-lg-4'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => {
-                            setVendorYQAmount(e.target.value);
-                          }}
-                          value={vendorYQAmount}
-                          placeholder=' '
-                          type='number'
-                          onWheel={(e) => e.target.blur()}
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Vendor YQ Amount
-                        </label>
+                    {bookingType?.value !== 'Miscellaneous' && (
+                      <div className='col-lg-4'>
+                        <div className='form-input'>
+                          <input
+                            onChange={(e) => {
+                              setVendorYQAmount(e.target.value);
+                            }}
+                            value={vendorYQAmount}
+                            placeholder=' '
+                            type='number'
+                            onWheel={(e) => e.target.blur()}
+                          />
+                          <label className='lh-1 text-16 text-light-1'>
+                            Vendor YQ Amount
+                          </label>
+                        </div>
                       </div>
-                    </div>
+                    )}
                     <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
@@ -1338,7 +1349,7 @@ const AddNewBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-8' />
+                    {bookingType?.value !== 'Miscellaneous' && <div className='col-8' />}
                     <div className='form-input-select col-lg-4'>
                       <label>Payment Account</label>
                       <Select

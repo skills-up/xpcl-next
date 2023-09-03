@@ -24,7 +24,7 @@ const PartialRefunds = () => {
   const getPartialRefunds = async () => {
     const response = await getList('partial-refunds');
     if (response?.success) {
-      setPartialRefunds(response.data);
+      setPartialRefunds(response.data.reverse());
     } else {
       sendToast(
         'error',
