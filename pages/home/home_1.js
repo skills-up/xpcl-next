@@ -2,7 +2,7 @@ import dynamic from 'next/dynamic';
 import AddBanner from '../../components/add-banner/AddBanner';
 import Seo from '../../components/common/Seo';
 import PopularDestinations from '../../components/destinations/PopularDestinations';
-import DefaultFooter from '../../components/footer/default';
+import DefaultFooter from '../../components/footer/footer-2';
 import Header1 from '../../components/header/header-1';
 import Hero1 from '../../components/hero/hero-1';
 import BlockGuide from '../../components/block/BlockGuide';

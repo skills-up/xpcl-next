@@ -123,35 +123,37 @@ const AddNewBooking = () => {
       if (response?.success) {
         setTicketNumber(response.data.ticket_number);
         setPNR(response.data.pnr);
-        setVendorBaseAmount(response.data.vendor_base_amount);
-        setVendorTaxAmount(response.data.vendor_tax_amount);
-        setVendorGSTAmount(response.data.vendor_gst_amount);
-        setVendorMiscChargers(response.data.vendor_misc_charges);
-        setVendorYQAmount(response.data.vendor_yq_amount);
-        setVendorTotal(response.data.vendor_total);
+        setVendorBaseAmount((+response.data.vendor_base_amount || 0).toFixed(0));
+        setVendorTaxAmount((+response.data.vendor_tax_amount || 0).toFixed(0));
+        setVendorGSTAmount((+response.data.vendor_gst_amount || 0).toFixed(0));
+        setVendorMiscChargers((+response.data.vendor_misc_charges || 0).toFixed(0));
+        setVendorYQAmount((+response.data.vendor_yq_amount || 0).toFixed(0));
+        setVendorTotal((+response.data.vendor_total || 0).toFixed(0));
         setIATACommissionPercent(response.data.iata_commission_percent);
         setPLBCommissionPercent(response.data.plb_commission_percent);
-        setVendorServiceCharges(response.data.vendor_service_charges);
-        setVendorTDS(response.data.vendor_tds);
-        setCommissionReceivable(response.data.commission_receivable);
-        setClientReferralFee(response.data.client_referral_fee);
-        setClientBaseAmount(response.data.client_base_amount);
-        setClientGSTAmount(response.data.client_gst_amount);
-        setClientServicesCharges(response.data.client_service_charges);
-        setClientTotal(response.data.client_total);
+        setVendorServiceCharges((+response.data.vendor_service_charges || 0).toFixed(2));
+        setVendorTDS((+response.data.vendor_tds || 0).toFixed(2));
+        setCommissionReceivable((+response.data.commission_receivable || 0).toFixed(0));
+        setClientReferralFee((+response.data.client_referral_fee || 0).toFixed(0));
+        setClientBaseAmount((+response.data.client_base_amount || 0).toFixed(0));
+        setClientGSTAmount((+response.data.client_gst_amount || 0).toFixed(0));
+        setClientServicesCharges((+response.data.client_service_charges || 0).toFixed(2));
+        setClientTotal((+response.data.client_total || 0).toFixed(0));
         setSector(response.data.sector);
         setOriginalBookingID(response.data?.original_booking_id);
-        setReissuePenalty(response.data?.reissue_penalty);
-        setPaymentAmount(response.data.payment_amount);
-        setClientTaxAmount(response.data.client_tax_amount);
+        setReissuePenalty((+response.data?.reissue_penalty || 0).toFixed(0));
+        setPaymentAmount((+response.data.payment_amount || 0).toFixed(0));
+        setClientTaxAmount((+response.data.client_tax_amount || 0).toFixed(0));
         setBookingDate(
           new DateObject({ date: response.data.booking_date, format: 'YYYY-MM-DD' })
         );
         setIsOffshore(response.data?.is_offshore);
         setClientQuotedAmount(
-          +response.data.client_base_amount +
+          (
+            +response.data.client_base_amount +
             +response.data.client_tax_amount +
             +response.data.client_gst_amount
+          ).toFixed(0)
         );
 
         // Client GST Percent
@@ -308,13 +310,13 @@ const AddNewBooking = () => {
               if (airport.id === bookSec.from_airport_id) {
                 tempFromAirportID = {
                   value: airport.id,
-                  label: `${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
+                  label: `|${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
                 };
               }
               if (airport.id === bookSec.to_airport_id) {
                 tempToAirportID = {
                   value: airport.id,
-                  label: `${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
+                  label: `|${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
                 };
               }
             }
@@ -540,7 +542,7 @@ const AddNewBooking = () => {
         (+vendorTaxAmount || 0) +
         (+vendorGSTAmount || 0) +
         (+vendorMiscCharges || 0)
-    );
+    ).toFixed(0);
     setVendorTotal(vendorTotal);
     // Updating
     updatePaymentAmount(paymentAccountID, vendorTotal, vendorMiscCharges);
@@ -552,7 +554,7 @@ const AddNewBooking = () => {
         (((+grossCommission || 0) - (+vendorServiceCharges || 0)) *
           (+vendorTDSPercent || 0)) /
           100
-      ).toFixed(4);
+      ).toFixed(2);
       setVendorTDS(vendorTDS);
     }
   };
@@ -562,7 +564,7 @@ const AddNewBooking = () => {
       setVendorTDSPercent(
         Number(
           (100 * vendorTDS) / ((+grossCommission || 0) - (+vendorServiceCharges || 0))
-        ).toFixed(4)
+        ).toFixed(2)
       );
   };
 
@@ -570,7 +572,7 @@ const AddNewBooking = () => {
     if (vendorGSTFocused) {
       let vendorServiceCharges = Number(
         ((+grossCommission || 0) * (+vendorServiceChargePercent || 0)) / 100
-      ).toFixed(4);
+      ).toFixed(2);
       setVendorServiceCharges(vendorServiceCharges);
       // Update
       updateVendorTDS(grossCommission, vendorServiceCharges, vendorTDSPercent);
@@ -580,7 +582,7 @@ const AddNewBooking = () => {
   const updateVendorServiceChargePercent = (vendorServiceCharges, grossCommission) => {
     if (!vendorGSTFocused)
       setVendorServiceChargePercent(
-        Number((100 * (+vendorServiceCharges || 0)) / (+grossCommission || 0)).toFixed(4)
+        Number((100 * (+vendorServiceCharges || 0)) / (+grossCommission || 0)).toFixed(2)
       );
   };
 
@@ -619,13 +621,13 @@ const AddNewBooking = () => {
         bookingType?.value === 'Miscellaneous'
           ? Number(
               ((+IATACommissionPercent || 0) * (+vendorBaseAmount || 0)) / 100
-            ).toFixed(4)
+            ).toFixed(0)
           : Number(
               ((+IATACommissionPercent || 0) *
                 ((+commissionRuleID.iata_basic || 0) * (+vendorBaseAmount || 0) +
                   (+commissionRuleID.iata_yq || 0) * (+vendorYQAmount || 0))) /
                 100
-            ).toFixed(4);
+            ).toFixed(0);
       const plb_comm =
         bookingType?.value === 'Miscellaneous'
           ? 0
@@ -635,7 +637,7 @@ const AddNewBooking = () => {
                   (+commissionRuleID.plb_yq || 0) * (+vendorYQAmount || 0) -
                   iata_comm)) /
                 100
-            ).toFixed(4);
+            ).toFixed(0);
       let grossCommission = Number((+plb_comm || 0) + (+iata_comm || 0));
       setGrossCommission(grossCommission);
       // Calls after gross commission is updated
@@ -678,7 +680,7 @@ const AddNewBooking = () => {
       (((+clientBaseAmount || 0) + (+clientReferralFee || 0)) *
         (+clientServiceChargePercent || 0)) /
         100
-    ).toFixed(0);
+    ).toFixed(2);
     if (clientServiceCharges && clientServiceCharges !== 'NaN') {
       setClientServicesCharges(clientServiceCharges);
     }
@@ -693,7 +695,7 @@ const AddNewBooking = () => {
       Number(
         (100 * (+clientServiceCharges || 0)) /
           ((+clientBaseAmount || 0) + (+clientReferralFee || 0))
-      ).toFixed(4)
+      ).toFixed(2)
     );
   };
 
@@ -710,11 +712,11 @@ const AddNewBooking = () => {
         clientGSTAmount = +vendorGSTAmount;
       else if (clientGSTPercent?.label === '5% of Base') {
         clientGSTAmount = Number(
-          (((+clientQuotedAmount || 0) - (+clientTaxAmount || 0)) * (5 / 100)).toFixed(4)
+          (((+clientQuotedAmount || 0) - (+clientTaxAmount || 0)) * (5 / 100)).toFixed(0)
         );
       } else if (clientGSTPercent?.label === '12% of Base') {
         clientGSTAmount = Number(
-          (((+clientQuotedAmount || 0) - (+clientTaxAmount || 0)) * (12 / 100)).toFixed(4)
+          (((+clientQuotedAmount || 0) - (+clientTaxAmount || 0)) * (12 / 100)).toFixed(0)
         );
       }
       setClientGSTAmount(clientGSTAmount);
@@ -766,7 +768,7 @@ const AddNewBooking = () => {
           (+clientTaxAmount || 0) +
           (+clientServiceCharges || 0) +
           (+clientReferralFee || 0)
-      )
+      ).toFixed(0)
     );
   };
 
@@ -924,7 +926,7 @@ const AddNewBooking = () => {
                     {/* Booking Sectors */}
                     {bookingType?.value !== 'Miscellaneous' && (
                       <div className='pl-20 pr-10'>
-                        <div className='bg-light px-20 py-10 lg:px-10'>
+                        <div className='bg-light pl-20 pr-40 py-10 lg:px-10'>
                           <h4 className='d-block'>Add Booking Sectors</h4>
                           <div>
                             {bookingSectors.map((element, index) => {
@@ -934,7 +936,7 @@ const AddNewBooking = () => {
                                   key={index}
                                 >
                                   <div>{index + 1}.</div>
-                                  <div className='d-flex row y-gap-10 col-12 lg:pr-0 md:flex-column items-center justify-between'>
+                                  <div className='d-flex row y-gap-10 col-12 x-gap-15 lg:pr-0 md:flex-column items-center justify-between'>
                                     <div className='form-input-select col-md-2'>
                                       <label>
                                         From<span className='text-danger'>*</span>
@@ -967,30 +969,45 @@ const AddNewBooking = () => {
                                             value: airport.id,
                                             label: `|${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
                                           }))}
-                                        formatOptionLabel={(opt) => {
+                                        formatOptionLabel={(opt, { context }) => {
                                           const [_, iata_code, city, name, country_name] =
                                             opt.label.split('|');
-                                          return (
-                                            <div key={iata_code}>
-                                              <div
-                                                className='d-flex justify-between align-items-center'
-                                                style={{ fontSize: '1rem' }}
-                                              >
-                                                <span>
-                                                  {city} (<strong>{iata_code}</strong>)
-                                                </span>
+                                          if (context === 'value')
+                                            return (
+                                              <div key={iata_code}>
                                                 <div
-                                                  style={{
-                                                    fontSize: 'small',
-                                                    fontStyle: 'italic',
-                                                  }}
+                                                  className='d-flex justify-between align-items-center'
+                                                  style={{ fontSize: '1rem' }}
                                                 >
-                                                  {country_name}
+                                                  <span>
+                                                    <strong>{iata_code}</strong>{' '}
+                                                    <small>({country_name})</small>
+                                                  </span>
                                                 </div>
                                               </div>
-                                              <small>{name}</small>
-                                            </div>
-                                          );
+                                            );
+                                          else
+                                            return (
+                                              <div key={iata_code}>
+                                                <div
+                                                  className='d-flex justify-between align-items-center'
+                                                  style={{ fontSize: '1rem' }}
+                                                >
+                                                  <span>
+                                                    {city} (<strong>{iata_code}</strong>)
+                                                  </span>
+                                                  <div
+                                                    style={{
+                                                      fontSize: 'small',
+                                                      fontStyle: 'italic',
+                                                    }}
+                                                  >
+                                                    {country_name}
+                                                  </div>
+                                                </div>
+                                                <small>{name}</small>
+                                              </div>
+                                            );
                                         }}
                                         value={element['from_airport_id']}
                                         onChange={(id) =>
@@ -1033,30 +1050,45 @@ const AddNewBooking = () => {
                                             value: airport.id,
                                             label: `|${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
                                           }))}
-                                        formatOptionLabel={(opt) => {
+                                        formatOptionLabel={(opt, { context }) => {
                                           const [_, iata_code, city, name, country_name] =
                                             opt.label.split('|');
-                                          return (
-                                            <div key={iata_code}>
-                                              <div
-                                                className='d-flex justify-between align-items-center'
-                                                style={{ fontSize: '1rem' }}
-                                              >
-                                                <span>
-                                                  {city} (<strong>{iata_code}</strong>)
-                                                </span>
+                                          if (context === 'value')
+                                            return (
+                                              <div key={iata_code}>
                                                 <div
-                                                  style={{
-                                                    fontSize: 'small',
-                                                    fontStyle: 'italic',
-                                                  }}
+                                                  className='d-flex justify-between align-items-center'
+                                                  style={{ fontSize: '1rem' }}
                                                 >
-                                                  {country_name}
+                                                  <span>
+                                                    <strong>{iata_code}</strong>{' '}
+                                                    <small>({country_name})</small>
+                                                  </span>
                                                 </div>
                                               </div>
-                                              <small>{name}</small>
-                                            </div>
-                                          );
+                                            );
+                                          else
+                                            return (
+                                              <div key={iata_code}>
+                                                <div
+                                                  className='d-flex justify-between align-items-center'
+                                                  style={{ fontSize: '1rem' }}
+                                                >
+                                                  <span>
+                                                    {city} (<strong>{iata_code}</strong>)
+                                                  </span>
+                                                  <div
+                                                    style={{
+                                                      fontSize: 'small',
+                                                      fontStyle: 'italic',
+                                                    }}
+                                                  >
+                                                    {country_name}
+                                                  </div>
+                                                </div>
+                                                <small>{name}</small>
+                                              </div>
+                                            );
                                         }}
                                         value={element['to_airport_id']}
                                         onChange={(id) =>
@@ -1089,7 +1121,7 @@ const AddNewBooking = () => {
                                         }}
                                         numberOfMonths={1}
                                         offsetY={10}
-                                        format='DD MMMM YYYY'
+                                        format='DD MMM YYYY'
                                       />
                                     </div>
                                     <div className='col-md-2'>

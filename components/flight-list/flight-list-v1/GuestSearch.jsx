@@ -86,7 +86,7 @@ const GuestSearch = ({ guests, cabins }) => {
         data-bs-offset='0,22'
       >
         {/* <h4 className='text-15 fw-500 ls-2 lh-16'>Travellers</h4> */}
-        <div className='text-18 d-flex gap-2 items-center cursor-pointer'>
+        <div className='text-16 d-flex gap-2 items-center cursor-pointer'>
           {/* Adult */}
           {/* <FaUserTie className='text-25' /> */}
           <span className='js-count-adult'>

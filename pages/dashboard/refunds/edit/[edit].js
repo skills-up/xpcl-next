@@ -44,10 +44,14 @@ const UpdateRefund = () => {
         setRefundDate(
           new DateObject({ date: response.data.refund_date, format: 'YYYY-MM-DD' })
         );
-        setAirlineCancellationCharges(response.data.airline_cancellation_charges);
-        setVendorServiceFee(response.data.vendor_service_fee);
-        setClientCancellationCharges(response.data.client_cancellation_charges);
-        setRefundAmount(response.data.refund_amount);
+        setAirlineCancellationCharges(
+          (+response.data.airline_cancellation_charges || 0).toFixed(0)
+        );
+        setVendorServiceFee((+response.data.vendor_service_fee || 0).toFixed(0));
+        setClientCancellationCharges(
+          (+response.data.client_cancellation_charges || 0).toFixed(0)
+        );
+        setRefundAmount((+response.data.refund_amount || 0).toFixed(0));
         setReason(response.data?.reason);
         setNumber(response.data.number);
 

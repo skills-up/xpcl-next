@@ -208,11 +208,11 @@ const ViewBooking = () => {
   const columns = [
     {
       Header: 'From',
-      accessor: 'from_airport.name',
+      accessor: 'from_airport.iata_code',
     },
     {
       Header: 'To',
-      accessor: 'to_airport.name',
+      accessor: 'to_airport.iata_code',
     },
     {
       Header: 'Travel Date',
@@ -236,6 +236,10 @@ const ViewBooking = () => {
     {
       Header: 'Booking Class',
       accessor: 'booking_class',
+    },
+    {
+      Header: 'Boarding Pass',
+      accessor: 'boarding_pass',
     },
   ];
 
