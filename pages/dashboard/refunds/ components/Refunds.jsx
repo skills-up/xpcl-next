@@ -15,6 +15,7 @@ const Refunds = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
+  const [orgs, setOrgs] = useState([]);
 
   const router = useRouter();
   useEffect(() => {
@@ -23,8 +24,11 @@ const Refunds = () => {
 
   const getRefunds = async () => {
     const response = await getList('refunds');
-    if (response?.success) {
+    const orgs = await getList('organizations');
+
+    if (response?.success && orgs?.success) {
       setRefunds(response.data.reverse());
+      setOrgs(orgs.data);
     } else {
       sendToast(
         'error',
@@ -40,8 +44,42 @@ const Refunds = () => {
       accessor: 'number',
     },
     {
+      Header: 'Comment',
+      accessor: 'reason',
+    },
+    {
       Header: 'Booking ID',
       accessor: 'booking_id',
+    },
+    {
+      Header: 'Sector',
+      accessor: 'booking.sector',
+    },
+    {
+      Header: 'Refund Amount',
+      Cell: (data) => {
+        return (
+          <span>
+            {(+data.row.original.refund_amount)?.toLocaleString('en-IN', {
+              maximumFractionDigits: 2,
+              style: 'currency',
+              currency: 'INR',
+            })}
+          </span>
+        );
+      },
+    },
+    {
+      Header: 'Client Name',
+      Cell: (data) => {
+        return (
+          <span>
+            {orgs
+              ?.filter((el) => el.id === data.row.original.booking.client_id)
+              ?.map((el) => `${el.name}`)}
+          </span>
+        );
+      },
     },
     {
       Header: 'Refund Date',
