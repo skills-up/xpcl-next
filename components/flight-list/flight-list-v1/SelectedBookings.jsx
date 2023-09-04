@@ -15,7 +15,7 @@ function SelectedBookings() {
       {!emailClientMode && (selectedBooking?.to || selectedBooking?.from) && (
         <div className='mb-30' id='selected-bookings'>
           {/* Title */}
-          <h2>Selected Bookings</h2>
+          <h2>Selected Flights</h2>
           {/* To */}
           {selectedBooking?.to && (
             <FlightProperty element={selectedBooking.to} isSelectedBooking />

@@ -280,7 +280,7 @@ const UpdateRefund = () => {
                           placeholder=' '
                           type='text'
                         />
-                        <label className='lh-1 text-16 text-light-1'>Reason</label>
+                        <label className='lh-1 text-16 text-light-1'>Comment</label>
                       </div>
                     </div>
                     <div className='d-inline-block'>

@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { customAPICall } from '../../../api/xplorzApi';
 import CallToActions from '../../../components/common/CallToActions';
 import Seo from '../../../components/common/Seo';
-import DefaultFooter from '../../../components/footer/default';
+import DefaultFooter from '../../../components/footer/footer-2';
 import Header1 from '../../../components/header/header-1';
 import AvailableRooms from '../../../components/hotel-single/AvailableRooms';
 import Overview from '../../../components/hotel-single/Overview';

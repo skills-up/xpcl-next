@@ -16,12 +16,14 @@ import Audit from '../../../../components/audits';
 import { AiOutlinePrinter } from 'react-icons/ai';
 import Datatable from '../../../../components/datatable/Datatable';
 import { downloadApiPDF } from '../../../../utils/fileDownloader';
+import { BsDashSquare, BsPlusSquare } from 'react-icons/bs';
 
 const ViewBooking = () => {
   const [booking, setBooking] = useState([]);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
   const [bookingSectors, setBookingSectors] = useState(null);
+  const [auditExpanded, setAuditExpanded] = useState(false);
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -367,8 +369,23 @@ const ViewBooking = () => {
                 )}
                 <hr className='my-4' />
                 <div>
-                  <h2 className='mb-3'>Audit Log</h2>
-                  <Audit url={'bookings/' + router.query.view + '/audit-trail'} />
+                  <h2 className='mb-3 d-flex justify-between items-center'>
+                    <span>Audit Log</span>
+                    {auditExpanded ? (
+                      <BsDashSquare
+                        className='cursor-pointer text-blue-1'
+                        onClick={() => setAuditExpanded((prev) => !prev)}
+                      />
+                    ) : (
+                      <BsPlusSquare
+                        className='cursor-pointer text-blue-1'
+                        onClick={() => setAuditExpanded((prev) => !prev)}
+                      />
+                    )}
+                  </h2>
+                  {auditExpanded && (
+                    <Audit url={'bookings/' + router.query.view + '/audit-trail'} />
+                  )}
                 </div>
               </div>
             </div>

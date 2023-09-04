@@ -1,7 +1,7 @@
 import CustomerInfo from '../../../components/booking-page/CustomerInfo';
 import CallToActions from '../../../components/common/CallToActions';
 import Seo from '../../../components/common/Seo';
-import DefaultFooter from '../../../components/footer/default';
+import DefaultFooter from '../../../components/footer/footer-2';
 import Header1 from '../../../components/header/header-1';
 
 const index = () => {

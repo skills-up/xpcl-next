@@ -3,7 +3,7 @@ import CallToActions from '../../../components/common/CallToActions';
 import Seo from '../../../components/common/Seo';
 import PreviewBooking from '../../../components/flight-book/book/PreviewBooking';
 import Seatmap from '../../../components/flight-book/book/Seatmap';
-import DefaultFooter from '../../../components/footer/default';
+import DefaultFooter from '../../../components/footer/footer-2';
 import Header1 from '../../../components/header/header-1';
 
 const index = () => {
