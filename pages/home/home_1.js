@@ -161,7 +161,7 @@ const Home_1 = () => {
   );
   return (
     <>
-      <Seo pageTitle='Home-1' />
+      <Seo pageTitle='Home' />
       {/* End Page Title */}
 
       <Header1 permaOpaque={false} />

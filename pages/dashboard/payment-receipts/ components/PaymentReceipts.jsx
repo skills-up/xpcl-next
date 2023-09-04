@@ -69,6 +69,10 @@ const PaymentReceipts = () => {
       accessor: 'type',
     },
     {
+      Header: 'Narration',
+      accessor: 'narration',
+    },
+    {
       Header: 'Debit',
       accessor: 'dr_account_name',
     },

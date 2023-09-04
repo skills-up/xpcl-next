@@ -21,7 +21,7 @@ const index = () => {
       }}
     >
       <div>
-        <Seo pageTitle='Hotel List v1' />
+        <Seo pageTitle='Book Hotels' />
         {/* End Page Title */}
 
         <div className='header-margin'></div>

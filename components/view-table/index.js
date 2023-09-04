@@ -29,6 +29,37 @@ const ViewTable = ({
 
   return (
     <div className='view-table'>
+      {showButtons && (
+        <div className='mb-15 d-flex gap-2'>
+          <button
+            className='btn btn-primary d-flex items-center gap-1'
+            type='button'
+            onClick={onEdit}
+          >
+            <HiOutlinePencilAlt /> Edit
+          </button>
+          <button
+            className='btn btn-danger d-flex items-center gap-1'
+            type='button'
+            onClick={onDelete}
+          >
+            <BsTrash3 /> Delete
+          </button>
+          {extraButtons &&
+            extraButtons.map((element, index) => {
+              return (
+                <button
+                  key={index}
+                  onClick={element?.onClick}
+                  className={`${element?.classNames} btn d-flex items-center gap-1`}
+                  style={element?.style}
+                >
+                  {element?.icon} {element?.text}
+                </button>
+              );
+            })}
+        </div>
+      )}
       <table>
         <tbody>
           {Object.keys(data).map((element, index) => {
@@ -67,37 +98,6 @@ const ViewTable = ({
           })}
         </tbody>
       </table>
-      {showButtons && (
-        <div className='mt-15 d-flex gap-2'>
-          <button
-            className='btn btn-primary d-flex items-center gap-1'
-            type='button'
-            onClick={onEdit}
-          >
-            <HiOutlinePencilAlt /> Edit
-          </button>
-          <button
-            className='btn btn-danger d-flex items-center gap-1'
-            type='button'
-            onClick={onDelete}
-          >
-            <BsTrash3 /> Delete
-          </button>
-          {extraButtons &&
-            extraButtons.map((element, index) => {
-              return (
-                <button
-                  key={index}
-                  onClick={element?.onClick}
-                  className={`${element?.classNames} btn d-flex items-center gap-1`}
-                  style={element?.style}
-                >
-                  {element?.icon} {element?.text}
-                </button>
-              );
-            })}
-        </div>
-      )}
     </div>
   );
 };

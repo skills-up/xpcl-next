@@ -25,7 +25,7 @@ const VendorCommissionInvoices = () => {
   const getVendorCommissionInvoices = async () => {
     const response = await getList('vendor-commission-invoices');
     if (response?.success) {
-      setVendorCommissionInvoices(response.data);
+      setVendorCommissionInvoices(response.data?.reverse());
     } else {
       sendToast(
         'error',

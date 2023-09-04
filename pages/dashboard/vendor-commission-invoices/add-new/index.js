@@ -36,7 +36,11 @@ const AddNewVendorCommissionInvoice = () => {
     const vendors = await getList('organizations', { is_vendor: 1 });
     if (vendors?.success) {
       setVendors(
-        vendors.data.map((element) => ({ value: element.id, label: element.name }))
+        vendors.data.map((element) => ({
+          value: element.id,
+          gstn: element.gstn,
+          label: element.name,
+        }))
       );
     } else {
       sendToast('error', 'Unable to fetch required data', 4000);
@@ -80,12 +84,12 @@ const AddNewVendorCommissionInvoice = () => {
 
   useEffect(() => {
     if (commission) {
-      setTds(+commission * 0.05);
-      setSgst(+commission * (gstn.startsWith('27') ? 0.09 : 0));
-      setCgst(+commission * (gstn.startsWith('27') ? 0.09 : 0));
-      setIgst(+commission * (gstn.startsWith('27') ? 0 : 0.18));
+      setTds((+commission * 0.05).toFixed(2));
+      setSgst((+commission * (gstn.startsWith('27') ? 0.09 : 0)).toFixed(2));
+      setCgst((+commission * (gstn.startsWith('27') ? 0.09 : 0)).toFixed(2));
+      setIgst((+commission * (gstn.startsWith('27') ? 0 : 0.18)).toFixed(2));
     }
-  }, [commission]);
+  }, [commission, gstn]);
 
   return (
     <>
@@ -153,7 +157,14 @@ const AddNewVendorCommissionInvoice = () => {
                         options={vendors}
                         value={vendorID}
                         placeholder='Search & Select Vendor (required)'
-                        onChange={(id) => setVendorID(id)}
+                        onChange={(id) => {
+                          setVendorID(id);
+                          if (id?.gstn) {
+                            setGstn(id?.gstn);
+                          } else {
+                            setGstn('');
+                          }
+                        }}
                       />
                     </div>
                     <div className='col-12'>

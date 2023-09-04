@@ -335,7 +335,7 @@ const MainFilterSearchBox = () => {
         <div className='flight-search pl-20 lg:pl-0'>
           {/* Round Trip */}
           <div className='row items-center y-gap-10'>
-            <div className='col-lg-3 ml-6 d-flex justify-center items-center'>
+            <div className='col-xxl-3 col-xl-5 col-lg-6 ml-6 d-flex justify-center items-center'>
               <div className='dropdown js-dropdown'>
                 <div
                   className='dropdown__button d-flex items-center text-15'

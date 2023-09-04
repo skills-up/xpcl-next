@@ -1,13 +1,10 @@
-import Head from "next/head";
+import Head from 'next/head';
 
 const Seo = ({ pageTitle }) => (
   <>
     <Head>
-      <title>
-        {pageTitle &&
-          `${pageTitle} || GoTrip - Travel & Tour React NextJS Template}`}
-      </title>
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <title>{pageTitle && `${pageTitle} | Xplorz.Com`}</title>
+      <meta name='viewport' content='width=device-width, initial-scale=1' />
     </Head>
   </>
 );

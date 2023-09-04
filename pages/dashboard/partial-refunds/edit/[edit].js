@@ -321,7 +321,10 @@ const AddNewPartialRefund = () => {
     if (loaded)
       if (bookingData && accountID) {
         const payment =
-          (+bookingData?.payment_amount || 0) + (+refundBookingData?.payment_amount || 0);
+          (+vendorBaseAmount || 0) +
+          (+vendorYQAmount || 0) +
+          (+vendorTaxAmount || 0) +
+          (+vendorGSTAmount || 0);
         if (payment)
           setRefundAmount((+payment || 0) - (+airlineCancellationCharges || 0));
       }
@@ -1220,7 +1223,7 @@ const AddNewPartialRefund = () => {
                           placeholder=' '
                           type='text'
                         />
-                        <label className='lh-1 text-16 text-light-1'>Reason</label>
+                        <label className='lh-1 text-16 text-light-1'>Comment</label>
                       </div>
                     </div>
                     <div>
