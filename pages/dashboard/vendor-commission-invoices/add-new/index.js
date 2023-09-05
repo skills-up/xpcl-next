@@ -175,6 +175,7 @@ const AddNewVendorCommissionInvoice = () => {
                           placeholder=' '
                           type='string'
                           required
+                          pattern='^\d{2}[A-Za-z]{5}\d{4}[A-Za-z]\wZ\w$'
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           GSTN<span className='text-danger'>*</span>
