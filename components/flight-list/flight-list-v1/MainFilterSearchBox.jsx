@@ -66,7 +66,7 @@ const MainFilterSearchBox = () => {
       getData();
     } else {
       sendToast('error', 'You must be logged in in order to view this page', 8000);
-      router.push('/login');
+      router.push('/');
     }
   }, []);
 
@@ -482,7 +482,7 @@ const MainFilterSearchBox = () => {
                         style={{ fontSize: '1rem' }}
                       >
                         <span>
-                          <strong>{iata_code}</strong> <small>({country_name})</small>
+                          <strong>{city}</strong> <small>({iata_code})</small>
                         </span>
                       </div>
                     </div>
@@ -554,7 +554,7 @@ const MainFilterSearchBox = () => {
                         style={{ fontSize: '1rem' }}
                       >
                         <span>
-                          <strong>{iata_code}</strong> <small>({country_name})</small>
+                          <strong>{city}</strong> <small>({iata_code})</small>
                         </span>
                       </div>
                     </div>

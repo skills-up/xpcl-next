@@ -499,7 +499,7 @@ const ReissueBooking = () => {
         (((+grossCommission || 0) - (+vendorServiceCharges || 0)) *
           (+vendorTDSPercent || 0)) /
           100
-      ).toFixed(2);
+      ).toFixed(0);
       setVendorTDS(vendorTDS);
     }
   };
@@ -517,7 +517,7 @@ const ReissueBooking = () => {
     if (vendorGSTFocused) {
       let vendorServiceCharges = Number(
         ((+grossCommission || 0) * (+vendorServiceChargePercent || 0)) / 100
-      ).toFixed(2);
+      ).toFixed(0);
       setVendorServiceCharges(vendorServiceCharges);
       // Update
       updateVendorTDS(grossCommission, vendorServiceCharges, vendorTDSPercent);
@@ -612,7 +612,7 @@ const ReissueBooking = () => {
       (((+clientBaseAmount || 0) + (+clientReferralFee || 0)) *
         (+clientServiceChargePercent || 0)) /
         100
-    ).toFixed(2);
+    ).toFixed(0);
     if (clientServiceCharges && clientServiceCharges !== 'NaN') {
       setClientServicesCharges(clientServiceCharges);
     }
@@ -904,8 +904,8 @@ const ReissueBooking = () => {
                                                   style={{ fontSize: '1rem' }}
                                                 >
                                                   <span>
-                                                    <strong>{iata_code}</strong>{' '}
-                                                    <small>({country_name})</small>
+                                                    <strong>{city}</strong>{' '}
+                                                    <small>({iata_code})</small>
                                                   </span>
                                                 </div>
                                               </div>
@@ -985,8 +985,8 @@ const ReissueBooking = () => {
                                                   style={{ fontSize: '1rem' }}
                                                 >
                                                   <span>
-                                                    <strong>{iata_code}</strong>{' '}
-                                                    <small>({country_name})</small>
+                                                    <strong>{city}</strong>{' '}
+                                                    <small>({iata_code})</small>
                                                   </span>
                                                 </div>
                                               </div>
@@ -1404,7 +1404,7 @@ const ReissueBooking = () => {
                     <div className='col-lg-4 pr-0'>
                       <div className='row'>
                         <label className='col-12 fw-500 mb-4'>
-                          Vendor Service Charges
+                          Vendor GST on Commission
                         </label>
                         <div className='form-input col-4'>
                           <input

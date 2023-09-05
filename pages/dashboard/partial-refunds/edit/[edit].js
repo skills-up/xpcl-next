@@ -171,16 +171,16 @@ const AddNewPartialRefund = () => {
           setIATACommissionPercent(response.data.iata_commission_percent);
           setPLBCommissionPercent(response.data.plb_commission_percent);
           setVendorServiceCharges(
-            (+response.data.vendor_service_charges || 0).toFixed(2)
+            (+response.data.vendor_service_charges || 0).toFixed(0)
           );
-          setVendorTDS((+response.data.vendor_tds || 0).toFixed(2));
+          setVendorTDS((+response.data.vendor_tds || 0).toFixed(0));
           setClientReferralFee((+response.data.client_referral_fee || 0).toFixed(0));
           setReason(response.data.reason);
           setClientBaseAmount((+response.data.client_base_amount || 0).toFixed(0));
           setClientGSTAmount((+response.data.client_gst_amount || 0).toFixed(0));
           setIsOffshore(response.data?.is_offshore);
           setClientServicesCharges(
-            (+response.data.client_service_charges || 0).toFixed(2)
+            (+response.data.client_service_charges || 0).toFixed(0)
           );
           setClientTaxAmount((+response.data.client_tax_amount || 0).toFixed(0));
           setVendorTotal((+response.data.vendor_total || 0).toFixed(0));
@@ -373,7 +373,7 @@ const AddNewPartialRefund = () => {
         (((+grossCommission || 0) - (+vendorServiceCharges || 0)) *
           (+vendorTDSPercent || 0)) /
           100
-      ).toFixed(2);
+      ).toFixed(0);
       setVendorTDS(vendorTDS);
     }
   };
@@ -391,7 +391,7 @@ const AddNewPartialRefund = () => {
     if (vendorGSTFocused) {
       let vendorServiceCharges = Number(
         ((+grossCommission || 0) * (+vendorServiceChargePercent || 0)) / 100
-      ).toFixed(2);
+      ).toFixed(0);
       setVendorServiceCharges(vendorServiceCharges);
       // Update
       updateVendorTDS(grossCommission, vendorServiceCharges, vendorTDSPercent);
@@ -494,7 +494,7 @@ const AddNewPartialRefund = () => {
       (((+clientBaseAmount || 0) + (+clientReferralFee || 0)) *
         (+clientServiceChargePercent || 0)) /
         100
-    ).toFixed(2);
+    ).toFixed(0);
     if (clientServiceCharges && clientServiceCharges !== 'NaN') {
       setClientServicesCharges(clientServiceCharges);
     }
@@ -828,7 +828,7 @@ const AddNewPartialRefund = () => {
                     <div className='col-lg-4 pr-0'>
                       <div className='row'>
                         <label className='col-12 fw-500 mb-4'>
-                          Vendor Service Charges
+                          Vendor GST on Commission
                         </label>
                         <div className='form-input col-4'>
                           <input

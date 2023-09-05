@@ -30,9 +30,15 @@ const ViewRefunds = () => {
   const getRefund = async () => {
     if (router.query.view) {
       const response = await getItem('partial-refunds', router.query.view);
+      let originalBooking;
       if (response?.success) {
+        let temp = await getItem('bookings', response.data.booking_id);
+        if (temp?.success) {
+          originalBooking = temp.data;
+        }
         let data = response.data;
         // Converting time columns
+        if (originalBooking) data['sector'] = originalBooking.sector;
         delete data['id'];
         if (data.created_by) {
           data.created_by = (
