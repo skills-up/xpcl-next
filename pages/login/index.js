@@ -1,10 +1,9 @@
 import dynamic from 'next/dynamic';
 import CallToActions from '../../components/common/CallToActions';
-import Seo from '../../components/common/Seo';
-import Header1 from '../../components/header/header-1';
-import DefaultFooter from '../../components/footer/default';
-import LoginWithSocial from '../../components/common/LoginWithSocial';
 import LoginForm from '../../components/common/LoginForm';
+import Seo from '../../components/common/Seo';
+import DefaultFooter from '../../components/footer/footer-2';
+import Header1 from '../../components/header/header-1';
 
 const LogIn = () => {
   return (
@@ -45,7 +44,7 @@ const LogIn = () => {
       </section>
       {/* End login section */}
 
-      <CallToActions />
+      {/* <CallToActions /> */}
       {/* End Call To Actions Section */}
 
       <DefaultFooter />

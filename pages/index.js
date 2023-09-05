@@ -1,5 +1,5 @@
-import Wrapper from "./layout/wrapper";
-import Home1 from "./home/home_1";
+import Wrapper from './layout/wrapper';
+import Home1 from './home/home_1';
 
 const MainRoot = () => {
   return (

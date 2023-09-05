@@ -108,7 +108,7 @@ const MainMenu = ({ style = '' }) => {
         </li> */}
         {/* End pages items */}
 
-        <li
+        {/* <li
           className={`${
             isActiveParentChaild(dashboardItems, router.asPath) ? 'current' : ''
           } menu-item-has-children`}
@@ -127,10 +127,10 @@ const MainMenu = ({ style = '' }) => {
               </li>
             ))}
           </ul>
-        </li>
+        </li> */}
 
-        <li className={router.pathname === '/contact' ? 'current' : ''}>
-          <Link href='/contact'>Contact</Link>
+        <li className={router.pathname === '/about' ? 'current' : ''}>
+          <Link href='/about'>About</Link>
         </li>
       </ul>
     </nav>
