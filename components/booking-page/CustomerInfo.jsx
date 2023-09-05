@@ -10,12 +10,16 @@ import { sendToast } from '../../utils/toastify';
 import BookingDetails from './sidebar/BookingDetails';
 import GoogleMapReact from 'google-map-react';
 import Pluralize from '../../utils/pluralChecker';
+import Seo from '../common/Seo';
 
 const CustomerInfo = () => {
+  const [SEO, setSEO] = useState('Hotel Booking');
   const [isProgress, setIsProgress] = useState(false);
   const [progress, setProgress] = useState(0);
   const router = useRouter();
   const rooms = useSelector((state) => state.hotelSearch.value.rooms);
+  const checkOutDate = useSelector((state) => state.hotelSearch.value.checkOutDate);
+  const checkInDate = useSelector((state) => state.hotelSearch.value.checkInDate);
   const PNR = useSelector((state) => state.hotelSearch.value.PNR);
   const [confirmationData, setConfirmationData] = useState(null);
   const age = useSelector((state) => state.hotelSearch.value.age);
@@ -37,6 +41,25 @@ const CustomerInfo = () => {
     { value: 'Master', label: 'Mstr.' },
     { value: 'Ms', label: 'Ms.' },
   ];
+
+  const updateSEO = () => {
+    setSEO(
+      `Hotel ${stage === 0 ? 'Booking' : 'Confirmation'}${
+        PNR?.data?.hInfo?.name
+          ? ' | ' +
+            PNR?.data?.hInfo?.name +
+            ', ' +
+            new DateObject({ date: checkInDate, format: 'YYYY-MM-DD' }).format('DD') +
+            '-' +
+            new DateObject({ date: checkOutDate, format: 'YYYY-MM-DD' }).format('DD MMMM')
+          : ''
+      }`
+    );
+  };
+
+  useEffect(() => {
+    updateSEO();
+  }, [stage]);
 
   const getData = async () => {
     setProgress(30);
@@ -208,6 +231,7 @@ const CustomerInfo = () => {
 
   return (
     <>
+      <Seo pageTitle={SEO} />
       <LoadingBar
         color='#19f9fc'
         progress={progress}

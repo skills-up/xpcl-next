@@ -151,7 +151,7 @@ const UpdateRefund = () => {
 
   return (
     <>
-      <Seo pageTitle='Update Refund' />
+      <Seo pageTitle={`Update Refund ${number}`} />
       {/* End Page Title */}
 
       <div className='header-margin'></div>

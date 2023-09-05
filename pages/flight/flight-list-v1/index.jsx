@@ -16,7 +16,6 @@ const index = () => {
       }}
     >
       <div>
-        <Seo pageTitle='Book Flights' />
         {/* End Page Title */}
 
         <div className='header-margin'></div>

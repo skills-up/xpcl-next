@@ -8,11 +8,13 @@ import Select from 'react-select';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 import LoadingBar from 'react-top-loading-bar';
 import Pluralize from '../../../utils/pluralChecker';
+import Seo from '../../common/Seo';
 
 function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
   const selectedBookings = useSelector(
     (state) => state.flightSearch.value.selectedBookings
   );
+  const [SEO, setSEO] = useState('');
   const [isProceed, setIsProceed] = useState(false);
   const [progress, setProgress] = useState(0);
   const [frequentFliers, setFrequentFliers] = useState([]);
@@ -65,6 +67,28 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
   useEffect(() => console.log('traveller', travellerInfo), [travellerInfo]);
 
   const getData = async () => {
+    // SEO
+    if (destinations) {
+      setSEO(
+        `Flight Booking | ${
+          returnFlight
+            ? destinations?.to?.label?.split('|')?.at(1) +
+              ' - ' +
+              destinations?.from?.label?.split('|')?.at(1) +
+              ' - ' +
+              destinations?.to?.label?.split('|')?.at(1) +
+              ' Roundtrip'
+            : destinations?.from?.label?.split('|')?.at(1) +
+              ' - ' +
+              destinations?.to?.label?.split('|')?.at(1) +
+              ', ' +
+              new DateObject({
+                date: selectedBookings?.to?.segments[0].departure.time.split('T')[0],
+                format: 'YYYY-MM-DD',
+              })?.format('DD MMMM')
+        }`
+      );
+    }
     // Getting Traveller Details
     if (travellerDOBS) {
       if (clientTravellers) {
@@ -422,6 +446,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
 
   return (
     <section className='pt-40 pb-40 bg-light-2'>
+      <Seo pageTitle={SEO} />
       <LoadingBar
         color='#19f9fc'
         progress={progress}

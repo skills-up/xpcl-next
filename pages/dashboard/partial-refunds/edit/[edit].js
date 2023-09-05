@@ -39,6 +39,7 @@ const AddNewPartialRefund = () => {
   const [clientQuotedAmount, setClientQuotedAmount] = useState(0);
   const [isOffshore, setIsOffshore] = useState(false);
   const [bookingType, setBookingType] = useState(null);
+  const [number, setNumber] = useState('');
 
   // Percentages
   const [vendorServiceChargePercent, setVendorServiceChargePercent] = useState(18);
@@ -152,6 +153,7 @@ const AddNewPartialRefund = () => {
               label: element.name,
             }))
           );
+          setNumber(response.data.number);
           setBookingData(bookingData.data);
           // Prefilling
           setAirlineCancellationCharges(
@@ -586,7 +588,7 @@ const AddNewPartialRefund = () => {
 
   return (
     <>
-      <Seo pageTitle='Update Partial Refund' />
+      <Seo pageTitle={`Update Partial Refund ${number}`} />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
