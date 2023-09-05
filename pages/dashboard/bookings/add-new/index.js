@@ -633,7 +633,7 @@ const AddNewBooking = () => {
                 <div>
                   <form
                     onSubmit={onSubmit}
-                    className='row col-12 y-gap-15 lg:pr-0 lg:ml-0'
+                    className='row col-12 y-gap-10 x-gap-10 lg:pr-0 lg:ml-0'
                   >
                     <h3>Basic Details</h3>
                     {/* <div className='form-input-select col-lg-12'>
@@ -750,9 +750,9 @@ const AddNewBooking = () => {
                     </div>
                     {/* Booking Sectors */}
                     {bookingType?.value !== 'Miscellaneous' && (
-                      <div className='pl-20 pr-10'>
-                        <div className='bg-light pl-20 pr-40 py-10 lg:px-10'>
-                          <h4 className='d-block'>Add Booking Sectors</h4>
+                      <div>
+                        <div className='bg-light pl-10 pr-30 py-10 lg:px-10 rounded-4'>
+                          <h4 className='d-block'>Booking Sectors</h4>
                           <div>
                             {bookingSectors.map((element, index) => {
                               return (
@@ -761,7 +761,7 @@ const AddNewBooking = () => {
                                   key={index}
                                 >
                                   <div>{index + 1}.</div>
-                                  <div className='d-flex row y-gap-10 col-12 x-gap-15 lg:pr-0 md:flex-column items-center justify-between'>
+                                  <div className='d-flex row y-gap-10 col-12 x-gap-10 lg:pr-0 md:flex-column items-center justify-between'>
                                     <div className='form-input-select col-md-2'>
                                       <label>
                                         From<span className='text-danger'>*</span>
@@ -1011,7 +1011,7 @@ const AddNewBooking = () => {
                                     >
                                       <BsTrash3
                                         className='text-danger'
-                                        style={{ fontSize: '1.5rem', cursor: 'pointer' }}
+                                        style={{ cursor: 'pointer' }}
                                       />
                                     </span>
                                   </div>

@@ -671,7 +671,7 @@ const AddNewPartialRefund = () => {
 
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
-                  <form onSubmit={onSubmit} className='row col-12 y-gap-15'>
+                  <form onSubmit={onSubmit} className='row col-12 y-gap-10 x-gap-10'>
                     <div className='d-block ml-3 col-lg-4 form-datepicker'>
                       <label>
                         Refund Date<span className='text-danger'>*</span>
