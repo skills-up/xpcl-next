@@ -574,7 +574,7 @@ const CustomerInfo = () => {
                   <div className='text-15'>Total Amount</div>
                   <div className='fw-500'>
                     {PNR.room.tp.toLocaleString('en-IN', {
-                      maximumFractionDigits: 2,
+                      maximumFractionDigits: 0,
                       style: 'currency',
                       currency: 'INR',
                     })}

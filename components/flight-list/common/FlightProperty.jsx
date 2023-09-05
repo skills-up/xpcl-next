@@ -488,7 +488,7 @@ function FlightProperty({
                   <div className='text-right md:text-left'>
                     <div className='text-18 lh-16 fw-500'>
                       {element.total.toLocaleString('en-IN', {
-                        maximumFractionDigits: 2,
+                        maximumFractionDigits: 0,
                         style: 'currency',
                         currency: 'INR',
                       })}
@@ -514,7 +514,7 @@ function FlightProperty({
                         >
                           {travellerDOBS.ADT}x Adult @{' '}
                           {element.adultPrice.toLocaleString('en-IN', {
-                            maximumFractionDigits: 2,
+                            maximumFractionDigits: 0,
                             style: 'currency',
                             currency: 'INR',
                           })}
@@ -557,7 +557,7 @@ function FlightProperty({
                         >
                           {travellerDOBS.CHD}x Child @{' '}
                           {element.childPrice.toLocaleString('en-IN', {
-                            maximumFractionDigits: 2,
+                            maximumFractionDigits: 0,
                             style: 'currency',
                             currency: 'INR',
                           })}
@@ -600,7 +600,7 @@ function FlightProperty({
                         >
                           {travellerDOBS.INF}x Infant @{' '}
                           {element.infantPrice.toLocaleString('en-IN', {
-                            maximumFractionDigits: 2,
+                            maximumFractionDigits: 0,
                             style: 'currency',
                             currency: 'INR',
                           })}

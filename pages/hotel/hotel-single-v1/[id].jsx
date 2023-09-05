@@ -209,7 +209,7 @@ const HotelSingleV1Dynamic = () => {
                           From{' '}
                           <span className='text-22 text-dark-1 fw-500'>
                             {data?.hotel?.ops[0]?.tp.toLocaleString('en-IN', {
-                              maximumFractionDigits: 2,
+                              maximumFractionDigits: 0,
                               style: 'currency',
                               currency: 'INR',
                             })}{' '}

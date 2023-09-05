@@ -41,6 +41,7 @@ const MainFilterSearchBox = () => {
   const [returnFlight, setReturnFlight] = useState(true);
   const [clientTravellers, setClientTravellers] = useState([]);
   const [airlines, setAirlines] = useState([]);
+  const [airportOptions, setAirportOptions] = useState([]);
   const [progress, setProgress] = useState(0);
   const [isSearched, setIsSearched] = useState(false);
   const [guestCounts, setGuestCounts] = useState({
@@ -71,6 +72,7 @@ const MainFilterSearchBox = () => {
   }, []);
 
   const getData = async () => {
+    if (airports && airports?.length > 0) setAirportOptions(airports.map((e) => e));
     const clientTravellers = await getList('client-travellers', {
       client_id,
     });
@@ -458,6 +460,25 @@ const MainFilterSearchBox = () => {
           </div> */}
           <div className='flight-search-select'>
             <WindowedSelect
+              onInputChange={(e) => {
+                setAirportOptions((prev) => {
+                  if (e) {
+                    prev.sort((a, b) => {
+                      e = e.toLowerCase();
+                      let tempA =
+                        (a?.iata_code?.toLowerCase()?.startsWith(e) ? 0.6 : 0) +
+                        (a?.city?.toLowerCase()?.includes(e) ? 0.3 : 0) +
+                        (a?.country_name?.toLowerCase()?.includes(e) ? 0.1 : 0);
+                      let tempB =
+                        (b?.iata_code?.toLowerCase()?.startsWith(e) ? 0.6 : 0) +
+                        (b?.city?.toLowerCase()?.includes(e) ? 0.3 : 0) +
+                        (b?.country_name?.toLowerCase()?.includes(e) ? 0.1 : 0);
+                      return tempB - tempA;
+                    });
+                  } else prev = airports.map((e) => e);
+                  return [...prev];
+                });
+              }}
               filterOption={(candidate, input) => {
                 if (input) {
                   return (
@@ -467,7 +488,7 @@ const MainFilterSearchBox = () => {
                 }
                 return true;
               }}
-              options={airports.map((airport) => ({
+              options={airportOptions.map((airport) => ({
                 value: airport.id,
                 label: `|${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
                 iata: airport.iata_code,
@@ -525,6 +546,25 @@ const MainFilterSearchBox = () => {
               className='col-lg-6 col-12'
             />
             <WindowedSelect
+              onInputChange={(e) => {
+                setAirportOptions((prev) => {
+                  if (e) {
+                    prev.sort((a, b) => {
+                      e = e.toLowerCase();
+                      let tempA =
+                        (a?.iata_code?.toLowerCase()?.startsWith(e) ? 0.6 : 0) +
+                        (a?.city?.toLowerCase()?.includes(e) ? 0.3 : 0) +
+                        (a?.country_name?.toLowerCase()?.includes(e) ? 0.1 : 0);
+                      let tempB =
+                        (b?.iata_code?.toLowerCase()?.startsWith(e) ? 0.6 : 0) +
+                        (b?.city?.toLowerCase()?.includes(e) ? 0.3 : 0) +
+                        (b?.country_name?.toLowerCase()?.includes(e) ? 0.1 : 0);
+                      return tempB - tempA;
+                    });
+                  } else prev = airports.map((e) => e);
+                  return [...prev];
+                });
+              }}
               filterOption={(candidate, input) => {
                 if (input) {
                   return (
@@ -542,7 +582,7 @@ const MainFilterSearchBox = () => {
                   </span>
                 </>
               }
-              options={airports.map((airport) => ({
+              options={airportOptions.map((airport) => ({
                 value: airport.id,
                 label: `|${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
                 iata: airport.iata_code,

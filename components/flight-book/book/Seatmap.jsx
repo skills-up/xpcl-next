@@ -1069,7 +1069,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                                     ? `Amount - ${group.amount.toLocaleString(
                                                         'en-IN',
                                                         {
-                                                          maximumFractionDigits: 2,
+                                                          maximumFractionDigits: 0,
                                                           style: 'currency',
                                                           currency: 'INR',
                                                         }
@@ -1485,7 +1485,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                   data-tooltip-content={
                                     el.amount > 0 && !el.isBooked
                                       ? `Amount - ${el.amount.toLocaleString('en-IN', {
-                                          maximumFractionDigits: 2,
+                                          maximumFractionDigits: 0,
                                           style: 'currency',
                                           currency: 'INR',
                                         })}`
@@ -2232,7 +2232,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                                     ? `Amount - ${(+price).toLocaleString(
                                                         'en-IN',
                                                         {
-                                                          maximumFractionDigits: 2,
+                                                          maximumFractionDigits: 0,
                                                           style: 'currency',
                                                           currency: 'INR',
                                                         }
@@ -2307,13 +2307,13 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                       </span>{' '}
                       has changed from{' '}
                       {a.alert.oldFare.toLocaleString('en-IN', {
-                        maximumFractionDigits: 2,
+                        maximumFractionDigits: 0,
                         style: 'currency',
                         currency: 'INR',
                       })}{' '}
                       to{' '}
                       {a.alert.newFare.toLocaleString('en-IN', {
-                        maximumFractionDigits: 2,
+                        maximumFractionDigits: 0,
                         style: 'currency',
                         currency: 'INR',
                       })}
@@ -2493,7 +2493,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                                                     el.amount.toLocaleString(
                                                                       'en-IN',
                                                                       {
-                                                                        maximumFractionDigits: 2,
+                                                                        maximumFractionDigits: 0,
                                                                         style: 'currency',
                                                                         currency: 'INR',
                                                                       }
@@ -2603,7 +2603,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                                           )[0].price.toLocaleString(
                                                             'en-IN',
                                                             {
-                                                              maximumFractionDigits: 2,
+                                                              maximumFractionDigits: 0,
                                                               style: 'currency',
                                                               currency: 'INR',
                                                             }
@@ -2861,7 +2861,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                           <div className='d-flex justify-between' key={index}>
                             <span className='fw-500'>{key}: </span>
                             {value.toLocaleString('en-IN', {
-                              maximumFractionDigits: 2,
+                              maximumFractionDigits: 0,
                               style: 'currency',
                               currency: 'INR',
                             })}
@@ -2871,7 +2871,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                         <div className='d-flex justify-between'>
                           <span className='fw-500'>Total: </span>
                           {total(breakdown).toLocaleString('en-IN', {
-                            maximumFractionDigits: 2,
+                            maximumFractionDigits: 0,
                             style: 'currency',
                             currency: 'INR',
                           })}
@@ -2972,7 +2972,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                           <div className='fw-500'>
                             {totalAmount &&
                               (+totalAmount).toLocaleString('en-IN', {
-                                maximumFractionDigits: 2,
+                                maximumFractionDigits: 0,
                                 style: 'currency',
                                 currency: 'INR',
                               })}
@@ -2996,7 +2996,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                 <span className='d-block'>
                                   <span className='fw-500'>{key}</span>:{' '}
                                   {value?.toLocaleString('en-IN', {
-                                    maximumFractionDigits: 2,
+                                    maximumFractionDigits: 0,
                                     style: 'currency',
                                     currency: 'INR',
                                   })}

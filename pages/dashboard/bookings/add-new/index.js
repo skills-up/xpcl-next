@@ -97,6 +97,7 @@ const AddNewBooking = () => {
   const [clients, setClients] = useState([]);
   const [clientTravellers, setClientTravellers] = useState([]);
   const [clientOrgs, setClientOrgs] = useState([]);
+  const [airportOptions, setAirportOptions] = useState([]);
 
   const [xplorzGSTFocused, setXplorzGSTFocused] = useState(false);
   const [vendorGSTFocused, setVendorGSTFocused] = useState(true);
@@ -133,6 +134,7 @@ const AddNewBooking = () => {
     } else {
       router.back();
     }
+    if (airports && airports?.length > 0) setAirportOptions(airports.map((e) => e));
     const vendors = await getList('organizations', { is_vendor: 1 });
     const clientOrgs = await getList('organizations', { is_client: 1 });
     const commissionRules = await getList('commission-rules');
@@ -767,6 +769,45 @@ const AddNewBooking = () => {
                                         From<span className='text-danger'>*</span>
                                       </label>
                                       <WindowedSelect
+                                        onInputChange={(e) => {
+                                          setAirportOptions((prev) => {
+                                            if (e) {
+                                              prev.sort((a, b) => {
+                                                e = e.toLowerCase();
+                                                let tempA =
+                                                  (a?.iata_code
+                                                    ?.toLowerCase()
+                                                    ?.startsWith(e)
+                                                    ? 0.6
+                                                    : 0) +
+                                                  (a?.city?.toLowerCase()?.includes(e)
+                                                    ? 0.3
+                                                    : 0) +
+                                                  (a?.country_name
+                                                    ?.toLowerCase()
+                                                    ?.includes(e)
+                                                    ? 0.1
+                                                    : 0);
+                                                let tempB =
+                                                  (b?.iata_code
+                                                    ?.toLowerCase()
+                                                    ?.startsWith(e)
+                                                    ? 0.6
+                                                    : 0) +
+                                                  (b?.city?.toLowerCase()?.includes(e)
+                                                    ? 0.3
+                                                    : 0) +
+                                                  (b?.country_name
+                                                    ?.toLowerCase()
+                                                    ?.includes(e)
+                                                    ? 0.1
+                                                    : 0);
+                                                return tempB - tempA;
+                                              });
+                                            } else prev = airports.map((e) => e);
+                                            return [...prev];
+                                          });
+                                        }}
                                         filterOption={(candidate, input) => {
                                           if (input) {
                                             return (
@@ -779,7 +820,7 @@ const AddNewBooking = () => {
                                           }
                                           return true;
                                         }}
-                                        options={airports
+                                        options={airportOptions
                                           .filter((airport) => {
                                             if (
                                               bookingType?.value ===
@@ -850,6 +891,45 @@ const AddNewBooking = () => {
                                         To<span className='text-danger'>*</span>
                                       </label>
                                       <WindowedSelect
+                                        onInputChange={(e) => {
+                                          setAirportOptions((prev) => {
+                                            if (e) {
+                                              prev.sort((a, b) => {
+                                                e = e.toLowerCase();
+                                                let tempA =
+                                                  (a?.iata_code
+                                                    ?.toLowerCase()
+                                                    ?.startsWith(e)
+                                                    ? 0.6
+                                                    : 0) +
+                                                  (a?.city?.toLowerCase()?.includes(e)
+                                                    ? 0.3
+                                                    : 0) +
+                                                  (a?.country_name
+                                                    ?.toLowerCase()
+                                                    ?.includes(e)
+                                                    ? 0.1
+                                                    : 0);
+                                                let tempB =
+                                                  (b?.iata_code
+                                                    ?.toLowerCase()
+                                                    ?.startsWith(e)
+                                                    ? 0.6
+                                                    : 0) +
+                                                  (b?.city?.toLowerCase()?.includes(e)
+                                                    ? 0.3
+                                                    : 0) +
+                                                  (b?.country_name
+                                                    ?.toLowerCase()
+                                                    ?.includes(e)
+                                                    ? 0.1
+                                                    : 0);
+                                                return tempB - tempA;
+                                              });
+                                            } else prev = airports.map((e) => e);
+                                            return [...prev];
+                                          });
+                                        }}
                                         filterOption={(candidate, input) => {
                                           if (input) {
                                             return (
@@ -862,7 +942,7 @@ const AddNewBooking = () => {
                                           }
                                           return true;
                                         }}
-                                        options={airports
+                                        options={airportOptions
                                           .filter((airport) => {
                                             if (
                                               bookingType?.value ===
