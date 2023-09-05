@@ -805,8 +805,7 @@ const AddNewBooking = () => {
                                                   style={{ fontSize: '1rem' }}
                                                 >
                                                   <span>
-                                                    <strong>{iata_code}</strong>{' '}
-                                                    <small>({country_name})</small>
+                                                  {city} <small>(<strong>{iata_code}</strong>)</small>
                                                   </span>
                                                 </div>
                                               </div>
@@ -886,8 +885,7 @@ const AddNewBooking = () => {
                                                   style={{ fontSize: '1rem' }}
                                                 >
                                                   <span>
-                                                    <strong>{iata_code}</strong>{' '}
-                                                    <small>({country_name})</small>
+                                                  {city} <small>(<strong>{iata_code}</strong>)</small>
                                                   </span>
                                                 </div>
                                               </div>
