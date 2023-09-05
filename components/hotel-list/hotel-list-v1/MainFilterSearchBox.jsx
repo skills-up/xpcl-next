@@ -19,8 +19,10 @@ import { BiPlusMedical, BiTrash } from 'react-icons/bi';
 import { sendToast } from '../../../utils/toastify';
 import LoadingBar from 'react-top-loading-bar';
 import GuestSearch from '../../hotel-single/filter-box/GuestSearch';
+import Seo from '../../common/Seo';
 
 const MainFilterSearchBox = () => {
+  const [SEO, setSEO] = useState('Hotel Search');
   const [progress, setProgress] = useState(0);
   const dispatch = useDispatch();
   const [location, setLocation] = useState(null);
@@ -43,6 +45,14 @@ const MainFilterSearchBox = () => {
     if (clientTravellers?.success) {
       setClientTravellers(clientTravellers.data);
     }
+  };
+
+  const updateSEO = () => {
+    setSEO(
+      `Hotel Search Results | ${location?.cityName}, ${date[0]?.format(
+        'DD'
+      )}-${date[1]?.format('DD MMMM')}`
+    );
   };
 
   const onSearch = async (e) => {
@@ -137,6 +147,7 @@ const MainFilterSearchBox = () => {
     setProgress(70);
     let totalAdult = 0;
     if (response?.success) {
+      updateSEO();
       let totalChildren = 0;
       for (let info of response.data.searchQuery.roomInfo) {
         totalAdult += info.numberOfAdults;
@@ -159,6 +170,7 @@ const MainFilterSearchBox = () => {
         if (el) el.scrollIntoView();
       }, 1000);
     } else {
+      updateSEO('Hotel Search');
       sendToast('error', 'No Rooms Found', 4000);
     }
     setIsSearched(false);
@@ -167,6 +179,7 @@ const MainFilterSearchBox = () => {
 
   return (
     <>
+      <Seo pageTitle={SEO} />
       <LoadingBar
         color='#19f9fc'
         progress={progress}

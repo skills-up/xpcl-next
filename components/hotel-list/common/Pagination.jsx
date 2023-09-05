@@ -10,7 +10,7 @@ const Pagination = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = 5; // Change this to the actual total number of pages
   const dispatch = useDispatch();
-  const [dataPerPageID, setDataPerPageID] = useState({ label: 10, value: 10 });
+  const [dataPerPageID, setDataPerPageID] = useState({ label: 50, value: 50 });
 
   // const [currentMaxPage, setCurrentMaxPage] = useState(0);
   let currentMaxPage = 0;

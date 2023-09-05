@@ -27,6 +27,7 @@ import { MdFlightLand, MdFlightTakeoff } from 'react-icons/md';
 import { TbArrowsExchange2 } from 'react-icons/tb';
 import { SlCalender } from 'react-icons/sl';
 import { RiArrowRightLine, RiArrowLeftRightFill } from 'react-icons/ri';
+import Seo from '../../common/Seo';
 
 const MainFilterSearchBox = () => {
   const [directFlight, setDirectFlight] = useState(false);
@@ -47,6 +48,7 @@ const MainFilterSearchBox = () => {
     Children: 0,
     Infants: 0,
   });
+  const [SEO, setSEO] = useState('Flight Search');
 
   const dispatch = useDispatch();
   const router = useRouter();
@@ -57,7 +59,7 @@ const MainFilterSearchBox = () => {
   const travellerDOBS = useSelector((state) => state.flightSearch.value.travellerDOBS);
 
   useEffect(() => {
-    dispatch(setInitialState());
+    // dispatch(setInitialState());
     if (token !== '') {
       checkUser(router, dispatch);
       checkAirportCache(dispatch);
@@ -251,6 +253,7 @@ const MainFilterSearchBox = () => {
             }
           }
           tempSearchData = { ...tempSearchData, aa: res.data };
+          updateSEO();
         }
       })
       .catch((err) => console.error(err))
@@ -266,6 +269,7 @@ const MainFilterSearchBox = () => {
               res.data.to = tempSearchData.aa.to;
             }
             tempSearchData = { ...tempSearchData, aa: res.data };
+            updateSEO();
           }
         })
         .catch((err) => console.error(err))
@@ -282,6 +286,7 @@ const MainFilterSearchBox = () => {
             }
           }
           tempSearchData = { ...tempSearchData, tj: res.data };
+          updateSEO();
         }
       })
       .catch((err) => console.error(err))
@@ -297,6 +302,7 @@ const MainFilterSearchBox = () => {
               res.data.to = tempSearchData.tj.to;
             }
             tempSearchData = { ...tempSearchData, tj: res.data };
+            updateSEO();
           }
         })
         .catch((err) => console.error(err))
@@ -317,11 +323,31 @@ const MainFilterSearchBox = () => {
     setProgress(percentage);
   };
 
+  const updateSEO = () => {
+    setSEO(
+      `Flight Search Results | ${
+        returnFlight
+          ? to?.label?.split('|')?.at(1) +
+            ' - ' +
+            from?.label?.split('|')?.at(1) +
+            ' - ' +
+            to?.label?.split('|')?.at(1) +
+            ' Roundtrip'
+          : from?.label?.split('|')?.at(1) +
+            ' - ' +
+            to?.label?.split('|')?.at(1) +
+            ', ' +
+            departDate?.format('DD MMMM')
+      }`
+    );
+  };
+
   const searchData = useSelector((state) => state.flightSearch.value.searchData);
   useEffect(() => console.log('sd', searchData), [searchData]);
 
   return (
     <div className='col-lg-6'>
+      <Seo pageTitle={SEO} />
       {/* <div className='row y-gap-20 items-center'>
         <FilterSelect />
       </div> */}

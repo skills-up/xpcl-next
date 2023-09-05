@@ -7,7 +7,7 @@ import Header1 from '../../../components/header/header-1';
 const index = () => {
   return (
     <>
-      <Seo pageTitle='Hotel Booking Page' />
+      <Seo pageTitle='Hotel Booking' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -26,7 +26,7 @@ const index = () => {
       </section>
       {/* End stepper */}
 
-      <CallToActions />
+      {/* <CallToActions /> */}
       {/* End Call To Actions Section */}
 
       <DefaultFooter />

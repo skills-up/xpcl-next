@@ -11,20 +11,21 @@ const Address = ({ lighterHeading = false }) => {
       id: 1,
       colClass: 'col-auto',
       title: (
-        <Link href='/' className='header-logo mb-10'>
-          <img src='/img/general/xplorz-logo.png' className='w-180' alt='logo icon' />
-        </Link>
+        // <Link href='/' className='header-logo mb-10'>
+        //   <img src='/img/general/xplorz-logo.png' className='w-180' alt='logo icon' />
+        // </Link>
+        <></>
       ),
       content: (
         <>
-          <div>Xplorz.Com Private Limited</div>
+          <div className='text-20 mt-30 lg:mt-0'>Xplorz.Com Private Limited</div>
         </>
       ),
     },
     {
       id: 2,
       colClass: 'col-lg-3',
-      title: <IoLocationOutline className='text-30 mb-10' />,
+      title: <IoLocationOutline className='text-25 mb-10' />,
       content: (
         <div
           style={{
@@ -39,7 +40,7 @@ const Address = ({ lighterHeading = false }) => {
     {
       id: 3,
       colClass: 'col-auto',
-      title: <BsTelephone className='text-30 mb-10' />,
+      title: <BsTelephone className='text-25 mb-10' />,
       content: (
         <>
           <a href='tel:+912266121000 '>+91 22 66121000 </a>
@@ -49,10 +50,10 @@ const Address = ({ lighterHeading = false }) => {
     {
       id: 4,
       colClass: 'col-auto',
-      title: <AiOutlineMail className='text-30 mb-5' />,
+      title: <AiOutlineMail className='text-25 mb-5' />,
       content: (
         <>
-          <a href='mailto:support@xplorz.com'>support@xplorz.com</a>
+          <a href='mailto:support@xplorz.com'>support[at]xplorz.com</a>
         </>
       ),
     },
@@ -61,10 +62,10 @@ const Address = ({ lighterHeading = false }) => {
     <>
       {addressContent.map((item) => (
         <div className={`${item.colClass} text-center`} key={item.id}>
-          <div className={`text-14 ${lighterHeading ? 'text-blue-1' : 'text-light-1'}`}>
+          <div className={`text-14 ${lighterHeading ? 'text-light' : 'text-light-1'}`}>
             {item.title}
           </div>
-          <div className='text-18 fw-500'>{item.content}</div>
+          <div className='text-16 fw-500 '>{item.content}</div>
         </div>
       ))}
     </>

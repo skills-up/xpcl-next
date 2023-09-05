@@ -39,7 +39,7 @@ export const initialState = {
     airlineOrgs: [],
     clientTravellers: [],
     paginateDataNumber: 0,
-    paginateDataPerPage: 10,
+    paginateDataPerPage: 50,
     paginateTotalDataSize: 0,
     stops: null,
     cabins: null,

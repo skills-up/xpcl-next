@@ -10,7 +10,7 @@ export const initialState = {
     checkOutDate: new DateObject(),
     selectedData: null,
     paginateDataNumber: 0,
-    paginateDataPerPage: 10,
+    paginateDataPerPage: 50,
     paginateTotalDataSize: 0,
     ratings: 1,
     maxRatings: 5,

@@ -784,7 +784,7 @@ const UpdateBooking = () => {
 
   return (
     <>
-      <Seo pageTitle='Update Invoice' />
+      <Seo pageTitle={`Update Invoice ${number}`} />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
