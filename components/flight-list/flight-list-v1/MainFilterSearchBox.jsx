@@ -482,7 +482,10 @@ const MainFilterSearchBox = () => {
                         style={{ fontSize: '1rem' }}
                       >
                         <span>
-                          <strong>{city}</strong> <small>({iata_code})</small>
+                          {city}{' '}
+                          <small>
+                            (<strong>{iata_code}</strong>)
+                          </small>
                         </span>
                       </div>
                     </div>
@@ -554,7 +557,10 @@ const MainFilterSearchBox = () => {
                         style={{ fontSize: '1rem' }}
                       >
                         <span>
-                          <strong>{city}</strong> <small>({iata_code})</small>
+                          {city}{' '}
+                          <small>
+                            (<strong>{iata_code}</strong>)
+                          </small>
                         </span>
                       </div>
                     </div>

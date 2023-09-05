@@ -84,6 +84,10 @@ const Sidebar = () => {
           title: 'Visa Requirements',
           href: '/dashboard/visa-requirements',
         },
+        {
+          title: 'Booking History',
+          href: '/dashboard/bookings/history',
+        },
       ],
     },
     {
