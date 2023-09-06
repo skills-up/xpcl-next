@@ -9,42 +9,19 @@ const DepartingFrom = () => {
 
   return (
     <>
-      <div className='row mb-3'>
-        {checkAll && (
-          <div className='col-12'>
-            <button
-              className='btn col-12 btn-outline-primary text-15'
-              onClick={() => {
-                let temp = {};
-                for (let [key, value] of Object.entries(departingFrom)) {
-                  temp[key] = { ...value, value: true };
-                }
-                dispatch(setDepartingFrom(temp));
-                setCheckAll((prev) => !prev);
-              }}
-            >
-              Check All
-            </button>
-          </div>
-        )}
-        {!checkAll && (
-          <div className='col-12'>
-            <button
-              className='btn col-12 btn-outline-primary text-15'
-              onClick={() => {
-                let temp = {};
-                for (let [key, value] of Object.entries(departingFrom)) {
-                  temp[key] = { ...value, value: false };
-                }
-                dispatch(setDepartingFrom(temp));
-                setCheckAll((prev) => !prev);
-              }}
-            >
-              Uncheck All
-            </button>
-          </div>
-        )}
-      </div>
+      <a
+        className='text-14 text-blue-1 fw-500 underline'
+        onClick={() => {
+          let temp = {};
+          for (let [key, value] of Object.entries(departingFrom)) {
+            temp[key] = { ...value, value: checkAll };
+          }
+          dispatch(setDepartingFrom(temp));
+          setCheckAll((prev) => !prev);
+        }}
+      >
+        {checkAll ? 'Check' : 'Uncheck'} All
+      </a>
       {departingFrom &&
         Object.entries(departingFrom).map(([key, value], index) => (
           <div className='row y-gap-10 items-center justify-between'>
