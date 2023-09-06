@@ -1,25 +1,23 @@
 import { useEffect, useState } from 'react';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 import { useDispatch } from 'react-redux';
-import ReactSwitch from 'react-switch';
 import Select from 'react-select';
-import WindowedSelect, { createFilter } from 'react-windowed-select';
-import { customAPICall, getList } from '../../../api/xplorzApi';
+import LoadingBar from 'react-top-loading-bar';
+import WindowedSelect from 'react-windowed-select';
+import { customAPICall } from '../../../api/xplorzApi';
+import { hotelSearchData } from '../../../data/hotelSearchData';
 import {
   setAge,
   setCheckInDate,
   setCheckOutDate,
   setInitialState,
-  setSearchData,
-  setRooms as setRoomsRedux,
   setRatingParams,
+  setRooms as setRoomsRedux,
+  setSearchData,
 } from '../../../features/hotelSearch/hotelSearchSlice';
-import { hotelSearchData } from '../../../data/hotelSearchData';
-import { BiPlusMedical, BiTrash } from 'react-icons/bi';
 import { sendToast } from '../../../utils/toastify';
-import LoadingBar from 'react-top-loading-bar';
-import GuestSearch from '../../hotel-single/filter-box/GuestSearch';
 import Seo from '../../common/Seo';
+import GuestSearch from '../../hotel-single/filter-box/GuestSearch';
 
 const MainFilterSearchBox = () => {
   const [SEO, setSEO] = useState('Hotel Search');
@@ -29,23 +27,23 @@ const MainFilterSearchBox = () => {
   const [date, setDate] = useState([new DateObject(), new DateObject().add(1, 'days')]);
   const [rooms, setRooms] = useState([{ adult: 2, child: [] }]);
   const [ratingParam, setRatingParam] = useState([]);
-  const [clientTravellers, setClientTravellers] = useState([]);
+  // const [clientTravellers, setClientTravellers] = useState([]);
   const [isSearched, setIsSearched] = useState(false);
 
   const ratingOptions = ['1', '2', '3', '4', '5'];
 
-  useEffect(() => console.log('Rooms', rooms), [rooms]);
+  // useEffect(() => console.log('Rooms', rooms), [rooms]);
 
-  useEffect(() => {
+  /* useEffect(() => {
     getData();
-  }, []);
+  }, []); */
 
-  const getData = async () => {
+  /* const getData = async () => {
     const clientTravellers = await getList('client-travellers');
     if (clientTravellers?.success) {
       setClientTravellers(clientTravellers.data);
     }
-  };
+  }; */
 
   const updateSEO = () => {
     setSEO(

@@ -22,10 +22,10 @@ const HotelProperties = () => {
   const ratings = useSelector((state) => state.hotelSearch.value.ratings);
   const maxRatings = useSelector((state) => state.hotelSearch.value.maxRatings);
   const options = useSelector((state) => state.hotelSearch.value.options);
-  const searchQuery = useSelector((state) => state.hotelSearch.value.searchQuery);
+  const searchQuery = useSelector((state) => state.hotelSearch.value.searchQuery.toLowerCase());
 
   const [manip, setManip] = useState([]);
-  const searchData = useSelector((state) => state.hotelSearch.value.searchData.toLowerCase());
+  const searchData = useSelector((state) => state.hotelSearch.value.searchData);
 
   useEffect(() => {
     if (searchData?.searchResult?.his) {

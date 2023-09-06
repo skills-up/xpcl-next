@@ -1,11 +1,16 @@
+import { useState } from 'react';
 import PirceSlider from '../sidebar/PirceSlider';
 import PopularFilters from '../sidebar/PopularFilters';
 import RatingsFilter from '../sidebar/RatingsFilter';
 import MaxRatingsFilter from '../sidebar/MaxRatingFilter';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { setSearchQuery } from '../../../features/hotelSearch/hotelSearchSlice';
 
 const Sidebar = () => {
+  const [searchText, setSearchText] = useState('');
   const ratingParams = useSelector((state) => state.hotelSearch.value.ratingParams);
+  const dispatch = useDispatch();
+
   return (
     <>
       {/* <div className='sidebar__item -no-border position-relative'>
@@ -13,10 +18,20 @@ const Sidebar = () => {
       </div> */}
       {/* End find map */}
 
-      {/* <div className='sidebar__item -no-border'>
-        <h5 className='text-18 fw-500 mb-10'>Search by property name</h5>
-        <SearchBox />
-      </div> */}
+      <div className='sidebar__item -no-border'>
+        <h5 className='text-18 fw-500 mb-10'>Search</h5>
+          <input
+            type='text'
+            className='form-control border-light rounded-4'
+            placeholder='Search by Name or Location'
+            onChange={(e) => {
+              const text = e.target.value;
+              setSearchText(text);
+              dispatch(setSearchQuery(text));
+            }}
+            value={searchText}
+          />
+      </div>
       {/* End search box */}
 
       {/* <div className='sidebar__item'>

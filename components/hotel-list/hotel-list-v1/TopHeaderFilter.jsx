@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import { BsFillArrowDownCircleFill } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
-import { setSort, setSearchQuery } from '../../../features/hotelSearch/hotelSearchSlice';
+import { setSort } from '../../../features/hotelSearch/hotelSearchSlice';
 
 const TopHeaderFilter = () => {
   const [openSort, setOpenSort] = useState(false);
-  const [searchText, setSearchText] = useState('');
   const paginateTotalDataSize = useSelector(
     (state) => state.hotelSearch.value.paginateTotalDataSize
   );
@@ -25,19 +24,6 @@ const TopHeaderFilter = () => {
         <div className='col-auto'>
           <div className='row x-gap-20 y-gap-20'>
             <div className='col-auto hotel-search-sort-container'>
-              <div className='col-lg-3'>
-                <input
-                  type='text'
-                  className='d-block form-control'
-                  placeholder='Search'
-                  onChange={(e) => {
-                    const text = e.target.value;
-                    setSearchText(text);
-                    dispatch(setSearchQuery(text));
-                  }}
-                  value={searchText}
-                />
-              </div>              
               <button
                 className='button -blue-1 h-40 px-20 rounded-100 bg-blue-1-05 text-15 text-blue-1'
                 onClick={() => setOpenSort((prev) => !prev)}
