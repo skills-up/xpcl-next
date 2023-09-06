@@ -11,12 +11,12 @@ function ContactPage({ isSignUp = false }) {
       <div className='header-margin'></div>
       {/* header top margin */}
       {/* End Header 1 */}
-      <section className='layout-pt-md layout-pb-lg bg-light-2'>
+      <section className='layout-pt-lg layout-pb-lg bg-white'>
         <div className='container'>
           <div className='row justify-center text-center'>
             <div className='col-auto'>
               <div className='sectionTitle -md'>
-                <h2 className='sectionTitle__title'>About Us</h2>
+                <h1 className='mb-20'>About Us</h1>
                 <div style={{ textAlign: 'justify' }}>
                   <p className=' sectionTitle__text text-18 mt-5 sm:mt-0'>
                     Xplorz.Com Private Limited was founded in 2005 by Vikram Ramchand.
@@ -31,7 +31,7 @@ function ContactPage({ isSignUp = false }) {
                   </p>
                 </div>
               </div>
-              <h4 className='mt-20'>Our Solutions Include</h4>
+              <h3 className='mt-40'>Our Solutions Include</h3>
               <div className='row y-gap-20 justify-between pt-30'>
                 <Solutions />
               </div>
@@ -44,12 +44,12 @@ function ContactPage({ isSignUp = false }) {
       {/* <LocationTopBar /> */}
       {/* End location top bar section */}
 
-      <section className='layout-pt-md layout-pb-md bg-blue-2'>
+      <section className='layout-pt-lg layout-pb-lg bg-blue-2'>
         <div className='container'>
           <div className='row justify-center text-center'>
             <div className='col-auto'>
               <div className='sectionTitle -md'>
-                <h2 className='sectionTitle__title'>Why Choose Us</h2>
+                <h1 className='mb-20'>Why Choose Us</h1>
                 <div style={{ textAlign: 'justify' }}>
                   <p className=' sectionTitle__text text-18 mt-5 sm:mt-0'>
                     Corporate Travel Management is now efficient and super awesome. Trust

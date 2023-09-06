@@ -99,6 +99,7 @@ const UpdateBooking = () => {
   const [clients, setClients] = useState([]);
   const [clientTravellers, setClientTravellers] = useState([]);
   const [clientOrgs, setClientOrgs] = useState([]);
+  const [airportOptions, setAirportOptions] = useState([]);
 
   const [xplorzGSTFocused, setXplorzGSTFocused] = useState(false);
   const [vendorGSTFocused, setVendorGSTFocused] = useState(false);
@@ -119,6 +120,7 @@ const UpdateBooking = () => {
   }, [router.isReady]);
 
   const getData = async () => {
+    if (airports && airports?.length > 0) setAirportOptions(airports.map((e) => e));
     if (router.query.edit) {
       const response = await getItem('bookings', router.query.edit);
       if (response?.success) {
@@ -132,13 +134,13 @@ const UpdateBooking = () => {
         setVendorTotal((+response.data.vendor_total || 0).toFixed(0));
         setIATACommissionPercent(response.data.iata_commission_percent);
         setPLBCommissionPercent(response.data.plb_commission_percent);
-        setVendorServiceCharges((+response.data.vendor_service_charges || 0).toFixed(2));
-        setVendorTDS((+response.data.vendor_tds || 0).toFixed(2));
+        setVendorServiceCharges((+response.data.vendor_service_charges || 0).toFixed(0));
+        setVendorTDS((+response.data.vendor_tds || 0).toFixed(0));
         setCommissionReceivable((+response.data.commission_receivable || 0).toFixed(0));
         setClientReferralFee((+response.data.client_referral_fee || 0).toFixed(0));
         setClientBaseAmount((+response.data.client_base_amount || 0).toFixed(0));
         setClientGSTAmount((+response.data.client_gst_amount || 0).toFixed(0));
-        setClientServicesCharges((+response.data.client_service_charges || 0).toFixed(2));
+        setClientServicesCharges((+response.data.client_service_charges || 0).toFixed(0));
         setClientTotal((+response.data.client_total || 0).toFixed(0));
         setSector(response.data.sector);
         setOriginalBookingID(response.data?.original_booking_id);
@@ -564,7 +566,7 @@ const UpdateBooking = () => {
         (((+grossCommission || 0) - (+vendorServiceCharges || 0)) *
           (+vendorTDSPercent || 0)) /
           100
-      ).toFixed(2);
+      ).toFixed(0);
       setVendorTDS(vendorTDS);
     }
   };
@@ -582,7 +584,7 @@ const UpdateBooking = () => {
     if (vendorGSTFocused) {
       let vendorServiceCharges = Number(
         ((+grossCommission || 0) * (+vendorServiceChargePercent || 0)) / 100
-      ).toFixed(2);
+      ).toFixed(0);
       setVendorServiceCharges(vendorServiceCharges);
       // Update
       updateVendorTDS(grossCommission, vendorServiceCharges, vendorTDSPercent);
@@ -690,7 +692,7 @@ const UpdateBooking = () => {
       (((+clientBaseAmount || 0) + (+clientReferralFee || 0)) *
         (+clientServiceChargePercent || 0)) /
         100
-    ).toFixed(2);
+    ).toFixed(0);
     if (clientServiceCharges && clientServiceCharges !== 'NaN') {
       setClientServicesCharges(clientServiceCharges);
     }
@@ -954,6 +956,45 @@ const UpdateBooking = () => {
                                         From<span className='text-danger'>*</span>
                                       </label>
                                       <WindowedSelect
+                                        onInputChange={(e) => {
+                                          setAirportOptions((prev) => {
+                                            if (e) {
+                                              prev.sort((a, b) => {
+                                                e = e.toLowerCase();
+                                                let tempA =
+                                                  (a?.iata_code
+                                                    ?.toLowerCase()
+                                                    ?.startsWith(e)
+                                                    ? 0.6
+                                                    : 0) +
+                                                  (a?.city?.toLowerCase()?.includes(e)
+                                                    ? 0.3
+                                                    : 0) +
+                                                  (a?.country_name
+                                                    ?.toLowerCase()
+                                                    ?.includes(e)
+                                                    ? 0.1
+                                                    : 0);
+                                                let tempB =
+                                                  (b?.iata_code
+                                                    ?.toLowerCase()
+                                                    ?.startsWith(e)
+                                                    ? 0.6
+                                                    : 0) +
+                                                  (b?.city?.toLowerCase()?.includes(e)
+                                                    ? 0.3
+                                                    : 0) +
+                                                  (b?.country_name
+                                                    ?.toLowerCase()
+                                                    ?.includes(e)
+                                                    ? 0.1
+                                                    : 0);
+                                                return tempB - tempA;
+                                              });
+                                            } else prev = airports.map((e) => e);
+                                            return [...prev];
+                                          });
+                                        }}
                                         filterOption={(candidate, input) => {
                                           if (input) {
                                             return (
@@ -966,7 +1007,7 @@ const UpdateBooking = () => {
                                           }
                                           return true;
                                         }}
-                                        options={airports
+                                        options={airportOptions
                                           .filter((airport) => {
                                             if (
                                               bookingType?.value ===
@@ -992,8 +1033,10 @@ const UpdateBooking = () => {
                                                   style={{ fontSize: '1rem' }}
                                                 >
                                                   <span>
-                                                    <strong>{iata_code}</strong>{' '}
-                                                    <small>({country_name})</small>
+                                                    {city}{' '}
+                                                    <small>
+                                                      (<strong>{iata_code}</strong>)
+                                                    </small>
                                                   </span>
                                                 </div>
                                               </div>
@@ -1035,6 +1078,45 @@ const UpdateBooking = () => {
                                         To<span className='text-danger'>*</span>
                                       </label>
                                       <WindowedSelect
+                                        onInputChange={(e) => {
+                                          setAirportOptions((prev) => {
+                                            if (e) {
+                                              prev.sort((a, b) => {
+                                                e = e.toLowerCase();
+                                                let tempA =
+                                                  (a?.iata_code
+                                                    ?.toLowerCase()
+                                                    ?.startsWith(e)
+                                                    ? 0.6
+                                                    : 0) +
+                                                  (a?.city?.toLowerCase()?.includes(e)
+                                                    ? 0.3
+                                                    : 0) +
+                                                  (a?.country_name
+                                                    ?.toLowerCase()
+                                                    ?.includes(e)
+                                                    ? 0.1
+                                                    : 0);
+                                                let tempB =
+                                                  (b?.iata_code
+                                                    ?.toLowerCase()
+                                                    ?.startsWith(e)
+                                                    ? 0.6
+                                                    : 0) +
+                                                  (b?.city?.toLowerCase()?.includes(e)
+                                                    ? 0.3
+                                                    : 0) +
+                                                  (b?.country_name
+                                                    ?.toLowerCase()
+                                                    ?.includes(e)
+                                                    ? 0.1
+                                                    : 0);
+                                                return tempB - tempA;
+                                              });
+                                            } else prev = airports.map((e) => e);
+                                            return [...prev];
+                                          });
+                                        }}
                                         filterOption={(candidate, input) => {
                                           if (input) {
                                             return (
@@ -1047,7 +1129,7 @@ const UpdateBooking = () => {
                                           }
                                           return true;
                                         }}
-                                        options={airports
+                                        options={airportOptions
                                           .filter((airport) => {
                                             if (
                                               bookingType?.value ===
@@ -1073,8 +1155,10 @@ const UpdateBooking = () => {
                                                   style={{ fontSize: '1rem' }}
                                                 >
                                                   <span>
-                                                    <strong>{iata_code}</strong>{' '}
-                                                    <small>({country_name})</small>
+                                                    {city}{' '}
+                                                    <small>
+                                                      (<strong>{iata_code}</strong>)
+                                                    </small>
                                                   </span>
                                                 </div>
                                               </div>
@@ -1498,7 +1582,7 @@ const UpdateBooking = () => {
                     <div className='col-lg-4 pr-0'>
                       <div className='row'>
                         <label className='col-12 fw-500 mb-4'>
-                          Vendor Service Charges
+                          Vendor GST on Commission
                         </label>
                         <div className='form-input col-4'>
                           <input

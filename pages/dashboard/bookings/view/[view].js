@@ -69,6 +69,9 @@ const ViewBooking = () => {
             </a>
           );
         }
+        if (data?.client_service_charges)
+          data['xplorz_gst_amount'] = data['client_service_charges'];
+        delete data['client_service_charges'];
         delete data['created_at'];
         delete data['updated_at'];
         if (data?.client_name && data?.client_id) {
@@ -190,7 +193,6 @@ const ViewBooking = () => {
         delete data['original_booking_number'];
         delete data['original_booking_id'];
         delete data['sectors'];
-        delete data['sector'];
         delete data['reissued_booking'];
         delete data['partial_refund'];
         delete data['refund'];

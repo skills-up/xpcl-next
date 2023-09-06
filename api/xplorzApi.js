@@ -78,7 +78,7 @@ export const customAPICall = async (
     if (err?.response?.status === 401) {
       store.dispatch(setInitialUserState());
       sendToast('error', 'Your current session has expired. Please login again.', 4000);
-      window.location.assign('/login');
+      window.location.assign('/');
       return;
     }
     console.error(

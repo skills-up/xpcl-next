@@ -233,7 +233,8 @@ const CustomerInfo = () => {
     <>
       <Seo pageTitle={SEO} />
       <LoadingBar
-        color='#19f9fc'
+        height={3}
+        color='#3554d1'
         progress={progress}
         onLoaderFinished={() => setProgress(0)}
       />
@@ -574,7 +575,7 @@ const CustomerInfo = () => {
                   <div className='text-15'>Total Amount</div>
                   <div className='fw-500'>
                     {PNR.room.tp.toLocaleString('en-IN', {
-                      maximumFractionDigits: 2,
+                      maximumFractionDigits: 0,
                       style: 'currency',
                       currency: 'INR',
                     })}

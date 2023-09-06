@@ -22,9 +22,10 @@ const HotelProperties = () => {
   const ratings = useSelector((state) => state.hotelSearch.value.ratings);
   const maxRatings = useSelector((state) => state.hotelSearch.value.maxRatings);
   const options = useSelector((state) => state.hotelSearch.value.options);
+  const searchQuery = useSelector((state) => state.hotelSearch.value.searchQuery);
 
   const [manip, setManip] = useState([]);
-  const searchData = useSelector((state) => state.hotelSearch.value.searchData);
+  const searchData = useSelector((state) => state.hotelSearch.value.searchData.toLowerCase());
 
   useEffect(() => {
     if (searchData?.searchResult?.his) {
@@ -69,11 +70,15 @@ const HotelProperties = () => {
           }).length,
         })
       );
-  }, [manip, sort, options, ratings, maxRatings, price]);
+  }, [manip, sort, options, ratings, maxRatings, price, searchQuery]);
 
   const filter = (el) => {
     // Filters
 
+    // Filter by search query
+    if (searchQuery.length && !el.name.toLowerCase().includes(searchQuery) && !el.ad?.adr?.toLowerCase().includes(searchQuery)) {
+      return false;
+    }
     // Filter By Price Slider
     if (!(el.ops[0].tp >= price.value.min && el.ops[0].tp <= price.value.max))
       return false;

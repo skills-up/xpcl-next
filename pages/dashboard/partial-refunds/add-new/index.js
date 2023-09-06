@@ -39,6 +39,7 @@ const AddNewPartialRefund = () => {
   const [clientQuotedAmount, setClientQuotedAmount] = useState(0);
   const [isOffshore, setIsOffshore] = useState(false);
   const [bookingType, setBookingType] = useState(null);
+  const [clientRefundAmount, setClientRefundAmount] = useState(0);
 
   // Percentages
   const [vendorServiceChargePercent, setVendorServiceChargePercent] = useState(18);
@@ -178,25 +179,19 @@ const AddNewPartialRefund = () => {
           (+refundData?.data?.vendor_gst_amount || 0)
         ).toFixed(0)
       );
-      setIATACommissionPercent(
-        (+bookingData.data.iata_commission_percent || 0) +
-          (+refundData?.data?.iata_commission_percent || 0)
-      );
-      setPLBCommissionPercent(
-        (+bookingData.data.plb_commission_percent || 0) +
-          (+refundData?.data?.plb_commission_percent || 0)
-      );
+      setIATACommissionPercent(+bookingData.data.iata_commission_percent || 0);
+      setPLBCommissionPercent(+bookingData.data.plb_commission_percent || 0);
       setVendorServiceCharges(
         (
           (+bookingData.data.vendor_service_charges || 0) +
           (+refundData?.data?.vendor_service_charges || 0)
-        ).toFixed(2)
+        ).toFixed(0)
       );
       setVendorTDS(
         Number(
           (
             (+bookingData.data.vendor_tds || 0) + (+refundData?.data?.vendor_tds || 0)
-          ).toFixed(2)
+          ).toFixed(0)
         )
       );
       setClientReferralFee(
@@ -222,7 +217,7 @@ const AddNewPartialRefund = () => {
         (
           (+bookingData.data.client_service_charges || 0) +
           (+refundData?.data?.client_service_charges || 0)
-        ).toFixed(2)
+        ).toFixed(0)
       );
       setClientTaxAmount(
         (
@@ -386,6 +381,17 @@ const AddNewPartialRefund = () => {
     }
   }, [bookingData, airlineCancellationCharges, accountID, refundBookingData]);
 
+  useEffect(() => {
+    if (bookingType?.value) {
+      const payment = (
+        (+clientTotal || 0) -
+        (bookingType?.value === 'Domestic Flight Ticket' ? 1.09 : 1.18) *
+          (+clientCancellationCharges || 0)
+      ).toFixed(0);
+      if (payment) setClientRefundAmount(payment);
+    }
+  }, [clientTotal, clientCancellationCharges, bookingType]);
+
   // Offshore
   useEffect(() => {
     if (isOffshore) {
@@ -427,7 +433,7 @@ const AddNewPartialRefund = () => {
         (((+grossCommission || 0) - (+vendorServiceCharges || 0)) *
           (+vendorTDSPercent || 0)) /
           100
-      ).toFixed(2);
+      ).toFixed(0);
       setVendorTDS(vendorTDS);
     }
   };
@@ -445,7 +451,7 @@ const AddNewPartialRefund = () => {
     if (vendorGSTFocused) {
       let vendorServiceCharges = Number(
         ((+grossCommission || 0) * (+vendorServiceChargePercent || 0)) / 100
-      ).toFixed(2);
+      ).toFixed(0);
       setVendorServiceCharges(vendorServiceCharges);
       // Update
       updateVendorTDS(grossCommission, vendorServiceCharges, vendorTDSPercent);
@@ -453,6 +459,7 @@ const AddNewPartialRefund = () => {
   };
 
   const updateVendorServiceChargePercent = (vendorServiceCharges, grossCommission) => {
+    console.log('gross', vendorServiceCharges, grossCommission);
     if (!vendorGSTFocused)
       setVendorServiceChargePercent(
         Number((100 * (+vendorServiceCharges || 0)) / (+grossCommission || 0)).toFixed(2)
@@ -548,7 +555,7 @@ const AddNewPartialRefund = () => {
       (((+clientBaseAmount || 0) + (+clientReferralFee || 0)) *
         (+clientServiceChargePercent || 0)) /
         100
-    ).toFixed(2);
+    ).toFixed(0);
     if (clientServiceCharges && clientServiceCharges !== 'NaN') {
       setClientServicesCharges(clientServiceCharges);
     }
@@ -878,7 +885,7 @@ const AddNewPartialRefund = () => {
                     <div className='col-lg-4 pr-0'>
                       <div className='row'>
                         <label className='col-12 fw-500 mb-4'>
-                          Vendor Service Charges
+                          Vendor GST on Commission
                         </label>
                         <div className='form-input col-4'>
                           <input
@@ -1278,27 +1285,34 @@ const AddNewPartialRefund = () => {
                         <label className='lh-1 text-16 text-light-1'>Comment</label>
                       </div>
                     </div>
-                    <div>
-                      <p>
-                        <strong>Vendor Base Amount:</strong>{' '}
-                        {bookingData?.vendor_base_amount || 0}
-                      </p>
-                      <p>
-                        <strong>Vendor YQ Amount:</strong>{' '}
-                        {bookingData?.vendor_yq_amount || 0}
-                      </p>
-                      <p>
-                        <strong>Vendor Tax Amount:</strong>{' '}
-                        {bookingData?.vendor_tax_amount || 0}
-                      </p>
-                      <p>
-                        <strong>Vendor Misc. Amount:</strong>{' '}
-                        {bookingData?.vendor_misc_charges || 0}
-                      </p>
-                      <p>
-                        <strong>Reissue Penalty:</strong>{' '}
-                        {bookingData?.reissue_penalty || 0}
-                      </p>
+                    <div className='row justify-between'>
+                      <div className='col-lg-3'>
+                        <p>
+                          <strong>Vendor Base Amount:</strong>{' '}
+                          {bookingData?.vendor_base_amount || 0}
+                        </p>
+                        <p>
+                          <strong>Vendor YQ Amount:</strong>{' '}
+                          {bookingData?.vendor_yq_amount || 0}
+                        </p>
+                        <p>
+                          <strong>Vendor Tax Amount:</strong>{' '}
+                          {bookingData?.vendor_tax_amount || 0}
+                        </p>
+                        <p>
+                          <strong>Vendor Misc. Amount:</strong>{' '}
+                          {bookingData?.vendor_misc_charges || 0}
+                        </p>
+                        <p>
+                          <strong>Reissue Penalty:</strong>{' '}
+                          {bookingData?.reissue_penalty || 0}
+                        </p>
+                      </div>
+                      <div className='col-lg-3 text-right'>
+                        <p>
+                          <strong>Client Refund Amount:</strong> {clientRefundAmount || 0}
+                        </p>
+                      </div>
                     </div>
                     <div className='d-inline-block'>
                       <button
