@@ -1,14 +1,11 @@
-import { useState } from 'react';
 import PirceSlider from '../sidebar/PirceSlider';
 import PopularFilters from '../sidebar/PopularFilters';
 import RatingsFilter from '../sidebar/RatingsFilter';
-import MaxRatingsFilter from '../sidebar/MaxRatingFilter';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSearchQuery } from '../../../features/hotelSearch/hotelSearchSlice';
 
 const Sidebar = () => {
-  const [searchText, setSearchText] = useState('');
-  const ratingParams = useSelector((state) => state.hotelSearch.value.ratingParams);
+  const searchQuery = useSelector((state) => state.hotelSearch.value.searchQuery);
   const dispatch = useDispatch();
 
   return (
@@ -25,11 +22,9 @@ const Sidebar = () => {
             className='form-control border-light rounded-4'
             placeholder='Search by Name or Location'
             onChange={(e) => {
-              const text = e.target.value;
-              setSearchText(text);
-              dispatch(setSearchQuery(text));
+              dispatch(setSearchQuery(e.target.value));
             }}
-            value={searchText}
+            value={searchQuery}
           />
       </div>
       {/* End search box */}
@@ -72,14 +67,12 @@ const Sidebar = () => {
       {/* </div> */}
       {/* End Aminities filter */}
 
-      {ratingParams?.length !== 1 && (
-        <div className='sidebar__item'>
-          <h5 className='text-18 fw-500 mb-10'>Star Rating</h5>
-          <div className='row x-gap-10 y-gap-10 pt-10'>
-            <RatingsFilter />
-          </div>
+      <div className='sidebar__item'>
+        <h5 className='text-18 fw-500 mb-10'>Star Rating</h5>
+        <div className='row x-gap-10 y-gap-10 pt-10'>
+          <RatingsFilter />
         </div>
-      )}
+      </div>
       {/* End rating filter */}
 
       {/* <div className='sidebar__item'>

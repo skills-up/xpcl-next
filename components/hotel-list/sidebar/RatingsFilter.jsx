@@ -1,51 +1,56 @@
-import { useEffect, useState } from 'react';
-import InputRange from 'react-input-range';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  setMaxRatings,
-  setRatings,
+  setSelectedRatings,
 } from '../../../features/hotelSearch/hotelSearchSlice';
 
 const RatingsFilter = () => {
   const dispatch = useDispatch();
-  let [ratingOptions, setRatingOptions] = useState([1, 2, 3, 4, 5]);
-  const ratingParams = useSelector((state) => state.hotelSearch.value.ratingParams);
-  const maxRatings = useSelector((state) => state.hotelSearch.value.maxRatings);
-  const ratings = useSelector((state) => state.hotelSearch.value.ratings);
-  useEffect(() => {
-    if (ratingParams.length > 0) {
-      console.log('ratings', ratingParams);
-      let dat = ratingParams.map((el) => +el.value).sort();
-      setRatingOptions(dat);
-      dispatch(setRatings(dat[0]));
-      dispatch(setMaxRatings(dat.at(-1)));
-    }
-  }, []);
+  const [checkAll, setCheckAll] = useState(false);
+  const selectedRatings = useSelector((state) => state.hotelSearch.value.selectedRatings);
 
   return (
     <>
-      <div className='text-15 text-dark-1'>
-        <span className='js-lower mx-1'>
-          {ratings} - {maxRatings}
-        </span>
-      </div>
-      <div className='px-5'>
-        <InputRange
-          formatLabel={(value) => ``}
-          minValue={ratingOptions[0]}
-          maxValue={ratingOptions.at(-1)}
-          value={{ min: ratings, max: maxRatings }}
-          onChange={(value) => {
-            dispatch(setRatings(value.min));
-            dispatch(setMaxRatings(value.max));
-            console.log('value', value);
-          }}
-        />
-      </div>
-      <div className='text-15 text-blue-1 justify-between d-flex'>
-        <span className='fw-500'>{ratingOptions[0]}</span> -{' '}
-        <span className='fw-500'>{ratingOptions.at(-1)}</span>
-      </div>
+      <a
+        className='text-14 text-blue-1 fw-500 underline'
+        onClick={() => {
+          let temp = {};
+          for (let [key, value] of Object.entries(selectedRatings)) {
+            temp[key] = { ...value, value: checkAll };
+          }
+          dispatch(setSelectedRatings(temp));
+          setCheckAll((prev) => !prev);
+        }}
+      >
+        {checkAll ? 'Check' : 'Uncheck'} All
+      </a>
+      {selectedRatings && Object.entries(selectedRatings).map(([key, value], index) => (
+        <div className='row y-gap-10 items-center justify-between'>
+          <div className='col-auto'>
+            <div className='form-checkbox d-flex items-center'>
+              <input
+                type='checkbox'
+                checked={value.value}
+                onChange={() => {
+                  dispatch(
+                    setSelectedRatings({
+                      ...selectedRatings,
+                      [key]: { number: value.number, value: !value.value },
+                    })
+                  );
+                }}
+              />
+              <div className='form-checkbox__mark'>
+                <div className='form-checkbox__icon icon-check' />
+              </div>
+              <div className='text-15 ml-10'>{key}-Star</div>
+            </div>
+          </div>
+          <div className='col-auto'>
+            <div className='text-15 text-light-1'>{value.number}</div>
+          </div>
+        </div>
+      ))}
     </>
   );
 };
