@@ -138,7 +138,7 @@ function FlightProperty({
                   alt='image'
                 />
               </div>
-              <div className='col y-gap-20 row pr-0'>
+              <div className='col y-gap-10 row pr-0'>
                 {/* Not Combined */}
                 <div className='col-12 row pr-0 x-gap-10'>
                   <div className='col pr-0'>
@@ -280,7 +280,7 @@ function FlightProperty({
                 </div>
                 {/* Combined */}
                 {element.type === 'combined' && layoffSegment && (
-                  <div className='col-12 row pr-0'>
+                  <div className='col-12 row pr-0 x-gap-10'>
                     <div className='col pr-0'>
                       <div className='row x-gap-20 items-end'>
                         <div className='col-auto'>
@@ -504,160 +504,8 @@ function FlightProperty({
                   <div className='text-right md:text-left'>
                     <div className='text-18 lh-16 fw-500'>
                       <a
-                        data-tooltip-id={element.selectId}
-                        data-tooltip-content={
-                          <>
-                            {element.adultPrice > 0 && (
-                              <div className='text-15 lh-16 text-light-1'>
-                                <a
-                                  data-tooltip-id={'x_' + element.selectId}
-                                  data-tooltip-content={
-                                    element.provider === 'tj'
-                                      ? `Max Check-In Baggage - ${
-                                          element.prices.prices.ADULT.baggage.checkIn ||
-                                          'NA'
-                                        }\nMax Cabin Baggage - ${
-                                          element.prices.prices.ADULT.baggage.cabin ||
-                                          'NA'
-                                        }\nFree Meal - ${
-                                          element.prices.prices.ADULT.freeMeal
-                                            ? 'Yes'
-                                            : 'No'
-                                        }\nRefundable - ${
-                                          element.prices.prices.ADULT.refundable
-                                            ? 'Yes'
-                                            : 'No'
-                                        } `
-                                      : undefined
-                                  }
-                                  data-tooltip-place='top'
-                                >
-                                  {travellerDOBS.ADT}x Adult @{' '}
-                                  {element.adultPrice.toLocaleString('en-IN', {
-                                    maximumFractionDigits: 0,
-                                    style: 'currency',
-                                    currency: 'INR',
-                                  })}
-                                </a>
-                                {element.provider === 'tj' && (
-                                  <ReactTooltip
-                                    id={'x_' + element.selectId}
-                                    render={({ content }) => (
-                                      <span>
-                                        {content?.split('\n')?.map((el) => (
-                                          <>
-                                            {el}
-                                            <br />
-                                          </>
-                                        ))}
-                                      </span>
-                                    )}
-                                  />
-                                )}
-                              </div>
-                            )}
-                            $
-                            {element.childPrice > 0 && (
-                              <div className='text-15 lh-16 text-light-1'>
-                                <a
-                                  data-tooltip-id={'x_' + element.selectId}
-                                  data-tooltip-content={
-                                    element.provider === 'tj'
-                                      ? `Max Check-In Baggage - ${
-                                          element.prices.prices.CHILD.baggage.checkIn ||
-                                          'NA'
-                                        }\nMax Cabin Baggage - ${
-                                          element.prices.prices.CHILD.baggage.cabin ||
-                                          'NA'
-                                        }\nFree Meal - ${
-                                          element.prices.prices.CHILD.freeMeal
-                                            ? 'Yes'
-                                            : 'No'
-                                        }\nRefundable - ${
-                                          element.prices.prices.CHILD.refundable
-                                            ? 'Yes'
-                                            : 'No'
-                                        } `
-                                      : undefined
-                                  }
-                                  data-tooltip-place='top'
-                                >
-                                  {travellerDOBS.CHD}x Child @{' '}
-                                  {element.childPrice.toLocaleString('en-IN', {
-                                    maximumFractionDigits: 0,
-                                    style: 'currency',
-                                    currency: 'INR',
-                                  })}
-                                </a>
-                                {element.provider === 'tj' && (
-                                  <ReactTooltip
-                                    id={'x_' + element.selectId}
-                                    render={({ content }) => (
-                                      <span>
-                                        {content?.split('\n')?.map((el) => (
-                                          <>
-                                            {el}
-                                            <br />
-                                          </>
-                                        ))}
-                                      </span>
-                                    )}
-                                  />
-                                )}
-                              </div>
-                            )}
-                            $
-                            {element.infantPrice > 0 && (
-                              <div className='text-15 lh-16 text-light-1'>
-                                <a
-                                  data-tooltip-id={'x_' + element.selectId}
-                                  data-tooltip-content={
-                                    element.provider === 'tj'
-                                      ? `Max Check-In Baggage - ${
-                                          element.prices.prices.INFANT.baggage.checkIn ||
-                                          'NA'
-                                        }\nMax Cabin Baggage - ${
-                                          element.prices.prices.INFANT.baggage.cabin ||
-                                          'NA'
-                                        }\nFree Meal - ${
-                                          element.prices.prices.INFANT.freeMeal
-                                            ? 'Yes'
-                                            : 'No'
-                                        }\nRefundable - ${
-                                          element.prices.prices.INFANT.refundable
-                                            ? 'Yes'
-                                            : 'No'
-                                        } `
-                                      : undefined
-                                  }
-                                  data-tooltip-place='top'
-                                >
-                                  {travellerDOBS.INF}x Infant @{' '}
-                                  {element.infantPrice.toLocaleString('en-IN', {
-                                    maximumFractionDigits: 0,
-                                    style: 'currency',
-                                    currency: 'INR',
-                                  })}
-                                </a>
-                                {element.provider === 'tj' && (
-                                  <ReactTooltip
-                                    id={'x_' + element.selectId}
-                                    render={({ content }) => (
-                                      <span>
-                                        {content?.split('\n')?.map((el) => (
-                                          <>
-                                            {el}
-                                            <br />
-                                          </>
-                                        ))}
-                                      </span>
-                                    )}
-                                  />
-                                )}
-                              </div>
-                            )}
-                          </>
-                        }
+                        data-tooltip-id={'x_' + element.selectId}
+                        data-tooltip-content={<div>hi</div>}
                         data-tooltip-place='top'
                       >
                         {element.total.toLocaleString('en-IN', {
@@ -666,7 +514,13 @@ function FlightProperty({
                           currency: 'INR',
                         })}
                       </a>
-                      <ReactTooltip id={element.selectId} />
+                      <ReactTooltip
+                        id={element.selectId}
+                        render={(content) => {
+                          console.log('render', content);
+                          return <div>{content}</div>;
+                        }}
+                      />
                     </div>
                   </div>
                 </div>
@@ -758,8 +612,8 @@ function FlightProperty({
 
               return (
                 <div key={segmentIndex}>
-                  <div className='border-light rounded-4 my-3'>
-                    <div className='py-20 px-30'>
+                  <div className='border-light rounded-4 my-2'>
+                    <div className='py-5 px-30'>
                       <div className='row justify-between items-center'>
                         <div className='col-auto'>
                           <div className='fw-500 text-dark-1'>
@@ -782,10 +636,10 @@ function FlightProperty({
                         </div>
                       </div>
                     </div>
-                    <div className='py-30 px-30 border-top-light'>
+                    <div className='py-10 px-30 border-top-light'>
                       <div className='row y-gap-10 justify-between'>
                         <div className='col-auto'>
-                          <div className='d-flex items-center mb-15'>
+                          <div className='d-flex items-center mb-5'>
                             <div className='w-28 d-flex justify-center mr-15'>
                               <img
                                 src={`/img/flights/${segment.flight.airline}.png`}
@@ -905,7 +759,7 @@ function FlightProperty({
                         )}
                       </span>
                     ) : (
-                      <hr className='my-4 d-block' />
+                      <hr className='my-3 d-block' />
                     )
                   ) : (
                     <></>

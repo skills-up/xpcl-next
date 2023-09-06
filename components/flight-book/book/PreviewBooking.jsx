@@ -66,6 +66,14 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
 
   useEffect(() => console.log('traveller', travellerInfo), [travellerInfo]);
 
+  useEffect(() => {
+    if (travellerDOBS) {
+      setSelectedTravellers([
+        ...Array(travellerDOBS?.ADT + travellerDOBS?.INF + travellerDOBS?.CHD),
+      ]);
+    }
+  }, [travellerDOBS]);
+
   const getData = async () => {
     // SEO
     if (destinations) {
@@ -456,14 +464,14 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
       <div className='container'>
         {/* Itinerary */}
         <div>
-          <h1>Itinerary Details</h1>
+          <h2>Itinerary Details</h2>
           {/* To */}
           {selectedBookings?.to && (
-            <div className='mt-20'>
-              <h3>
+            <div className=''>
+              <h4>
                 {selectedBookings.to.segments[0].departure.airport.code} &rarr;{' '}
                 {selectedBookings.to.segments.at(-1).arrival.airport.code}
-              </h3>
+              </h4>
               <FlightProperty
                 alreadyExpanded
                 element={selectedBookings.to}
@@ -473,11 +481,11 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
           )}
           {/* Return */}
           {selectedBookings?.from && returnFlight && (
-            <div className='mt-30'>
-              <h3>
+            <div className='mt-10'>
+              <h4>
                 {selectedBookings.from.segments[0].departure.airport.code} &rarr;{' '}
                 {selectedBookings.from.segments.at(-1).arrival.airport.code}
-              </h3>
+              </h4>
               <FlightProperty
                 alreadyExpanded
                 element={selectedBookings.from}
@@ -487,8 +495,8 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
           )}
           {/* Return */}
           {selectedBookings?.combined && (
-            <div className='mt-30'>
-              <h3>Round Trip</h3>
+            <div className='mt-10'>
+              <h4>Round Trip</h4>
               <FlightProperty
                 alreadyExpanded
                 element={selectedBookings.combined}
@@ -499,21 +507,32 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
         </div>
         {/* Selection */}
         {!selectionConfirm && (
-          <div className='mt-30'>
+          <div className='mt-10'>
             <h3 className='mb-10'>Select Passengers</h3>
-            <div className='row items-center'>
-              <Select
-                className='col-lg-8'
-                isOptionDisabled={() =>
-                  selectedTravellers.length >=
-                  travellerDOBS?.ADT + travellerDOBS?.CHD + travellerDOBS?.INF
-                }
-                options={travellers}
-                isMulti
-                value={selectedTravellers}
-                onChange={(id) => setSelectedTravellers(id)}
-              />
-              <div className='col-lg-4 d-flex justify-end'>
+            <div className='row x-gap-10 y-gap-10 items-center'>
+              {selectedTravellers &&
+                selectedTravellers.map((element, index) => (
+                  <Select
+                    key={index}
+                    className='col-lg-6'
+                    options={travellers
+                      .filter((el) => {
+                        console.log('test', travellers, selectedTravellers);
+                        for (let sel of selectedTravellers)
+                          if (el?.value?.id === sel?.value?.id) return false;
+                        return true;
+                      })
+                      .map((el) => el)}
+                    value={selectedTravellers[index]}
+                    onChange={(id) =>
+                      setSelectedTravellers((prev) => {
+                        prev[index] = id;
+                        return [...prev];
+                      })
+                    }
+                  />
+                ))}
+              <div className='col-lg-6 d-flex justify-end'>
                 <button
                   style={{ height: '43px' }}
                   className='button col-12 px-24 -dark-1 bg-blue-1 text-white'
@@ -641,20 +660,20 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
         {/* Traveller Details */}
         {selectionConfirm && (
           <div
-            className='mt-20'
+            className='mt-10'
             id='traveller-details'
             style={{ scrollMarginTop: '5.5rem' }}
           >
-            <h1>Traveller Details</h1>
+            <h3>Traveller Details</h3>
             {travellerInfo &&
               travellerInfo.length > 0 &&
               travellerInfo.map((element, index) => (
                 <div key={index}>
-                  <h3 className='mt-20'>{element.aliases[0]}</h3>
-                  <div key={index} className='bg-white py-30 px-30 mt-20'>
-                    <h4>Traveller</h4>
-                    <div className='row my-3'>
-                      <div className='row col-12 mb-20 y-gap-20'>
+                  <h4 className='mt-10 mb-5'>{element.aliases[0]}</h4>
+                  <div key={index} className='bg-white py-10 px-30'>
+                    <h5>Traveller</h5>
+                    <div className='row my-1 y-gap-10 x-gap-10'>
+                      <div className='row col-12 x-gap-10 y-gap-10'>
                         <div className='col-md-3 form-input-select'>
                           <label>Prefix</label>
                           <Select
@@ -711,7 +730,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                           <label className='lh-1 text-16 text-light-1'>Last Name</label>
                         </div>
                       </div>
-                      <div className='row col-12 y-gap-20'>
+                      <div className='row col-12 y-gap-10 x-gap-10'>
                         <div className='form-datepicker col-md-6'>
                           <label>Date of Birth</label>
                           <DatePicker
@@ -859,8 +878,8 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                         </div>
                       </>
                     )}
-                    <h4>Travel Membership</h4>
-                    <div className='row my-3'>
+                    <h5>Travel Membership</h5>
+                    <div className='row'>
                       {element.frequentFliers &&
                         Object.entries(element.frequentFliers).map(
                           ([key, value], ffI) => (
@@ -869,7 +888,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                                 <>
                                   {(element.frequentFliers['from'] ||
                                     element.frequentFliers['combined']) && (
-                                    <h5 className='mb-10'>
+                                    <span className='fw-500 text-18'>
                                       {key === 'to'
                                         ? element.frequentFliers['from']
                                           ? 'Onward Trip'
@@ -877,9 +896,9 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                                         : key === 'from'
                                         ? 'Return Trip'
                                         : 'Onward & Return Trip'}
-                                    </h5>
+                                    </span>
                                   )}
-                                  <div className='row col-12 y-gap-20'>
+                                  <div className='row col-12 y-gap-10 x-gap-10'>
                                     <div className='col-md-6 form-input-select'>
                                       <label>Travel Membership Program</label>
                                       <Select
@@ -924,7 +943,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                         )}
                     </div>
                     {/* <h4>Miscellaneous Details</h4> */}
-                    <div className='row my-1 y-gap-20'>
+                    <div className='row my-1 y-gap-10 x-gap-10'>
                       <div className='col-md-6'>
                         <h5 className='fw-500'>Seat Preference: </h5>
                         {element.seat_preference
@@ -959,7 +978,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                     </div>
                     <div className='d-flex col-12 justify-end'>
                       <a
-                        className='h-50 cursor-pointer text-primary'
+                        className='text-16 text-blue-1 fw-500 underline cursor-pointer'
                         onClick={async () => {
                           // Getting Travel Memberships
                           let res = await getList('travel-memberships', {
