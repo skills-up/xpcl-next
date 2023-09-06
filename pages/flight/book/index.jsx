@@ -24,7 +24,7 @@ const index = () => {
 
   return (
     <>
-      <Seo pageTitle='Flight Book' />
+      <Seo pageTitle='Flight Booking' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -49,7 +49,7 @@ const index = () => {
         />
       )}
 
-      <CallToActions />
+      {/* <CallToActions /> */}
       {/* End Call To Actions Section */}
 
       <DefaultFooter />

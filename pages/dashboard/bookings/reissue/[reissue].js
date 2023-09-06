@@ -95,6 +95,7 @@ const ReissueBooking = () => {
   const [paymentAccounts, setPaymentAccounts] = useState([]);
   const [clients, setClients] = useState([]);
   const [clientTravellers, setClientTravellers] = useState([]);
+  const [airportOptions, setAirportOptions] = useState([]);
 
   const [xplorzGSTFocused, setXplorzGSTFocused] = useState(false);
   const [vendorGSTFocused, setVendorGSTFocused] = useState(true);
@@ -111,6 +112,7 @@ const ReissueBooking = () => {
   }, [router.isReady]);
 
   const getData = async () => {
+    if (airports && airports?.length > 0) setAirportOptions(airports.map((e) => e));
     if (router.query.reissue) {
       const response = await getItem('bookings', router.query.reissue);
       if (response?.success) {
@@ -499,7 +501,7 @@ const ReissueBooking = () => {
         (((+grossCommission || 0) - (+vendorServiceCharges || 0)) *
           (+vendorTDSPercent || 0)) /
           100
-      ).toFixed(2);
+      ).toFixed(0);
       setVendorTDS(vendorTDS);
     }
   };
@@ -517,7 +519,7 @@ const ReissueBooking = () => {
     if (vendorGSTFocused) {
       let vendorServiceCharges = Number(
         ((+grossCommission || 0) * (+vendorServiceChargePercent || 0)) / 100
-      ).toFixed(2);
+      ).toFixed(0);
       setVendorServiceCharges(vendorServiceCharges);
       // Update
       updateVendorTDS(grossCommission, vendorServiceCharges, vendorTDSPercent);
@@ -612,7 +614,7 @@ const ReissueBooking = () => {
       (((+clientBaseAmount || 0) + (+clientReferralFee || 0)) *
         (+clientServiceChargePercent || 0)) /
         100
-    ).toFixed(2);
+    ).toFixed(0);
     if (clientServiceCharges && clientServiceCharges !== 'NaN') {
       setClientServicesCharges(clientServiceCharges);
     }
@@ -740,7 +742,7 @@ const ReissueBooking = () => {
                 <div>
                   <form
                     onSubmit={onSubmit}
-                    className='row col-12 y-gap-15 lg:pr-0 lg:ml-0'
+                    className='row col-12 y-gap-10 x-gap-10 lg:pr-0 lg:ml-0'
                   >
                     <h3>Basic Details</h3>
                     {/* <div className=' col-lg-12'>
@@ -849,9 +851,9 @@ const ReissueBooking = () => {
                     </div>
                     {/* Booking Sectors */}
                     {bookingType?.value !== 'Miscellaneous' && (
-                      <div className='pl-20 pr-10'>
-                        <div className='bg-light pl-20 pr-40 py-10 lg:px-10'>
-                          <h4 className='d-block'>Add Booking Sectors</h4>
+                      <div>
+                        <div className='bg-light pl-10 pr-30 py-10 lg:px-10 rounded-4'>
+                          <h4 className='d-block'>Booking Sectors</h4>
                           <div>
                             {bookingSectors.map((element, index) => {
                               return (
@@ -860,12 +862,51 @@ const ReissueBooking = () => {
                                   key={index}
                                 >
                                   <div>{index + 1}.</div>
-                                  <div className='d-flex row y-gap-10 col-12 x-gap-15 lg:pr-0 md:flex-column items-center justify-between'>
+                                  <div className='d-flex row y-gap-10 col-12 x-gap-10 lg:pr-0 md:flex-column items-center justify-between'>
                                     <div className='form-input-select col-md-2'>
                                       <label>
                                         From<span className='text-danger'>*</span>
                                       </label>
                                       <WindowedSelect
+                                        onInputChange={(e) => {
+                                          setAirportOptions((prev) => {
+                                            if (e) {
+                                              prev.sort((a, b) => {
+                                                e = e.toLowerCase();
+                                                let tempA =
+                                                  (a?.iata_code
+                                                    ?.toLowerCase()
+                                                    ?.startsWith(e)
+                                                    ? 0.6
+                                                    : 0) +
+                                                  (a?.city?.toLowerCase()?.includes(e)
+                                                    ? 0.3
+                                                    : 0) +
+                                                  (a?.country_name
+                                                    ?.toLowerCase()
+                                                    ?.includes(e)
+                                                    ? 0.1
+                                                    : 0);
+                                                let tempB =
+                                                  (b?.iata_code
+                                                    ?.toLowerCase()
+                                                    ?.startsWith(e)
+                                                    ? 0.6
+                                                    : 0) +
+                                                  (b?.city?.toLowerCase()?.includes(e)
+                                                    ? 0.3
+                                                    : 0) +
+                                                  (b?.country_name
+                                                    ?.toLowerCase()
+                                                    ?.includes(e)
+                                                    ? 0.1
+                                                    : 0);
+                                                return tempB - tempA;
+                                              });
+                                            } else prev = airports.map((e) => e);
+                                            return [...prev];
+                                          });
+                                        }}
                                         filterOption={(candidate, input) => {
                                           if (input) {
                                             return (
@@ -878,7 +919,7 @@ const ReissueBooking = () => {
                                           }
                                           return true;
                                         }}
-                                        options={airports
+                                        options={airportOptions
                                           .filter((airport) => {
                                             if (
                                               bookingType?.value ===
@@ -904,8 +945,10 @@ const ReissueBooking = () => {
                                                   style={{ fontSize: '1rem' }}
                                                 >
                                                   <span>
-                                                    <strong>{iata_code}</strong>{' '}
-                                                    <small>({country_name})</small>
+                                                    {city}{' '}
+                                                    <small>
+                                                      (<strong>{iata_code}</strong>)
+                                                    </small>
                                                   </span>
                                                 </div>
                                               </div>
@@ -947,6 +990,45 @@ const ReissueBooking = () => {
                                         To<span className='text-danger'>*</span>
                                       </label>
                                       <WindowedSelect
+                                        onInputChange={(e) => {
+                                          setAirportOptions((prev) => {
+                                            if (e) {
+                                              prev.sort((a, b) => {
+                                                e = e.toLowerCase();
+                                                let tempA =
+                                                  (a?.iata_code
+                                                    ?.toLowerCase()
+                                                    ?.startsWith(e)
+                                                    ? 0.6
+                                                    : 0) +
+                                                  (a?.city?.toLowerCase()?.includes(e)
+                                                    ? 0.3
+                                                    : 0) +
+                                                  (a?.country_name
+                                                    ?.toLowerCase()
+                                                    ?.includes(e)
+                                                    ? 0.1
+                                                    : 0);
+                                                let tempB =
+                                                  (b?.iata_code
+                                                    ?.toLowerCase()
+                                                    ?.startsWith(e)
+                                                    ? 0.6
+                                                    : 0) +
+                                                  (b?.city?.toLowerCase()?.includes(e)
+                                                    ? 0.3
+                                                    : 0) +
+                                                  (b?.country_name
+                                                    ?.toLowerCase()
+                                                    ?.includes(e)
+                                                    ? 0.1
+                                                    : 0);
+                                                return tempB - tempA;
+                                              });
+                                            } else prev = airports.map((e) => e);
+                                            return [...prev];
+                                          });
+                                        }}
                                         filterOption={(candidate, input) => {
                                           if (input) {
                                             return (
@@ -959,7 +1041,7 @@ const ReissueBooking = () => {
                                           }
                                           return true;
                                         }}
-                                        options={airports
+                                        options={airportOptions
                                           .filter((airport) => {
                                             if (
                                               bookingType?.value ===
@@ -985,8 +1067,10 @@ const ReissueBooking = () => {
                                                   style={{ fontSize: '1rem' }}
                                                 >
                                                   <span>
-                                                    <strong>{iata_code}</strong>{' '}
-                                                    <small>({country_name})</small>
+                                                    {city}{' '}
+                                                    <small>
+                                                      (<strong>{iata_code}</strong>)
+                                                    </small>
                                                   </span>
                                                 </div>
                                               </div>
@@ -1110,7 +1194,7 @@ const ReissueBooking = () => {
                                     >
                                       <BsTrash3
                                         className='text-danger'
-                                        style={{ fontSize: '1.5rem', cursor: 'pointer' }}
+                                        style={{ cursor: 'pointer' }}
                                       />
                                     </span>
                                   </div>
@@ -1404,7 +1488,7 @@ const ReissueBooking = () => {
                     <div className='col-lg-4 pr-0'>
                       <div className='row'>
                         <label className='col-12 fw-500 mb-4'>
-                          Vendor Service Charges
+                          Vendor GST on Commission
                         </label>
                         <div className='form-input col-4'>
                           <input

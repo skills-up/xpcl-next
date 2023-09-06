@@ -13,8 +13,12 @@ import Testimonial from '../../components/home/home-1/Testimonial';
 import TestimonialLeftCol from '../../components/home/home-1/TestimonialLeftCol';
 import Hotels from '../../components/hotels/Hotels';
 import SelectFilter from '../../components/hotels/filter-tabs/SelectFilter';
+import { useSelector } from 'react-redux';
+import ContactPage from '../../components/contact/Contact';
 
 const Home_1 = () => {
+  const token = useSelector((state) => state.auth.value.token);
+
   const Temp = () => (
     <>
       <section className='layout-pt-lg layout-pb-md' data-aos='fade-up'>
@@ -166,8 +170,7 @@ const Home_1 = () => {
 
       <Header1 permaOpaque={false} />
       {/* End Header 1 */}
-
-      <Hero1 />
+      {token === '' || !token ? <ContactPage isSignUp /> : <Hero1 />}
       {/* End Hero 1 */}
       {/* <Temp /> */}
       <DefaultFooter />

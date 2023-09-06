@@ -84,6 +84,10 @@ const Sidebar = () => {
           title: 'Visa Requirements',
           href: '/dashboard/visa-requirements',
         },
+        {
+          title: 'Booking History',
+          href: '/dashboard/bookings/history',
+        },
       ],
     },
     {
@@ -418,7 +422,7 @@ const Sidebar = () => {
                   dispatch(setInitialUserState());
                   sendToast('success', 'Logged Out Successfully', 4000);
                   sessionStorage.removeItem('checking-user');
-                  router.push('/login');
+                  router.push('/');
                 } else {
                   sendToast('error', 'Error Logging Out', 4000);
                 }

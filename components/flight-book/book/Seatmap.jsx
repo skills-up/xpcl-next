@@ -15,19 +15,24 @@ import { setSelectedBookings } from '../../../features/flightSearch/flightSearch
 import { TiTickOutline } from 'react-icons/ti';
 import FlightProperty from '../../flight-list/common/FlightProperty';
 import { FaMinus, FaPlus } from 'react-icons/fa';
+import Seo from '../../common/Seo';
 
 function Seatmap({ seatMaps, PNRS, travellerInfos }) {
+  const [SEO, setSEO] = useState('');
   const [PNR, setPNR] = PNRS;
   const [seatMap, setSeatMap] = seatMaps;
   // const travellers = useSelector((state) => state.flightSearch.value.travellers);
   const selectedBookings = useSelector(
     (state) => state.flightSearch.value.selectedBookings
   );
+  const destinations = useSelector((state) => state.flightSearch.value.destinations);
+
   const [isProgress, setIsProgress] = useState(false);
   const travellerDOBS = useSelector((state) => state.flightSearch.value.travellerDOBS);
   const clientTravellers = useSelector(
     (state) => state.flightSearch.value.clientTravellers
   );
+  const returnFlight = useSelector((state) => state.flightSearch.value.returnFlight);
   const client_id = useSelector((state) => state.auth.value.currentOrganization);
   const [travellerInfo, setTravellerInfo] = travellerInfos;
   const [progress, setProgress] = useState(0);
@@ -64,6 +69,34 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
     () => console.log('alerts', alerts, selectedBookings),
     [alerts, selectedBookings]
   );
+
+  useEffect(() => {
+    updateSEO();
+  }, [stage]);
+
+  const updateSEO = () => {
+    if (destinations) {
+      setSEO(
+        `Flight ${stage === 1 ? 'Confirmation' : 'Booking'} | ${
+          returnFlight
+            ? destinations?.to?.label?.split('|')?.at(1) +
+              ' - ' +
+              destinations?.from?.label?.split('|')?.at(1) +
+              ' - ' +
+              destinations?.to?.label?.split('|')?.at(1) +
+              ' Roundtrip'
+            : destinations?.from?.label?.split('|')?.at(1) +
+              ' - ' +
+              destinations?.to?.label?.split('|')?.at(1) +
+              ', ' +
+              new DateObject({
+                date: selectedBookings?.to?.segments[0].departure.time.split('T')[0],
+                format: 'YYYY-MM-DD',
+              })?.format('DD MMMM')
+        }`
+      );
+    }
+  };
 
   const total = (obj) => {
     if (obj) {
@@ -1036,7 +1069,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                                     ? `Amount - ${group.amount.toLocaleString(
                                                         'en-IN',
                                                         {
-                                                          maximumFractionDigits: 2,
+                                                          maximumFractionDigits: 0,
                                                           style: 'currency',
                                                           currency: 'INR',
                                                         }
@@ -1452,7 +1485,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                   data-tooltip-content={
                                     el.amount > 0 && !el.isBooked
                                       ? `Amount - ${el.amount.toLocaleString('en-IN', {
-                                          maximumFractionDigits: 2,
+                                          maximumFractionDigits: 0,
                                           style: 'currency',
                                           currency: 'INR',
                                         })}`
@@ -2199,7 +2232,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                                     ? `Amount - ${(+price).toLocaleString(
                                                         'en-IN',
                                                         {
-                                                          maximumFractionDigits: 2,
+                                                          maximumFractionDigits: 0,
                                                           style: 'currency',
                                                           currency: 'INR',
                                                         }
@@ -2241,6 +2274,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
 
   return (
     <section className='pt-40 pb-40 bg-light-2'>
+      <Seo pageTitle={SEO} />
       <div className='container'>
         <LoadingBar
           color='#19f9fc'
@@ -2273,13 +2307,13 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                       </span>{' '}
                       has changed from{' '}
                       {a.alert.oldFare.toLocaleString('en-IN', {
-                        maximumFractionDigits: 2,
+                        maximumFractionDigits: 0,
                         style: 'currency',
                         currency: 'INR',
                       })}{' '}
                       to{' '}
                       {a.alert.newFare.toLocaleString('en-IN', {
-                        maximumFractionDigits: 2,
+                        maximumFractionDigits: 0,
                         style: 'currency',
                         currency: 'INR',
                       })}
@@ -2459,7 +2493,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                                                     el.amount.toLocaleString(
                                                                       'en-IN',
                                                                       {
-                                                                        maximumFractionDigits: 2,
+                                                                        maximumFractionDigits: 0,
                                                                         style: 'currency',
                                                                         currency: 'INR',
                                                                       }
@@ -2569,7 +2603,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                                           )[0].price.toLocaleString(
                                                             'en-IN',
                                                             {
-                                                              maximumFractionDigits: 2,
+                                                              maximumFractionDigits: 0,
                                                               style: 'currency',
                                                               currency: 'INR',
                                                             }
@@ -2827,7 +2861,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                           <div className='d-flex justify-between' key={index}>
                             <span className='fw-500'>{key}: </span>
                             {value.toLocaleString('en-IN', {
-                              maximumFractionDigits: 2,
+                              maximumFractionDigits: 0,
                               style: 'currency',
                               currency: 'INR',
                             })}
@@ -2837,7 +2871,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                         <div className='d-flex justify-between'>
                           <span className='fw-500'>Total: </span>
                           {total(breakdown).toLocaleString('en-IN', {
-                            maximumFractionDigits: 2,
+                            maximumFractionDigits: 0,
                             style: 'currency',
                             currency: 'INR',
                           })}
@@ -2938,7 +2972,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                           <div className='fw-500'>
                             {totalAmount &&
                               (+totalAmount).toLocaleString('en-IN', {
-                                maximumFractionDigits: 2,
+                                maximumFractionDigits: 0,
                                 style: 'currency',
                                 currency: 'INR',
                               })}
@@ -2962,7 +2996,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                 <span className='d-block'>
                                   <span className='fw-500'>{key}</span>:{' '}
                                   {value?.toLocaleString('en-IN', {
-                                    maximumFractionDigits: 2,
+                                    maximumFractionDigits: 0,
                                     style: 'currency',
                                     currency: 'INR',
                                   })}

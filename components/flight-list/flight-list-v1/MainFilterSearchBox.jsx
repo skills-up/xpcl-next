@@ -27,6 +27,7 @@ import { MdFlightLand, MdFlightTakeoff } from 'react-icons/md';
 import { TbArrowsExchange2 } from 'react-icons/tb';
 import { SlCalender } from 'react-icons/sl';
 import { RiArrowRightLine, RiArrowLeftRightFill } from 'react-icons/ri';
+import Seo from '../../common/Seo';
 
 const MainFilterSearchBox = () => {
   const [directFlight, setDirectFlight] = useState(false);
@@ -40,6 +41,7 @@ const MainFilterSearchBox = () => {
   const [returnFlight, setReturnFlight] = useState(true);
   const [clientTravellers, setClientTravellers] = useState([]);
   const [airlines, setAirlines] = useState([]);
+  const [airportOptions, setAirportOptions] = useState([]);
   const [progress, setProgress] = useState(0);
   const [isSearched, setIsSearched] = useState(false);
   const [guestCounts, setGuestCounts] = useState({
@@ -47,6 +49,7 @@ const MainFilterSearchBox = () => {
     Children: 0,
     Infants: 0,
   });
+  const [SEO, setSEO] = useState('Flight Search');
 
   const dispatch = useDispatch();
   const router = useRouter();
@@ -57,18 +60,19 @@ const MainFilterSearchBox = () => {
   const travellerDOBS = useSelector((state) => state.flightSearch.value.travellerDOBS);
 
   useEffect(() => {
-    dispatch(setInitialState());
+    // dispatch(setInitialState());
     if (token !== '') {
       checkUser(router, dispatch);
       checkAirportCache(dispatch);
       getData();
     } else {
       sendToast('error', 'You must be logged in in order to view this page', 8000);
-      router.push('/login');
+      router.push('/');
     }
   }, []);
 
   const getData = async () => {
+    if (airports && airports?.length > 0) setAirportOptions(airports.map((e) => e));
     const clientTravellers = await getList('client-travellers', {
       client_id,
     });
@@ -251,6 +255,7 @@ const MainFilterSearchBox = () => {
             }
           }
           tempSearchData = { ...tempSearchData, aa: res.data };
+          updateSEO();
         }
       })
       .catch((err) => console.error(err))
@@ -266,6 +271,7 @@ const MainFilterSearchBox = () => {
               res.data.to = tempSearchData.aa.to;
             }
             tempSearchData = { ...tempSearchData, aa: res.data };
+            updateSEO();
           }
         })
         .catch((err) => console.error(err))
@@ -282,6 +288,7 @@ const MainFilterSearchBox = () => {
             }
           }
           tempSearchData = { ...tempSearchData, tj: res.data };
+          updateSEO();
         }
       })
       .catch((err) => console.error(err))
@@ -297,6 +304,7 @@ const MainFilterSearchBox = () => {
               res.data.to = tempSearchData.tj.to;
             }
             tempSearchData = { ...tempSearchData, tj: res.data };
+            updateSEO();
           }
         })
         .catch((err) => console.error(err))
@@ -317,11 +325,31 @@ const MainFilterSearchBox = () => {
     setProgress(percentage);
   };
 
+  const updateSEO = () => {
+    setSEO(
+      `Flight Search Results | ${
+        returnFlight
+          ? to?.label?.split('|')?.at(1) +
+            ' - ' +
+            from?.label?.split('|')?.at(1) +
+            ' - ' +
+            to?.label?.split('|')?.at(1) +
+            ' Roundtrip'
+          : from?.label?.split('|')?.at(1) +
+            ' - ' +
+            to?.label?.split('|')?.at(1) +
+            ', ' +
+            departDate?.format('DD MMMM')
+      }`
+    );
+  };
+
   const searchData = useSelector((state) => state.flightSearch.value.searchData);
   useEffect(() => console.log('sd', searchData), [searchData]);
 
   return (
     <div className='col-lg-6'>
+      <Seo pageTitle={SEO} />
       {/* <div className='row y-gap-20 items-center'>
         <FilterSelect />
       </div> */}
@@ -432,6 +460,25 @@ const MainFilterSearchBox = () => {
           </div> */}
           <div className='flight-search-select'>
             <WindowedSelect
+              onInputChange={(e) => {
+                setAirportOptions((prev) => {
+                  if (e) {
+                    prev.sort((a, b) => {
+                      e = e.toLowerCase();
+                      let tempA =
+                        (a?.iata_code?.toLowerCase()?.startsWith(e) ? 0.6 : 0) +
+                        (a?.city?.toLowerCase()?.includes(e) ? 0.3 : 0) +
+                        (a?.country_name?.toLowerCase()?.includes(e) ? 0.1 : 0);
+                      let tempB =
+                        (b?.iata_code?.toLowerCase()?.startsWith(e) ? 0.6 : 0) +
+                        (b?.city?.toLowerCase()?.includes(e) ? 0.3 : 0) +
+                        (b?.country_name?.toLowerCase()?.includes(e) ? 0.1 : 0);
+                      return tempB - tempA;
+                    });
+                  } else prev = airports.map((e) => e);
+                  return [...prev];
+                });
+              }}
               filterOption={(candidate, input) => {
                 if (input) {
                   return (
@@ -441,7 +488,7 @@ const MainFilterSearchBox = () => {
                 }
                 return true;
               }}
-              options={airports.map((airport) => ({
+              options={airportOptions.map((airport) => ({
                 value: airport.id,
                 label: `|${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
                 iata: airport.iata_code,
@@ -456,7 +503,10 @@ const MainFilterSearchBox = () => {
                         style={{ fontSize: '1rem' }}
                       >
                         <span>
-                          <strong>{iata_code}</strong> <small>({country_name})</small>
+                          {city}{' '}
+                          <small>
+                            (<strong>{iata_code}</strong>)
+                          </small>
                         </span>
                       </div>
                     </div>
@@ -496,6 +546,25 @@ const MainFilterSearchBox = () => {
               className='col-lg-6 col-12'
             />
             <WindowedSelect
+              onInputChange={(e) => {
+                setAirportOptions((prev) => {
+                  if (e) {
+                    prev.sort((a, b) => {
+                      e = e.toLowerCase();
+                      let tempA =
+                        (a?.iata_code?.toLowerCase()?.startsWith(e) ? 0.6 : 0) +
+                        (a?.city?.toLowerCase()?.includes(e) ? 0.3 : 0) +
+                        (a?.country_name?.toLowerCase()?.includes(e) ? 0.1 : 0);
+                      let tempB =
+                        (b?.iata_code?.toLowerCase()?.startsWith(e) ? 0.6 : 0) +
+                        (b?.city?.toLowerCase()?.includes(e) ? 0.3 : 0) +
+                        (b?.country_name?.toLowerCase()?.includes(e) ? 0.1 : 0);
+                      return tempB - tempA;
+                    });
+                  } else prev = airports.map((e) => e);
+                  return [...prev];
+                });
+              }}
               filterOption={(candidate, input) => {
                 if (input) {
                   return (
@@ -513,7 +582,7 @@ const MainFilterSearchBox = () => {
                   </span>
                 </>
               }
-              options={airports.map((airport) => ({
+              options={airportOptions.map((airport) => ({
                 value: airport.id,
                 label: `|${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
                 iata: airport.iata_code,
@@ -528,7 +597,10 @@ const MainFilterSearchBox = () => {
                         style={{ fontSize: '1rem' }}
                       >
                         <span>
-                          <strong>{iata_code}</strong> <small>({country_name})</small>
+                          {city}{' '}
+                          <small>
+                            (<strong>{iata_code}</strong>)
+                          </small>
                         </span>
                       </div>
                     </div>

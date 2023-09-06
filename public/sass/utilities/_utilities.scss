@@ -1250,7 +1250,8 @@ $_displays: none, inline-block, block, flex;
     transition: all 0.2s $easeOutQuart;
 
     &:focus {
-      border: 2px solid #051036 !important;
+      border-color: #2684ff !important;
+      box-shadow: 0 0 0 1px #2684ff;
     }
   }
 

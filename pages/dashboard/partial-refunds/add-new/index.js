@@ -190,13 +190,13 @@ const AddNewPartialRefund = () => {
         (
           (+bookingData.data.vendor_service_charges || 0) +
           (+refundData?.data?.vendor_service_charges || 0)
-        ).toFixed(2)
+        ).toFixed(0)
       );
       setVendorTDS(
         Number(
           (
             (+bookingData.data.vendor_tds || 0) + (+refundData?.data?.vendor_tds || 0)
-          ).toFixed(2)
+          ).toFixed(0)
         )
       );
       setClientReferralFee(
@@ -222,7 +222,7 @@ const AddNewPartialRefund = () => {
         (
           (+bookingData.data.client_service_charges || 0) +
           (+refundData?.data?.client_service_charges || 0)
-        ).toFixed(2)
+        ).toFixed(0)
       );
       setClientTaxAmount(
         (
@@ -427,7 +427,7 @@ const AddNewPartialRefund = () => {
         (((+grossCommission || 0) - (+vendorServiceCharges || 0)) *
           (+vendorTDSPercent || 0)) /
           100
-      ).toFixed(2);
+      ).toFixed(0);
       setVendorTDS(vendorTDS);
     }
   };
@@ -445,7 +445,7 @@ const AddNewPartialRefund = () => {
     if (vendorGSTFocused) {
       let vendorServiceCharges = Number(
         ((+grossCommission || 0) * (+vendorServiceChargePercent || 0)) / 100
-      ).toFixed(2);
+      ).toFixed(0);
       setVendorServiceCharges(vendorServiceCharges);
       // Update
       updateVendorTDS(grossCommission, vendorServiceCharges, vendorTDSPercent);
@@ -548,7 +548,7 @@ const AddNewPartialRefund = () => {
       (((+clientBaseAmount || 0) + (+clientReferralFee || 0)) *
         (+clientServiceChargePercent || 0)) /
         100
-    ).toFixed(2);
+    ).toFixed(0);
     if (clientServiceCharges && clientServiceCharges !== 'NaN') {
       setClientServicesCharges(clientServiceCharges);
     }
@@ -671,7 +671,7 @@ const AddNewPartialRefund = () => {
 
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
-                  <form onSubmit={onSubmit} className='row col-12 y-gap-15'>
+                  <form onSubmit={onSubmit} className='row col-12 y-gap-10 x-gap-10'>
                     <div className='d-block ml-3 col-lg-4 form-datepicker'>
                       <label>
                         Refund Date<span className='text-danger'>*</span>
@@ -878,7 +878,7 @@ const AddNewPartialRefund = () => {
                     <div className='col-lg-4 pr-0'>
                       <div className='row'>
                         <label className='col-12 fw-500 mb-4'>
-                          Vendor Service Charges
+                          Vendor GST on Commission
                         </label>
                         <div className='form-input col-4'>
                           <input

@@ -99,6 +99,20 @@ const Journals = () => {
     },
   ];
 
+  // const colors = ['dark-1', 'dark-4', 'blue-1', 'green-2', 'yellow-3', 'brown-1', 'purple-1', 'red-2'];
+
+  const colors = ['#00C', '#C00', '#0C0', '#0CC', '#CC0', '#C0C', '#000', '#009', '#900', '#090', '#099', '#990', '#909', '#999'];
+  const allottedColors = {};
+  const getColor = (text) => {
+    let color = allottedColors[text];
+    if (!color) {
+      const index = Object.keys(allottedColors).length % colors.length;
+      color = colors[index];
+      allottedColors[text] = color;
+    }
+    return color;
+  };
+
   return (
     <div className='col-12'>
       {/* Custom Data Modal */}
@@ -139,10 +153,20 @@ const Journals = () => {
                 {
                   Header: 'Debit From',
                   accessor: 'dr_account_name',
+                  Cell: (data) => {
+                    return (
+                      <span style={{color: getColor(data.row.original.dr_account_id)}}>{data.row.original.dr_account_name}</span>
+                    )
+                  }
                 },
                 {
                   Header: 'Credit To',
                   accessor: 'cr_account_name',
+                  Cell: (data) => {
+                    return (
+                      <span style={{color: getColor(data.row.original.cr_account_id)}}>{data.row.original.cr_account_name}</span>
+                    )
+                  }
                 },
                 {
                   Header: 'Amount',
