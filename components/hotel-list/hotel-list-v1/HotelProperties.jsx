@@ -5,6 +5,7 @@ import {
   setOptions,
   setPaginateTotalDataSize,
   setPrice,
+  setSelectedRatings
 } from '../../../features/hotelSearch/hotelSearchSlice';
 import HotelProperty from '../common/HotelProperty';
 
@@ -22,16 +23,18 @@ const HotelProperties = () => {
   const ratings = useSelector((state) => state.hotelSearch.value.ratings);
   const maxRatings = useSelector((state) => state.hotelSearch.value.maxRatings);
   const options = useSelector((state) => state.hotelSearch.value.options);
-  const searchQuery = useSelector((state) => state.hotelSearch.value.searchQuery);
-
+  const searchQuery = useSelector((state) => state.hotelSearch.value.searchQuery.toLowerCase());
+  const selectedRatings = useSelector((state) => state.hotelSearch.value.selectedRatings);
+  const selectedRatingsArr = Object.entries(selectedRatings).filter(([_, value]) => value.value).map(([key, _]) => +key);
   const [manip, setManip] = useState([]);
-  const searchData = useSelector((state) => state.hotelSearch.value.searchData.toLowerCase());
+  const searchData = useSelector((state) => state.hotelSearch.value.searchData);
 
   useEffect(() => {
     if (searchData?.searchResult?.his) {
       let maxPrice = 0;
       let options = {};
       let minPrice = 0;
+      let ratings = {};
       for (let data of searchData.searchResult?.his) {
         // Options
         for (let pop of data.pops)
@@ -42,10 +45,18 @@ const HotelProperties = () => {
         }
         // Min Price
         if (minPrice === 0 || data.ops[0].tp < minPrice) minPrice = data.ops[0].tp;
+        // Rating
+        if (data.rt) {
+          ratings[data.rt] = (ratings[data.rt] || 0) + 1;
+        }
       }
       // Options Manip
       for (let [key, value] of Object.entries(options))
         options[key] = { number: value, value: true };
+      // Ratings
+      for (let [key, value] of Object.entries(ratings))
+        ratings[key] = { number: value, value: true };
+      dispatch(setSelectedRatings(ratings));
       // Price
       dispatch(
         setPrice({
@@ -70,7 +81,7 @@ const HotelProperties = () => {
           }).length,
         })
       );
-  }, [manip, sort, options, ratings, maxRatings, price, searchQuery]);
+  }, [manip, sort, options, ratings, maxRatings, price, searchQuery, selectedRatings]);
 
   const filter = (el) => {
     // Filters
@@ -83,7 +94,7 @@ const HotelProperties = () => {
     if (!(el.ops[0].tp >= price.value.min && el.ops[0].tp <= price.value.max))
       return false;
     // Filter By Ratings
-    if (el.rt < ratings || el.rt > maxRatings) return false;
+    if (!selectedRatingsArr.includes(+(el.rt))) return false;
     // Filter By Options
     let hasOption = false;
     for (let [key, value] of Object.entries(options)) {

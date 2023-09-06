@@ -1,11 +1,13 @@
 import PirceSlider from '../sidebar/PirceSlider';
 import PopularFilters from '../sidebar/PopularFilters';
 import RatingsFilter from '../sidebar/RatingsFilter';
-import MaxRatingsFilter from '../sidebar/MaxRatingFilter';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { setSearchQuery } from '../../../features/hotelSearch/hotelSearchSlice';
 
 const Sidebar = () => {
-  const ratingParams = useSelector((state) => state.hotelSearch.value.ratingParams);
+  const searchQuery = useSelector((state) => state.hotelSearch.value.searchQuery);
+  const dispatch = useDispatch();
+
   return (
     <>
       {/* <div className='sidebar__item -no-border position-relative'>
@@ -13,10 +15,18 @@ const Sidebar = () => {
       </div> */}
       {/* End find map */}
 
-      {/* <div className='sidebar__item -no-border'>
-        <h5 className='text-18 fw-500 mb-10'>Search by property name</h5>
-        <SearchBox />
-      </div> */}
+      <div className='sidebar__item -no-border'>
+        <h5 className='text-18 fw-500 mb-10'>Search</h5>
+          <input
+            type='text'
+            className='form-control border-light rounded-4'
+            placeholder='Search by Name or Location'
+            onChange={(e) => {
+              dispatch(setSearchQuery(e.target.value));
+            }}
+            value={searchQuery}
+          />
+      </div>
       {/* End search box */}
 
       {/* <div className='sidebar__item'>
@@ -57,14 +67,12 @@ const Sidebar = () => {
       {/* </div> */}
       {/* End Aminities filter */}
 
-      {ratingParams?.length !== 1 && (
-        <div className='sidebar__item'>
-          <h5 className='text-18 fw-500 mb-10'>Star Rating</h5>
-          <div className='row x-gap-10 y-gap-10 pt-10'>
-            <RatingsFilter />
-          </div>
+      <div className='sidebar__item'>
+        <h5 className='text-18 fw-500 mb-10'>Star Rating</h5>
+        <div className='row x-gap-10 y-gap-10 pt-10'>
+          <RatingsFilter />
         </div>
-      )}
+      </div>
       {/* End rating filter */}
 
       {/* <div className='sidebar__item'>
