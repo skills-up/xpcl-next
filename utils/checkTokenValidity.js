@@ -17,7 +17,7 @@ export const checkUser = async (router, dispatch) => {
       if (!response?.success) {
         dispatch(setInitialUserState());
         sendToast('error', 'Your current session has expired. Please login again.', 4000);
-        router.push('/');
+        if (router.pathname !== '/') router.push('/');
         return;
       }
       sessionStorage.setItem('checking-user', Date.now());

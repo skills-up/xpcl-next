@@ -2277,7 +2277,8 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
       <Seo pageTitle={SEO} />
       <div className='container'>
         <LoadingBar
-          color='#19f9fc'
+          height={3}
+          color='#3554d1'
           progress={progress}
           onLoaderFinished={() => setProgress(0)}
         />

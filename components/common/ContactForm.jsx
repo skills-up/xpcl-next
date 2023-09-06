@@ -43,107 +43,110 @@ const ContactForm = () => {
         </div>
       )}
       {!resSuccess && (
-        <form className='row y-gap-20' onSubmit={handleSubmit}>
-          <div className='col-lg-4 col-md-6'>
-            <div className='form-input'>
-              <input
-                type='text'
-                value={companyName}
-                onChange={(e) => setCompanyName(e.target.value)}
-                required
-                placeholder=' '
-              />
-              <label className='lh-1 text-16 text-light-1'>
-                Name of the Company<span className='text-danger'>*</span>
-              </label>
+        <>
+          <h3 className='text-center mb-20'>Sign-Up</h3>
+          <form className='row y-gap-20' onSubmit={handleSubmit}>
+            <div className='col-lg-4 col-md-6'>
+              <div className='form-input'>
+                <input
+                  type='text'
+                  value={companyName}
+                  onChange={(e) => setCompanyName(e.target.value)}
+                  required
+                  placeholder=' '
+                />
+                <label className='lh-1 text-16 text-light-1'>
+                  Name of the Company<span className='text-danger'>*</span>
+                </label>
+              </div>
             </div>
-          </div>
-          <div className='col-lg-4 col-md-6'>
-            <div className='form-input'>
-              <input
-                type='text'
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-                placeholder=' '
-              />
-              <label className='lh-1 text-16 text-light-1'>
-                Contact Person's Name<span className='text-danger'>*</span>
-              </label>
+            <div className='col-lg-4 col-md-6'>
+              <div className='form-input'>
+                <input
+                  type='text'
+                  value={gstn}
+                  onChange={(e) => setGstn(e.target.value)}
+                  placeholder=' '
+                />
+                <label className='lh-1 text-16 text-light-1'>GSTN</label>
+              </div>
             </div>
-          </div>
-          <div className='col-lg-4 col-md-6'>
-            <div className='form-input'>
-              <input
-                type='text'
-                value={addr}
-                onChange={(e) => setAddr(e.target.value)}
-                required
-                placeholder=' '
-              />
-              <label className='lh-1 text-16 text-light-1'>
-                Address<span className='text-danger'>*</span>
-              </label>
+            <div className='col-lg-4 col-md-6'>
+              <div className='form-input'>
+                <input
+                  type='text'
+                  value={addr}
+                  onChange={(e) => setAddr(e.target.value)}
+                  required
+                  placeholder=' '
+                />
+                <label className='lh-1 text-16 text-light-1'>
+                  Address<span className='text-danger'>*</span>
+                </label>
+              </div>
             </div>
-          </div>
-          <div className='col-lg-4 col-md-6'>
-            <div className='form-input'>
-              <input
-                type='number'
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                required
-                placeholder=' '
-              />
-              <label className='lh-1 text-16 text-light-1'>
-                Phone<span className='text-danger'>*</span>
-              </label>
+            <div className='col-lg-4 col-md-6'>
+              <div className='form-input'>
+                <input
+                  type='text'
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                  placeholder=' '
+                />
+                <label className='lh-1 text-16 text-light-1'>
+                  Contact Person's Name<span className='text-danger'>*</span>
+                </label>
+              </div>
             </div>
-          </div>
-          <div className='col-lg-4 col-md-6'>
-            <div className='form-input'>
-              <input
-                type='email'
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                placeholder=' '
-              />
-              <label className='lh-1 text-16 text-light-1'>
-                Email<span className='text-danger'>*</span>
-              </label>
+            <div className='col-lg-4 col-md-6'>
+              <div className='form-input'>
+                <input
+                  type='number'
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  required
+                  placeholder=' '
+                />
+                <label className='lh-1 text-16 text-light-1'>
+                  Phone<span className='text-danger'>*</span>
+                </label>
+              </div>
             </div>
-          </div>
-          <div className='col-lg-4 col-md-6'>
-            <div className='form-input'>
-              <input
-                type='text'
-                value={gstn}
-                onChange={(e) => setGstn(e.target.value)}
-                placeholder=' '
-              />
-              <label className='lh-1 text-16 text-light-1'>GSTN</label>
+            <div className='col-lg-4 col-md-6'>
+              <div className='form-input'>
+                <input
+                  type='email'
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  placeholder=' '
+                />
+                <label className='lh-1 text-16 text-light-1'>
+                  Email<span className='text-danger'>*</span>
+                </label>
+              </div>
             </div>
-          </div>
-          <div className='col-12 row justify-between lg:pr-0 items-center'>
-            <div className='col-lg-4'>
-              <ReCAPTCHA
-                sitekey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY}
-                onChange={() => console.log('test', value)}
-              />
+            <div className='col-12 row justify-between lg:pr-0 items-center'>
+              <div className='col-lg-4'>
+                <ReCAPTCHA
+                  sitekey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY}
+                  onChange={() => console.log('test', value)}
+                />
+              </div>
+              <div className='col-lg-3 lg:pr-0'>
+                <button
+                  // disabled={!siteKeyCorrect}
+                  type='submit'
+                  className='button col-lg-10 col-12 px-24 h-50 -dark-1 bg-blue-1 text-white'
+                >
+                  Sign-Up
+                  <div className='icon-arrow-top-right ml-15'></div>
+                </button>
+              </div>
             </div>
-            <div className='col-lg-3 lg:pr-0'>
-              <button
-                // disabled={!siteKeyCorrect}
-                type='submit'
-                className='button col-lg-10 col-12 px-24 h-50 -dark-1 bg-blue-1 text-white'
-              >
-                Sign-Up
-                <div className='icon-arrow-top-right ml-15'></div>
-              </button>
-            </div>
-          </div>
-        </form>
+          </form>
+        </>
       )}
     </div>
   );

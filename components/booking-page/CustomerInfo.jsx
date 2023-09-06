@@ -233,7 +233,8 @@ const CustomerInfo = () => {
     <>
       <Seo pageTitle={SEO} />
       <LoadingBar
-        color='#19f9fc'
+        height={3}
+        color='#3554d1'
         progress={progress}
         onLoaderFinished={() => setProgress(0)}
       />
