@@ -316,8 +316,8 @@ const AddNewPartialRefund = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    if (!accountID?.value) {
-      sendToast('error', 'You must select an Account', 4000);
+    if (!clientAccountID?.value) {
+      sendToast('error', 'You must select a Refund To Account', 4000);
       return;
     }
     if (!vendorID?.value) {
@@ -695,7 +695,9 @@ const AddNewPartialRefund = () => {
                       />
                     </div>
                     <div className='form-input-select col-lg-4'>
-                      <label>Refund To</label>
+                      <label>
+                        Refund To<span className='text-danger'>*</span>
+                      </label>
                       <Select
                         options={clientAccounts}
                         value={clientAccountID}
@@ -1253,9 +1255,7 @@ const AddNewPartialRefund = () => {
                       </div>
                     </div>
                     <div className='form-input-select col-lg-4'>
-                      <label>
-                        Payment Refunded To<span className='text-danger'>*</span>
-                      </label>
+                      <label>Payment Refunded To</label>
                       <Select
                         options={accounts}
                         value={accountID}
