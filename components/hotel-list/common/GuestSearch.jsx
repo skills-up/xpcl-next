@@ -1,72 +1,38 @@
-import React, { useState } from "react";
-const counters = [
-  { name: "Adults", defaultValue: 2 },
-  { name: "Children", defaultValue: 1 },
-  { name: "Rooms", defaultValue: 1 },
-];
+import React, { useEffect, useState } from "react";
+import Room from "./Room";
 
-const Counter = ({ name, defaultValue, onCounterChange }) => {
-  const [count, setCount] = useState(defaultValue);
-  const incrementCount = () => {
-    setCount(count + 1);
-    onCounterChange(name, count + 1);
-  };
-  const decrementCount = () => {
-    if (count > 0) {
-      setCount(count - 1);
-      onCounterChange(name, count - 1);
-    }
-  };
-
-  return (
-    <>
-      <div className="row y-gap-10 justify-between items-center">
-        <div className="col-auto">
-          <div className="text-15 lh-12 fw-500">{name}</div>
-          {name === "Children" && (
-            <div className="text-14 lh-12 text-light-1 mt-5">Ages 0 - 17</div>
-          )}
-        </div>
-        {/* End .col-auto */}
-        <div className="col-auto">
-          <div className="d-flex items-center js-counter">
-            <button
-              className="button -outline-blue-1 text-blue-1 size-38 rounded-4 js-down"
-              onClick={decrementCount}
-            >
-              <i className="icon-minus text-12" />
-            </button>
-            {/* decrement button */}
-            <div className="flex-center size-20 ml-15 mr-15">
-              <div className="text-15 js-count">{count}</div>
-            </div>
-            {/* counter text  */}
-            <button
-              className="button -outline-blue-1 text-blue-1 size-38 rounded-4 js-up"
-              onClick={incrementCount}
-            >
-              <i className="icon-plus text-12" />
-            </button>
-            {/* increment button */}
-          </div>
-        </div>
-        {/* End .col-auto */}
-      </div>
-      {/* End .row */}
-      <div className="border-top-light mt-24 mb-24" />
-    </>
-  );
-};
-
-const GuestSearch = () => {
+const GuestSearch = ({guestRooms, guestRoomsData}) => {
+  const [rooms, setRooms] = guestRooms;
+  const [roomsData, setRoomsData] = guestRoomsData;
   const [guestCounts, setGuestCounts] = useState({
-    Adults: 2,
-    Children: 1,
-    Rooms: 1,
+    rooms: 1,
+    adults: 1,
+    children: 0,
   });
-  const handleCounterChange = (name, value) => {
-    setGuestCounts((prevState) => ({ ...prevState, [name]: value }));
-  };
+
+  const calculateCounts = () => {
+    let roomsCount = roomsData.length, adults = 0, children = 0;
+    for (let room of roomsData) {
+      adults += room.adults;
+      children += room.child.length;
+    }
+    console.log('Rooms Data', roomsData);
+    setGuestCounts({rooms: roomsCount, adults, children});
+  }
+
+  const deleteRoom = (idx) => {
+    setRooms(prev => prev.splice(idx, 1));
+    setRoomsData(prev => prev.splice(idx, 1));
+  }
+
+  const appendRoom = () => {
+    setRooms(prev => [...prev, <Room setRoomsData={setRoomsData} index={rooms.length}/>]);
+  }
+
+  useEffect(() => {
+    calculateCounts();
+  }, [roomsData]);
+
   return (
     <div className="searchMenu-guests px-20  lg:py-20 lg:px-0 js-form-dd bg-white position-relative">
       <div
@@ -75,29 +41,36 @@ const GuestSearch = () => {
         aria-expanded="false"
         data-bs-offset="0,22"
       >
-        <h4 className="text-15 fw-500 ls-2 lh-16">Guest</h4>
+        <h4 className="text-15 fw-500 ls-2 lh-16">For</h4>
         <div className="text-15 text-light-1 ls-2 lh-16">
-          <span className="js-count-adult">{guestCounts.Adults}</span> adults -{" "}
-          <span className="js-count-child">{guestCounts.Children}</span>{" "}
-          childeren - <span className="js-count-room">{guestCounts.Rooms}</span>{" "}
-          room
+          <span className="js-count-room">{guestCounts.rooms}</span> Room(s) - 
+          <span className="js-count-adult"> {guestCounts.adults}</span> Adult(s)
+          {guestCounts.children ? <span> &amp; <span className="js-count-child">{guestCounts.children}</span> Children</span> : ''}
         </div>
       </div>
       {/* End guest */}
 
-      <div className="shadow-2 dropdown-menu min-width-400">
-        <div className="bg-white px-30 py-30 rounded-4 counter-box">
-          {counters.map((counter) => (
-            <Counter
-              key={counter.name}
-              name={counter.name}
-              defaultValue={counter.defaultValue}
-              onCounterChange={handleCounterChange}
-            />
-          ))}
-        </div>
+      <div className="shadow-2 dropdown-menu min-width-400" style={{maxHeight: 400, overflowY: 'auto'}}>
+        {rooms.map((room, idx) => {
+          return (
+            <div className="roomSearch-room bg-white px-30 py-30 rounded-4 counter-box" key={idx}>
+              <div className='d-flex justify-between items-center'>
+                <h6>Room #{idx+1}</h6>
+                {idx ? <a className='button text-20 js-up' onClick={() => deleteRoom(idx)}> &times; </a> : ''}
+              </div>
+              {room}
+            </div>
+          );
+        })}
+        {rooms.length < 9 ?
+          <div className="roomSearch-room bg-white px-30 py-30 rounded-4 counter-box">
+            <button className='button -outline-blue-1 text-blue-1 size-38 rounded-4 js-up' onClick={appendRoom}>
+              <i className='icon-plus text-12' />
+            </button>
+          </div> : ''}
       </div>
     </div>
   );
 };
+
 export default GuestSearch;
