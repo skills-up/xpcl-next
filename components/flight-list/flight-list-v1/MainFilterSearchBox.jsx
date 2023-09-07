@@ -1,33 +1,28 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { MdFlightLand, MdFlightTakeoff } from 'react-icons/md';
+import { RiArrowLeftRightFill, RiArrowRightLine } from 'react-icons/ri';
+import { SlCalender } from 'react-icons/sl';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 import { useDispatch, useSelector } from 'react-redux';
-import ReactSwitch from 'react-switch';
-import WindowedSelect from 'react-windowed-select';
-import checkAirportCache from '../../../utils/airportCacheValidity';
-import { sendToast } from '../../../utils/toastify';
 import LoadingBar from 'react-top-loading-bar';
-import Select from 'react-select';
 import { customAPICall, getList } from '../../../api/xplorzApi';
 import {
   setAirlineOrgs,
   setClientTravellers as setClientTravellersRedux,
   setDestinations,
   setInitialSearchData,
-  setInitialState,
   setReturnFlight as setReturnFlightRedux,
   setSearchData,
   setTravellerDOBS,
   setTravellers as setTravellersRedux,
 } from '../../../features/flightSearch/flightSearchSlice';
+import checkAirportCache from '../../../utils/airportCacheValidity';
 import { checkUser } from '../../../utils/checkTokenValidity';
-import GuestSearch from './GuestSearch';
-import FilterSelect from './FilterSelect';
-import { MdFlightLand, MdFlightTakeoff } from 'react-icons/md';
-import { TbArrowsExchange2 } from 'react-icons/tb';
-import { SlCalender } from 'react-icons/sl';
-import { RiArrowRightLine, RiArrowLeftRightFill } from 'react-icons/ri';
+import { sendToast } from '../../../utils/toastify';
 import Seo from '../../common/Seo';
+import AirportSearch from '../common/AirportSearch';
+import GuestSearch from './GuestSearch';
 
 const MainFilterSearchBox = () => {
   const [directFlight, setDirectFlight] = useState(false);
@@ -348,7 +343,7 @@ const MainFilterSearchBox = () => {
   useEffect(() => console.log('sd', searchData), [searchData]);
 
   return (
-    <div className='col-lg-6'>
+    <div className=''>
       <Seo pageTitle={SEO} />
       {/* <div className='row y-gap-20 items-center'>
         <FilterSelect />
@@ -364,7 +359,7 @@ const MainFilterSearchBox = () => {
         <div className='flight-search pl-20 lg:pl-0'>
           {/* Round Trip */}
           <div className='row items-center y-gap-10'>
-            <div className='col-xxl-3 col-xl-5 col-lg-6 ml-6 d-flex justify-center items-center'>
+            <div className='col-xxl-3 col-xl-5 col-6 ml-6 d-flex items-center'>
               <div className='dropdown js-dropdown'>
                 <div
                   className='dropdown__button d-flex items-center text-15'
@@ -372,11 +367,11 @@ const MainFilterSearchBox = () => {
                   data-bs-auto-close='true'
                   data-bs-offset='0,0'
                 >
-                  <span className='js-dropdown-title text-16 d-flex items-center gap-2'>
+                  <span className='js-dropdown-title text-16 d-flex items-center gap-1'>
                     {returnFlight ? (
-                      <RiArrowLeftRightFill className='text-25 mb-1' />
+                      <RiArrowLeftRightFill className='text-25' />
                     ) : (
-                      <RiArrowRightLine className='text-25 mb-1' />
+                      <RiArrowRightLine className='text-25' />
                     )}{' '}
                     {returnFlight ? 'Round Trip' : 'One Way'}
                   </span>
@@ -410,7 +405,7 @@ const MainFilterSearchBox = () => {
                 </div>
               </div>
             </div>
-            <div className='col-lg-auto d-flex justify-center items-center'>
+            <div className='col-auto d-flex justify-center items-center'>
               <GuestSearch
                 guests={[guestCounts, setGuestCounts]}
                 cabins={[preferredCabin, setPrefferedCabin]}
@@ -459,233 +454,84 @@ const MainFilterSearchBox = () => {
               onChange={(values) => setPreferredAirlines(values)}
             />
           </div> */}
-          <div className='flight-search-select'>
-            <WindowedSelect
-              onInputChange={(e) => {
-                setAirportOptions((prev) => {
-                  if (e) {
-                    prev.sort((a, b) => {
-                      e = e.toLowerCase();
-                      let tempA =
-                        (a?.iata_code?.toLowerCase()?.startsWith(e) ? 0.6 : 0) +
-                        (a?.city?.toLowerCase()?.includes(e) ? 0.3 : 0) +
-                        (a?.country_name?.toLowerCase()?.includes(e) ? 0.1 : 0);
-                      let tempB =
-                        (b?.iata_code?.toLowerCase()?.startsWith(e) ? 0.6 : 0) +
-                        (b?.city?.toLowerCase()?.includes(e) ? 0.3 : 0) +
-                        (b?.country_name?.toLowerCase()?.includes(e) ? 0.1 : 0);
-                      return tempB - tempA;
-                    });
-                  } else prev = airports.map((e) => e);
-                  return [...prev];
-                });
-              }}
-              filterOption={(candidate, input) => {
-                if (input) {
-                  return (
-                    candidate.data.iata.toLowerCase() === input.toLowerCase() ||
-                    candidate.label.toLowerCase().includes(input.toLowerCase())
-                  );
-                }
-                return true;
-              }}
-              options={airportOptions.map((airport) => ({
-                value: airport.id,
-                label: `|${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
-                iata: airport.iata_code,
-              }))}
-              formatOptionLabel={(opt, { context }) => {
-                const [_, iata_code, city, name, country_name] = opt.label.split('|');
-                if (context === 'value')
-                  return (
-                    <div key={iata_code}>
-                      <div
-                        className='d-flex justify-between align-items-center'
-                        style={{ fontSize: '1rem' }}
-                      >
-                        <span>
-                          {city}{' '}
-                          <small>
-                            (<strong>{iata_code}</strong>)
-                          </small>
-                        </span>
-                      </div>
-                    </div>
-                  );
-                else
-                  return (
-                    <div key={iata_code}>
-                      <div
-                        className='d-flex justify-between align-items-center'
-                        style={{ fontSize: '1rem' }}
-                      >
-                        <span>
-                          {city} (<strong>{iata_code}</strong>)
-                        </span>
-                        <div
-                          style={{
-                            fontSize: 'small',
-                            fontStyle: 'italic',
-                          }}
-                        >
-                          {country_name}
-                        </div>
-                      </div>
-                      <small>{name}</small>
-                    </div>
-                  );
-              }}
-              value={from}
-              onChange={(id) => setFrom(id)}
-              placeholder={
-                <>
-                  <span className='d-flex items-center gap-2'>
-                    <MdFlightTakeoff className='text-25 mb-1' /> Where From?
-                  </span>
-                </>
-              }
-              className='col-lg-6 col-12'
-            />
-            <WindowedSelect
-              onInputChange={(e) => {
-                setAirportOptions((prev) => {
-                  if (e) {
-                    prev.sort((a, b) => {
-                      e = e.toLowerCase();
-                      let tempA =
-                        (a?.iata_code?.toLowerCase()?.startsWith(e) ? 0.6 : 0) +
-                        (a?.city?.toLowerCase()?.includes(e) ? 0.3 : 0) +
-                        (a?.country_name?.toLowerCase()?.includes(e) ? 0.1 : 0);
-                      let tempB =
-                        (b?.iata_code?.toLowerCase()?.startsWith(e) ? 0.6 : 0) +
-                        (b?.city?.toLowerCase()?.includes(e) ? 0.3 : 0) +
-                        (b?.country_name?.toLowerCase()?.includes(e) ? 0.1 : 0);
-                      return tempB - tempA;
-                    });
-                  } else prev = airports.map((e) => e);
-                  return [...prev];
-                });
-              }}
-              filterOption={(candidate, input) => {
-                if (input) {
-                  return (
-                    candidate.data.iata.toLowerCase() === input.toLowerCase() ||
-                    candidate.label.toLowerCase().includes(input.toLowerCase())
-                  );
-                }
-                return true;
-              }}
-              className='to col-lg-6 col-12'
-              placeholder={
-                <>
-                  <span className='d-flex items-center gap-2'>
-                    <MdFlightLand className='text-25' /> Where To?
-                  </span>
-                </>
-              }
-              options={airportOptions.map((airport) => ({
-                value: airport.id,
-                label: `|${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
-                iata: airport.iata_code,
-              }))}
-              formatOptionLabel={(opt, { context }) => {
-                const [_, iata_code, city, name, country_name] = opt.label.split('|');
-                if (context === 'value')
-                  return (
-                    <div key={iata_code}>
-                      <div
-                        className='d-flex justify-between align-items-center'
-                        style={{ fontSize: '1rem' }}
-                      >
-                        <span>
-                          {city}{' '}
-                          <small>
-                            (<strong>{iata_code}</strong>)
-                          </small>
-                        </span>
-                      </div>
-                    </div>
-                  );
-                else
-                  return (
-                    <div key={iata_code}>
-                      <div
-                        className='d-flex justify-between align-items-center'
-                        style={{ fontSize: '1rem' }}
-                      >
-                        <span>
-                          {city} (<strong>{iata_code}</strong>)
-                        </span>
-                        <div
-                          style={{
-                            fontSize: 'small',
-                            fontStyle: 'italic',
-                          }}
-                        >
-                          {country_name}
-                        </div>
-                      </div>
-                      <small>{name}</small>
-                    </div>
-                  );
-              }}
-              value={to}
-              onChange={(id) => setTo(id)}
-            />
-            {/* <TbArrowsExchange2 className='exchange-icon' /> */}
-          </div>
-          <div className='row px-15'>
-            {/* End Location Flying To */}
-            <div
-              className='flight-date-picker col-lg-7'
-              style={{ border: '1px solid lightgray' }}
-            >
-              <div className='text-center'>
-                {!departDate && (
-                  <label className='d-flex gap-2 items-center'>
-                    <SlCalender className='text-20 mb-1' /> Depart
-                  </label>
-                )}
-                <DatePicker
-                  style={{ fontSize: '1rem' }}
-                  inputClass='custom_input-picker text-center'
-                  containerClassName='custom_container-picker'
-                  value={departDate}
-                  onChange={(i) => {
-                    setDepartDate(i);
-                    if (returnDate?.valueOf() < i?.valueOf()) setReturnDate(i);
-                  }}
-                  numberOfMonths={1}
-                  offsetY={10}
-                  format='DD MMM YYYY'
-                  minDate={new DateObject()}
+          <div className='row'>
+            <div className='flight-search-select col-lg-6 col-12 d-flex'>
+              <div className='col-lg-6 col-12 border-light px-2 d-flex items-center gap-1'>
+                <MdFlightTakeoff className='text-25 col-1' />
+                <AirportSearch
+                  airports={[airportOptions, setAirportOptions]}
+                  value={from}
+                  setValue={setFrom}
+                  options={airports}
+                  className='col-11'
+                  placeholder='From'
                 />
               </div>
-              {returnFlight && <hr />}
-              {/* End Depart */}
-              {returnFlight && (
+              <div className='col-lg-6 col-12 border-light px-2 d-flex items-center gap-1'>
+                <MdFlightLand className='text-25 col-1' />
+                <AirportSearch
+                  value={to}
+                  airports={[airportOptions, setAirportOptions]}
+                  setValue={setTo}
+                  options={airports}
+                  className='col-11'
+                  placeholder='To'
+                />
+              </div>
+              {/* <TbArrowsExchange2 className='exchange-icon' /> */}
+            </div>
+            <div className='col-lg-6 col-12 d-flex'>
+              {/* End Location Flying To */}
+              <div
+                className='flight-date-picker col-lg-7 col-6'
+                style={{ border: '1px solid lightgray' }}
+              >
                 <div className='text-center'>
-                  {!returnDate && (
+                  {!departDate && (
                     <label className='d-flex gap-2 items-center'>
-                      <SlCalender className='text-20 mb-1' /> Return
+                      <SlCalender className='text-20 mb-1' /> Depart
                     </label>
                   )}
                   <DatePicker
                     style={{ fontSize: '1rem' }}
                     inputClass='custom_input-picker text-center'
                     containerClassName='custom_container-picker'
-                    value={returnDate}
-                    onChange={setReturnDate}
+                    value={departDate}
+                    onChange={(i) => {
+                      setDepartDate(i);
+                      if (returnDate?.valueOf() < i?.valueOf()) setReturnDate(i);
+                    }}
                     numberOfMonths={1}
                     offsetY={10}
                     format='DD MMM YYYY'
-                    minDate={departDate}
+                    minDate={new DateObject()}
                   />
                 </div>
-              )}
-            </div>
-            {/* End Return */}
-            {/* <div>
+                {returnFlight && <hr />}
+                {/* End Depart */}
+                {returnFlight && (
+                  <div className='text-center'>
+                    {!returnDate && (
+                      <label className='d-flex gap-2 items-center'>
+                        <SlCalender className='text-20 mb-1' /> Return
+                      </label>
+                    )}
+                    <DatePicker
+                      style={{ fontSize: '1rem' }}
+                      inputClass='custom_input-picker text-center'
+                      containerClassName='custom_container-picker'
+                      value={returnDate}
+                      onChange={setReturnDate}
+                      numberOfMonths={1}
+                      offsetY={10}
+                      format='DD MMM YYYY'
+                      minDate={departDate}
+                    />
+                  </div>
+                )}
+              </div>
+              {/* End Return */}
+              {/* <div>
             <div className='pl-5 d-flex mt-30 gap-2 justify-center lg:mt-0 items-center'>
               <label>Direct Flight</label>
               <ReactSwitch
@@ -694,13 +540,12 @@ const MainFilterSearchBox = () => {
               />
             </div>
             </div> */}
-            {/* End guest */}
+              {/* End guest */}
 
-            {/* End search button_item */}
-            <div className='button-item pl-20 lg:pl-0 col-lg-5 lg:pr-0 lg:mt-15'>
+              {/* End search button_item */}
               <button
                 disabled={isSearched}
-                className='mainSearch__submit button -blue-1 py-15 h-60 col-12 rounded-4 bg-dark-3 text-white d-flex items-center'
+                className='mainSearch__submit button -blue-1 py-15 h-60 col-lg-5 col-6 rounded-4 bg-dark-3 text-white d-flex items-center'
                 onClick={search}
               >
                 <i className='icon-search text-18 mr-10 mb-1' />
