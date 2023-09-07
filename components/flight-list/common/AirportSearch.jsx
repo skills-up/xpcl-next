@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import WindowedSelect from 'react-windowed-select';
 
 const AirportSearch = ({
@@ -28,23 +27,14 @@ const AirportSearch = ({
                 (b?.country_name?.toLowerCase()?.includes(e) ? 0.1 : 0);
               return tempB - tempA;
             });
-          } else prev = options.map((e) => e);
+          } else prev = options;
           return [...prev];
         });
       }}
-      filterOption={(candidate, input) => {
-        if (input) {
-          return (
-            candidate.data.iata.toLowerCase() === input.toLowerCase() ||
-            candidate.label.toLowerCase().includes(input.toLowerCase())
-          );
-        }
-        return true;
-      }}
+      filterOption={(candidate, input) => (!input || candidate.label.toLowerCase().includes(input.toLowerCase()))}
       options={airportOptions.map((airport) => ({
         value: airport.id,
         label: `${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
-        iata: airport.iata_code,
       }))}
       formatOptionLabel={(opt, { context }) => {
         const [iata_code, city, name, country_name] = opt.label.split('|');
