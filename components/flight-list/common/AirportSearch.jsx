@@ -1,8 +1,15 @@
-import { useState } from "react";
-import WindowedSelect from "react-windowed-select";
+import { useEffect, useState } from 'react';
+import WindowedSelect from 'react-windowed-select';
 
-const AirportSearch = ({ value, setValue, options, className = '', placeholder = '' }) => {
-  const [airportOptions, setAirportOptions] = useState([]);
+const AirportSearch = ({
+  value,
+  setValue,
+  options,
+  airports,
+  className = '',
+  placeholder = '',
+}) => {
+  const [airportOptions, setAirportOptions] = airports;
 
   return (
     <WindowedSelect
@@ -11,15 +18,15 @@ const AirportSearch = ({ value, setValue, options, className = '', placeholder =
           if (e) {
             prev.sort((a, b) => {
               e = e.toLowerCase();
-              return (
+              let tempA =
                 (a?.iata_code?.toLowerCase()?.startsWith(e) ? 0.6 : 0) +
                 (a?.city?.toLowerCase()?.includes(e) ? 0.3 : 0) +
-                (a?.country_name?.toLowerCase()?.includes(e) ? 0.1 : 0)
-              ) - (
-                  (b?.iata_code?.toLowerCase()?.startsWith(e) ? 0.6 : 0) +
-                  (b?.city?.toLowerCase()?.includes(e) ? 0.3 : 0) +
-                  (b?.country_name?.toLowerCase()?.includes(e) ? 0.1 : 0)
-                );
+                (a?.country_name?.toLowerCase()?.includes(e) ? 0.1 : 0);
+              let tempB =
+                (b?.iata_code?.toLowerCase()?.startsWith(e) ? 0.6 : 0) +
+                (b?.city?.toLowerCase()?.includes(e) ? 0.3 : 0) +
+                (b?.country_name?.toLowerCase()?.includes(e) ? 0.1 : 0);
+              return tempB - tempA;
             });
           } else prev = options.map((e) => e);
           return [...prev];
@@ -48,13 +55,11 @@ const AirportSearch = ({ value, setValue, options, className = '', placeholder =
               style={{ fontSize: '1rem' }}
             >
               <span>
-                <strong>{iata_code}</strong>
-                {' '}
-                <small>
-                  ({city})
-                </small>
+                <strong>{iata_code}</strong> <small>({city})</small>
               </span>
-              {context === 'value' ? '' :
+              {context === 'value' ? (
+                ''
+              ) : (
                 <div
                   style={{
                     fontSize: 'small',
@@ -64,11 +69,9 @@ const AirportSearch = ({ value, setValue, options, className = '', placeholder =
                 >
                   {country_name}
                 </div>
-              }
+              )}
             </div>
-            {context === 'value' ? '' :
-              <small>{name}</small>
-            }
+            {context === 'value' ? '' : <small>{name}</small>}
           </div>
         );
       }}
@@ -77,7 +80,7 @@ const AirportSearch = ({ value, setValue, options, className = '', placeholder =
       placeholder={placeholder}
       className={className}
     />
-  )
-}
+  );
+};
 
 export default AirportSearch;

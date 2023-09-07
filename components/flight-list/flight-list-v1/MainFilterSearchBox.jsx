@@ -15,7 +15,7 @@ import {
   setReturnFlight as setReturnFlightRedux,
   setSearchData,
   setTravellerDOBS,
-  setTravellers as setTravellersRedux
+  setTravellers as setTravellersRedux,
 } from '../../../features/flightSearch/flightSearchSlice';
 import checkAirportCache from '../../../utils/airportCacheValidity';
 import { checkUser } from '../../../utils/checkTokenValidity';
@@ -322,18 +322,19 @@ const MainFilterSearchBox = () => {
 
   const updateSEO = () => {
     setSEO(
-      `Flight Search Results | ${returnFlight
-        ? to?.label?.split('|')?.at(1) +
-        ' - ' +
-        from?.label?.split('|')?.at(1) +
-        ' - ' +
-        to?.label?.split('|')?.at(1) +
-        ' Roundtrip'
-        : from?.label?.split('|')?.at(1) +
-        ' - ' +
-        to?.label?.split('|')?.at(1) +
-        ', ' +
-        departDate?.format('DD MMMM')
+      `Flight Search Results | ${
+        returnFlight
+          ? to?.label?.split('|')?.at(1) +
+            ' - ' +
+            from?.label?.split('|')?.at(1) +
+            ' - ' +
+            to?.label?.split('|')?.at(1) +
+            ' Roundtrip'
+          : from?.label?.split('|')?.at(1) +
+            ' - ' +
+            to?.label?.split('|')?.at(1) +
+            ', ' +
+            departDate?.format('DD MMMM')
       }`
     );
   };
@@ -382,8 +383,9 @@ const MainFilterSearchBox = () => {
                       <div>
                         <div
                           role='button'
-                          className={`${!returnFlight ? 'text-blue-1 ' : ''
-                            }d-block js-dropdown-link`}
+                          className={`${
+                            !returnFlight ? 'text-blue-1 ' : ''
+                          }d-block js-dropdown-link`}
                           onClick={() => setReturnFlight(false)}
                         >
                           One Way
@@ -391,8 +393,9 @@ const MainFilterSearchBox = () => {
                       </div>
                       <div
                         role='button'
-                        className={`mt-10 ${returnFlight ? 'text-blue-1 ' : ''
-                          }d-block js-dropdown-link`}
+                        className={`mt-10 ${
+                          returnFlight ? 'text-blue-1 ' : ''
+                        }d-block js-dropdown-link`}
                         onClick={() => setReturnFlight(true)}
                       >
                         Round Trip
@@ -451,15 +454,29 @@ const MainFilterSearchBox = () => {
               onChange={(values) => setPreferredAirlines(values)}
             />
           </div> */}
-          <div className="row">
+          <div className='row'>
             <div className='flight-search-select col-lg-6 col-12 d-flex'>
               <div className='col-lg-6 col-12 border-light px-2 d-flex items-center gap-1'>
                 <MdFlightTakeoff className='text-25 col-1' />
-                <AirportSearch value={from} setValue={setFrom} options={airports} className='col-11' placeholder='From' />
+                <AirportSearch
+                  airports={[airportOptions, setAirportOptions]}
+                  value={from}
+                  setValue={setFrom}
+                  options={airports}
+                  className='col-11'
+                  placeholder='From'
+                />
               </div>
               <div className='col-lg-6 col-12 border-light px-2 d-flex items-center gap-1'>
                 <MdFlightLand className='text-25 col-1' />
-                <AirportSearch value={to} setValue={setTo} options={airports} className='col-11' placeholder='To' />
+                <AirportSearch
+                  value={to}
+                  airports={[airportOptions, setAirportOptions]}
+                  setValue={setTo}
+                  options={airports}
+                  className='col-11'
+                  placeholder='To'
+                />
               </div>
               {/* <TbArrowsExchange2 className='exchange-icon' /> */}
             </div>
