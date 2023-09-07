@@ -893,9 +893,9 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                 </span>
               </div>
               {expand[type].includes(ind) && (
-                <div className='d-flex justify-between x-gap-20 mt-10'>
+                <div className='d-flex gap-4 mt-10'>
                   {/* Iterating Decks */}
-                  <div>
+                  <div className='aaseatmap-scroll-container scroll-bar-1'>
                     {Object.entries(el.seatMap.decks).map(
                       ([deckKey, deckVal], deckIn) => {
                         return (
@@ -1211,14 +1211,15 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                     style={{ height: '100%' }}
                   >
                     <h4 className='text-center mb-10'>Legend</h4>
-                    <div className='d-flex gap-3 text-center'>
+                    <div className='legend'>
                       <span className='d-flex flex-column items-center'>
                         <Seat label={''} fill={'#FF0000'} />
                         <span
                           style={{
                             fontWeight: '700',
-                            maxWidth: '100px',
                             display: 'inline-block',
+                            lineHeight: '1rem',
+                            marginTop: '0.4rem',
                           }}
                         >
                           Booked
@@ -1229,8 +1230,9 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                         <span
                           style={{
                             fontWeight: '700',
-                            maxWidth: '100px',
                             display: 'inline-block',
+                            lineHeight: '1rem',
+                            marginTop: '0.4rem',
                           }}
                         >
                           Selected
@@ -1241,8 +1243,9 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                         <span
                           style={{
                             fontWeight: '700',
-                            maxWidth: '100px',
                             display: 'inline-block',
+                            lineHeight: '1rem',
+                            marginTop: '0.4rem',
                           }}
                         >
                           Book With Extra Costs
@@ -1253,8 +1256,9 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                         <span
                           style={{
                             fontWeight: '700',
-                            maxWidth: '100px',
                             display: 'inline-block',
+                            lineHeight: '1rem',
+                            marginTop: '0.4rem',
                           }}
                         >
                           Book Without Extra Costs
@@ -1407,10 +1411,10 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                 </span>
               </div>
               {expand[type].includes(index) && (
-                <div className='d-flex justify-between x-gap-20 mt-10'>
+                <div className='d-flex gap-4 between x-gap-20 mt-10'>
                   {/* Seatmap */}
                   {newArr && newArr.length > 0 && (
-                    <div className=''>
+                    <div className='tjseatmap-scroll-container scroll-bar-1'>
                       {newArr.map((element, ind) => {
                         return (
                           <div key={ind} className='tj-grid col-lg-12'>
@@ -1442,6 +1446,8 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                           ? '#FF0000'
                                           : el?.isSelected
                                           ? '#4CBB17'
+                                          : el?.isLegroom
+                                          ? '#800080'
                                           : el?.amount > 0
                                           ? '#FFA500'
                                           : undefined
@@ -1585,14 +1591,15 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                     style={{ height: '100%' }}
                   >
                     <h4 className='text-center mb-10'>Legend</h4>
-                    <div className='d-flex gap-3 text-center'>
+                    <div className='legend'>
                       <span className='d-flex flex-column items-center'>
                         <Seat label={''} fill={'#FF0000'} />
                         <span
                           style={{
                             fontWeight: '700',
-                            maxWidth: '100px',
+                            lineHeight: '1rem',
                             display: 'inline-block',
+                            marginTop: '0.4rem',
                           }}
                         >
                           Booked
@@ -1603,11 +1610,25 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                         <span
                           style={{
                             fontWeight: '700',
-                            maxWidth: '100px',
+                            lineHeight: '1rem',
                             display: 'inline-block',
+                            marginTop: '0.4rem',
                           }}
                         >
                           Selected
+                        </span>
+                      </span>
+                      <span className='d-flex flex-column items-center'>
+                        <Seat label={''} fill={'#800080'} clickable />
+                        <span
+                          style={{
+                            fontWeight: '700',
+                            lineHeight: '1rem',
+                            display: 'inline-block',
+                            marginTop: '0.4rem',
+                          }}
+                        >
+                          Legroom
                         </span>
                       </span>
                       <span className='d-flex flex-column items-center'>
@@ -1615,8 +1636,9 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                         <span
                           style={{
                             fontWeight: '700',
-                            maxWidth: '100px',
                             display: 'inline-block',
+                            lineHeight: '1rem',
+                            marginTop: '0.4rem',
                           }}
                         >
                           Book With Extra Costs
@@ -1627,8 +1649,9 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                         <span
                           style={{
                             fontWeight: '700',
-                            maxWidth: '100px',
+                            lineHeight: '1rem',
                             display: 'inline-block',
+                            marginTop: '0.4rem',
                           }}
                         >
                           Book Without Extra Costs
@@ -1780,14 +1803,448 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                 </span>
               </div>
               {expand[type].includes(dIndex) && (
-                <>
+                <div className='d-flex gap-4 mt-10'>
+                  <div>
+                    {/* Deck Toggle */}
+                    {d.upperDeckToggle !== null && d.upperDeckToggle !== undefined && (
+                      <button
+                        className=' mb-30 btn btn-outline-dark d-block'
+                        onClick={() =>
+                          setSeatMap((prev) => {
+                            prev[type].data[dIndex].upperDeckToggle =
+                              !prev[type].data[dIndex].upperDeckToggle;
+                            return { ...prev };
+                          })
+                        }
+                      >
+                        {d.upperDeckToggle ? 'Show Lower Deck' : 'Show Upper Deck'}
+                      </button>
+                    )}
+                    {/* Iterating Cabins */}
+                    <div className='adseatmap-scroll-container scroll-bar-1'>
+                      {getArray(seatmap.cabin).map((cabin, cabinIndex) => {
+                        const facilities = getArray(cabin.cabinFacilities || []);
+                        const compartment = cabin.compartmentDetails;
+                        const defSeatOcc =
+                          compartment.defaultSeatOccupation ||
+                          cabin.defaultSeatOccupation ||
+                          'F';
+                        const seatRows = compartment.seatRowRange.number;
+                        const isUpperDeck = compartment.cabinZoneCode == 'U';
+
+                        // TODO JQuery
+                        // if (isUpperDeck) $('#upperDeckToggle').show();
+
+                        //Obtain column header and layout
+                        var seatFormatArr = [];
+                        var prev = '';
+                        var spacers = 0;
+                        compartment.columnDetails.map((detail) => {
+                          var curr = getArray(detail.description);
+                          // Checking if previous and current column was an A
+                          if (curr.indexOf('A') >= 0 && prev.indexOf('A') >= 0) {
+                            if (++spacers > 2) {
+                              var unspacer = seatFormatArr.lastIndexOf(' ');
+                              seatFormatArr.splice(unspacer, 1);
+                            }
+                            seatFormatArr.push(' ');
+                          }
+                          seatFormatArr.push(detail.seatColumn);
+                          prev = curr;
+                        });
+
+                        let rowRange = [];
+                        for (let i = seatRows[0]; i <= seatRows[1]; i++) {
+                          rowRange.push(i);
+                        }
+
+                        const props = spacers < 2 ? ['L', 'R'] : ['L', 'C', 'R'];
+                        var propIdx, currProp, contObj;
+                        var facRow = '';
+                        let facRear = '';
+                        let facFront = '';
+
+                        for (let fac of facilities) {
+                          var facObj = { L: [], C: [], R: [] };
+                          var facDetails = fac.cabinFacilityDetails;
+                          var facLocation = getLocation(facDetails.location, spacers);
+                          facObj[facLocation].push(facDetails.type);
+                          var otrFacDetails = getArray(
+                            fac.otherCabinFacilityDetails || []
+                          );
+                          otrFacDetails.forEach((facDetails) => {
+                            facLocation = getLocation(facDetails.location, spacers);
+                            facObj[facLocation].push(facDetails.type);
+                          });
+                          facRow = '';
+                          propIdx = 0;
+                          currProp = 'L';
+                          contObj = { L: '', C: '', R: '' };
+                          for (let col of seatFormatArr) {
+                            if (col == ' ') {
+                              contObj[currProp] += '<td class="no-seat"></td>';
+                              currProp = props[++propIdx];
+                            } else {
+                              var facility = facObj[currProp].shift();
+                              if (facility) {
+                                contObj[currProp] +=
+                                  '<td class="seat seat-' + facility + '"> &nbsp; </td>';
+                              } else {
+                                if (currProp == 'R') {
+                                  contObj[currProp] =
+                                    '<td class="no-seat"></td>' + contObj[currProp];
+                                } else if (
+                                  currProp == 'C' &&
+                                  contObj[currProp].indexOf('</td><td') > 0
+                                ) {
+                                  contObj[currProp] = contObj[currProp].replace(
+                                    '</td><td',
+                                    '</td><td class="no-seat"></td><td'
+                                  );
+                                } else {
+                                  contObj[currProp] += '<td class="no-seat"></td>';
+                                }
+                              }
+                            }
+                          }
+                          facRow = contObj['L'] + contObj['C'] + contObj['R'];
+                          if (fac.rowLocation == 'F') {
+                            facFront += '<tr><td></td>' + facRow + '</tr>';
+                          } else {
+                            facRear += '<tr><td></td>' + facRow + '</tr>';
+                          }
+                        }
+
+                        let show = false;
+                        if (
+                          d.upperDeckToggle !== undefined &&
+                          d.upperDeckToggle !== null
+                        ) {
+                          if (d.upperDeckToggle === true && isUpperDeck) {
+                            show = true;
+                          } else if (d.upperDeckToggle === false && !isUpperDeck) {
+                            show = true;
+                          }
+                        } else {
+                          show = true;
+                        }
+
+                        return (
+                          <table
+                            key={cabinIndex}
+                            className={`amadeus-table ${
+                              isUpperDeck ? 'upper-deck' : 'lower-deck'
+                            }`}
+                            style={{ display: `${show ? 'block' : 'none'}` }}
+                          >
+                            <tbody>
+                              {/* facFront */}
+                              <tr>
+                                <td></td>
+                                {seatFormatArr.map((col) => (
+                                  <th className='col-name'>{col}</th>
+                                ))}
+                              </tr>
+                              {parse(facFront)}
+                              {/* cont */}
+                              {rowRange.map((i, index) => {
+                                const cabinRow = rows[currRow++];
+                                if (cabinRow !== undefined) {
+                                  var rowBefore = '',
+                                    rowAfter = '';
+                                  const rowFacilities = getArray(
+                                    cabinRow.cabinFacility || []
+                                  );
+                                  rowFacilities.map((fac) => {
+                                    var facObj = { L: [], C: [], R: [] };
+                                    var facDetails = fac.cabinFacilityDetails;
+                                    var facLocation = getLocation(
+                                      facDetails.location,
+                                      spacers
+                                    );
+                                    facObj[facLocation].push(facDetails.type);
+                                    var otrFacDetails = getArray(
+                                      fac.otherCabinFacilityDetails || []
+                                    );
+                                    otrFacDetails.forEach((facDetails) => {
+                                      facLocation = getLocation(
+                                        facDetails.location,
+                                        spacers
+                                      );
+                                      facObj[facLocation].push(facDetails.type);
+                                    });
+
+                                    facRow = '';
+                                    propIdx = 0;
+                                    currProp = 'L';
+                                    contObj = { L: '', C: '', R: '' };
+                                    seatFormatArr.forEach((col) => {
+                                      if (col == ' ') {
+                                        contObj[currProp] += '<td class="no-seat"></td>';
+                                        currProp = props[++propIdx];
+                                      } else {
+                                        var facility = facObj[currProp].shift();
+                                        if (facility) {
+                                          contObj[currProp] +=
+                                            '<td class="seat seat-' +
+                                            facility +
+                                            '"> &nbsp; </td>';
+                                        } else {
+                                          if (currProp == 'R') {
+                                            contObj[currProp] =
+                                              '<td class="no-seat"></td>' +
+                                              contObj[currProp];
+                                          } else if (
+                                            currProp == 'C' &&
+                                            contObj[currProp].indexOf('</td><td') > 0
+                                          ) {
+                                            contObj[currProp] = contObj[currProp].replace(
+                                              '</td><td',
+                                              '</td><td class="no-seat"></td><td'
+                                            );
+                                          } else {
+                                            contObj[currProp] +=
+                                              '<td class="no-seat"></td>';
+                                          }
+                                        }
+                                      }
+                                    });
+                                    facRow = contObj['L'] + contObj['C'] + contObj['R'];
+
+                                    if (fac.rowLocation == 'F') {
+                                      rowBefore += '<tr><td></td>' + facRow + '</tr>';
+                                    } else {
+                                      rowAfter += '<tr><td></td>' + facRow + '</tr>';
+                                    }
+                                  });
+                                  const row = cabinRow.rowDetails;
+                                  const rowNum = row.seatRowNumber || i;
+                                  var details = Object.assign(
+                                    {},
+                                    ...getArray(row.seatOccupationDetails).map(
+                                      (detail) => ({
+                                        [detail.seatColumn]: getArray(
+                                          detail.seatCharacteristic
+                                        ).concat(getArray(detail.seatOccupation)),
+                                      })
+                                    )
+                                  );
+
+                                  return (
+                                    <>
+                                      {parse(rowBefore)}
+                                      <tr
+                                        className={`seat-row ${
+                                          row.rowCharacteristicDetails
+                                            ? 'row-type-' +
+                                              row.rowCharacteristicDetails
+                                                .rowCharacteristic
+                                            : ''
+                                        }`}
+                                      >
+                                        <th className='row-number'>{rowNum}</th>
+                                        {seatFormatArr.map((col, colInd) => {
+                                          if (col !== ' ') {
+                                            var chars =
+                                              details[col] || getArray(defSeatOcc);
+                                            var price = prices[rowNum + col] || 0;
+                                            // var contents = chars.indexOf('O') >= 0 ? 'X' : (chars.indexOf('E') >= 0 ? 'E' : (chars.indexOf('1') >= 0 ? 'R' : (chars.indexOf('CH') >= 0 ? '$' : '&nbsp;')));
+                                            var contents = '\u00A0';
+                                            // If these codes then seat is unavailable
+                                            if (
+                                              chars.indexOf('O') >= 0 ||
+                                              chars.indexOf('Z') >= 0
+                                            ) {
+                                              contents = 'X';
+                                            } else {
+                                              if (chars.indexOf('CH') >= 0)
+                                                contents = '₹';
+                                              var reserved = false;
+                                              reserveCodes.forEach((code) => {
+                                                if (chars.indexOf(code) >= 0) {
+                                                  reserved = true;
+                                                }
+                                              });
+                                              if (!reserved) chars.push('AVL');
+                                            }
+                                            // If Seat Selected
+                                            let seatSelected = false;
+                                            if (seatMap[type].data[dIndex]?.travellers) {
+                                              for (let x of seatMap[type].data[dIndex]
+                                                .travellers) {
+                                                if (x?.seatNo === rowNum + col) {
+                                                  seatSelected = true;
+                                                }
+                                              }
+                                            }
+                                            let conditions =
+                                              chars.includes('AVL') &&
+                                              !chars.includes(1) &&
+                                              !chars.includes('O') &&
+                                              !chars.includes(8) &&
+                                              !chars.includes('GN') &&
+                                              !chars.includes('SO') &&
+                                              !chars.includes('BK') &&
+                                              !chars.includes('ST') &&
+                                              !chars.includes('LA') &&
+                                              !chars.includes('G');
+                                            if (chars.indexOf('8') >= 0) {
+                                              return (
+                                                <td key={colInd} className='no-seat' />
+                                              );
+                                            } else {
+                                              return (
+                                                <td
+                                                  className={`seat seat-${chars.join(
+                                                    ' seat-'
+                                                  )} ${seatSelected ? 'seat-sel' : ''} ${
+                                                    conditions ? 'cursor-pointer' : ''
+                                                  }`}
+                                                  onClick={() => {
+                                                    if (conditions) {
+                                                      // Seat Number = rowNum+col
+                                                      setSeatMap((prev) => {
+                                                        // Adding Travellers that arent infants
+                                                        let tempTravs = [];
+                                                        for (let traveller of travellerInfo) {
+                                                          const age = (
+                                                            (Date.now() -
+                                                              +new DateObject({
+                                                                date: traveller?.passport_dob,
+                                                                format: 'YYYY-MM-DD',
+                                                              })
+                                                                .toDate()
+                                                                .getTime()) /
+                                                            31536000000
+                                                          ).toFixed(2);
+                                                          if (age >= 2)
+                                                            tempTravs.push(traveller);
+                                                        }
+                                                        let add = {
+                                                          amount: price,
+                                                          seatNo: rowNum + col,
+                                                        };
+                                                        let travl =
+                                                          prev[type]?.data[dIndex]
+                                                            ?.travellers;
+                                                        if (travl) {
+                                                          // Check if the seat is already selected
+                                                          let seatSelected = false;
+                                                          for (
+                                                            let x = travl.length - 1;
+                                                            x >= 0;
+                                                            x--
+                                                          ) {
+                                                            if (
+                                                              travl[x].seatNo ===
+                                                              rowNum + col
+                                                            ) {
+                                                              travl.splice(x, 1);
+                                                              seatSelected = true;
+                                                            }
+                                                          }
+                                                          if (!seatSelected) {
+                                                            // If the traveller is going to repeat
+                                                            if (
+                                                              travl.length ===
+                                                              tempTravs.length
+                                                            ) {
+                                                              travl.push({
+                                                                ...travl[0],
+                                                                ...add,
+                                                              });
+                                                              travl.splice(0, 1);
+                                                            } else {
+                                                              let travlToAdd = false;
+                                                              for (let x of tempTravs) {
+                                                                let match = false;
+                                                                for (let y of travl) {
+                                                                  if (y.id === x.id) {
+                                                                    match = true;
+                                                                  }
+                                                                }
+                                                                if (
+                                                                  !match &&
+                                                                  !travlToAdd
+                                                                ) {
+                                                                  travl.push({
+                                                                    ...x,
+                                                                    ...add,
+                                                                  });
+                                                                  travlToAdd = true;
+                                                                }
+                                                              }
+                                                            }
+                                                          }
+                                                        } else {
+                                                          travl = [
+                                                            { ...tempTravs[0], ...add },
+                                                          ];
+                                                        }
+                                                        prev[type].data[dIndex][
+                                                          'travellers'
+                                                        ] = travl;
+                                                        return { ...prev };
+                                                      });
+                                                    }
+                                                  }}
+                                                >
+                                                  <a
+                                                    data-tooltip-id={
+                                                      conditions
+                                                        ? rowNum + col
+                                                        : undefined
+                                                    }
+                                                    data-tooltip-content={
+                                                      conditions
+                                                        ? `Amount - ${(+price).toLocaleString(
+                                                            'en-IN',
+                                                            {
+                                                              maximumFractionDigits: 0,
+                                                              style: 'currency',
+                                                              currency: 'INR',
+                                                            }
+                                                          )}`
+                                                        : undefined
+                                                    }
+                                                    data-tooltip-place='top'
+                                                  >
+                                                    {contents}
+                                                  </a>
+                                                  <ReactTooltip id={rowNum + col} />
+                                                </td>
+                                              );
+                                            }
+                                          } else {
+                                            return (
+                                              <td key={colInd} className='no-seat' />
+                                            );
+                                          }
+                                        })}
+                                      </tr>
+                                      {parse(rowAfter)}
+                                    </>
+                                  );
+                                }
+                              })}
+                              {/* facRear */}
+                              {parse(facRear)}
+                            </tbody>
+                          </table>
+                        );
+                      })}
+                    </div>
+                  </div>
                   {/* Legend */}
-                  <div className='d-inline-block bg-light-2 pt-10 px-20 mb-20'>
-                    <h1>
+                  <div
+                    style={{ height: '100%' }}
+                    className='bg-light-2 pt-10 px-20 mb-20'
+                  >
+                    <h4>
                       <th colspan='2' className='text-center mb-10 d-block'>
                         Legend
                       </th>
-                    </h1>
+                    </h4>
                     <table className='amadeus-table'>
                       <tbody className='legend'>
                         <tr>
@@ -1895,410 +2352,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                       })}
                     </div>
                   </div>
-                  {/* Deck Toggle */}
-                  {d.upperDeckToggle !== null && d.upperDeckToggle !== undefined && (
-                    <button
-                      className=' mb-30 btn btn-outline-dark d-block'
-                      onClick={() =>
-                        setSeatMap((prev) => {
-                          prev[type].data[dIndex].upperDeckToggle =
-                            !prev[type].data[dIndex].upperDeckToggle;
-                          return { ...prev };
-                        })
-                      }
-                    >
-                      {d.upperDeckToggle ? 'Show Lower Deck' : 'Show Upper Deck'}
-                    </button>
-                  )}
-                  {/* Iterating Cabins */}
-                  {getArray(seatmap.cabin).map((cabin, cabinIndex) => {
-                    const facilities = getArray(cabin.cabinFacilities || []);
-                    const compartment = cabin.compartmentDetails;
-                    const defSeatOcc =
-                      compartment.defaultSeatOccupation ||
-                      cabin.defaultSeatOccupation ||
-                      'F';
-                    const seatRows = compartment.seatRowRange.number;
-                    const isUpperDeck = compartment.cabinZoneCode == 'U';
-
-                    // TODO JQuery
-                    // if (isUpperDeck) $('#upperDeckToggle').show();
-
-                    //Obtain column header and layout
-                    var seatFormatArr = [];
-                    var prev = '';
-                    var spacers = 0;
-                    compartment.columnDetails.map((detail) => {
-                      var curr = getArray(detail.description);
-                      // Checking if previous and current column was an A
-                      if (curr.indexOf('A') >= 0 && prev.indexOf('A') >= 0) {
-                        if (++spacers > 2) {
-                          var unspacer = seatFormatArr.lastIndexOf(' ');
-                          seatFormatArr.splice(unspacer, 1);
-                        }
-                        seatFormatArr.push(' ');
-                      }
-                      seatFormatArr.push(detail.seatColumn);
-                      prev = curr;
-                    });
-
-                    let rowRange = [];
-                    for (let i = seatRows[0]; i <= seatRows[1]; i++) {
-                      rowRange.push(i);
-                    }
-
-                    const props = spacers < 2 ? ['L', 'R'] : ['L', 'C', 'R'];
-                    var propIdx, currProp, contObj;
-                    var facRow = '';
-                    let facRear = '';
-                    let facFront = '';
-
-                    for (let fac of facilities) {
-                      var facObj = { L: [], C: [], R: [] };
-                      var facDetails = fac.cabinFacilityDetails;
-                      var facLocation = getLocation(facDetails.location, spacers);
-                      facObj[facLocation].push(facDetails.type);
-                      var otrFacDetails = getArray(fac.otherCabinFacilityDetails || []);
-                      otrFacDetails.forEach((facDetails) => {
-                        facLocation = getLocation(facDetails.location, spacers);
-                        facObj[facLocation].push(facDetails.type);
-                      });
-                      facRow = '';
-                      propIdx = 0;
-                      currProp = 'L';
-                      contObj = { L: '', C: '', R: '' };
-                      for (let col of seatFormatArr) {
-                        if (col == ' ') {
-                          contObj[currProp] += '<td class="no-seat"></td>';
-                          currProp = props[++propIdx];
-                        } else {
-                          var facility = facObj[currProp].shift();
-                          if (facility) {
-                            contObj[currProp] +=
-                              '<td class="seat seat-' + facility + '"> &nbsp; </td>';
-                          } else {
-                            if (currProp == 'R') {
-                              contObj[currProp] =
-                                '<td class="no-seat"></td>' + contObj[currProp];
-                            } else if (
-                              currProp == 'C' &&
-                              contObj[currProp].indexOf('</td><td') > 0
-                            ) {
-                              contObj[currProp] = contObj[currProp].replace(
-                                '</td><td',
-                                '</td><td class="no-seat"></td><td'
-                              );
-                            } else {
-                              contObj[currProp] += '<td class="no-seat"></td>';
-                            }
-                          }
-                        }
-                      }
-                      facRow = contObj['L'] + contObj['C'] + contObj['R'];
-                      if (fac.rowLocation == 'F') {
-                        facFront += '<tr><td></td>' + facRow + '</tr>';
-                      } else {
-                        facRear += '<tr><td></td>' + facRow + '</tr>';
-                      }
-                    }
-
-                    let show = false;
-                    if (d.upperDeckToggle !== undefined && d.upperDeckToggle !== null) {
-                      if (d.upperDeckToggle === true && isUpperDeck) {
-                        show = true;
-                      } else if (d.upperDeckToggle === false && !isUpperDeck) {
-                        show = true;
-                      }
-                    } else {
-                      show = true;
-                    }
-
-                    return (
-                      <table
-                        key={cabinIndex}
-                        className={`amadeus-table ${
-                          isUpperDeck ? 'upper-deck' : 'lower-deck'
-                        }`}
-                        style={{ display: `${show ? 'block' : 'none'}` }}
-                      >
-                        <tbody>
-                          {/* facFront */}
-                          <tr>
-                            <td></td>
-                            {seatFormatArr.map((col) => (
-                              <th className='col-name'>{col}</th>
-                            ))}
-                          </tr>
-                          {parse(facFront)}
-                          {/* cont */}
-                          {rowRange.map((i, index) => {
-                            const cabinRow = rows[currRow++];
-                            if (cabinRow !== undefined) {
-                              var rowBefore = '',
-                                rowAfter = '';
-                              const rowFacilities = getArray(
-                                cabinRow.cabinFacility || []
-                              );
-                              rowFacilities.map((fac) => {
-                                var facObj = { L: [], C: [], R: [] };
-                                var facDetails = fac.cabinFacilityDetails;
-                                var facLocation = getLocation(
-                                  facDetails.location,
-                                  spacers
-                                );
-                                facObj[facLocation].push(facDetails.type);
-                                var otrFacDetails = getArray(
-                                  fac.otherCabinFacilityDetails || []
-                                );
-                                otrFacDetails.forEach((facDetails) => {
-                                  facLocation = getLocation(facDetails.location, spacers);
-                                  facObj[facLocation].push(facDetails.type);
-                                });
-
-                                facRow = '';
-                                propIdx = 0;
-                                currProp = 'L';
-                                contObj = { L: '', C: '', R: '' };
-                                seatFormatArr.forEach((col) => {
-                                  if (col == ' ') {
-                                    contObj[currProp] += '<td class="no-seat"></td>';
-                                    currProp = props[++propIdx];
-                                  } else {
-                                    var facility = facObj[currProp].shift();
-                                    if (facility) {
-                                      contObj[currProp] +=
-                                        '<td class="seat seat-' +
-                                        facility +
-                                        '"> &nbsp; </td>';
-                                    } else {
-                                      if (currProp == 'R') {
-                                        contObj[currProp] =
-                                          '<td class="no-seat"></td>' + contObj[currProp];
-                                      } else if (
-                                        currProp == 'C' &&
-                                        contObj[currProp].indexOf('</td><td') > 0
-                                      ) {
-                                        contObj[currProp] = contObj[currProp].replace(
-                                          '</td><td',
-                                          '</td><td class="no-seat"></td><td'
-                                        );
-                                      } else {
-                                        contObj[currProp] += '<td class="no-seat"></td>';
-                                      }
-                                    }
-                                  }
-                                });
-                                facRow = contObj['L'] + contObj['C'] + contObj['R'];
-
-                                if (fac.rowLocation == 'F') {
-                                  rowBefore += '<tr><td></td>' + facRow + '</tr>';
-                                } else {
-                                  rowAfter += '<tr><td></td>' + facRow + '</tr>';
-                                }
-                              });
-                              const row = cabinRow.rowDetails;
-                              const rowNum = row.seatRowNumber || i;
-                              var details = Object.assign(
-                                {},
-                                ...getArray(row.seatOccupationDetails).map((detail) => ({
-                                  [detail.seatColumn]: getArray(
-                                    detail.seatCharacteristic
-                                  ).concat(getArray(detail.seatOccupation)),
-                                }))
-                              );
-
-                              return (
-                                <>
-                                  {parse(rowBefore)}
-                                  <tr
-                                    className={`seat-row ${
-                                      row.rowCharacteristicDetails
-                                        ? 'row-type-' +
-                                          row.rowCharacteristicDetails.rowCharacteristic
-                                        : ''
-                                    }`}
-                                  >
-                                    <th className='row-number'>{rowNum}</th>
-                                    {seatFormatArr.map((col, colInd) => {
-                                      if (col !== ' ') {
-                                        var chars = details[col] || getArray(defSeatOcc);
-                                        var price = prices[rowNum + col] || 0;
-                                        // var contents = chars.indexOf('O') >= 0 ? 'X' : (chars.indexOf('E') >= 0 ? 'E' : (chars.indexOf('1') >= 0 ? 'R' : (chars.indexOf('CH') >= 0 ? '$' : '&nbsp;')));
-                                        var contents = '\u00A0';
-                                        // If these codes then seat is unavailable
-                                        if (
-                                          chars.indexOf('O') >= 0 ||
-                                          chars.indexOf('Z') >= 0
-                                        ) {
-                                          contents = 'X';
-                                        } else {
-                                          if (chars.indexOf('CH') >= 0) contents = '₹';
-                                          var reserved = false;
-                                          reserveCodes.forEach((code) => {
-                                            if (chars.indexOf(code) >= 0) {
-                                              reserved = true;
-                                            }
-                                          });
-                                          if (!reserved) chars.push('AVL');
-                                        }
-                                        // If Seat Selected
-                                        let seatSelected = false;
-                                        if (seatMap[type].data[dIndex]?.travellers) {
-                                          for (let x of seatMap[type].data[dIndex]
-                                            .travellers) {
-                                            if (x?.seatNo === rowNum + col) {
-                                              seatSelected = true;
-                                            }
-                                          }
-                                        }
-                                        let conditions =
-                                          chars.includes('AVL') &&
-                                          !chars.includes(1) &&
-                                          !chars.includes('O') &&
-                                          !chars.includes(8) &&
-                                          !chars.includes('GN') &&
-                                          !chars.includes('SO') &&
-                                          !chars.includes('BK') &&
-                                          !chars.includes('ST') &&
-                                          !chars.includes('LA') &&
-                                          !chars.includes('G');
-                                        if (chars.indexOf('8') >= 0) {
-                                          return <td key={colInd} className='no-seat' />;
-                                        } else {
-                                          return (
-                                            <td
-                                              className={`seat seat-${chars.join(
-                                                ' seat-'
-                                              )} ${seatSelected ? 'seat-sel' : ''} ${
-                                                conditions ? 'cursor-pointer' : ''
-                                              }`}
-                                              onClick={() => {
-                                                if (conditions) {
-                                                  // Seat Number = rowNum+col
-                                                  setSeatMap((prev) => {
-                                                    // Adding Travellers that arent infants
-                                                    let tempTravs = [];
-                                                    for (let traveller of travellerInfo) {
-                                                      const age = (
-                                                        (Date.now() -
-                                                          +new DateObject({
-                                                            date: traveller?.passport_dob,
-                                                            format: 'YYYY-MM-DD',
-                                                          })
-                                                            .toDate()
-                                                            .getTime()) /
-                                                        31536000000
-                                                      ).toFixed(2);
-                                                      if (age >= 2)
-                                                        tempTravs.push(traveller);
-                                                    }
-                                                    let add = {
-                                                      amount: price,
-                                                      seatNo: rowNum + col,
-                                                    };
-                                                    let travl =
-                                                      prev[type]?.data[dIndex]
-                                                        ?.travellers;
-                                                    if (travl) {
-                                                      // Check if the seat is already selected
-                                                      let seatSelected = false;
-                                                      for (
-                                                        let x = travl.length - 1;
-                                                        x >= 0;
-                                                        x--
-                                                      ) {
-                                                        if (
-                                                          travl[x].seatNo ===
-                                                          rowNum + col
-                                                        ) {
-                                                          travl.splice(x, 1);
-                                                          seatSelected = true;
-                                                        }
-                                                      }
-                                                      if (!seatSelected) {
-                                                        // If the traveller is going to repeat
-                                                        if (
-                                                          travl.length ===
-                                                          tempTravs.length
-                                                        ) {
-                                                          travl.push({
-                                                            ...travl[0],
-                                                            ...add,
-                                                          });
-                                                          travl.splice(0, 1);
-                                                        } else {
-                                                          let travlToAdd = false;
-                                                          for (let x of tempTravs) {
-                                                            let match = false;
-                                                            for (let y of travl) {
-                                                              if (y.id === x.id) {
-                                                                match = true;
-                                                              }
-                                                            }
-                                                            if (!match && !travlToAdd) {
-                                                              travl.push({
-                                                                ...x,
-                                                                ...add,
-                                                              });
-                                                              travlToAdd = true;
-                                                            }
-                                                          }
-                                                        }
-                                                      }
-                                                    } else {
-                                                      travl = [
-                                                        { ...tempTravs[0], ...add },
-                                                      ];
-                                                    }
-                                                    prev[type].data[dIndex][
-                                                      'travellers'
-                                                    ] = travl;
-                                                    return { ...prev };
-                                                  });
-                                                }
-                                              }}
-                                            >
-                                              <a
-                                                data-tooltip-id={
-                                                  conditions ? rowNum + col : undefined
-                                                }
-                                                data-tooltip-content={
-                                                  conditions
-                                                    ? `Amount - ${(+price).toLocaleString(
-                                                        'en-IN',
-                                                        {
-                                                          maximumFractionDigits: 0,
-                                                          style: 'currency',
-                                                          currency: 'INR',
-                                                        }
-                                                      )}`
-                                                    : undefined
-                                                }
-                                                data-tooltip-place='top'
-                                              >
-                                                {contents}
-                                              </a>
-                                              <ReactTooltip id={rowNum + col} />
-                                            </td>
-                                          );
-                                        }
-                                      } else {
-                                        return <td key={colInd} className='no-seat' />;
-                                      }
-                                    })}
-                                  </tr>
-                                  {parse(rowAfter)}
-                                </>
-                              );
-                            }
-                          })}
-                          {/* facRear */}
-                          {parse(facRear)}
-                        </tbody>
-                      </table>
-                    );
-                  })}
-                </>
+                </div>
               )}
             </div>
           );
