@@ -4,9 +4,6 @@
 const nextConfig = {
   transpilePackages: ['react-timezone-select'],
   reactStrictMode: false,
-  sassOptions: {
-    fiber: false,
-  },
   images: {
     unoptimized: true,
   },
