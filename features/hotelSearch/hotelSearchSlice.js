@@ -24,6 +24,8 @@ export const initialState = {
       rating: false,
     },
     PNR: null,
+    searchQuery: '',
+    selectedRatings: {},
   },
 };
 
@@ -49,7 +51,9 @@ const hotelSearchSlice = createSlice({
     setMaxRatings: (state, action) => void (state.value.maxRatings = action.payload),
     setOptions: (state, action) => void (state.value.options = action.payload),
     setRatingParams: (state, action) => void (state.value.ratingParams = action.payload),
+    setSelectedRatings: (state, action) => void (state.value.selectedRatings = action.payload),
     setAge: (state, action) => void (state.value.age = action.payload),
+    setSearchQuery: (state, action) => void (state.value.searchQuery = action.payload),
     setSort: (state, action) => {
       if (action.payload.key === '_') {
         state.value.sort['_'] = action.payload.value;
@@ -85,6 +89,8 @@ export const {
   setPrice,
   setRooms,
   setSelectedData,
+  setSearchQuery,
+  setSelectedRatings,
   setSort,
   setInitialState,
 } = hotelSearchSlice.actions;

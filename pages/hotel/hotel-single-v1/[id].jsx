@@ -137,6 +137,7 @@ const HotelSingleV1Dynamic = () => {
       <Seo pageTitle={SEO} />
       <div>
         <LoadingBar
+          height={3}
           color='#19f9fc'
           progress={progress}
           onLoaderFinished={() => setProgress(0)}

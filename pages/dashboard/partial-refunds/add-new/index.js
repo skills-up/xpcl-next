@@ -39,6 +39,7 @@ const AddNewPartialRefund = () => {
   const [clientQuotedAmount, setClientQuotedAmount] = useState(0);
   const [isOffshore, setIsOffshore] = useState(false);
   const [bookingType, setBookingType] = useState(null);
+  const [clientRefundAmount, setClientRefundAmount] = useState(0);
 
   // Percentages
   const [vendorServiceChargePercent, setVendorServiceChargePercent] = useState(18);
@@ -178,14 +179,8 @@ const AddNewPartialRefund = () => {
           (+refundData?.data?.vendor_gst_amount || 0)
         ).toFixed(0)
       );
-      setIATACommissionPercent(
-        (+bookingData.data.iata_commission_percent || 0) +
-          (+refundData?.data?.iata_commission_percent || 0)
-      );
-      setPLBCommissionPercent(
-        (+bookingData.data.plb_commission_percent || 0) +
-          (+refundData?.data?.plb_commission_percent || 0)
-      );
+      setIATACommissionPercent(+bookingData.data.iata_commission_percent || 0);
+      setPLBCommissionPercent(+bookingData.data.plb_commission_percent || 0);
       setVendorServiceCharges(
         (
           (+bookingData.data.vendor_service_charges || 0) +
@@ -321,8 +316,8 @@ const AddNewPartialRefund = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    if (!accountID?.value) {
-      sendToast('error', 'You must select an Account', 4000);
+    if (!clientAccountID?.value) {
+      sendToast('error', 'You must select a Refund To Account', 4000);
       return;
     }
     if (!vendorID?.value) {
@@ -385,6 +380,17 @@ const AddNewPartialRefund = () => {
       if (payment) setRefundAmount((+payment || 0) - (+airlineCancellationCharges || 0));
     }
   }, [bookingData, airlineCancellationCharges, accountID, refundBookingData]);
+
+  useEffect(() => {
+    if (bookingType?.value) {
+      const payment = (
+        (+clientTotal || 0) -
+        (bookingType?.value === 'Domestic Flight Ticket' ? 1.09 : 1.18) *
+          (+clientCancellationCharges || 0)
+      ).toFixed(0);
+      if (payment) setClientRefundAmount(payment);
+    }
+  }, [clientTotal, clientCancellationCharges, bookingType]);
 
   // Offshore
   useEffect(() => {
@@ -453,6 +459,7 @@ const AddNewPartialRefund = () => {
   };
 
   const updateVendorServiceChargePercent = (vendorServiceCharges, grossCommission) => {
+    console.log('gross', vendorServiceCharges, grossCommission);
     if (!vendorGSTFocused)
       setVendorServiceChargePercent(
         Number((100 * (+vendorServiceCharges || 0)) / (+grossCommission || 0)).toFixed(2)
@@ -688,7 +695,9 @@ const AddNewPartialRefund = () => {
                       />
                     </div>
                     <div className='form-input-select col-lg-4'>
-                      <label>Refund To</label>
+                      <label>
+                        Refund To<span className='text-danger'>*</span>
+                      </label>
                       <Select
                         options={clientAccounts}
                         value={clientAccountID}
@@ -1246,9 +1255,7 @@ const AddNewPartialRefund = () => {
                       </div>
                     </div>
                     <div className='form-input-select col-lg-4'>
-                      <label>
-                        Payment Refunded To<span className='text-danger'>*</span>
-                      </label>
+                      <label>Payment Refunded To</label>
                       <Select
                         options={accounts}
                         value={accountID}
@@ -1278,27 +1285,34 @@ const AddNewPartialRefund = () => {
                         <label className='lh-1 text-16 text-light-1'>Comment</label>
                       </div>
                     </div>
-                    <div>
-                      <p>
-                        <strong>Vendor Base Amount:</strong>{' '}
-                        {bookingData?.vendor_base_amount || 0}
-                      </p>
-                      <p>
-                        <strong>Vendor YQ Amount:</strong>{' '}
-                        {bookingData?.vendor_yq_amount || 0}
-                      </p>
-                      <p>
-                        <strong>Vendor Tax Amount:</strong>{' '}
-                        {bookingData?.vendor_tax_amount || 0}
-                      </p>
-                      <p>
-                        <strong>Vendor Misc. Amount:</strong>{' '}
-                        {bookingData?.vendor_misc_charges || 0}
-                      </p>
-                      <p>
-                        <strong>Reissue Penalty:</strong>{' '}
-                        {bookingData?.reissue_penalty || 0}
-                      </p>
+                    <div className='row justify-between'>
+                      <div className='col-lg-3'>
+                        <p>
+                          <strong>Vendor Base Amount:</strong>{' '}
+                          {bookingData?.vendor_base_amount || 0}
+                        </p>
+                        <p>
+                          <strong>Vendor YQ Amount:</strong>{' '}
+                          {bookingData?.vendor_yq_amount || 0}
+                        </p>
+                        <p>
+                          <strong>Vendor Tax Amount:</strong>{' '}
+                          {bookingData?.vendor_tax_amount || 0}
+                        </p>
+                        <p>
+                          <strong>Vendor Misc. Amount:</strong>{' '}
+                          {bookingData?.vendor_misc_charges || 0}
+                        </p>
+                        <p>
+                          <strong>Reissue Penalty:</strong>{' '}
+                          {bookingData?.reissue_penalty || 0}
+                        </p>
+                      </div>
+                      <div className='col-lg-3 text-right'>
+                        <p>
+                          <strong>Client Refund Amount:</strong> {clientRefundAmount || 0}
+                        </p>
+                      </div>
                     </div>
                     <div className='d-inline-block'>
                       <button

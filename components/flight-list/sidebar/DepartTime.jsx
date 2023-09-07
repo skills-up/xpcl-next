@@ -9,42 +9,19 @@ const DepartTime = () => {
 
   return (
     <>
-      <div className='row mb-3'>
-        {checkAll && (
-          <div className='col-12'>
-            <button
-              className='btn col-12 btn-outline-primary text-15'
-              onClick={() => {
-                let temp = {};
-                for (let [key, value] of Object.entries(departTimes)) {
-                  temp[key] = { ...value, value: true };
-                }
-                dispatch(setDepartTimes(temp));
-                setCheckAll((prev) => !prev);
-              }}
-            >
-              Check All
-            </button>
-          </div>
-        )}
-        {!checkAll && (
-          <div className='col-12'>
-            <button
-              className='btn col-12 btn-outline-primary text-15'
-              onClick={() => {
-                let temp = {};
-                for (let [key, value] of Object.entries(departTimes)) {
-                  temp[key] = { ...value, value: false };
-                }
-                dispatch(setDepartTimes(temp));
-                setCheckAll((prev) => !prev);
-              }}
-            >
-              Uncheck All
-            </button>
-          </div>
-        )}
-      </div>
+      <a
+        className='text-14 text-blue-1 fw-500 underline'
+        onClick={() => {
+          let temp = {};
+          for (let [key, value] of Object.entries(departTimes)) {
+            temp[key] = { ...value, value: checkAll };
+          }
+          dispatch(setDepartTimes(temp));
+          setCheckAll((prev) => !prev);
+        }}
+      >
+        {checkAll ? 'Check' : 'Uncheck'} All
+      </a>
       {departTimes &&
         Object.entries(departTimes)
           .filter(([key, value]) => value.number > 0)

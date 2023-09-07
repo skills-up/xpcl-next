@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { setSidebarOpen } from '../../../features/apis/apisSlice';
 import checkAirportCache from '../../../utils/airportCacheValidity';
 import { checkUser } from '../../../utils/checkTokenValidity';
 import { sendToast } from '../../../utils/toastify';
@@ -10,12 +11,11 @@ import MobileMenu from '../MobileMenu';
 
 const HeaderDashBoard = () => {
   const [navbar, setNavbar] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
 
   const dispatch = useDispatch();
   const router = useRouter();
   const token = useSelector((state) => state.auth.value.token);
-
+  const isOpen = useSelector((state) => state.apis.value.sidebarOpen);
   useEffect(() => {
     window.addEventListener('scroll', changeBackground);
     // Checking if user is still valid
@@ -41,7 +41,7 @@ const HeaderDashBoard = () => {
   }, [router.isReady]);
 
   const handleToggle = () => {
-    setIsOpen(!isOpen);
+    dispatch(setSidebarOpen(!isOpen));
   };
 
   const changeBackground = () => {

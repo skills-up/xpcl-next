@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 export const initialState = {
   value: {
+    sidebarOpen: true,
     airports: [],
     lastAirportCache: '',
     clientOrganizations: [],
@@ -12,6 +13,9 @@ const apisSlice = createSlice({
   name: 'apis',
   initialState,
   reducers: {
+    setSidebarOpen: (state, action) => {
+      state.value.sidebarOpen = action.payload;
+    },
     setAirports: (state, action) => {
       state.value.airports = action.payload.airports;
     },
@@ -35,6 +39,7 @@ const apisSlice = createSlice({
 });
 
 export const {
+  setSidebarOpen,
   setAirports,
   setLastAirportCache,
   setClientOrganizations,
