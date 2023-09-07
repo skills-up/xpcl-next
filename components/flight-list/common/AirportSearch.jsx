@@ -31,9 +31,12 @@ const AirportSearch = ({
           return [...prev];
         });
       }}
-      filterOption={(candidate, input) => (!input || candidate.label.toLowerCase().includes(input.toLowerCase()))}
+      filterOption={(candidate, input) =>
+        !input || candidate.label.toLowerCase().includes(input.toLowerCase())
+      }
       options={airportOptions.map((airport) => ({
         value: airport.id,
+        iata: airport.iata_code,
         label: `${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
       }))}
       formatOptionLabel={(opt, { context }) => {
