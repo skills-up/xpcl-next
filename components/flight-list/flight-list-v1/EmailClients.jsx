@@ -182,7 +182,7 @@ function EmailClients() {
     for (let opt of additionalFlights) {
       let data = {
         airline: opt.airline.label,
-        airline_code: opt.airline.value,
+        airline_code: opt.airline.code,
         from: opt.from_airport.iata,
         to: opt.to_airport.iata,
         departure: new Date(opt.depart_date.format('YYYY-MM-DD') + 'T' + opt.depart_time)
