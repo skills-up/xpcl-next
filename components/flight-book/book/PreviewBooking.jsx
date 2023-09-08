@@ -253,7 +253,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
           };
           if (!isFound) {
             toSector.push(dat);
-            if (segment.arrival.airport.code === destinations?.to?.iata) isFound = true;
+            if (segment.arrival.airport.code === destinations?.to?.value) isFound = true;
           } else {
             fromSector.push(dat);
           }
