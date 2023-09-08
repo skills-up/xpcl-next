@@ -98,8 +98,8 @@ function EmailClients() {
     let fromDestination;
     let toDestination;
     for (let airport of airports) {
-      if (destinations.from.iata === airport.iata_code) fromDestination = airport.name;
-      if (destinations.to.iata === airport.iata_code) toDestination = airport.name;
+      if (destinations.from.value === airport.iata_code) fromDestination = airport.name;
+      if (destinations.to.value === airport.iata_code) toDestination = airport.name;
     }
     let dateDestination = new DateObject({
       date: destinations.departDate,
@@ -195,8 +195,8 @@ function EmailClients() {
         cabin: opt.cabin.value,
         price: +opt.price + +markup,
       };
-      console.log('destinations', opt.from_airport.iata, destinations.from.iata);
-      if (opt.from_airport.iata === destinations.to.iata) {
+      console.log('destinations', opt.from_airport.iata, destinations.from.value);
+      if (opt.from_airport.iata === destinations.to.value) {
         tempFrom.push(data);
       } else {
         tempTo.push(data);
@@ -208,13 +208,13 @@ function EmailClients() {
     let formData = new FormData();
     formData.append(
       'subject',
-      `Flight Options from ${destinations.from.iata} to ${destinations.to.iata} - ${dateDestination}`
+      `Flight Options from ${destinations.from.value} to ${destinations.to.value} - ${dateDestination}`
     );
     let data = (
       <div>
         <p>Hi {name},</p>
         <p>
-          Here are the options for {destinations.from.iata} to {destinations.to.iata} on{' '}
+          Here are the options for {destinations.from.value} to {destinations.to.value} on{' '}
           {dateDestination}
         </p>
         {Object.entries(manipData).map(([key, value], index) => {
