@@ -453,10 +453,11 @@ img:before {
   content: ' ';
   display: inline-block;
   position: relative;
-  height: 65px;
-  width: 53px;
+  height: 256px;
+  width: 256px;
   background-image: url('/img/icons/placeholder_icon.svg');
-  background-size: contain;
+  background-size: cover;
   vertical-align: middle;
   font-size: 0;
+  background-position: center;
 }
