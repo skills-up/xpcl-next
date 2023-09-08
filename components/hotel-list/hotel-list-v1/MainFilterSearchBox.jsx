@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 import { useDispatch } from 'react-redux';
 import LoadingBar from 'react-top-loading-bar';
@@ -16,7 +16,6 @@ import { sendToast } from '../../../utils/toastify';
 import Seo from '../../common/Seo';
 import GuestSearch from '../common/GuestSearch';
 import LocationSearch from '../common/LocationSearch';
-import Room from '../common/Room';
 
 const MainFilterSearchBox = () => {
   const [SEO, setSEO] = useState('Hotel Search');
@@ -25,8 +24,12 @@ const MainFilterSearchBox = () => {
   const [location, setLocation] = useState(null);
   const [locationOptions, setLocationOptions] = useState([]);
   const [date, setDate] = useState([new DateObject(), new DateObject().add(1, 'days')]);
-  const [roomsData, setRoomsData] = useState([{adults: 1, child: []}]);
-  const [rooms, setRooms] = useState([<Room setRoomsData={setRoomsData}/>]);
+  const [roomsData, setRoomsData] = useState([{ adults: 1, child: [] }]);
+
+  // Initial Filling
+  useEffect(() => {
+    if (hotelSearchData) setLocationOptions(hotelSearchData);
+  }, [hotelSearchData]);
 
   const updateSEO = () => {
     setSEO(
@@ -102,7 +105,7 @@ const MainFilterSearchBox = () => {
         sendToast('error', 'Each room should have an adult', 4000);
         return;
       }
-      if ((room.adults + room.child.length) > 5) {
+      if (room.adults + room.child.length > 5) {
         sendToast('error', 'Each room can have a maximum of 5 guests', 4000);
         return;
       }
@@ -140,7 +143,7 @@ const MainFilterSearchBox = () => {
       );
       dispatch(
         setRoomsRedux([
-          ...rooms.map((el) => ({ ...{ adult: el.adult, child: [...el.child] } })),
+          ...roomsData.map((el) => ({ ...{ adult: el.adult, child: [...el.child] } })),
         ])
       );
       dispatch(setAge({ totalAdult, totalChildren }));
@@ -165,43 +168,41 @@ const MainFilterSearchBox = () => {
         progress={progress}
         onLoaderFinished={() => setProgress(0)}
       />
-      <div className="mainSearch -col-3-big bg-white px-10 py-10 lg:px-20 lg:pt-5 lg:pb-20 rounded-100 border-light">
-        <div className="button-grid items-center">
-          <div className="searchMenu-loc px-30 lg:py-20 lg:px-0 js-form-dd js-liverSearch">
-            <h4 className="text-15 fw-500 ls-2 lh-16">Location</h4>
-              <LocationSearch
-                value={location}
-                setValue={setLocation}
-                options={hotelSearchData}
-                locations={[locationOptions, setLocationOptions]}
-                placeholder='Search City or Location'
-                styles={{
-                  control: (baseStyles, state) => ({
-                    ...baseStyles,
+      <div className='mainSearch -col-3-big bg-white px-10 py-10 lg:px-20 lg:pt-5 lg:pb-20 rounded-100 border-light'>
+        <div className='button-grid items-center'>
+          <div className='searchMenu-loc px-30 lg:py-20 lg:px-0 js-form-dd js-liverSearch'>
+            <h4 className='text-15 fw-500 ls-2 lh-16'>Location</h4>
+            <LocationSearch
+              value={location}
+              setValue={setLocation}
+              options={hotelSearchData}
+              locations={[locationOptions, setLocationOptions]}
+              placeholder='Search City or Location'
+              styles={{
+                control: (baseStyles, state) => ({
+                  ...baseStyles,
+                  border: 'none',
+                  ':hover': {
                     border: 'none',
-                    ':hover': {
-                      border: 'none',
-                      boxShadow: 'none',
-                    },
-                  }),
-                  valueContainer: (styles) => ({
-                    ...styles,
-                    padding: 0,
-                  }),
-                  indicatorsContainer: (styles) => ({
-                    ...styles,
-                    display: 'none',
-                  }),
-                }}
-              />
+                    boxShadow: 'none',
+                  },
+                }),
+                valueContainer: (styles) => ({
+                  ...styles,
+                  padding: 0,
+                }),
+                indicatorsContainer: (styles) => ({
+                  ...styles,
+                  display: 'none',
+                }),
+              }}
+            />
           </div>
           {/* End Location */}
 
-          <div className="searchMenu-date px-30 lg:py-20 lg:px-0 js-form-dd js-calendar">
+          <div className='searchMenu-date px-30 lg:py-20 lg:px-0 js-form-dd js-calendar'>
             <div>
-              <h4 className="text-15 fw-500 ls-2 lh-16">
-                Check in - Check out
-              </h4>
+              <h4 className='text-15 fw-500 ls-2 lh-16'>Check in - Check out</h4>
               <DatePicker
                 range
                 rangeHover
@@ -221,15 +222,15 @@ const MainFilterSearchBox = () => {
           </div>
           {/* End check-in-out */}
 
-          <GuestSearch guestRooms={[rooms, setRooms]} guestRoomsData={[roomsData, setRoomsData]}/>
+          <GuestSearch guestRoomsData={[roomsData, setRoomsData]} />
           {/* End guest */}
 
-          <div className="button-item">
+          <div className='button-item'>
             <button
-              className="mainSearch__submit button -dark-1 h-60 px-35 col-12 rounded-100 bg-blue-1 text-white"
+              className='mainSearch__submit button -dark-1 h-60 px-35 col-12 rounded-100 bg-blue-1 text-white'
               onClick={onSearch}
             >
-              <i className="icon-search text-20 mr-10" />
+              <i className='icon-search text-20 mr-10' />
               Search
             </button>
           </div>
