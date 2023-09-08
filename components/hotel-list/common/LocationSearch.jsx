@@ -19,18 +19,22 @@ const LocationSearch = ({
             prev.sort((a, b) => {
               e = e.toLowerCase();
               let tempA =
-                (a[1].toLowerCase()?.startsWith(e) ? 0.7 : 0) +
-                (((a[2].toLowerCase()?.split(e).length || 1) - 1) * 0.3);
+                +(a[1].toLowerCase() === e) +
+                (a[1].toLowerCase()?.startsWith(e) ? 0.85 : 0) +
+                ((a[2].toLowerCase()?.split(e).length || 1) - 1) * 0.05;
               let tempB =
-                (b[1].toLowerCase()?.startsWith(e) ? 0.7 : 0) +
-                (((b[2].toLowerCase()?.split(e).length || 1) - 1) * 0.3);
+                +(b[1].toLowerCase() === e) +
+                (b[1].toLowerCase()?.startsWith(e) ? 0.85 : 0) +
+                ((b[2].toLowerCase()?.split(e).length || 1) - 1) * 0.05;
               return tempB - tempA;
             });
           } else prev = options;
           return [...prev];
         });
       }}
-      filterOption={(candidate, input) => (!input || candidate.label.toLowerCase().includes(input.toLowerCase()))}
+      filterOption={(candidate, input) =>
+        !input || candidate.label.toLowerCase().includes(input.toLowerCase())
+      }
       options={locationOptions.map((location) => ({
         value: location[0],
         cityName: location[1],
