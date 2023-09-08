@@ -72,11 +72,11 @@ const TravelList = () => {
     },
     {
       Header: 'From',
-      accessor: 'sector.from_sector',
+      accessor: 'sector.from_airport',
     },
     {
       Header: 'To',
-      accessor: 'sector.to_sector',
+      accessor: 'sector.to_airport',
     },
     {
       Header: 'Ticket #',
