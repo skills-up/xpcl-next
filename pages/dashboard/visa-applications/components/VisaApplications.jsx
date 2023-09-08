@@ -9,7 +9,7 @@ import { HiOutlinePencilAlt } from 'react-icons/hi';
 import { BsTrash3 } from 'react-icons/bs';
 import { IoCopyOutline } from 'react-icons/io5';
 import Select from 'react-select';
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation';
 
 const VisaApplications = () => {
   const searchParams = useSearchParams();
@@ -35,7 +35,7 @@ const VisaApplications = () => {
 
   useEffect(() => {
     if (queryStatus) {
-      setStatus({value: queryStatus, label: queryStatus});
+      setStatus({ value: queryStatus, label: queryStatus });
     }
   }, [queryStatus]);
 
@@ -111,14 +111,6 @@ const VisaApplications = () => {
                   icon: <HiOutlinePencilAlt />,
                 },
                 {
-                  label: 'Clone',
-                  onClick: () =>
-                    window.location.assign(
-                      '/dashboard/visa-applications/clone/' + data.row.original.id
-                    ),
-                  icon: <IoCopyOutline />,
-                },
-                {
                   label: 'Delete',
                   onClick: () => {
                     setIdToDelete(data.row.original.id);
@@ -177,11 +169,7 @@ const VisaApplications = () => {
           />
         </div>
         <div className='col-4'>
-          <Select
-            options={statusOptions}
-            value={status}
-            onChange={setStatus}
-          />
+          <Select options={statusOptions} value={status} onChange={setStatus} />
         </div>
         <button
           className='btn btn-primary col-lg-2 col-5'
@@ -202,7 +190,10 @@ const VisaApplications = () => {
               ?.toString()
               ?.toLowerCase()
               ?.includes(searchQuery.toLowerCase()) ||
-            perm?.status?.toString()?.toLowerCase()?.includes(searchQuery.toLowerCase()))
+              perm?.status
+                ?.toString()
+                ?.toLowerCase()
+                ?.includes(searchQuery.toLowerCase()))
         )}
       />
     </div>

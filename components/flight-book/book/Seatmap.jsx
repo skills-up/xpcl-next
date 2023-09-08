@@ -27,7 +27,11 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
     (state) => state.flightSearch.value.selectedBookings
   );
   const destinations = useSelector((state) => state.flightSearch.value.destinations);
-
+  const [showItinerary, setShowItinerary] = useState({
+    to: false,
+    from: false,
+    combined: false,
+  });
   const [isProgress, setIsProgress] = useState(false);
   const travellerDOBS = useSelector((state) => state.flightSearch.value.travellerDOBS);
   const clientTravellers = useSelector(
@@ -2424,7 +2428,12 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                 {seatMap?.to?.data && (
                   <>
                     <div className='bg-white py-10 px-20 mt-5'>
-                      {seatMap.to && seatMap.from && <h4 className='mb-5'>Onward</h4>}
+                      <h4 className='mb-5 d-flex justify-between items-center'>
+                        <span>Onward</span>
+                        <span className='text-14 text-blue-1 fw-500 underline cursor-pointer'>
+                          Show Itinerary
+                        </span>
+                      </h4>
                       {
                         // TJ
                         seatMap?.to?.provider === 'tj' ? (
@@ -2446,7 +2455,12 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                 {seatMap?.from && (
                   <>
                     <div className='bg-white py-10 px-20 mt-10'>
-                      <h4 className='mb-5'>Return</h4>
+                      <h4 className='mb-5 d-flex justify-between items-center'>
+                        <span>Return</span>
+                        <span className='text-14 text-blue-1 fw-500 underline cursor-pointer'>
+                          Show Itinerary
+                        </span>
+                      </h4>
                       {
                         // TJ
                         seatMap?.from?.provider === 'tj' ? (
@@ -2468,7 +2482,12 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                 {seatMap?.combined && (
                   <>
                     <div className='bg-white py-10 px-20 mt-10'>
-                      <h4 className='mb-5'>Onward and Return</h4>
+                      <h4 className='mb-5 d-flex justify-between items-center'>
+                        <span>Onward and Return</span>
+                        <span className='text-14 text-blue-1 fw-500 underline cursor-pointer'>
+                          Show Itinerary
+                        </span>
+                      </h4>
                       {
                         // TJ
                         seatMap?.combined?.provider === 'tj' ? (

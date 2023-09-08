@@ -782,7 +782,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                         <>
                           <h4>Passport</h4>
                           <div className='row my-3'>
-                            <div className='row col-12 y-gap-20'>
+                            <div className='row x-gap-10 col-12 y-gap-20'>
                               <div className='form-input col-md-4 bg-white'>
                                 <input
                                   onChange={(e) =>
