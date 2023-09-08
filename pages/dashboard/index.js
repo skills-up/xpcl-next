@@ -1,24 +1,14 @@
 import Seo from '../../components/common/Seo';
-import DashboardCard from './components/DashboardCard';
-import Sidebar from '../../components/sidebars/dashboard-sidebars';
-import Header from '../../components/header/dashboard-header';
-import ChartSelect from './components/ChartSelect';
-import ChartMain from './components/ChartMain';
-import Link from 'next/link';
-import RercentBooking from './components/RercentBooking';
 import Footer from '../../components/footer/dashboard-footer';
-import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { sendToast } from '../../utils/toastify';
-import { useRouter } from 'next/router';
+import Header from '../../components/header/dashboard-header';
+import Sidebar from '../../components/sidebars/dashboard-sidebars';
+import CountCard from './visa-applications/components/CountCard';
+import TravelList from './components/TravelList';
 
 const index = () => {
-  const token = useSelector((state) => state.auth.value.token);
-  const router = useRouter();
-
   return (
     <>
-      <Seo pageTitle='Vendor Dashboard' />
+      <Seo pageTitle='Dashboard' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -35,54 +25,29 @@ const index = () => {
 
         <div className='dashboard__main'>
           <div className='dashboard__content bg-light-2'>
-            <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
+            <div className='row y-gap-20 justify-between items-end pb-20'>
               <div className='col-12'>
                 <h1 className='text-30 lh-14 fw-600'>Dashboard</h1>
                 <div className='text-15 text-light-1'>
-                  Lorem ipsum dolor sit amet, consectetur.
+                  A quick look at critical information
                 </div>
               </div>
               {/* End .col-12 */}
             </div>
             {/* End .row */}
 
-            <DashboardCard />
+            <div className="row y-gap-30">
+              <CountCard />
+            </div>
 
             <div className='row y-gap-30 pt-20 chart_responsive'>
-              <div className='col-xl-7 col-md-6'>
-                <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
-                  <div className='d-flex justify-between items-center'>
-                    <h2 className='text-18 lh-1 fw-500'>Earning Statistics</h2>
-                    <ChartSelect />
-                  </div>
-                  {/* End .d-flex */}
-
-                  <div className='pt-30'>
-                    <ChartMain />
-                  </div>
-                </div>
-              </div>
-              {/* End .col */}
-
               <div className='col-xl-5 col-md-6'>
                 <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
-                  <div className='d-flex justify-between items-center'>
-                    <h2 className='text-18 lh-1 fw-500'>Recent Bookings</h2>
-                    <div>
-                      <Link href='#' className='text-14 text-blue-1 fw-500 underline'>
-                        View All
-                      </Link>
-                    </div>
-                  </div>
-                  {/* End d-flex */}
-
-                  <RercentBooking />
+                  <h2 className='text-18 lh-1 fw-500'>Travel List</h2>
+                  <TravelList />
                 </div>
-                {/* End py-30 */}
               </div>
-              {/* End .col */}
             </div>
-            {/* End .row */}
 
             <Footer />
           </div>

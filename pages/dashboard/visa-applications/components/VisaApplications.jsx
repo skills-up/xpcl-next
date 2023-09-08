@@ -8,16 +8,36 @@ import { AiOutlineEye } from 'react-icons/ai';
 import { HiOutlinePencilAlt } from 'react-icons/hi';
 import { BsTrash3 } from 'react-icons/bs';
 import { IoCopyOutline } from 'react-icons/io5';
+import Select from 'react-select';
+import { useSearchParams } from 'next/navigation'
 
 const VisaApplications = () => {
+  const searchParams = useSearchParams();
+  const queryStatus = searchParams.get('status');
   const [visaApplications, setVisaApplications] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
+  const [status, setStatus] = useState(null);
+
+  const statusOptions = [
+    { value: '', label: 'Any Status' },
+    { value: 'Pending', label: 'Pending' },
+    { value: 'Query', label: 'Query' },
+    { value: 'Replied', label: 'Replied' },
+    { value: 'Processing', label: 'Processing' },
+    { value: 'Processed', label: 'Processed' },
+  ];
 
   useEffect(() => {
     getVisaApplications();
   }, []);
+
+  useEffect(() => {
+    if (queryStatus) {
+      setStatus({value: queryStatus, label: queryStatus});
+    }
+  }, [queryStatus]);
 
   const getVisaApplications = async () => {
     const response = await getList('visa-applications');
@@ -147,13 +167,20 @@ const VisaApplications = () => {
       )}
       {/* Search Bar + Add New */}
       <div className='row mb-3 items-center justify-between mr-4'>
-        <div className='col-lg-10 col-7'>
+        <div className='col-3 col-lg-6'>
           <input
             type='text'
             className='d-block form-control'
             placeholder='Search'
             onChange={(e) => setSearchQuery(e.target.value)}
             value={searchQuery}
+          />
+        </div>
+        <div className='col-4'>
+          <Select
+            options={statusOptions}
+            value={status}
+            onChange={setStatus}
           />
         </div>
         <button
@@ -170,11 +197,12 @@ const VisaApplications = () => {
         columns={columns}
         data={visaApplications.filter(
           (perm) =>
-            perm?.visa_requirement?.country_name
+            (!status?.value || perm?.status == status.value) &&
+            (perm?.visa_requirement?.country_name
               ?.toString()
               ?.toLowerCase()
               ?.includes(searchQuery.toLowerCase()) ||
-            perm?.status?.toString()?.toLowerCase()?.includes(searchQuery.toLowerCase())
+            perm?.status?.toString()?.toLowerCase()?.includes(searchQuery.toLowerCase()))
         )}
       />
     </div>
