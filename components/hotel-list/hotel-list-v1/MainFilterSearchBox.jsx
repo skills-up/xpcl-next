@@ -143,7 +143,7 @@ const MainFilterSearchBox = () => {
       );
       dispatch(
         setRoomsRedux([
-          ...roomsData.map((el) => ({ ...{ adult: el.adult, child: [...el.child] } })),
+          ...roomsData.map((el) => ({ ...{ adult: el.adults, child: [...el.child] } })),
         ])
       );
       dispatch(setAge({ totalAdult, totalChildren }));
