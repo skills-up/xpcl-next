@@ -65,11 +65,11 @@ function EmailClients() {
         sendToast('error', 'Please enter Flight Code', 4000);
         return;
       }
-      if (!additionalFlight.from_airport_id) {
+      if (!additionalFlight.from_airport) {
         sendToast('error', 'Please Select From Airport', 4000);
         return;
       }
-      if (!additionalFlight.to_airport_id) {
+      if (!additionalFlight.to_airport) {
         sendToast('error', 'Please Select To Airport', 4000);
         return;
       }
@@ -98,8 +98,8 @@ function EmailClients() {
     let fromDestination;
     let toDestination;
     for (let airport of airports) {
-      if (destinations.from.iata === airport.iata_code) fromDestination = airport.name;
-      if (destinations.to.iata === airport.iata_code) toDestination = airport.name;
+      if (destinations.from.value === airport.iata_code) fromDestination = airport.name;
+      if (destinations.to.value === airport.iata_code) toDestination = airport.name;
     }
     let dateDestination = new DateObject({
       date: destinations.departDate,
@@ -182,9 +182,9 @@ function EmailClients() {
     for (let opt of additionalFlights) {
       let data = {
         airline: opt.airline.label,
-        airline_code: opt.airline.value,
-        from: opt.from_airport_id.iata,
-        to: opt.to_airport_id.iata,
+        airline_code: opt.airline.code,
+        from: opt.from_airport.iata,
+        to: opt.to_airport.iata,
         departure: new Date(opt.depart_date.format('YYYY-MM-DD') + 'T' + opt.depart_time)
           .toString()
           .slice(0, -31),
@@ -195,8 +195,8 @@ function EmailClients() {
         cabin: opt.cabin.value,
         price: +opt.price + +markup,
       };
-      console.log('destinations', opt.from_airport_id.iata, destinations.from.iata);
-      if (opt.from_airport_id.iata === destinations.to.iata) {
+      console.log('destinations', opt.from_airport.iata, destinations.from.value);
+      if (opt.from_airport.iata === destinations.to.value) {
         tempFrom.push(data);
       } else {
         tempTo.push(data);
@@ -208,13 +208,13 @@ function EmailClients() {
     let formData = new FormData();
     formData.append(
       'subject',
-      `Flight Options from ${destinations.from.iata} to ${destinations.to.iata} - ${dateDestination}`
+      `Flight Options from ${destinations.from.value} to ${destinations.to.value} - ${dateDestination}`
     );
     let data = (
       <div>
         <p>Hi {name},</p>
         <p>
-          Here are the options for {destinations.from.iata} to {destinations.to.iata} on{' '}
+          Here are the options for {destinations.from.value} to {destinations.to.value} on{' '}
           {dateDestination}
         </p>
         {Object.entries(manipData).map(([key, value], index) => {
@@ -710,10 +710,10 @@ function EmailClients() {
                               </div>
                             );
                           }}
-                          value={element['from_airport_id']}
+                          value={element['from_airport']}
                           onChange={(id) =>
                             setAdditionalFlights((prev) => {
-                              prev[index]['from_airport_id'] = id;
+                              prev[index]['from_airport'] = id;
                               return [...prev];
                             })
                           }
@@ -766,10 +766,10 @@ function EmailClients() {
                               </div>
                             );
                           }}
-                          value={element['to_airport_id']}
+                          value={element['to_airport']}
                           onChange={(id) =>
                             setAdditionalFlights((prev) => {
-                              prev[index]['to_airport_id'] = id;
+                              prev[index]['to_airport'] = id;
                               return [...prev];
                             })
                           }
@@ -920,16 +920,16 @@ function EmailClients() {
                   setAdditionalFlights((prev) => {
                     let fromAirportID = null;
                     if (prev.length > 0) {
-                      if (prev.at(-1)?.to_airport_id)
-                        fromAirportID = prev.at(-1)?.to_airport_id;
+                      if (prev.at(-1)?.to_airport)
+                        fromAirportID = prev.at(-1)?.to_airport;
                     }
                     return [
                       ...prev,
                       {
                         airline: null,
                         flight: '',
-                        from_airport_id: fromAirportID,
-                        to_airport_id: null,
+                        from_airport: fromAirportID,
+                        to_airport: null,
                         depart_date: new DateObject(),
                         depart_time: '',
                         arrival_date: new DateObject(),

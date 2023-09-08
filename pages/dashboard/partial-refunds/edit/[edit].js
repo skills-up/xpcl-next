@@ -337,7 +337,7 @@ const AddNewPartialRefund = () => {
     if (bookingType?.value) {
       const payment = (
         (+clientTotal || 0) -
-        (bookingType?.value === 'Domestic Flight Ticket' ? 1.09 : 1.18) *
+        (bookingType?.value === 'Domestic Flight Ticket' ? 1.009 : 1.018) *
           (+clientCancellationCharges || 0)
       ).toFixed(0);
       if (payment) setClientRefundAmount(payment);

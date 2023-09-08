@@ -198,7 +198,7 @@ function FlightProperty({
                         </div>
                       </div>
                       <div className='col-auto'>
-                        <div className='lh-15 fw-500' style={{ width: '75px' }}>
+                        <div className='lh-15 fw-500' style={{ width: '77px' }}>
                           {element.provider === 'aa' &&
                             element.segments.at(-1).arrival.time.slice(-8, -3)}
                           {element.provider === 'tj' &&
@@ -346,7 +346,7 @@ function FlightProperty({
                           </div>
                         </div>
                         <div className='col-auto'>
-                          <div className='lh-15 fw-500' style={{ width: '75px' }}>
+                          <div className='lh-15 fw-500' style={{ width: '77px' }}>
                             {element.provider === 'aa' &&
                               element.segments.at(-1).arrival.time.slice(-8, -3)}
                             {element.provider === 'tj' &&

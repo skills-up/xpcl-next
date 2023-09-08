@@ -8,12 +8,11 @@ import { sendToast } from '../../../../utils/toastify';
 import { useEffect, useState } from 'react';
 import { createItem, getList } from '../../../../api/xplorzApi';
 import ReactSwitch from 'react-switch';
-import Select, { createFilter } from 'react-select';
+import Select from 'react-select';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 import { BiPlusMedical } from 'react-icons/bi';
-import { store } from '../../../../app/store';
 import { BsTrash3 } from 'react-icons/bs';
-import WindowedSelect from 'react-windowed-select';
+import AirportSearch from '../../../../components/flight-list/common/AirportSearch';
 
 const AddNewBooking = () => {
   const [ticketNumber, setTicketNumber] = useState('');
@@ -219,8 +218,8 @@ const AddNewBooking = () => {
     // Checking if all data in booking sectors is filled
     for (let bookingSec of bookingSectors) {
       if (
-        !bookingSec?.from_airport_id?.value ||
-        !bookingSec?.to_airport_id?.value ||
+        !bookingSec?.from_airport?.value ||
+        !bookingSec?.to_airport?.value ||
         !bookingSec?.travel_date
       ) {
         sendToast('error', 'Please fill all required details in Booking Sectors', 4000);
@@ -265,8 +264,8 @@ const AddNewBooking = () => {
         bookingType.value === 'Miscellaneous'
           ? undefined
           : bookingSectors.map((element) => ({
-              from_airport_id: element['from_airport_id']?.value,
-              to_airport_id: element['to_airport_id']?.value,
+              from_airport: element['from_airport']?.value,
+              to_airport: element['to_airport']?.value,
               travel_date: element['travel_date']?.format('YYYY-MM-DD'),
               travel_time: element['travel_time'] + ':00',
               details:
@@ -759,253 +758,43 @@ const AddNewBooking = () => {
                             {bookingSectors.map((element, index) => {
                               return (
                                 <div
-                                  className='booking-sectors mx-1 pr-10 bg-light items-center my-3 lg:pr-0'
+                                  className='booking-sectors mx-1 pr-10 bg-light items-center mt-2 lg:pr-0'
                                   key={index}
                                 >
-                                  <div>{index + 1}.</div>
-                                  <div className='d-flex row y-gap-10 col-12 x-gap-10 lg:pr-0 md:flex-column items-center justify-between'>
+                                  <div style={{minWidth: 15, maxWidth: 15}}>{index + 1}.</div>
+                                  <div className='d-flex row y-gap-10 col-12 x-gap-5 lg:pr-0 md:flex-column items-center justify-between'>
                                     <div className='form-input-select col-md-2'>
                                       <label>
                                         From<span className='text-danger'>*</span>
                                       </label>
-                                      <WindowedSelect
-                                        onInputChange={(e) => {
-                                          setAirportOptions((prev) => {
-                                            if (e) {
-                                              prev.sort((a, b) => {
-                                                e = e.toLowerCase();
-                                                let tempA =
-                                                  (a?.iata_code
-                                                    ?.toLowerCase()
-                                                    ?.startsWith(e)
-                                                    ? 0.6
-                                                    : 0) +
-                                                  (a?.city?.toLowerCase()?.includes(e)
-                                                    ? 0.3
-                                                    : 0) +
-                                                  (a?.country_name
-                                                    ?.toLowerCase()
-                                                    ?.includes(e)
-                                                    ? 0.1
-                                                    : 0);
-                                                let tempB =
-                                                  (b?.iata_code
-                                                    ?.toLowerCase()
-                                                    ?.startsWith(e)
-                                                    ? 0.6
-                                                    : 0) +
-                                                  (b?.city?.toLowerCase()?.includes(e)
-                                                    ? 0.3
-                                                    : 0) +
-                                                  (b?.country_name
-                                                    ?.toLowerCase()
-                                                    ?.includes(e)
-                                                    ? 0.1
-                                                    : 0);
-                                                return tempB - tempA;
-                                              });
-                                            } else prev = airports.map((e) => e);
-                                            return [...prev];
-                                          });
-                                        }}
-                                        filterOption={(candidate, input) => {
-                                          if (input) {
-                                            return (
-                                              candidate?.data?.iata?.toLowerCase() ===
-                                                input.toLowerCase() ||
-                                              candidate?.label
-                                                ?.toLowerCase()
-                                                ?.includes(input?.toLowerCase())
-                                            );
-                                          }
-                                          return true;
-                                        }}
-                                        options={airportOptions
-                                          .filter((airport) => {
-                                            if (
-                                              bookingType?.value ===
-                                              'Domestic Flight Ticket'
-                                            ) {
-                                              return airport.country_name === 'India';
-                                            } else {
-                                              return true;
-                                            }
-                                          })
-                                          .map((airport) => ({
-                                            value: airport.id,
-                                            label: `|${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
-                                          }))}
-                                        formatOptionLabel={(opt, { context }) => {
-                                          const [_, iata_code, city, name, country_name] =
-                                            opt.label.split('|');
-                                          if (context === 'value')
-                                            return (
-                                              <div key={iata_code}>
-                                                <div
-                                                  className='d-flex justify-between align-items-center'
-                                                  style={{ fontSize: '1rem' }}
-                                                >
-                                                  <span>
-                                                    {city}{' '}
-                                                    <small>
-                                                      (<strong>{iata_code}</strong>)
-                                                    </small>
-                                                  </span>
-                                                </div>
-                                              </div>
-                                            );
-                                          else
-                                            return (
-                                              <div key={iata_code}>
-                                                <div
-                                                  className='d-flex justify-between align-items-center'
-                                                  style={{ fontSize: '1rem' }}
-                                                >
-                                                  <span>
-                                                    {city} (<strong>{iata_code}</strong>)
-                                                  </span>
-                                                  <div
-                                                    style={{
-                                                      fontSize: 'small',
-                                                      fontStyle: 'italic',
-                                                    }}
-                                                  >
-                                                    {country_name}
-                                                  </div>
-                                                </div>
-                                                <small>{name}</small>
-                                              </div>
-                                            );
-                                        }}
-                                        value={element['from_airport_id']}
-                                        onChange={(id) =>
-                                          setBookingSectors((prev) => {
-                                            prev[index]['from_airport_id'] = id;
+                                      <AirportSearch
+                                        value={element['from_airport']}
+                                        airports={[airportOptions, setAirportOptions]}
+                                        setValue={(id) => 
+                                          setBookingSectors(prev => {
+                                            prev[index]['from_airport'] = id;
                                             return [...prev];
                                           })
                                         }
+                                        options={airports}
+                                        domestic={bookingType?.value === 'Domestic Flight Ticket'}
                                       />
                                     </div>
                                     <div className='form-input-select col-md-2'>
                                       <label>
                                         To<span className='text-danger'>*</span>
                                       </label>
-                                      <WindowedSelect
-                                        onInputChange={(e) => {
-                                          setAirportOptions((prev) => {
-                                            if (e) {
-                                              prev.sort((a, b) => {
-                                                e = e.toLowerCase();
-                                                let tempA =
-                                                  (a?.iata_code
-                                                    ?.toLowerCase()
-                                                    ?.startsWith(e)
-                                                    ? 0.6
-                                                    : 0) +
-                                                  (a?.city?.toLowerCase()?.includes(e)
-                                                    ? 0.3
-                                                    : 0) +
-                                                  (a?.country_name
-                                                    ?.toLowerCase()
-                                                    ?.includes(e)
-                                                    ? 0.1
-                                                    : 0);
-                                                let tempB =
-                                                  (b?.iata_code
-                                                    ?.toLowerCase()
-                                                    ?.startsWith(e)
-                                                    ? 0.6
-                                                    : 0) +
-                                                  (b?.city?.toLowerCase()?.includes(e)
-                                                    ? 0.3
-                                                    : 0) +
-                                                  (b?.country_name
-                                                    ?.toLowerCase()
-                                                    ?.includes(e)
-                                                    ? 0.1
-                                                    : 0);
-                                                return tempB - tempA;
-                                              });
-                                            } else prev = airports.map((e) => e);
-                                            return [...prev];
-                                          });
-                                        }}
-                                        filterOption={(candidate, input) => {
-                                          if (input) {
-                                            return (
-                                              candidate?.data?.iata?.toLowerCase() ===
-                                                input.toLowerCase() ||
-                                              candidate?.label
-                                                ?.toLowerCase()
-                                                ?.includes(input?.toLowerCase())
-                                            );
-                                          }
-                                          return true;
-                                        }}
-                                        options={airportOptions
-                                          .filter((airport) => {
-                                            if (
-                                              bookingType?.value ===
-                                              'Domestic Flight Ticket'
-                                            ) {
-                                              return airport.country_name === 'India';
-                                            } else {
-                                              return true;
-                                            }
-                                          })
-                                          .map((airport) => ({
-                                            value: airport.id,
-                                            label: `|${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
-                                          }))}
-                                        formatOptionLabel={(opt, { context }) => {
-                                          const [_, iata_code, city, name, country_name] =
-                                            opt.label.split('|');
-                                          if (context === 'value')
-                                            return (
-                                              <div key={iata_code}>
-                                                <div
-                                                  className='d-flex justify-between align-items-center'
-                                                  style={{ fontSize: '1rem' }}
-                                                >
-                                                  <span>
-                                                    {city}{' '}
-                                                    <small>
-                                                      (<strong>{iata_code}</strong>)
-                                                    </small>
-                                                  </span>
-                                                </div>
-                                              </div>
-                                            );
-                                          else
-                                            return (
-                                              <div key={iata_code}>
-                                                <div
-                                                  className='d-flex justify-between align-items-center'
-                                                  style={{ fontSize: '1rem' }}
-                                                >
-                                                  <span>
-                                                    {city} (<strong>{iata_code}</strong>)
-                                                  </span>
-                                                  <div
-                                                    style={{
-                                                      fontSize: 'small',
-                                                      fontStyle: 'italic',
-                                                    }}
-                                                  >
-                                                    {country_name}
-                                                  </div>
-                                                </div>
-                                                <small>{name}</small>
-                                              </div>
-                                            );
-                                        }}
-                                        value={element['to_airport_id']}
-                                        onChange={(id) =>
-                                          setBookingSectors((prev) => {
-                                            prev[index]['to_airport_id'] = id;
+                                      <AirportSearch
+                                        value={element['to_airport']}
+                                        airports={[airportOptions, setAirportOptions]}
+                                        setValue={(id) => 
+                                          setBookingSectors(prev => {
+                                            prev[index]['to_airport'] = id;
                                             return [...prev];
                                           })
                                         }
+                                        options={airports}
+                                        domestic={bookingType?.value === 'Domestic Flight Ticket'}
                                       />
                                     </div>
                                     <div className='col-md-2 form-datepicker'>
@@ -1108,19 +897,19 @@ const AddNewBooking = () => {
                             onClick={(e) => {
                               e.preventDefault();
                               setBookingSectors((prev) => {
-                                let fromAirportID = null;
+                                let fromAirport = null;
                                 let dateObj = new DateObject();
                                 if (prev.length > 0) {
-                                  if (prev.at(-1)?.to_airport_id)
-                                    fromAirportID = prev.at(-1)?.to_airport_id;
+                                  if (prev.at(-1)?.to_airport)
+                                    fromAirport = prev.at(-1)?.to_airport;
                                   if (prev.at(-1)?.travel_date)
                                     dateObj = prev.at(-1).travel_date;
                                 }
                                 return [
                                   ...prev,
                                   {
-                                    from_airport_id: fromAirportID,
-                                    to_airport_id: null,
+                                    from_airport: fromAirport,
+                                    to_airport: null,
                                     travel_date: dateObj,
                                     travel_time: '',
                                     details: '',

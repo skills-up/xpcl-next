@@ -1,103 +1,104 @@
-import React, { useState } from "react";
-const counters = [
-  { name: "Adults", defaultValue: 2 },
-  { name: "Children", defaultValue: 1 },
-  { name: "Rooms", defaultValue: 1 },
-];
+import React, { useEffect, useState } from 'react';
+import Pluralize from '../../../utils/pluralChecker';
+import Room from './Room';
 
-const Counter = ({ name, defaultValue, onCounterChange }) => {
-  const [count, setCount] = useState(defaultValue);
-  const incrementCount = () => {
-    setCount(count + 1);
-    onCounterChange(name, count + 1);
-  };
-  const decrementCount = () => {
-    if (count > 0) {
-      setCount(count - 1);
-      onCounterChange(name, count - 1);
+const GuestSearch = ({ guestRoomsData }) => {
+  const [roomsData, setRoomsData] = guestRoomsData;
+  const [guestCounts, setGuestCounts] = useState({ rooms: 0, adults: 0, children: 0 });
+
+  const calculateCounts = () => {
+    let adults = 0,
+      children = 0,
+      rooms = roomsData?.length;
+    for (let room of roomsData) {
+      adults += room?.adults;
+      children += room?.child?.length;
     }
+    setGuestCounts({ rooms, adults, children });
   };
 
-  return (
-    <>
-      <div className="row y-gap-10 justify-between items-center">
-        <div className="col-auto">
-          <div className="text-15 lh-12 fw-500">{name}</div>
-          {name === "Children" && (
-            <div className="text-14 lh-12 text-light-1 mt-5">Ages 0 - 17</div>
-          )}
-        </div>
-        {/* End .col-auto */}
-        <div className="col-auto">
-          <div className="d-flex items-center js-counter">
-            <button
-              className="button -outline-blue-1 text-blue-1 size-38 rounded-4 js-down"
-              onClick={decrementCount}
-            >
-              <i className="icon-minus text-12" />
-            </button>
-            {/* decrement button */}
-            <div className="flex-center size-20 ml-15 mr-15">
-              <div className="text-15 js-count">{count}</div>
-            </div>
-            {/* counter text  */}
-            <button
-              className="button -outline-blue-1 text-blue-1 size-38 rounded-4 js-up"
-              onClick={incrementCount}
-            >
-              <i className="icon-plus text-12" />
-            </button>
-            {/* increment button */}
-          </div>
-        </div>
-        {/* End .col-auto */}
-      </div>
-      {/* End .row */}
-      <div className="border-top-light mt-24 mb-24" />
-    </>
-  );
-};
-
-const GuestSearch = () => {
-  const [guestCounts, setGuestCounts] = useState({
-    Adults: 2,
-    Children: 1,
-    Rooms: 1,
-  });
-  const handleCounterChange = (name, value) => {
-    setGuestCounts((prevState) => ({ ...prevState, [name]: value }));
+  const deleteRoom = (idx) => {
+    setRoomsData((prev) => {
+      prev.splice(idx, 1);
+      return [...prev];
+    });
   };
+
+  const appendRoom = () => {
+    setRoomsData((prev) => [...prev, { adults: 1, child: [] }]);
+  };
+
+  useEffect(() => {
+    calculateCounts();
+  }, [roomsData]);
+
   return (
-    <div className="searchMenu-guests px-20  lg:py-20 lg:px-0 js-form-dd bg-white position-relative">
+    <div className='searchMenu-guests px-20  lg:py-20 lg:px-0 js-form-dd bg-white position-relative'>
       <div
-        data-bs-toggle="dropdown"
-        data-bs-auto-close="outside"
-        aria-expanded="false"
-        data-bs-offset="0,22"
+        data-bs-toggle='dropdown'
+        data-bs-auto-close='outside'
+        aria-expanded='false'
+        data-bs-offset='0,22'
       >
-        <h4 className="text-15 fw-500 ls-2 lh-16">Guest</h4>
-        <div className="text-15 text-light-1 ls-2 lh-16">
-          <span className="js-count-adult">{guestCounts.Adults}</span> adults -{" "}
-          <span className="js-count-child">{guestCounts.Children}</span>{" "}
-          childeren - <span className="js-count-room">{guestCounts.Rooms}</span>{" "}
-          room
+        <h4 className='text-15 fw-500 ls-2 lh-16'>For</h4>
+        <div className='text-15 text-light-1 ls-2 lh-16'>
+          <span className='js-count-room'>{guestCounts.rooms}</span>
+          {Pluralize(' Room', ' Rooms', guestCounts.rooms)},
+          <span className='js-count-adult'> {guestCounts.adults}</span>
+          {Pluralize(' Adult', ' Adults', guestCounts.adults)}
+          {guestCounts.children ? (
+            <span>
+              {' '}
+              &amp; <span className='js-count-child'>{guestCounts.children}</span>
+              {Pluralize(' Child', ' Children', guestCounts.children)}
+            </span>
+          ) : (
+            ''
+          )}
         </div>
       </div>
       {/* End guest */}
 
-      <div className="shadow-2 dropdown-menu min-width-400">
-        <div className="bg-white px-30 py-30 rounded-4 counter-box">
-          {counters.map((counter) => (
-            <Counter
-              key={counter.name}
-              name={counter.name}
-              defaultValue={counter.defaultValue}
-              onCounterChange={handleCounterChange}
-            />
-          ))}
-        </div>
+      <div
+        className='shadow-2 dropdown-menu -w-100'
+        style={{ maxHeight: 400, overflowY: 'auto', minWidth: 300 }}
+      >
+        {roomsData.map((room, idx) => {
+          return (
+            <div
+              className='roomSearch-room bg-white px-20 py-10 rounded-4 counter-box'
+              key={idx}
+            >
+              <div className='d-flex justify-between items-center mb-10'>
+                <h6>Room #{idx + 1}</h6>
+                {idx ? (
+                  <a className='button text-20 js-up' onClick={() => deleteRoom(idx)}>
+                    {' '}
+                    &times;{' '}
+                  </a>
+                ) : (
+                  ''
+                )}
+              </div>
+              <Room roomsData={room} setRoomsData={setRoomsData} index={idx} />
+            </div>
+          );
+        })}
+        {roomsData.length < 9 ? (
+          <div className='roomSearch-room bg-white px-20 py-10 rounded-4 counter-box'>
+            <button
+              className='button -outline-blue-1 text-blue-1 text-15 px-10 py-10 rounded-4 js-up'
+              onClick={appendRoom}
+            >
+              <i className='icon-plus text-12 pr-5'/> Add Room
+            </button>
+          </div>
+        ) : (
+          ''
+        )}
       </div>
     </div>
   );
 };
+
 export default GuestSearch;

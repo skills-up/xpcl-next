@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 import { useDispatch } from 'react-redux';
-import Select from 'react-select';
 import LoadingBar from 'react-top-loading-bar';
-import WindowedSelect from 'react-windowed-select';
 import { customAPICall } from '../../../api/xplorzApi';
 import { hotelSearchData } from '../../../data/hotelSearchData';
 import {
@@ -11,39 +9,27 @@ import {
   setCheckInDate,
   setCheckOutDate,
   setInitialState,
-  setRatingParams,
   setRooms as setRoomsRedux,
   setSearchData,
 } from '../../../features/hotelSearch/hotelSearchSlice';
 import { sendToast } from '../../../utils/toastify';
 import Seo from '../../common/Seo';
-import GuestSearch from '../../hotel-single/filter-box/GuestSearch';
+import GuestSearch from '../common/GuestSearch';
+import LocationSearch from '../common/LocationSearch';
 
 const MainFilterSearchBox = () => {
   const [SEO, setSEO] = useState('Hotel Search');
   const [progress, setProgress] = useState(0);
   const dispatch = useDispatch();
   const [location, setLocation] = useState(null);
+  const [locationOptions, setLocationOptions] = useState([]);
   const [date, setDate] = useState([new DateObject(), new DateObject().add(1, 'days')]);
-  const [rooms, setRooms] = useState([{ adult: 2, child: [] }]);
-  const [ratingParam, setRatingParam] = useState([]);
-  // const [clientTravellers, setClientTravellers] = useState([]);
-  const [isSearched, setIsSearched] = useState(false);
+  const [roomsData, setRoomsData] = useState([{ adults: 1, child: [] }]);
 
-  const ratingOptions = ['1', '2', '3', '4', '5'];
-
-  // useEffect(() => console.log('Rooms', rooms), [rooms]);
-
-  /* useEffect(() => {
-    getData();
-  }, []); */
-
-  /* const getData = async () => {
-    const clientTravellers = await getList('client-travellers');
-    if (clientTravellers?.success) {
-      setClientTravellers(clientTravellers.data);
-    }
-  }; */
+  // Initial Filling
+  useEffect(() => {
+    if (hotelSearchData) setLocationOptions(hotelSearchData);
+  }, [hotelSearchData]);
 
   const updateSEO = () => {
     setSEO(
@@ -55,13 +41,11 @@ const MainFilterSearchBox = () => {
 
   const onSearch = async (e) => {
     e.preventDefault();
-    setIsSearched(true);
     // Resetting Values
     dispatch(setInitialState());
     // Checks
     if (!location?.value) {
       sendToast('error', 'Please select Location', 4000);
-      setIsSearched(false);
       return;
     }
     // Getting Travellers Ages
@@ -82,7 +66,7 @@ const MainFilterSearchBox = () => {
     //   return;
     // }
     // let currentTime = Date.now();
-    for (let room of rooms) {
+    for (let room of roomsData) {
       // if (!room.travellers || room.travellers.length === 0) {
       //   sendToast('error', 'Each room should have a traveller..', 4000);
       //   return;
@@ -117,13 +101,16 @@ const MainFilterSearchBox = () => {
       //   sendToast('error', 'Each room should have an adult', 4000);
       //   return;
       // }
-      if (room.adult === 0) {
+      if (room.adults === 0) {
         sendToast('error', 'Each room should have an adult', 4000);
-        setIsSearched(false);
+        return;
+      }
+      if (room.adults + room.child.length > 5) {
+        sendToast('error', 'Each room can have a maximum of 5 guests', 4000);
         return;
       }
       roomsTemp.push({
-        adults: room.adult,
+        adults: room.adults,
         childAge: room.child,
       });
     }
@@ -137,7 +124,6 @@ const MainFilterSearchBox = () => {
         checkIn: date[0].format('YYYY-MM-DD'),
         checkOut: date[1]?.format('YYYY-MM-DD') || date[0].format('YYYY-MM-DD'),
         rooms: roomsTemp,
-        ratings: ratingParam.length > 0 ? ratingParam.map((el) => +el.value) : undefined,
       },
       {},
       true
@@ -151,14 +137,13 @@ const MainFilterSearchBox = () => {
         totalAdult += info.numberOfAdults;
         totalChildren += info.numberOfChild;
       }
-      dispatch(setRatingParams(ratingParam));
       dispatch(setCheckInDate(date[0].format('YYYY-MM-DD')));
       dispatch(
         setCheckOutDate(date[1]?.format('YYYY-MM-DD') || date[0]?.format('YYYY-MM-DD'))
       );
       dispatch(
         setRoomsRedux([
-          ...rooms.map((el) => ({ ...{ adult: el.adult, child: [...el.child] } })),
+          ...roomsData.map((el) => ({ ...{ adult: el.adults, child: [...el.child] } })),
         ])
       );
       dispatch(setAge({ totalAdult, totalChildren }));
@@ -171,7 +156,6 @@ const MainFilterSearchBox = () => {
       updateSEO('Hotel Search');
       sendToast('error', 'No Rooms Found', 4000);
     }
-    setIsSearched(false);
     setProgress(100);
   };
 
@@ -184,195 +168,73 @@ const MainFilterSearchBox = () => {
         progress={progress}
         onLoaderFinished={() => setProgress(0)}
       />
-      <div className='border-light rounded-4 pr-20 py-20 lg:px-10 lg:pt-5 lg:pb-20 mt-15'>
-        {/* Hotel Search */}
-        <div className='hotel-search pl-20 lg:pl-0'>
-          <div className='hotel-search-select'>
-            <label className='text-15 lh-12 fw-500'>
-              Location<span className='text-danger'>*</span>
-            </label>
-            <WindowedSelect
-              filterOption={(candidate, input) => {
-                if (input) {
-                  return (
-                    candidate.data.cityName.toLowerCase() === input.toLowerCase() ||
-                    candidate.label.toLowerCase().includes(input.toLowerCase())
-                  );
-                }
-                return true;
-              }}
-              placeholder={
-                <>
-                  Search..
-                  <br />
-                  <br />
-                </>
-              }
-              windowThreshold={200}
-              options={hotelSearchData.map((hotel) => ({
-                value: hotel[0],
-                label: hotel[2],
-                cityName: hotel[1],
-              }))}
-              formatOptionLabel={(opt) => {
-                return (
-                  <div key={opt.value}>
-                    {opt.cityName}
-                    <br />
-                    <small>{opt.label}</small>
-                  </div>
-                );
-              }}
+      <div className='mainSearch -col-3-big bg-white px-10 py-10 lg:px-20 lg:pt-5 lg:pb-20 rounded-100 border-light'>
+        <div className='button-grid items-center'>
+          <div className='searchMenu-loc px-30 lg:py-20 lg:px-0 js-form-dd js-liverSearch'>
+            <h4 className='text-15 fw-500 ls-2 lh-16'>Location</h4>
+            <LocationSearch
               value={location}
-              onChange={(id) => setLocation(id)}
+              setValue={setLocation}
+              options={hotelSearchData}
+              locations={[locationOptions, setLocationOptions]}
+              placeholder='Search City or Location'
+              styles={{
+                control: (baseStyles, state) => ({
+                  ...baseStyles,
+                  border: 'none',
+                  ':hover': {
+                    border: 'none',
+                    boxShadow: 'none',
+                  },
+                }),
+                valueContainer: (styles) => ({
+                  ...styles,
+                  padding: 0,
+                }),
+                indicatorsContainer: (styles) => ({
+                  ...styles,
+                  display: 'none',
+                }),
+              }}
             />
           </div>
-          {/* End Location Flying From */}
+          {/* End Location */}
 
-          <div className=''>
-            <label className='text-15 lh-12 fw-500'>
-              Select Dates<span className='text-danger'>*</span>
-            </label>
-            <div
-              style={{ border: '1px solid lightgray' }}
-              className='hotel-date-select py-4 d-flex rounded-4 gap-1 items-center justify-center'
-            >
-              <div className='text-center'>
-                <span className='text-15 lh-12 fw-500'>Check In - Check Out</span>
-                <DatePicker
-                  range
-                  rangeHover
-                  style={{ fontSize: '1rem' }}
-                  inputClass='custom_input-picker text-center'
-                  containerClassName='custom_container-picker'
-                  value={date}
-                  onChange={(i) => {
-                    setDate(i);
-                  }}
-                  numberOfMonths={2}
-                  offsetY={10}
-                  format='DD MMM YY'
-                  minDate={new DateObject()}
-                />
-              </div>
+          <div className='searchMenu-date px-30 lg:py-20 lg:px-0 js-form-dd js-calendar'>
+            <div>
+              <h4 className='text-15 fw-500 ls-2 lh-16'>Check in - Check out</h4>
+              <DatePicker
+                range
+                rangeHover
+                style={{ fontSize: '1rem' }}
+                inputClass='custom_input-picker'
+                containerClassName='custom_container-picker'
+                value={date}
+                onChange={(i) => {
+                  setDate(i);
+                }}
+                numberOfMonths={2}
+                offsetY={10}
+                format='DD MMM YY'
+                minDate={new DateObject()}
+              />
             </div>
-            {/* End Depart */}
           </div>
+          {/* End check-in-out */}
 
-          {/* End Return */}
-          <div className='hotel-search-select '>
-            <label className='text-15 lh-12 fw-500'>Hotel Ratings </label>
-            <Select
-              options={ratingOptions.map((el) => ({ label: el, value: el }))}
-              isMulti
-              value={ratingParam}
-              placeholder={
-                <>
-                  Search..
-                  <br />
-                  <br />
-                </>
-              }
-              onChange={(id) => setRatingParam(id)}
-            />
-          </div>
+          <GuestSearch guestRoomsData={[roomsData, setRoomsData]} />
           {/* End guest */}
-        </div>
-        {/* Rooms Guests */}
-        <hr
-          style={{ margin: 'auto', width: '90%', color: '#13357b', opacity: '100%' }}
-          className='my-3'
-        />
-        <div className='pl-20 lg:pl-0'>
-          <h4 className='text-center mb-10'>Rooms & Guests</h4>
-          <GuestSearch room={[rooms, setRooms]} />
-          {/* <div className='bg-white hotel-search-guest-selector py-15'>
-            {rooms.map((room, index) => {
-              return (
-                <div
-                  key={index}
-                  className='px-30 lg:px-10 hotel-search-guest-container row items-center py-10 y-gap-10'
-                >
-                  <span
-                    className='col-lg-1 text-center d-block'
-                    style={{ fontWeight: 'bold' }}
-                  >
-                    Room {index + 1}
-                  </span>
-                  <div className='form-input-select col-lg-9 px-0 lg:px-15'>
-                    <label>Select Guests</label>
-                    <Select
-                      isOptionDisabled={() => rooms[index].travellers.length >= 5}
-                      options={clientTravellers
-                        .filter((el) => {
-                          let found = false;
-                          for (let room of rooms) {
-                            for (let traveller of room.travellers) {
-                              if (traveller.value === el.traveller_id) {
-                                found = true;
-                              }
-                            }
-                          }
-                          if (!found) {
-                            return true;
-                          }
-                        })
-                        .map((el) => ({
-                          label: el.traveller_name,
-                          value: el.traveller_id,
-                        }))}
-                      isMulti
-                      value={rooms[index].travellers}
-                      onChange={(id) =>
-                        setRooms((prev) => {
-                          prev[index].travellers = id;
-                          return [...prev];
-                        })
-                      }
-                    />
-                  </div>
-                  <div className='col-lg-2 lg:px-15 m-0 d-flex gap-1'>
-                    {index < 8 && (
-                      <button
-                        onClick={() =>
-                          setRooms((prev) =>
-                            prev.length < 9 ? [...prev, { travellers: [] }] : [...prev]
-                          )
-                        }
-                        className='btn btn-outline-success py-20 col-6 lg:py-10'
-                      >
-                        <BiPlusMedical style={{ fontSize: '1.5rem' }} />
-                      </button>
-                    )}
-                    {index > 0 && index < 9 && (
-                      <button
-                        className='btn btn-outline-danger py-20 col-6 lg:py-10'
-                        onClick={() =>
-                          setRooms((prev) => {
-                            prev.splice(index, 1);
-                            return [...prev];
-                          })
-                        }
-                      >
-                        <BiTrash style={{ fontSize: '1.5rem' }} />
-                      </button>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div> */}
-        </div>
-        {/* End search button_item */}
-        <div className='button-item pl-20 mt-20 lg:pl-0'>
-          <button
-            disabled={isSearched}
-            className='d-block mainSearch__submit button -blue-1 py-15 h-60 col-12 rounded-4 bg-dark-3 text-white'
-            onClick={onSearch}
-          >
-            <i className='icon-search text-20 mr-10' />
-            Search
-          </button>
+
+          <div className='button-item'>
+            <button
+              className='mainSearch__submit button -dark-1 h-60 px-35 col-12 rounded-100 bg-blue-1 text-white'
+              onClick={onSearch}
+            >
+              <i className='icon-search text-20 mr-10' />
+              Search
+            </button>
+          </div>
+          {/* End search button_item */}
         </div>
       </div>
     </>
