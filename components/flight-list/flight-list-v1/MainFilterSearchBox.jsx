@@ -186,8 +186,8 @@ const MainFilterSearchBox = () => {
       preferredCarriers: preferredAirlines.map((el) => el?.code).filter((el) => el),
       sectors: [
         {
-          from: from?.iata,
-          to: to?.iata,
+          from: from?.value,
+          to: to?.value,
           date: departDate.format('YYYY-MM-DD'),
         },
       ],
@@ -199,8 +199,8 @@ const MainFilterSearchBox = () => {
     }
     if (returnFlight && !domestic) {
       request.sectors.push({
-        from: to?.iata,
-        to: from?.iata,
+        from: to?.value,
+        to: from?.value,
         date: returnDate.format('YYYY-MM-DD'),
       });
     }
@@ -209,8 +209,8 @@ const MainFilterSearchBox = () => {
       ...request,
       sectors: [
         {
-          from: to?.iata,
-          to: from?.iata,
+          from: to?.value,
+          to: from?.value,
           date: returnDate?.format('YYYY-MM-DD'),
         },
       ],
