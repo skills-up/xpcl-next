@@ -182,6 +182,8 @@ const MainFilterSearchBox = () => {
                 control: (baseStyles, state) => ({
                   ...baseStyles,
                   border: 'none',
+                  boxShadow: 'none',
+                  minHeight: '20px !important',
                   ':hover': {
                     border: 'none',
                     boxShadow: 'none',
@@ -190,10 +192,17 @@ const MainFilterSearchBox = () => {
                 valueContainer: (styles) => ({
                   ...styles,
                   padding: 0,
+                  height: '25px',
                 }),
                 indicatorsContainer: (styles) => ({
                   ...styles,
                   display: 'none',
+                }),
+                input: (styles) => ({
+                  ...styles,
+                  margin: '0',
+                  padding: '0',
+                  lineHeight: '1rem',
                 }),
               }}
             />

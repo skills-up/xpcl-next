@@ -78,12 +78,14 @@ const GuestSearch = ({ guests, cabins }) => {
     setGuestCounts((prevState) => ({ ...prevState, [name]: value }));
   };
   return (
-    <div className='searchMenu-guests px-20 lg:px-0 js-form-dd bg-white position-relative'>
+    <>
       <div
+        className='text-secondary'
         data-bs-toggle='dropdown'
         data-bs-auto-close='outside'
         aria-expanded='false'
         data-bs-offset='0,22'
+        style={{ lineHeight: '1.5rem' }}
       >
         {/* <h4 className='text-15 fw-500 ls-2 lh-16'>Travellers</h4> */}
         <div className='text-16 d-flex gap-2 items-center cursor-pointer'>
@@ -107,7 +109,7 @@ const GuestSearch = ({ guests, cabins }) => {
             )}
             <>, {preferredCabin?.value}</>
           </span>
-          <i className='icon icon-chevron-sm-down text-7' />
+          {/* <i className='icon icon-chevron-sm-down text-7' /> */}
         </div>
       </div>
       {/* End guest */}
@@ -139,7 +141,7 @@ const GuestSearch = ({ guests, cabins }) => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 export default GuestSearch;

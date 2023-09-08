@@ -7,7 +7,8 @@ const AirportSearch = ({
   airports,
   className = '',
   placeholder = '',
-  domestic = false
+  domestic = false,
+  styles = {},
 }) => {
   const [airportOptions, setAirportOptions] = airports;
 
@@ -35,7 +36,10 @@ const AirportSearch = ({
       filterOption={(candidate, input) =>
         !input || candidate.label.toLowerCase().includes(input.toLowerCase())
       }
-      options={(domestic ? airportOptions.filter(x => x.country_name === 'India') : airportOptions).map((airport) => ({
+      options={(domestic
+        ? airportOptions.filter((x) => x.country_name === 'India')
+        : airportOptions
+      ).map((airport) => ({
         value: airport.iata_code,
         label: `${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
       }))}
@@ -72,6 +76,7 @@ const AirportSearch = ({
       onChange={(id) => setValue(id)}
       placeholder={placeholder}
       className={className}
+      styles={styles}
     />
   );
 };
