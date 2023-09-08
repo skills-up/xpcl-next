@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Pluralize from '../../../utils/pluralChecker';
 import Room from './Room';
 
 const GuestSearch = ({ guestRoomsData }) => {
@@ -41,13 +42,15 @@ const GuestSearch = ({ guestRoomsData }) => {
       >
         <h4 className='text-15 fw-500 ls-2 lh-16'>For</h4>
         <div className='text-15 text-light-1 ls-2 lh-16'>
-          <span className='js-count-room'>{guestCounts.rooms}</span> Room(s) -
-          <span className='js-count-adult'> {guestCounts.adults}</span> Adult(s)
+          <span className='js-count-room'>{guestCounts.rooms}</span>
+          {Pluralize(' Room', ' Rooms', guestCounts.rooms)},
+          <span className='js-count-adult'> {guestCounts.adults}</span>
+          {Pluralize(' Adult', ' Adults', guestCounts.adults)}
           {guestCounts.children ? (
             <span>
               {' '}
-              &amp; <span className='js-count-child'>{guestCounts.children}</span>{' '}
-              Children
+              &amp; <span className='js-count-child'>{guestCounts.children}</span>
+              {Pluralize(' Child', ' Children', guestCounts.children)}
             </span>
           ) : (
             ''
@@ -57,16 +60,16 @@ const GuestSearch = ({ guestRoomsData }) => {
       {/* End guest */}
 
       <div
-        className='shadow-2 dropdown-menu min-width-400'
-        style={{ maxHeight: 400, overflowY: 'auto' }}
+        className='shadow-2 dropdown-menu -w-100'
+        style={{ maxHeight: 400, overflowY: 'auto', minWidth: 300 }}
       >
         {roomsData.map((room, idx) => {
           return (
             <div
-              className='roomSearch-room bg-white px-30 py-30 rounded-4 counter-box'
+              className='roomSearch-room bg-white px-20 py-10 rounded-4 counter-box'
               key={idx}
             >
-              <div className='d-flex justify-between items-center'>
+              <div className='d-flex justify-between items-center mb-10'>
                 <h6>Room #{idx + 1}</h6>
                 {idx ? (
                   <a className='button text-20 js-up' onClick={() => deleteRoom(idx)}>
@@ -82,12 +85,12 @@ const GuestSearch = ({ guestRoomsData }) => {
           );
         })}
         {roomsData.length < 9 ? (
-          <div className='roomSearch-room bg-white px-30 py-30 rounded-4 counter-box'>
+          <div className='roomSearch-room bg-white px-20 py-10 rounded-4 counter-box'>
             <button
-              className='button -outline-blue-1 text-blue-1 size-38 rounded-4 js-up'
+              className='button -outline-blue-1 text-blue-1 text-15 px-10 py-10 rounded-4 js-up'
               onClick={appendRoom}
             >
-              <i className='icon-plus text-12' />
+              <i className='icon-plus text-12 pr-5'/> Add Room
             </button>
           </div>
         ) : (

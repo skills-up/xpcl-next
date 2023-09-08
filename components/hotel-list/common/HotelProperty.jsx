@@ -1,10 +1,8 @@
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination } from 'swiper';
-import Image from 'next/image';
-import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { DateObject } from 'react-multi-date-picker';
 import { useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
+import { Navigation, Pagination } from 'swiper';
+import { Swiper, SwiperSlide } from 'swiper/react';
 import Pluralize from '../../../utils/pluralChecker';
 
 function HotelProperty({ item }) {
@@ -164,7 +162,7 @@ function HotelProperty({ item }) {
                     .toDate()
                     .getTime()) /
                   86400000}{' '}
-                nights,{' '}
+                Nights,{' '}
                 {totalAdults > 0
                   ? totalAdults + Pluralize(' Adult', ' Adults', totalAdults)
                   : ''}
