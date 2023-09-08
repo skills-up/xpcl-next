@@ -2430,10 +2430,25 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                     <div className='bg-white py-10 px-20 mt-5'>
                       <h4 className='mb-5 d-flex justify-between items-center'>
                         <span>Onward</span>
-                        <span className='text-14 text-blue-1 fw-500 underline cursor-pointer'>
-                          Show Itinerary
+                        <span
+                          onClick={() =>
+                            setShowItinerary((prev) => ({ ...prev, to: !prev.to }))
+                          }
+                          className='text-14 text-blue-1 fw-500 underline cursor-pointer'
+                        >
+                          {showItinerary?.to ? 'Hide Itinerary' : 'Show Itinerary'}
                         </span>
                       </h4>
+                      {showItinerary?.to && selectedBookings?.to && (
+                        <div className='mb-10 border-light mt-10'>
+                          <FlightProperty
+                            isSelectedBooking
+                            element={selectedBookings?.to}
+                            showPrice={false}
+                            alreadyExpanded={true}
+                          />
+                        </div>
+                      )}
                       {
                         // TJ
                         seatMap?.to?.provider === 'tj' ? (
@@ -2457,10 +2472,25 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                     <div className='bg-white py-10 px-20 mt-10'>
                       <h4 className='mb-5 d-flex justify-between items-center'>
                         <span>Return</span>
-                        <span className='text-14 text-blue-1 fw-500 underline cursor-pointer'>
-                          Show Itinerary
+                        <span
+                          onClick={() =>
+                            setShowItinerary((prev) => ({ ...prev, from: !prev.from }))
+                          }
+                          className='text-14 text-blue-1 fw-500 underline cursor-pointer'
+                        >
+                          {showItinerary?.from ? 'Hide Itinerary' : 'Show Itinerary'}
                         </span>
                       </h4>
+                      {showItinerary?.from && selectedBookings?.from && (
+                        <div className='mb-10 border-light mt-10'>
+                          <FlightProperty
+                            isSelectedBooking
+                            element={selectedBookings?.from}
+                            showPrice={false}
+                            alreadyExpanded={true}
+                          />
+                        </div>
+                      )}
                       {
                         // TJ
                         seatMap?.from?.provider === 'tj' ? (
@@ -2484,10 +2514,28 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                     <div className='bg-white py-10 px-20 mt-10'>
                       <h4 className='mb-5 d-flex justify-between items-center'>
                         <span>Onward and Return</span>
-                        <span className='text-14 text-blue-1 fw-500 underline cursor-pointer'>
-                          Show Itinerary
+                        <span
+                          onClick={() =>
+                            setShowItinerary((prev) => ({
+                              ...prev,
+                              combined: !prev.combined,
+                            }))
+                          }
+                          className='text-14 text-blue-1 fw-500 underline cursor-pointer'
+                        >
+                          {showItinerary?.combined ? 'Hide Itinerary' : 'Show Itinerary'}
                         </span>
                       </h4>
+                      {showItinerary?.combined && selectedBookings?.combined && (
+                        <div className='mb-10 border-light mt-10'>
+                          <FlightProperty
+                            isSelectedBooking
+                            element={selectedBookings?.combined}
+                            showPrice={false}
+                            alreadyExpanded={true}
+                          />
+                        </div>
+                      )}
                       {
                         // TJ
                         seatMap?.combined?.provider === 'tj' ? (
@@ -3023,7 +3071,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
         {/* Stage 1 */}
         {stage === 1 && (
           <div className='border-light rounded-4 px-20 py-20 bg-white'>
-            <h2 className='text-center mb-40 d-flex items-center justify-center gap-2'>
+            <h2 className='text-center mb-20 d-flex items-center justify-center gap-2'>
               <TiTickOutline className='text-50 text-success' /> Booking Successful
             </h2>
             {bookingConfirmation &&
@@ -3093,7 +3141,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                   return (
                     <div key={index}>
                       <h3>{tripType}</h3>
-                      <div className='border-top-light mt-30' />
+                      <div className='border-top-light mt-10' />
                       <div className='row y-gap-20'>
                         <div className='col-md-4 text-center'>
                           <div className='text-15'>Booking ID</div>

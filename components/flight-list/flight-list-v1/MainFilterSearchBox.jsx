@@ -46,6 +46,7 @@ const MainFilterSearchBox = () => {
   });
   const [SEO, setSEO] = useState('Flight Search');
 
+  const destinations = useSelector((state) => state.flightSearch.value.destinations);
   const dispatch = useDispatch();
   const router = useRouter();
   const token = useSelector((state) => state.auth.value.token);
@@ -239,6 +240,7 @@ const MainFilterSearchBox = () => {
         returnDate: returnFlight ? returnDate.format('YYYY-MM-DD') : null,
       })
     );
+    console.log('Destinations', destinations);
     // Akasa
     // To
     customAPICall('aa/v1/search', 'post', request, {}, true)
