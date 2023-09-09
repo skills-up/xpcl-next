@@ -753,7 +753,15 @@ const AddNewPartialRefund = () => {
                     <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
-                          onChange={(e) => setVendorGSTAmount(e.target.value)}
+                          onChange={(e) => {
+                            setVendorGSTAmount(e.target.value);
+                            updateClientGSTAmount(
+                              clientGSTPercent,
+                              e.target.value,
+                              clientQuotedAmount,
+                              clientTaxAmount
+                            );
+                          }}
                           value={vendorGSTAmount}
                           placeholder=' '
                           type='number'
@@ -1011,7 +1019,15 @@ const AddNewPartialRefund = () => {
                             setClientBaseAmountFocused(true);
                             setXplorzGSTFocused(true);
                           }}
-                          onBlur={() => setClientBaseAmountFocused(false)}
+                          onBlur={() => {
+                            setClientBaseAmountFocused(false);
+                            updateClientGSTAmount(
+                              clientGSTPercent,
+                              vendorGSTAmount,
+                              clientQuotedAmount,
+                              clientTaxAmount
+                            );
+                          }}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Client Base Amount

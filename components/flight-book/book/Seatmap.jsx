@@ -28,9 +28,9 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
   );
   const destinations = useSelector((state) => state.flightSearch.value.destinations);
   const [showItinerary, setShowItinerary] = useState({
-    to: false,
-    from: false,
-    combined: false,
+    to: true,
+    from: true,
+    combined: true,
   });
   const [isProgress, setIsProgress] = useState(false);
   const travellerDOBS = useSelector((state) => state.flightSearch.value.travellerDOBS);
@@ -1216,7 +1216,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                   >
                     <h4 className='text-center mb-10'>Legend</h4>
                     <div className='legend'>
-                      <span className='d-flex flex-column items-center'>
+                      <span className='d-flex items-center'>
                         <Seat label={''} fill={'#FF0000'} />
                         <span
                           style={{
@@ -1229,7 +1229,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                           Booked
                         </span>
                       </span>
-                      <span className='d-flex flex-column items-center'>
+                      <span className='d-flex items-center'>
                         <Seat label={''} fill={'#4CBB17'} clickable />
                         <span
                           style={{
@@ -1242,7 +1242,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                           Selected
                         </span>
                       </span>
-                      <span className='d-flex flex-column items-center'>
+                      <span className='d-flex items-center'>
                         <Seat label={''} fill={'#FFA500'} clickable />
                         <span
                           style={{
@@ -1255,7 +1255,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                           Book With Extra Costs
                         </span>
                       </span>
-                      <span className='d-flex flex-column items-center'>
+                      <span className='d-flex items-center'>
                         <Seat label={''} fill={'#000'} clickable />
                         <span
                           style={{
@@ -1596,7 +1596,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                   >
                     <h4 className='text-center mb-10'>Legend</h4>
                     <div className='legend'>
-                      <span className='d-flex flex-column items-center'>
+                      <span className='d-flex items-center'>
                         <Seat label={''} fill={'#FF0000'} />
                         <span
                           style={{
@@ -1609,7 +1609,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                           Booked
                         </span>
                       </span>
-                      <span className='d-flex flex-column items-center'>
+                      <span className='d-flex items-center'>
                         <Seat label={''} fill={'#4CBB17'} clickable />
                         <span
                           style={{
@@ -1622,7 +1622,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                           Selected
                         </span>
                       </span>
-                      <span className='d-flex flex-column items-center'>
+                      <span className='d-flex items-center'>
                         <Seat label={''} fill={'#800080'} clickable />
                         <span
                           style={{
@@ -1635,7 +1635,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                           Legroom
                         </span>
                       </span>
-                      <span className='d-flex flex-column items-center'>
+                      <span className='d-flex items-center'>
                         <Seat label={''} fill={'#FFA500'} clickable />
                         <span
                           style={{
@@ -1648,7 +1648,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                           Book With Extra Costs
                         </span>
                       </span>
-                      <span className='d-flex flex-column items-center'>
+                      <span className='d-flex items-center'>
                         <Seat label={''} fill={'#000'} clickable />
                         <span
                           style={{
@@ -2445,7 +2445,6 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                             isSelectedBooking
                             element={selectedBookings?.to}
                             showPrice={false}
-                            alreadyExpanded={true}
                           />
                         </div>
                       )}
@@ -2487,7 +2486,6 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                             isSelectedBooking
                             element={selectedBookings?.from}
                             showPrice={false}
-                            alreadyExpanded={true}
                           />
                         </div>
                       )}
@@ -2572,7 +2570,12 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                       // If above 2 but below 12, child
                       if (age >= 2)
                         return (
-                          <div key={travlInd} className='col-lg-6'>
+                          <div
+                            key={travlInd}
+                            className={`${
+                              travellerInfo.length < 2 ? 'col-12' : 'col-lg-6'
+                            }`}
+                          >
                             <h4>{travl.aliases[0]}</h4>
                             {/* Iterating Over PNRS to get the segments */}
                             <div className='row y-gap-10'>

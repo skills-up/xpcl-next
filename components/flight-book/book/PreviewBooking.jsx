@@ -508,152 +508,157 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
         {/* Selection */}
         {!selectionConfirm && (
           <div className='mt-10'>
-            <h3 className='mb-10'>Select Passengers</h3>
+            <h3 className=''>Select Passengers</h3>
             <div className='row x-gap-10 y-gap-10 items-center'>
               {selectedTravellers &&
                 selectedTravellers.map((element, index) => (
-                  <Select
-                    key={index}
-                    className='col-lg-6'
-                    options={travellers
-                      .filter((el) => {
-                        console.log('test', travellers, selectedTravellers);
-                        for (let sel of selectedTravellers)
-                          if (el?.value?.id === sel?.value?.id) return false;
-                        return true;
-                      })
-                      .map((el) => el)}
-                    value={selectedTravellers[index]}
-                    onChange={(id) =>
-                      setSelectedTravellers((prev) => {
-                        prev[index] = id;
-                        return [...prev];
-                      })
-                    }
-                  />
-                ))}
-              <div className='col-lg-6 d-flex justify-end'>
-                <button
-                  style={{ height: '43px' }}
-                  className='button col-12 px-24 -dark-1 bg-blue-1 text-white'
-                  onClick={async () => {
-                    // Check if all the rooms have correct travellers
-                    let adults = 0;
-                    let children = 0;
-                    let infants = 0;
-                    let currentTime = Date.now();
-                    for (let traveller of selectedTravellers) {
-                      if (traveller?.value) {
-                        const age = (
-                          (currentTime -
-                            +new DateObject({
-                              date: traveller.value.passport_dob,
-                              format: 'YYYY-MM-DD',
-                            })
-                              .toDate()
-                              .getTime()) /
-                          31536000000
-                        ).toFixed(2);
-                        if (age < 2) infants += 1;
-                        // If below 12 and above 2, child
-                        if (age >= 2 && age < 12) children += 1;
-                        // If above 12 years, consider adult
-                        if (age >= 12) adults += 1;
+                  <div
+                    className={`${selectedTravellers.length < 2 ? 'col-12' : 'col-lg-6'}`}
+                  >
+                    <h5>Passenger {index + 1}</h5>
+                    <Select
+                      key={index}
+                      className=''
+                      options={travellers
+                        .filter((el) => {
+                          console.log('test', travellers, selectedTravellers);
+                          for (let sel of selectedTravellers)
+                            if (el?.value?.id === sel?.value?.id) return false;
+                          return true;
+                        })
+                        .map((el) => el)}
+                      value={selectedTravellers[index]}
+                      onChange={(id) =>
+                        setSelectedTravellers((prev) => {
+                          prev[index] = id;
+                          return [...prev];
+                        })
                       }
+                    />
+                  </div>
+                ))}
+            </div>
+            <div className='col-12 mt-10 d-flex justify-end'>
+              <button
+                style={{ height: '43px' }}
+                className='button col-lg-5 px-24 -dark-1 bg-blue-1 text-white'
+                onClick={async () => {
+                  // Check if all the rooms have correct travellers
+                  let adults = 0;
+                  let children = 0;
+                  let infants = 0;
+                  let currentTime = Date.now();
+                  for (let traveller of selectedTravellers) {
+                    if (traveller?.value) {
+                      const age = (
+                        (currentTime -
+                          +new DateObject({
+                            date: traveller.value.passport_dob,
+                            format: 'YYYY-MM-DD',
+                          })
+                            .toDate()
+                            .getTime()) /
+                        31536000000
+                      ).toFixed(2);
+                      if (age < 2) infants += 1;
+                      // If below 12 and above 2, child
+                      if (age >= 2 && age < 12) children += 1;
+                      // If above 12 years, consider adult
+                      if (age >= 12) adults += 1;
                     }
-                    if (
-                      adults !== travellerDOBS.ADT ||
-                      children !== travellerDOBS.CHD ||
-                      infants !== travellerDOBS.INF
-                    ) {
-                      sendToast(
-                        'error',
-                        `Flight searches were for ${travellerDOBS.ADT} ${Pluralize(
-                          'adult',
-                          'adults',
-                          travellerDOBS.ADT
-                        )}${
-                          travellerDOBS.CHD > 0
-                            ? `, ${travellerDOBS.CHD} ${Pluralize(
-                                'child',
-                                'children',
-                                travellerDOBS.CHD
-                              )}`
-                            : ''
-                        }${
-                          travellerDOBS.INF > 0
-                            ? `, ${travellerDOBS.INF} ${Pluralize(
-                                'infant',
-                                'infants',
-                                travellerDOBS.INF
-                              )}`
-                            : ''
-                        }, whereas ${adults} ${Pluralize('adult', 'adults', adults)}${
-                          children > 0
-                            ? `, ${children} ${Pluralize('child', 'children', children)}`
-                            : ''
-                        }${
-                          infants > 0
-                            ? `, ${infants} ${Pluralize('infant', 'infants', infants)}`
-                            : ''
-                        } have been selected.`,
-                        10000
-                      );
-                      return;
-                    }
-                    // TODO set progress
+                  }
+                  if (
+                    adults !== travellerDOBS.ADT ||
+                    children !== travellerDOBS.CHD ||
+                    infants !== travellerDOBS.INF
+                  ) {
+                    sendToast(
+                      'error',
+                      `Flight searches were for ${travellerDOBS.ADT} ${Pluralize(
+                        'adult',
+                        'adults',
+                        travellerDOBS.ADT
+                      )}${
+                        travellerDOBS.CHD > 0
+                          ? `, ${travellerDOBS.CHD} ${Pluralize(
+                              'child',
+                              'children',
+                              travellerDOBS.CHD
+                            )}`
+                          : ''
+                      }${
+                        travellerDOBS.INF > 0
+                          ? `, ${travellerDOBS.INF} ${Pluralize(
+                              'infant',
+                              'infants',
+                              travellerDOBS.INF
+                            )}`
+                          : ''
+                      }, whereas ${adults} ${Pluralize('adult', 'adults', adults)}${
+                        children > 0
+                          ? `, ${children} ${Pluralize('child', 'children', children)}`
+                          : ''
+                      }${
+                        infants > 0
+                          ? `, ${infants} ${Pluralize('infant', 'infants', infants)}`
+                          : ''
+                      } have been selected.`,
+                      10000
+                    );
+                    return;
+                  }
+                  // TODO set progress
 
-                    // Getting Travel Membership Programs -> Setting them per leg
-                    let temp = [];
-                    for (let traveller of selectedTravellers.map((el) => el?.value)) {
-                      let res = await getList('travel-memberships', {
-                        traveller_id: traveller.id,
-                      });
-                      let tempObj = {};
-                      if (res?.success) {
-                        // Iterating Over Bookings
-                        for (let [key, value] of Object.entries(selectedBookings)) {
-                          if (value)
-                            // Iterating over travel memberships
-                            for (let membership of res.data) {
-                              if (
-                                value.segments[0].flight.airline === membership.provider
-                              ) {
-                                // Iterating Over Travel Membership Programs
-                                for (let opt of frequentFliers) {
-                                  if (
-                                    opt.code === membership.provider &&
-                                    opt.type === membership.membership_type
-                                  ) {
-                                    tempObj[key] = {
-                                      program: {
-                                        value: opt,
-                                        label: opt.program + ' (' + opt.code + ')',
-                                      },
-                                      membershipID: membership.number,
-                                    };
-                                  }
+                  // Getting Travel Membership Programs -> Setting them per leg
+                  let temp = [];
+                  for (let traveller of selectedTravellers.map((el) => el?.value)) {
+                    let res = await getList('travel-memberships', {
+                      traveller_id: traveller.id,
+                    });
+                    let tempObj = {};
+                    if (res?.success) {
+                      // Iterating Over Bookings
+                      for (let [key, value] of Object.entries(selectedBookings)) {
+                        if (value)
+                          // Iterating over travel memberships
+                          for (let membership of res.data) {
+                            if (
+                              value.segments[0].flight.airline === membership.provider
+                            ) {
+                              // Iterating Over Travel Membership Programs
+                              for (let opt of frequentFliers) {
+                                if (
+                                  opt.code === membership.provider &&
+                                  opt.type === membership.membership_type
+                                ) {
+                                  tempObj[key] = {
+                                    program: {
+                                      value: opt,
+                                      label: opt.program + ' (' + opt.code + ')',
+                                    },
+                                    membershipID: membership.number,
+                                  };
                                 }
                               }
                             }
-                        }
+                          }
                       }
-                      temp.push({
-                        ...traveller,
-                        frequentFliers: { ...traveller.frequentFliers, ...tempObj },
-                      });
                     }
-                    setTravellerInfo(temp);
-                    setSelectionConfirm(true);
-                    setTimeout(() => {
-                      const elem = document.getElementById('traveller-details');
-                      if (elem) elem.scrollIntoView();
-                    }, [450]);
-                  }}
-                >
-                  Confirm Passengers
-                </button>
-              </div>
+                    temp.push({
+                      ...traveller,
+                      frequentFliers: { ...traveller.frequentFliers, ...tempObj },
+                    });
+                  }
+                  setTravellerInfo(temp);
+                  setSelectionConfirm(true);
+                  setTimeout(() => {
+                    const elem = document.getElementById('traveller-details');
+                    if (elem) elem.scrollIntoView();
+                  }, [450]);
+                }}
+              >
+                Confirm Passengers
+              </button>
             </div>
           </div>
         )}
@@ -669,7 +674,10 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
               {travellerInfo &&
                 travellerInfo.length > 0 &&
                 travellerInfo.map((element, index) => (
-                  <div key={index} className='col-lg-6'>
+                  <div
+                    key={index}
+                    className={`${travellerInfo.length < 2 ? 'col-12' : 'col-lg-6'}`}
+                  >
                     <h4 className='mb-5'>{element.aliases[0]}</h4>
                     <div key={index} className='bg-white py-10 px-30'>
                       <h5>Traveller</h5>
@@ -908,6 +916,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                                       <div className='col-md-6 form-input-select'>
                                         <label>Travel Membership Program</label>
                                         <Select
+                                          isClearable
                                           options={frequentFliers.map((el) => ({
                                             value: el,
                                             label: el.program + ' (' + el.code + ')',

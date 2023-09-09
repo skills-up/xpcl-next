@@ -937,7 +937,9 @@ const AddNewBooking = () => {
                                   className='booking-sectors mx-1 pr-10 bg-light items-center mt-2 lg:pr-0'
                                   key={index}
                                 >
-                                  <div style={{minWidth: 15, maxWidth: 15}}>{index + 1}.</div>
+                                  <div style={{ minWidth: 15, maxWidth: 15 }}>
+                                    {index + 1}.
+                                  </div>
                                   <div className='d-flex row y-gap-10 col-12 x-gap-5 lg:pr-0 md:flex-column items-center justify-between'>
                                     <div className='form-input-select col-md-2'>
                                       <label>
@@ -946,14 +948,16 @@ const AddNewBooking = () => {
                                       <AirportSearch
                                         value={element['from_airport']}
                                         airports={[airportOptions, setAirportOptions]}
-                                        setValue={(id) => 
-                                          setBookingSectors(prev => {
+                                        setValue={(id) =>
+                                          setBookingSectors((prev) => {
                                             prev[index]['from_airport'] = id;
                                             return [...prev];
                                           })
                                         }
                                         options={airports}
-                                        domestic={bookingType?.value === 'Domestic Flight Ticket'}
+                                        domestic={
+                                          bookingType?.value === 'Domestic Flight Ticket'
+                                        }
                                       />
                                     </div>
                                     <div className='form-input-select col-md-2'>
@@ -963,14 +967,16 @@ const AddNewBooking = () => {
                                       <AirportSearch
                                         value={element['to_airport']}
                                         airports={[airportOptions, setAirportOptions]}
-                                        setValue={(id) => 
-                                          setBookingSectors(prev => {
+                                        setValue={(id) =>
+                                          setBookingSectors((prev) => {
                                             prev[index]['to_airport'] = id;
                                             return [...prev];
                                           })
                                         }
                                         options={airports}
-                                        domestic={bookingType?.value === 'Domestic Flight Ticket'}
+                                        domestic={
+                                          bookingType?.value === 'Domestic Flight Ticket'
+                                        }
                                       />
                                     </div>
                                     <div className='col-md-2 form-datepicker'>
@@ -1105,6 +1111,7 @@ const AddNewBooking = () => {
                         <div className='form-input-select col-lg-4'>
                           <label>Client Referrer</label>
                           <Select
+                            isClearable
                             options={clients}
                             value={clientReferrerID}
                             onChange={(id) => {
@@ -1205,6 +1212,12 @@ const AddNewBooking = () => {
                         <input
                           onChange={(e) => {
                             setVendorGSTAmount(e.target.value);
+                            updateClientGSTAmount(
+                              clientGSTPercent,
+                              e.target.value,
+                              clientQuotedAmount,
+                              clientTaxAmount
+                            );
                           }}
                           value={vendorGSTAmount}
                           placeholder=' '
@@ -1518,7 +1531,15 @@ const AddNewBooking = () => {
                             setClientBaseAmountFocused(true);
                             setXplorzGSTFocused(true);
                           }}
-                          onBlur={() => setClientBaseAmountFocused(false)}
+                          onBlur={() => {
+                            setClientBaseAmountFocused(false);
+                            updateClientGSTAmount(
+                              clientGSTPercent,
+                              vendorGSTAmount,
+                              clientQuotedAmount,
+                              clientTaxAmount
+                            );
+                          }}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Client Base Amount<span className='text-danger'>*</span>

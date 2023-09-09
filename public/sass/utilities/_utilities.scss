@@ -2657,12 +2657,8 @@ table.table-6 {
 // Tripjack Seatmap
 .tj-seatmap {
   .legend {
-    text-align: center;
-    margin: 0;
-    display: grid;
-    grid-template-columns:
-      minmax(0, 65px) minmax(0, 65px) minMax(0, 65px)
-      minMax(0, 65px) minMax(0, 65px);
+    display: flex;
+    flex-direction: column;
     gap: 0.75rem 0.25rem;
   }
   .tj-grid {
@@ -2696,12 +2692,8 @@ table.table-6 {
     }
   }
   .legend {
-    text-align: center;
-    margin: 0;
-    display: grid;
-    grid-template-columns:
-      minmax(0, 80px) minmax(0, 80px) minMax(0, 80px)
-      minMax(0, 80px);
+    display: flex;
+    flex-direction: column;
     gap: 0.75rem 0.25rem;
   }
   .aaseatmap-scroll-container {
