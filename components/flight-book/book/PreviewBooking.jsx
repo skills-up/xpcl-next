@@ -175,7 +175,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
     if (frequentFliersList?.success) {
       setFrequentFliers(frequentFliersList?.data);
     } else {
-      sendToast('error', 'Failed to fetch travel membership programs', 4000);
+      sendToast('error', 'Failed to fetch frequent flier programs', 4000);
     }
   };
 
@@ -196,7 +196,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
           ) {
             sendToast(
               'error',
-              'Travel Membership Program & Membership ID should both be empty or selected.',
+              'Frequent Flier Program & Membership ID should both be empty or selected.',
               8000
             );
             setIsProceed(false);
@@ -892,7 +892,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                           </div>
                         </>
                       )}
-                      <h5>Travel Membership</h5>
+                      <h5>Frequent Fliers</h5>
                       <div className='row'>
                         {element.frequentFliers &&
                           Object.entries(element.frequentFliers).map(
@@ -914,7 +914,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                                     )}
                                     <div className='row col-12 y-gap-10 x-gap-10'>
                                       <div className='col-md-6 form-input-select'>
-                                        <label>Travel Membership Program</label>
+                                        <label>Frequent Flier Program</label>
                                         <Select
                                           isClearable
                                           options={frequentFliers.map((el) => ({
@@ -1099,7 +1099,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                             else {
                               sendToast(
                                 'error',
-                                'Error fetching travel memberships',
+                                'Error fetching frequent fliers',
                                 5000,
                                 false
                               );

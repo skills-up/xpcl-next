@@ -1322,9 +1322,13 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
           // 3D Array
           let newArr = [];
           let aisleArr = [];
+          let startsFrom = 0;
           if (value) {
             const columnLimit = value?.sData?.column;
             const rowLimit = value?.sData?.row;
+            value?.sInfo?.sort((a, b) => a?.seatPosition?.row - b?.seatPosition?.row);
+            startsFrom = value?.sInfo[0]?.seatPosition?.row;
+            console.log('val', value?.sInfo, startsFrom);
             for (let i = 0; i < columnLimit; i++) {
               aisleArr.push(i);
             }
@@ -1420,108 +1424,111 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                   {newArr && newArr.length > 0 && (
                     <div className='tjseatmap-scroll-container scroll-bar-1'>
                       {newArr.map((element, ind) => {
-                        return (
-                          <div key={ind} className='tj-grid col-lg-12'>
-                            {element.map((el, i) =>
-                              el ? (
-                                <>
-                                  <a
-                                    data-tooltip-id={
-                                      el.amount > 0 && !el.isBooked
-                                        ? el.seatNo
-                                        : undefined
-                                    }
-                                    data-tooltip-content={
-                                      el.amount > 0 && !el.isBooked
-                                        ? `Amount - ${el.amount.toLocaleString('en-IN', {
-                                            maximumFractionDigits: 0,
-                                            style: 'currency',
-                                            currency: 'INR',
-                                          })}`
-                                        : undefined
-                                    }
-                                    data-tooltip-place='top'
-                                  >
-                                    <Seat
-                                      key={i}
-                                      label={el.seatNo.split('').at(-1)}
-                                      fill={
-                                        el.isBooked
-                                          ? '#FF0000'
-                                          : el?.isSelected
-                                          ? '#4CBB17'
-                                          : el?.isLegroom
-                                          ? '#800080'
-                                          : el?.amount > 0
-                                          ? '#FFA500'
+                        if (ind + 1 >= startsFrom)
+                          return (
+                            <div key={ind} className='tj-grid col-lg-12'>
+                              {element.map((el, i) =>
+                                el ? (
+                                  <>
+                                    <a
+                                      data-tooltip-id={
+                                        el.amount > 0 && !el.isBooked
+                                          ? el.seatNo
                                           : undefined
                                       }
-                                      clickable={el.isBooked ? false : true}
-                                      onClick={
-                                        !el.isBooked
-                                          ? () => {
-                                              if (!el.isBooked) {
-                                                // Adding / Removing Selected Seats
-                                                setSeatMap((prev) => {
-                                                  for (let dat of prev[type].data.seatMap[
-                                                    key
-                                                  ]?.sInfo) {
-                                                    if (dat.seatNo === el.seatNo) {
-                                                      // Adding Travellers that arent infants
-                                                      let tempTravs = [];
-                                                      for (let traveller of travellerInfo) {
-                                                        const age = (
-                                                          (Date.now() -
-                                                            +new DateObject({
-                                                              date: traveller?.passport_dob,
-                                                              format: 'YYYY-MM-DD',
-                                                            })
-                                                              .toDate()
-                                                              .getTime()) /
-                                                          31536000000
-                                                        ).toFixed(2);
-                                                        if (age >= 2)
-                                                          tempTravs.push(traveller);
-                                                      }
-                                                      let travl = prev[type].data.seatMap[
-                                                        key
-                                                      ]['travellers']
-                                                        ? prev[type].data.seatMap[key][
-                                                            'travellers'
-                                                          ]
-                                                        : [];
-                                                      let add = {
-                                                        seatNo: el.seatNo,
-                                                        amount: el.amount,
-                                                        key,
-                                                      };
-                                                      // If already selected, removing selected + traveller info on that seat
-                                                      if (dat['isSelected']) {
-                                                        dat['isSelected'] = false;
-                                                        travl = travl.filter(
-                                                          (trav) =>
-                                                            trav.seatNo !== el.seatNo
-                                                        );
-                                                      }
-                                                      // If not selected, then we add traveller and seat info (if max seats are selected,)
-                                                      // Setting first traveller to new seat selected
-                                                      else {
-                                                        dat['isSelected'] = true;
-                                                        if (travl) {
-                                                          if (
-                                                            travl.length ===
-                                                            tempTravs.length
-                                                          ) {
-                                                            travl.push({
-                                                              ...travl[0],
-                                                              ...add,
-                                                            });
-                                                            prev[type].data.seatMap[
-                                                              key
-                                                            ].sInfo = prev[
-                                                              type
-                                                            ].data.seatMap[key].sInfo.map(
-                                                              (s) =>
+                                      data-tooltip-content={
+                                        el.amount > 0 && !el.isBooked
+                                          ? `Amount - ${el.amount.toLocaleString(
+                                              'en-IN',
+                                              {
+                                                maximumFractionDigits: 0,
+                                                style: 'currency',
+                                                currency: 'INR',
+                                              }
+                                            )}`
+                                          : undefined
+                                      }
+                                      data-tooltip-place='top'
+                                    >
+                                      <Seat
+                                        key={i}
+                                        label={el.seatNo.split('').at(-1)}
+                                        fill={
+                                          el.isBooked
+                                            ? '#FF0000'
+                                            : el?.isSelected
+                                            ? '#4CBB17'
+                                            : el?.isLegroom
+                                            ? '#800080'
+                                            : el?.amount > 0
+                                            ? '#FFA500'
+                                            : undefined
+                                        }
+                                        clickable={el.isBooked ? false : true}
+                                        onClick={
+                                          !el.isBooked
+                                            ? () => {
+                                                if (!el.isBooked) {
+                                                  // Adding / Removing Selected Seats
+                                                  setSeatMap((prev) => {
+                                                    for (let dat of prev[type].data
+                                                      .seatMap[key]?.sInfo) {
+                                                      if (dat.seatNo === el.seatNo) {
+                                                        // Adding Travellers that arent infants
+                                                        let tempTravs = [];
+                                                        for (let traveller of travellerInfo) {
+                                                          const age = (
+                                                            (Date.now() -
+                                                              +new DateObject({
+                                                                date: traveller?.passport_dob,
+                                                                format: 'YYYY-MM-DD',
+                                                              })
+                                                                .toDate()
+                                                                .getTime()) /
+                                                            31536000000
+                                                          ).toFixed(2);
+                                                          if (age >= 2)
+                                                            tempTravs.push(traveller);
+                                                        }
+                                                        let travl = prev[type].data
+                                                          .seatMap[key]['travellers']
+                                                          ? prev[type].data.seatMap[key][
+                                                              'travellers'
+                                                            ]
+                                                          : [];
+                                                        let add = {
+                                                          seatNo: el.seatNo,
+                                                          amount: el.amount,
+                                                          key,
+                                                        };
+                                                        // If already selected, removing selected + traveller info on that seat
+                                                        if (dat['isSelected']) {
+                                                          dat['isSelected'] = false;
+                                                          travl = travl.filter(
+                                                            (trav) =>
+                                                              trav.seatNo !== el.seatNo
+                                                          );
+                                                        }
+                                                        // If not selected, then we add traveller and seat info (if max seats are selected,)
+                                                        // Setting first traveller to new seat selected
+                                                        else {
+                                                          dat['isSelected'] = true;
+                                                          if (travl) {
+                                                            if (
+                                                              travl.length ===
+                                                              tempTravs.length
+                                                            ) {
+                                                              travl.push({
+                                                                ...travl[0],
+                                                                ...add,
+                                                              });
+                                                              prev[type].data.seatMap[
+                                                                key
+                                                              ].sInfo = prev[
+                                                                type
+                                                              ].data.seatMap[
+                                                                key
+                                                              ].sInfo.map((s) =>
                                                                 s.seatNo ===
                                                                 travl[0].seatNo
                                                                   ? {
@@ -1529,63 +1536,66 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                                                       isSelected: false,
                                                                     }
                                                                   : s
-                                                            );
-                                                            travl.splice(0, 1);
-                                                          } else {
-                                                            // Adding the first traveller in travellers that isnt added
-                                                            let travlToAdd = false;
-                                                            for (let x of tempTravs) {
-                                                              let match = false;
-                                                              for (let y of travl) {
-                                                                if (y.id === x.id) {
-                                                                  match = true;
+                                                              );
+                                                              travl.splice(0, 1);
+                                                            } else {
+                                                              // Adding the first traveller in travellers that isnt added
+                                                              let travlToAdd = false;
+                                                              for (let x of tempTravs) {
+                                                                let match = false;
+                                                                for (let y of travl) {
+                                                                  if (y.id === x.id) {
+                                                                    match = true;
+                                                                  }
+                                                                }
+                                                                if (
+                                                                  !match &&
+                                                                  !travlToAdd
+                                                                ) {
+                                                                  travl.push({
+                                                                    ...x,
+                                                                    ...add,
+                                                                  });
+                                                                  travlToAdd = true;
                                                                 }
                                                               }
-                                                              if (!match && !travlToAdd) {
-                                                                travl.push({
-                                                                  ...x,
-                                                                  ...add,
-                                                                });
-                                                                travlToAdd = true;
-                                                              }
                                                             }
+                                                          } else {
+                                                            travl = [
+                                                              {
+                                                                ...tempTravs[0],
+                                                                ...add,
+                                                              },
+                                                            ];
                                                           }
-                                                        } else {
-                                                          travl = [
-                                                            {
-                                                              ...tempTravs[0],
-                                                              ...add,
-                                                            },
-                                                          ];
                                                         }
+                                                        prev[type].data.seatMap[key][
+                                                          'travellers'
+                                                        ] = travl;
                                                       }
-                                                      prev[type].data.seatMap[key][
-                                                        'travellers'
-                                                      ] = travl;
                                                     }
-                                                  }
-                                                  return { ...prev };
-                                                });
+                                                    return { ...prev };
+                                                  });
+                                                }
                                               }
-                                            }
-                                          : undefined
-                                      }
-                                    />
-                                  </a>
-                                  <ReactTooltip id={el.seatNo} />
-                                </>
-                              ) : (
-                                <>
-                                  {aisleArr.includes(i) ? (
-                                    <span className='row-number'>{ind + 1}</span>
-                                  ) : (
-                                    <span className='row-number' />
-                                  )}
-                                </>
-                              )
-                            )}
-                          </div>
-                        );
+                                            : undefined
+                                        }
+                                      />
+                                    </a>
+                                    <ReactTooltip id={el.seatNo} />
+                                  </>
+                                ) : (
+                                  <>
+                                    {aisleArr.includes(i) ? (
+                                      <span className='row-number'>{ind + 1}</span>
+                                    ) : (
+                                      <span className='row-number' />
+                                    )}
+                                  </>
+                                )
+                              )}
+                            </div>
+                          );
                       })}
                     </div>
                   )}
