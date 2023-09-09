@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import Datatable from "../../../components/datatable/Datatable";
+import Datatable from '../../../components/datatable/Datatable';
 import { getList } from '../../../api/xplorzApi';
+import BoardingPassUpload from './BoardingPassUpload';
 
 const TravelList = () => {
   const [travelSectors, setTravelSectors] = useState([]);
@@ -27,11 +28,11 @@ const TravelList = () => {
         pnr,
       }))(bookingData);
       for (let sector of bookingData.sectors) {
-        formattedData.push({booking, sector});
+        formattedData.push({ ...booking, ...sector });
       }
     }
     return formattedData;
-  }
+  };
 
   const getTravelList = async () => {
     const response = await getList('travel-list');
@@ -41,9 +42,7 @@ const TravelList = () => {
     } else {
       sendToast(
         'error',
-        response?.data?.message ||
-          response?.data?.error ||
-          'Error getting travel list',
+        response?.data?.message || response?.data?.error || 'Error getting travel list',
         4000
       );
     }
@@ -52,56 +51,77 @@ const TravelList = () => {
   const columns = [
     {
       Header: 'Booking #',
-      accessor: 'booking.number',
+      accessor: 'number',
     },
     {
       Header: 'Client',
-      accessor: 'booking.client_name',
+      accessor: 'client_name',
     },
     {
       Header: 'Traveller',
-      accessor: 'booking.client_traveller_name',
+      accessor: 'client_traveller_name',
     },
     {
       Header: 'Travel Date',
-      accessor: 'sector.travel_date',
+      accessor: 'travel_date',
     },
     {
       Header: 'Time',
-      accessor: 'sector.travel_time',
+      accessor: 'travel_time',
     },
     {
       Header: 'From',
-      accessor: 'sector.from_airport',
+      accessor: 'from_airport',
     },
     {
       Header: 'To',
-      accessor: 'sector.to_airport',
+      accessor: 'to_airport',
     },
     {
       Header: 'Ticket #',
-      accessor: 'booking.ticket_number',
+      accessor: 'ticket_number',
     },
     {
       Header: 'PNR',
-      accessor: 'booking.pnr',
+      accessor: 'pnr',
     },
     {
       Header: 'Flight',
-      accessor: 'sector.details',
+      accessor: 'details',
     },
     {
       Header: 'Class',
-      accessor: 'sector.booking_class',
+      accessor: 'booking_class',
     },
     {
       Header: 'Boarding Pass',
-      accessor: 'sector.boarding_pass',
+      accessor: 'boarding_pass',
+      Cell: (data) => {
+        return (
+          <div>
+            {data.row.original.boarding_pass ? (
+              <a
+                href={data.row.original.boarding_pass}
+                target='_blank'
+                download='boarding_pass'
+              >
+                Download
+              </a>
+            ) : (
+              '-'
+            )}
+          </div>
+        );
+      },
+    },
+    {
+      Header: 'Upload Boarding Pass',
+      Cell: (data) => <BoardingPassUpload id={data.row.original.id} />,
     },
   ];
 
   return (
-    <div className="overflow-scroll scroll-bar-1 pt-30">
+    <div className='overflow-scroll scroll-bar-1 pt-30'>
       <Datatable
         downloadCSV
         CSVName='TravelList.csv'
