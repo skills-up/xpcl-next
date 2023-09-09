@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import Datatable from "../../../components/datatable/Datatable";
+import Datatable from '../../../components/datatable/Datatable';
 import { getList } from '../../../api/xplorzApi';
 
 const TravelList = () => {
@@ -27,11 +27,11 @@ const TravelList = () => {
         pnr,
       }))(bookingData);
       for (let sector of bookingData.sectors) {
-        formattedData.push({booking, sector});
+        formattedData.push({ booking, sector });
       }
     }
     return formattedData;
-  }
+  };
 
   const getTravelList = async () => {
     const response = await getList('travel-list');
@@ -41,9 +41,7 @@ const TravelList = () => {
     } else {
       sendToast(
         'error',
-        response?.data?.message ||
-          response?.data?.error ||
-          'Error getting travel list',
+        response?.data?.message || response?.data?.error || 'Error getting travel list',
         4000
       );
     }
@@ -101,7 +99,7 @@ const TravelList = () => {
   ];
 
   return (
-    <div className="overflow-scroll scroll-bar-1 pt-30">
+    <div className='overflow-scroll scroll-bar-1 pt-30'>
       <Datatable
         downloadCSV
         CSVName='TravelList.csv'

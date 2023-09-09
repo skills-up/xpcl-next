@@ -36,7 +36,7 @@ const index = () => {
             </div>
             {/* End .row */}
 
-            <div className="row y-gap-30">
+            <div className='row y-gap-30'>
               <CountCard />
             </div>
 
