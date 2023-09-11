@@ -46,6 +46,8 @@ const MainFilterSearchBox = () => {
   });
   const [SEO, setSEO] = useState('Flight Search');
 
+  const [autoSearch, setAutoSearch] = useState(false);
+
   const destinations = useSelector((state) => state.flightSearch.value.destinations);
   const dispatch = useDispatch();
   const router = useRouter();
@@ -56,16 +58,26 @@ const MainFilterSearchBox = () => {
   const travellerDOBS = useSelector((state) => state.flightSearch.value.travellerDOBS);
 
   useEffect(() => {
-    // dispatch(setInitialState());
-    if (token !== '') {
-      checkUser(router, dispatch);
-      checkAirportCache(dispatch);
-      getData();
-    } else {
-      sendToast('error', 'You must be logged in in order to view this page', 8000);
-      router.push('/');
+    if (to && from && router.query?.data && !autoSearch) {
+      search();
+      setAutoSearch(true);
     }
-  }, []);
+  }, [to, from]);
+
+  useEffect(() => {
+    // dispatch(setInitialState());
+    if (router.isReady)
+      if (token !== '') {
+        checkUser(router, dispatch);
+        checkAirportCache(dispatch);
+        getData();
+      } else {
+        sendToast('error', 'You must be logged in in order to view this page', 8000);
+        router.push('/');
+      }
+  }, [router.isReady]);
+
+  useEffect(() => console.log('to', to, 'from', from), [to, from]);
 
   const getData = async () => {
     if (airports && airports?.length > 0) setAirportOptions(airports.map((e) => e));
@@ -91,6 +103,19 @@ const MainFilterSearchBox = () => {
           code: element.code,
         }))
       );
+      if (router.query?.data) {
+        try {
+          const data = await JSON.parse(decodeURIComponent(router.query.data));
+          setGuestCounts(data.guestCounts);
+          setPrefferedCabin(data.preferredCabin);
+          setReturnFlight(data.returnFlight);
+          if (data.departDate) setDepartDate(new DateObject({ date: data.departDate }));
+          if (data.returnDate) setReturnDate(new DateObject({ date: data.returnDate }));
+          else setReturnDate(null);
+          setTo(data.to);
+          setFrom(data.from);
+        } catch (err) {}
+      }
     } else {
       sendToast('error', 'Error getting data', 4000);
     }
@@ -110,6 +135,16 @@ const MainFilterSearchBox = () => {
     }
     if (!from?.value) {
       sendToast('error', 'Please select your departure destination', 4000);
+      searchF();
+      return;
+    }
+    if (!departDate) {
+      sendToast('error', 'Please select your departure date', 4000);
+      searchF();
+      return;
+    }
+    if (returnFlight && !returnDate) {
+      sendToast('error', 'Please select your return date', 4000);
       searchF();
       return;
     }
@@ -467,7 +502,10 @@ const MainFilterSearchBox = () => {
                         className={`${
                           !returnFlight ? 'text-blue-1 ' : ''
                         }d-block js-dropdown-link`}
-                        onClick={() => setReturnFlight(false)}
+                        onClick={() => {
+                          setReturnFlight(false);
+                          setReturnDate(null);
+                        }}
                       >
                         One Way
                       </div>
@@ -477,7 +515,10 @@ const MainFilterSearchBox = () => {
                       className={`mt-10 ${
                         returnFlight ? 'text-blue-1 ' : ''
                       }d-block js-dropdown-link`}
-                      onClick={() => setReturnFlight(true)}
+                      onClick={() => {
+                        setReturnFlight(true);
+                        setReturnDate(departDate);
+                      }}
                     >
                       Round Trip
                     </div>

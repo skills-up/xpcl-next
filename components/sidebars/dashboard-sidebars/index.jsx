@@ -415,7 +415,7 @@ const Sidebar = () => {
           <a
             onClick={async () => {
               if (token === '') {
-                window.location = '/login';
+                window.location = '/';
               } else {
                 const response = await customAPICall('auth/logout', 'post');
                 if (response?.success) {

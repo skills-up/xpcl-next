@@ -15,11 +15,9 @@ export const checkUser = async (router, dispatch) => {
   // If valid, then create session storage item again, otherwise log them out
   if (!checkingUser) {
     if (router) {
-      let found = true;
       const response = await customAPICall('/auth/me', 'post');
       if (!response?.success) {
         dispatch(setInitialUserState());
-        found = false;
         setTimeout(() => {
           sendToast(
             'error',
@@ -29,8 +27,7 @@ export const checkUser = async (router, dispatch) => {
           router.push('/');
           return;
         }, 1000);
-      }
-      if (found) sessionStorage.setItem('checking-user', Date.now());
+      } else sessionStorage.setItem('checking-user', Date.now());
     }
   }
 };

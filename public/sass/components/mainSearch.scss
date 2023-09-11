@@ -68,6 +68,16 @@
     }
   }
 
+  &.-col-3-big2 {
+    .button-grid {
+      grid-template-columns: 1fr 1fr 1fr 0.6fr;
+
+      @include media-below(lg) {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+
   &.-col-3-big {
     .button-grid {
       grid-template-columns: 1fr 0.6fr 0.6fr auto;

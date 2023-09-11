@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 import { useDispatch } from 'react-redux';
@@ -25,11 +26,40 @@ const MainFilterSearchBox = () => {
   const [locationOptions, setLocationOptions] = useState([]);
   const [date, setDate] = useState([new DateObject(), new DateObject().add(1, 'days')]);
   const [roomsData, setRoomsData] = useState([{ adults: 1, child: [] }]);
+  const router = useRouter();
+  const [autoSearch, setAutoSearch] = useState(false);
 
   // Initial Filling
   useEffect(() => {
     if (hotelSearchData) setLocationOptions(hotelSearchData);
   }, [hotelSearchData]);
+
+  useEffect(() => {
+    if (router.isReady) {
+      getData();
+    }
+  }, [router.isReady]);
+
+  const getData = async () => {
+    if (router.query?.data) {
+      try {
+        const data = await JSON.parse(decodeURIComponent(router.query.data));
+        setRoomsData(data?.roomsData);
+        setDate([
+          new DateObject({ date: data?.date[0] }),
+          new DateObject({ date: data?.date[1] }),
+        ]);
+        setLocation(data?.location);
+      } catch (err) {}
+    }
+  };
+
+  useEffect(() => {
+    if (location && roomsData && router.query?.data && !autoSearch) {
+      onSearch();
+      setAutoSearch(true);
+    }
+  }, [location, roomsData]);
 
   const updateSEO = () => {
     setSEO(
@@ -39,8 +69,7 @@ const MainFilterSearchBox = () => {
     );
   };
 
-  const onSearch = async (e) => {
-    e.preventDefault();
+  const onSearch = async () => {
     // Resetting Values
     dispatch(setInitialState());
     // Checks
