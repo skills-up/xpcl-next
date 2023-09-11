@@ -193,6 +193,7 @@ const AddNewOrganization = () => {
                     <div className='form-input-select'>
                       <label>Select Calendar Template</label>
                       <Select
+                        isClearable
                         options={calenderTemplates}
                         value={calenderTemplateID}
                         placeholder='Search & Select Calendar Template'

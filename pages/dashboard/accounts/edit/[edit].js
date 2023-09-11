@@ -151,6 +151,7 @@ const UpdateAccounts = () => {
                     <div className='form-input-select'>
                       <label>Year</label>
                       <Select
+                        isClearable
                         options={yearOptions}
                         value={year}
                         onChange={(id) => setYear(id)}

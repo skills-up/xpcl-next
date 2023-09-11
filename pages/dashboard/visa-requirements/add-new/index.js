@@ -274,6 +274,7 @@ const AddNewVisaRequirements = () => {
                         <span className='text-danger'>*</span>
                       </label>
                       <Select
+                        isClearable
                         options={requiredVisaDocs.filter(
                           (element) => element?.category === 'Personal'
                         )}
@@ -289,6 +290,7 @@ const AddNewVisaRequirements = () => {
                         <span className='text-danger'>*</span>
                       </label>
                       <Select
+                        isClearable
                         options={requiredVisaDocs.filter(
                           (element) => element?.category === 'Financial'
                         )}
@@ -304,6 +306,7 @@ const AddNewVisaRequirements = () => {
                         <span className='text-danger'>*</span>
                       </label>
                       <Select
+                        isClearable
                         options={requiredVisaDocs.filter(
                           (element) => element?.category === 'Support'
                         )}

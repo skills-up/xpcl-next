@@ -125,6 +125,7 @@ const UpdateAccountCategories = () => {
                         Select Parent Category<span className='text-danger'>*</span>
                       </label>
                       <Select
+                        isClearable
                         options={accountCategories}
                         defaultValue={accountCategoryID}
                         value={accountCategoryID}

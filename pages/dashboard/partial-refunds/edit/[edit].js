@@ -663,6 +663,7 @@ const AddNewPartialRefund = () => {
                     <div className='form-input-select col-lg-4'>
                       <label>Client Referrer</label>
                       <Select
+                        isClearable
                         options={clients}
                         value={clientReferrerID}
                         placeholder='Search & Select Client Referrer'
@@ -1228,6 +1229,7 @@ const AddNewPartialRefund = () => {
                     <div className='form-input-select col-lg-4'>
                       <label>Payment Refunded To</label>
                       <Select
+                        isClearable
                         options={accounts}
                         value={accountID}
                         placeholder='Search & Select Account (required)'

@@ -684,7 +684,7 @@ const AddNewBooking = () => {
                     </div>
                     {bookingType?.value === 'Miscellaneous' && (
                       <div className='form-input-select col-lg-4'>
-                        <label>Type</label>
+                        <label>Type<span className='text-danger'>*</span></label>
                         <Select
                           options={miscellaneousOptions}
                           value={miscellaneousType}
@@ -694,7 +694,7 @@ const AddNewBooking = () => {
                     )}
                     {bookingType?.value !== 'Miscellaneous' && (
                       <div className='form-input-select col-lg-4'>
-                        <label>Airline</label>
+                        <label>Airline<span className='text-danger'>*</span></label>
                         <Select
                           options={airlines}
                           value={airlineID}
@@ -1096,6 +1096,7 @@ const AddNewBooking = () => {
                     <div className='form-input-select col-lg-4'>
                       <label>Payment Account</label>
                       <Select
+                        isClearable
                         options={paymentAccounts}
                         value={paymentAccountID}
                         onChange={(id) => {
@@ -1141,6 +1142,7 @@ const AddNewBooking = () => {
                         <div className='form-input-select col-lg-4'>
                           <label>Commission Rule</label>
                           <Select
+                            isClearable
                             options={commissionRules}
                             value={commissionRuleID}
                             onChange={(id) => {

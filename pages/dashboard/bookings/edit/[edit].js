@@ -1302,6 +1302,7 @@ const UpdateBooking = () => {
                     <div className='form-input-select col-lg-4'>
                       <label>Payment Account</label>
                       <Select
+                        isClearable
                         options={paymentAccounts}
                         value={paymentAccountID}
                         onChange={(id) => {
