@@ -302,7 +302,7 @@ const ReissueBooking = () => {
                 date: bookSec.travel_date,
                 format: 'YYYY-MM-DD',
               }),
-              travel_time: bookSec?.travel_time.slice(0, -3),
+              travel_time: bookSec?.travel_time?.substring(0,5),
               details: bookSec?.details,
               booking_class: tempBookingClass,
             });
@@ -397,7 +397,7 @@ const ReissueBooking = () => {
               travel_date: element['travel_date']?.format('YYYY-MM-DD'),
               travel_time: element['travel_time']
                 ? element['travel_time'] + ':00'
-                : element['travel_time'],
+                : undefined,
               details:
                 element['details'].trim().length > 0 ? element['details'] : undefined,
               booking_class: element['booking_class']?.value,
@@ -937,8 +937,8 @@ const ReissueBooking = () => {
                                             })
                                           }
                                           value={element['travel_time']}
-                                          placeholder=' '
-                                          type='time'
+                                          placeholder='--:--'
+                                          pattern='^[0-2][0-9]:[0-5][0-9]$'
                                         />
                                         <label className='lh-1 text-16 text-light-1'>
                                           Travel Time

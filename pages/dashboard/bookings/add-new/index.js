@@ -267,7 +267,9 @@ const AddNewBooking = () => {
               from_airport: element['from_airport']?.value,
               to_airport: element['to_airport']?.value,
               travel_date: element['travel_date']?.format('YYYY-MM-DD'),
-              travel_time: element['travel_time'] + ':00',
+              travel_time: element['travel_time']
+              ? element['travel_time'] + ':00'
+              : undefined,
               details:
                 element['details'].trim().length > 0 ? element['details'] : undefined,
               booking_class: element['booking_class']?.value,
@@ -838,8 +840,8 @@ const AddNewBooking = () => {
                                             })
                                           }
                                           value={element['travel_time']}
-                                          placeholder=' '
-                                          type='time'
+                                          placeholder='--:--'
+                                          pattern='^[0-2][0-9]:[0-5][0-9]$'
                                         />
                                         <label className='lh-1 text-16 text-light-1'>
                                           Travel Time
