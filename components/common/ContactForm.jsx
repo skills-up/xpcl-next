@@ -12,6 +12,7 @@ const ContactForm = () => {
       organization_name: companyName,
       address: addr,
       gstn,
+      annual_spend: annualSpend,
       contact_name: name,
       contact_email: email,
       contact_phone: phone,
@@ -37,6 +38,7 @@ const ContactForm = () => {
   const [email, setEmail] = useState('');
   const [addr, setAddr] = useState('');
   const [gstn, setGstn] = useState('');
+  const [annualSpend, setAnnualSpend] = useState('');
   const [signupClicked, setSignupClicked] = useState(false);
 
   return (
@@ -135,6 +137,20 @@ const ContactForm = () => {
                 />
                 <label className='lh-1 text-16 text-light-1'>
                   Email<span className='text-danger'>*</span>
+                </label>
+              </div>
+            </div>
+            <div className='col-lg-4 col-md-6'>
+              <div className='form-input'>
+                <input
+                  type='text'
+                  value={annualSpend}
+                  onChange={(e) => setAnnualSpend(e.target.value)}
+                  required
+                  placeholder=' '
+                />
+                <label className='lh-1 text-16 text-light-1'>
+                  Annual Travel Spend<span className='text-danger'>*</span>
                 </label>
               </div>
             </div>
