@@ -183,6 +183,7 @@ const PartialRefunds = () => {
       </div>
       {/* Data Table */}
       <Datatable
+        viewLink={'/dashboard/partial-refunds'}
         downloadCSV
         CSVName='PartialRefunds.csv'
         columns={columns}

@@ -164,6 +164,7 @@ const CalendarTemplates = () => {
       </div>
       {/* Data Table */}
       <Datatable
+        viewLink={'/dashboard/calendar-templates'}
         downloadCSV
         CSVName='CalendarTemplates.csv'
         columns={columns}

@@ -184,6 +184,7 @@ const Organizations = () => {
 
       {/* Data Table */}
       <Datatable
+        viewLink={'/dashboard/organizations'}
         downloadCSV
         CSVName='Organizations.csv'
         columns={columns}

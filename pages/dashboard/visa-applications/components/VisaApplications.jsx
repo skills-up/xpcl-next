@@ -180,6 +180,7 @@ const VisaApplications = () => {
       </div>
       {/* Data Table */}
       <Datatable
+        viewLink={'/dashboard/visa-applications'}
         downloadCSV
         CSVName='VisaApplications.csv'
         columns={columns}

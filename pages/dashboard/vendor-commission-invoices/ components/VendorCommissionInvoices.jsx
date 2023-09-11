@@ -180,6 +180,7 @@ const VendorCommissionInvoices = () => {
       </div>
       {/* Data Table */}
       <Datatable
+        viewLink={'/dashboard/vendor-commission-invoices'}
         downloadCSV
         CSVName='VendorCommissionInvoices.csv'
         columns={columns}

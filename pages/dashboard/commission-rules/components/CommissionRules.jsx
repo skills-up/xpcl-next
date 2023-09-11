@@ -176,6 +176,7 @@ const CommissionRules = () => {
       </div>
       {/* Data Table */}
       <Datatable
+        viewLink={'/dashboard/commission-rules'}
         downloadCSV
         CSVName='CommissionRules.csv'
         columns={columns}

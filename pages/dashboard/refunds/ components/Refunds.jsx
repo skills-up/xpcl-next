@@ -168,6 +168,7 @@ const Refunds = () => {
       </div>
       {/* Data Table */}
       <Datatable
+        viewLink={'/dashboard/refunds'}
         downloadCSV
         CSVName='Refunds.csv'
         columns={columns}

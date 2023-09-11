@@ -173,6 +173,7 @@ const AirlineOrganizationMarkup = () => {
       </div>
       {/* Data Table */}
       <Datatable
+        viewLink={'/dashboard/airline-organization-markup'}
         downloadCSV
         CSVName='AirlineOrganizationMarkup.csv'
         columns={columns}
