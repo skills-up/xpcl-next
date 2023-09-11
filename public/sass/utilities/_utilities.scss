@@ -2642,16 +2642,58 @@ table.table-6 {
 // Seat Image
 #seat {
   position: relative;
+  height: 45px;
+  width: 45px;
+  margin: 0.3rem;
   .seat-img {
-    height: 55px;
-    width: 55px;
+  }
+  &.normal {
+    border-radius: 5px;
+    box-shadow: 0 0 2px rgb(33, 165, 226);
+    // outline: rgb(33, 165, 226) solid 1px;
+    background-color: #ebf5ff;
+    color: rgb(33, 165, 226);
+  }
+  &.booked {
+    border-radius: 5px;
+    box-shadow: 0 0 2px rgb(190, 193, 194);
+    background-color: #f9f3f9;
+    color: #000;
+  }
+  &.selected {
+    border-radius: 5px;
+    box-shadow: 0 0 2px rgb(15, 69, 184);
+    background-color: #c0d3f8;
+    color: rgb(15, 69, 184);
+  }
+  &.legroom {
+    border-radius: 5px;
+    box-shadow: 0 0 2px rgb(84, 11, 202);
+    background-color: #dfc0f8;
+    color: rgb(84, 11, 202);
+  }
+  &.paid {
+    border-radius: 5px;
+    box-shadow: 0 0 2px rgb(33, 165, 226);
+    // outline: rgb(33, 165, 226) solid 1px;
+    background-color: #f2f2fd;
+    color: rgb(33, 165, 226);
   }
   span {
     display: block;
     position: absolute;
-    left: 42%;
-    top: 12.5%;
-    font-size: 1rem !important;
+    &.main-label {
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1rem !important;
+    }
+    &.priced-icon {
+      bottom: 0%;
+      right: 0%;
+      transform: translate(0, 10%);
+      font-size: 0.7rem !important;
+    }
   }
 }
 
@@ -2669,9 +2711,10 @@ table.table-6 {
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 55px;
-      min-width: 55px;
-      font-size: 1.2rem;
+      height: 45px;
+      width: 45px;
+      margin: 0.3rem;
+      font-size: 1rem;
       text-align: center;
     }
   }
@@ -2686,9 +2729,10 @@ table.table-6 {
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 55px;
-      min-width: 55px;
-      font-size: 1.2rem;
+      height: 45px;
+      width: 45px;
+      margin: 0.3rem;
+      font-size: 1rem;
       text-align: center;
     }
   }
@@ -2698,23 +2742,23 @@ table.table-6 {
     gap: 0.75rem 0.25rem;
   }
   .aaseatmap-scroll-container {
-    #seat {
-      position: relative;
-      text-align: center;
-      .seat-img {
-        height: 55px;
-        width: 55px;
-      }
-      span {
-        display: block;
-        position: absolute;
-        max-width: 10px;
-        width: 100%;
-        left: 33%;
-        top: 18.5%;
-        font-size: 0.75rem !important;
-      }
-    }
+    // #seat {
+    //   position: relative;
+    //   text-align: center;
+    //   .seat-img {
+    //     height: 55px;
+    //     width: 55px;
+    //   }
+    //   span {
+    //     display: block;
+    //     position: absolute;
+    //     max-width: 10px;
+    //     width: 100%;
+    //     left: 33%;
+    //     top: 18.5%;
+    //     font-size: 0.75rem !important;
+    //   }
+    // }
   }
 }
 
@@ -2982,7 +3026,7 @@ table.table-6 {
 }
 
 .aaseatmap-scroll-container {
-  max-width: 408px;
+  max-width: 420px;
   max-height: 500px;
   overflow-y: auto;
   overflow-x: auto;

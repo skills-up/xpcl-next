@@ -16,6 +16,7 @@ import { TiTickOutline } from 'react-icons/ti';
 import FlightProperty from '../../flight-list/common/FlightProperty';
 import { FaMinus, FaPlus } from 'react-icons/fa';
 import Seo from '../../common/Seo';
+import { RxCross1 } from 'react-icons/rx';
 
 function Seatmap({ seatMaps, PNRS, travellerInfos }) {
   const [SEO, setSEO] = useState('');
@@ -1000,15 +1001,20 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                                   >
                                                     <Seat
                                                       key={index}
+                                                      isPriced={
+                                                        group &&
+                                                        group.amount > 0 &&
+                                                        element.assignable
+                                                      }
                                                       label={element?.designator}
-                                                      fill={
+                                                      type={
                                                         !element.assignable
-                                                          ? '#FF0000'
+                                                          ? 'booked'
                                                           : element?.isSelected
-                                                          ? '#4CBB17'
+                                                          ? 'selected'
                                                           : group?.amount > 0
-                                                          ? '#FFA500'
-                                                          : undefined
+                                                          ? 'paid'
+                                                          : 'normal'
                                                       }
                                                       clickable={
                                                         !element.assignable ? false : true
@@ -1419,7 +1425,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                 </span>
               </div>
               {expand[type].includes(index) && (
-                <div className='d-flex gap-4 between x-gap-20 mt-10'>
+                <div className='d-flex gap-4 between mt-10'>
                   {/* Seatmap */}
                   {newArr && newArr.length > 0 && (
                     <div className='tjseatmap-scroll-container scroll-bar-1'>
@@ -1452,18 +1458,25 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                     >
                                       <Seat
                                         key={i}
-                                        label={el.seatNo.split('').at(-1)}
-                                        fill={
-                                          el.isBooked
-                                            ? '#FF0000'
-                                            : el?.isSelected
-                                            ? '#4CBB17'
-                                            : el?.isLegroom
-                                            ? '#800080'
-                                            : el?.amount > 0
-                                            ? '#FFA500'
-                                            : undefined
+                                        label={
+                                          el.isBooked ? (
+                                            <RxCross1 />
+                                          ) : (
+                                            el.seatNo.split('').at(-1)
+                                          )
                                         }
+                                        type={
+                                          el.isBooked
+                                            ? 'booked'
+                                            : el?.isSelected
+                                            ? 'selected'
+                                            : el?.isLegroom
+                                            ? 'legroom'
+                                            : el?.amount > 0
+                                            ? 'paid'
+                                            : 'normal'
+                                        }
+                                        isPriced={!el.isBooked && el.amount > 0}
                                         clickable={el.isBooked ? false : true}
                                         onClick={
                                           !el.isBooked
