@@ -2672,6 +2672,12 @@ table.table-6 {
     background-color: #dfc0f8;
     color: rgb(84, 11, 202);
   }
+  &.overwing {
+    border-radius: 5px;
+    box-shadow: 0 0 2px rgb(151, 153, 9);
+    background-color: #ff99;
+    color: rgb(151, 153, 9);
+  }
   &.paid {
     border-radius: 5px;
     box-shadow: 0 0 2px rgb(33, 165, 226);
@@ -2803,8 +2809,8 @@ table.table-6 {
     }
     td.seat,
     div.seat {
-      height: 60px;
-      width: 60px;
+      height: 40px;
+      width: 40px;
       background-image: url('../../img/flights/seat.png');
       background-size: contain;
       background-repeat: no-repeat;

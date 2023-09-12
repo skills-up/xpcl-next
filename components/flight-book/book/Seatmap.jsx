@@ -17,6 +17,7 @@ import FlightProperty from '../../flight-list/common/FlightProperty';
 import { FaMinus, FaPlus } from 'react-icons/fa';
 import Seo from '../../common/Seo';
 import { RxCross1 } from 'react-icons/rx';
+import ReactDomServer from 'react-dom/server';
 
 function Seatmap({ seatMaps, PNRS, travellerInfos }) {
   const [SEO, setSEO] = useState('');
@@ -1006,7 +1007,13 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                                         group.amount > 0 &&
                                                         element.assignable
                                                       }
-                                                      label={element?.designator}
+                                                      label={
+                                                        element.assignable ? (
+                                                          element?.designator
+                                                        ) : (
+                                                          <RxCross1 />
+                                                        )
+                                                      }
                                                       type={
                                                         !element.assignable
                                                           ? 'booked'
@@ -2020,33 +2027,67 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                             facLocation = getLocation(facDetails.location, spacers);
                             facObj[facLocation].push(facDetails.type);
                           });
-                          facRow = '';
                           propIdx = 0;
+                          facRow = '';
                           currProp = 'L';
                           contObj = { L: '', C: '', R: '' };
                           for (let col of seatFormatArr) {
                             if (col == ' ') {
-                              contObj[currProp] += '<td class="no-seat"></td>';
+                              contObj[currProp] += `<td className="no-seat"></td>`;
                               currProp = props[++propIdx];
                             } else {
                               var facility = facObj[currProp].shift();
                               if (facility) {
-                                contObj[currProp] +=
-                                  '<td class="seat seat-' + facility + '"> &nbsp; </td>';
+                                contObj[currProp] += `<td>${ReactDomServer.renderToString(
+                                  <Seat
+                                    clickable={false}
+                                    type={
+                                      facility === 'O' ||
+                                      facility === '1' ||
+                                      facility === 'GN'
+                                        ? 'booked'
+                                        : facility === 'ST'
+                                        ? 'stairs'
+                                        : facility === 'SO'
+                                        ? 'storage'
+                                        : facility === 'BK'
+                                        ? 'bulkhead'
+                                        : facility === 'B'
+                                        ? 'basinette'
+                                        : facility === '1D'
+                                        ? 'limited-recliner'
+                                        : facility === 'AG'
+                                        ? 'adjacent-galley'
+                                        : facility === 'G'
+                                        ? 'galley'
+                                        : facility === 'AL'
+                                        ? 'adjacent-lavatory'
+                                        : facility === 'LA'
+                                        ? 'lavatory'
+                                        : facility === 'OW'
+                                        ? 'overwing'
+                                        : facility === 'E'
+                                        ? 'exit-row-seat'
+                                        : facility === 'L' || facility === 'K'
+                                        ? 'legroom'
+                                        : 'normal'
+                                    }
+                                  />
+                                )}</td>`;
                               } else {
                                 if (currProp == 'R') {
                                   contObj[currProp] =
-                                    '<td class="no-seat"></td>' + contObj[currProp];
+                                    '<td className="no-seat"></td>' + contObj[currProp];
                                 } else if (
                                   currProp == 'C' &&
                                   contObj[currProp].indexOf('</td><td') > 0
                                 ) {
                                   contObj[currProp] = contObj[currProp].replace(
                                     '</td><td',
-                                    '</td><td class="no-seat"></td><td'
+                                    '</td><td className="no-seat"></td><td'
                                   );
                                 } else {
-                                  contObj[currProp] += '<td class="no-seat"></td>';
+                                  contObj[currProp] += '<td className="no-seat"></td>';
                                 }
                               }
                             }
@@ -2124,19 +2165,55 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                     contObj = { L: '', C: '', R: '' };
                                     seatFormatArr.forEach((col) => {
                                       if (col == ' ') {
-                                        contObj[currProp] += '<td class="no-seat"></td>';
+                                        contObj[currProp] +=
+                                          '<td className="no-seat"></td>';
                                         currProp = props[++propIdx];
                                       } else {
                                         var facility = facObj[currProp].shift();
                                         if (facility) {
-                                          contObj[currProp] +=
-                                            '<td class="seat seat-' +
-                                            facility +
-                                            '"> &nbsp; </td>';
+                                          contObj[
+                                            currProp
+                                          ] += `<td>${ReactDomServer.renderToString(
+                                            <Seat
+                                              clickable={false}
+                                              type={
+                                                facility === 'O' ||
+                                                facility === '1' ||
+                                                facility === 'GN' ||
+                                                facility === 'CL'
+                                                  ? 'booked'
+                                                  : facility === 'ST'
+                                                  ? 'stairs'
+                                                  : facility === 'SO'
+                                                  ? 'storage'
+                                                  : facility === 'BK'
+                                                  ? 'bulkhead'
+                                                  : facility === 'B'
+                                                  ? 'basinette'
+                                                  : facility === '1D'
+                                                  ? 'limited-recliner'
+                                                  : facility === 'AG'
+                                                  ? 'adjacent-galley'
+                                                  : facility === 'G'
+                                                  ? 'galley'
+                                                  : facility === 'AL'
+                                                  ? 'adjacent-lavatory'
+                                                  : facility === 'LA'
+                                                  ? 'lavatory'
+                                                  : facility === 'OW'
+                                                  ? 'overwing'
+                                                  : facility === 'E'
+                                                  ? 'exit-row-seat'
+                                                  : facility === 'L' || facility === 'K'
+                                                  ? 'legroom'
+                                                  : 'normal'
+                                              }
+                                            />
+                                          )}</td>`;
                                         } else {
                                           if (currProp == 'R') {
                                             contObj[currProp] =
-                                              '<td class="no-seat"></td>' +
+                                              '<td className="no-seat"></td>' +
                                               contObj[currProp];
                                           } else if (
                                             currProp == 'C' &&
@@ -2144,11 +2221,11 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                           ) {
                                             contObj[currProp] = contObj[currProp].replace(
                                               '</td><td',
-                                              '</td><td class="no-seat"></td><td'
+                                              '</td><td className="no-seat"></td><td'
                                             );
                                           } else {
                                             contObj[currProp] +=
-                                              '<td class="no-seat"></td>';
+                                              '<td className="no-seat"></td>';
                                           }
                                         }
                                       }
@@ -2238,13 +2315,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                               );
                                             } else {
                                               return (
-                                                <td
-                                                  className={`seat seat-${chars.join(
-                                                    ' seat-'
-                                                  )} ${seatSelected ? 'seat-sel' : ''} ${
-                                                    conditions ? 'cursor-pointer' : ''
-                                                  }`}
-                                                >
+                                                <td>
                                                   <a
                                                     data-tooltip-id={
                                                       conditions
@@ -2252,7 +2323,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                                         : undefined
                                                     }
                                                     data-tooltip-content={
-                                                      conditions
+                                                      conditions && +price > 0
                                                         ? `Amount - ${(+price).toLocaleString(
                                                             'en-IN',
                                                             {
@@ -2267,19 +2338,51 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                                   >
                                                     <Seat
                                                       key={index}
-                                                      label={contents}
+                                                      label={
+                                                        conditions ? (
+                                                          rowNum + col
+                                                        ) : (
+                                                          <RxCross1 />
+                                                        )
+                                                      }
+                                                      isPriced={
+                                                        chars.includes('CH') && +price > 0
+                                                      }
                                                       type={
-                                                        !element.assignable
+                                                        chars.includes('O') ||
+                                                        chars.includes('1') ||
+                                                        chars.includes('GN')
                                                           ? 'booked'
-                                                          : element?.isSelected
+                                                          : seatSelected
                                                           ? 'selected'
-                                                          : group?.amount > 0
-                                                          ? 'paid'
+                                                          : chars.includes('ST')
+                                                          ? 'stairs'
+                                                          : chars.includes('SO')
+                                                          ? 'storage'
+                                                          : chars.includes('BK')
+                                                          ? 'bulkhead'
+                                                          : chars.includes('B')
+                                                          ? 'basinette'
+                                                          : chars.includes('1D')
+                                                          ? 'limited-recliner'
+                                                          : chars.includes('AG')
+                                                          ? 'adjacent-galley'
+                                                          : chars.includes('G')
+                                                          ? 'galley'
+                                                          : chars.includes('AL')
+                                                          ? 'adjacent-lavatory'
+                                                          : chars.includes('LA')
+                                                          ? 'lavatory'
+                                                          : chars.includes('OW')
+                                                          ? 'overwing'
+                                                          : chars.includes('E')
+                                                          ? 'exit-row-seat'
+                                                          : chars.includes('L') ||
+                                                            chars.includes('K')
+                                                          ? 'legroom'
                                                           : 'normal'
                                                       }
-                                                      clickable={
-                                                        !element.assignable ? false : true
-                                                      }
+                                                      clickable={conditions}
                                                       onClick={() => {
                                                         if (conditions) {
                                                           // Seat Number = rowNum+col
@@ -2372,7 +2475,6 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                                         }
                                                       }}
                                                     />
-                                                    {contents}
                                                   </a>
                                                   <ReactTooltip id={rowNum + col} />
                                                 </td>
