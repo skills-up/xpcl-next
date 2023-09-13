@@ -14,10 +14,15 @@ import LoadingBar from 'react-top-loading-bar';
 import { setSelectedBookings } from '../../../features/flightSearch/flightSearchSlice';
 import { TiTickOutline } from 'react-icons/ti';
 import FlightProperty from '../../flight-list/common/FlightProperty';
-import { FaMinus, FaPlus } from 'react-icons/fa';
+import { FaDoorClosed, FaMinus, FaPlus } from 'react-icons/fa';
 import Seo from '../../common/Seo';
 import { RxCross1 } from 'react-icons/rx';
 import ReactDomServer from 'react-dom/server';
+import { TbStairsUp } from 'react-icons/tb';
+import { BsBox2Fill } from 'react-icons/bs';
+import { GiForkKnifeSpoon } from 'react-icons/gi';
+import { ImManWoman } from 'react-icons/im';
+import { BiSolidCabinet } from 'react-icons/bi';
 
 function Seatmap({ seatMaps, PNRS, travellerInfos }) {
   const [SEO, setSEO] = useState('');
@@ -900,6 +905,74 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
               </div>
               {expand[type].includes(ind) && (
                 <div className='mt-10'>
+                  {/* Legend */}
+                  <div
+                    className='bg-light-2 pt-10 px-20 mb-20 mt-10'
+                    style={{ height: '100%' }}
+                  >
+                    <h4 className='text-center mb-5'>Legend</h4>
+                    <div className='legend'>
+                      <div>
+                        <span>
+                          <Seat label={<RxCross1 />} type={'booked'} />
+                        </span>
+                        <span>Booked / Unavailable</span>
+                      </div>
+                      <div>
+                        <span>
+                          <Seat type={'selected'} />
+                        </span>
+                        <span>Selected</span>
+                      </div>
+                      <div>
+                        <span>
+                          <Seat isPriced type={'paid'} />
+                        </span>
+                        <span>Book With Extra Costs</span>
+                      </div>
+                      <div>
+                        <span>
+                          <Seat type={'normal'} />
+                        </span>
+                        <span>Book Without Extra Costs</span>
+                      </div>
+                    </div>
+                    <div className='row my-3'>
+                      {travellerInfo.map((trav, travInd) => {
+                        let seatSelected = '';
+                        if (el.seatMap?.travellers)
+                          for (let travl of el.seatMap?.travellers)
+                            if (travl.id === trav.id)
+                              seatSelected = travl?.designator || '';
+                        const age = (
+                          (Date.now() -
+                            +new DateObject({
+                              date: trav.passport_dob,
+                              format: 'YYYY-MM-DD',
+                            })
+                              .toDate()
+                              .getTime()) /
+                          31536000000
+                        ).toFixed(2);
+                        if (age >= 2)
+                          return (
+                            <span
+                              style={{ fontWeight: 'bold' }}
+                              className='d-block col-auto'
+                              key={travInd}
+                            >
+                              <span>{trav?.aliases[0]}</span>{' '}
+                              <span
+                                className='text-primary d-inline-block'
+                                style={{ width: '50px' }}
+                              >
+                                - {seatSelected ? seatSelected : 'NA'}
+                              </span>
+                            </span>
+                          );
+                      })}
+                    </div>
+                  </div>
                   {/* Iterating Decks */}
                   <div className='aaseatmap-scroll-container d-flex col-12 scroll-bar-1'>
                     {Object.entries(el.seatMap.decks).map(
@@ -1199,6 +1272,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                                   </a>
                                                   {group && group.amount > 0 && (
                                                     <ReactTooltip
+                                                      style={{ zIndex: '10' }}
                                                       id={element.designator}
                                                     />
                                                   )}
@@ -1221,102 +1295,6 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                         );
                       }
                     )}
-                  </div>
-                  {/* Legend */}
-                  <div
-                    className='bg-light-2 pt-10 px-20 mb-20 mt-10'
-                    style={{ height: '100%' }}
-                  >
-                    <h4 className='text-center mb-10'>Legend</h4>
-                    <div className='legend'>
-                      <span className='d-flex items-center'>
-                        <Seat label={''} fill={'#FF0000'} />
-                        <span
-                          style={{
-                            fontWeight: '700',
-                            display: 'inline-block',
-                            lineHeight: '1rem',
-                            marginTop: '0.4rem',
-                          }}
-                        >
-                          Booked
-                        </span>
-                      </span>
-                      <span className='d-flex items-center'>
-                        <Seat label={''} fill={'#4CBB17'} clickable />
-                        <span
-                          style={{
-                            fontWeight: '700',
-                            display: 'inline-block',
-                            lineHeight: '1rem',
-                            marginTop: '0.4rem',
-                          }}
-                        >
-                          Selected
-                        </span>
-                      </span>
-                      <span className='d-flex items-center'>
-                        <Seat label={''} fill={'#FFA500'} clickable />
-                        <span
-                          style={{
-                            fontWeight: '700',
-                            display: 'inline-block',
-                            lineHeight: '1rem',
-                            marginTop: '0.4rem',
-                          }}
-                        >
-                          Book With Extra Costs
-                        </span>
-                      </span>
-                      <span className='d-flex items-center'>
-                        <Seat label={''} fill={'#000'} clickable />
-                        <span
-                          style={{
-                            fontWeight: '700',
-                            display: 'inline-block',
-                            lineHeight: '1rem',
-                            marginTop: '0.4rem',
-                          }}
-                        >
-                          Book Without Extra Costs
-                        </span>
-                      </span>
-                    </div>
-                    <div className='row my-3'>
-                      {travellerInfo.map((trav, travInd) => {
-                        let seatSelected = '';
-                        if (el.seatMap?.travellers)
-                          for (let travl of el.seatMap?.travellers)
-                            if (travl.id === trav.id)
-                              seatSelected = travl?.designator || '';
-                        const age = (
-                          (Date.now() -
-                            +new DateObject({
-                              date: trav.passport_dob,
-                              format: 'YYYY-MM-DD',
-                            })
-                              .toDate()
-                              .getTime()) /
-                          31536000000
-                        ).toFixed(2);
-                        if (age >= 2)
-                          return (
-                            <span
-                              style={{ fontWeight: 'bold' }}
-                              className='d-block col-auto'
-                              key={travInd}
-                            >
-                              <span>{trav?.aliases[0]}</span>{' '}
-                              <span
-                                className='text-primary d-inline-block'
-                                style={{ width: '50px' }}
-                              >
-                                - {seatSelected ? seatSelected : 'NA'}
-                              </span>
-                            </span>
-                          );
-                      })}
-                    </div>
                   </div>
                 </div>
               )}
@@ -1433,6 +1411,80 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
               </div>
               {expand[type].includes(index) && (
                 <div className='mt-10'>
+                  {' '}
+                  {/* Legend */}
+                  <div
+                    className='bg-light-2 pt-10 px-20 mb-20 mt-10'
+                    style={{ height: '100%' }}
+                  >
+                    <h4 className='text-center mb-5'>Legend</h4>
+                    <div className='legend'>
+                      <div>
+                        <span>
+                          <Seat label={<RxCross1 />} type={'booked'} />
+                        </span>
+                        <span>Booked / Unavailable</span>
+                      </div>
+                      <div>
+                        <span>
+                          <Seat type={'selected'} />
+                        </span>
+                        <span>Selected</span>
+                      </div>
+                      <div>
+                        <span>
+                          <Seat isPriced type={'paid'} />
+                        </span>
+                        <span>Book With Extra Costs</span>
+                      </div>
+                      <div>
+                        <span>
+                          <Seat type={'normal'} />
+                        </span>
+                        <span>Book Without Extra Costs</span>
+                      </div>
+                      <div>
+                        <span>
+                          <Seat type={'legroom'} />
+                        </span>
+                        <span>Legroom</span>
+                      </div>
+                    </div>
+                    <div className='row my-3'>
+                      {travellerInfo.map((trav, travInd) => {
+                        let seatSelected = '';
+                        if (value?.travellers)
+                          for (let travl of value?.travellers)
+                            if (travl.id === trav.id) seatSelected = travl?.seatNo || '';
+                        const age = (
+                          (Date.now() -
+                            +new DateObject({
+                              date: trav.passport_dob,
+                              format: 'YYYY-MM-DD',
+                            })
+                              .toDate()
+                              .getTime()) /
+                          31536000000
+                        ).toFixed(2);
+                        if (age >= 2)
+                          return (
+                            <span
+                              style={{ fontWeight: 'bold' }}
+                              className='d-block col-auto'
+                              key={index}
+                            >
+                              <span>{trav?.aliases[0]}</span>{' '}
+                              <span
+                                className='text-primary d-inline-block'
+                                style={{ width: '50px' }}
+                              >
+                                - {seatSelected ? seatSelected : 'NA'}
+                              </span>
+                            </span>
+                          );
+                      })}
+                    </div>
+                  </div>
                   {/* Seatmap */}
                   {newArr && newArr.length > 0 && (
                     <div className='tjseatmap-scroll-container d-flex col-12 scroll-bar-1'>
@@ -1465,13 +1517,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                     >
                                       <Seat
                                         key={i}
-                                        label={
-                                          el.isBooked ? (
-                                            <RxCross1 />
-                                          ) : (
-                                            el.seatNo.split('').at(-1)
-                                          )
-                                        }
+                                        label={el.isBooked ? <RxCross1 /> : el.seatNo}
                                         type={
                                           el.isBooked
                                             ? 'booked'
@@ -1602,12 +1648,15 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                         }
                                       />
                                     </a>
-                                    <ReactTooltip id={el.seatNo} />
+                                    <ReactTooltip
+                                      id={el.seatNo}
+                                      style={{ zIndex: '10' }}
+                                    />
                                   </>
                                 ) : (
                                   <>
                                     {aisleArr.includes(i) ? (
-                                      <span className='row-number'>{ind + 1}</span>
+                                      <span className='row-number'></span>
                                     ) : (
                                       <span className='row-number' />
                                     )}
@@ -1619,114 +1668,6 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                       })}
                     </div>
                   )}
-                  {/* Legend */}
-                  <div
-                    className='bg-light-2 pt-10 px-20 mb-20 mt-10'
-                    style={{ height: '100%' }}
-                  >
-                    <h4 className='text-center mb-10'>Legend</h4>
-                    <div className='legend'>
-                      <span className='d-flex items-center'>
-                        <Seat label={''} fill={'#FF0000'} />
-                        <span
-                          style={{
-                            fontWeight: '700',
-                            lineHeight: '1rem',
-                            display: 'inline-block',
-                            marginTop: '0.4rem',
-                          }}
-                        >
-                          Booked
-                        </span>
-                      </span>
-                      <span className='d-flex items-center'>
-                        <Seat label={''} fill={'#4CBB17'} clickable />
-                        <span
-                          style={{
-                            fontWeight: '700',
-                            lineHeight: '1rem',
-                            display: 'inline-block',
-                            marginTop: '0.4rem',
-                          }}
-                        >
-                          Selected
-                        </span>
-                      </span>
-                      <span className='d-flex items-center'>
-                        <Seat label={''} fill={'#800080'} clickable />
-                        <span
-                          style={{
-                            fontWeight: '700',
-                            lineHeight: '1rem',
-                            display: 'inline-block',
-                            marginTop: '0.4rem',
-                          }}
-                        >
-                          Legroom
-                        </span>
-                      </span>
-                      <span className='d-flex items-center'>
-                        <Seat label={''} fill={'#FFA500'} clickable />
-                        <span
-                          style={{
-                            fontWeight: '700',
-                            display: 'inline-block',
-                            lineHeight: '1rem',
-                            marginTop: '0.4rem',
-                          }}
-                        >
-                          Book With Extra Costs
-                        </span>
-                      </span>
-                      <span className='d-flex items-center'>
-                        <Seat label={''} fill={'#000'} clickable />
-                        <span
-                          style={{
-                            fontWeight: '700',
-                            lineHeight: '1rem',
-                            display: 'inline-block',
-                            marginTop: '0.4rem',
-                          }}
-                        >
-                          Book Without Extra Costs
-                        </span>
-                      </span>
-                    </div>
-                    <div className='row my-3'>
-                      {travellerInfo.map((trav, travInd) => {
-                        let seatSelected = '';
-                        if (value?.travellers)
-                          for (let travl of value?.travellers)
-                            if (travl.id === trav.id) seatSelected = travl?.seatNo || '';
-                        const age = (
-                          (Date.now() -
-                            +new DateObject({
-                              date: trav.passport_dob,
-                              format: 'YYYY-MM-DD',
-                            })
-                              .toDate()
-                              .getTime()) /
-                          31536000000
-                        ).toFixed(2);
-                        if (age >= 2)
-                          return (
-                            <span
-                              style={{ fontWeight: 'bold' }}
-                              className='d-block col-auto'
-                              key={index}
-                            >
-                              <span>{trav?.aliases[0]}</span>{' '}
-                              <span
-                                className='text-primary d-inline-block'
-                                style={{ width: '50px' }}
-                              >
-                                - {seatSelected ? seatSelected : 'NA'}
-                              </span>
-                            </span>
-                          );
-                      })}
-                    </div>
-                  </div>
                 </div>
               )}
             </div>
@@ -1843,83 +1784,99 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                     style={{ height: '100%' }}
                     className='bg-light-2 pt-10 px-20 mb-20'
                   >
-                    <h4>
-                      <th colspan='2' className='text-center mb-10 d-block'>
-                        Legend
-                      </th>
-                    </h4>
-                    <table className='amadeus-table'>
-                      <tbody className='legend'>
-                        <tr>
-                          <td class='seat seat-sel'> &nbsp; </td>
-                          <span>Selected Seat</span>
-                        </tr>
-                        <tr>
-                          <td class='seat seat-O'> X </td>
-                          <span>Occupied Seat</span>
-                        </tr>
-                        <tr>
-                          <td class='seat seat-CH'> ₹ </td>
-                          <span>Paid Seat</span>
-                        </tr>
-                        <tr>
-                          <td class='seat seat-1'> &nbsp; </td>
-                          <span>Different Class / Reserved for Airport Check-In</span>
-                        </tr>
-                        <tr>
-                          <td class='seat seat-L'> &nbsp; </td>
-                          <span>Extra Leg Room Seat</span>
-                        </tr>
-                        <tr>
-                          <td class='seat seat-E'> &nbsp; </td>
-                          <span>Exit Row Preferred Seat</span>
-                        </tr>
-                        <tr>
-                          <td class='seat seat-OW'> &nbsp; </td>
-                          <span>Overwing Seat</span>
-                        </tr>
-                        <tr>
-                          <td class='seat seat-LA'> &nbsp; </td>
-                          <span>Lavatory</span>
-                        </tr>
-                        <tr>
-                          <td class='seat seat-AL'> &nbsp; </td>
-                          <span>Adjacent to Lavatory</span>
-                        </tr>
-                        <tr>
-                          <td class='seat seat-G'> &nbsp; </td>
-                          <span>Galley</span>
-                        </tr>
-                        <tr>
-                          <td class='seat seat-AG'> &nbsp; </td>
-                          <span>Adjacent to Galley</span>
-                        </tr>
-                        <tr>
-                          <td class='seat seat-1D'> &nbsp; </td>
-                          <span>Limited Recline Seat</span>
-                        </tr>
-                        <tr>
-                          <td class='seat seat-B'> &nbsp; </td>
-                          <span>Seat with Basinette</span>
-                        </tr>
-                        <tr>
-                          <td class='seat seat-BK'> &nbsp; </td>
-                          <span>Bulk Head</span>
-                        </tr>
-                        <tr>
-                          <td class='seat seat-SO'> &nbsp; </td>
-                          <span>Storage</span>
-                        </tr>
-                        <tr>
-                          <td class='seat seat-ST'> &nbsp; </td>
-                          <span>Stairs to Upper Deck</span>
-                        </tr>
-                        <tr>
-                          <td class='seat seat-GN'> &nbsp; </td>
-                          <span>Unavailable / Reserved for Other Usage</span>
-                        </tr>
-                      </tbody>
-                    </table>
+                    <h4 className='text-center mb-5'>Legend</h4>
+                    <div className='legend'>
+                      <div>
+                        <span>
+                          <Seat label={<RxCross1 />} type={'booked'} />
+                        </span>
+                        <span>Booked / Unavailable</span>
+                      </div>
+                      <div>
+                        <span>
+                          <Seat type={'selected'} />
+                        </span>
+                        <span>Selected</span>
+                      </div>
+                      <div>
+                        <span>
+                          <Seat isPriced type={'paid'} />
+                        </span>
+                        <span>Book With Extra Costs</span>
+                      </div>
+                      <div>
+                        <span>
+                          <Seat type={'normal'} />
+                        </span>
+                        <span>Book Without Extra Costs</span>
+                      </div>
+                      <div>
+                        <span>
+                          <Seat type={'legroom'} />
+                        </span>
+                        <span>Legroom</span>
+                      </div>
+                      <div>
+                        <span>
+                          <Seat type={'overwing'} />
+                        </span>
+                        <span>Overwing</span>
+                      </div>
+                      <div>
+                        <span>
+                          <Seat type={'exit-row-seat'} />
+                        </span>
+                        <span>Exit Row Seat</span>
+                      </div>
+                      <div>
+                        <span>
+                          <Seat type={'limited-recliner'} />
+                        </span>
+                        <span>Limited Recliner</span>
+                      </div>
+                      <div>
+                        <span>
+                          <Seat type={'basinette'} />
+                        </span>
+                        <span>Basinette</span>
+                      </div>
+                      <div>
+                        <span>
+                          <Seat label={<TbStairsUp />} type={'other'} />
+                        </span>
+                        <span>Stairs to Upper Deck</span>
+                      </div>
+                      <div>
+                        <span>
+                          <Seat label={<BiSolidCabinet />} type={'other'} />
+                        </span>
+                        <span>Closet</span>
+                      </div>
+                      <div>
+                        <span>
+                          <Seat label={<BsBox2Fill />} type={'other'} />
+                        </span>
+                        <span>Storage</span>
+                      </div>
+                      <div>
+                        <span>
+                          <Seat label={<GiForkKnifeSpoon />} type={'other'} />
+                        </span>
+                        <span>Galley</span>
+                      </div>
+                      <div>
+                        <span>
+                          <Seat label={<ImManWoman />} type={'other'} />
+                        </span>
+                        <span>Lavatory</span>
+                      </div>
+                      <div>
+                        <span>
+                          <Seat label={<FaDoorClosed />} type={'other'} />
+                        </span>
+                        <span>Bulk Head</span>
+                      </div>
+                    </div>
                     <div className='row my-3'>
                       {travellerInfo.map((trav, travInd) => {
                         let seatSelected = '';
@@ -2033,70 +1990,76 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                           contObj = { L: '', C: '', R: '' };
                           for (let col of seatFormatArr) {
                             if (col == ' ') {
-                              contObj[currProp] += `<td className="no-seat"></td>`;
+                              contObj[currProp] += `<td>${ReactDomServer.renderToString(
+                                <Seat />
+                              )}</td>`;
                               currProp = props[++propIdx];
                             } else {
                               var facility = facObj[currProp].shift();
                               if (facility) {
                                 contObj[currProp] += `<td>${ReactDomServer.renderToString(
                                   <Seat
+                                    label={
+                                      facility === 'ST' ? (
+                                        <TbStairsUp />
+                                      ) : facility === 'SO' ? (
+                                        <BsBox2Fill />
+                                      ) : facility === 'BK' ? (
+                                        <FaDoorClosed />
+                                      ) : facility === 'GN' ? (
+                                        <GiForkKnifeSpoon />
+                                      ) : facility === 'LA' ? (
+                                        <ImManWoman />
+                                      ) : facility === 'CL' ? (
+                                        <BiSolidCabinet />
+                                      ) : (
+                                        <RxCross1 />
+                                      )
+                                    }
                                     clickable={false}
                                     type={
-                                      facility === 'O' ||
-                                      facility === '1' ||
-                                      facility === 'GN'
-                                        ? 'booked'
-                                        : facility === 'ST'
-                                        ? 'stairs'
-                                        : facility === 'SO'
-                                        ? 'storage'
-                                        : facility === 'BK'
-                                        ? 'bulkhead'
-                                        : facility === 'B'
-                                        ? 'basinette'
-                                        : facility === '1D'
-                                        ? 'limited-recliner'
-                                        : facility === 'AG'
-                                        ? 'adjacent-galley'
-                                        : facility === 'G'
-                                        ? 'galley'
-                                        : facility === 'AL'
-                                        ? 'adjacent-lavatory'
-                                        : facility === 'LA'
-                                        ? 'lavatory'
-                                        : facility === 'OW'
-                                        ? 'overwing'
-                                        : facility === 'E'
-                                        ? 'exit-row-seat'
-                                        : facility === 'L' || facility === 'K'
-                                        ? 'legroom'
-                                        : 'normal'
+                                      facility === 'ST' ||
+                                      facility === 'SO' ||
+                                      facility === 'BK' ||
+                                      facility === 'GN' ||
+                                      facility === 'LA' ||
+                                      facility === 'CL'
+                                        ? 'other'
+                                        : 'booked'
                                     }
                                   />
                                 )}</td>`;
                               } else {
                                 if (currProp == 'R') {
                                   contObj[currProp] =
-                                    '<td className="no-seat"></td>' + contObj[currProp];
+                                    `<td>${ReactDomServer.renderToString(
+                                      <Seat />
+                                    )}</td>` + contObj[currProp];
                                 } else if (
                                   currProp == 'C' &&
                                   contObj[currProp].indexOf('</td><td') > 0
                                 ) {
                                   contObj[currProp] = contObj[currProp].replace(
                                     '</td><td',
-                                    '</td><td className="no-seat"></td><td'
+                                    `</td><td>${ReactDomServer.renderToString(
+                                      <Seat />
+                                    )}</td><td`
                                   );
                                 } else {
-                                  contObj[currProp] += '<td className="no-seat"></td>';
+                                  contObj[
+                                    currProp
+                                  ] += `<td>${ReactDomServer.renderToString(
+                                    <Seat />
+                                  )}</td>`;
                                 }
                               }
                             }
                           }
                           facRow = contObj['L'] + contObj['C'] + contObj['R'];
                           if (fac.rowLocation == 'F') {
-                            facFront += '<tr><td></td>' + facRow + '</tr>';
+                            facFront += '<tr>' + facRow + '</tr>';
                           } else {
-                            facRear += '<tr><td></td>' + facRow + '</tr>';
+                            facRear += '<tr>' + facRow + '</tr>';
                           }
                         }
 
@@ -2124,12 +2087,12 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                           >
                             <tbody>
                               {/* facFront */}
-                              <tr>
+                              {/* <tr>
                                 <td></td>
                                 {seatFormatArr.map((col) => (
                                   <th className='col-name'>{col}</th>
                                 ))}
-                              </tr>
+                              </tr> */}
                               {parse(facFront)}
                               {/* cont */}
                               {rowRange.map((i, index) => {
@@ -2165,8 +2128,11 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                     contObj = { L: '', C: '', R: '' };
                                     seatFormatArr.forEach((col) => {
                                       if (col == ' ') {
-                                        contObj[currProp] +=
-                                          '<td className="no-seat"></td>';
+                                        contObj[
+                                          currProp
+                                        ] += `<td>${ReactDomServer.renderToString(
+                                          <Seat />
+                                        )}</td>`;
                                         currProp = props[++propIdx];
                                       } else {
                                         var facility = facObj[currProp].shift();
@@ -2175,57 +2141,58 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                             currProp
                                           ] += `<td>${ReactDomServer.renderToString(
                                             <Seat
+                                              label={
+                                                facility === 'ST' ? (
+                                                  <TbStairsUp />
+                                                ) : facility === 'SO' ? (
+                                                  <BsBox2Fill />
+                                                ) : facility === 'BK' ? (
+                                                  <FaDoorClosed />
+                                                ) : facility === 'GN' ? (
+                                                  <GiForkKnifeSpoon />
+                                                ) : facility === 'LA' ? (
+                                                  <ImManWoman />
+                                                ) : facility === 'CL' ? (
+                                                  <BiSolidCabinet />
+                                                ) : (
+                                                  <RxCross1 />
+                                                )
+                                              }
                                               clickable={false}
                                               type={
-                                                facility === 'O' ||
-                                                facility === '1' ||
+                                                facility === 'ST' ||
+                                                facility === 'SO' ||
+                                                facility === 'BK' ||
                                                 facility === 'GN' ||
+                                                facility === 'LA' ||
                                                 facility === 'CL'
-                                                  ? 'booked'
-                                                  : facility === 'ST'
-                                                  ? 'stairs'
-                                                  : facility === 'SO'
-                                                  ? 'storage'
-                                                  : facility === 'BK'
-                                                  ? 'bulkhead'
-                                                  : facility === 'B'
-                                                  ? 'basinette'
-                                                  : facility === '1D'
-                                                  ? 'limited-recliner'
-                                                  : facility === 'AG'
-                                                  ? 'adjacent-galley'
-                                                  : facility === 'G'
-                                                  ? 'galley'
-                                                  : facility === 'AL'
-                                                  ? 'adjacent-lavatory'
-                                                  : facility === 'LA'
-                                                  ? 'lavatory'
-                                                  : facility === 'OW'
-                                                  ? 'overwing'
-                                                  : facility === 'E'
-                                                  ? 'exit-row-seat'
-                                                  : facility === 'L' || facility === 'K'
-                                                  ? 'legroom'
-                                                  : 'normal'
+                                                  ? 'other'
+                                                  : 'booked'
                                               }
                                             />
                                           )}</td>`;
                                         } else {
                                           if (currProp == 'R') {
                                             contObj[currProp] =
-                                              '<td className="no-seat"></td>' +
-                                              contObj[currProp];
+                                              `<td>${ReactDomServer.renderToString(
+                                                <Seat />
+                                              )}</td>` + contObj[currProp];
                                           } else if (
                                             currProp == 'C' &&
                                             contObj[currProp].indexOf('</td><td') > 0
                                           ) {
                                             contObj[currProp] = contObj[currProp].replace(
                                               '</td><td',
-                                              '</td><td className="no-seat"></td><td'
+                                              `</td><td>${ReactDomServer.renderToString(
+                                                <Seat />
+                                              )}</td><td`
                                             );
                                           } else {
-                                            contObj[currProp] +=
-                                              '<td className="no-seat"></td>';
+                                            contObj[
+                                              currProp
+                                            ] += `<td>${ReactDomServer.renderToString(
+                                              <Seat />
+                                            )}</td>`;
                                           }
                                         }
                                       }
@@ -2233,9 +2200,9 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                     facRow = contObj['L'] + contObj['C'] + contObj['R'];
 
                                     if (fac.rowLocation == 'F') {
-                                      rowBefore += '<tr><td></td>' + facRow + '</tr>';
+                                      rowBefore += '<tr><' + facRow + '</tr>';
                                     } else {
-                                      rowAfter += '<tr><td></td>' + facRow + '</tr>';
+                                      rowAfter += '<tr>' + facRow + '</tr>';
                                     }
                                   });
                                   const row = cabinRow.rowDetails;
@@ -2263,7 +2230,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                             : ''
                                         }`}
                                       >
-                                        <th className='row-number'>{rowNum}</th>
+                                        {/* <th className='row-number'>{rowNum}</th> */}
                                         {seatFormatArr.map((col, colInd) => {
                                           if (col !== ' ') {
                                             var chars =
@@ -2307,11 +2274,12 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                               !chars.includes('SO') &&
                                               !chars.includes('BK') &&
                                               !chars.includes('ST') &&
-                                              !chars.includes('LA') &&
-                                              !chars.includes('G');
+                                              !chars.includes('LA');
                                             if (chars.indexOf('8') >= 0) {
                                               return (
-                                                <td key={colInd} className='no-seat' />
+                                                <td key={colInd}>
+                                                  <Seat />
+                                                </td>
                                               );
                                             } else {
                                               return (
@@ -2341,45 +2309,52 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                                       label={
                                                         conditions ? (
                                                           rowNum + col
+                                                        ) : chars.includes('ST') ? (
+                                                          <TbStairsUp />
+                                                        ) : chars.includes('SO') ? (
+                                                          <BsBox2Fill />
+                                                        ) : chars.includes('BK') ? (
+                                                          <FaDoorClosed />
+                                                        ) : chars.includes('GN') ? (
+                                                          <GiForkKnifeSpoon />
+                                                        ) : chars.includes('LA') ? (
+                                                          <ImManWoman />
+                                                        ) : chars.includes('CL') ? (
+                                                          <BiSolidCabinet />
                                                         ) : (
                                                           <RxCross1 />
                                                         )
                                                       }
                                                       isPriced={
-                                                        chars.includes('CH') && +price > 0
+                                                        conditions &&
+                                                        chars.includes('CH') &&
+                                                        +price > 0
                                                       }
                                                       type={
-                                                        chars.includes('O') ||
-                                                        chars.includes('1') ||
-                                                        chars.includes('GN')
+                                                        chars.includes('ST') ||
+                                                        chars.includes('SO') ||
+                                                        chars.includes('BK') ||
+                                                        chars.includes('GN') ||
+                                                        chars.includes('LA') ||
+                                                        chars.includes('CL')
+                                                          ? 'other'
+                                                          : !conditions
                                                           ? 'booked'
                                                           : seatSelected
                                                           ? 'selected'
-                                                          : chars.includes('ST')
-                                                          ? 'stairs'
-                                                          : chars.includes('SO')
-                                                          ? 'storage'
-                                                          : chars.includes('BK')
-                                                          ? 'bulkhead'
                                                           : chars.includes('B')
                                                           ? 'basinette'
                                                           : chars.includes('1D')
                                                           ? 'limited-recliner'
-                                                          : chars.includes('AG')
-                                                          ? 'adjacent-galley'
-                                                          : chars.includes('G')
-                                                          ? 'galley'
-                                                          : chars.includes('AL')
-                                                          ? 'adjacent-lavatory'
-                                                          : chars.includes('LA')
-                                                          ? 'lavatory'
-                                                          : chars.includes('OW')
-                                                          ? 'overwing'
                                                           : chars.includes('E')
                                                           ? 'exit-row-seat'
-                                                          : chars.includes('L') ||
-                                                            chars.includes('K')
+                                                          : chars.includes('OW')
+                                                          ? 'overwing'
+                                                          : chars.includes('L')
                                                           ? 'legroom'
+                                                          : chars.includes('CH') &&
+                                                            +price > 0
+                                                          ? 'paid'
                                                           : 'normal'
                                                       }
                                                       clickable={conditions}
@@ -2476,13 +2451,18 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                                       }}
                                                     />
                                                   </a>
-                                                  <ReactTooltip id={rowNum + col} />
+                                                  <ReactTooltip
+                                                    style={{ zIndex: '10' }}
+                                                    id={rowNum + col}
+                                                  />
                                                 </td>
                                               );
                                             }
                                           } else {
                                             return (
-                                              <td key={colInd} className='no-seat' />
+                                              <td key={colInd}>
+                                                <Seat />
+                                              </td>
                                             );
                                           }
                                         })}
