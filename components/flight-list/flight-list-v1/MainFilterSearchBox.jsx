@@ -12,6 +12,7 @@ import {
   setClientTravellers as setClientTravellersRedux,
   setDestinations,
   setInitialSearchData,
+  setInitialState,
   setReturnFlight as setReturnFlightRedux,
   setSearchData,
   setTravellerDOBS,
@@ -65,7 +66,7 @@ const MainFilterSearchBox = () => {
   }, [to, from]);
 
   useEffect(() => {
-    // dispatch(setInitialState());
+    dispatch(setInitialState());
     if (router.isReady)
       if (token !== '') {
         checkUser(router, dispatch);

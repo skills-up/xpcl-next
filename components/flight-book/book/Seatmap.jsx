@@ -904,10 +904,10 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                 </span>
               </div>
               {expand[type].includes(ind) && (
-                <div className='mt-10'>
+                <div className=''>
                   {/* Legend */}
                   <div
-                    className='bg-light-2 pt-10 px-20 mb-20 mt-10'
+                    className='bg-light-2 pt-10 px-20 mb-20'
                     style={{ height: '100%' }}
                   >
                     <h4 className='text-center mb-5'>Legend</h4>
@@ -1410,11 +1410,11 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                 </span>
               </div>
               {expand[type].includes(index) && (
-                <div className='mt-10'>
+                <div className=''>
                   {' '}
                   {/* Legend */}
                   <div
-                    className='bg-light-2 pt-10 px-20 mb-20 mt-10'
+                    className='bg-light-2 pt-10 px-20 mb-20'
                     style={{ height: '100%' }}
                   >
                     <h4 className='text-center mb-5'>Legend</h4>
@@ -1778,7 +1778,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                 </span>
               </div>
               {expand[type].includes(dIndex) && (
-                <div className='mt-10'>
+                <div className=''>
                   {/* Legend */}
                   <div
                     style={{ height: '100%' }}
