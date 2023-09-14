@@ -11,10 +11,12 @@ import { createItem, deleteItem, getItem } from '../../../../api/xplorzApi';
 import ViewTable from '../../../../components/view-table';
 import Select from 'react-select';
 import NewFileUploads from '../../../../components/new-file-uploads';
+import { BsTrash3 } from 'react-icons/bs';
 
 const ViewVisaApplications = () => {
   const [visaApplications, setVisaApplications] = useState([]);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [confirmDeleteNote, setConfirmDeleteNote] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
   const [status, setStatus] = useState(null);
   const [noteImage, setNoteImage] = useState([]);
@@ -161,6 +163,10 @@ const ViewVisaApplications = () => {
     setConfirmDelete(false);
     setIdToDelete(-1);
   };
+  const onNoteCancel = async () => {
+    setConfirmDeleteNote(false);
+    setIdToDelete(-1);
+  };
   const onSubmit = async () => {
     const response = await deleteItem('visa-applications', idToDelete);
     if (response?.success) {
@@ -176,6 +182,22 @@ const ViewVisaApplications = () => {
       );
     }
     onCancel();
+  };
+  const onNoteSubmit = async () => {
+    const response = await deleteItem('visa-application-notes', idToDelete);
+    if (response?.success) {
+      sendToast('success', 'Deleted successfully', 4000);
+      router.reload();
+    } else {
+      sendToast(
+        'error',
+        response.data?.message ||
+          response.data?.error ||
+          'Unexpected Error Occurred While Trying to Delete this Note',
+        4000
+      );
+    }
+    onNoteCancel();
   };
 
   const submitNote = async () => {
@@ -359,6 +381,47 @@ const ViewVisaApplications = () => {
                   </>
                 )}
                 <h4 className='mt-10'>Notes</h4>
+                <>
+                  {confirmDeleteNote && (
+                    <ConfirmationModal
+                      onCancel={onNoteCancel}
+                      onSubmit={onNoteSubmit}
+                      title='Do you really want to delete this note?'
+                      content='This will permanently delete the visa application note. Press OK to confirm.'
+                    />
+                  )}
+                  {visaApplications?.notes?.map(note => (
+                    <div className='d-flex flex-column border-light rounded_4 p-4'>
+                      <div className='col-12'>
+                        {note.body}
+                      </div>
+                      <small className='row justify-between mt-10'>
+                        <div class='col-auto'>
+                        {note.attachments?.length ? 
+                          <>
+                            <b>Attachments:</b>
+                            {note.attachments?.map(url => (
+                              <a className='btn-link ml-10' href={url} target='_blank' download>Download</a>
+                            ))}
+                          </> : '' }
+                        </div>
+                        <div class='col-auto'>
+                          <button
+                            className='btn btn-danger d-flex items-center gap-1 col-auto'
+                            type='button'
+                            onClick={() => {
+                              setIdToDelete(note.id);
+                              setConfirmDeleteNote(true);
+                            }}
+                          >
+                            <BsTrash3 /> Delete
+                          </button>
+                        </div>
+                      </small>
+                    </div>
+                  ))}
+                </>
+                <h6 className='mt-20'>Add New</h6>
                 <div className='form-input my-2'>
                   <textarea
                     rows={4}
