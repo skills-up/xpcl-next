@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Datatable from '../../../components/datatable/Datatable';
 import { getList } from '../../../api/xplorzApi';
 import BoardingPassUpload from './BoardingPassUpload';
+import { sendToast } from '../../../utils/toastify';
 
 const TravelList = () => {
   const [travelSectors, setTravelSectors] = useState([]);
