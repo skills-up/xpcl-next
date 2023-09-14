@@ -62,7 +62,7 @@ const ViewCalendarTemplate = () => {
         if (data.image_url) {
           data.image_url = (
             <a href={data.image_url} target='_blank'>
-              {data.image_url.split('/').at(-1)}
+              Download
             </a>
           );
         }

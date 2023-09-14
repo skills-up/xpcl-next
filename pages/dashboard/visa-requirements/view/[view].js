@@ -32,6 +32,17 @@ const ViewVisaRequirements = () => {
         delete data['personal_docs_reqs'];
         delete data['supporting_docs_reqs'];
         delete data['financial_docs_reqs'];
+        if (data.visa_forms && data.visa_forms.length) {
+          data.visa_forms = (
+            <>
+              {data.visa_forms.map((element) => (
+                <a className='mr-10' href={element} target='_blank'>
+                  Download
+                </a>
+              ))}
+            </>
+          );
+        }
         if (data.created_by) {
           data.created_by = (
             <a

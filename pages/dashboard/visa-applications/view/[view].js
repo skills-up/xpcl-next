@@ -82,7 +82,7 @@ const ViewVisaApplications = () => {
             for (let [key, value] of Object.entries(data['personal_docs_scans'])) {
               data['personal_docs_scans'][key] = (
                 <a href={value} target='_blank'>
-                  {value.split('/').at(-1)}
+                  Download
                 </a>
               );
             }
@@ -103,7 +103,7 @@ const ViewVisaApplications = () => {
             for (let [key, value] of Object.entries(data['financial_docs_scans'])) {
               data['financial_docs_scans'][key] = (
                 <a href={value} target='_blank'>
-                  {value.split('/').at(-1)}
+                  Download
                 </a>
               );
             }
@@ -124,7 +124,7 @@ const ViewVisaApplications = () => {
             for (let [key, value] of Object.entries(data['supporting_docs_scans'])) {
               data['supporting_docs_scans'][key] = (
                 <a href={value} target='_blank'>
-                  {value.split('/').at(-1)}
+                  Download
                 </a>
               );
             }
@@ -132,15 +132,13 @@ const ViewVisaApplications = () => {
         if (data['visa_requirement']['visa_forms']) {
           data['visa_requirement']['visa_forms'] = {
             visa_forms: (
-              <ul className='list-disc'>
+              <>
                 {data['visa_requirement']['visa_forms'].map((element) => (
-                  <li>
-                    <a href={element} target='_blank'>
-                      {element.split('/').at(-1)}
+                    <a className='mr-10' href={element} target='_blank'>
+                      Download
                     </a>
-                  </li>
                 ))}
-              </ul>
+              </>
             ),
           };
         }
