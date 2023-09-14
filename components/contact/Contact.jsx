@@ -1,16 +1,22 @@
-import Address from '../block/Address';
 import WhyChoose from '../block/BlockGuide';
 import Solutions from '../block/Solutions';
 import ContactForm from '../common/ContactForm';
-import Social from '../common/social/Social';
-import Header1 from '../header/header-1';
+import ContactHero from '../common/Hero';
+import ContactPartner from '../common/Partner';
+import ContactGetStarted from '../common/GetStarted';
+import ContactWhyUs from '../common/WhyUs';
+import ContactBudget from '../common/Budget';
 
 function ContactPage({ isSignUp = false }) {
   return (
-    <>
+    <div className='contact-page'>
       <div className='header-margin'></div>
       {/* header top margin */}
       {/* End Header 1 */}
+
+      <ContactHero />
+      <ContactPartner />
+      <ContactGetStarted />
       <section className='layout-pt-lg layout-pb-lg bg-white'>
         <div className='container'>
           <div className='row justify-center text-center'>
@@ -117,7 +123,7 @@ function ContactPage({ isSignUp = false }) {
         </div>
       </section> */}
       {/* End Address Section */}
-    </>
+    </div>
   );
 }
 
