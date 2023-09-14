@@ -29,7 +29,7 @@ function ContactPartner() {
               </div>
             </div>
             {/* Right */}
-            <div className='col-lg-6'>
+            <div className='col-lg-6 pt-30'>
               <Slider
                 {...{
                   dots: false,

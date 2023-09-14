@@ -54,7 +54,7 @@ function ContactHero() {
           <div className='container'>
             <div className='row'>
               {/* Row */}
-              <div className='col-12 row x-gap-10' data-aos='fade'>
+              <div className='col-lg-12 row x-gap-10' data-aos='fade'>
                 {/* Left */}
                 <div className='col-lg-6'>
                   {/* Tab Buttons */}

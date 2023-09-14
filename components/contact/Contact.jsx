@@ -6,6 +6,7 @@ import ContactPartner from '../common/Partner';
 import ContactGetStarted from '../common/GetStarted';
 import ContactWhyUs from '../common/WhyUs';
 import ContactBudget from '../common/Budget';
+import ContactQR from '../common/ContactQR';
 
 function ContactPage({ isSignUp = false }) {
   return (
@@ -17,6 +18,8 @@ function ContactPage({ isSignUp = false }) {
       <ContactHero />
       <ContactPartner />
       <ContactGetStarted />
+      <ContactQR />
+      <ContactWhyUs />
       <section className='layout-pt-lg layout-pb-lg bg-white'>
         <div className='container'>
           <div className='row justify-center text-center'>

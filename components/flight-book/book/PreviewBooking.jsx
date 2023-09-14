@@ -115,6 +115,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                 value: {
                   ...el,
                   ...{
+                    intermediary_quoted: { from: 0, to: 0, combined: 0 },
                     quoted_amount: { from: 0, to: 0, combined: 0 },
                     frequentFliers: ff,
                     // frequentFliers: null,
@@ -267,7 +268,12 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
             ...prev,
             combined: {
               data: response.data,
-              ...{ provider: 'ad', hide_fare: false, email_travellers: false },
+              ...{
+                provider: 'ad',
+                hide_fare: false,
+                email_travellers: false,
+                via_intermediary: false,
+              },
             },
           }));
           setCurrentStep(2);
@@ -305,8 +311,24 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
         });
         if (response?.success) {
           setPNR((prev) => ({
-            from: { data: response.data, provider: 'ad' },
-            to: { data: response.data, provider: 'ad' },
+            from: {
+              data: response.data,
+              ...{
+                provider: 'ad',
+                hide_fare: false,
+                email_travellers: false,
+                via_intermediary: false,
+              },
+            },
+            to: {
+              data: response.data,
+              ...{
+                provider: 'ad',
+                hide_fare: false,
+                email_travellers: false,
+                via_intermediary: false,
+              },
+            },
             combined: null,
           }));
           setCurrentStep(2);
@@ -379,7 +401,12 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
             ...prev,
             [key]: {
               data: response.data,
-              ...{ provider: 'aa', hide_fare: false, email_travellers: false },
+              ...{
+                provider: 'aa',
+                hide_fare: false,
+                email_travellers: false,
+                via_intermediary: false,
+              },
             },
           }));
           currentAPICalls += 1;
@@ -401,7 +428,12 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
               ...prev,
               [key]: {
                 data: response.data,
-                ...{ provider: 'tj', hide_fare: false, email_travellers: false },
+                ...{
+                  provider: 'tj',
+                  hide_fare: false,
+                  email_travellers: false,
+                  via_intermediary: false,
+                },
               },
             }));
             currentAPICalls += 1;
@@ -433,7 +465,12 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
               ...prev,
               [key]: {
                 data: response.data,
-                ...{ provider: 'ad', hide_fare: false, email_travellers: false },
+                ...{
+                  provider: 'ad',
+                  hide_fare: false,
+                  email_travellers: false,
+                  via_intermediary: false,
+                },
               },
             }));
             currentAPICalls += 1;
