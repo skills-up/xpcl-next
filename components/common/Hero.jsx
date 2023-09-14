@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Parallax } from 'react-parallax';
-import TextTransition, { presets } from 'react-text-transition';
 
 function ContactHero() {
   const list = [
@@ -71,10 +70,10 @@ function ContactHero() {
                     ))}
                   </div>
                   <h3 className='mb-5 mt-10 text-primary'>Xplorz For Business</h3>
-                  <TextTransition springConfig={presets.slow}>
+                  <div className='text-transition'>
                     <h1 className='text-white'>{list[currentTab].title}</h1>
                     <h5 className='text-white mt-30'>{list[currentTab].subtitle}</h5>
-                  </TextTransition>
+                  </div>
                   <div className='d-inline-block hero-button'>
                     <Link
                       href='/hotel/hotel-list-v5'

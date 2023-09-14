@@ -3171,22 +3171,10 @@ table.table-6 {
         top: -80% !important;
       }
     }
-    .hero-button {
-      margin-top: 0;
-      @include media-below(xxl) {
-        margin-top: 2rem;
-      }
-      @include media-below(xl) {
-        margin-top: 5rem;
-      }
+    .text-transition {
+      margin-bottom: 3rem;
       @include media-below(lg) {
-        margin-top: 2rem;
-      }
-      @include media-below(md) {
-        margin-top: 5rem;
-      }
-      @include media-below(sm) {
-        margin-top: 2rem;
+        margin-bottom: 2rem;
       }
     }
     .hero-image {
