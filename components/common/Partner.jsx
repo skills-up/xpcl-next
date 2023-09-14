@@ -8,7 +8,7 @@ function ContactPartner() {
           {/* Row */}
           <div className='row x-gap-20 justify-between'>
             {/* Left */}
-            <div className='col-lg-6'>
+            <div className='col-xl-6'>
               <span className='d-block text-25'>
                 <span className='text-light-5 fw-700'>Partner to</span>{' '}
                 <span className='text-40'>49,648</span> Businesses
@@ -29,7 +29,7 @@ function ContactPartner() {
               </div>
             </div>
             {/* Right */}
-            <div className='col-lg-6 pt-30'>
+            <div className='col-xl-6 pt-30'>
               <Slider
                 {...{
                   dots: false,
@@ -39,26 +39,41 @@ function ContactPartner() {
                   autoplay: true,
                   speed: 2000,
                   autoplaySpeed: 2000,
+                  swipeToSlide: true,
                   cssEase: 'linear',
+                  responsive: [
+                    {
+                      breakpoint: 1200,
+                      settings: {
+                        slidesToShow: 3,
+                      },
+                    },
+                    {
+                      breakpoint: 576,
+                      settings: {
+                        slidesToShow: 2,
+                      },
+                    },
+                  ],
                 }}
               >
                 <div>
-                  <h5>PartnerImage1</h5>
+                  <h5>PartnerImg1</h5>
                 </div>
                 <div>
-                  <h5>PartnerImage2</h5>
+                  <h5>PartnerImg2</h5>
                 </div>
                 <div>
-                  <h5>PartnerImage3</h5>
+                  <h5>PartnerImg3</h5>
                 </div>
                 <div>
-                  <h5>PartnerImage4</h5>
+                  <h5>PartnerImg4</h5>
                 </div>
                 <div>
-                  <h5>PartnerImage5</h5>
+                  <h5>PartnerImg5</h5>
                 </div>
                 <div>
-                  <h5>PartnerImage6</h5>
+                  <h5>PartnerImg6</h5>
                 </div>
               </Slider>
             </div>
