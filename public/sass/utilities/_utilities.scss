@@ -1258,7 +1258,7 @@ $_displays: none, inline-block, block, flex;
   textarea:focus ~ label,
   textarea:not(:placeholder-shown) ~ label,
   input:focus ~ label,
-  input[placeholder] ~ label,
+  // input[placeholder] ~ label,
   input:not(:placeholder-shown) ~ label {
     transform: translateY(-10px);
   }
