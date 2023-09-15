@@ -605,7 +605,7 @@ const FlightProperties = () => {
                 flex: '1',
               }}
             >
-              {destinations?.from?.iata} <BsArrowRight /> {destinations?.to?.iata}
+              {destinations?.from?.value} <BsArrowRight /> {destinations?.to?.value}
             </span>
           )}
           {fromCount > 0 && (
@@ -620,7 +620,7 @@ const FlightProperties = () => {
                 flex: '1',
               }}
             >
-              {destinations?.to?.iata} <BsArrowRight /> {destinations?.from?.iata}
+              {destinations?.to?.value} <BsArrowRight /> {destinations?.from?.value}
             </span>
           )}
           {combinedCount > 0 && (

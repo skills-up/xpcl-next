@@ -158,6 +158,7 @@ const Permissions = () => {
       </div>
       {/* Data Table */}
       <Datatable
+        viewLink={'/dashboard/permissions'}
         downloadCSV
         CSVName='Permissions.csv'
         columns={columns}

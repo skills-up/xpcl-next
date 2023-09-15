@@ -267,7 +267,9 @@ const AddNewBooking = () => {
               from_airport: element['from_airport']?.value,
               to_airport: element['to_airport']?.value,
               travel_date: element['travel_date']?.format('YYYY-MM-DD'),
-              travel_time: element['travel_time'] + ':00',
+              travel_time: element['travel_time']
+              ? element['travel_time'] + ':00'
+              : undefined,
               details:
                 element['details'].trim().length > 0 ? element['details'] : undefined,
               booking_class: element['booking_class']?.value,
@@ -684,7 +686,7 @@ const AddNewBooking = () => {
                     </div>
                     {bookingType?.value === 'Miscellaneous' && (
                       <div className='form-input-select col-lg-4'>
-                        <label>Type</label>
+                        <label>Type<span className='text-danger'>*</span></label>
                         <Select
                           options={miscellaneousOptions}
                           value={miscellaneousType}
@@ -694,7 +696,7 @@ const AddNewBooking = () => {
                     )}
                     {bookingType?.value !== 'Miscellaneous' && (
                       <div className='form-input-select col-lg-4'>
-                        <label>Airline</label>
+                        <label>Airline<span className='text-danger'>*</span></label>
                         <Select
                           options={airlines}
                           value={airlineID}
@@ -761,7 +763,9 @@ const AddNewBooking = () => {
                                   className='booking-sectors mx-1 pr-10 bg-light items-center mt-2 lg:pr-0'
                                   key={index}
                                 >
-                                  <div style={{minWidth: 15, maxWidth: 15}}>{index + 1}.</div>
+                                  <div style={{ minWidth: 15, maxWidth: 15 }}>
+                                    {index + 1}.
+                                  </div>
                                   <div className='d-flex row y-gap-10 col-12 x-gap-5 lg:pr-0 md:flex-column items-center justify-between'>
                                     <div className='form-input-select col-md-2'>
                                       <label>
@@ -770,14 +774,16 @@ const AddNewBooking = () => {
                                       <AirportSearch
                                         value={element['from_airport']}
                                         airports={[airportOptions, setAirportOptions]}
-                                        setValue={(id) => 
-                                          setBookingSectors(prev => {
+                                        setValue={(id) =>
+                                          setBookingSectors((prev) => {
                                             prev[index]['from_airport'] = id;
                                             return [...prev];
                                           })
                                         }
                                         options={airports}
-                                        domestic={bookingType?.value === 'Domestic Flight Ticket'}
+                                        domestic={
+                                          bookingType?.value === 'Domestic Flight Ticket'
+                                        }
                                       />
                                     </div>
                                     <div className='form-input-select col-md-2'>
@@ -787,14 +793,16 @@ const AddNewBooking = () => {
                                       <AirportSearch
                                         value={element['to_airport']}
                                         airports={[airportOptions, setAirportOptions]}
-                                        setValue={(id) => 
-                                          setBookingSectors(prev => {
+                                        setValue={(id) =>
+                                          setBookingSectors((prev) => {
                                             prev[index]['to_airport'] = id;
                                             return [...prev];
                                           })
                                         }
                                         options={airports}
-                                        domestic={bookingType?.value === 'Domestic Flight Ticket'}
+                                        domestic={
+                                          bookingType?.value === 'Domestic Flight Ticket'
+                                        }
                                       />
                                     </div>
                                     <div className='col-md-2 form-datepicker'>
@@ -832,8 +840,8 @@ const AddNewBooking = () => {
                                             })
                                           }
                                           value={element['travel_time']}
-                                          placeholder=' '
-                                          type='time'
+                                          placeholder='--:--'
+                                          pattern='^[0-2][0-9]:[0-5][0-9]$'
                                         />
                                         <label className='lh-1 text-16 text-light-1'>
                                           Travel Time
@@ -929,6 +937,7 @@ const AddNewBooking = () => {
                         <div className='form-input-select col-lg-4'>
                           <label>Client Referrer</label>
                           <Select
+                            isClearable
                             options={clients}
                             value={clientReferrerID}
                             onChange={(id) => {
@@ -1029,6 +1038,12 @@ const AddNewBooking = () => {
                         <input
                           onChange={(e) => {
                             setVendorGSTAmount(e.target.value);
+                            updateClientGSTAmount(
+                              clientGSTPercent,
+                              e.target.value,
+                              clientQuotedAmount,
+                              clientTaxAmount
+                            );
                           }}
                           value={vendorGSTAmount}
                           placeholder=' '
@@ -1083,6 +1098,7 @@ const AddNewBooking = () => {
                     <div className='form-input-select col-lg-4'>
                       <label>Payment Account</label>
                       <Select
+                        isClearable
                         options={paymentAccounts}
                         value={paymentAccountID}
                         onChange={(id) => {
@@ -1128,6 +1144,7 @@ const AddNewBooking = () => {
                         <div className='form-input-select col-lg-4'>
                           <label>Commission Rule</label>
                           <Select
+                            isClearable
                             options={commissionRules}
                             value={commissionRuleID}
                             onChange={(id) => {
@@ -1342,7 +1359,15 @@ const AddNewBooking = () => {
                             setClientBaseAmountFocused(true);
                             setXplorzGSTFocused(true);
                           }}
-                          onBlur={() => setClientBaseAmountFocused(false)}
+                          onBlur={() => {
+                            setClientBaseAmountFocused(false);
+                            updateClientGSTAmount(
+                              clientGSTPercent,
+                              vendorGSTAmount,
+                              clientQuotedAmount,
+                              clientTaxAmount
+                            );
+                          }}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Client Base Amount<span className='text-danger'>*</span>

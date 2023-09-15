@@ -83,7 +83,7 @@ const ViewTravelVisas = () => {
               {Object.values(data?.visa_scans).map((element, index) => (
                 <li key={index}>
                   <a href={element} target='_blank'>
-                    {element.split('/').at(-1)}
+                    Download
                   </a>
                 </li>
               ))}

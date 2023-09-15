@@ -158,6 +158,7 @@ const Roles = () => {
       </div>
       {/* Data Table */}
       <Datatable
+        viewLink={'/dashboard/roles'}
         downloadCSV
         CSVName='Roles.csv'
         columns={columns}

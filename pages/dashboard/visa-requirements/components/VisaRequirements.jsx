@@ -165,6 +165,7 @@ const VisaRequirements = () => {
       </div>
       {/* Data Table */}
       <Datatable
+        viewLink={'/dashboard/visa-requirements'}
         downloadCSV
         CSVName='VisaRequirements.csv'
         columns={columns}

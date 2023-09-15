@@ -123,6 +123,7 @@ const AddNewAccountCategories = () => {
                         Select Parent Category<span className='text-danger'>*</span>
                       </label>
                       <Select
+                        isClearable
                         defaultValue={accountCategoryID}
                         options={accountCategories}
                         value={accountCategoryID}

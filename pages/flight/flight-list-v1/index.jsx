@@ -26,6 +26,9 @@ const index = () => {
 
         <section className='pt-40 pb-40'>
           <div className='container'>
+            <div className='text-center'>
+              <h1 className='text-30 fw-600'>Search Flights</h1>
+            </div>
             <MainFilterSearchBox />
           </div>
         </section>

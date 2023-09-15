@@ -75,7 +75,7 @@ const ViewTravelInsurances = () => {
               {Object.values(data?.documents).map((element, index) => (
                 <li key={index}>
                   <a href={element} target='_blank'>
-                    {element.split('/').at(-1)}
+                    Download
                   </a>
                 </li>
               ))}

@@ -162,6 +162,7 @@ const Travellers = () => {
       </div>
       {/* Data Table */}
       <Datatable
+        viewLink={'/dashboard/travellers'}
         downloadCSV
         CSVName='Travellers.csv'
         columns={columns}

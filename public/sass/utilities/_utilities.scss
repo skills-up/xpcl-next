@@ -1258,6 +1258,7 @@ $_displays: none, inline-block, block, flex;
   textarea:focus ~ label,
   textarea:not(:placeholder-shown) ~ label,
   input:focus ~ label,
+  input[placeholder] ~ label,
   input:not(:placeholder-shown) ~ label {
     transform: translateY(-10px);
   }
@@ -2641,40 +2642,132 @@ table.table-6 {
 // Seat Image
 #seat {
   position: relative;
+  height: 40px;
+  width: 40px;
+  margin: 0.2rem;
   .seat-img {
-    height: 55px;
-    width: 55px;
+  }
+  &.normal {
+    border-radius: 5px;
+    box-shadow: 0 0 2px rgb(33, 165, 226);
+    // outline: rgb(33, 165, 226) solid 1px;
+    background-color: #ebf5ff;
+    color: rgb(33, 165, 226);
+  }
+  &.booked {
+    border-radius: 5px;
+    box-shadow: 0 0 2px rgb(190, 193, 194);
+    background-color: #f9f3f9;
+    color: #000;
+  }
+  &.selected {
+    border-radius: 5px;
+    box-shadow: 0 0 2px rgb(15, 69, 184);
+    background-color: #c0d3f8;
+    color: rgb(15, 69, 184);
+  }
+  &.legroom {
+    border-radius: 5px;
+    box-shadow: 0 0 2px rgb(84, 11, 202);
+    background-color: #dfc0f8;
+    color: rgb(84, 11, 202);
+  }
+  &.overwing {
+    border-radius: 5px;
+    box-shadow: 0 0 2px rgb(151, 153, 9);
+    background-color: #ff99;
+    color: rgb(151, 153, 9);
+  }
+  &.exit-row-seat {
+    border-radius: 5px;
+    box-shadow: 0 0 2px rgb(153, 107, 9);
+    background-color: rgba(255, 211, 153, 0.6);
+    color: rgb(153, 107, 9);
+  }
+  &.limited-recliner {
+    border-radius: 5px;
+    box-shadow: 0 0 2px rgb(9, 153, 9);
+    background-color: rgba(165, 255, 153, 0.6);
+    color: rgb(9, 153, 9);
+  }
+  &.basinette {
+    border-radius: 5px;
+    box-shadow: 0 0 2px rgb(153, 9, 52);
+    background-color: rgba(255, 153, 187, 0.6);
+    color: rgb(153, 9, 52);
+  }
+  &.other {
+    border-radius: 5px;
+    box-shadow: 0 0 2px rgb(190, 193, 194);
+    background-color: #f6f5fa;
+    color: #000;
+  }
+  &.paid {
+    border-radius: 5px;
+    box-shadow: 0 0 2px rgb(33, 165, 226);
+    // outline: rgb(33, 165, 226) solid 1px;
+    background-color: #ebf7ff;
+    color: rgb(33, 165, 226);
   }
   span {
     display: block;
     position: absolute;
-    left: 42%;
-    top: 12.5%;
-    font-size: 1rem !important;
+    &.main-label {
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 0.95rem !important;
+    }
+    &.priced-icon {
+      bottom: 0%;
+      right: 0%;
+      transform: translate(0, 10%);
+      font-size: 0.7rem !important;
+    }
   }
 }
 
 // Tripjack Seatmap
 .tj-seatmap {
   .legend {
-    text-align: center;
     margin: 0;
     display: grid;
-    grid-template-columns:
-      minmax(0, 65px) minmax(0, 65px) minMax(0, 65px)
-      minMax(0, 65px) minMax(0, 65px);
-    gap: 0.75rem 0.25rem;
+    grid-template-columns: auto auto auto auto auto;
+    gap: 0.2rem;
+    @include media-below(xl) {
+      grid-template-columns: auto auto auto auto;
+    }
+    div {
+      display: flex;
+      align-items: center;
+      gap: 0.2rem;
+      #seat {
+        height: 30px;
+        width: 30px;
+      }
+    }
+    span {
+      font-size: 0.8rem;
+      line-height: 1rem;
+    }
+    .seat {
+      max-width: 50px;
+      max-height: 50px;
+    }
   }
   .tj-grid {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    border-top: 2px solid #999;
+    border-bottom: 2px solid #999;
     .row-number {
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 55px;
-      min-width: 55px;
-      font-size: 1.2rem;
+      height: 40px;
+      width: 100%;
+      margin: 0.2rem;
+      font-size: 1rem;
       text-align: center;
     }
   }
@@ -2684,44 +2777,64 @@ table.table-6 {
 .aa-seatmap {
   .aa-grid {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    border-top: 2px solid #999;
+    border-bottom: 2px solid #999;
     .row-number {
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 55px;
-      min-width: 55px;
-      font-size: 1.2rem;
+      height: 40px;
+      width: 40px;
+      margin: 0.2rem;
+      font-size: 1rem;
       text-align: center;
     }
   }
   .legend {
-    text-align: center;
     margin: 0;
     display: grid;
-    grid-template-columns:
-      minmax(0, 80px) minmax(0, 80px) minMax(0, 80px)
-      minMax(0, 80px);
-    gap: 0.75rem 0.25rem;
-  }
-  .aaseatmap-scroll-container {
-    #seat {
-      position: relative;
-      text-align: center;
-      .seat-img {
-        height: 55px;
-        width: 55px;
-      }
-      span {
-        display: block;
-        position: absolute;
-        max-width: 10px;
-        width: 100%;
-        left: 33%;
-        top: 18.5%;
-        font-size: 0.75rem !important;
+    grid-template-columns: auto auto auto auto;
+    gap: 0.2rem;
+    @include media-below(xl) {
+      grid-template-columns: auto auto auto auto;
+    }
+    div {
+      display: flex;
+      align-items: center;
+      gap: 0.2rem;
+      #seat {
+        height: 30px;
+        width: 30px;
       }
     }
+    span {
+      font-size: 0.8rem;
+      line-height: 1rem;
+    }
+    .seat {
+      max-width: 50px;
+      max-height: 50px;
+    }
+  }
+  .aaseatmap-scroll-container {
+    // #seat {
+    //   position: relative;
+    //   text-align: center;
+    //   .seat-img {
+    //     height: 55px;
+    //     width: 55px;
+    //   }
+    //   span {
+    //     display: block;
+    //     position: absolute;
+    //     max-width: 10px;
+    //     width: 100%;
+    //     left: 33%;
+    //     top: 18.5%;
+    //     font-size: 0.75rem !important;
+    //   }
+    // }
   }
 }
 
@@ -2736,19 +2849,61 @@ table.table-6 {
 
 // Amadeus Seatmap
 .amadeus-container {
+  .legend {
+    margin: 0;
+    display: grid;
+    grid-template-columns: auto auto auto auto auto;
+    gap: 0.2rem;
+    @include media-below(xl) {
+      grid-template-columns: auto auto auto auto;
+    }
+    div {
+      display: flex;
+      align-items: center;
+      gap: 0.2rem;
+      #seat {
+        height: 30px;
+        width: 30px;
+      }
+    }
+    span {
+      font-size: 0.8rem;
+      line-height: 1rem;
+    }
+    .seat {
+      max-width: 50px;
+      max-height: 50px;
+    }
+  }
   .amadeus-table {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    tbody {
+      display: flex;
+      flex-direction: row;
+    }
+    tr {
+      display: flex;
+      flex-direction: column-reverse;
+    }
     border-collapse: collapse;
     border-spacing: 0;
     .upper-deck {
       display: none;
     }
-    tbody th:nth-child(2),
-    tbody td:nth-child(2) {
-      border-left: 2px solid #999;
+    // tbody th:nth-child(2),
+    // tbody td:nth-child(2) {
+    //   border-left: 2px solid #999;
+    // }
+    tbody th:first-child,
+    tbody td:first-child {
+      border-bottom: 2px solid #999;
     }
     tbody th:last-child,
     tbody td:last-child {
-      border-right: 2px solid #999;
+      border-top: 2px solid #999;
     }
     th.col-name {
       text-align: center;
@@ -2766,8 +2921,8 @@ table.table-6 {
     }
     td.seat,
     div.seat {
-      height: 60px;
-      width: 60px;
+      height: 40px;
+      width: 40px;
       background-image: url('../../img/flights/seat.png');
       background-size: contain;
       background-repeat: no-repeat;
@@ -2850,7 +3005,9 @@ table.table-6 {
       width: 100%;
     }
     td.no-seat {
-      width: 30px;
+      width: 40px;
+      height: 40px;
+      margin: 0.2rem;
     }
     td.seat span.price {
       display: none;
@@ -2885,28 +3042,6 @@ table.table-6 {
     #upperDeckToggle {
       margin-bottom: 1em;
       display: none;
-    }
-    .legend {
-      margin: 0;
-      display: grid;
-      grid-template-columns: auto auto auto auto auto;
-      gap: 0.75rem 1.25rem;
-      tr {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        width: 50px;
-      }
-      span {
-        margin-top: 0.4rem;
-        line-height: 1rem;
-        font-weight: 700;
-      }
-      .seat {
-        max-width: 50px;
-        max-height: 50px;
-      }
     }
   }
 }
@@ -2989,22 +3124,247 @@ table.table-6 {
 }
 
 .aaseatmap-scroll-container {
-  max-width: 408px;
+  // max-width: 420px;
   max-height: 500px;
   overflow-y: auto;
   overflow-x: auto;
+  padding-bottom: 0.5rem;
 }
 
 .tjseatmap-scroll-container {
-  max-width: 420px;
-  max-height: 500px;
+  // max-width: 420px;
+  max-height: 600px;
   overflow-y: auto;
   overflow-x: auto;
+  padding-bottom: 0.5rem;
 }
 
 .adseatmap-scroll-container {
-  max-width: 420px;
-  max-height: 655px;
+  max-height: 600px;
   overflow-y: auto;
   overflow-x: auto;
+  display: flex;
+  padding-bottom: 0.5rem;
+}
+
+.contact-page {
+  h1 {
+    font-size: 3rem;
+    line-height: 3.5rem;
+  }
+  h5 {
+    font-weight: 300;
+    font-size: 1.5rem;
+    line-height: 1.8rem;
+  }
+  h2 {
+    font-size: 1.75rem;
+    line-height: 1.8rem;
+  }
+  h3 {
+    font-size: 1.6rem;
+    line-height: 1.6rem;
+  }
+  #contact-hero {
+    .react-parallax {
+      img {
+        top: -80% !important;
+      }
+    }
+    .text-transition {
+      margin-bottom: 3rem;
+      @include media-below(lg) {
+        margin-bottom: 2rem;
+      }
+    }
+    .hero-image {
+      border-radius: 10px;
+      margin-top: 3rem;
+      object-fit: cover;
+      width: 70%;
+      height: 70%;
+      @include media-below(lg) {
+        width: 100%;
+        height: 100%;
+      }
+      @include media-below(sm) {
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+      }
+    }
+  }
+  #contact-partner {
+    .travellers {
+      display: block;
+      line-height: 1.3rem;
+    }
+  }
+  #contact-started {
+    position: relative;
+    .started-title {
+      padding-bottom: 13rem;
+    }
+    .main-container {
+      z-index: 5;
+      transform: translate(0, -8%);
+      @include media-below(lg) {
+        transform: translate(0, -4%);
+      }
+      .cards-container {
+        @include media-below(lg) {
+          max-width: 500px;
+          margin: auto;
+        }
+        position: relative;
+        .contact-card {
+          height: 100%;
+          border-radius: 10px;
+          box-shadow: 0 0 10px 1px lightgray;
+          .subtitle {
+            display: block;
+            line-height: 1.2rem;
+          }
+          .icon {
+            font-size: 2.5rem;
+          }
+          .points {
+            line-height: 1.3rem;
+          }
+        }
+      }
+      .features {
+        margin-top: 9rem;
+        .feature {
+          padding-right: 6rem;
+          @include media-below(xxl) {
+            padding-right: 4rem;
+          }
+          @include media-below(xl) {
+            padding-right: 2rem;
+          }
+          .feature-number {
+            padding: 1rem 2.25rem;
+            border-radius: 50%;
+            background-color: var(--color-blue-1);
+          }
+        }
+      }
+    }
+  }
+  #contact-qr {
+    .section-bg {
+      padding-top: 5rem;
+    }
+    .left-img {
+      width: 100%;
+      height: 400px;
+      @include media-below(sm) {
+        height: 300px;
+      }
+    }
+    .qr {
+      width: 200px;
+      height: 200px;
+    }
+    .playstore,
+    .appstore {
+      width: 175px;
+      @include media-below(sm) {
+        width: 150px;
+      }
+    }
+  }
+  #contact-why {
+    .testimonials-container {
+      position: relative;
+      margin-top: 4rem;
+      @include media-below(lg) {
+        margin-top: 5rem;
+      }
+      .slick-arrow {
+        padding: 1.5rem;
+        border-radius: 50px;
+        box-shadow: 0 0 10px 1px lightgray;
+        .icon {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          color: var(--color-blue-1);
+          z-index: 100;
+          font-size: 1.3rem;
+          display: block !important;
+        }
+      }
+      .slick-prev {
+        top: 0;
+        left: 95%;
+        transform: translate(-130%, -120%);
+        @include media-below(lg) {
+          left: 50%;
+          transform: translate(-120%, -120%);
+        }
+      }
+      .slick-next {
+        top: 0;
+        left: 95%;
+        transform: translate(0, -120%);
+        @include media-below(lg) {
+          left: 50%;
+          transform: translate(20%, -120%);
+        }
+      }
+      .testimonial {
+        max-width: 300px;
+        .icon {
+          width: 50px;
+        }
+        p {
+          line-height: 1.1rem;
+        }
+      }
+    }
+    .case-studies {
+      position: relative;
+      padding: 0 6rem;
+      padding-top: 4rem;
+      @include media-below(lg) {
+        padding: 0 3rem;
+        padding-top: 4rem;
+      }
+      @include media-below(sm) {
+        padding: 0 1.5rem;
+        padding-top: 4rem;
+      }
+      .pseudo-bg {
+        z-index: -1;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 80%;
+        background: #6b345b;
+        @include media-below(lg) {
+          height: 88%;
+        }
+      }
+      .cases-container {
+        z-index: 3;
+        .cases {
+          @include media-below(lg) {
+            max-width: 400px;
+            margin: auto;
+          }
+          &.last-two {
+            box-shadow: 0px 1px 3px rgb(230, 227, 227);
+          }
+          border-radius: 10px;
+          height: 100%;
+          p {
+            line-height: 1.3rem;
+          }
+        }
+      }
+    }
+  }
 }

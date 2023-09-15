@@ -11,9 +11,12 @@ import ReactSwitch from 'react-switch';
 import Select from 'react-select';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 import { BsEye, BsPencil } from 'react-icons/bs';
+import validateCreditCard from '../../../../../utils/validateCreditCard';
 
 const UpdateCreditCard = () => {
   const [number, setNumber] = useState(0);
+  const [cardType, setCardType] = useState('');
+  const [cardValid, setCardValid] = useState(true);
   const [maskedNumber, setMaskedNumber] = useState('');
   const [name, setName] = useState('');
   const [expiryDate, setExpiryDate] = useState(new DateObject());
@@ -61,6 +64,10 @@ const UpdateCreditCard = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    if (!cardValid) {
+      sendToast('error', 'Please enter a valid credit card number', 4000);
+      return;
+    }
     // Checking if account id is not null
     const response = await updateItem('credit-cards', router.query.edit, {
       traveller_id: parseInt(router.query.traveller_id),
@@ -142,17 +149,34 @@ const UpdateCreditCard = () => {
                       <div className='col-12'>
                         <div className='form-input'>
                           <input
-                            onChange={(e) => setNumber(e.target.value)}
+                            onChange={(e) => {
+                              const cardNumber = e.target.value.trim();
+                              setNumber(cardNumber);
+                              if (cardNumber) {
+                                const {valid, type} = validateCreditCard(cardNumber);
+                                setCardType(type || '');
+                                setCardValid(valid);
+                              } else {
+                                setCardType('');
+                                setCardValid(true);
+                              }
+                            }}
+                            type='tel'
+                            pattern='[0-9]{14,16}'
+                            inputMode='numeric'
+                            autoComplete='cc-number'
+                            title='Credit card number should have between 14 to 16 digits'
                             value={number}
-                            placeholder=' '
-                            type='number'
-                            onWheel={(e) => e.target.blur()}
+                            placeholder='xxxxxxxxxxxxxxxx'
+                            className='cc-input'
                             required
                           />
+                          <small style={{position: 'absolute', right: '0.5em', bottom: '.25em'}}>{cardType && cardType}</small>
                           <label className='lh-1 text-16 text-light-1'>
                             Card Number<span className='text-danger'>*</span>
                           </label>
                         </div>
+                        <small className='text-danger'>{cardValid || 'Invalid Card Number'}</small>
                       </div>
                     )}
                     <div className='col-12'>

@@ -138,7 +138,7 @@ const HotelSingleV1Dynamic = () => {
       <div>
         <LoadingBar
           height={3}
-          color='#19f9fc'
+          color='#3554d1'
           progress={progress}
           onLoaderFinished={() => setProgress(0)}
         />

@@ -101,6 +101,7 @@ const AddNewAccountCategories = () => {
                         Select Parent Category<span className='text-danger'>*</span>
                       </label>
                       <Select
+                        isClearable
                         options={accountCategories}
                         value={accountCategoryID}
                         placeholder='Search & Select Parent Category (required)'

@@ -11,6 +11,7 @@ import {
 import { sendToast } from '../../../utils/toastify';
 import { useRouter } from 'next/router';
 import { setClientOrganizations } from '../../../features/apis/apisSlice';
+import { AiOutlinePlus } from 'react-icons/ai';
 
 const Sidebar = () => {
   const [organizationID, setOrganizationsID] = useState(null);
@@ -95,12 +96,49 @@ const Sidebar = () => {
       title: 'Accounting',
       permissions: [],
       links: [
-        { title: 'Invoicing', href: '/dashboard/bookings' },
+        {
+          title: 'Invoicing',
+          href: '/dashboard/bookings',
+          submenus: [
+            {
+              title: 'Add Domestic',
+              href: '/dashboard/bookings/add-new?type=domestic',
+              icon: <AiOutlinePlus />,
+            },
+            {
+              title: 'Add International',
+              href: '/dashboard/bookings/add-new?type=international',
+              icon: <AiOutlinePlus />,
+            },
+            {
+              title: 'Add Miscellaneous',
+              href: '/dashboard/bookings/add-new?type=misc',
+              icon: <AiOutlinePlus />,
+            },
+          ],
+        },
         { title: 'Refunds', href: '/dashboard/refunds' },
         { title: 'Partial Refunds', href: '/dashboard/partial-refunds' },
         {
           title: 'Transactions',
           href: '/dashboard/payment-receipts',
+          submenus: [
+            {
+              title: 'Add Payment',
+              href: '/dashboard/payment-receipts/add-new?type=Payment',
+              icon: <AiOutlinePlus />,
+            },
+            {
+              title: 'Add Receipt',
+              href: '/dashboard/payment-receipts/add-new?type=Receipt',
+              icon: <AiOutlinePlus />,
+            },
+            {
+              title: 'Add Voucher',
+              href: '/dashboard/payment-receipts/add-new?type=Voucher',
+              icon: <AiOutlinePlus />,
+            },
+          ],
         },
         {
           title: 'Vendor Invoicing',
@@ -388,6 +426,21 @@ const Sidebar = () => {
                           <a href={link.href} className='text-15'>
                             {link.title}
                           </a>
+                          {link?.submenus && (
+                            <ul className='ml-10'>
+                              {link.submenus.map((sub, subIndex) => (
+                                <li key={subIndex} style={{ listStyleType: 'unset' }}>
+                                  <a
+                                    href={sub.href}
+                                    className='text-14 d-flex gap-1 items-center'
+                                  >
+                                    <span className='pb-1'>{sub?.icon}</span>
+                                    <span>{sub.title}</span>
+                                  </a>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
                         </li>
                       ))}
                     </ul>
@@ -415,7 +468,7 @@ const Sidebar = () => {
           <a
             onClick={async () => {
               if (token === '') {
-                window.location = '/login';
+                window.location = '/';
               } else {
                 const response = await customAPICall('auth/logout', 'post');
                 if (response?.success) {

@@ -72,7 +72,7 @@ const ViewTravellers = () => {
               {Object.values(data?.passport_scans).map((element, index) => (
                 <li key={index}>
                   <a href={element} target='_blank'>
-                    {element.split('/').at(-1)}
+                    Download
                   </a>
                 </li>
               ))}
@@ -82,21 +82,21 @@ const ViewTravellers = () => {
         if (data?.vaccination_certificate) {
           data.vaccination_certificate = (
             <a href={data.vaccination_certificate} target='_blank'>
-              {data.vaccination_certificate.split('/').at(-1)}
+              Download
             </a>
           );
         }
         if (data?.aadhaar_card_scan) {
           data.aadhaar_card_scan = (
             <a href={data.aadhaar_card_scan} target='_blank'>
-              {data.aadhaar_card_scan.split('/').at(-1)}
+              Download
             </a>
           );
         }
         if (data?.pan_card_scan) {
           data.pan_card_scan = (
             <a href={data.pan_card_scan} target='_blank'>
-              {data.pan_card_scan.split('/').at(-1)}
+              Download
             </a>
           );
         }
@@ -175,7 +175,7 @@ const ViewTravellers = () => {
         // if (data.aadhaar_card_scan) {
         //   data.aadhaar_card_scan = (
         //     <a className='ml20 text-15' href={data.aadhaar_card_scan} target='_blank'>
-        //       {data.aadhaar_card_scan.split('/').at(-1)}
+        //       Download
         //     </a>
         //   );
         // }

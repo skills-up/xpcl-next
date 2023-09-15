@@ -193,6 +193,7 @@ const UpdateOrganization = () => {
                     <div className='form-input-select'>
                       <label>Select Calendar Template</label>
                       <Select
+                        isClearable
                         defaultValue={calenderTemplateID}
                         options={calenderTemplates}
                         value={calenderTemplateID}

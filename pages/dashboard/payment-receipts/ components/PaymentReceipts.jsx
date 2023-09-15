@@ -233,6 +233,7 @@ const PaymentReceipts = () => {
       </div>
       {/* Data Table */}
       <Datatable
+        viewLink={'/dashboard/payment-receipts'}
         downloadCSV
         CSVName='PaymentReceipts.csv'
         columns={columns}

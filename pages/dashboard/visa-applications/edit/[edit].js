@@ -18,6 +18,7 @@ const UpdateVisaApplications = () => {
   const [supportingDocsReqs, setSupportingDocsReqs] = useState(null);
   const [photoSample, setPhotoSample] = useState(null);
   const [visaFormFiles, setVisaFormFiles] = useState([]);
+  const [visaFormUrls, setVisaFormUrls] = useState([]);
   const [previousVisaFormFiles, setPreviousVisaFormFiles] = useState([]);
   const [previousPhotoSample, setPreviousPhotoSample] = useState('');
   const [previousPersonalDocReqs, setPreviousPersonalDocReqs] = useState('');
@@ -66,6 +67,7 @@ const UpdateVisaApplications = () => {
             response.data.visa_requirement.visa_forms &&
             response.data.visa_requirement.visa_forms.length > 0
           ) {
+            setVisaFormUrls(response.data.visa_requirement.visa_forms);
             temp.push({ step: ++totalSteps, name: 'Visa Forms' });
           }
         }
@@ -381,7 +383,10 @@ const UpdateVisaApplications = () => {
                     {currentStep.name === 'Visa Forms' && (
                       <div>
                         <h3>Upload Visa Forms</h3>
-                        <label>Visa Forms</label>
+                        <label>Visa Forms</label><br/>
+                        {visaFormUrls.map((url, idx) => (
+                          <a className='btn-link' href={url} key={`form-url-${idx}`} target='_blank' download>Download Form #{idx+1}</a>
+                        ))}
                         {previousVisaFormFiles && (
                           <PreviousUploadPictures
                             data={previousVisaFormFiles}
@@ -393,7 +398,7 @@ const UpdateVisaApplications = () => {
                             }}
                           />
                         )}
-                        <button
+                        {/* <button
                           type='button'
                           onClick={() => {
                             for (let url of previousVisaFormFiles) {
@@ -401,7 +406,7 @@ const UpdateVisaApplications = () => {
                           }}
                         >
                           Download
-                        </button>
+                        </button> */}
                         <NewFileUploads multiple={true} setUploads={setVisaFormFiles} />
                       </div>
                     )}

@@ -302,7 +302,7 @@ const ReissueBooking = () => {
                 date: bookSec.travel_date,
                 format: 'YYYY-MM-DD',
               }),
-              travel_time: bookSec?.travel_time.slice(0, -3),
+              travel_time: bookSec?.travel_time?.substring(0,5),
               details: bookSec?.details,
               booking_class: tempBookingClass,
             });
@@ -397,7 +397,7 @@ const ReissueBooking = () => {
               travel_date: element['travel_date']?.format('YYYY-MM-DD'),
               travel_time: element['travel_time']
                 ? element['travel_time'] + ':00'
-                : element['travel_time'],
+                : undefined,
               details:
                 element['details'].trim().length > 0 ? element['details'] : undefined,
               booking_class: element['booking_class']?.value,
@@ -860,7 +860,9 @@ const ReissueBooking = () => {
                                   className='booking-sectors mx-1 pr-10 bg-light items-center mt-2 lg:pr-0'
                                   key={index}
                                 >
-                                  <div style={{minWidth: 15, maxWidth: 15}}>{index + 1}.</div>
+                                  <div style={{ minWidth: 15, maxWidth: 15 }}>
+                                    {index + 1}.
+                                  </div>
                                   <div className='d-flex row y-gap-10 col-12 x-gap-5 lg:pr-0 md:flex-column items-center justify-between'>
                                     <div className='form-input-select col-md-2'>
                                       <label>
@@ -869,14 +871,16 @@ const ReissueBooking = () => {
                                       <AirportSearch
                                         value={element['from_airport']}
                                         airports={[airportOptions, setAirportOptions]}
-                                        setValue={(id) => 
-                                          setBookingSectors(prev => {
+                                        setValue={(id) =>
+                                          setBookingSectors((prev) => {
                                             prev[index]['from_airport'] = id;
                                             return [...prev];
                                           })
                                         }
                                         options={airports}
-                                        domestic={bookingType?.value === 'Domestic Flight Ticket'}
+                                        domestic={
+                                          bookingType?.value === 'Domestic Flight Ticket'
+                                        }
                                       />
                                     </div>
                                     <div className='form-input-select col-md-2'>
@@ -886,14 +890,16 @@ const ReissueBooking = () => {
                                       <AirportSearch
                                         value={element['to_airport']}
                                         airports={[airportOptions, setAirportOptions]}
-                                        setValue={(id) => 
-                                          setBookingSectors(prev => {
+                                        setValue={(id) =>
+                                          setBookingSectors((prev) => {
                                             prev[index]['to_airport'] = id;
                                             return [...prev];
                                           })
                                         }
                                         options={airports}
-                                        domestic={bookingType?.value === 'Domestic Flight Ticket'}
+                                        domestic={
+                                          bookingType?.value === 'Domestic Flight Ticket'
+                                        }
                                       />
                                     </div>
                                     <div className='col-md-2 form-datepicker'>
@@ -931,8 +937,8 @@ const ReissueBooking = () => {
                                             })
                                           }
                                           value={element['travel_time']}
-                                          placeholder=' '
-                                          type='time'
+                                          placeholder='--:--'
+                                          pattern='^[0-2][0-9]:[0-5][0-9]$'
                                         />
                                         <label className='lh-1 text-16 text-light-1'>
                                           Travel Time
@@ -1028,6 +1034,7 @@ const ReissueBooking = () => {
                         <div className='form-input-select col-lg-4'>
                           <label>Client Referrer</label>
                           <Select
+                            isClearable
                             options={clients}
                             value={clientReferrerID}
                             onChange={(id) => setClientReferrerID(id)}
@@ -1120,7 +1127,15 @@ const ReissueBooking = () => {
                     <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
-                          onChange={(e) => setVendorGSTAmount(e.target.value)}
+                          onChange={(e) => {
+                            setVendorGSTAmount(e.target.value);
+                            updateClientGSTAmount(
+                              clientGSTPercent,
+                              e.target.value,
+                              clientQuotedAmount,
+                              clientTaxAmount
+                            );
+                          }}
                           value={vendorGSTAmount}
                           placeholder=' '
                           type='number'
@@ -1192,6 +1207,7 @@ const ReissueBooking = () => {
                     <div className='form-input-select col-lg-4'>
                       <label>Payment Account</label>
                       <Select
+                        isClearable
                         options={paymentAccounts}
                         value={paymentAccountID}
                         onChange={(id) => {
@@ -1447,7 +1463,15 @@ const ReissueBooking = () => {
                             setClientBaseAmountFocused(true);
                             setXplorzGSTFocused(true);
                           }}
-                          onBlur={() => setClientBaseAmountFocused(false)}
+                          onBlur={() => {
+                            setClientBaseAmountFocused(false);
+                            updateClientGSTAmount(
+                              clientGSTPercent,
+                              vendorGSTAmount,
+                              clientQuotedAmount,
+                              clientTaxAmount
+                            );
+                          }}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Client Base Amount<span className='text-danger'>*</span>

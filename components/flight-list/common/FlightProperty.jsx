@@ -505,7 +505,77 @@ function FlightProperty({
                     <div className='text-18 lh-16 fw-500'>
                       <a
                         data-tooltip-id={'x_' + element.selectId}
-                        data-tooltip-content={<div>hi</div>}
+                        data-tooltip-content={`${
+                          element.adultPrice > 0
+                            ? `${
+                                travellerDOBS.ADT
+                              }x Adult @ ${element.adultPrice.toLocaleString('en-IN', {
+                                maximumFractionDigits: 0,
+                                style: 'currency',
+                                currency: 'INR',
+                              })}`
+                            : ''
+                        }${
+                          element.childPrice > 0
+                            ? `\n${
+                                travellerDOBS.CHD
+                              }x Child @ ${element.childPrice.toLocaleString('en-IN', {
+                                maximumFractionDigits: 0,
+                                style: 'currency',
+                                currency: 'INR',
+                              })}`
+                            : ''
+                        }${
+                          element.infantPrice > 0
+                            ? `\n${
+                                travellerDOBS.INF
+                              }x Infant @ ${element.infantPrice.toLocaleString('en-IN', {
+                                maximumFractionDigits: 0,
+                                style: 'currency',
+                                currency: 'INR',
+                              })}`
+                            : ''
+                        }${
+                          element.provider === 'tj'
+                            ? `\n\n- Additional Adult Details -\nMax Check-In Baggage - ${
+                                element.prices.prices.ADULT.baggage.checkIn || 'NA'
+                              }\nMax Cabin Baggage - ${
+                                element.prices.prices.ADULT.baggage.cabin || 'NA'
+                              }\nFree Meal - ${
+                                element.prices.prices.ADULT.freeMeal ? 'Yes' : 'No'
+                              }\n  Refundable - ${
+                                element.prices.prices.ADULT.refundable ? 'Yes' : 'No'
+                              }${
+                                element?.prices?.prices?.CHILD
+                                  ? `\n- Additional Child Details -\nMax Check-In Baggage - ${
+                                      element.prices.prices.CHILD.baggage.checkIn || 'NA'
+                                    }\nMax Cabin Baggage - ${
+                                      element.prices.prices.CHILD.baggage.cabin || 'NA'
+                                    }\nFree Meal - ${
+                                      element.prices.prices.CHILD.freeMeal ? 'Yes' : 'No'
+                                    }\n  Refundable - ${
+                                      element.prices.prices.CHILD.refundable
+                                        ? 'Yes'
+                                        : 'No'
+                                    }`
+                                  : ''
+                              }${
+                                element?.prices?.prices?.INFANT
+                                  ? `\n- Additional Infant Details -\nMax Check-In Baggage - ${
+                                      element.prices.prices.INFANT.baggage.checkIn || 'NA'
+                                    }\nMax Cabin Baggage - ${
+                                      element.prices.prices.INFANT.baggage.cabin || 'NA'
+                                    }\nFree Meal - ${
+                                      element.prices.prices.INFANT.freeMeal ? 'Yes' : 'No'
+                                    }\n  Refundable - ${
+                                      element.prices.prices.INFANT.refundable
+                                        ? 'Yes'
+                                        : 'No'
+                                    }`
+                                  : ''
+                              }`
+                            : ''
+                        }`}
                         data-tooltip-place='top'
                       >
                         {element.total.toLocaleString('en-IN', {
@@ -515,11 +585,17 @@ function FlightProperty({
                         })}
                       </a>
                       <ReactTooltip
-                        id={element.selectId}
-                        render={(content) => {
-                          console.log('render', content);
-                          return <div>{content}</div>;
-                        }}
+                        id={'x_' + element.selectId}
+                        render={({ content }) => (
+                          <span style={{ display: 'block', textAlign: 'left' }}>
+                            {content?.split('\n')?.map((el) => (
+                              <>
+                                {el}
+                                <br />
+                              </>
+                            ))}
+                          </span>
+                        )}
                       />
                     </div>
                   </div>

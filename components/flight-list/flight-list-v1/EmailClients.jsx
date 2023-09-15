@@ -183,8 +183,8 @@ function EmailClients() {
       let data = {
         airline: opt.airline.label,
         airline_code: opt.airline.code,
-        from: opt.from_airport.iata,
-        to: opt.to_airport.iata,
+        from: opt.from_airport.value,
+        to: opt.to_airport.value,
         departure: new Date(opt.depart_date.format('YYYY-MM-DD') + 'T' + opt.depart_time)
           .toString()
           .slice(0, -31),
@@ -195,8 +195,8 @@ function EmailClients() {
         cabin: opt.cabin.value,
         price: +opt.price + +markup,
       };
-      console.log('destinations', opt.from_airport.iata, destinations.from.value);
-      if (opt.from_airport.iata === destinations.to.value) {
+      console.log('destinations', opt.from_airport.value, destinations.from.value);
+      if (opt.from_airport.value === destinations.to.value) {
         tempFrom.push(data);
       } else {
         tempTo.push(data);
@@ -671,7 +671,7 @@ function EmailClients() {
                           filterOption={(candidate, input) => {
                             if (input) {
                               return (
-                                candidate.data.iata.toLowerCase() ===
+                                candidate.data.value.toLowerCase() ===
                                   input.toLowerCase() ||
                                 candidate.label
                                   .toLowerCase()
@@ -727,7 +727,7 @@ function EmailClients() {
                           filterOption={(candidate, input) => {
                             if (input) {
                               return (
-                                candidate.data.iata.toLowerCase() ===
+                                candidate.data.value.toLowerCase() ===
                                   input.toLowerCase() ||
                                 candidate.label
                                   .toLowerCase()

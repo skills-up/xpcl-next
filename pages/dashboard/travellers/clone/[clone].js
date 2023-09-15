@@ -396,6 +396,7 @@ const AddNewTravellers = () => {
                     <div className='col-lg-2 form-input-select'>
                       <label>Prefix</label>
                       <Select
+                        isClearable
                         options={passportPrefixOptions}
                         value={prefix}
                         onChange={(id) => setPrefix(id)}
@@ -510,6 +511,7 @@ const AddNewTravellers = () => {
                     <div className='col-lg-3 form-input-select'>
                       <label>Passport Gender</label>
                       <Select
+                        isClearable
                         options={passportGenderOptions}
                         value={passportGender}
                         onChange={(id) => setPassportGender(id)}
@@ -518,6 +520,7 @@ const AddNewTravellers = () => {
                     <div className='col-lg-3 form-input-select'>
                       <label>Passport Country</label>
                       <Select
+                        isClearable
                         options={countries.map((el) => ({
                           value: el.code,
                           label: `${el.name} (${el.code})`,
@@ -651,6 +654,7 @@ const AddNewTravellers = () => {
                     <div className='form-input-select col-lg-3'>
                       <label>Domestic Airline Preference</label>
                       <Select
+                        isClearable
                         isMulti
                         options={airlines}
                         value={domesticAirlinePreference}
@@ -660,6 +664,7 @@ const AddNewTravellers = () => {
                     <div className='form-input-select col-lg-3'>
                       <label>International Airline Preference</label>
                       <Select
+                        isClearable
                         isMulti
                         options={airlines}
                         value={internationalAirlinePreference}
@@ -669,6 +674,7 @@ const AddNewTravellers = () => {
                     <div className='col-lg-3 form-input-select'>
                       <label>Domestic Cabin Preference</label>
                       <Select
+                        isClearable
                         options={cabinPreferenceOptions}
                         value={domesticCabinPreference}
                         onChange={(id) => setDomesticCabinPreference(id)}
@@ -677,6 +683,7 @@ const AddNewTravellers = () => {
                     <div className='col-lg-3 form-input-select'>
                       <label>International Cabin Preference</label>
                       <Select
+                        isClearable
                         options={cabinPreferenceOptions}
                         value={internationalCabinPreference}
                         onChange={(id) => setInternationalCabinPreference(id)}
@@ -685,6 +692,7 @@ const AddNewTravellers = () => {
                     <div className='col-lg-3 form-input-select'>
                       <label>Meal Preference</label>
                       <Select
+                        isClearable
                         options={mealPreferenceOptions}
                         value={mealPreference}
                         onChange={(id) => setMealPreference(id)}
@@ -693,6 +701,7 @@ const AddNewTravellers = () => {
                     <div className='col-lg-3 form-input-select'>
                       <label>Seat Preference</label>
                       <Select
+                        isClearable
                         options={seatPreferenceOptions}
                         value={seatPreference}
                         onChange={(id) => setSeatPreference(id)}
@@ -701,6 +710,7 @@ const AddNewTravellers = () => {
                     <div className='col-lg-3 form-input-select'>
                       <label>Cabin Position</label>
                       <Select
+                        isClearable
                         options={cabinPositionOptions}
                         value={cabinPosition}
                         onChange={(id) => setCabinPosition(id)}
@@ -709,6 +719,7 @@ const AddNewTravellers = () => {
                     <div className='col-lg-3 form-input-select'>
                       <label>Fare Preference</label>
                       <Select
+                        isClearable
                         options={farePreferenceOptions}
                         value={farePreference}
                         onChange={(id) => setFarePreference(id)}

@@ -708,6 +708,7 @@ const AddNewPartialRefund = () => {
                     <div className='form-input-select col-lg-4'>
                       <label>Client Referrer</label>
                       <Select
+                        isClearable
                         options={clients}
                         value={clientReferrerID}
                         placeholder='Search & Select Client Referrer'
@@ -798,7 +799,15 @@ const AddNewPartialRefund = () => {
                     <div className='col-lg-4'>
                       <div className='form-input'>
                         <input
-                          onChange={(e) => setVendorGSTAmount(e.target.value)}
+                          onChange={(e) => {
+                            setVendorGSTAmount(e.target.value);
+                            updateClientGSTAmount(
+                              clientGSTPercent,
+                              e.target.value,
+                              clientQuotedAmount,
+                              clientTaxAmount
+                            );
+                          }}
                           value={vendorGSTAmount}
                           placeholder=' '
                           type='number'
@@ -847,6 +856,7 @@ const AddNewPartialRefund = () => {
                         <div className='form-input-select col-lg-4'>
                           <label>Commission Rule</label>
                           <Select
+                            isClearable
                             options={commissionRules}
                             value={commissionRuleID}
                             onChange={(id) => setCommissionRuleID(id)}
@@ -1056,7 +1066,15 @@ const AddNewPartialRefund = () => {
                             setClientBaseAmountFocused(true);
                             setXplorzGSTFocused(true);
                           }}
-                          onBlur={() => setClientBaseAmountFocused(false)}
+                          onBlur={() => {
+                            setClientBaseAmountFocused(false);
+                            updateClientGSTAmount(
+                              clientGSTPercent,
+                              vendorGSTAmount,
+                              clientQuotedAmount,
+                              clientTaxAmount
+                            );
+                          }}
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Client Base Amount
@@ -1257,6 +1275,7 @@ const AddNewPartialRefund = () => {
                     <div className='form-input-select col-lg-4'>
                       <label>Payment Refunded To</label>
                       <Select
+                        isClearable
                         options={accounts}
                         value={accountID}
                         placeholder='Search & Select Account (required)'
