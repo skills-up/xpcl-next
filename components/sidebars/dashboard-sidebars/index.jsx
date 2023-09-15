@@ -78,13 +78,7 @@ const Sidebar = () => {
       title: 'Travel',
       permissions: [],
       links: [
-        { title: 'Book Hotels', href: '/hotel/hotel-list-v1' },
-        { title: 'Book Flights', href: '/flight/flight-list-v1' },
-        { title: 'Traveller Profiles', href: '/dashboard/travellers' },
-        {
-          title: 'Visa Requirements',
-          href: '/dashboard/visa-requirements',
-        },
+        { title: 'Client Travellers', href: '/dashboard/client-travellers' },
         {
           title: 'Booking History',
           href: '/dashboard/bookings/history',
@@ -140,10 +134,6 @@ const Sidebar = () => {
             },
           ],
         },
-        {
-          title: 'Vendor Invoicing',
-          href: '/dashboard/vendor-commission-invoices',
-        },
       ],
     },
     {
@@ -198,10 +188,6 @@ const Sidebar = () => {
           title: 'Organizations',
           href: '/dashboard/organizations',
         },
-        {
-          title: 'Airline Organization Markup',
-          href: '/dashboard/airline-organization-markup',
-        },
       ],
     },
     {
@@ -229,32 +215,12 @@ const Sidebar = () => {
       permissions: [],
       links: [
         {
-          title: 'Countries',
-          href: '/dashboard/countries',
-        },
-        {
           title: 'Airports',
           href: '/dashboard/airports',
         },
         {
           title: 'Commission Rules',
           href: '/dashboard/commission-rules',
-        },
-        {
-          title: 'Calendar Templates',
-          href: '/dashboard/calendar-templates',
-        },
-        {
-          title: 'Travel Membership Programs',
-          href: '/dashboard/travel-membership-programs',
-        },
-        {
-          title: 'Visa Requirement Docs',
-          href: '/dashboard/visa-requirement-documents',
-        },
-        {
-          title: 'Visa Applications',
-          href: '/dashboard/visa-applications',
         },
       ],
     },
