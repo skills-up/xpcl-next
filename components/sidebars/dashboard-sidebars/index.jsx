@@ -78,7 +78,7 @@ const Sidebar = () => {
       title: 'Travel',
       permissions: [],
       links: [
-        { title: 'Client Travellers', href: '/dashboard/client-travellers' },
+        { title: 'Travellers', href: '/dashboard/client-travellers' },
         {
           title: 'Booking History',
           href: '/dashboard/bookings/history',

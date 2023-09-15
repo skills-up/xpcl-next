@@ -8,54 +8,34 @@ import { AiOutlineEye } from 'react-icons/ai';
 import { HiOutlinePencilAlt } from 'react-icons/hi';
 import { BsTrash3 } from 'react-icons/bs';
 import { IoCopyOutline } from 'react-icons/io5';
-import { useRouter } from 'next/router';
 
-const TravelMemberships = () => {
-  const [travelMemberships, setTravelMemberships] = useState([]);
+const ClientTravellers = () => {
+  const [clientTravellers, setClientTravellers] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
 
-  const router = useRouter();
   useEffect(() => {
-    if (router.isReady) getTravelMemberships();
-  }, [router.isReady]);
+    getClientTravellers();
+  }, []);
 
-  const getTravelMemberships = async () => {
-    if (router.query.view) {
-      const response = await getList('travel-memberships', {
-        traveller_id: router.query.view,
-      });
-      if (response?.success) {
-        setTravelMemberships(response.data);
-      } else {
-        sendToast(
-          'error',
-          response?.data?.message ||
-            response?.data?.error ||
-            'Error getting travel memberships',
-          4000
-        );
-      }
+  const getClientTravellers = async () => {
+    const response = await getList('client-travellers');
+    if (response?.success) {
+      setClientTravellers(response.data);
+    } else {
+      sendToast(
+        'error',
+        response?.data?.message || response?.data?.error || 'Error getting travellers',
+        4000
+      );
     }
   };
 
   const columns = [
     {
-      Header: 'Number',
-      accessor: 'number',
-    },
-    {
-      Header: 'Membership Type',
-      accessor: 'membership_type',
-    },
-    {
-      Header: 'Provider',
-      accessor: 'provider',
-    },
-    {
-      Header: 'Username',
-      accessor: 'username',
+      Header: 'Name',
+      accessor: 'traveller_name',
     },
     {
       Header: 'Actions',
@@ -70,37 +50,25 @@ const TravelMemberships = () => {
                 {
                   label: 'View',
                   onClick: () =>
-                    router.push({
-                      pathname: '/dashboard/travellers/travel-memberships/view/',
-                      query: {
-                        traveller_id: router.query.view,
-                        view: data.row.original.id,
-                      },
-                    }),
+                    window.location.assign(
+                      '/dashboard/client-travellers/view/' + data.row.original.id
+                    ),
                   icon: <AiOutlineEye />,
                 },
                 {
                   label: 'Edit',
                   onClick: () =>
-                    router.push({
-                      pathname: '/dashboard/travellers/travel-memberships/edit/',
-                      query: {
-                        traveller_id: router.query.view,
-                        edit: data.row.original.id,
-                      },
-                    }),
+                    window.location.assign(
+                      '/dashboard/client-travellers/edit/' + data.row.original.id
+                    ),
                   icon: <HiOutlinePencilAlt />,
                 },
                 {
                   label: 'Clone',
                   onClick: () =>
-                    router.push({
-                      pathname: '/dashboard/travellers/travel-memberships/clone/',
-                      query: {
-                        traveller_id: router.query.view,
-                        clone: data.row.original.id,
-                      },
-                    }),
+                    window.location.assign(
+                      '/dashboard/client-travellers/clone/' + data.row.original.id
+                    ),
                   icon: <IoCopyOutline />,
                 },
                 {
@@ -124,16 +92,16 @@ const TravelMemberships = () => {
     setIdToDelete(-1);
   };
   const onSubmit = async () => {
-    const response = await deleteItem('travel-memberships', idToDelete);
+    const response = await deleteItem('client-travellers', idToDelete);
     if (response?.success) {
       sendToast('success', 'Deleted successfully', 4000);
-      getTravelMemberships();
+      getClientTravellers();
     } else {
       sendToast(
         'error',
         response.data?.message ||
           response.data?.error ||
-          'Unexpected Error Occurred While Trying to Delete this Travel Membership',
+          'Unexpected Error Occurred While Trying to Delete this Traveller',
         4000
       );
     }
@@ -146,8 +114,8 @@ const TravelMemberships = () => {
         <ConfirmationModal
           onCancel={onCancel}
           onSubmit={onSubmit}
-          title='Do you really want to delete this travel membership?'
-          content='This will permanently delete the travel membership. Press OK to confirm.'
+          title='Do you really want to delete this traveller?'
+          content='This will permanently delete the traveller. Press OK to confirm.'
         />
       )}
       {/* Search Bar + Add New */}
@@ -163,33 +131,23 @@ const TravelMemberships = () => {
         </div>
         <button
           className='btn btn-primary col-lg-2 col-5'
-          onClick={() =>
-            router.push({
-              pathname: '/dashboard/travellers/travel-memberships/add-new',
-              query: { traveller_id: router.query.view },
-            })
-          }
+          onClick={() => window.location.assign('/dashboard/client-travellers/add-new')}
         >
           Add New
         </button>
       </div>
       {/* Data Table */}
       <Datatable
-        viewLink={'/dashboard/travellers/travel-memberships'}
-        dataFiltering
+        viewLink={'/dashboard/client-travellers'}
         downloadCSV
-        CSVName='TravelMemberships.csv'
+        CSVName='ClientTravellers.csv'
         columns={columns}
-        data={travelMemberships.filter(
-          (perm) =>
-            perm?.username?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            perm?.membership_type?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            perm?.provider?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            perm?.number?.toLowerCase().includes(searchQuery.toLowerCase())
+        data={clientTravellers.filter((perm) =>
+          perm?.traveller_name?.toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>
   );
 };
 
-export default TravelMemberships;
+export default ClientTravellers;

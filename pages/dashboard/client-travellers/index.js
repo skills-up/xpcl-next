@@ -2,16 +2,9 @@ import Seo from '../../../components/common/Seo';
 import Footer from '../../../components/footer/dashboard-footer';
 import Header from '../../../components/header/dashboard-header';
 import Sidebar from '../../../components/sidebars/dashboard-sidebars';
-import { useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
-import { sendToast } from '../../../utils/toastify';
-import { useEffect } from 'react';
-import Travellers from './components/Travellers';
+import ClientTravellers from './components/ClientTravellers';
 
 const index = () => {
-  const token = useSelector((state) => state.auth.value.token);
-  const router = useRouter();
-
   return (
     <>
       <Seo pageTitle='Travellers' />
@@ -42,7 +35,7 @@ const index = () => {
               {/* End .row */}
 
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
-                <Travellers />
+                <ClientTravellers />
               </div>
             </div>
 

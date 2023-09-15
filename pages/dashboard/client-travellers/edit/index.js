@@ -13,6 +13,7 @@ import Select from 'react-select';
 const UpdateClientTraveller = () => {
   const [clientOrgs, setClientOrgs] = useState([]);
   const [clientID, setClientID] = useState(null);
+  const client_id = useSelector((state) => state.auth.value.currentOrganization);
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();

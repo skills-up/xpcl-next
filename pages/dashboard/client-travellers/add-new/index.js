@@ -1,69 +1,44 @@
-import Seo from '../../../../../components/common/Seo';
-import Footer from '../../../../../components/footer/dashboard-footer';
-import Header from '../../../../../components/header/dashboard-header';
-import Sidebar from '../../../../../components/sidebars/dashboard-sidebars';
+import Seo from '../../../../components/common/Seo';
+import Footer from '../../../../components/footer/dashboard-footer';
+import Header from '../../../../components/header/dashboard-header';
+import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { sendToast } from '../../../../../utils/toastify';
+import { sendToast } from '../../../../utils/toastify';
 import { useEffect, useState } from 'react';
-import { createItem, getList } from '../../../../../api/xplorzApi';
+import { createItem, getList } from '../../../../api/xplorzApi';
 import ReactSwitch from 'react-switch';
 import Select from 'react-select';
 
 const AddNewClientTraveller = () => {
-  const [clientOrgs, setClientOrgs] = useState([]);
-  const [clientID, setClientID] = useState(null);
+  const [travellerName, setTravellerName] = useState('');
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
-
-  useEffect(() => {
-    if (router.isReady) {
-      if (!router.query.traveller_id) {
-        router.push('/dashboard/travellers');
-      }
-      getData();
-    }
-  }, [router.isReady]);
-
-  const getData = async () => {
-    const clientOrgs = await getList('organizations', { is_client: 1 });
-    if (clientOrgs?.success) {
-      setClientOrgs(
-        clientOrgs.data.map((element) => ({ value: element.id, label: element.name }))
-      );
-    } else {
-      sendToast('error', 'Error fetching required data.', 4000);
-      router.push('/dashboard/travellers/view/' + router.query.traveller_id);
-    }
-  };
+  const client_id = useSelector((state) => state.auth.value.currentOrganization);
 
   const onSubmit = async (e) => {
     e.preventDefault();
     // Checking if client id is not null
-    if (clientID?.value) {
-      const response = await createItem('client-travellers', {
-        traveller_id: parseInt(router.query.traveller_id),
-        client_id: clientID.value,
-      });
-      if (response?.success) {
-        sendToast('success', 'Linked Client Successfully.', 4000);
-        router.push('/dashboard/travellers/view/' + router.query.traveller_id);
-      } else {
-        sendToast(
-          'error',
-          response.data?.message || response.data?.error || 'Failed to Link Client.',
-          4000
-        );
-      }
+    const response = await createItem('client-travellers', {
+      traveller_name: travellerName,
+      client_id,
+    });
+    if (response?.success) {
+      sendToast('success', 'Created Traveller Successfully.', 4000);
+      router.push('/dashboard/travellers/view/' + router.query.traveller_id);
     } else {
-      sendToast('error', 'You must select a Client first.', 8000);
+      sendToast(
+        'error',
+        response.data?.message || response.data?.error || 'Failed to Create Traveller.',
+        4000
+      );
     }
   };
 
   return (
     <>
-      <Seo pageTitle='Link New Client' />
+      <Seo pageTitle='Create Traveller' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -83,8 +58,8 @@ const AddNewClientTraveller = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Link New Client</h1>
-                  <div className='text-15 text-light-1'>Link a client.</div>
+                  <h1 className='text-30 lh-14 fw-600'>Create Traveller</h1>
+                  <div className='text-15 text-light-1'>Add a new traveller.</div>
                 </div>
                 {/* End .col-12 */}
               </div>
@@ -93,23 +68,25 @@ const AddNewClientTraveller = () => {
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
-                    <div className='form-input-select'>
-                      <label>
-                        Client<span className='text-danger'>*</span>
-                      </label>
-                      <Select
-                        options={clientOrgs}
-                        value={clientID}
-                        placeholder='Search & Select Client (required)'
-                        onChange={(id) => setClientID(id)}
-                      />
+                    <div>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setTravellerName(e.target.value)}
+                          value={travellerName}
+                          placeholder=' '
+                          type='text'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Traveller Name
+                        </label>
+                      </div>
                     </div>
                     <div className='d-inline-block'>
                       <button
                         type='submit'
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
                       >
-                        Link Client
+                        Create Traveller
                       </button>
                     </div>
                   </form>
