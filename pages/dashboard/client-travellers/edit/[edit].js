@@ -1,34 +1,56 @@
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { createItem } from '../../../../api/xplorzApi';
+import { getItem, updateItem } from '../../../../api/xplorzApi';
 import Seo from '../../../../components/common/Seo';
 import Footer from '../../../../components/footer/dashboard-footer';
 import Header from '../../../../components/header/dashboard-header';
 import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
 import { sendToast } from '../../../../utils/toastify';
 
-const AddNewClientTraveller = () => {
+const UpdateClientTraveller = () => {
   const [travellerName, setTravellerName] = useState('');
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
   const client_id = useSelector((state) => state.auth.value.currentOrganization);
 
+  useEffect(() => {
+    if (router.isReady) {
+      getData();
+    }
+  }, [router.isReady]);
+
+  const getData = async () => {
+    if (router.query.edit) {
+      const response = await getItem('client-travellers', router.query.edit);
+      if (response?.success) {
+        setTravellerName(response.data.traveller_name);
+      } else {
+        sendToast(
+          'error',
+          response?.data?.error || response?.data?.message || 'Error fetching Traveller',
+          4000
+        );
+        router.push('/dashboard/client-travellers');
+      }
+    }
+  };
+
   const onSubmit = async (e) => {
     e.preventDefault();
     // Checking if client id is not null
-    const response = await createItem('client-travellers', {
+    const response = await updateItem('client-travellers', router.query.edit, {
       traveller_name: travellerName,
       client_id,
     });
     if (response?.success) {
-      sendToast('success', 'Created Traveller Successfully.', 4000);
+      sendToast('success', 'Updated Traveller Successfully.', 4000);
       router.push('/dashboard/client-travellers');
     } else {
       sendToast(
         'error',
-        response.data?.message || response.data?.error || 'Failed to Create Traveller.',
+        response.data?.message || response.data?.error || 'Failed to Update Traveller.',
         4000
       );
     }
@@ -36,7 +58,7 @@ const AddNewClientTraveller = () => {
 
   return (
     <>
-      <Seo pageTitle='Create Traveller' />
+      <Seo pageTitle='Update Traveller' />
       {/* End Page Title */}
 
       <div className='header-margin'></div>
@@ -56,8 +78,10 @@ const AddNewClientTraveller = () => {
             <div>
               <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Create Traveller</h1>
-                  <div className='text-15 text-light-1'>Add a new traveller.</div>
+                  <h1 className='text-30 lh-14 fw-600'>Update Traveller</h1>
+                  <div className='text-15 text-light-1'>
+                    Update an existing traveller.
+                  </div>
                 </div>
                 {/* End .col-12 */}
               </div>
@@ -84,7 +108,7 @@ const AddNewClientTraveller = () => {
                         type='submit'
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
                       >
-                        Create Traveller
+                        Update Traveller
                       </button>
                     </div>
                   </form>
@@ -103,4 +127,4 @@ const AddNewClientTraveller = () => {
   );
 };
 
-export default AddNewClientTraveller;
+export default UpdateClientTraveller;

@@ -77,22 +77,6 @@ const MobileMenu = () => {
             >
               About
             </MenuItem>
-            {token !== '' && (
-              <MenuItem
-                component={
-                  <Link
-                    href='/dashboard/visa-applications'
-                    className={
-                      router.pathname === '/dashboard/visa-applications'
-                        ? 'menu-active-link'
-                        : ''
-                    }
-                  />
-                }
-              >
-                Apply for Visa
-              </MenuItem>
-            )}
             {/* End Contact  Menu */}
           </Menu>
         </Sidebar>

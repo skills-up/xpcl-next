@@ -127,15 +127,6 @@ const MainMenu = ({ style = '' }) => {
         <li className={router.pathname === '/about' ? 'current' : ''}>
           <Link href='/about'>About</Link>
         </li>
-        {token !== '' && (
-          <li
-            className={
-              router.pathname === '/dashboard/visa-applications' ? 'current' : ''
-            }
-          >
-            <Link href='/dashboard/visa-applications'>Apply for Visa</Link>
-          </li>
-        )}
       </ul>
     </nav>
   );

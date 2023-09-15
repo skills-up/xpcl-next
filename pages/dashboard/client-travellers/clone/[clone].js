@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { createItem } from '../../../../api/xplorzApi';
+import { createItem, getItem } from '../../../../api/xplorzApi';
 import Seo from '../../../../components/common/Seo';
 import Footer from '../../../../components/footer/dashboard-footer';
 import Header from '../../../../components/header/dashboard-header';
@@ -14,6 +14,28 @@ const AddNewClientTraveller = () => {
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
   const client_id = useSelector((state) => state.auth.value.currentOrganization);
+
+  useEffect(() => {
+    if (router.isReady) {
+      getData();
+    }
+  }, [router.isReady]);
+
+  const getData = async () => {
+    if (router.query.clone) {
+      const response = await getItem('client-travellers', router.query.clone);
+      if (response?.success) {
+        setTravellerName(response.data.traveller_name);
+      } else {
+        sendToast(
+          'error',
+          response?.data?.error || response?.data?.message || 'Error fetching Traveller',
+          4000
+        );
+        router.push('/dashboard/client-travellers');
+      }
+    }
+  };
 
   const onSubmit = async (e) => {
     e.preventDefault();
