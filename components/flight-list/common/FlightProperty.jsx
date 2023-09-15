@@ -658,8 +658,7 @@ function FlightProperty({
               // Business Class
               let businessClass;
               if (element.provider === 'aa') {
-                if (element.prices.prices.ADT.cabinClass === 'EC')
-                  businessClass = 'Economy';
+                if (element.prices?.type === 'EC') businessClass = 'Economy';
               } else if (element.provider === 'tj') {
                 if (element.prices.prices.ADULT.cabinClass === 'PREMIUM_ECONOMY')
                   businessClass = 'Premium Economy';

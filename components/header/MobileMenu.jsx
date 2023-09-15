@@ -2,20 +2,13 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Menu, MenuItem, ProSidebarProvider, Sidebar, SubMenu } from 'react-pro-sidebar';
-import {
-  blogItems,
-  categorieMobileItems,
-  dashboardItems,
-  homeItems,
-  pageItems,
-} from '../../data/mainMenuData';
-import { isActiveLink } from '../../utils/linkActiveChecker';
-import Social from '../common/social/Social';
+import { Menu, MenuItem, ProSidebarProvider, Sidebar } from 'react-pro-sidebar';
+import { useSelector } from 'react-redux';
 import ContactInfo from './ContactInfo';
 
 const MobileMenu = () => {
   const router = useRouter();
+  const token = useSelector((state) => state.auth.value.token);
 
   return (
     <>
@@ -84,6 +77,22 @@ const MobileMenu = () => {
             >
               About
             </MenuItem>
+            {token !== '' && (
+              <MenuItem
+                component={
+                  <Link
+                    href='/dashboard/visa-applications'
+                    className={
+                      router.pathname === '/dashboard/visa-applications'
+                        ? 'menu-active-link'
+                        : ''
+                    }
+                  />
+                }
+              >
+                Apply for Visa
+              </MenuItem>
+            )}
             {/* End Contact  Menu */}
           </Menu>
         </Sidebar>

@@ -119,7 +119,7 @@ function EmailClients() {
       }
       let cabin;
       if (opt.provider === 'aa') {
-        if (opt.prices.prices.ADT.cabinClass === 'EC') cabin = 'Economy';
+        if (opt.prices?.type === 'EC') cabin = 'Economy';
       } else if (opt.provider === 'tj') {
         if (opt.prices.prices.ADULT.cabinClass === 'PREMIUM_ECONOMY')
           cabin = 'Premium Economy';
@@ -249,7 +249,7 @@ function EmailClients() {
                     <th>Flight</th>
                     <th>Cabin</th>
                     {!withoutFares && <th>Price</th>}
-                    <th></th>
+                    {/* <th></th> */}
                   </tr>
                 </thead>
                 <tbody>
@@ -364,7 +364,8 @@ function EmailClients() {
                                 })}
                               </td>
                             )}
-                            <td rowspan='1' style={{ textAlign: 'center' }}>
+                            {/* Book Button */}
+                            {/* <td rowspan='1' style={{ textAlign: 'center' }}>
                               <a
                                 target='_blank'
                                 href={`mailto:${
@@ -412,7 +413,7 @@ function EmailClients() {
                               >
                                 Book
                               </a>
-                            </td>
+                            </td> */}
                           </tr>
                         </>
                       );
@@ -461,7 +462,8 @@ function EmailClients() {
                                 })}
                               </td>
                             )}
-                            <td rowspan='1' style={{ textAlign: 'center' }}>
+                            {/* Book Button*/}
+                            {/* <td rowspan='1' style={{ textAlign: 'center' }}>
                               <a
                                 target='_blank'
                                 href={`mailto:${
@@ -503,7 +505,7 @@ function EmailClients() {
                               >
                                 Book
                               </a>
-                            </td>
+                            </td> */}
                           </tr>
                         </>
                       );
@@ -528,6 +530,15 @@ function EmailClients() {
     let response;
     if (type === 'email') {
       response = await createItem('send/email', formData);
+      if (response.success) {
+        sendToast('success', 'Mail sent successfully', 4000);
+      } else {
+        sendToast(
+          'error',
+          response?.data?.message || response?.data?.error || 'Error sending mail',
+          4000
+        );
+      }
     }
     // Whatsapp
     else if (type === 'whatsapp') {
@@ -951,20 +962,20 @@ function EmailClients() {
         <div className='button-item pl-20 mt-20 lg:pl-0 row x-gap-10 y-gap-10'>
           <div className='col-md-6'>
             <button
-              className='d-block mainSearch__submit button -blue-1 col-12 py-15 h-60 rounded-4 bg-dark-3 text-white'
+              className='d-block mainSearch__submit button -blue-1 col-12 py-15 h-50 rounded-4 bg-dark-3 text-white'
               onClick={() => submit('email')}
             >
               <AiOutlineMail className='icon-search text-20 mr-10' />
-              Send In Email
+              Send Via Email
             </button>
           </div>
           <div className='col-md-6'>
             <button
-              className='d-block mainSearch__submit button -blue-1 py-15 col-12 h-60 rounded-4 bg-dark-3 text-white'
+              className='d-block mainSearch__submit button -blue-1 py-15 col-12 h-50 rounded-4 bg-dark-3 text-white'
               onClick={submit}
             >
               <BsWhatsapp className='icon-search text-20 mr-10' />
-              Send Through Whatsapp
+              Send Via Whatsapp
             </button>
           </div>
         </div>

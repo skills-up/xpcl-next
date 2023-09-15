@@ -158,8 +158,8 @@ const VisaApplications = () => {
         />
       )}
       {/* Search Bar + Add New */}
-      <div className='row mb-3 items-center justify-between mr-4'>
-        <div className='col-3 col-lg-6'>
+      <div className='row mb-3 items-center y-gap-20 justify-between mr-4'>
+        <div className='col-lg-6'>
           <input
             type='text'
             className='d-block form-control'
@@ -168,15 +168,17 @@ const VisaApplications = () => {
             value={searchQuery}
           />
         </div>
-        <div className='col-4'>
+        <div className='col-lg-4'>
           <Select options={statusOptions} value={status} onChange={setStatus} />
         </div>
-        <button
-          className='btn btn-primary col-lg-2 col-5'
-          onClick={() => window.location.assign('/dashboard/visa-applications/add-new')}
-        >
-          Add New
-        </button>
+        <div className='col-lg-2'>
+          <button
+            className='btn btn-primary col-12 h-40'
+            onClick={() => window.location.assign('/dashboard/visa-applications/add-new')}
+          >
+            Add New
+          </button>
+        </div>
       </div>
       {/* Data Table */}
       <Datatable

@@ -1,16 +1,11 @@
 import Link from 'next/link';
 
-import { homeItems, blogItems, pageItems, dashboardItems } from '../../data/mainMenuData';
-import CategoriesMegaMenu from './CategoriesMegaMenu';
-import {
-  isActiveParent,
-  isActiveLink,
-  isActiveParentChaild,
-} from '../../utils/linkActiveChecker';
 import { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
 
 const MainMenu = ({ style = '' }) => {
   const router = useRouter();
+  const token = useSelector((state) => state.auth.value.token);
 
   return (
     <nav className='menu js-navList'>
@@ -132,6 +127,15 @@ const MainMenu = ({ style = '' }) => {
         <li className={router.pathname === '/about' ? 'current' : ''}>
           <Link href='/about'>About</Link>
         </li>
+        {token !== '' && (
+          <li
+            className={
+              router.pathname === '/dashboard/visa-applications' ? 'current' : ''
+            }
+          >
+            <Link href='/dashboard/visa-applications'>Apply for Visa</Link>
+          </li>
+        )}
       </ul>
     </nav>
   );

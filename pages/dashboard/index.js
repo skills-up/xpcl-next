@@ -41,7 +41,7 @@ const index = () => {
             </div>
 
             <div className='row y-gap-30 pt-20 chart_responsive'>
-              <div className='col-xl-5 col-md-6'>
+              <div className=''>
                 <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                   <h2 className='text-18 lh-1 fw-500'>Travel List</h2>
                   <TravelList />
