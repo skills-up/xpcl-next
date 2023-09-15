@@ -433,7 +433,7 @@ function EmailClients() {
                               {index + 1}.
                             </td>
                             <td rowspan='1' style={{ textAlign: 'center' }}>
-                              <span
+                              {/* <span
                                 class='proton-image-anchor'
                                 data-proton-remote='remote-1'
                                 style={{ maxWidth: '50px' }}
@@ -444,7 +444,7 @@ function EmailClients() {
                                   style={{ maxWidth: '50px' }}
                                 />
                               </span>
-                              <br />
+                              <br /> */}
                               {element.airline}
                             </td>
                             <td style={{ textAlign: 'center' }}>{element.from}</td>
