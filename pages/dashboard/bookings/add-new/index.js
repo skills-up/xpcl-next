@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { sendToast } from '../../../../utils/toastify';
 import { useEffect, useState } from 'react';
-import { createItem, getList } from '../../../../api/xplorzApi';
+import { createItem, getItem, getList } from '../../../../api/xplorzApi';
 import ReactSwitch from 'react-switch';
 import Select from 'react-select';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
@@ -142,14 +142,17 @@ const AddNewBooking = () => {
     const airlines = await getList('organizations', { is_airline: 1 });
     const paymentAccounts = await getList('accounts', { category: 'Credit Cards' });
     const clients = await getList('accounts', { category: 'Referrers' });
+    const prefillExchangeRate = await getItem('utilities', 'exchange-rate');
     if (
       vendors?.success &&
       commissionRules?.success &&
       airlines?.success &&
       paymentAccounts?.success &&
       clients?.success &&
-      clientOrgs?.success
+      clientOrgs?.success &&
+      prefillExchangeRate?.success
     ) {
+      setExchangeRate(+prefillExchangeRate.data || 0);
       setClientOrgs(
         clientOrgs.data.map((element) => ({
           value: element.id,
@@ -243,12 +246,14 @@ const AddNewBooking = () => {
       vendor_misc_charges: vendorMiscCharges
         ? vendorMiscCharges / (exchangeRate || 1)
         : 0,
-      vendor_total: vendorTotal ? vendorBaseAmount / (vendorBaseAmount || 1) : 0,
+      vendor_total: vendorTotal ? vendorTotal / (exchangeRate || 1) : 0,
       commission_rule_id: commissionRuleID?.value,
       iata_commission_percent: IATACommissionPercent || 0,
       plb_commission_percent: plbCommissionPercent || 0,
-      vendor_service_charges: vendorServiceCharges || 0,
-      vendor_tds: vendorTDS || 0,
+      vendor_service_charges: vendorServiceCharges
+        ? vendorServiceCharges / (exchangeRate || 1)
+        : 0,
+      vendor_tds: vendorTDS ? vendorTDS / (exchangeRate || 1) : 0,
       commission_receivable: commissionReceivable,
       airline_id: airlineID?.value,
       miscellaneous_type: miscellaneousType?.value,

@@ -41,6 +41,8 @@ const ReissueBooking = () => {
   const [isOffshore, setIsOffshore] = useState(false);
   const [grossCommission, setGrossCommission] = useState(0);
   const [clientQuotedAmount, setClientQuotedAmount] = useState(0);
+  const [exchangeRate, setExchangeRate] = useState(0);
+  const [enableINR, setEnableINR] = useState(false);
 
   // Percentages
   const [vendorServiceChargePercent, setVendorServiceChargePercent] = useState(18);
@@ -138,6 +140,8 @@ const ReissueBooking = () => {
         setBookingDate(
           new DateObject({ date: response.data.booking_date, format: 'YYYY-MM-DD' })
         );
+        setEnableINR(response.data.enable_inr);
+        setExchangeRate((+response.data.exchange_rate).toFixed(2));
         setIsOffshore(response.data?.is_offshore);
         // setClientQuotedAmount(
         //   +response.data.client_base_amount +
@@ -302,7 +306,7 @@ const ReissueBooking = () => {
                 date: bookSec.travel_date,
                 format: 'YYYY-MM-DD',
               }),
-              travel_time: bookSec?.travel_time?.substring(0,5),
+              travel_time: bookSec?.travel_time?.substring(0, 5),
               details: bookSec?.details,
               booking_class: tempBookingClass,
             });
@@ -360,22 +364,28 @@ const ReissueBooking = () => {
       ticket_number: ticketNumber,
       pnr,
       vendor_id: vendorID.value,
-      vendor_base_amount: vendorBaseAmount || 0,
-      vendor_yq_amount: vendorYQAmount || 0,
-      vendor_tax_amount: vendorTaxAmount || 0,
-      vendor_gst_amount: vendorGSTAmount || 0,
-      vendor_misc_charges: vendorMiscCharges || 0,
-      vendor_total: vendorTotal || 0,
+      vendor_base_amount: vendorBaseAmount ? vendorBaseAmount / (exchangeRate || 1) : 0,
+      vendor_yq_amount: vendorYQAmount ? vendorYQAmount / (exchangeRate || 1) : 0,
+      vendor_tax_amount: vendorTaxAmount ? vendorTaxAmount / (exchangeRate || 1) : 0,
+      vendor_gst_amount: vendorGSTAmount ? vendorGSTAmount / (exchangeRate || 1) : 0,
+      vendor_misc_charges: vendorMiscCharges
+        ? vendorMiscCharges / (exchangeRate || 1)
+        : 0,
+      vendor_total: vendorTotal ? vendorTotal / (exchangeRate || 1) : 0,
       commission_rule_id: commissionRuleID?.value,
       iata_commission_percent: IATACommissionPercent || 0,
       plb_commission_percent: plbCommissionPercent || 0,
-      vendor_service_charges: vendorServiceCharges || 0,
-      vendor_tds: vendorTDS || 0,
+      vendor_service_charges: vendorServiceCharges
+        ? vendorServiceCharges / (exchangeRate || 1)
+        : 0,
+      vendor_tds: vendorTDS ? vendorTDS / (exchangeRate || 1) : 0,
       commission_receivable: commissionReceivable,
       airline_id: airlineID?.value,
       miscellaneous_type: miscellaneousType?.value,
       payment_account_id: paymentAccountID?.value,
-      payment_amount: +paymentAmount ? paymentAmount || undefined : undefined,
+      payment_amount: +paymentAmount
+        ? paymentAmount / (exchangeRate || 1) || undefined
+        : undefined,
       client_referrer_id: clientReferrerID?.value,
       client_referral_fee: +clientReferralFee
         ? clientReferralFee || undefined
@@ -388,6 +398,7 @@ const ReissueBooking = () => {
       original_booking_id: router.query.reissue,
       reissue_penalty: reissuePenalty || 0,
       client_traveller_id: clientTravellerID?.value,
+      exchange_rate: exchangeRate || 0,
       booking_sectors:
         bookingType.value === 'Miscellaneous'
           ? undefined
@@ -403,6 +414,7 @@ const ReissueBooking = () => {
               booking_class: element['booking_class']?.value,
             })),
       is_offshore: isOffshore,
+      enable_inr: enableINR,
       sector: bookingType.value === 'Miscellaneous' ? sector : undefined,
     });
     if (response?.success) {
@@ -1626,12 +1638,41 @@ const ReissueBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='d-flex items-center gap-3'>
+                    {enableINR && (
+                      <div className={`col-lg-4 ${isOffshore ? 'pt-35 lg:pt-10' : ''}`}>
+                        <div className='form-input'>
+                          <input
+                            onChange={(e) => {
+                              setExchangeRate(e.target.value);
+                            }}
+                            value={exchangeRate}
+                            placeholder=' '
+                            type='number'
+                            onWheel={(e) => e.target.blur()}
+                          />
+                          <label className='lh-1 text-16 text-light-1'>
+                            Exchange Rate
+                          </label>
+                        </div>
+                      </div>
+                    )}
+                    <div className='col-12' />
+                    <div className='d-flex col-lg-4 col-xl-3 col-xxl-2 items-center gap-3'>
                       <ReactSwitch
                         onChange={() => setIsOffshore((prev) => !prev)}
                         checked={isOffshore}
                       />
                       <label>Is Offshore</label>
+                    </div>
+                    <div className='d-flex col-lg-4 col-xl-3 col-xxl-2 items-center gap-3'>
+                      <ReactSwitch
+                        onChange={() => {
+                          if (enableINR) setExchangeRate(0);
+                          setEnableINR((prev) => !prev);
+                        }}
+                        checked={enableINR}
+                      />
+                      <label>Enable INR</label>
                     </div>
                     <div className='d-inline-block'>
                       <button
