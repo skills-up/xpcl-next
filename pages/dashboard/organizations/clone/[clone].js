@@ -16,8 +16,6 @@ const AddNewOrganization = () => {
   const [contactName, setContactName] = useState('');
   const [contactEmail, setContactEmail] = useState('');
   const [address, setAddress] = useState('');
-  const [gstn, setGstn] = useState('');
-  const [useGstn, setUseGstn] = useState(false);
   const [type, setType] = useState(null);
   const [vendorServicePercent, setVendorServicePercent] = useState(0);
   const [vendorTDSPercent, setVendorTDSPercent] = useState(0);
@@ -46,8 +44,6 @@ const AddNewOrganization = () => {
         setContactName(response.data?.contact_name);
         setContactEmail(response.data?.contact_email);
         setAddress(response.data?.address);
-        setGstn(response.data?.gstn);
-        setUseGstn(response.data?.use_gstn);
         setFarePercent(response.data?.fare_percent);
         setVendorServicePercent(response.data?.vendor_service_charge_percentage);
         setVendorTDSPercent(response.data?.vendor_tds_percentage);
@@ -81,8 +77,6 @@ const AddNewOrganization = () => {
       contact_name: contactName,
       contact_email: contactEmail,
       address,
-      gstn,
-      use_gstn: useGstn,
       type: type?.value,
       fare_percent: farePercent,
       vendor_service_charge_percentage: vendorServicePercent,
@@ -207,18 +201,6 @@ const AddNewOrganization = () => {
                     <div className='col-12'>
                       <div className='form-input'>
                         <input
-                          onChange={(e) => setGstn(e.target.value)}
-                          value={gstn}
-                          placeholder=' '
-                          type='text'
-                          pattern='^\d{2}[A-Za-z]{5}\d{4}[A-Za-z]\wZ\w$'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>GSTN</label>
-                      </div>
-                    </div>
-                    <div className='col-12'>
-                      <div className='form-input'>
-                        <input
                           onChange={(e) => setFarePercent(e.target.value)}
                           value={farePercent}
                           placeholder=' '
@@ -257,13 +239,6 @@ const AddNewOrganization = () => {
                           Vendor TDS Percent
                         </label>
                       </div>
-                    </div>
-                    <div className='d-flex items-center gap-3'>
-                      <ReactSwitch
-                        onChange={() => setUseGstn((prev) => !prev)}
-                        checked={useGstn}
-                      />
-                      <label>Use GSTN?</label>
                     </div>
                     <div className='d-inline-block'>
                       <button
