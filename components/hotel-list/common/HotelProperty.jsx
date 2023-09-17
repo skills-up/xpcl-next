@@ -10,7 +10,6 @@ function HotelProperty({ item }) {
   const age = useSelector((state) => state.hotelSearch.value.age);
   const totalAdults = age.totalAdult;
   const totalChildren = age.totalChildren;
-  console.log('total', totalChildren, totalAdults);
   const router = useRouter();
   return (
     <div className='col-12 bg-white px-20 mb-30 rounded-4 lg:mb-20' key={item?.id}>

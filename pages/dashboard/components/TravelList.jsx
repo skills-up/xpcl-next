@@ -117,6 +117,7 @@ const TravelList = () => {
     },
     {
       Header: 'Upload Boarding Pass',
+      removeMaxWidth: true,
       Cell: (data) => <BoardingPassUpload id={data.row.original.id} />,
     },
   ];

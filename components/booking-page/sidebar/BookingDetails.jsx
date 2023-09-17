@@ -36,7 +36,6 @@ const BookingDetails = ({ PNR }) => {
         <div className='text-20 fw-500 mb-30'>Your booking details</div>
         <div className='row x-gap-15 y-gap-20'>
           <div className='col-auto'>
-            {console.log('PNR', PNR)}
             <Image
               width={140}
               height={140}

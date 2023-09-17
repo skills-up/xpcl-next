@@ -24,8 +24,8 @@ const ArrivingAt = () => {
       </a>
       {arrivingAt &&
         Object.entries(arrivingAt).map(([key, value], index) => (
-          <div className='row y-gap-10 items-center justify-between'>
-            <div className='col-auto -wmax-80'>
+          <div className='row y-gap-10 items-center'>
+            <div className='col-10 -wmax-80'>
               <div className='form-checkbox d-flex items-center'>
                 <input
                   type='checkbox'
@@ -54,7 +54,7 @@ const ArrivingAt = () => {
               </div>
             </div>
             {/* End .col */}
-            <div className='col-auto'>
+            <div className='col-2'>
               <div className='text-15 text-light-1'>{value.number}</div>
             </div>
           </div>

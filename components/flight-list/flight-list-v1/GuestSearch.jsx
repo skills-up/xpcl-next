@@ -71,7 +71,6 @@ const Counter = ({ name, defaultValue, onCounterChange }) => {
 };
 
 const GuestSearch = ({ guests, cabins }) => {
-  console.log('cabin', cabins);
   const [guestCounts, setGuestCounts] = guests;
   const [preferredCabin, setPrefferedCabin] = cabins;
   const handleCounterChange = (name, value) => {

@@ -37,7 +37,6 @@ const PirceSlider = () => {
           </div>
 
           <div className='px-5'>
-            {console.log('Min Price', price.minPrice)}
             <InputRange
               formatLabel={(value) => ``}
               minValue={price.minPrice}

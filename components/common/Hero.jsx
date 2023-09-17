@@ -5,24 +5,19 @@ import { Parallax } from 'react-parallax';
 function ContactHero() {
   const list = [
     {
-      title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elitz',
+      title: 'Corporate Travel Management Redefined',
       subtitle:
-        'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariaturs.',
+        'We understand how business travel works and have perfected every process involved in managing travel for large companies across India. With our 24/7 Service, Xplorz will always be there for you.',
     },
     {
-      title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elits',
+      title: 'Unparalleled Technology',
       subtitle:
-        'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur2.',
+        'Efficiency and Perfection in every thing we do. We build our own technologies with the ever changing needs of our clients and empower our customers to do much more than just book travel.',
     },
     {
-      title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elitw',
+      title: 'Clear and Efficient MIS and Billing',
       subtitle:
-        'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariaturw.',
-    },
-    {
-      title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elitt',
-      subtitle:
-        'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariaturz.',
+        'Access your weekly, monthly billing and travel reports along with GST ledgers at your fingertips. Transparency at its best.',
     },
   ];
   const [currentTab, setCurrentTab] = useState(0);
@@ -74,14 +69,14 @@ function ContactHero() {
                     <h1 className='text-white'>{list[currentTab].title}</h1>
                     <h5 className='text-white mt-30'>{list[currentTab].subtitle}</h5>
                   </div>
-                  <div className='d-inline-block hero-button'>
+                  {/* <div className='d-inline-block hero-button'>
                     <Link
                       href='/hotel/hotel-list-v5'
                       className='button py-20 w-250 text-18 text-center bg-blue-1 text-white'
                     >
                       Find Deals
                     </Link>
-                  </div>
+                  </div> */}
                 </div>
                 {/* Right */}
                 <div className='col-lg-6 d-flex justify-center'>

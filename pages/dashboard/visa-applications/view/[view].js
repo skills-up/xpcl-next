@@ -391,33 +391,40 @@ const ViewVisaApplications = () => {
                     />
                   )}
                   {visaApplications?.notes?.map(note => (
-                    <div className='d-flex flex-column border-light rounded_4 p-4'>
-                      <div className='col-12'>
-                        {note.body}
+                    <div className='mt-20'>
+                      <div className='d-flex justify-between'>
+                        <a
+                          className='text-12 cursor-pointer'
+                          href={'/dashboard/users/view/' + note.created_by}
+                        >
+                          <strong>User #{note.created_by} </strong> @ 
+                          {new Date(note.created_at).toLocaleString('en-IN', {
+                            dateStyle: 'medium',
+                            timeStyle: 'short',
+                          })}
+                        </a>
+                        <a
+                          className='gap-1 col-auto'
+                          onClick={() => {
+                            setIdToDelete(note.id);
+                            setConfirmDeleteNote(true);
+                          }}
+                        >
+                          <BsTrash3 />
+                        </a>
                       </div>
-                      <small className='row justify-between mt-10'>
-                        <div class='col-auto'>
+                      <div className='d-flex flex-column bg-light-2 border-light rounded_4 p-2'>
+                        <div className='col-12'>
+                          {note.body}
+                        </div>
                         {note.attachments?.length ? 
-                          <>
-                            <b>Attachments:</b>
-                            {note.attachments?.map(url => (
-                              <a className='btn-link ml-10' href={url} target='_blank' download>Download</a>
-                            ))}
-                          </> : '' }
-                        </div>
-                        <div class='col-auto'>
-                          <button
-                            className='btn btn-danger d-flex items-center gap-1 col-auto'
-                            type='button'
-                            onClick={() => {
-                              setIdToDelete(note.id);
-                              setConfirmDeleteNote(true);
-                            }}
-                          >
-                            <BsTrash3 /> Delete
-                          </button>
-                        </div>
-                      </small>
+                        <div className='text-12 mt-10'>
+                          <b>Attachments:</b>
+                          {note.attachments?.map(url => (
+                            <a className='btn-link ml-10' href={url} target='_blank' download>Download</a>
+                          ))}
+                        </div> : '' }
+                      </div>
                     </div>
                   ))}
                 </>

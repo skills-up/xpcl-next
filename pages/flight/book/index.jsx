@@ -20,8 +20,6 @@ const index = () => {
   // 2 - Seat Maps
   // 3 - Review
 
-  useEffect(() => console.log('PNR', PNR), [PNR]);
-
   return (
     <>
       <Seo pageTitle='Flight Booking' />
