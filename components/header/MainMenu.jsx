@@ -51,14 +51,6 @@ const MainMenu = ({ style = '' }) => {
           <Link href='/destinations'>Destinations</Link>
         </li> */}
 
-        <li className={router.pathname === '/flight/flight-list-v1' ? 'current' : ''}>
-          <Link href='/flight/flight-list-v1'>Flights</Link>
-        </li>
-
-        <li className={router.pathname === '/hotel/hotel-list-v1' ? 'current' : ''}>
-          <Link href='/hotel/hotel-list-v1'>Hotels</Link>
-        </li>
-
         {/* <li
           className={`${
             isActiveParentChaild(blogItems, router.asPath) ? 'current' : ''

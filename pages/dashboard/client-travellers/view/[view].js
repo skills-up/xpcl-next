@@ -1,19 +1,20 @@
-import Seo from '../../../../../components/common/Seo';
-import Footer from '../../../../../components/footer/dashboard-footer';
-import Header from '../../../../../components/header/dashboard-header';
-import Sidebar from '../../../../../components/sidebars/dashboard-sidebars';
-import ConfirmationModal from '../../../../../components/confirm-modal';
+import Seo from '../../../../components/common/Seo';
+import Footer from '../../../../components/footer/dashboard-footer';
+import Header from '../../../../components/header/dashboard-header';
+import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
+import ConfirmationModal from '../../../../components/confirm-modal';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { sendToast } from '../../../../../utils/toastify';
+import { sendToast } from '../../../../utils/toastify';
 import { useEffect, useState } from 'react';
-import { deleteItem, getItem } from '../../../../../api/xplorzApi';
-import ViewTable from '../../../../../components/view-table';
+import { deleteItem, getItem, getList } from '../../../../api/xplorzApi';
+import ViewTable from '../../../../components/view-table';
 
 const ViewClientTravellers = () => {
   const [clientTraveller, setClientTraveller] = useState([]);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
+  const [clients, setClients] = useState([]);
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -25,9 +26,20 @@ const ViewClientTravellers = () => {
   const getClientTraveller = async () => {
     if (router.query.view) {
       const response = await getItem('client-travellers', router.query.view);
-      if (response?.success) {
+      const clients = await getList('organizations', { is_client: 1 });
+      if (response?.success && clients?.success) {
         let data = response.data;
         // Converting time columns
+        if (data.client_id && data.client_name)
+          data['client_name'] = (
+            <a
+              className='text-15 cursor-pointer'
+              href={'/dashboard/organizations/view/' + data.client_id}
+            >
+              <strong>{data.client_name}</strong>
+            </a>
+          );
+        delete data['client_id'];
         delete data['id'];
         if (data.created_by) {
           data.created_by = (
@@ -61,13 +73,6 @@ const ViewClientTravellers = () => {
         }
         delete data['created_at'];
         delete data['updated_at'];
-        if (data?.traveller_name && data?.traveller_id) {
-          data.traveller_name = (
-            <a href={'/dashboard/travellers/view/' + data.traveller_id}>
-              {data.traveller_name}
-            </a>
-          );
-        }
         delete data['traveller_id'];
         setClientTraveller(data);
       } else {
@@ -77,7 +82,7 @@ const ViewClientTravellers = () => {
             response.data?.error ||
             'Could Not Fetch The Requested Client Traveller.'
         );
-        router.push('/dashboard/travellers/view/' + router.query.traveller_id);
+        router.push('/dashboard/client-travellers');
       }
     }
   };

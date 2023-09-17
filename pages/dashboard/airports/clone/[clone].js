@@ -12,8 +12,7 @@ import TimezoneSelect from 'react-timezone-select';
 import { setInitialAirportsState } from '../../../../features/apis/apisSlice';
 
 const AddNewAirports = () => {
-  const [countries, setCountries] = useState([]);
-  const [countryID, setCountryID] = useState(null);
+  const [countryName, setCountryName] = useState('');
   const [name, setName] = useState('');
   const [iataCode, setIataCode] = useState('');
   const [city, setCity] = useState('');
@@ -32,28 +31,11 @@ const AddNewAirports = () => {
     if (router.query.clone) {
       const response = await getItem('airports', router.query.clone);
       if (response?.data) {
+        setCountryName(response.data?.country_name);
         setName(response.data?.name);
         setIataCode(response.data?.iata_code);
         setCity(response.data?.city);
         setTimeZone(response.data?.timezone);
-        const countries = await getList('countries');
-        if (countries?.success) {
-          setCountries(
-            countries.data.map((element) => ({
-              value: element.id,
-              label: element.name,
-            }))
-          );
-          // Setting country
-          for (let country of countries.data) {
-            if (country.name === response.data?.country_name) {
-              setCountryID({ value: country.id, label: country.name });
-            }
-          }
-        } else {
-          sendToast('error', 'Unable to fetch required data', 4000);
-          router.push('/dashboard/airports');
-        }
       } else {
         sendToast(
           'error',
@@ -70,28 +52,24 @@ const AddNewAirports = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     // Checking if airport id is not null
-    if (countryID?.value) {
-      const response = await createItem('airports', {
-        country_name: countryID.label,
-        name,
-        iata_code: iataCode,
-        city,
-        timezone: timezone?.value || timezone,
-      });
-      if (response?.success) {
-        sendToast('success', 'Created Airport Successfully.', 4000);
-        sessionStorage.removeItem('airports-checked');
-        dispatch(setInitialAirportsState());
-        router.push('/dashboard/airports');
-      } else {
-        sendToast(
-          'error',
-          response.data?.message || response.data?.error || 'Failed to Create Airport.',
-          4000
-        );
-      }
+    const response = await createItem('airports', {
+      country_name: countryName,
+      name,
+      iata_code: iataCode,
+      city,
+      timezone: timezone?.value || timezone,
+    });
+    if (response?.success) {
+      sendToast('success', 'Created Airport Successfully.', 4000);
+      sessionStorage.removeItem('airports-checked');
+      dispatch(setInitialAirportsState());
+      router.push('/dashboard/airports');
     } else {
-      sendToast('error', 'You must select a Country.', 4000);
+      sendToast(
+        'error',
+        response.data?.message || response.data?.error || 'Failed to Create Airport.',
+        4000
+      );
     }
   };
 
@@ -127,17 +105,19 @@ const AddNewAirports = () => {
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
-                    <div className='form-input-select'>
-                      <label>
-                        Select Country<span className='text-danger'>*</span>
-                      </label>
-                      <Select
-                        defaultValue={countryID}
-                        options={countries}
-                        value={countryID}
-                        placeholder='Search & Select Country (required)'
-                        onChange={(id) => setCountryID(id)}
-                      />
+                    <div className='col-12'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setCountryName(e.target.value)}
+                          value={countryName}
+                          placeholder=' '
+                          type='text'
+                          required
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Country Name<span className='text-danger'>*</span>
+                        </label>
+                      </div>
                     </div>
                     <div className='col-12'>
                       <div className='form-input'>

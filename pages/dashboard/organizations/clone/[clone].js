@@ -11,8 +11,6 @@ import ReactSwitch from 'react-switch';
 import Select from 'react-select';
 
 const AddNewOrganization = () => {
-  const [calenderTemplates, setCalenderTemplates] = useState([]);
-  const [calenderTemplateID, setCalenderTemplateID] = useState(null);
   const [name, setName] = useState('');
   const [code, setCode] = useState('');
   const [contactName, setContactName] = useState('');
@@ -53,50 +51,9 @@ const AddNewOrganization = () => {
         setFarePercent(response.data?.fare_percent);
         setVendorServicePercent(response.data?.vendor_service_charge_percentage);
         setVendorTDSPercent(response.data?.vendor_tds_percentage);
-
-        const calenderTemplates = await getList('calendar-templates');
-        if (calenderTemplates?.success) {
-          setCalenderTemplates(
-            calenderTemplates.data.map((element) => ({
-              value: element.id,
-              label: element?.image_url ? (
-                <span>
-                  {element.name}{' '}
-                  <img
-                    style={{ height: '288px', maxWidth: '200px' }}
-                    src={element.image_url}
-                  />
-                </span>
-              ) : (
-                <span>{element.name}</span>
-              ),
-            }))
-          );
-          for (let calendar of calenderTemplates.data) {
-            if (calendar.id === response.data.calendar_template_id) {
-              setCalenderTemplateID({
-                value: calendar.id,
-                label: calendar?.image_url ? (
-                  <span>
-                    {calendar.name}{' '}
-                    <img
-                      style={{ height: '288px', maxWidth: '200px' }}
-                      src={calendar.image_url}
-                    />
-                  </span>
-                ) : (
-                  <span>{calendar.name}</span>
-                ),
-              });
-            }
-          }
-          // Setting types
-          for (let i of options) {
-            if (response.data?.type === i.value) setType(i);
-          }
-        } else {
-          sendToast('error', 'Unable to fetch required data', 4000);
-          router.push('/dashboard/organizations');
+        // Setting types
+        for (let i of options) {
+          if (response.data?.type === i.value) setType(i);
         }
       } else {
         sendToast(
@@ -119,7 +76,6 @@ const AddNewOrganization = () => {
       return;
     }
     const response = await createItem('organizations', {
-      calendar_template_id: calenderTemplateID?.value || null,
       name,
       code,
       contact_name: contactName,
@@ -188,16 +144,6 @@ const AddNewOrganization = () => {
                         value={type}
                         placeholder='Search & Select Organization Type (required)'
                         onChange={(id) => setType(id)}
-                      />
-                    </div>
-                    <div className='form-input-select'>
-                      <label>Select Calendar Template</label>
-                      <Select
-                        isClearable
-                        options={calenderTemplates}
-                        value={calenderTemplateID}
-                        placeholder='Search & Select Calendar Template'
-                        onChange={(id) => setCalenderTemplateID(id)}
                       />
                     </div>
                     <div className='col-12'>

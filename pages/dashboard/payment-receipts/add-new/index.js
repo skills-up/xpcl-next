@@ -1,15 +1,14 @@
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import DatePicker, { DateObject } from 'react-multi-date-picker';
+import { useSelector } from 'react-redux';
+import Select from 'react-select';
+import { createItem, getList } from '../../../../api/xplorzApi';
 import Seo from '../../../../components/common/Seo';
 import Footer from '../../../../components/footer/dashboard-footer';
 import Header from '../../../../components/header/dashboard-header';
 import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
-import { useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
 import { sendToast } from '../../../../utils/toastify';
-import { useEffect, useState } from 'react';
-import { createItem, getList } from '../../../../api/xplorzApi';
-import ReactSwitch from 'react-switch';
-import Select from 'react-select';
-import DatePicker, { DateObject } from 'react-multi-date-picker';
 
 const AddNewPaymentReceipt = () => {
   const [type, setType] = useState(null);
@@ -23,21 +22,6 @@ const AddNewPaymentReceipt = () => {
   const [bankCashAccounts, setBankCashAccounts] = useState([]);
   const [tdsAccounts, setTDSAccounts] = useState([]);
   const [organizations, setOrganizations] = useState([]);
-  const [itc, setItc] = useState(false);
-  const [itcObj, setItcObj] = useState({
-    name: '',
-    gstn: '',
-    igst: '',
-    cgst: '',
-    sgst: '',
-  });
-  const [tds, setTds] = useState(false);
-  const [tdsObj, setTdsObj] = useState({
-    name: '',
-    pan: '',
-    account_id: null,
-    amount: '',
-  });
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -45,24 +29,6 @@ const AddNewPaymentReceipt = () => {
   useEffect(() => {
     if (router.isReady) getData();
   }, [router.isReady]);
-
-  useEffect(() => {
-    if (itcObj?.gstn) {
-      if (itcObj.gstn.slice(0, 2) === '27') {
-        setItcObj((prev) => ({ ...prev, igst: '' }));
-      } else {
-        setItcObj((prev) => ({ ...prev, ...{ cgst: '', sgst: '' } }));
-      }
-    }
-  }, [itcObj.gstn]);
-
-  useEffect(() => {
-    if (itcObj.cgst && itc) setItcObj((prev) => ({ ...prev, sgst: prev.cgst }));
-  }, [itcObj.cgst]);
-
-  useEffect(() => {
-    if (itcObj.sgst && itc) setItcObj((prev) => ({ ...prev, cgst: prev.sgst }));
-  }, [itcObj.sgst]);
 
   const getData = async () => {
     setType({ value: router.query.type });
@@ -110,20 +76,6 @@ const AddNewPaymentReceipt = () => {
       sendToast('error', 'You must select a Debit Account', 4000);
       return;
     }
-    if (tds && !tdsObj.pan.match(/[A-Z]{5}[0-9]{4}[A-Z]{1}$/)) {
-      sendToast('error', 'PAN format is invalid', 4000);
-      return;
-    }
-    if (
-      itc &&
-      !itcObj.gstn.match(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/)
-    ) {
-      sendToast('error', 'GSTN format is invalid', 4000);
-      return;
-    }
-    const tempTDSObj = tdsObj;
-    if (tempTDSObj['account_id']?.value)
-      tempTDSObj['account_id'] = tempTDSObj['account_id']?.value;
 
     const response = await createItem('payment-receipts', {
       type: type.value,
@@ -133,20 +85,6 @@ const AddNewPaymentReceipt = () => {
       date: date.format('YYYY-MM-DD'),
       amount,
       narration,
-      itc:
-        type.value === 'Payment'
-          ? itc
-            ? {
-                ...itcObj,
-                ...{
-                  igst: itcObj?.igst || 0,
-                  cgst: itcObj?.cgst || 0,
-                  sgst: itcObj?.sgst || 0,
-                },
-              }
-            : null
-          : null,
-      tds: type.value === 'Payment' ? (tds ? tempTDSObj : null) : null,
     });
     if (response?.success) {
       sendToast('success', 'Created ' + router.query.type + ' Successfully.', 4000);
@@ -307,189 +245,6 @@ const AddNewPaymentReceipt = () => {
                         </label>
                       </div>
                     </div>
-                    {/* ITC */}
-                    {type?.value === 'Payment' && (
-                      <div className='d-flex items-center gap-3'>
-                        <ReactSwitch
-                          onChange={() => setItc((prev) => !prev)}
-                          checked={itc}
-                        />
-                        <label>ITC</label>
-                      </div>
-                    )}
-                    {itc && type?.value === 'Payment' && (
-                      <div className='row pr-0'>
-                        <div className='col-3 pr-0'>
-                          <div className='form-input'>
-                            <input
-                              onChange={(e) =>
-                                setItcObj((prev) => ({ ...prev, name: e.target.value }))
-                              }
-                              value={itcObj.name}
-                              placeholder=' '
-                              type='text'
-                            />
-                            <label className='lh-1 text-16 text-light-1'>
-                              Name<span className='text-danger'>*</span>
-                            </label>
-                          </div>
-                        </div>
-                        <div className='col-3 pr-0'>
-                          <div className='form-input'>
-                            <input
-                              onChange={(e) =>
-                                setItcObj((prev) => ({ ...prev, gstn: e.target.value }))
-                              }
-                              value={itcObj.gstn}
-                              placeholder=' '
-                              type='text'
-                              pattern='^\d{2}[A-Za-z]{5}\d{4}[A-Za-z]\wZ\w$'
-                              />
-                            <label className='lh-1 text-16 text-light-1'>
-                              GSTN<span className='text-danger'>*</span>
-                            </label>
-                          </div>
-                        </div>
-                        <div className='col-2 pr-0'>
-                          <div className='form-input'>
-                            <input
-                              onChange={(e) =>
-                                setItcObj((prev) => ({ ...prev, cgst: e.target.value }))
-                              }
-                              value={itcObj.cgst}
-                              placeholder=' '
-                              type='number'
-                              onWheel={(e) => e.target.blur()}
-                              disabled={
-                                itcObj.gstn ? itcObj.gstn.slice(0, 2) !== '27' : false
-                              }
-                            />
-                            <label className='lh-1 text-16 text-light-1'>
-                              CGST
-                              {itcObj.gstn && itcObj.gstn.slice(0, 2) === '27' && (
-                                <span className='text-danger'>*</span>
-                              )}
-                            </label>
-                          </div>
-                        </div>
-                        <div className='col-2 pr-0'>
-                          <div className='form-input'>
-                            <input
-                              onChange={(e) =>
-                                setItcObj((prev) => ({ ...prev, sgst: e.target.value }))
-                              }
-                              value={itcObj.sgst}
-                              placeholder=' '
-                              type='number'
-                              onWheel={(e) => e.target.blur()}
-                              disabled={
-                                itcObj.gstn ? itcObj.gstn.slice(0, 2) !== '27' : false
-                              }
-                            />
-                            <label className='lh-1 text-16 text-light-1'>
-                              SGST
-                              {itcObj.gstn && itcObj.gstn.slice(0, 2) === '27' && (
-                                <span className='text-danger'>*</span>
-                              )}
-                            </label>
-                          </div>
-                        </div>
-                        <div className='col-2 pr-0'>
-                          <div className='form-input'>
-                            <input
-                              onChange={(e) =>
-                                setItcObj((prev) => ({ ...prev, igst: e.target.value }))
-                              }
-                              value={itcObj.igst}
-                              placeholder=' '
-                              type='number'
-                              onWheel={(e) => e.target.blur()}
-                              disabled={
-                                itcObj.gstn ? itcObj.gstn.slice(0, 2) === '27' : false
-                              }
-                            />
-                            <label className='lh-1 text-16 text-light-1'>
-                              IGST
-                              {itcObj.gstn && itcObj.gstn.slice(0, 2) !== '27' && (
-                                <span className='text-danger'>*</span>
-                              )}
-                            </label>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                    {/* TDS */}
-                    {type?.value === 'Payment' && (
-                      <div className='d-flex items-center gap-3'>
-                        <ReactSwitch
-                          onChange={() => setTds((prev) => !prev)}
-                          checked={tds}
-                        />
-                        <label>TDS</label>
-                      </div>
-                    )}
-                    {tds && type?.value === 'Payment' && (
-                      <div className='row pr-0 items-center'>
-                        <div className='col-3 pr-0'>
-                          <div className='form-input'>
-                            <input
-                              onChange={(e) =>
-                                setTdsObj((prev) => ({ ...prev, name: e.target.value }))
-                              }
-                              value={tdsObj.name}
-                              placeholder=' '
-                              type='text'
-                            />
-                            <label className='lh-1 text-16 text-light-1'>
-                              Name<span className='text-danger'>*</span>
-                            </label>
-                          </div>
-                        </div>
-                        <div className='col-3 pr-0'>
-                          <div className='form-input'>
-                            <input
-                              onChange={(e) =>
-                                setTdsObj((prev) => ({ ...prev, pan: e.target.value }))
-                              }
-                              value={tdsObj.pan}
-                              placeholder=' '
-                              type='text'
-                            />
-                            <label className='lh-1 text-16 text-light-1'>
-                              PAN<span className='text-danger'>*</span>
-                            </label>
-                          </div>
-                        </div>
-                        <div className='col-4 pr-0 form-input-select'>
-                          <label>
-                            Account<span className='text-danger'>*</span>
-                          </label>
-                          <Select
-                            options={tdsAccounts}
-                            value={tdsObj.account_id}
-                            onChange={(id) =>
-                              setTdsObj((prev) => ({ ...prev, account_id: id }))
-                            }
-                          />
-                        </div>
-                        <div className='col-2 pr-0'>
-                          <div className='form-input'>
-                            <input
-                              onChange={(e) =>
-                                setTdsObj((prev) => ({ ...prev, amount: e.target.value }))
-                              }
-                              value={tdsObj.amount}
-                              placeholder=' '
-                              type='number'
-                              onWheel={(e) => e.target.blur()}
-                            />
-                            <label className='lh-1 text-16 text-light-1'>
-                              Amount<span className='text-danger'>*</span>
-                            </label>
-                          </div>
-                        </div>
-                      </div>
-                    )}
                     <div className='d-inline-block'>
                       <button
                         type='submit'

@@ -42,31 +42,6 @@ const MobileMenu = () => {
             >
               Home
             </MenuItem>
-
-            <MenuItem
-              component={
-                <Link
-                  href='/flight/flight-list-v1'
-                  className={
-                    router.pathname === '/flight/flight-list-v1' ? 'menu-active-link' : ''
-                  }
-                />
-              }
-            >
-              Flights
-            </MenuItem>
-            <MenuItem
-              component={
-                <Link
-                  href='/hotel/hotel-list-v1'
-                  className={
-                    router.pathname === '/hotel/hotel-list-v1' ? 'menu-active-link' : ''
-                  }
-                />
-              }
-            >
-              Hotels
-            </MenuItem>
             <MenuItem
               component={
                 <Link
