@@ -40,21 +40,6 @@ const UpdateRefund = () => {
     if (router.query.edit) {
       const response = await getItem('refunds', router.query.edit);
       if (response?.success) {
-        // Setting values
-        setRefundDate(
-          new DateObject({ date: response.data.refund_date, format: 'YYYY-MM-DD' })
-        );
-        setAirlineCancellationCharges(
-          (+response.data.airline_cancellation_charges || 0).toFixed(0)
-        );
-        setVendorServiceFee((+response.data.vendor_service_fee || 0).toFixed(0));
-        setClientCancellationCharges(
-          (+response.data.client_cancellation_charges || 0).toFixed(0)
-        );
-        setRefundAmount((+response.data.refund_amount || 0).toFixed(0));
-        setReason(response.data?.reason);
-        setNumber(response.data.number);
-
         const paymentAccounts = await getList('accounts', { category: 'Credit Cards' });
         const accounts = await getList('organizations', { is_client: 1 });
         const bookingData = await getItem('bookings', response.data.booking_id);
@@ -68,6 +53,33 @@ const UpdateRefund = () => {
               sendToast('error');
             }
           }
+          // Setting values
+          setRefundDate(
+            new DateObject({ date: response.data.refund_date, format: 'YYYY-MM-DD' })
+          );
+          setAirlineCancellationCharges(
+            (
+              +response.data.airline_cancellation_charges *
+                (bookingData.data.enable_inr ? bookingData.data.exchange_rate : 1) || 0
+            ).toFixed(0)
+          );
+          setVendorServiceFee(
+            (
+              +response.data.vendor_service_fee *
+                (bookingData.data.enable_inr ? bookingData.data.exchange_rate : 1) || 0
+            ).toFixed(0)
+          );
+          setClientCancellationCharges(
+            (+response.data.client_cancellation_charges || 0).toFixed(0)
+          );
+          setRefundAmount(
+            (
+              +response.data.refund_amount *
+                (bookingData.data.enable_inr ? bookingData.data.exchange_rate : 1) || 0
+            ).toFixed(0)
+          );
+          setReason(response.data?.reason);
+          setNumber(response.data.number);
           setAccounts(
             accounts.data.map((element) => ({
               value: element.account_id,
@@ -119,11 +131,20 @@ const UpdateRefund = () => {
     const response = await updateItem('refunds', router.query.edit, {
       refund_date: refundDate.format('YYYY-MM-DD'),
       refund_to_account_id: accountID.value,
-      airline_cancellation_charges: airlineCancellationCharges || 0,
-      vendor_service_fee: vendorServiceFee || 0,
+      airline_cancellation_charges: airlineCancellationCharges
+        ? airlineCancellationCharges /
+          (bookingData?.enable_inr ? bookingData.exchange_rate : 1)
+        : 0,
+      vendor_service_fee: vendorServiceFee
+        ? vendorServiceFee / (bookingData?.enable_inr ? bookingData.exchange_rate : 1)
+        : 0,
       client_cancellation_charges: clientCancellationCharges || 0,
       payment_account_id: paymentAccountID?.value || undefined,
-      refund_amount: +refundAmount === 0 ? undefined : refundAmount || undefined,
+      refund_amount:
+        +refundAmount === 0
+          ? undefined
+          : refundAmount / (bookingData?.enable_inr ? bookingData.exchange_rate : 1) ||
+            undefined,
       reason,
     });
     if (response?.success) {
@@ -142,8 +163,13 @@ const UpdateRefund = () => {
   useEffect(() => {
     if (loaded)
       if (bookingData && paymentAccountID) {
-        const payment =
-          (+bookingData?.payment_amount || 0) + (+refundBookingData?.payment_amount || 0);
+        const payment = Number(
+          (
+            ((+bookingData?.payment_amount || 0) +
+              (+refundBookingData?.payment_amount || 0)) *
+              (bookingData?.enable_inr ? bookingData.exchange_rate : 1) || 0
+          ).toFixed(0)
+        );
         if (payment)
           setRefundAmount((+payment || 0) - (+airlineCancellationCharges || 0));
       }

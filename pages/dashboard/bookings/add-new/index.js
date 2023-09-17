@@ -33,7 +33,7 @@ const AddNewBooking = () => {
   const [clientBaseAmount, setClientBaseAmount] = useState(0);
   const [clientTaxAmount, setClientTaxAmount] = useState(0);
   const [clientGSTAmount, setClientGSTAmount] = useState(0);
-  const [clientServiceCharges, setClientServicesCharges] = useState(0);
+  const [currencyConversionCharges, setClientServicesCharges] = useState(0);
   const [clientTotal, setClientTotal] = useState(0);
   const [reissuePenalty, setReissuePenalty] = useState('');
   const [sector, setSector] = useState('');
@@ -43,6 +43,7 @@ const AddNewBooking = () => {
   const [enableINR, setEnableINR] = useState(false);
   const [clientQuotedAmount, setClientQuotedAmount] = useState(0);
   const [exchangeRate, setExchangeRate] = useState(0);
+  const [baseExchangeRate, setBaseExchangeRate] = useState(0);
 
   // Percentages
   const [vendorServiceChargePercent, setVendorServiceChargePercent] = useState(18);
@@ -152,7 +153,7 @@ const AddNewBooking = () => {
       clientOrgs?.success &&
       prefillExchangeRate?.success
     ) {
-      setExchangeRate(+prefillExchangeRate.data || 0);
+      setBaseExchangeRate(+prefillExchangeRate.data || 0);
       setClientOrgs(
         clientOrgs.data.map((element) => ({
           value: element.id,
@@ -268,7 +269,7 @@ const AddNewBooking = () => {
       client_base_amount: clientBaseAmount || 0,
       client_tax_amount: clientTaxAmount || 0,
       client_gst_amount: clientGSTAmount || 0,
-      client_service_charges: isOffshore ? 0 : clientServiceCharges || 0,
+      currency_conversion_charges: isOffshore ? 0 : currencyConversionCharges || 0,
       client_total: clientTotal || 0,
       client_traveller_id: clientTravellerID?.value,
       exchange_rate: exchangeRate || 0,
@@ -512,29 +513,29 @@ const AddNewBooking = () => {
     }
   };
 
-  const updateSetClientServiceCharges = (
+  const updateSetcurrencyConversionCharges = (
     clientBaseAmount,
     clientReferralFee,
     clientServiceChargePercent
   ) => {
-    let clientServiceCharges = Number(
+    let currencyConversionCharges = Number(
       (((+clientBaseAmount || 0) + (+clientReferralFee || 0)) *
         (+clientServiceChargePercent || 0)) /
         100
     ).toFixed(0);
-    if (clientServiceCharges && clientServiceCharges !== 'NaN') {
-      setClientServicesCharges(clientServiceCharges);
+    if (currencyConversionCharges && currencyConversionCharges !== 'NaN') {
+      setClientServicesCharges(currencyConversionCharges);
     }
   };
 
   const updateSetClientServiceChargePercent = (
-    clientServiceCharges,
+    currencyConversionCharges,
     clientBaseAmount,
     clientReferralFee
   ) => {
     setClientServiceChargePercent(
       Number(
-        (100 * (+clientServiceCharges || 0)) /
+        (100 * (+currencyConversionCharges || 0)) /
           ((+clientBaseAmount || 0) + (+clientReferralFee || 0))
       ).toFixed(2)
     );
@@ -583,7 +584,7 @@ const AddNewBooking = () => {
         (+clientQuotedAmount || 0) - (+clientTaxAmount || 0) - (+clientGSTAmount || 0);
       setClientBaseAmount(clientBaseAmount);
       // Updating
-      updateSetClientServiceCharges(
+      updateSetcurrencyConversionCharges(
         clientBaseAmount,
         clientReferralFee,
         clientServiceChargePercent
@@ -594,7 +595,7 @@ const AddNewBooking = () => {
   useEffect(() => {
     updateClientTotal();
   }, [
-    clientServiceCharges,
+    currencyConversionCharges,
     clientTaxAmount,
     clientGSTAmount,
     clientReferralFee,
@@ -607,7 +608,7 @@ const AddNewBooking = () => {
         (+clientBaseAmount || 0) +
           (+clientGSTAmount || 0) +
           (+clientTaxAmount || 0) +
-          (+clientServiceCharges || 0) +
+          (+currencyConversionCharges || 0) +
           (+clientReferralFee || 0)
       ).toFixed(0)
     );
@@ -967,7 +968,7 @@ const AddNewBooking = () => {
                             <input
                               onChange={(e) => {
                                 setClientReferralFee(e.target.value);
-                                updateSetClientServiceCharges(
+                                updateSetcurrencyConversionCharges(
                                   clientBaseAmount,
                                   e.target.value,
                                   clientServiceChargePercent
@@ -1356,7 +1357,7 @@ const AddNewBooking = () => {
                         <input
                           onChange={(e) => {
                             setClientBaseAmount(e.target.value);
-                            updateSetClientServiceCharges(
+                            updateSetcurrencyConversionCharges(
                               e.target.value,
                               clientReferralFee,
                               clientServiceChargePercent
@@ -1464,12 +1465,14 @@ const AddNewBooking = () => {
                     {!isOffshore && (
                       <div className='col-lg-4 pr-0'>
                         <div className='row'>
-                          <label className='col-12 fw-500 mb-4'>Xplorz GST Amount</label>
+                          <label className='col-12 fw-500 mb-4'>
+                            Currency Conversion Charges
+                          </label>
                           <div className='form-input col-4'>
                             <input
                               onChange={(e) => {
                                 setClientServiceChargePercent(e.target.value);
-                                updateSetClientServiceCharges(
+                                updateSetcurrencyConversionCharges(
                                   clientBaseAmount,
                                   clientReferralFee,
                                   e.target.value
@@ -1508,7 +1511,7 @@ const AddNewBooking = () => {
                                     clientReferralFee
                                   );
                                 }}
-                                value={clientServiceCharges}
+                                value={currencyConversionCharges}
                                 placeholder=' '
                                 type='number'
                                 onWheel={(e) => e.target.blur()}
@@ -1539,7 +1542,7 @@ const AddNewBooking = () => {
                         </label>
                       </div>
                     </div>
-                    {enableINR && (
+                    {enableINR ? (
                       <div className={`col-lg-4 ${isOffshore ? 'pt-35 lg:pt-10' : ''}`}>
                         <div className='form-input'>
                           <input
@@ -1556,19 +1559,15 @@ const AddNewBooking = () => {
                           </label>
                         </div>
                       </div>
+                    ) : (
+                      <></>
                     )}
                     <div className='col-12' />
                     <div className='d-flex col-lg-4 col-xl-3 col-xxl-2 items-center gap-3'>
                       <ReactSwitch
-                        onChange={() => setIsOffshore((prev) => !prev)}
-                        checked={isOffshore}
-                      />
-                      <label>Is Offshore</label>
-                    </div>
-                    <div className='d-flex col-lg-4 col-xl-3 col-xxl-2 items-center gap-3'>
-                      <ReactSwitch
                         onChange={() => {
                           if (enableINR) setExchangeRate(0);
+                          else setExchangeRate(baseExchangeRate);
                           setEnableINR((prev) => !prev);
                         }}
                         checked={enableINR}

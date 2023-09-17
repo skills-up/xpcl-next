@@ -69,9 +69,9 @@ const ViewBooking = () => {
             </a>
           );
         }
-        if (data?.client_service_charges)
-          data['xplorz_gst_amount'] = data['client_service_charges'];
-        delete data['client_service_charges'];
+        if (data?.currency_conversion_charges)
+          data['xplorz_gst_amount'] = data['currency_conversion_charges'];
+        delete data['currency_conversion_charges'];
         delete data['created_at'];
         delete data['updated_at'];
         if (data?.client_name && data?.client_id) {
@@ -108,6 +108,9 @@ const ViewBooking = () => {
               {data.vendor_name}
             </a>
           );
+        }
+        if (data?.enable_inr) {
+          data.enable_inr = data.enable_inr ? true : false;
         }
         delete data['vendor_id'];
         if (data?.airline_name && data?.airline_id) {
@@ -171,7 +174,8 @@ const ViewBooking = () => {
           );
         }
         if (data?.booking_sectors)
-          if (data?.booking_sectors.length > 0) setBookingSectors(data.booking_sectors.slice(0));
+          if (data?.booking_sectors.length > 0)
+            setBookingSectors(data.booking_sectors.slice(0));
         if (data?.original_booking_id && data?.original_booking_number) {
           data['reissued_for'] = (
             <a

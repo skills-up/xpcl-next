@@ -26,7 +26,7 @@ const AddNewPartialRefund = () => {
   const [clientBaseAmount, setClientBaseAmount] = useState(0);
   const [clientTaxAmount, setClientTaxAmount] = useState(0);
   const [clientGSTAmount, setClientGSTAmount] = useState(0);
-  const [clientServiceCharges, setClientServicesCharges] = useState(0);
+  const [currencyConversionCharges, setClientServicesCharges] = useState(0);
   const [clientTotal, setClientTotal] = useState(0);
   const [airlineCancellationCharges, setAirlineCancellationCharges] = useState(0);
   const [clientCancellationCharges, setClientCancellationCharges] = useState(0);
@@ -158,33 +158,83 @@ const AddNewPartialRefund = () => {
           setBookingData(bookingData.data);
           // Prefilling
           setAirlineCancellationCharges(
-            (+response.data.airline_cancellation_charges || 0).toFixed(0)
+            (+response.data.airline_cancellation_charges
+              ? +response.data.airline_cancellation_charges *
+                (bookingData?.data?.enable_inr ? bookingData?.data?.exchange_rate : 1)
+              : 0
+            ).toFixed(0)
           );
           setRefundAmount((+response.data.refund_amount || 0).toFixed(0));
-          setVendorServiceFee((+response.data.vendor_service_fee || 0).toFixed(0));
+          setVendorServiceFee(
+            (+response.data.vendor_service_fee
+              ? +response.data.vendor_service_fee *
+                (bookingData?.data?.enable_inr ? bookingData?.data?.exchange_rate : 1)
+              : 0
+            ).toFixed(0)
+          );
           setClientCancellationCharges(
             (+response.data.client_cancellation_charges || 0).toFixed(0)
           );
-          setVendorBaseAmount((+response.data.vendor_base_amount || 0).toFixed(0));
-          setVendorYQAmount((+response.data.vendor_yq_amount || 0).toFixed(0));
-          setVendorTaxAmount((+response.data.vendor_tax_amount || 0).toFixed(0));
-          setVendorGSTAmount((+response.data.vendor_gst_amount || 0).toFixed(0));
+          setVendorBaseAmount(
+            (+response.data.vendor_base_amount
+              ? +response.data.vendor_base_amount *
+                (bookingData?.data?.enable_inr ? bookingData?.data?.exchange_rate : 1)
+              : 0
+            ).toFixed(0)
+          );
+          setVendorYQAmount(
+            (+response.data.vendor_yq_amount
+              ? +response.data.vendor_yq_amount *
+                (bookingData?.data?.enable_inr ? bookingData?.data?.exchange_rate : 1)
+              : 0
+            ).toFixed(0)
+          );
+          setVendorTaxAmount(
+            (+response.data.vendor_tax_amount
+              ? +response.data.vendor_tax_amount *
+                (bookingData?.data?.enable_inr ? bookingData?.data?.exchange_rate : 1)
+              : 0
+            ).toFixed(0)
+          );
+          setVendorGSTAmount(
+            (+response.data.vendor_gst_amount
+              ? +response.data.vendor_gst_amount *
+                (bookingData?.data?.enable_inr ? bookingData?.data?.exchange_rate : 1)
+              : 0
+            ).toFixed(0)
+          );
           setIATACommissionPercent(response.data.iata_commission_percent);
           setPLBCommissionPercent(response.data.plb_commission_percent);
           setVendorServiceCharges(
-            (+response.data.vendor_service_charges || 0).toFixed(0)
+            (+response.data.vendor_service_charges
+              ? +response.data.vendor_service_charges *
+                (bookingData?.data?.enable_inr ? bookingData?.data?.exchange_rate : 1)
+              : 0
+            ).toFixed(0)
           );
-          setVendorTDS((+response.data.vendor_tds || 0).toFixed(0));
+          setVendorTDS(
+            (+response.data.vendor_tds
+              ? +response.data.vendor_tds *
+                (bookingData?.data?.enable_inr ? bookingData?.data?.exchange_rate : 1)
+              : 0
+            ).toFixed(0)
+          );
           setClientReferralFee((+response.data.client_referral_fee || 0).toFixed(0));
           setReason(response.data.reason);
           setClientBaseAmount((+response.data.client_base_amount || 0).toFixed(0));
           setClientGSTAmount((+response.data.client_gst_amount || 0).toFixed(0));
           setIsOffshore(response.data?.is_offshore);
           setClientServicesCharges(
-            (+response.data.client_service_charges || 0).toFixed(0)
+            (+response.data.currency_conversion_charges || 0).toFixed(0)
           );
           setClientTaxAmount((+response.data.client_tax_amount || 0).toFixed(0));
-          setVendorTotal((+response.data.vendor_total || 0).toFixed(0));
+          setVendorTotal(
+            (+response.data.vendor_total
+              ? +response.data.vendor_total *
+                (bookingData?.data?.enable_inr ? bookingData?.data?.exchange_rate : 1)
+              : 0
+            ).toFixed(0)
+          );
           setClientQuotedAmount(
             (
               +response.data.client_base_amount +
@@ -211,9 +261,17 @@ const AddNewPartialRefund = () => {
             ) === 12
           )
             setClientGSTPercent({ value: '12% of Base', label: '12% of Base' });
-          else if (response.data.client_gst_amount === 0)
+          else if (+response.data.client_gst_amount === 0)
             setClientGSTPercent({ value: 'None', label: 'None' });
-          else if (response.data.client_gst_amount === response.data.vendor_gst_amount)
+          else if (
+            +response.data.client_gst_amount ===
+            Number(
+              (
+                response.data.vendor_gst_amount *
+                (bookingData?.data?.enable_inr ? bookingData?.data?.exchange_rate : 1)
+              ).toFixed(0)
+            )
+          )
             setClientGSTPercent({ value: 'Vendor GST', label: 'Vendor GST' });
 
           // Setting Vendor
@@ -279,26 +337,45 @@ const AddNewPartialRefund = () => {
     const response = await updateItem('partial-refunds', router.query.edit, {
       refund_date: refundDate.format('YYYY-MM-DD'),
       vendor_id: vendorID.value,
-      vendor_base_amount: vendorBaseAmount || 0,
-      vendor_yq_amount: vendorYQAmount || 0,
-      vendor_tax_amount: vendorTaxAmount || 0,
-      vendor_gst_amount: vendorGSTAmount || 0,
-      vendor_total: vendorTotal || 0,
+      vendor_base_amount: vendorBaseAmount
+        ? vendorBaseAmount / (bookingData.enable_inr ? bookingData.exchange_rate : 1)
+        : 0,
+      vendor_yq_amount: vendorYQAmount
+        ? vendorYQAmount / (bookingData.enable_inr ? bookingData.exchange_rate : 1)
+        : 0,
+      vendor_tax_amount: vendorTaxAmount
+        ? vendorTaxAmount / (bookingData.enable_inr ? bookingData.exchange_rate : 1)
+        : 0,
+      vendor_gst_amount: vendorGSTAmount
+        ? vendorGSTAmount / (bookingData.enable_inr ? bookingData.exchange_rate : 1)
+        : 0,
+      vendor_total: vendorTotal
+        ? vendorTotal / (bookingData.enable_inr ? bookingData.exchange_rate : 1)
+        : 0,
       commission_rule_id: commissionRuleID?.value,
       iata_commission_percent: IATACommissionPercent || 0,
       plb_commission_percent: plbCommissionPercent || 0,
-      vendor_service_charges: vendorServiceCharges || 0,
-      vendor_tds: vendorTDS || 0,
+      vendor_service_charges: vendorServiceCharges
+        ? vendorServiceCharges / (bookingData.enable_inr ? bookingData.exchange_rate : 1)
+        : 0,
+      vendor_tds: vendorTDS
+        ? vendorTDS / (bookingData.enable_inr ? bookingData.exchange_rate : 1)
+        : 0,
       commission_receivable: commissionReceivable,
       client_referrer_id: clientReferrerID?.value,
       client_referral_fee: clientReferralFee || 0,
       client_base_amount: clientBaseAmount || 0,
       client_tax_amount: clientTaxAmount || 0,
       client_gst_amount: clientGSTAmount || 0,
-      client_service_charges: isOffshore ? 0 : clientServiceCharges || 0,
+      currency_conversion_charges: isOffshore ? 0 : currencyConversionCharges || 0,
       client_total: clientTotal || 0,
-      airline_cancellation_charges: airlineCancellationCharges || 0,
-      vendor_service_fee: vendorServiceFee || 0,
+      airline_cancellation_charges: airlineCancellationCharges
+        ? airlineCancellationCharges /
+          (bookingData.enable_inr ? bookingData.exchange_rate : 1)
+        : 0,
+      vendor_service_fee: vendorServiceFee
+        ? vendorServiceFee / (bookingData.enable_inr ? bookingData.exchange_rate : 1)
+        : 0,
       client_cancellation_charges: clientCancellationCharges || 0,
       refund_amount: +refundAmount === 0 ? undefined : refundAmount || undefined,
       payment_account_id: accountID?.value || undefined,
@@ -476,7 +553,7 @@ const AddNewPartialRefund = () => {
         updateVendorTDSPercent(vendorTDS, grossCommission, vendorServiceCharges);
         updateVendorServiceChargePercent(vendorServiceCharges, grossCommission);
         updateSetClientServiceChargePercent(
-          clientServiceCharges,
+          currencyConversionCharges,
           clientBaseAmount,
           clientReferralFee
         );
@@ -497,29 +574,29 @@ const AddNewPartialRefund = () => {
     }
   };
 
-  const updateSetClientServiceCharges = (
+  const updateSetcurrencyConversionCharges = (
     clientBaseAmount,
     clientReferralFee,
     clientServiceChargePercent
   ) => {
-    let clientServiceCharges = Number(
+    let currencyConversionCharges = Number(
       (((+clientBaseAmount || 0) + (+clientReferralFee || 0)) *
         (+clientServiceChargePercent || 0)) /
         100
     ).toFixed(0);
-    if (clientServiceCharges && clientServiceCharges !== 'NaN') {
-      setClientServicesCharges(clientServiceCharges);
+    if (currencyConversionCharges && currencyConversionCharges !== 'NaN') {
+      setClientServicesCharges(currencyConversionCharges);
     }
   };
 
   const updateSetClientServiceChargePercent = (
-    clientServiceCharges,
+    currencyConversionCharges,
     clientBaseAmount,
     clientReferralFee
   ) => {
     setClientServiceChargePercent(
       Number(
-        (100 * (+clientServiceCharges || 0)) /
+        (100 * (+currencyConversionCharges || 0)) /
           ((+clientBaseAmount || 0) + (+clientReferralFee || 0))
       ).toFixed(2)
     );
@@ -568,7 +645,7 @@ const AddNewPartialRefund = () => {
         (+clientQuotedAmount || 0) - (+clientTaxAmount || 0) - (+clientGSTAmount || 0);
       setClientBaseAmount(clientBaseAmount);
       // Updating
-      updateSetClientServiceCharges(
+      updateSetcurrencyConversionCharges(
         clientBaseAmount,
         clientReferralFee,
         clientServiceChargePercent
@@ -579,7 +656,7 @@ const AddNewPartialRefund = () => {
   useEffect(() => {
     updateClientTotal();
   }, [
-    clientServiceCharges,
+    currencyConversionCharges,
     clientTaxAmount,
     clientGSTAmount,
     clientReferralFee,
@@ -592,7 +669,7 @@ const AddNewPartialRefund = () => {
         (+clientBaseAmount || 0) +
           (+clientGSTAmount || 0) +
           (+clientTaxAmount || 0) +
-          (+clientServiceCharges || 0) +
+          (+currencyConversionCharges || 0) +
           (+clientReferralFee || 0)
       ).toFixed(0)
     );
@@ -675,7 +752,7 @@ const AddNewPartialRefund = () => {
                         <input
                           onChange={(e) => {
                             setClientReferralFee(e.target.value);
-                            updateSetClientServiceCharges(
+                            updateSetcurrencyConversionCharges(
                               clientBaseAmount,
                               e.target.value,
                               clientServiceChargePercent
@@ -1001,7 +1078,7 @@ const AddNewPartialRefund = () => {
                         <input
                           onChange={(e) => {
                             setClientBaseAmount(e.target.value);
-                            updateSetClientServiceCharges(
+                            updateSetcurrencyConversionCharges(
                               e.target.value,
                               clientReferralFee,
                               clientServiceChargePercent
@@ -1107,7 +1184,9 @@ const AddNewPartialRefund = () => {
                     {!isOffshore && (
                       <div className='col-lg-4 pr-0'>
                         <div className='row'>
-                          <label className='col-12 fw-500 mb-4'>Xplorz GST Amount</label>
+                          <label className='col-12 fw-500 mb-4'>
+                            Currency Conversion Charges
+                          </label>
                           <div className='form-input col-4'>
                             <input
                               style={{
@@ -1118,7 +1197,7 @@ const AddNewPartialRefund = () => {
                               }}
                               onChange={(e) => {
                                 setClientServiceChargePercent(e.target.value);
-                                updateSetClientServiceCharges(
+                                updateSetcurrencyConversionCharges(
                                   clientBaseAmount,
                                   clientReferralFee,
                                   e.target.value
@@ -1150,7 +1229,7 @@ const AddNewPartialRefund = () => {
                                     clientReferralFee
                                   );
                                 }}
-                                value={clientServiceCharges}
+                                value={currencyConversionCharges}
                                 placeholder=' '
                                 type='number'
                                 onWheel={(e) => e.target.blur()}
@@ -1179,13 +1258,6 @@ const AddNewPartialRefund = () => {
                           Client Total<span className='text-danger'>*</span>
                         </label>
                       </div>
-                    </div>
-                    <div className='d-flex items-center gap-3'>
-                      <ReactSwitch
-                        onChange={() => setIsOffshore((prev) => !prev)}
-                        checked={isOffshore}
-                      />
-                      <label>Is Offshore</label>
                     </div>
                     <div className='col-lg-4'>
                       <div className='form-input'>

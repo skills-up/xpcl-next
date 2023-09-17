@@ -90,11 +90,20 @@ const AddNewRefund = () => {
       booking_id: router.query.booking_id,
       refund_date: refundDate.format('YYYY-MM-DD'),
       refund_to_account_id: accountID.value,
-      airline_cancellation_charges: airlineCancellationCharges || 0,
-      vendor_service_fee: vendorServiceFee || 0,
+      airline_cancellation_charges: airlineCancellationCharges
+        ? airlineCancellationCharges /
+          (bookingData?.enable_inr ? bookingData.exchange_rate : 1)
+        : 0,
+      vendor_service_fee: vendorServiceFee
+        ? vendorServiceFee / (bookingData?.enable_inr ? bookingData.exchange_rate : 1)
+        : 0,
       client_cancellation_charges: clientCancellationCharges || 0,
       payment_account_id: paymentAccountID?.value || undefined,
-      refund_amount: +refundAmount === 0 ? undefined : refundAmount || undefined,
+      refund_amount:
+        +refundAmount === 0
+          ? undefined
+          : refundAmount / (bookingData?.enable_inr ? bookingData.exchange_rate : 1) ||
+            undefined,
       reason,
     });
     if (response?.success) {
@@ -112,8 +121,13 @@ const AddNewRefund = () => {
   // Calculation
   useEffect(() => {
     if (bookingData && paymentAccountID) {
-      const payment =
-        (+bookingData?.payment_amount || 0) + (+refundBookingData?.payment_amount || 0);
+      const payment = Number(
+        (
+          ((+bookingData?.payment_amount || 0) +
+            (+refundBookingData?.payment_amount || 0)) *
+            (bookingData?.enable_inr ? bookingData.exchange_rate : 1) || 0
+        ).toFixed(0)
+      );
       if (payment) setRefundAmount((+payment || 0) - (+airlineCancellationCharges || 0));
     }
   }, [bookingData, airlineCancellationCharges, paymentAccountID, refundBookingData]);

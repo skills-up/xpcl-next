@@ -34,7 +34,7 @@ const UpdateBooking = () => {
   const [clientBaseAmount, setClientBaseAmount] = useState(0);
   const [clientTaxAmount, setClientTaxAmount] = useState(0);
   const [clientGSTAmount, setClientGSTAmount] = useState(0);
-  const [clientServiceCharges, setClientServicesCharges] = useState(0);
+  const [currencyConversionCharges, setClientServicesCharges] = useState(0);
   const [clientTotal, setClientTotal] = useState(0);
   const [reissuePenalty, setReissuePenalty] = useState(0);
   const [sector, setSector] = useState('');
@@ -182,11 +182,18 @@ const UpdateBooking = () => {
         setClientReferralFee((+response.data.client_referral_fee || 0).toFixed(0));
         setClientBaseAmount((+response.data.client_base_amount || 0).toFixed(0));
         setClientGSTAmount((+response.data.client_gst_amount || 0).toFixed(0));
-        setClientServicesCharges((+response.data.client_service_charges || 0).toFixed(0));
+        setClientServicesCharges(
+          (+response.data.currency_conversion_charges || 0).toFixed(0)
+        );
         setClientTotal((+response.data.client_total || 0).toFixed(0));
         setSector(response.data.sector);
         setOriginalBookingID(response.data?.original_booking_id);
-        setReissuePenalty((+response.data?.reissue_penalty || 0).toFixed(0));
+        setReissuePenalty(
+          (
+            +response.data?.reissue_penalty *
+              (response.data.enable_inr ? response.data.exchange_rate : 1) || 0
+          ).toFixed(0)
+        );
         setPaymentAmount(
           (
             +response.data.payment_amount *
@@ -198,7 +205,7 @@ const UpdateBooking = () => {
           new DateObject({ date: response.data.booking_date, format: 'YYYY-MM-DD' })
         );
         setEnableINR(response.data.enable_inr);
-        setExchangeRate((+response.data.exchange_rate).toFixed(2));
+        setExchangeRate(Number((+response.data.exchange_rate).toFixed(2)));
         setIsOffshore(response.data?.is_offshore);
         setClientQuotedAmount(
           (
@@ -228,9 +235,17 @@ const UpdateBooking = () => {
           ) === 12
         )
           setClientGSTPercent({ value: '12% of Base', label: '12% of Base' });
-        else if (response.data.client_gst_amount === 0)
+        else if (+response.data.client_gst_amount === 0)
           setClientGSTPercent({ value: 'None', label: 'None' });
-        else if (response.data.client_gst_amount === response.data.vendor_gst_amount)
+        else if (
+          +response.data.client_gst_amount ===
+          Number(
+            (
+              +response.data.vendor_gst_amount *
+              (response.data.enable_inr ? +response.data.exchange_rate : 1)
+            ).toFixed(0)
+          )
+        )
           setClientGSTPercent({ value: 'Vendor GST', label: 'Vendor GST' });
 
         const vendors = await getList('organizations', { is_vendor: 1 });
@@ -440,6 +455,12 @@ const UpdateBooking = () => {
       }
     }
     // Adding response
+    console.log(
+      'test',
+      vendorBaseAmount,
+      exchangeRate,
+      vendorBaseAmount / (exchangeRate || 1)
+    );
     const editData = {
       booking_type: bookingType.value,
       client_id: clientID.value,
@@ -447,27 +468,35 @@ const UpdateBooking = () => {
       ticket_number: ticketNumber,
       pnr,
       vendor_id: vendorID.value,
-      vendor_base_amount: vendorBaseAmount ? vendorBaseAmount / (exchangeRate || 1) : 0,
-      vendor_yq_amount: vendorYQAmount ? vendorYQAmount / (exchangeRate || 1) : 0,
-      vendor_tax_amount: vendorTaxAmount ? vendorTaxAmount / (exchangeRate || 1) : 0,
-      vendor_gst_amount: vendorGSTAmount ? vendorGSTAmount / (exchangeRate || 1) : 0,
-      vendor_misc_charges: vendorMiscCharges
-        ? vendorMiscCharges / (exchangeRate || 1)
+      vendor_base_amount: vendorBaseAmount
+        ? vendorBaseAmount / (enableINR ? exchangeRate : 1)
         : 0,
-      vendor_total: vendorTotal ? vendorTotal / (exchangeRate || 1) : 0,
+      vendor_yq_amount: vendorYQAmount
+        ? vendorYQAmount / (enableINR ? exchangeRate : 1)
+        : 0,
+      vendor_tax_amount: vendorTaxAmount
+        ? vendorTaxAmount / (enableINR ? exchangeRate : 1)
+        : 0,
+      vendor_gst_amount: vendorGSTAmount
+        ? vendorGSTAmount / (enableINR ? exchangeRate : 1)
+        : 0,
+      vendor_misc_charges: vendorMiscCharges
+        ? vendorMiscCharges / (enableINR ? exchangeRate : 1)
+        : 0,
+      vendor_total: vendorTotal ? vendorTotal / (enableINR ? exchangeRate : 1) : 0,
       commission_rule_id: commissionRuleID?.value,
       iata_commission_percent: IATACommissionPercent || 0,
       plb_commission_percent: plbCommissionPercent || 0,
       vendor_service_charges: vendorServiceCharges
-        ? vendorServiceCharges / (exchangeRate || 1)
+        ? vendorServiceCharges / (enableINR ? exchangeRate : 1)
         : 0,
-      vendor_tds: vendorTDS ? vendorTDS / (exchangeRate || 1) : 0,
+      vendor_tds: vendorTDS ? vendorTDS / (enableINR ? exchangeRate : 1) : 0,
       commission_receivable: commissionReceivable,
       airline_id: airlineID?.value,
       miscellaneous_type: miscellaneousType?.value,
       payment_account_id: paymentAccountID?.value,
       payment_amount: +paymentAmount
-        ? paymentAmount / (exchangeRate || 1) || undefined
+        ? paymentAmount / (enableINR ? exchangeRate : 1) || undefined
         : undefined,
       client_referrer_id: clientReferrerID?.value,
       client_referral_fee: +clientReferralFee
@@ -476,7 +505,7 @@ const UpdateBooking = () => {
       client_base_amount: clientBaseAmount || 0,
       client_tax_amount: clientTaxAmount || 0,
       client_gst_amount: clientGSTAmount || 0,
-      client_service_charges: isOffshore ? 0 : clientServiceCharges || 0,
+      currency_conversion_charges: isOffshore ? 0 : currencyConversionCharges || 0,
       client_total: clientTotal || 0,
       client_traveller_id: clientTravellerID?.value,
       exchange_rate: exchangeRate || 0,
@@ -500,7 +529,9 @@ const UpdateBooking = () => {
     };
     if (originalBookingID) {
       editData['original_booking_id'] = originalBookingID;
-      editData['reissue_penalty'] = reissuePenalty || 0;
+      editData['reissue_penalty'] = reissuePenalty
+        ? reissuePenalty / (enableINR ? exchangeRate : 1)
+        : 0;
     }
     const response = await updateItem('bookings', router.query.edit, editData);
     if (response?.success) {
@@ -719,7 +750,7 @@ const UpdateBooking = () => {
         updateVendorTDSPercent(vendorTDS, grossCommission, vendorServiceCharges);
         updateVendorServiceChargePercent(vendorServiceCharges, grossCommission);
         updateSetClientServiceChargePercent(
-          clientServiceCharges,
+          currencyConversionCharges,
           clientBaseAmount,
           clientReferralFee
         );
@@ -740,29 +771,29 @@ const UpdateBooking = () => {
     }
   };
 
-  const updateSetClientServiceCharges = (
+  const updateSetcurrencyConversionCharges = (
     clientBaseAmount,
     clientReferralFee,
     clientServiceChargePercent
   ) => {
-    let clientServiceCharges = Number(
+    let currencyConversionCharges = Number(
       (((+clientBaseAmount || 0) + (+clientReferralFee || 0)) *
         (+clientServiceChargePercent || 0)) /
         100
     ).toFixed(0);
-    if (clientServiceCharges && clientServiceCharges !== 'NaN') {
-      setClientServicesCharges(clientServiceCharges);
+    if (currencyConversionCharges && currencyConversionCharges !== 'NaN') {
+      setClientServicesCharges(currencyConversionCharges);
     }
   };
 
   const updateSetClientServiceChargePercent = (
-    clientServiceCharges,
+    currencyConversionCharges,
     clientBaseAmount,
     clientReferralFee
   ) => {
     setClientServiceChargePercent(
       Number(
-        (100 * (+clientServiceCharges || 0)) /
+        (100 * (+currencyConversionCharges || 0)) /
           ((+clientBaseAmount || 0) + (+clientReferralFee || 0))
       ).toFixed(2)
     );
@@ -811,7 +842,7 @@ const UpdateBooking = () => {
         (+clientQuotedAmount || 0) - (+clientTaxAmount || 0) - (+clientGSTAmount || 0);
       setClientBaseAmount(clientBaseAmount);
       // Updating
-      updateSetClientServiceCharges(
+      updateSetcurrencyConversionCharges(
         clientBaseAmount,
         clientReferralFee,
         clientServiceChargePercent
@@ -822,7 +853,7 @@ const UpdateBooking = () => {
   useEffect(() => {
     updateClientTotal();
   }, [
-    clientServiceCharges,
+    currencyConversionCharges,
     clientTaxAmount,
     clientGSTAmount,
     clientReferralFee,
@@ -835,7 +866,7 @@ const UpdateBooking = () => {
         (+clientBaseAmount || 0) +
           (+clientGSTAmount || 0) +
           (+clientTaxAmount || 0) +
-          (+clientServiceCharges || 0) +
+          (+currencyConversionCharges || 0) +
           (+clientReferralFee || 0)
       ).toFixed(0)
     );
@@ -1191,7 +1222,7 @@ const UpdateBooking = () => {
                             <input
                               onChange={(e) => {
                                 setClientReferralFee(e.target.value);
-                                updateSetClientServiceCharges(
+                                updateSetcurrencyConversionCharges(
                                   clientBaseAmount,
                                   e.target.value,
                                   clientServiceChargePercent
@@ -1595,7 +1626,7 @@ const UpdateBooking = () => {
                         <input
                           onChange={(e) => {
                             setClientBaseAmount(e.target.value);
-                            updateSetClientServiceCharges(
+                            updateSetcurrencyConversionCharges(
                               e.target.value,
                               clientReferralFee,
                               clientServiceChargePercent
@@ -1703,12 +1734,14 @@ const UpdateBooking = () => {
                     {!isOffshore && (
                       <div className='col-lg-4 pr-0'>
                         <div className='row'>
-                          <label className='col-12 fw-500 mb-4'>Xplorz GST Amount</label>
+                          <label className='col-12 fw-500 mb-4'>
+                            Currency Conversion Charges
+                          </label>
                           <div className='form-input col-4'>
                             <input
                               onChange={(e) => {
                                 setClientServiceChargePercent(e.target.value);
-                                updateSetClientServiceCharges(
+                                updateSetcurrencyConversionCharges(
                                   clientBaseAmount,
                                   clientReferralFee,
                                   e.target.value
@@ -1747,7 +1780,7 @@ const UpdateBooking = () => {
                                     clientReferralFee
                                   );
                                 }}
-                                value={clientServiceCharges}
+                                value={currencyConversionCharges}
                                 placeholder=' '
                                 type='number'
                                 onWheel={(e) => e.target.blur()}
@@ -1778,7 +1811,7 @@ const UpdateBooking = () => {
                         </label>
                       </div>
                     </div>
-                    {enableINR && (
+                    {enableINR ? (
                       <div className={`col-lg-4 ${isOffshore ? 'pt-35 lg:pt-10' : ''}`}>
                         <div className='form-input'>
                           <input
@@ -1795,15 +1828,10 @@ const UpdateBooking = () => {
                           </label>
                         </div>
                       </div>
+                    ) : (
+                      <></>
                     )}
                     <div className='col-12' />
-                    <div className='d-flex col-lg-4 col-xl-3 col-xxl-2 items-center gap-3'>
-                      <ReactSwitch
-                        onChange={() => setIsOffshore((prev) => !prev)}
-                        checked={isOffshore}
-                      />
-                      <label>Is Offshore</label>
-                    </div>
                     <div className='d-flex col-lg-4 col-xl-3 col-xxl-2 items-center gap-3'>
                       <ReactSwitch
                         onChange={() => {
