@@ -18,9 +18,9 @@ function ContactPage({ isSignUp = false }) {
       <ContactHero />
       {/* <ContactPartner /> */}
       <ContactGetStarted />
-      <ContactQR />
+      {/* <ContactQR /> */}
       <ContactWhyUs />
-      <section className='layout-pt-lg layout-pb-lg bg-white'>
+      {/* <section className='layout-pt-lg layout-pb-lg bg-white'>
         <div className='container'>
           <div className='row justify-center text-center'>
             <div className='col-auto'>
@@ -46,10 +46,8 @@ function ContactPage({ isSignUp = false }) {
               </div>
             </div>
           </div>
-          {/* End .row */}
         </div>
-        {/* End .container */}
-      </section>
+      </section> */}
       {/* <LocationTopBar /> */}
       {/* End location top bar section */}
 

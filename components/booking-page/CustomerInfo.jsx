@@ -202,11 +202,6 @@ const CustomerInfo = () => {
     }
   };
 
-  useEffect(
-    () => console.log('sel travellers', selectedTravellers),
-    [selectedTravellers]
-  );
-
   const JSONParse = (text) => {
     try {
       let newT = JSON.parse(text);

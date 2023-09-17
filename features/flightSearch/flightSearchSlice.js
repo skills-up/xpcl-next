@@ -89,7 +89,6 @@ const flightSearchSlice = createSlice({
     },
     setDestinations: (state, action) => {
       state.value.destinations = action.payload;
-      console.log('destinations', state.value.destinations);
     },
     setPrice: (state, action) => {
       state.value.price = action.payload;

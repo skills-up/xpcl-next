@@ -111,7 +111,6 @@ function EmailClients() {
     let tempTo = [];
     let tempFrom = [];
     let tempCombined = [];
-    console.log('emailClients', emailClients);
     for (let opt of emailClients) {
       let airlineName;
       for (let airline of airlines) {
@@ -170,7 +169,6 @@ function EmailClients() {
           cabin,
           price: +opt.total + +markup,
         };
-      console.log('opt', opt);
       if (opt.type === 'to') {
         tempTo.push(data);
       } else if (opt.type === 'from') {
@@ -195,7 +193,6 @@ function EmailClients() {
         cabin: opt.cabin.value,
         price: +opt.price + +markup,
       };
-      console.log('destinations', opt.from_airport.value, destinations.from.value);
       if (opt.from_airport.value === destinations.to.value) {
         tempFrom.push(data);
       } else {
@@ -203,7 +200,6 @@ function EmailClients() {
       }
     }
     let manipData = { to: tempTo, from: tempFrom, combined: tempCombined };
-    console.log('manip', manipData);
     // Form Data
     let formData = new FormData();
     formData.append(

@@ -53,7 +53,6 @@ const MainFilterSearchBox = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const token = useSelector((state) => state.auth.value.token);
-  console.log('token', token);
   const airports = useSelector((state) => state.apis.value.airports);
   const client_id = useSelector((state) => state.auth.value.currentOrganization);
   const travellerDOBS = useSelector((state) => state.flightSearch.value.travellerDOBS);
@@ -77,8 +76,6 @@ const MainFilterSearchBox = () => {
         router.push('/');
       }
   }, [router.isReady]);
-
-  useEffect(() => console.log('to', to, 'from', from), [to, from]);
 
   const getData = async () => {
     if (airports && airports?.length > 0) setAirportOptions(airports.map((e) => e));
@@ -276,7 +273,6 @@ const MainFilterSearchBox = () => {
         returnDate: returnFlight ? returnDate.format('YYYY-MM-DD') : null,
       })
     );
-    console.log('Destinations', destinations);
     // Akasa
     // To
     customAPICall('aa/v1/search', 'post', request, {}, true)
@@ -378,7 +374,6 @@ const MainFilterSearchBox = () => {
   };
 
   const searchData = useSelector((state) => state.flightSearch.value.searchData);
-  useEffect(() => console.log('sd', searchData), [searchData]);
 
   return (
     <div className=''>

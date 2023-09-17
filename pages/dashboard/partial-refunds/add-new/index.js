@@ -459,7 +459,6 @@ const AddNewPartialRefund = () => {
   };
 
   const updateVendorServiceChargePercent = (vendorServiceCharges, grossCommission) => {
-    console.log('gross', vendorServiceCharges, grossCommission);
     if (!vendorGSTFocused)
       setVendorServiceChargePercent(
         Number((100 * (+vendorServiceCharges || 0)) / (+grossCommission || 0)).toFixed(2)

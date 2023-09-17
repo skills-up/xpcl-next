@@ -52,7 +52,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
     { value: 'MS', label: 'Ms.' },
   ];
 
-  console.log('sel', selectedBookings);
+  // console.log('sel', selectedBookings);
 
   useEffect(() => {
     if (
@@ -64,7 +64,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
     getData();
   }, []);
 
-  useEffect(() => console.log('traveller', travellerInfo), [travellerInfo]);
+  // useEffect(() => console.log('traveller', travellerInfo), [travellerInfo]);
 
   useEffect(() => {
     if (travellerDOBS) {
@@ -558,7 +558,6 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                       className=''
                       options={travellers
                         .filter((el) => {
-                          console.log('test', travellers, selectedTravellers);
                           for (let sel of selectedTravellers)
                             if (el?.value?.id === sel?.value?.id) return false;
                           return true;

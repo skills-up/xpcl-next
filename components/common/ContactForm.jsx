@@ -18,7 +18,6 @@ const ContactForm = () => {
       contact_phone: phone,
     });
     if (res?.success) {
-      console.log('success');
       setResSuccess(true);
     } else
       sendToast(
