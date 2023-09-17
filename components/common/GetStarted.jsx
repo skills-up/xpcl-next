@@ -62,11 +62,11 @@ function ContactGetStarted() {
       <div className='section-bg layout-pt-lg bg-light started-title'>
         <div className='container'>
           <div className='col-lg-6 pr-20 lg:pr-0'>
-            <h1 className='text-light-4'>Designed for Everyone in the Organisation</h1>
-            <h5 className='mt-20 text-light-4'>
+            <h1 className='text-light-4'>Our Super Features</h1>
+            {/* <h5 className='mt-20 text-light-4'>
               Our features and benefits are curated to suit the needs of every employee
               using myBiz.
-            </h5>
+            </h5> */}
           </div>
         </div>
       </div>
@@ -76,11 +76,11 @@ function ContactGetStarted() {
           <div className='row x-gap-30 y-gap-30 cards-container'>
             {cards.map((element, index) => (
               <div key={index} className='col-lg-4'>
-                <div key={index} className='px-30 py-20 bg-white contact-card'>
+                <div key={index} className='px-30 py-40 bg-white contact-card'>
                   <div className='mb-20 mt-10'>{element.icon}</div>
                   <h2>{element.title}</h2>
                   <span className='subtitle mt-1'>{element.subtitle}</span>
-                  {element.points.map((point, pointIndex) => (
+                  {/* {element.points.map((point, pointIndex) => (
                     <span
                       className='d-flex gap-2 text-light-4 points mt-30'
                       key={pointIndex}
@@ -96,7 +96,7 @@ function ContactGetStarted() {
                     href={element.knowMoreLink}
                   >
                     KNOW MORE
-                  </a>
+                  </a> */}
                 </div>
               </div>
             ))}

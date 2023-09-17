@@ -87,9 +87,9 @@ function ContactWhyUs() {
   }
   return (
     <div id='contact-why'>
-      <div className='section-bg layout-pt-sm'>
+      <div className='section-bg layout-pb-xl'>
         <div className='container mt-20'>
-          <h1 className='fw-500 text-40 lh-1'>Business Travellers Love Us</h1>
+          <h1 className='fw-500 text-40 lh-1'>Here’s what people say about us</h1>
           {/* Testimonials */}
           <div className='testimonials-container'>
             <Slider
@@ -123,7 +123,7 @@ function ContactWhyUs() {
             </Slider>
           </div>
           {/* Cases */}
-          <div className='case-studies mt-50'>
+          {/* <div className='case-studies mt-50'>
             <div className='pseudo-bg' />
             <div className='text-white'>
               <h1>Case Studies</h1>
@@ -174,7 +174,7 @@ function ContactWhyUs() {
                 </span>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
