@@ -3173,8 +3173,13 @@ table.table-6 {
     }
     .text-transition {
       margin-bottom: 3rem;
-      @include media-below(lg) {
+      min-height: 260px;
+      @include media-below(xl) {
+        min-height: 345px;
         margin-bottom: 2rem;
+      }
+      @include media-below(lg) {
+        min-height: 260px;
       }
     }
     .hero-image {

@@ -16,7 +16,7 @@ function ContactPage({ isSignUp = false }) {
       {/* End Header 1 */}
 
       <ContactHero />
-      <ContactPartner />
+      {/* <ContactPartner /> */}
       <ContactGetStarted />
       <ContactQR />
       <ContactWhyUs />
