@@ -169,11 +169,10 @@ const Travellers = () => {
         data={travellers.filter(
           (perm) =>
             perm?.first_name
-              .toString()
+              ?.toString()
               ?.toLowerCase()
               .includes(searchQuery.toLowerCase()) ||
-            perm?.address.toString()?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            perm?.last_name.toString()?.toLowerCase().includes(searchQuery.toLowerCase())
+            perm?.last_name?.toString()?.toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>
