@@ -18,7 +18,7 @@ export default function Document() {
           content='	booking, car rental, cruise, destination, experiences, flight, holiday, hotel, real estate, resort, tour, travel, travel agency, trip, vacation'
         />
 
-        <link rel='icon' href='/favicon.ico' />
+        <link rel='icon' href='/favicon.png' />
       </Head>
       <body>
         <Main />
