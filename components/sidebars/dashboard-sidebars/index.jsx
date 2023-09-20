@@ -156,6 +156,13 @@ const Sidebar = () => {
         {
           title: 'Ledgers',
           href: '/dashboard/journals/ledger',
+          submenus: [
+            {
+              title: 'Mail Client Ledgers',
+              href: '/dashboard/journals/mail-ledger',
+              icon: <AiOutlinePlus />,
+            }
+          ]
         },
         {
           title: 'Balance Sheet',
