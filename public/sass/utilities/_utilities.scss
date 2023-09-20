@@ -3373,3 +3373,18 @@ table.table-6 {
     }
   }
 }
+
+.form-input.currency-amount::after {
+  position: absolute;
+  right: 12px;
+  bottom: 0;
+  color: #999;
+}
+
+form.inr-amount .form-input.currency-amount::after {
+  content: 'INR';
+}
+
+form.aed-amount .form-input.currency-amount::after {
+  content: 'AED';
+}

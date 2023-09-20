@@ -41,10 +41,9 @@ const UpdateBooking = () => {
   const [originalBookingID, setOriginalBookingID] = useState(null);
   const [bookingSectors, setBookingSectors] = useState([]);
   const [grossCommission, setGrossCommission] = useState(0);
-  const [isOffshore, setIsOffshore] = useState(false);
   const [clientQuotedAmount, setClientQuotedAmount] = useState(0);
   const [number, setNumber] = useState('');
-  const [exchangeRate, setExchangeRate] = useState(0);
+  const [exchangeRate, setExchangeRate] = useState(1);
   const [enableINR, setEnableINR] = useState(false);
 
   // Percentages
@@ -178,14 +177,32 @@ const UpdateBooking = () => {
               (response.data.enable_inr ? response.data.exchange_rate : 1) || 0
           ).toFixed(0)
         );
-        setCommissionReceivable((+response.data.commission_receivable || 0).toFixed(0));
-        setClientReferralFee((+response.data.client_referral_fee || 0).toFixed(0));
-        setClientBaseAmount((+response.data.client_base_amount || 0).toFixed(0));
-        setClientGSTAmount((+response.data.client_gst_amount || 0).toFixed(0));
-        setClientServicesCharges(
-          (+response.data.currency_conversion_charges || 0).toFixed(0)
+        setCommissionReceivable(
+          (
+            response.data.exchange_rate * +response.data.commission_receivable || 0
+          ).toFixed(0)
         );
-        setClientTotal((+response.data.client_total || 0).toFixed(0));
+        setClientReferralFee(
+          (response.data.exchange_rate * +response.data.client_referral_fee || 0).toFixed(
+            0
+          )
+        );
+        setClientBaseAmount(
+          (response.data.exchange_rate * +response.data.client_base_amount || 0).toFixed(
+            0
+          )
+        );
+        setClientGSTAmount(
+          (response.data.exchange_rate * +response.data.client_gst_amount || 0).toFixed(0)
+        );
+        setClientServicesCharges(
+          (
+            response.data.exchange_rate * +response.data.currency_conversion_charges || 0
+          ).toFixed(0)
+        );
+        setClientTotal(
+          (response.data.exchange_rate * +response.data.client_total || 0).toFixed(0)
+        );
         setSector(response.data.sector);
         setOriginalBookingID(response.data?.original_booking_id);
         setReissuePenalty(
@@ -200,18 +217,20 @@ const UpdateBooking = () => {
               (response.data.enable_inr ? response.data.exchange_rate : 1) || 0
           ).toFixed(0)
         );
-        setClientTaxAmount((+response.data.client_tax_amount || 0).toFixed(0));
+        setClientTaxAmount(
+          (response.data.exchange_rate * +response.data.client_tax_amount || 0).toFixed(0)
+        );
         setBookingDate(
           new DateObject({ date: response.data.booking_date, format: 'YYYY-MM-DD' })
         );
         setEnableINR(response.data.enable_inr);
         setExchangeRate(Number((+response.data.exchange_rate).toFixed(2)));
-        setIsOffshore(response.data?.is_offshore);
         setClientQuotedAmount(
           (
-            +response.data.client_base_amount +
-            +response.data.client_tax_amount +
-            +response.data.client_gst_amount
+            response.data.exchange_rate *
+            (+response.data.client_base_amount +
+              +response.data.client_tax_amount +
+              +response.data.client_gst_amount)
           ).toFixed(0)
         );
         setNumber(response.data.number);
@@ -491,7 +510,7 @@ const UpdateBooking = () => {
         ? vendorServiceCharges / (enableINR ? exchangeRate : 1)
         : 0,
       vendor_tds: vendorTDS ? vendorTDS / (enableINR ? exchangeRate : 1) : 0,
-      commission_receivable: commissionReceivable,
+      commission_receivable: commissionReceivable / (enableINR ? exchangeRate : 1),
       airline_id: airlineID?.value,
       miscellaneous_type: miscellaneousType?.value,
       payment_account_id: paymentAccountID?.value,
@@ -500,15 +519,16 @@ const UpdateBooking = () => {
         : undefined,
       client_referrer_id: clientReferrerID?.value,
       client_referral_fee: +clientReferralFee
-        ? clientReferralFee || undefined
+        ? (clientReferralFee || 0) / (enableINR ? exchangeRate : 1)
         : undefined,
-      client_base_amount: clientBaseAmount || 0,
-      client_tax_amount: clientTaxAmount || 0,
-      client_gst_amount: clientGSTAmount || 0,
-      currency_conversion_charges: isOffshore ? 0 : currencyConversionCharges || 0,
-      client_total: clientTotal || 0,
+      client_base_amount: (clientBaseAmount || 0) / (enableINR ? exchangeRate : 1),
+      client_tax_amount: (clientTaxAmount || 0) / (enableINR ? exchangeRate : 1),
+      client_gst_amount: (clientGSTAmount || 0) / (enableINR ? exchangeRate : 1),
+      currency_conversion_charges:
+        (currencyConversionCharges || 0) / (enableINR ? exchangeRate : 1),
+      client_total: (clientTotal || 0) / (enableINR ? exchangeRate : 1),
       client_traveller_id: clientTravellerID?.value,
-      exchange_rate: exchangeRate || 0,
+      exchange_rate: exchangeRate || 1,
       booking_sectors:
         bookingType.value === 'Miscellaneous'
           ? undefined
@@ -523,7 +543,6 @@ const UpdateBooking = () => {
                 element['details'].trim().length > 0 ? element['details'] : undefined,
               booking_class: element['booking_class']?.value,
             })),
-      is_offshore: isOffshore,
       enable_inr: enableINR,
       sector: bookingType.value === 'Miscellaneous' ? sector : undefined,
     };
@@ -583,12 +602,12 @@ const UpdateBooking = () => {
   };
 
   // Offshore
-  useEffect(() => {
-    if (isOffshore) {
-      setClientServiceChargePercent(0);
-      setClientServicesCharges(0);
-    }
-  }, [isOffshore]);
+  // useEffect(() => {
+  //   if (isOffshore) {
+  //     setClientServiceChargePercent(0);
+  //     setClientServicesCharges(0);
+  //   }
+  // }, [isOffshore]);
 
   // // If vendor is an airline, setting airline automatically
   // useEffect(() => {
@@ -908,7 +927,9 @@ const UpdateBooking = () => {
                 <div>
                   <form
                     onSubmit={onSubmit}
-                    className='row col-12 y-gap-10 x-gap-10 lg:pr-0 lg:ml-0'
+                    className={`row col-12 y-gap-10 x-gap-10 lg:pr-0 lg:ml-0 ${
+                      enableINR ? 'inr-amount' : 'aed-amount'
+                    }`}
                   >
                     <h3>Basic Details</h3>
                     {/* <div className=' col-lg-12'>
@@ -1218,7 +1239,7 @@ const UpdateBooking = () => {
                           />
                         </div>
                         <div className='col-lg-4'>
-                          <div className='form-input'>
+                          <div className='form-input currency-amount'>
                             <input
                               onChange={(e) => {
                                 setClientReferralFee(e.target.value);
@@ -1253,7 +1274,7 @@ const UpdateBooking = () => {
                       />
                     </div>
                     <div className='col-lg-4'>
-                      <div className='form-input'>
+                      <div className='form-input currency-amount'>
                         <input
                           onChange={(e) => setVendorBaseAmount(e.target.value)}
                           value={vendorBaseAmount}
@@ -1269,7 +1290,7 @@ const UpdateBooking = () => {
                     </div>
                     {bookingType?.value !== 'Miscellaneous' && (
                       <div className='col-lg-4'>
-                        <div className='form-input'>
+                        <div className='form-input currency-amount'>
                           <input
                             onChange={(e) => setVendorYQAmount(e.target.value)}
                             value={vendorYQAmount}
@@ -1284,7 +1305,7 @@ const UpdateBooking = () => {
                       </div>
                     )}
                     <div className='col-lg-4'>
-                      <div className='form-input'>
+                      <div className='form-input currency-amount'>
                         <input
                           onChange={(e) => {
                             setVendorTaxAmount(e.target.value);
@@ -1302,7 +1323,7 @@ const UpdateBooking = () => {
                       </div>
                     </div>
                     <div className='col-lg-4'>
-                      <div className='form-input'>
+                      <div className='form-input currency-amount'>
                         <input
                           onChange={(e) => {
                             setVendorGSTAmount(e.target.value);
@@ -1325,7 +1346,7 @@ const UpdateBooking = () => {
                       </div>
                     </div>
                     <div className='col-lg-4'>
-                      <div className='form-input'>
+                      <div className='form-input currency-amount'>
                         <input
                           onChange={(e) => {
                             setVendorMiscChargers(e.target.value);
@@ -1347,7 +1368,7 @@ const UpdateBooking = () => {
                     </div>
                     {originalBookingID && (
                       <div className='col-lg-4'>
-                        <div className='form-input'>
+                        <div className='form-input currency-amount'>
                           <input
                             onChange={(e) => setReissuePenalty(e.target.value)}
                             value={reissuePenalty}
@@ -1362,7 +1383,7 @@ const UpdateBooking = () => {
                       </div>
                     )}
                     <div className='col-lg-4'>
-                      <div className='form-input'>
+                      <div className='form-input currency-amount'>
                         <input
                           onChange={(e) => setVendorTotal(e.target.value)}
                           value={vendorTotal}
@@ -1400,7 +1421,7 @@ const UpdateBooking = () => {
                       />
                     </div>
                     <div className='col-lg-4'>
-                      <div className='form-input'>
+                      <div className='form-input currency-amount'>
                         <input
                           onChange={(e) => setPaymentAmount(e.target.value)}
                           value={paymentAmount}
@@ -1501,7 +1522,7 @@ const UpdateBooking = () => {
                         </div>
                         <div className='d-flex col-8 items-center gap-2 pr-30 lg:pr-0'>
                           <label>Amount</label>
-                          <div className='form-input'>
+                          <div className='form-input currency-amount'>
                             <input
                               style={{
                                 height: '50px',
@@ -1556,7 +1577,7 @@ const UpdateBooking = () => {
                         </div>
                         <div className='d-flex gap-2 items-center col-8 pr-30 lg:pr-0'>
                           <label>Amount</label>
-                          <div className='form-input'>
+                          <div className='form-input currency-amount'>
                             <input
                               style={{
                                 height: '50px',
@@ -1583,7 +1604,7 @@ const UpdateBooking = () => {
                       </div>
                     </div>
                     <div className='col-lg-4 pt-35 lg:pt-10'>
-                      <div className='form-input'>
+                      <div className='form-input currency-amount'>
                         <input
                           onChange={(e) => setCommissionReceivable(e.target.value)}
                           value={commissionReceivable}
@@ -1600,7 +1621,7 @@ const UpdateBooking = () => {
                     </div>
                     <h3>Client Details</h3>
                     <div className='col-lg-4'>
-                      <div className='form-input'>
+                      <div className='form-input currency-amount'>
                         <input
                           onChange={(e) => {
                             setClientQuotedAmount(e.target.value);
@@ -1622,7 +1643,7 @@ const UpdateBooking = () => {
                       </div>
                     </div>
                     <div className='col-lg-4'>
-                      <div className='form-input'>
+                      <div className='form-input currency-amount'>
                         <input
                           onChange={(e) => {
                             setClientBaseAmount(e.target.value);
@@ -1662,7 +1683,7 @@ const UpdateBooking = () => {
                       </div>
                     </div>
                     <div className='col-lg-4'>
-                      <div className='form-input'>
+                      <div className='form-input currency-amount'>
                         <input
                           onChange={(e) => {
                             setClientTaxAmount(e.target.value);
@@ -1704,7 +1725,7 @@ const UpdateBooking = () => {
                             value={clientGSTPercent}
                           />
                         </div>
-                        <div className='form-input col-lg-6 pr-30 lg:pr-0'>
+                        <div className='form-input col-lg-6 pr-30 lg:pr-0 currency-amount'>
                           <input
                             style={{
                               height: '50px',
@@ -1731,71 +1752,69 @@ const UpdateBooking = () => {
                         </div>
                       </div>
                     </div>
-                    {!isOffshore && (
-                      <div className='col-lg-4 pr-0'>
-                        <div className='row'>
-                          <label className='col-12 fw-500 mb-4'>
-                            Currency Conversion Charges
-                          </label>
-                          <div className='form-input col-4'>
+                    <div className='col-lg-4 pr-0'>
+                      <div className='row'>
+                        <label className='col-12 fw-500 mb-4'>
+                          Currency Conversion Charges
+                        </label>
+                        <div className='form-input col-4'>
+                          <input
+                            onChange={(e) => {
+                              setClientServiceChargePercent(e.target.value);
+                              updateSetcurrencyConversionCharges(
+                                clientBaseAmount,
+                                clientReferralFee,
+                                e.target.value
+                              );
+                            }}
+                            style={{
+                              height: '50px',
+                              minHeight: 'unset',
+                              paddingTop: 'unset',
+                              backgroundColor: '#ffe',
+                            }}
+                            value={clientServiceChargePercent}
+                            placeholder=' '
+                            onFocus={() => setXplorzGSTFocused(true)}
+                            type='number'
+                            onWheel={(e) => e.target.blur()}
+                            required
+                          />
+                          <label className='lh-1 text-16 text-light-1'></label>
+                          <span className='d-flex items-center ml-10'>%</span>
+                        </div>
+                        <div className='d-flex gap-2 items-center col-8 pr-30 lg:pr-0'>
+                          <label>Amount</label>
+                          <div className='form-input currency-amount'>
                             <input
-                              onChange={(e) => {
-                                setClientServiceChargePercent(e.target.value);
-                                updateSetcurrencyConversionCharges(
-                                  clientBaseAmount,
-                                  clientReferralFee,
-                                  e.target.value
-                                );
-                              }}
                               style={{
                                 height: '50px',
                                 minHeight: 'unset',
                                 paddingTop: 'unset',
-                                backgroundColor: '#ffe',
                               }}
-                              value={clientServiceChargePercent}
+                              onChange={(e) => {
+                                setClientServicesCharges(e.target.value);
+                                updateSetClientServiceChargePercent(
+                                  e.target.value,
+                                  clientBaseAmount,
+                                  clientReferralFee
+                                );
+                              }}
+                              value={currencyConversionCharges}
                               placeholder=' '
-                              onFocus={() => setXplorzGSTFocused(true)}
                               type='number'
                               onWheel={(e) => e.target.blur()}
                               required
+                              onFocus={() => setXplorzGSTFocused(false)}
+                              onBlur={() => setXplorzGSTFocused(true)}
                             />
                             <label className='lh-1 text-16 text-light-1'></label>
-                            <span className='d-flex items-center ml-10'>%</span>
-                          </div>
-                          <div className='d-flex gap-2 items-center col-8 pr-30 lg:pr-0'>
-                            <label>Amount</label>
-                            <div className='form-input'>
-                              <input
-                                style={{
-                                  height: '50px',
-                                  minHeight: 'unset',
-                                  paddingTop: 'unset',
-                                }}
-                                onChange={(e) => {
-                                  setClientServicesCharges(e.target.value);
-                                  updateSetClientServiceChargePercent(
-                                    e.target.value,
-                                    clientBaseAmount,
-                                    clientReferralFee
-                                  );
-                                }}
-                                value={currencyConversionCharges}
-                                placeholder=' '
-                                type='number'
-                                onWheel={(e) => e.target.blur()}
-                                required
-                                onFocus={() => setXplorzGSTFocused(false)}
-                                onBlur={() => setXplorzGSTFocused(true)}
-                              />
-                              <label className='lh-1 text-16 text-light-1'></label>
-                            </div>
                           </div>
                         </div>
                       </div>
-                    )}
+                    </div>
                     <div className='col-lg-4 pt-35 lg:pt-10'>
-                      <div className='form-input'>
+                      <div className='form-input currency-amount'>
                         <input
                           onChange={(e) => setClientTotal(e.target.value)}
                           value={clientTotal}
@@ -1811,8 +1830,19 @@ const UpdateBooking = () => {
                         </label>
                       </div>
                     </div>
+                    <div className='col-12' />
+                    <div className='d-flex col-lg-4 col-xl-3 col-xxl-2 items-center gap-3'>
+                      <ReactSwitch
+                        onChange={() => {
+                          if (enableINR) setExchangeRate(1);
+                          setEnableINR((prev) => !prev);
+                        }}
+                        checked={enableINR}
+                      />
+                      <label>Enable INR</label>
+                    </div>
                     {enableINR ? (
-                      <div className={`col-lg-4 ${isOffshore ? 'pt-35 lg:pt-10' : ''}`}>
+                      <div className='col-lg-4'>
                         <div className='form-input'>
                           <input
                             onChange={(e) => {
@@ -1831,17 +1861,6 @@ const UpdateBooking = () => {
                     ) : (
                       <></>
                     )}
-                    <div className='col-12' />
-                    <div className='d-flex col-lg-4 col-xl-3 col-xxl-2 items-center gap-3'>
-                      <ReactSwitch
-                        onChange={() => {
-                          if (enableINR) setExchangeRate(0);
-                          setEnableINR((prev) => !prev);
-                        }}
-                        checked={enableINR}
-                      />
-                      <label>Enable INR</label>
-                    </div>
                     <div className='d-inline-block'>
                       <button
                         type='submit'
