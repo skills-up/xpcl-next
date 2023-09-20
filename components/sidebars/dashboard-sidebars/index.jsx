@@ -160,6 +160,7 @@ const Sidebar = () => {
             {
               title: 'Mail Client Ledgers',
               href: '/dashboard/journals/mail-ledger',
+              permission: 'journals.mail-client-ledger',
               icon: <AiOutlinePlus />,
             }
           ]
@@ -224,6 +225,18 @@ const Sidebar = () => {
         {
           title: 'Commission Rules',
           href: '/dashboard/commission-rules',
+        },
+        {
+          title: 'Exchange Rate',
+          href: '/dashboard',
+          submenus: [
+            {
+              title: 'Update Exchange Rate',
+              href: '/dashboard/exchange-rate',
+              permission: 'utlities.exchange-rate',
+              icon: <AiOutlinePlus />,
+            }
+          ]
         },
       ],
     },
@@ -402,6 +415,7 @@ const Sidebar = () => {
                           {link?.submenus && (
                             <ul className='ml-10'>
                               {link.submenus.map((sub, subIndex) => (
+                                (sub.permission && !permissions.includes(sub.permission)) ? '' :
                                 <li key={subIndex} style={{ listStyleType: 'unset' }}>
                                   <a
                                     href={sub.href}
