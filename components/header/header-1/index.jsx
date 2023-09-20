@@ -42,7 +42,7 @@ const Header1 = ({ permaOpaque = true }) => {
             <div className='col-auto'>
               <div className='d-flex items-center'>
                 <Link href='/' className='header-logo mr-20'>
-                  <img src='/img/general/xplorz-logo.png' alt='logo icon' />
+                  <img src='/img/general/tripcentral-logo.png' alt='logo icon' />
                 </Link>
                 {/* End logo */}
 

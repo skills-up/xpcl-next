@@ -15,7 +15,7 @@ const MobileMenu = () => {
       <div className='pro-header d-flex align-items-center justify-between border-bottom-light'>
         <Link href='/'>
           <img
-            src='/img/general/xplorz-logo.png'
+            src='/img/general/tripcentral-logo.png'
             alt='brand'
             style={{ width: '250px' }}
           />
