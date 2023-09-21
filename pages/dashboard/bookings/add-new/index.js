@@ -42,7 +42,7 @@ const AddNewBooking = () => {
   const [enableINR, setEnableINR] = useState(true);
   const [clientQuotedAmount, setClientQuotedAmount] = useState(0);
   const [exchangeRate, setExchangeRate] = useState(1);
-  const [baseExchangeRate, setBaseExchangeRate] = useState(22.5);
+  const [baseExchangeRate, setBaseExchangeRate] = useState(1);
 
   // Percentages
   const [vendorServiceChargePercent, setVendorServiceChargePercent] = useState(18);
@@ -152,8 +152,8 @@ const AddNewBooking = () => {
       clientOrgs?.success &&
       prefillExchangeRate?.success
     ) {
-      setBaseExchangeRate(+prefillExchangeRate.data || 22.5);
-      setExchangeRate(+prefillExchangeRate.data || 22.5);
+      setBaseExchangeRate(+prefillExchangeRate.data || 1);
+      setExchangeRate(+prefillExchangeRate.data || 1);
       setClientOrgs(
         clientOrgs.data.map((element) => ({
           value: element.id,
