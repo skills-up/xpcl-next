@@ -1260,7 +1260,17 @@ $_displays: none, inline-block, block, flex;
   input:focus ~ label,
   // input[placeholder] ~ label,
   input:not(:placeholder-shown) ~ label {
-    transform: translateY(-10px);
+    transform: translateY(-11px);
+  }
+
+  &.pr-20 {
+    textarea:focus ~ label,
+    textarea:not(:placeholder-shown) ~ label,
+    input:focus ~ label,
+    // input[placeholder] ~ label,
+    input:not(:placeholder-shown) ~ label {
+      transform: translateY(-15px);
+    }
   }
 }
 
@@ -3374,17 +3384,26 @@ table.table-6 {
   }
 }
 
-.form-input.currency-amount::after {
-  position: absolute;
-  right: 12px;
+.currency-amount::after {
+  position: relative;
+  right: -6px;
   bottom: 0;
   color: #999;
 }
 
-form.inr-amount .form-input.currency-amount::after {
+.form-input.currency-amount::after {
+  position: absolute;
+  right: 12px;
+}
+
+.form-input.pr-20.currency-amount::after {
+  right: 30px;
+}
+
+form.inr-amount .currency-amount::after {
   content: 'INR';
 }
 
-form.aed-amount .form-input.currency-amount::after {
+form.aed-amount .currency-amount::after {
   content: 'AED';
 }

@@ -37,7 +37,6 @@ const AddNewPartialRefund = () => {
   const [bookingData, setBookingData] = useState(null);
   const [refundBookingData, setRefundBookingData] = useState(null);
   const [clientQuotedAmount, setClientQuotedAmount] = useState(0);
-  const [isOffshore, setIsOffshore] = useState(false);
   const [bookingType, setBookingType] = useState(null);
   const [number, setNumber] = useState('');
   const [clientRefundAmount, setClientRefundAmount] = useState(0);
@@ -173,7 +172,11 @@ const AddNewPartialRefund = () => {
             ).toFixed(0)
           );
           setClientCancellationCharges(
-            (+response.data.client_cancellation_charges || 0).toFixed(0)
+            (
+              +response.data.client_cancellation_charges *
+                (bookingData?.data?.enable_inr ? bookingData?.data?.exchange_rate : 1) ||
+              0
+            ).toFixed(0)
           );
           setVendorBaseAmount(
             (+response.data.vendor_base_amount
@@ -219,15 +222,42 @@ const AddNewPartialRefund = () => {
               : 0
             ).toFixed(0)
           );
-          setClientReferralFee((+response.data.client_referral_fee || 0).toFixed(0));
-          setReason(response.data.reason);
-          setClientBaseAmount((+response.data.client_base_amount || 0).toFixed(0));
-          setClientGSTAmount((+response.data.client_gst_amount || 0).toFixed(0));
-          setIsOffshore(response.data?.is_offshore);
-          setClientServicesCharges(
-            (+response.data.currency_conversion_charges || 0).toFixed(0)
+          setClientReferralFee(
+            (
+              +response.data.client_referral_fee *
+                (bookingData?.data?.enable_inr ? bookingData?.data?.exchange_rate : 1) ||
+              0
+            ).toFixed(0)
           );
-          setClientTaxAmount((+response.data.client_tax_amount || 0).toFixed(0));
+          setReason(response.data.reason);
+          setClientBaseAmount(
+            (
+              +response.data.client_base_amount *
+                (bookingData?.data?.enable_inr ? bookingData?.data?.exchange_rate : 1) ||
+              0
+            ).toFixed(0)
+          );
+          setClientGSTAmount(
+            (
+              +response.data.client_gst_amount *
+                (bookingData?.data?.enable_inr ? bookingData?.data?.exchange_rate : 1) ||
+              0
+            ).toFixed(0)
+          );
+          setClientServicesCharges(
+            (
+              +response.data.currency_conversion_charges *
+                (bookingData?.data?.enable_inr ? bookingData?.data?.exchange_rate : 1) ||
+              0
+            ).toFixed(0)
+          );
+          setClientTaxAmount(
+            (
+              +response.data.client_tax_amount *
+                (bookingData?.data?.enable_inr ? bookingData?.data?.exchange_rate : 1) ||
+              0
+            ).toFixed(0)
+          );
           setVendorTotal(
             (+response.data.vendor_total
               ? +response.data.vendor_total *
@@ -237,9 +267,10 @@ const AddNewPartialRefund = () => {
           );
           setClientQuotedAmount(
             (
-              +response.data.client_base_amount +
-              +response.data.client_tax_amount +
-              +response.data.client_gst_amount
+              (+response.data.client_base_amount +
+                +response.data.client_tax_amount +
+                +response.data.client_gst_amount) *
+              (bookingData?.data?.enable_inr ? bookingData?.data?.exchange_rate : 1)
             ).toFixed(0)
           );
           // Setting Client GST Percent
@@ -263,15 +294,7 @@ const AddNewPartialRefund = () => {
             setClientGSTPercent({ value: '12% of Base', label: '12% of Base' });
           else if (+response.data.client_gst_amount === 0)
             setClientGSTPercent({ value: 'None', label: 'None' });
-          else if (
-            +response.data.client_gst_amount ===
-            Number(
-              (
-                response.data.vendor_gst_amount *
-                (bookingData?.data?.enable_inr ? bookingData?.data?.exchange_rate : 1)
-              ).toFixed(0)
-            )
-          )
+          else if (+response.data.client_gst_amount === +response.data.vendor_gst_amount)
             setClientGSTPercent({ value: 'Vendor GST', label: 'Vendor GST' });
 
           // Setting Vendor
@@ -361,14 +384,24 @@ const AddNewPartialRefund = () => {
       vendor_tds: vendorTDS
         ? vendorTDS / (bookingData.enable_inr ? bookingData.exchange_rate : 1)
         : 0,
-      commission_receivable: commissionReceivable,
+      commission_receivable:
+        commissionReceivable / (bookingData.enable_inr ? bookingData.exchange_rate : 1),
       client_referrer_id: clientReferrerID?.value,
-      client_referral_fee: clientReferralFee || 0,
-      client_base_amount: clientBaseAmount || 0,
-      client_tax_amount: clientTaxAmount || 0,
-      client_gst_amount: clientGSTAmount || 0,
-      currency_conversion_charges: isOffshore ? 0 : currencyConversionCharges || 0,
-      client_total: clientTotal || 0,
+      client_referral_fee:
+        (clientReferralFee || 0) /
+        (bookingData.enable_inr ? bookingData.exchange_rate : 1),
+      client_base_amount:
+        (clientBaseAmount || 0) /
+        (bookingData.enable_inr ? bookingData.exchange_rate : 1),
+      client_tax_amount:
+        (clientTaxAmount || 0) / (bookingData.enable_inr ? bookingData.exchange_rate : 1),
+      client_gst_amount:
+        (clientGSTAmount || 0) / (bookingData.enable_inr ? bookingData.exchange_rate : 1),
+      currency_conversion_charges:
+        (currencyConversionCharges || 0) /
+        (bookingData.enable_inr ? bookingData.exchange_rate : 1),
+      client_total:
+        (clientTotal || 0) / (bookingData.enable_inr ? bookingData.exchange_rate : 1),
       airline_cancellation_charges: airlineCancellationCharges
         ? airlineCancellationCharges /
           (bookingData.enable_inr ? bookingData.exchange_rate : 1)
@@ -376,8 +409,14 @@ const AddNewPartialRefund = () => {
       vendor_service_fee: vendorServiceFee
         ? vendorServiceFee / (bookingData.enable_inr ? bookingData.exchange_rate : 1)
         : 0,
-      client_cancellation_charges: clientCancellationCharges || 0,
-      refund_amount: +refundAmount === 0 ? undefined : refundAmount || undefined,
+      client_cancellation_charges:
+        (clientCancellationCharges || 0) /
+        (bookingData.enable_inr ? bookingData.exchange_rate : 1),
+      refund_amount:
+        +refundAmount === 0
+          ? undefined
+          : refundAmount / (bookingData.enable_inr ? bookingData.exchange_rate : 1) ||
+            undefined,
       payment_account_id: accountID?.value || undefined,
       refund_to_account_id: clientAccountID?.value || undefined,
       reason,
@@ -420,14 +459,6 @@ const AddNewPartialRefund = () => {
       if (payment) setClientRefundAmount(payment);
     }
   }, [clientTotal, clientCancellationCharges, bookingType]);
-
-  // Offshore
-  useEffect(() => {
-    if (isOffshore) {
-      setClientServiceChargePercent(0);
-      setClientServicesCharges(0);
-    }
-  }, [isOffshore]);
 
   useEffect(() => {
     if (vendorID?.value) {
@@ -710,7 +741,12 @@ const AddNewPartialRefund = () => {
 
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
-                  <form onSubmit={onSubmit} className='row col-12 y-gap-10 x-gap-10'>
+                  <form
+                    onSubmit={onSubmit}
+                    className={`row col-12 y-gap-10 x-gap-10 lg:pr-0 lg:ml-0 ${
+                      bookingData?.enable_inr ? 'inr-amount' : 'aed-amount'
+                    }`}
+                  >
                     <div className='d-block ml-3 col-lg-4 form-datepicker'>
                       <label>
                         Refund Date<span className='text-danger'>*</span>
@@ -748,7 +784,7 @@ const AddNewPartialRefund = () => {
                       />
                     </div>
                     <div className='col-lg-4'>
-                      <div className='form-input'>
+                      <div className='form-input currency-amount'>
                         <input
                           onChange={(e) => {
                             setClientReferralFee(e.target.value);
@@ -782,7 +818,7 @@ const AddNewPartialRefund = () => {
                       />
                     </div>
                     <div className='col-lg-4 '>
-                      <div className='form-input'>
+                      <div className='form-input currency-amount'>
                         <input
                           onChange={(e) => setVendorBaseAmount(e.target.value)}
                           value={vendorBaseAmount}
@@ -797,7 +833,7 @@ const AddNewPartialRefund = () => {
                     </div>
                     {bookingType?.value !== 'Miscellaneous' && (
                       <div className='col-lg-4 '>
-                        <div className='form-input'>
+                        <div className='form-input currency-amount'>
                           <input
                             onChange={(e) => setVendorYQAmount(e.target.value)}
                             value={vendorYQAmount}
@@ -812,7 +848,7 @@ const AddNewPartialRefund = () => {
                       </div>
                     )}
                     <div className='col-lg-4'>
-                      <div className='form-input'>
+                      <div className='form-input currency-amount'>
                         <input
                           onChange={(e) => {
                             setVendorTaxAmount(e.target.value);
@@ -829,7 +865,7 @@ const AddNewPartialRefund = () => {
                       </div>
                     </div>
                     <div className='col-lg-4'>
-                      <div className='form-input'>
+                      <div className='form-input currency-amount'>
                         <input
                           onChange={(e) => {
                             setVendorGSTAmount(e.target.value);
@@ -851,7 +887,7 @@ const AddNewPartialRefund = () => {
                       </div>
                     </div>
                     <div className='col-lg-4'>
-                      <div className='form-input'>
+                      <div className='form-input currency-amount'>
                         <input
                           className='bg-light'
                           onChange={(e) => setVendorTotal(e.target.value)}
@@ -933,7 +969,7 @@ const AddNewPartialRefund = () => {
                         <div className='form-input col-4'>
                           <input
                             style={{
-                              height: '50px',
+                              height: '53px',
                               minHeight: 'unset',
                               paddingTop: 'unset',
                               backgroundColor: '#ffe',
@@ -951,30 +987,26 @@ const AddNewPartialRefund = () => {
                           <label className='lh-1 text-16 text-light-1'></label>
                           <div className='d-flex items-center ml-10'>%</div>
                         </div>{' '}
-                        <div className='d-flex col-8 items-center gap-2 pr-30 lg:pr-0'>
-                          <label>Amount</label>
-                          <div className='form-input'>
-                            <input
-                              style={{
-                                height: '50px',
-                                minHeight: 'unset',
-                                paddingTop: 'unset',
-                              }}
-                              onChange={(e) => {
-                                setVendorServiceCharges(e.target.value);
-                                updateVendorServiceChargePercent(
-                                  e.target.value,
-                                  grossCommission
-                                );
-                              }}
-                              value={vendorServiceCharges}
-                              placeholder=' '
-                              type='number'
-                              onWheel={(e) => e.target.blur()}
-                              onFocus={() => setVendorGSTFocused(false)}
-                            />
-                            <label className='lh-1 text-16 text-light-1'></label>
-                          </div>
+                        <div className='form-input col-8 pr-20 currency-amount'>
+                          <input
+                            style={{
+                              height: '53px',
+                              minHeight: 'unset',
+                            }}
+                            onChange={(e) => {
+                              setVendorServiceCharges(e.target.value);
+                              updateVendorServiceChargePercent(
+                                e.target.value,
+                                grossCommission
+                              );
+                            }}
+                            value={vendorServiceCharges}
+                            placeholder=' '
+                            type='number'
+                            onWheel={(e) => e.target.blur()}
+                            onFocus={() => setVendorGSTFocused(false)}
+                          />
+                          <label className='lh-1 text-16 text-light-1'>Amount</label>
                         </div>
                       </div>
                     </div>
@@ -984,7 +1016,7 @@ const AddNewPartialRefund = () => {
                         <div className='form-input col-4'>
                           <input
                             style={{
-                              height: '50px',
+                              height: '53px',
                               minHeight: 'unset',
                               paddingTop: 'unset',
                               backgroundColor: '#ffe',
@@ -1006,36 +1038,32 @@ const AddNewPartialRefund = () => {
                           <label className='lh-1 text-16 text-light-1'></label>
                           <div className='d-flex items-center ml-10'>%</div>
                         </div>
-                        <div className='d-flex col-8 items-center gap-2 pr-30 lg:pr-0'>
-                          <label>Amount</label>
-                          <div className='form-input'>
-                            <input
-                              style={{
-                                height: '50px',
-                                minHeight: 'unset',
-                                paddingTop: 'unset',
-                              }}
-                              onChange={(e) => {
-                                setVendorTDS(e.target.value);
-                                updateVendorTDSPercent(
-                                  e.target.value,
-                                  grossCommission,
-                                  vendorServiceCharges
-                                );
-                              }}
-                              value={vendorTDS}
-                              placeholder=' '
-                              type='number'
-                              onWheel={(e) => e.target.blur()}
-                              onFocus={() => setVendorTDSPercentFocused(false)}
-                            />
-                            <label className='lh-1 text-16 text-light-1'></label>
-                          </div>
+                        <div className='form-input col-8 pr-20 currency-amount'>
+                          <input
+                            style={{
+                              height: '53px',
+                              minHeight: 'unset',
+                            }}
+                            onChange={(e) => {
+                              setVendorTDS(e.target.value);
+                              updateVendorTDSPercent(
+                                e.target.value,
+                                grossCommission,
+                                vendorServiceCharges
+                              );
+                            }}
+                            value={vendorTDS}
+                            placeholder=' '
+                            type='number'
+                            onWheel={(e) => e.target.blur()}
+                            onFocus={() => setVendorTDSPercentFocused(false)}
+                          />
+                          <label className='lh-1 text-16 text-light-1'>Amount</label>
                         </div>
                       </div>
                     </div>
                     <div className='col-lg-4 pt-35 lg:pt-10'>
-                      <div className='form-input'>
+                      <div className='form-input currency-amount'>
                         <input
                           onChange={(e) => setCommissionReceivable(e.target.value)}
                           value={commissionReceivable}
@@ -1052,7 +1080,7 @@ const AddNewPartialRefund = () => {
                     </div>
                     <h3>Client Details</h3>
                     <div className='col-lg-4'>
-                      <div className='form-input'>
+                      <div className='form-input currency-amount'>
                         <input
                           onChange={(e) => {
                             setClientQuotedAmount(e.target.value);
@@ -1074,7 +1102,7 @@ const AddNewPartialRefund = () => {
                       </div>
                     </div>
                     <div className='col-lg-4'>
-                      <div className='form-input'>
+                      <div className='form-input currency-amount'>
                         <input
                           onChange={(e) => {
                             setClientBaseAmount(e.target.value);
@@ -1113,7 +1141,7 @@ const AddNewPartialRefund = () => {
                       </div>
                     </div>
                     <div className='col-lg-4'>
-                      <div className='form-input'>
+                      <div className='form-input currency-amount'>
                         <input
                           onChange={(e) => {
                             setClientTaxAmount(e.target.value);
@@ -1154,10 +1182,10 @@ const AddNewPartialRefund = () => {
                             value={clientGSTPercent}
                           />
                         </div>
-                        <div className='form-input col-lg-6 pr-30 lg:pr-0'>
+                        <div className='form-input col-6 pr-20 currency-amount'>
                           <input
                             style={{
-                              height: '50px',
+                              height: '53px',
                               minHeight: 'unset',
                               paddingTop: 'unset',
                             }}
@@ -1181,69 +1209,63 @@ const AddNewPartialRefund = () => {
                         </div>
                       </div>
                     </div>
-                    {!isOffshore && (
-                      <div className='col-lg-4 pr-0'>
-                        <div className='row'>
-                          <label className='col-12 fw-500 mb-4'>
-                            Currency Conversion Charges
-                          </label>
-                          <div className='form-input col-4'>
-                            <input
-                              style={{
-                                height: '50px',
-                                minHeight: 'unset',
-                                paddingTop: 'unset',
-                                backgroundColor: '#ffe',
-                              }}
-                              onChange={(e) => {
-                                setClientServiceChargePercent(e.target.value);
-                                updateSetcurrencyConversionCharges(
-                                  clientBaseAmount,
-                                  clientReferralFee,
-                                  e.target.value
-                                );
-                              }}
-                              value={clientServiceChargePercent}
-                              placeholder=' '
-                              onFocus={() => setXplorzGSTFocused(true)}
-                              type='number'
-                              onWheel={(e) => e.target.blur()}
-                            />
-                            <label className='lh-1 text-16 text-light-1'></label>
-                            <span className='d-flex items-center ml-10'>%</span>
-                          </div>
-                          <div className='d-flex col-8 items-center gap-2 pr-30 lg:pr-0'>
-                            <label>Amount</label>
-                            <div className='form-input'>
-                              <input
-                                style={{
-                                  height: '50px',
-                                  minHeight: 'unset',
-                                  paddingTop: 'unset',
-                                }}
-                                onChange={(e) => {
-                                  setClientServicesCharges(e.target.value);
-                                  updateSetClientServiceChargePercent(
-                                    e.target.value,
-                                    clientBaseAmount,
-                                    clientReferralFee
-                                  );
-                                }}
-                                value={currencyConversionCharges}
-                                placeholder=' '
-                                type='number'
-                                onWheel={(e) => e.target.blur()}
-                                onFocus={() => setXplorzGSTFocused(false)}
-                                onBlur={() => setXplorzGSTFocused(true)}
-                              />
-                              <label className='lh-1 text-16 text-light-1'></label>
-                            </div>
-                          </div>
+                    <div className='col-lg-4 pr-0'>
+                      <div className='row'>
+                        <label className='col-12 fw-500 mb-4'>
+                          Currency Conversion Charges
+                        </label>
+                        <div className='form-input col-4'>
+                          <input
+                            style={{
+                              height: '53px',
+                              minHeight: 'unset',
+                              paddingTop: 'unset',
+                              backgroundColor: '#ffe',
+                            }}
+                            onChange={(e) => {
+                              setClientServiceChargePercent(e.target.value);
+                              updateSetcurrencyConversionCharges(
+                                clientBaseAmount,
+                                clientReferralFee,
+                                e.target.value
+                              );
+                            }}
+                            value={clientServiceChargePercent}
+                            placeholder=' '
+                            onFocus={() => setXplorzGSTFocused(true)}
+                            type='number'
+                            onWheel={(e) => e.target.blur()}
+                          />
+                          <label className='lh-1 text-16 text-light-1'></label>
+                          <span className='d-flex items-center ml-10'>%</span>
+                        </div>
+                        <div className='form-input col-8 pr-20 currency-amount'>
+                          <input
+                            style={{
+                              height: '53px',
+                              minHeight: 'unset',
+                            }}
+                            onChange={(e) => {
+                              setClientServicesCharges(e.target.value);
+                              updateSetClientServiceChargePercent(
+                                e.target.value,
+                                clientBaseAmount,
+                                clientReferralFee
+                              );
+                            }}
+                            value={currencyConversionCharges}
+                            placeholder=' '
+                            type='number'
+                            onWheel={(e) => e.target.blur()}
+                            onFocus={() => setXplorzGSTFocused(false)}
+                            onBlur={() => setXplorzGSTFocused(true)}
+                          />
+                          <label className='lh-1 text-16 text-light-1'>Amount</label>
                         </div>
                       </div>
-                    )}
+                    </div>
                     <div className='col-lg-4 pt-35 lg:pt-10'>
-                      <div className='form-input'>
+                      <div className='form-input currency-amount'>
                         <input
                           onChange={(e) => setClientTotal(e.target.value)}
                           value={clientTotal}
@@ -1260,7 +1282,7 @@ const AddNewPartialRefund = () => {
                       </div>
                     </div>
                     <div className='col-lg-4'>
-                      <div className='form-input'>
+                      <div className='form-input currency-amount'>
                         <input
                           onChange={(e) => setAirlineCancellationCharges(e.target.value)}
                           value={airlineCancellationCharges}
@@ -1273,7 +1295,7 @@ const AddNewPartialRefund = () => {
                       </div>
                     </div>
                     <div className='col-lg-4'>
-                      <div className='form-input'>
+                      <div className='form-input currency-amount'>
                         <input
                           onChange={(e) => setVendorServiceFee(e.target.value)}
                           value={vendorServiceFee}
@@ -1286,7 +1308,7 @@ const AddNewPartialRefund = () => {
                       </div>
                     </div>
                     <div className='col-lg-4'>
-                      <div className='form-input'>
+                      <div className='form-input currency-amount'>
                         <input
                           onChange={(e) => setClientCancellationCharges(e.target.value)}
                           value={clientCancellationCharges}
@@ -1309,7 +1331,7 @@ const AddNewPartialRefund = () => {
                       />
                     </div>
                     <div className='col-lg-4'>
-                      <div className='form-input'>
+                      <div className='form-input currency-amount'>
                         <input
                           onChange={(e) => setRefundAmount(e.target.value)}
                           value={refundAmount}
@@ -1331,30 +1353,35 @@ const AddNewPartialRefund = () => {
                       </div>
                     </div>
                     <div className='row justify-between'>
-                      <div className='col-lg-3'>
-                        <p>
+                      <div className='col-lg-4'>
+                        <p className='currency-amount'>
                           <strong>Vendor Base Amount:</strong>{' '}
-                          {bookingData?.vendor_base_amount || 0}
+                          {(bookingData?.vendor_base_amount || 0) *
+                            (bookingData?.enable_inr ? bookingData?.exchange_rate : 1)}
                         </p>
-                        <p>
+                        <p className='currency-amount'>
                           <strong>Vendor YQ Amount:</strong>{' '}
-                          {bookingData?.vendor_yq_amount || 0}
+                          {(bookingData?.vendor_yq_amount || 0) *
+                            (bookingData?.enable_inr ? bookingData?.exchange_rate : 1)}
                         </p>
-                        <p>
+                        <p className='currency-amount'>
                           <strong>Vendor Tax Amount:</strong>{' '}
-                          {bookingData?.vendor_tax_amount || 0}
+                          {(bookingData?.vendor_tax_amount || 0) *
+                            (bookingData?.enable_inr ? bookingData?.exchange_rate : 1)}
                         </p>
-                        <p>
+                        <p className='currency-amount'>
                           <strong>Vendor Misc. Amount:</strong>{' '}
-                          {bookingData?.vendor_misc_charges || 0}
+                          {(bookingData?.vendor_misc_charges || 0) *
+                            (bookingData?.enable_inr ? bookingData?.exchange_rate : 1)}
                         </p>
-                        <p>
+                        <p className='currency-amount'>
                           <strong>Reissue Penalty:</strong>{' '}
-                          {bookingData?.reissue_penalty || 0}
+                          {(bookingData?.reissue_penalty || 0) *
+                            (bookingData?.enable_inr ? bookingData?.exchange_rate : 1)}
                         </p>
                       </div>
-                      <div className='col-lg-3 text-right'>
-                        <p>
+                      <div className='col-lg-4 text-right'>
+                        <p className='currency-amount'>
                           <strong>Client Refund Amount:</strong> {clientRefundAmount || 0}
                         </p>
                       </div>

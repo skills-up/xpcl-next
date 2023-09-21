@@ -97,7 +97,9 @@ const AddNewRefund = () => {
       vendor_service_fee: vendorServiceFee
         ? vendorServiceFee / (bookingData?.enable_inr ? bookingData.exchange_rate : 1)
         : 0,
-      client_cancellation_charges: clientCancellationCharges || 0,
+      client_cancellation_charges:
+        (clientCancellationCharges || 0) /
+        (bookingData?.enable_inr ? bookingData.exchange_rate : 1),
       payment_account_id: paymentAccountID?.value || undefined,
       refund_amount:
         +refundAmount === 0
@@ -163,7 +165,12 @@ const AddNewRefund = () => {
 
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
-                  <form onSubmit={onSubmit} className='row col-12 y-gap-10 x-gap-10'>
+                  <form
+                    onSubmit={onSubmit}
+                    className={`row col-12 y-gap-10 x-gap-10 lg:pr-0 lg:ml-0 ${
+                      bookingData?.enable_inr ? 'inr-amount' : 'aed-amount'
+                    }`}
+                  >
                     <div className='d-block col-lg-4 ml-3 form-datepicker'>
                       <label>
                         Refund Date<span className='text-danger'>*</span>
@@ -199,7 +206,7 @@ const AddNewRefund = () => {
                       />
                     </div>
                     <div className='col-lg-4'>
-                      <div className='form-input'>
+                      <div className='form-input currency-amount'>
                         <input
                           onChange={(e) => setAirlineCancellationCharges(e.target.value)}
                           value={airlineCancellationCharges}
@@ -213,7 +220,7 @@ const AddNewRefund = () => {
                       </div>
                     </div>
                     <div className='col-lg-4'>
-                      <div className='form-input'>
+                      <div className='form-input currency-amount'>
                         <input
                           onChange={(e) => setVendorServiceFee(e.target.value)}
                           value={vendorServiceFee}
@@ -227,7 +234,7 @@ const AddNewRefund = () => {
                       </div>
                     </div>
                     <div className=' col-lg-4'>
-                      <div className='form-input'>
+                      <div className='form-input currency-amount'>
                         <input
                           onChange={(e) => setClientCancellationCharges(e.target.value)}
                           value={clientCancellationCharges}
@@ -242,7 +249,7 @@ const AddNewRefund = () => {
                     </div>
                     {bookingData && paymentAccountID && (
                       <div className=' col-lg-4'>
-                        <div className='form-input'>
+                        <div className='form-input currency-amount'>
                           <input
                             onChange={(e) => setRefundAmount(e.target.value)}
                             value={refundAmount}

@@ -672,9 +672,14 @@ const ReissueBooking = () => {
     clientTaxAmount,
     clientGSTAmount
   ) => {
-    const quotedAmount = (+clientBaseAmount || 0) + (+clientTaxAmount || 0) + (+clientGSTAmount || 0);
+    const quotedAmount =
+      (+clientBaseAmount || 0) + (+clientTaxAmount || 0) + (+clientGSTAmount || 0);
     setClientQuotedAmount(quotedAmount);
-    updateSetcurrencyConversionCharges(quotedAmount, clientReferralFee, clientServiceChargePercent);
+    updateSetcurrencyConversionCharges(
+      quotedAmount,
+      clientReferralFee,
+      clientServiceChargePercent
+    );
   };
 
   // Client Total
@@ -1303,7 +1308,7 @@ const ReissueBooking = () => {
                         <div className='form-input col-4'>
                           <input
                             style={{
-                              height: '50px',
+                              height: '53px',
                               minHeight: 'unset',
                               paddingTop: 'unset',
                               backgroundColor: '#ffe',
@@ -1321,30 +1326,26 @@ const ReissueBooking = () => {
                           <label className='lh-1 text-16 text-light-1'></label>
                           <div className='d-flex items-center ml-10'>%</div>
                         </div>
-                        <div className='d-flex col-8 items-center gap-2 pr-30 lg:pr-0'>
-                          <label>Amount</label>
-                          <div className='form-input currency-amount'>
-                            <input
-                              style={{
-                                height: '50px',
-                                minHeight: 'unset',
-                                paddingTop: 'unset',
-                              }}
-                              onChange={(e) => {
-                                setVendorServiceCharges(e.target.value);
-                                updateVendorServiceChargePercent(
-                                  e.target.value,
-                                  grossCommission
-                                );
-                              }}
-                              value={vendorServiceCharges}
-                              placeholder=' '
-                              type='number'
-                              onWheel={(e) => e.target.blur()}
-                              onFocus={() => setVendorGSTFocused(false)}
-                            />
-                            <label className='lh-1 text-16 text-light-1'></label>
-                          </div>
+                        <div className='form-input col-8 pr-20 currency-amount'>
+                          <input
+                            style={{
+                              height: '53px',
+                              minHeight: 'unset',
+                            }}
+                            onChange={(e) => {
+                              setVendorServiceCharges(e.target.value);
+                              updateVendorServiceChargePercent(
+                                e.target.value,
+                                grossCommission
+                              );
+                            }}
+                            value={vendorServiceCharges}
+                            placeholder=' '
+                            type='number'
+                            onWheel={(e) => e.target.blur()}
+                            onFocus={() => setVendorGSTFocused(false)}
+                          />
+                          <label className='lh-1 text-16 text-light-1'>Amount</label>
                         </div>
                       </div>
                     </div>
@@ -1354,7 +1355,7 @@ const ReissueBooking = () => {
                         <div className='form-input col-4'>
                           <input
                             style={{
-                              height: '50px',
+                              height: '53px',
                               minHeight: 'unset',
                               paddingTop: 'unset',
                               backgroundColor: '#ffe',
@@ -1376,31 +1377,27 @@ const ReissueBooking = () => {
                           <label className='lh-1 text-16 text-light-1'></label>
                           <div className='d-flex items-center ml-10'>%</div>
                         </div>
-                        <div className='d-flex gap-2 items-center col-8 pr-30 lg:pr-0'>
-                          <label>Amount</label>
-                          <div className='form-input currency-amount'>
-                            <input
-                              style={{
-                                height: '50px',
-                                minHeight: 'unset',
-                                paddingTop: 'unset',
-                              }}
-                              onChange={(e) => {
-                                setVendorTDS(e.target.value);
-                                updateVendorTDSPercent(
-                                  e.target.value,
-                                  grossCommission,
-                                  vendorServiceCharges
-                                );
-                              }}
-                              value={vendorTDS}
-                              placeholder=' '
-                              type='number'
-                              onWheel={(e) => e.target.blur()}
-                              onFocus={() => setVendorTDSPercentFocused(false)}
-                            />
-                            <label className='lh-1 text-16 text-light-1'></label>
-                          </div>
+                        <div className='form-input col-8 pr-20 currency-amount'>
+                          <input
+                            style={{
+                              height: '53px',
+                              minHeight: 'unset',
+                            }}
+                            onChange={(e) => {
+                              setVendorTDS(e.target.value);
+                              updateVendorTDSPercent(
+                                e.target.value,
+                                grossCommission,
+                                vendorServiceCharges
+                              );
+                            }}
+                            value={vendorTDS}
+                            placeholder=' '
+                            type='number'
+                            onWheel={(e) => e.target.blur()}
+                            onFocus={() => setVendorTDSPercentFocused(false)}
+                          />
+                          <label className='lh-1 text-16 text-light-1'>Amount</label>
                         </div>
                       </div>
                     </div>
@@ -1521,10 +1518,10 @@ const ReissueBooking = () => {
                             value={clientGSTPercent}
                           />
                         </div>
-                        <div className='form-input col-lg-6 pr-30 lg:pr-0 currency-amount'>
+                        <div className='form-input col-6 pr-20 currency-amount'>
                           <input
                             style={{
-                              height: '50px',
+                              height: '53px',
                               minHeight: 'unset',
                               paddingTop: 'unset',
                             }}
@@ -1564,7 +1561,7 @@ const ReissueBooking = () => {
                               );
                             }}
                             style={{
-                              height: '50px',
+                              height: '53px',
                               minHeight: 'unset',
                               paddingTop: 'unset',
                               backgroundColor: '#ffe',
@@ -1579,33 +1576,29 @@ const ReissueBooking = () => {
                           <label className='lh-1 text-16 text-light-1'></label>
                           <span className='d-flex items-center ml-10'>%</span>
                         </div>
-                        <div className='d-flex gap-2 items-center col-8 pr-30 lg:pr-0'>
-                          <label>Amount</label>
-                          <div className='form-input currency-amount'>
-                            <input
-                              style={{
-                                height: '50px',
-                                minHeight: 'unset',
-                                paddingTop: 'unset',
-                              }}
-                              onChange={(e) => {
-                                setClientServicesCharges(e.target.value);
-                                updateSetClientServiceChargePercent(
-                                  e.target.value,
-                                  clientBaseAmount,
-                                  clientReferralFee
-                                );
-                              }}
-                              value={currencyConversionCharges}
-                              placeholder=' '
-                              type='number'
-                              onWheel={(e) => e.target.blur()}
-                              required
-                              onFocus={() => setXplorzGSTFocused(false)}
-                              onBlur={() => setXplorzGSTFocused(true)}
-                            />
-                            <label className='lh-1 text-16 text-light-1'></label>
-                          </div>
+                        <div className='form-input col-8 pr-20 currency-amount'>
+                          <input
+                            style={{
+                              height: '53px',
+                              minHeight: 'unset',
+                            }}
+                            onChange={(e) => {
+                              setClientServicesCharges(e.target.value);
+                              updateSetClientServiceChargePercent(
+                                e.target.value,
+                                clientBaseAmount,
+                                clientReferralFee
+                              );
+                            }}
+                            value={currencyConversionCharges}
+                            placeholder=' '
+                            type='number'
+                            onWheel={(e) => e.target.blur()}
+                            required
+                            onFocus={() => setXplorzGSTFocused(false)}
+                            onBlur={() => setXplorzGSTFocused(true)}
+                          />
+                          <label className='lh-1 text-16 text-light-1'>Amount</label>
                         </div>
                       </div>
                     </div>
