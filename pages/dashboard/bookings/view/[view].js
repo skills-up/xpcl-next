@@ -69,9 +69,9 @@ const ViewBooking = () => {
             </a>
           );
         }
-        if (data?.currency_conversion_charges)
-          data['xplorz_gst_amount'] = data['currency_conversion_charges'];
-        delete data['currency_conversion_charges'];
+        // if (data?.currency_conversion_charges)
+        //   data['xplorz_gst_amount'] = data['currency_conversion_charges'];
+        // delete data['currency_conversion_charges'];
         delete data['created_at'];
         delete data['updated_at'];
         if (data?.client_name && data?.client_id) {
