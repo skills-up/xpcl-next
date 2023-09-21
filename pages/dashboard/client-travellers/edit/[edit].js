@@ -1,6 +1,8 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { AiOutlinePlus } from 'react-icons/ai';
+import { BsTrash3 } from 'react-icons/bs';
 import { getItem, updateItem } from '../../../../api/xplorzApi';
 import Seo from '../../../../components/common/Seo';
 import Footer from '../../../../components/footer/dashboard-footer';
@@ -10,6 +12,7 @@ import { sendToast } from '../../../../utils/toastify';
 
 const UpdateClientTraveller = () => {
   const [travellerName, setTravellerName] = useState('');
+  const [aliases, setAliases] = useState([{ value: '' }]);
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -26,6 +29,9 @@ const UpdateClientTraveller = () => {
       const response = await getItem('client-travellers', router.query.edit);
       if (response?.success) {
         setTravellerName(response.data.traveller_name);
+        if (response.data?.aliases?.length) {
+          setAliases(response.data.aliases.map((x) => ({ value: x })));
+        }
       } else {
         sendToast(
           'error',
@@ -39,11 +45,15 @@ const UpdateClientTraveller = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    // Checking if client id is not null
-    const response = await updateItem('client-travellers', router.query.edit, {
+    const data = {
       traveller_name: travellerName,
       client_id,
-    });
+    };
+    if (aliases.length > 0) {
+      data.aliases = aliases.map((x) => x.value.trim());
+    }
+    // Checking if client id is not null
+    const response = await updateItem('client-travellers', router.query.edit, data);
     if (response?.success) {
       sendToast('success', 'Updated Traveller Successfully.', 4000);
       router.push('/dashboard/client-travellers');
@@ -101,6 +111,56 @@ const UpdateClientTraveller = () => {
                         <label className='lh-1 text-16 text-light-1'>
                           Traveller Name
                         </label>
+                      </div>
+                    </div>
+                    {/* Aliases */}
+                    <div>
+                      <h3>Aliases</h3>
+                      <div>
+                        {aliases.map((element, index) => (
+                          <div key={index} className='d-flex my-2'>
+                            <div className='form-input'>
+                              <input
+                                value={element.value}
+                                onChange={(e) => {
+                                  setAliases((prev) => {
+                                    prev[index].value = e.target.value;
+                                    return [...prev];
+                                  });
+                                }}
+                                type='text'
+                                placeholder=' '
+                              />
+                              <label className='lh-1 text-16 text-light-1'>
+                                Add Alias {index + 1}
+                              </label>
+                            </div>
+                            {index !== 0 && (
+                              <button
+                                className='btn btn-outline-danger ml-10 px-20'
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  setAliases((prev) => {
+                                    prev.splice(index, 1);
+                                    return [...prev];
+                                  });
+                                }}
+                              >
+                                <BsTrash3 />
+                              </button>
+                            )}
+                            {index + 1 === aliases?.length && (
+                              <button
+                                className='btn btn-outline-success ml-10 px-20'
+                                onClick={() => {
+                                  setAliases((prev) => [...prev, { value: '' }]);
+                                }}
+                              >
+                                <AiOutlinePlus />
+                              </button>
+                            )}
+                          </div>
+                        ))}
                       </div>
                     </div>
                     <div className='d-inline-block'>

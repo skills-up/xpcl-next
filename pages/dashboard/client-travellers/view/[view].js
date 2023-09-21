@@ -95,7 +95,7 @@ const ViewClientTravellers = () => {
     const response = await deleteItem('client-travellers', idToDelete);
     if (response?.success) {
       sendToast('success', 'Deleted successfully', 4000);
-      router.push('/dashboard/travellers/view/' + router.query.traveller_id);
+      router.push('/dashboard/travellers/view/' + router.query.view);
     } else {
       sendToast(
         'error',
@@ -152,11 +152,7 @@ const ViewClientTravellers = () => {
                   data={clientTraveller}
                   onEdit={() =>
                     router.push({
-                      pathname: '/dashboard/travellers/client-travellers/edit',
-                      query: {
-                        traveller_id: router.query.traveller_id,
-                        edit: router.query.view,
-                      },
+                      pathname: '/dashboard/client-travellers/edit/' + router.query.view,
                     })
                   }
                   onDelete={() => {
