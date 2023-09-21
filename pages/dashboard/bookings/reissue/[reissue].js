@@ -614,12 +614,12 @@ const ReissueBooking = () => {
   };
 
   const updateSetcurrencyConversionCharges = (
-    clientBaseAmount,
+    clientQuotedAmount,
     clientReferralFee,
     clientServiceChargePercent
   ) => {
     let currencyConversionCharges = Number(
-      (((+clientBaseAmount || 0) + (+clientReferralFee || 0)) *
+      (((+clientQuotedAmount || 0) + (+clientReferralFee || 0)) *
         (+clientServiceChargePercent || 0)) /
         100
     ).toFixed(0);
@@ -672,9 +672,9 @@ const ReissueBooking = () => {
     clientTaxAmount,
     clientGSTAmount
   ) => {
-    setClientQuotedAmount(
-      (+clientBaseAmount || 0) + (+clientTaxAmount || 0) + (+clientGSTAmount || 0)
-    );
+    const quotedAmount = (+clientBaseAmount || 0) + (+clientTaxAmount || 0) + (+clientGSTAmount || 0);
+    setClientQuotedAmount(quotedAmount);
+    updateSetcurrencyConversionCharges(quotedAmount, clientReferralFee, clientServiceChargePercent);
   };
 
   // Client Total
@@ -683,12 +683,6 @@ const ReissueBooking = () => {
       let clientBaseAmount =
         (+clientQuotedAmount || 0) - (+clientTaxAmount || 0) - (+clientGSTAmount || 0);
       setClientBaseAmount(clientBaseAmount);
-      // Updating
-      updateSetcurrencyConversionCharges(
-        clientBaseAmount,
-        clientReferralFee,
-        clientServiceChargePercent
-      );
     }
   };
 
@@ -1057,7 +1051,7 @@ const ReissueBooking = () => {
                               onChange={(e) => {
                                 setClientReferralFee(e.target.value);
                                 updateSetcurrencyConversionCharges(
-                                  clientBaseAmount,
+                                  clientQuotedAmount,
                                   e.target.value,
                                   clientServiceChargePercent
                                 );
@@ -1454,11 +1448,6 @@ const ReissueBooking = () => {
                         <input
                           onChange={(e) => {
                             setClientBaseAmount(e.target.value);
-                            updateSetcurrencyConversionCharges(
-                              e.target.value,
-                              clientReferralFee,
-                              clientServiceChargePercent
-                            );
                             updateClientQuotedAmount(
                               e.target.value,
                               clientTaxAmount,
@@ -1569,7 +1558,7 @@ const ReissueBooking = () => {
                             onChange={(e) => {
                               setClientServiceChargePercent(e.target.value);
                               updateSetcurrencyConversionCharges(
-                                clientBaseAmount,
+                                clientQuotedAmount,
                                 clientReferralFee,
                                 e.target.value
                               );
