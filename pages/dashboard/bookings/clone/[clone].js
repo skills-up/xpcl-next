@@ -48,7 +48,7 @@ const AddNewBooking = () => {
   // Percentages
   const [vendorServiceChargePercent, setVendorServiceChargePercent] = useState(18);
   const [vendorTDSPercent, setVendorTDSPercent] = useState(5);
-  const [clientServiceChargePercent, setClientServiceChargePercent] = useState(0);
+  const [clientServiceChargePercent, setClientServiceChargePercent] = useState(2);
   const [clientGSTPercent, setClientGSTPercent] = useState(null);
 
   // Dates
@@ -1580,6 +1580,11 @@ const AddNewBooking = () => {
                               e.target.value,
                               clientTaxAmount,
                               clientGSTAmount
+                            );
+                            updateSetcurrencyConversionCharges(
+                              e.target.value,
+                              clientReferralFee,
+                              clientServiceChargePercent
                             );
                           }}
                           value={clientQuotedAmount}

@@ -1330,6 +1330,11 @@ const AddNewBooking = () => {
                               clientTaxAmount,
                               clientGSTAmount
                             );
+                            updateSetcurrencyConversionCharges(
+                              e.target.value,
+                              clientReferralFee,
+                              clientServiceChargePercent
+                            );
                           }}
                           value={clientQuotedAmount}
                           placeholder=' '
