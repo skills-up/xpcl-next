@@ -95,7 +95,7 @@ const ViewClientTravellers = () => {
     const response = await deleteItem('client-travellers', idToDelete);
     if (response?.success) {
       sendToast('success', 'Deleted successfully', 4000);
-      router.push('/dashboard/travellers/view/' + router.query.view);
+      router.push('/dashboard/client-travellers');
     } else {
       sendToast(
         'error',
