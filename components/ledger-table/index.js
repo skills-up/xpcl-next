@@ -148,7 +148,7 @@ function LedgerTable({ data, accountID, accountName, dates }) {
                   narration: 'Opening Balance',
                   dr: '',
                   cr: '',
-                  balance: newData?.opening_balance,
+                  balance: newData?.opening_balance?.toFixed(2),
                 });
                 // Adding Entries
                 for (let entry of newData?.entries) {
@@ -157,24 +157,16 @@ function LedgerTable({ data, accountID, accountName, dates }) {
                       date: entry?.date,
                       format: 'YYYY-MM-DD',
                     }).format('DD-MMMM-YYYY'),
-                    narration: 'Opening Balance',
+                    narration: entry.narration,
                     dr:
                       +entry?.dr_account_id === +accountID
-                        ? Math.abs(entry?.amount).toLocaleString('en-AE', {
-                            maximumFractionDigits: 2,
-                            style: 'currency',
-                            currency: 'AED',
-                          })
+                        ? Math.abs(entry?.amount).toFixed(2)
                         : '',
                     cr:
                       +entry?.cr_account_id === +accountID
-                        ? Math.abs(entry?.amount).toLocaleString('en-AE', {
-                            maximumFractionDigits: 2,
-                            style: 'currency',
-                            currency: 'AED',
-                          })
+                        ? Math.abs(entry?.amount).toFixed(2)
                         : '',
-                    balance: entry?.total,
+                    balance: entry?.total?.toFixed(2),
                   });
                 }
                 // Adding Closing Balance
@@ -183,7 +175,7 @@ function LedgerTable({ data, accountID, accountName, dates }) {
                   narration: 'Closing Balance',
                   dr: '',
                   cr: '',
-                  balance: newData?.total,
+                  balance: newData?.total?.toFixed(2),
                 });
                 CSVDownloader(jsonToCSV(temp), 'Ledger.csv');
               } catch (err) {
