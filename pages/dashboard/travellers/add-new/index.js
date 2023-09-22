@@ -199,6 +199,7 @@ const AddNewTravellers = () => {
     // Aliases
     if (aliases.length === 1 && aliases[0].value.trim().length === 0) {
       passportFormData.append('aliases[]', `${passportName}`);
+      passportFormData.append('aliases[]', `${lastName} ${firstName} ${prefix?.value ?? ''}`.trim());
     } else {
       for (let alias of aliases) passportFormData.append('aliases[]', alias?.value);
     }
