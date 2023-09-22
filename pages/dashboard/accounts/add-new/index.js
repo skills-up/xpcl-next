@@ -14,6 +14,7 @@ const AddNewAccounts = () => {
   const [accountCategories, setAccountCategories] = useState([]);
   const [accountCategoryID, setAccountCategoryID] = useState(null);
   const [name, setName] = useState('');
+  const [code, setCode] = useState('');
   const [year, setYear] = useState({ label: 'None', value: '' });
   const [isBankCash, setIsBankCash] = useState(false);
 
@@ -53,6 +54,7 @@ const AddNewAccounts = () => {
       name,
       account_category_id: accountCategoryID?.value || null,
       year: year?.value,
+      code: code || null,
       is_bank_cash: isBankCash,
     });
     if (response?.success) {
@@ -122,14 +124,28 @@ const AddNewAccounts = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='form-input-select'>
-                      <label>Year</label>
-                      <Select
-                        isClearable
-                        options={yearOptions}
-                        value={year}
-                        onChange={(id) => setYear(id)}
-                      />
+                    <div className='col-6'>
+                      <div className='form-input-select'>
+                        <label>Year</label>
+                        <Select
+                          isClearable
+                          options={yearOptions}
+                          value={year}
+                          onChange={(id) => setYear(id)}
+                        />
+                      </div>
+                    </div>
+                    <div className='col-6'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setCode(e.target.value)}
+                          value={code}
+                          placeholder=' '
+                          type='text'
+                          required
+                        />
+                        <label className='lh-1 text-16 text-light-1'>Code</label>
+                      </div>
                     </div>
                     <div className='d-flex items-center gap-3'>
                       <ReactSwitch
