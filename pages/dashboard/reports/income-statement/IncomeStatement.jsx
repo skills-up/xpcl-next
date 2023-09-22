@@ -127,7 +127,7 @@ const Journals = () => {
                     <></>
                   )
                 ) : (
-                  element !== '_' && (
+                  element !== '_' && Math.abs(+data[element]) !== 0 && (
                     <a
                       className='d-flex justify-between cursor-pointer'
                       style={{ paddingLeft: `${level}rem`, color: 'blue' }}
