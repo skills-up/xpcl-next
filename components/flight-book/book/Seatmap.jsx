@@ -1089,11 +1089,11 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                                       group.amount > 0 &&
                                                       element.assignable
                                                         ? `Amount - ${group.amount.toLocaleString(
-                                                            'en-IN',
+                                                            'en-AE',
                                                             {
                                                               maximumFractionDigits: 0,
                                                               style: 'currency',
-                                                              currency: 'INR',
+                                                              currency: 'AED',
                                                             }
                                                           )}`
                                                         : undefined
@@ -1533,11 +1533,11 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                         data-tooltip-content={
                                           el.amount > 0 && !el.isBooked
                                             ? `Amount - ${el.amount.toLocaleString(
-                                                'en-IN',
+                                                'en-AE',
                                                 {
                                                   maximumFractionDigits: 0,
                                                   style: 'currency',
-                                                  currency: 'INR',
+                                                  currency: 'AED',
                                                 }
                                               )}`
                                             : undefined
@@ -2328,11 +2328,11 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                                     data-tooltip-content={
                                                       conditions && +price > 0
                                                         ? `Amount - ${(+price).toLocaleString(
-                                                            'en-IN',
+                                                            'en-AE',
                                                             {
                                                               maximumFractionDigits: 0,
                                                               style: 'currency',
-                                                              currency: 'INR',
+                                                              currency: 'AED',
                                                             }
                                                           )}`
                                                         : undefined
@@ -2559,16 +2559,16 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                         Trip{' '}
                       </span>{' '}
                       has changed from{' '}
-                      {a.alert.oldFare.toLocaleString('en-IN', {
+                      {a.alert.oldFare.toLocaleString('en-AE', {
                         maximumFractionDigits: 0,
                         style: 'currency',
-                        currency: 'INR',
+                        currency: 'AED',
                       })}{' '}
                       to{' '}
-                      {a.alert.newFare.toLocaleString('en-IN', {
+                      {a.alert.newFare.toLocaleString('en-AE', {
                         maximumFractionDigits: 0,
                         style: 'currency',
-                        currency: 'INR',
+                        currency: 'AED',
                       })}
                       . Please proceed accordingly.
                     </li>
@@ -2811,12 +2811,12 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                                                   (el?.amount
                                                                     ? ' - ' +
                                                                       el.amount.toLocaleString(
-                                                                        'en-IN',
+                                                                        'en-AE',
                                                                         {
                                                                           maximumFractionDigits: 0,
                                                                           style:
                                                                             'currency',
-                                                                          currency: 'INR',
+                                                                          currency: 'AED',
                                                                         }
                                                                       )
                                                                     : ''),
@@ -2926,11 +2926,11 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                                               Object.values(
                                                                 el.passengersAvailability
                                                               )[0].price.toLocaleString(
-                                                                'en-IN',
+                                                                'en-AE',
                                                                 {
                                                                   maximumFractionDigits: 0,
                                                                   style: 'currency',
-                                                                  currency: 'INR',
+                                                                  currency: 'AED',
                                                                 }
                                                               ),
                                                           })),
@@ -3096,10 +3096,10 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                         {Object.entries(breakdown).map(([key, value], index) => (
                           <div className='d-flex justify-between' key={index}>
                             <span className='fw-500'>{key}: </span>
-                            {value.toLocaleString('en-IN', {
+                            {value.toLocaleString('en-AE', {
                               maximumFractionDigits: 0,
                               style: 'currency',
-                              currency: 'INR',
+                              currency: 'AED',
                             })}
                           </div>
                         ))}
@@ -3109,10 +3109,10 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                         />
                         <div className='d-flex justify-between'>
                           <span className='fw-500'>Total: </span>
-                          {total(breakdown).toLocaleString('en-IN', {
+                          {total(breakdown).toLocaleString('en-AE', {
                             maximumFractionDigits: 0,
                             style: 'currency',
-                            currency: 'INR',
+                            currency: 'AED',
                           })}
                         </div>
                       </>
@@ -3357,10 +3357,10 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                           <div className='text-15'>Total Amount</div>
                           <div className='fw-500'>
                             {totalAmount &&
-                              (+totalAmount).toLocaleString('en-IN', {
+                              (+totalAmount).toLocaleString('en-AE', {
                                 maximumFractionDigits: 0,
                                 style: 'currency',
-                                currency: 'INR',
+                                currency: 'AED',
                               })}
                           </div>
                         </div>
@@ -3381,10 +3381,10 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                               {value && value > 0 ? (
                                 <span className='d-block'>
                                   <span className='fw-500'>{key}</span>:{' '}
-                                  {value?.toLocaleString('en-IN', {
+                                  {value?.toLocaleString('en-AE', {
                                     maximumFractionDigits: 0,
                                     style: 'currency',
-                                    currency: 'INR',
+                                    currency: 'AED',
                                   })}
                                 </span>
                               ) : (

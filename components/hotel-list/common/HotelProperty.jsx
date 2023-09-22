@@ -171,10 +171,10 @@ function HotelProperty({ item }) {
                   : ''}
               </div>
               <div className='text-22 lh-12 fw-600 mt-5'>
-                {item?.ops[0]?.tp.toLocaleString('en-IN', {
+                {item?.ops[0]?.tp.toLocaleString('en-AE', {
                   maximumFractionDigits: 0,
                   style: 'currency',
-                  currency: 'INR',
+                  currency: 'AED',
                 })}{' '}
                 Onwards
               </div>

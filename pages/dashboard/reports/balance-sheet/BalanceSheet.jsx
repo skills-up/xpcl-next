@@ -108,10 +108,10 @@ const Journals = () => {
                       >
                         <span>{element}</span>
                         <span>
-                          {Math.abs(+data[element]['_']).toLocaleString('en-IN', {
+                          {Math.abs(+data[element]['_']).toLocaleString('en-AE', {
                             maximumFractionDigits: 2,
                             style: 'currency',
-                            currency: 'INR',
+                            currency: 'AED',
                           })}{' '}
                           {data[element]['_'] >= 0 ? 'Dr' : 'Cr'}
                         </span>
@@ -135,10 +135,10 @@ const Journals = () => {
                     >
                       <span>{element.split('|')[1]}</span>
                       <span>
-                        {Math.abs(+data[element]).toLocaleString('en-IN', {
+                        {Math.abs(+data[element]).toLocaleString('en-AE', {
                           maximumFractionDigits: 2,
                           style: 'currency',
-                          currency: 'INR',
+                          currency: 'AED',
                         })}{' '}
                         {data[element] >= 0 ? 'Dr' : 'Cr'}
                       </span>
@@ -194,10 +194,10 @@ const Journals = () => {
                 >
                   <span>Profit</span>
                   <span>
-                    {Math.abs(+balanceSheet?._).toLocaleString('en-IN', {
+                    {Math.abs(+balanceSheet?._).toLocaleString('en-AE', {
                       maximumFractionDigits: 2,
                       style: 'currency',
-                      currency: 'INR',
+                      currency: 'AED',
                     })}{' '}
                     Cr
                   </span>
@@ -219,10 +219,10 @@ const Journals = () => {
                   Math.abs(+balanceSheet?.Liabilities?._)
                     ? Math.abs(+balanceSheet?.Assets?._)
                     : Math.abs(+balanceSheet?.Liabilities?._)
-                  ).toLocaleString('en-IN', {
+                  ).toLocaleString('en-AE', {
                     maximumFractionDigits: 2,
                     style: 'currency',
-                    currency: 'INR',
+                    currency: 'AED',
                   })}{' '}
                   Cr
                 </>
@@ -251,10 +251,10 @@ const Journals = () => {
                 >
                   <span>Loss</span>
                   <span>
-                    {Math.abs(+balanceSheet?._).toLocaleString('en-IN', {
+                    {Math.abs(+balanceSheet?._).toLocaleString('en-AE', {
                       maximumFractionDigits: 2,
                       style: 'currency',
-                      currency: 'INR',
+                      currency: 'AED',
                     })}{' '}
                     Dr
                   </span>
@@ -276,10 +276,10 @@ const Journals = () => {
                   Math.abs(+balanceSheet?.Liabilities?._)
                     ? Math.abs(+balanceSheet?.Assets?._)
                     : Math.abs(+balanceSheet?.Liabilities?._)
-                  ).toLocaleString('en-IN', {
+                  ).toLocaleString('en-AE', {
                     maximumFractionDigits: 2,
                     style: 'currency',
-                    currency: 'INR',
+                    currency: 'AED',
                   })}{' '}
                   Dr
                 </>

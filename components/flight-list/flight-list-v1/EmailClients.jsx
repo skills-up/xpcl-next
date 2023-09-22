@@ -357,10 +357,10 @@ function EmailClients() {
                             <td style={{ textAlign: 'center' }}>{element.cabin}</td>
                             {!withoutFares && (
                               <td rowspan='1' style={{ textAlign: 'center' }}>
-                                {(+element.price).toLocaleString('en-IN', {
+                                {(+element.price).toLocaleString('en-AE', {
                                   maximumFractionDigits: 2,
                                   style: 'currency',
-                                  currency: 'INR',
+                                  currency: 'AED',
                                 })}
                               </td>
                             )}
@@ -390,10 +390,10 @@ function EmailClients() {
                                   element.cabin
                                 } ${!withoutFares ? '%0D%0A%0D%0AFare per pax: ' : ''}${
                                   !withoutFares
-                                    ? `${(+element.price).toLocaleString('en-IN', {
+                                    ? `${(+element.price).toLocaleString('en-AE', {
                                         maximumFractionDigits: 2,
                                         style: 'currency',
-                                        currency: 'INR',
+                                        currency: 'AED',
                                       })}/-`
                                     : ''
                                 }%0D%0A%0D%0APlease book the same.%0D%0A%0D%0AThanks!`}
@@ -455,10 +455,10 @@ function EmailClients() {
                             <td style={{ textAlign: 'center' }}>{element.cabin}</td>
                             {!withoutFares && (
                               <td rowspan='1' style={{ textAlign: 'center' }}>
-                                {(+element.price).toLocaleString('en-IN', {
+                                {(+element.price).toLocaleString('en-AE', {
                                   maximumFractionDigits: 2,
                                   style: 'currency',
-                                  currency: 'INR',
+                                  currency: 'AED',
                                 })}
                               </td>
                             )}
@@ -482,10 +482,10 @@ function EmailClients() {
                                   !withoutFares ? '%0D%0A%0D%0AFare per pax: ' : ''
                                 }${
                                   !withoutFares
-                                    ? `${(+element.price).toLocaleString('en-IN', {
+                                    ? `${(+element.price).toLocaleString('en-AE', {
                                         maximumFractionDigits: 2,
                                         style: 'currency',
-                                        currency: 'INR',
+                                        currency: 'AED',
                                       })}/-`
                                     : ''
                                 }%0D%0A%0D%0APlease book the same.%0D%0A%0D%0AThanks!`}

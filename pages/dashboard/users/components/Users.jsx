@@ -52,7 +52,7 @@ const Users = () => {
         return (
           <div>
             {data.row.original.updated_at
-              ? new Date(data.row.original.updated_at).toLocaleString('en-IN', {
+              ? new Date(data.row.original.updated_at).toLocaleString('en-AE', {
                   dateStyle: 'medium',
                   timeStyle: 'short',
                 })

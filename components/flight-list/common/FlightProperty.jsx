@@ -509,30 +509,30 @@ function FlightProperty({
                           element.adultPrice > 0
                             ? `${
                                 travellerDOBS.ADT
-                              }x Adult @ ${element.adultPrice.toLocaleString('en-IN', {
+                              }x Adult @ ${element.adultPrice.toLocaleString('en-AE', {
                                 maximumFractionDigits: 0,
                                 style: 'currency',
-                                currency: 'INR',
+                                currency: 'AED',
                               })}`
                             : ''
                         }${
                           element.childPrice > 0
                             ? `\n${
                                 travellerDOBS.CHD
-                              }x Child @ ${element.childPrice.toLocaleString('en-IN', {
+                              }x Child @ ${element.childPrice.toLocaleString('en-AE', {
                                 maximumFractionDigits: 0,
                                 style: 'currency',
-                                currency: 'INR',
+                                currency: 'AED',
                               })}`
                             : ''
                         }${
                           element.infantPrice > 0
                             ? `\n${
                                 travellerDOBS.INF
-                              }x Infant @ ${element.infantPrice.toLocaleString('en-IN', {
+                              }x Infant @ ${element.infantPrice.toLocaleString('en-AE', {
                                 maximumFractionDigits: 0,
                                 style: 'currency',
-                                currency: 'INR',
+                                currency: 'AED',
                               })}`
                             : ''
                         }${
@@ -578,10 +578,10 @@ function FlightProperty({
                         }`}
                         data-tooltip-place='top'
                       >
-                        {element.total.toLocaleString('en-IN', {
+                        {element.total.toLocaleString('en-AE', {
                           maximumFractionDigits: 0,
                           style: 'currency',
-                          currency: 'INR',
+                          currency: 'AED',
                         })}
                       </a>
                       <ReactTooltip

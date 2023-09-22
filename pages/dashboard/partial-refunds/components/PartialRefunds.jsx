@@ -69,10 +69,10 @@ const PartialRefunds = () => {
       Cell: (data) => {
         return (
           <span>
-            {(+data.row.original.refund_amount)?.toLocaleString('en-IN', {
+            {(+data.row.original.refund_amount)?.toLocaleString('en-AE', {
               maximumFractionDigits: 2,
               style: 'currency',
-              currency: 'INR',
+              currency: 'AED',
             })}
           </span>
         );
@@ -87,10 +87,10 @@ const PartialRefunds = () => {
       Cell: (data) => {
         return (
           <span>
-            {(+data.row.original.client_total)?.toLocaleString('en-IN', {
+            {(+data.row.original.client_total)?.toLocaleString('en-AE', {
               maximumFractionDigits: 2,
               style: 'currency',
-              currency: 'INR',
+              currency: 'AED',
             })}
           </span>
         );

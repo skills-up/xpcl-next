@@ -41,7 +41,7 @@ const History = () => {
       Cell: (data) => {
         return (
           <span>
-            {data.row?.original?.booking_date?.toLocaleString('en-IN', {
+            {data.row?.original?.booking_date?.toLocaleString('en-AE', {
               dateStyle: 'medium',
               timeStyle: 'short',
             })}
@@ -74,10 +74,10 @@ const History = () => {
       Cell: (data) => {
         return (
           <span>
-            {(+data.row.original.client_total).toLocaleString('en-IN', {
+            {(+data.row.original.client_total).toLocaleString('en-AE', {
               maximumFractionDigits: 2,
               style: 'currency',
-              currency: 'INR',
+              currency: 'AED',
             })}
           </span>
         );

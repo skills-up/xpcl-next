@@ -143,10 +143,10 @@ const Journals = () => {
                     />
                     <label className='lh-1 text-16 text-light-1'>
                       {element.name} (Value:{' '}
-                      {(+element.value).toLocaleString('en-IN', {
+                      {(+element.value).toLocaleString('en-AE', {
                         maximumFractionDigits: 2,
                         style: 'currency',
-                        currency: 'INR',
+                        currency: 'AED',
                       })}
                       )
                     </label>

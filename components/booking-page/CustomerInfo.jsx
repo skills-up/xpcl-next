@@ -574,10 +574,10 @@ const CustomerInfo = () => {
                 <div className='col-md-4 text-center'>
                   <div className='text-15'>Total Amount</div>
                   <div className='fw-500'>
-                    {PNR.room.tp.toLocaleString('en-IN', {
+                    {PNR.room.tp.toLocaleString('en-AE', {
                       maximumFractionDigits: 0,
                       style: 'currency',
-                      currency: 'INR',
+                      currency: 'AED',
                     })}
                   </div>
                 </div>

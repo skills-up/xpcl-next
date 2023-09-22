@@ -51,7 +51,7 @@ const Journals = () => {
         return (
           <div>
             {data.row.original.date
-              ? new Date(data.row.original.date).toLocaleString('en-IN', {
+              ? new Date(data.row.original.date).toLocaleString('en-AE', {
                   dateStyle: 'medium',
                 })
               : ''}
@@ -119,7 +119,7 @@ const Journals = () => {
       {modalOpen && (
         <CustomDataModal
           title={`[
-            ${new Date(journalView?.date).toLocaleString('en-IN', {
+            ${new Date(journalView?.date).toLocaleString('en-AE', {
               dateStyle: 'medium',
             })}
             ] - ${journalView?.narration}`}
@@ -138,7 +138,7 @@ const Journals = () => {
                 //   Cell: (data) => {
                 //     return (
                 //       <span>
-                //         {new Date(data.row.original.date).toLocaleString('en-IN', {
+                //         {new Date(data.row.original.date).toLocaleString('en-AE', {
                 //           dateStyle: 'medium',
                 //         })}
                 //       </span>
@@ -175,10 +175,10 @@ const Journals = () => {
                   Cell: (data) => {
                     return (
                       <span className='text-right d-block'>
-                        {(+data.row.original.amount).toLocaleString('en-IN', {
+                        {(+data.row.original.amount).toLocaleString('en-AE', {
                           maximumFractionDigits: 2,
                           style: 'currency',
-                          currency: 'INR',
+                          currency: 'AED',
                         })}
                       </span>
                     );

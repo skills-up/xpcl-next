@@ -140,28 +140,28 @@ const AvailableRooms = ({ hotel, onRoomSelect, rooms, isProgress }) => {
                     <div>
                       <div className='text-14 lh-1'>Room Total</div>
                       <div className='text-22 fw-500 lh-17 mt-5'>
-                        {h?.tp?.toLocaleString('en-IN', {
+                        {h?.tp?.toLocaleString('en-AE', {
                           maximumFractionDigits: 2,
                           style: 'currency',
-                          currency: 'INR',
+                          currency: 'AED',
                         })}
                       </div>
                       <div className='text-15 fw-500 mt-15'>Price Breakup:</div>
                       <ul className='list-disc y-gap-4 pt-5'>
                         <li className='text-14'>
                           <span style={{ fontWeight: 'bold' }}>Base Fare: </span>
-                          {h?.tfcs?.BF?.toLocaleString('en-IN', {
+                          {h?.tfcs?.BF?.toLocaleString('en-AE', {
                             maximumFractionDigits: 2,
                             style: 'currency',
-                            currency: 'INR',
+                            currency: 'AED',
                           }) || 0}
                         </li>
                         <li className='text-14'>
                           <span style={{ fontWeight: 'bold' }}>Taxes & Fees: </span>
-                          {h?.tfcs?.TAF?.toLocaleString('en-IN', {
+                          {h?.tfcs?.TAF?.toLocaleString('en-AE', {
                             maximumFractionDigits: 2,
                             style: 'currency',
-                            currency: 'INR',
+                            currency: 'AED',
                           }) || 0}
                         </li>
                       </ul>
@@ -184,10 +184,10 @@ const AvailableRooms = ({ hotel, onRoomSelect, rooms, isProgress }) => {
           <div className='col-lg-6 flex items-center gap-2'>
             <div className='text-14 lh-1'>Booking Total</div>
             <div className='text-22 fw-500 lh-17'>
-              {hotel?.tp?.toLocaleString('en-IN', {
+              {hotel?.tp?.toLocaleString('en-AE', {
                 maximumFractionDigits: 2,
                 style: 'currency',
-                currency: 'INR',
+                currency: 'AED',
               })}
             </div>
           </div>

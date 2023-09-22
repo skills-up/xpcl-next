@@ -41,7 +41,7 @@ const ViewPaymentReceipts = () => {
               href={'/dashboard/users/view/' + data.created_by}
             >
               <strong>User #{data.created_by} </strong>[
-              {new Date(data.created_at).toLocaleString('en-IN', {
+              {new Date(data.created_at).toLocaleString('en-AE', {
                 dateStyle: 'medium',
                 timeStyle: 'short',
               })}
@@ -56,7 +56,7 @@ const ViewPaymentReceipts = () => {
               href={'/dashboard/users/view/' + data.updated_by}
             >
               <strong>User #{data.updated_by} </strong>[
-              {new Date(data.updated_at).toLocaleString('en-IN', {
+              {new Date(data.updated_at).toLocaleString('en-AE', {
                 dateStyle: 'medium',
                 timeStyle: 'short',
               })}

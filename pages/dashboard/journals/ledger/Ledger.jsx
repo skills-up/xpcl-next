@@ -120,7 +120,7 @@ const Ledger = () => {
                 //   Cell: (data) => {
                 //     return (
                 //       <span>
-                //         {new Date(data.row.original.date).toLocaleString('en-IN', {
+                //         {new Date(data.row.original.date).toLocaleString('en-AE', {
                 //           dateStyle: 'medium',
                 //         })}
                 //       </span>

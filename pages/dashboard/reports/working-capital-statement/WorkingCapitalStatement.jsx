@@ -70,10 +70,10 @@ const Journals = () => {
                       >
                         <td className='one'>{element}</td>
                         <td className='two'>
-                          {(+data[element]?.total).toLocaleString('en-IN', {
+                          {(+data[element]?.total).toLocaleString('en-AE', {
                             maximumFractionDigits: 2,
                             style: 'currency',
-                            currency: 'INR',
+                            currency: 'AED',
                           })}
                         </td>
                       </tr>
@@ -84,10 +84,10 @@ const Journals = () => {
                               <tr key={ind} className='member'>
                                 <td className='one'>{el.name}</td>
                                 <td className='two'>
-                                  {el.balance.toLocaleString('en-IN', {
+                                  {el.balance.toLocaleString('en-AE', {
                                     maximumFractionDigits: 2,
                                     style: 'currency',
-                                    currency: 'INR',
+                                    currency: 'AED',
                                   })}
                                 </td>
                               </tr>
@@ -99,10 +99,10 @@ const Journals = () => {
               <tr className='net-cash'>
                 <td className='one'>Net Cash Position</td>
                 <td className='two'>
-                  {netCash.toLocaleString('en-IN', {
+                  {netCash.toLocaleString('en-AE', {
                     maximumFractionDigits: 2,
                     style: 'currency',
-                    currency: 'INR',
+                    currency: 'AED',
                   })}
                 </td>
               </tr>

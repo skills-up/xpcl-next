@@ -67,10 +67,10 @@ function LedgerTable({ data, accountID, accountName, dates }) {
                   <th className='number-col'></th>
                   <th className='number-col'></th>
                   <th className='number-col'>
-                    {(+newData?.opening_balance).toLocaleString('en-IN', {
+                    {(+newData?.opening_balance).toLocaleString('en-AE', {
                       maximumFractionDigits: 2,
                       style: 'currency',
-                      currency: 'INR',
+                      currency: 'AED',
                     })}{' '}
                     {newData?.opening_balance >= 0 ? 'Dr' : 'Cr'}
                   </th>
@@ -81,32 +81,32 @@ function LedgerTable({ data, accountID, accountName, dates }) {
                     return (
                       <tr key={index}>
                         <td>
-                          {new Date(element?.date).toLocaleString('en-IN', {
+                          {new Date(element?.date).toLocaleString('en-AE', {
                             dateStyle: 'medium',
                           })}
                         </td>
                         <td className='narration'>{element?.narration}</td>
                         <td className='number-col'>
                           {accountID === element.dr_account_id &&
-                            `${(+element.amount).toLocaleString('en-IN', {
+                            `${(+element.amount).toLocaleString('en-AE', {
                               maximumFractionDigits: 2,
                               style: 'currency',
-                              currency: 'INR',
+                              currency: 'AED',
                             })}`}
                         </td>
                         <td className='number-col'>
                           {accountID === element.cr_account_id &&
-                            `${(+element.amount).toLocaleString('en-IN', {
+                            `${(+element.amount).toLocaleString('en-AE', {
                               maximumFractionDigits: 2,
                               style: 'currency',
-                              currency: 'INR',
+                              currency: 'AED',
                             })}`}
                         </td>
                         <td className='number-col'>
-                          {Math.abs(element?.total).toLocaleString('en-IN', {
+                          {Math.abs(element?.total).toLocaleString('en-AE', {
                             maximumFractionDigits: 2,
                             style: 'currency',
-                            currency: 'INR',
+                            currency: 'AED',
                           })}{' '}
                           {element?.total >= 0 ? 'Dr' : 'Cr'}
                         </td>
@@ -119,10 +119,10 @@ function LedgerTable({ data, accountID, accountName, dates }) {
                   <th></th>
                   <th></th>
                   <th className='number-col'>
-                    {Math.abs(newData?.total).toLocaleString('en-IN', {
+                    {Math.abs(newData?.total).toLocaleString('en-AE', {
                       maximumFractionDigits: 2,
                       style: 'currency',
-                      currency: 'INR',
+                      currency: 'AED',
                     })}{' '}
                     {newData?.total >= 0 ? 'Dr' : 'Cr'}
                   </th>
@@ -160,18 +160,18 @@ function LedgerTable({ data, accountID, accountName, dates }) {
                     narration: 'Opening Balance',
                     dr:
                       +entry?.dr_account_id === +accountID
-                        ? Math.abs(entry?.amount).toLocaleString('en-IN', {
+                        ? Math.abs(entry?.amount).toLocaleString('en-AE', {
                             maximumFractionDigits: 2,
                             style: 'currency',
-                            currency: 'INR',
+                            currency: 'AED',
                           })
                         : '',
                     cr:
                       +entry?.cr_account_id === +accountID
-                        ? Math.abs(entry?.amount).toLocaleString('en-IN', {
+                        ? Math.abs(entry?.amount).toLocaleString('en-AE', {
                             maximumFractionDigits: 2,
                             style: 'currency',
-                            currency: 'INR',
+                            currency: 'AED',
                           })
                         : '',
                     balance: entry?.total,

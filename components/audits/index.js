@@ -76,7 +76,7 @@ const Audit = ({ data = undefined, url }) => {
                 {
                   <span>
                     [
-                    {new Date(element?.date).toLocaleString('en-IN', {
+                    {new Date(element?.date).toLocaleString('en-AE', {
                       dateStyle: 'medium',
                     })}
                     ]
@@ -86,7 +86,7 @@ const Audit = ({ data = undefined, url }) => {
               </h5>
               <span>
                 <em>
-                  {new Date(element?.created_at).toLocaleString('en-IN', {
+                  {new Date(element?.created_at).toLocaleString('en-AE', {
                     dateStyle: 'medium',
                     timeStyle: 'short',
                   })}
@@ -102,7 +102,7 @@ const Audit = ({ data = undefined, url }) => {
                 //   Cell: (data) => {
                 //     return (
                 //       <span>
-                //         {new Date(data.row.original.date).toLocaleString('en-IN', {
+                //         {new Date(data.row.original.date).toLocaleString('en-AE', {
                 //           dateStyle: 'medium',
                 //         })}
                 //       </span>
@@ -128,10 +128,10 @@ const Audit = ({ data = undefined, url }) => {
                   Cell: (data) => {
                     return (
                       <div className='text-right'>
-                        {(+data.row.original.amount).toLocaleString('en-IN', {
+                        {(+data.row.original.amount).toLocaleString('en-AE', {
                           maximumFractionDigits: 2,
                           style: 'currency',
-                          currency: 'INR',
+                          currency: 'AED',
                         })}
                       </div>
                     );

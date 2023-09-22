@@ -46,7 +46,7 @@ const ViewBooking = () => {
               href={'/dashboard/users/view/' + data.created_by}
             >
               <strong>User #{data.created_by} </strong>[
-              {new Date(data.created_at).toLocaleString('en-IN', {
+              {new Date(data.created_at).toLocaleString('en-AE', {
                 dateStyle: 'medium',
                 timeStyle: 'short',
               })}
@@ -61,7 +61,7 @@ const ViewBooking = () => {
               href={'/dashboard/users/view/' + data.updated_by}
             >
               <strong>User #{data.updated_by} </strong>[
-              {new Date(data.updated_at).toLocaleString('en-IN', {
+              {new Date(data.updated_at).toLocaleString('en-AE', {
                 dateStyle: 'medium',
                 timeStyle: 'short',
               })}
@@ -230,7 +230,7 @@ const ViewBooking = () => {
         return (
           <div>
             {data.row.original.travel_date
-              ? new Date(data.row.original.travel_date).toLocaleString('en-IN', {
+              ? new Date(data.row.original.travel_date).toLocaleString('en-AE', {
                   dateStyle: 'medium',
                 })
               : ''}

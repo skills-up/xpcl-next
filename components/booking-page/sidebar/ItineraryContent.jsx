@@ -59,12 +59,12 @@ const ItineraryContent = ({ pd, checkIn }) => {
                   {item.am === 0 ? (
                     <span className='text-success'>
                       Cancel for free between{' '}
-                      {new Date(item.fdt).toLocaleString('en-IN', {
+                      {new Date(item.fdt).toLocaleString('en-AE', {
                         dateStyle: 'long',
                         timeStyle: 'short',
                       })}{' '}
                       and{' '}
-                      {new Date(item.tdt).toLocaleString('en-IN', {
+                      {new Date(item.tdt).toLocaleString('en-AE', {
                         dateStyle: 'long',
                         timeStyle: 'short',
                       })}
@@ -73,24 +73,24 @@ const ItineraryContent = ({ pd, checkIn }) => {
                     <span>
                       Cancellation between{' '}
                       <span className='text-blue-1'>
-                        {new Date(item.fdt).toLocaleString('en-IN', {
+                        {new Date(item.fdt).toLocaleString('en-AE', {
                           dateStyle: 'long',
                           timeStyle: 'short',
                         })}
                       </span>{' '}
                       and{' '}
                       <span className='text-blue-1'>
-                        {new Date(item.tdt).toLocaleString('en-IN', {
+                        {new Date(item.tdt).toLocaleString('en-AE', {
                           dateStyle: 'long',
                           timeStyle: 'short',
                         })}
                       </span>{' '}
                       will cost{' '}
                       <span className='text-danger'>
-                        {item.am.toLocaleString('en-IN', {
+                        {item.am.toLocaleString('en-AE', {
                           maximumFractionDigits: 2,
                           style: 'currency',
-                          currency: 'INR',
+                          currency: 'AED',
                         })}
                       </span>
                       .
@@ -118,7 +118,7 @@ const ItineraryContent = ({ pd, checkIn }) => {
               <div className='text-16 lh-15 fw-500'>
                 Check-In{' '}
                 {new Date(checkIn)
-                  .toLocaleString('en-IN', {
+                  .toLocaleString('en-AE', {
                     dateStyle: 'long',
                     timeStyle: 'short',
                   })

@@ -53,7 +53,7 @@ const PaymentReceipts = () => {
       Cell: (data) => {
         return (
           <span>
-            {new Date(data.row.original.date).toLocaleString('en-IN', {
+            {new Date(data.row.original.date).toLocaleString('en-AE', {
               dateStyle: 'medium',
             })}
           </span>
@@ -85,10 +85,10 @@ const PaymentReceipts = () => {
       Cell: (data) => {
         return (
           <span>
-            {(+data.row.original.amount).toLocaleString('en-IN', {
+            {(+data.row.original.amount).toLocaleString('en-AE', {
               maximumFractionDigits: 2,
               style: 'currency',
-              currency: 'INR',
+              currency: 'AED',
             })}
           </span>
         );
