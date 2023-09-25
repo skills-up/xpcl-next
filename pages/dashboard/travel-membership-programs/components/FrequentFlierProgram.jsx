@@ -171,11 +171,8 @@ const FrequentFlierProgram = () => {
         downloadCSV
         CSVName='FrequentFlierPrograms.csv'
         columns={columns}
-        data={frequentFlierPrograms.filter(
-          (perm) =>
-            perm?.code?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            perm?.type?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            perm?.program?.toLowerCase().includes(searchQuery.toLowerCase())
+        data={frequentFlierPrograms.filter((perm) =>
+          Object.values(perm).join(',').toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>

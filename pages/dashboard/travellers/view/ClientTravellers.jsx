@@ -169,7 +169,7 @@ const ClientTravellers = () => {
         CSVName='ClientTravellers.csv'
         columns={columns}
         data={clientTravellers.filter((perm) =>
-          perm?.client_id?.toString()?.toLowerCase().includes(searchQuery.toLowerCase())
+          Object.values(perm).join(',').toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>

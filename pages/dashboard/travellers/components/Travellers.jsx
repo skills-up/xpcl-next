@@ -166,13 +166,8 @@ const Travellers = () => {
         downloadCSV
         CSVName='Travellers.csv'
         columns={columns}
-        data={travellers.filter(
-          (perm) =>
-            perm?.first_name
-              ?.toString()
-              ?.toLowerCase()
-              .includes(searchQuery.toLowerCase()) ||
-            perm?.last_name?.toString()?.toLowerCase().includes(searchQuery.toLowerCase())
+        data={travellers.filter((perm) =>
+          Object.values(perm).join(',').toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>

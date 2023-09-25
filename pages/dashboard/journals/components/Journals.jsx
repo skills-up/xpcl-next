@@ -101,7 +101,22 @@ const Journals = () => {
 
   // const colors = ['dark-1', 'dark-4', 'blue-1', 'green-2', 'yellow-3', 'brown-1', 'purple-1', 'red-2'];
 
-  const colors = ['#00C', '#C00', '#0C0', '#0CC', '#CC0', '#C0C', '#000', '#009', '#900', '#090', '#099', '#990', '#909', '#999'];
+  const colors = [
+    '#00C',
+    '#C00',
+    '#0C0',
+    '#0CC',
+    '#CC0',
+    '#C0C',
+    '#000',
+    '#009',
+    '#900',
+    '#090',
+    '#099',
+    '#990',
+    '#909',
+    '#999',
+  ];
   const allottedColors = {};
   const getColor = (text) => {
     let color = allottedColors[text];
@@ -155,18 +170,22 @@ const Journals = () => {
                   accessor: 'dr_account_name',
                   Cell: (data) => {
                     return (
-                      <span style={{color: getColor(data.row.original.dr_account_id)}}>{data.row.original.dr_account_name}</span>
-                    )
-                  }
+                      <span style={{ color: getColor(data.row.original.dr_account_id) }}>
+                        {data.row.original.dr_account_name}
+                      </span>
+                    );
+                  },
                 },
                 {
                   Header: 'Credit To',
                   accessor: 'cr_account_name',
                   Cell: (data) => {
                     return (
-                      <span style={{color: getColor(data.row.original.cr_account_id)}}>{data.row.original.cr_account_name}</span>
-                    )
-                  }
+                      <span style={{ color: getColor(data.row.original.cr_account_id) }}>
+                        {data.row.original.cr_account_name}
+                      </span>
+                    );
+                  },
                 },
                 {
                   Header: 'Amount',
@@ -231,10 +250,11 @@ const Journals = () => {
         fullData={journals}
         data={
           journals.data
-            ? journals.data.filter(
-                (perm) =>
-                  perm?.reference?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                  perm?.narration?.toLowerCase().includes(searchQuery.toLowerCase())
+            ? journals.data.filter((perm) =>
+                Object.values(perm)
+                  .join(',')
+                  .toLowerCase()
+                  .includes(searchQuery.toLowerCase())
               )
             : []
         }

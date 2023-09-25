@@ -166,10 +166,8 @@ const Users = () => {
         downloadCSV
         CSVName='Users.csv'
         columns={columns}
-        data={users.filter(
-          (perm) =>
-            perm?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            perm?.email?.toLowerCase().includes(searchQuery.toLowerCase())
+        data={users.filter((perm) =>
+          Object.values(perm).join(',').toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>

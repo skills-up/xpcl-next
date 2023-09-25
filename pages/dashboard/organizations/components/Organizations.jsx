@@ -202,14 +202,11 @@ const Organizations = () => {
               return perm;
             }
           })
-          .filter(
-            (perm) =>
-              perm?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              perm?.code?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              perm?.address?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              perm?.contact_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              perm?.contact_email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              perm?.gstn?.toLowerCase().includes(searchQuery.toLowerCase())
+          .filter((perm) =>
+            Object.values(perm)
+              .join(',')
+              .toLowerCase()
+              .includes(searchQuery.toLowerCase())
           )}
       />
     </div>
