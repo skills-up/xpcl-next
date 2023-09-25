@@ -1549,6 +1549,10 @@ table.table-3 {
     > tr + tr {
       border-top: 1px dashed var(--color-border);
     }
+
+    tr.row-disabled {
+      background-color: #eee;
+    }
   }
 
   td {
