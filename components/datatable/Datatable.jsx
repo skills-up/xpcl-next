@@ -189,7 +189,6 @@ const Datatable = ({
           <tbody {...getTableBodyProps()}>
             {page.map((row, i) => {
               prepareRow(row);
-              console.log('Row', row);
               return (
                 <tr key={i} {...row.getRowProps()} style={getRowStyle ? getRowStyle(row) : undefined} className={getRowClassName ? getRowClassName(row) : undefined}>
                   {row.cells.map((cell, index) => {
