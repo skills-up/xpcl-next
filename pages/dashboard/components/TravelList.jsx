@@ -129,6 +129,7 @@ const TravelList = () => {
         CSVName='TravelList.csv'
         columns={columns}
         data={travelSectors}
+        getRowClassName={(row) => row.original.boarding_pass ? 'row-disabled' : ''}
       />
     </div>
   );
