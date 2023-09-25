@@ -188,7 +188,7 @@ const PartialRefunds = () => {
         CSVName='PartialRefunds.csv'
         columns={columns}
         data={partialRefunds.filter((perm) =>
-          perm?.number?.toLowerCase().includes(searchQuery.toLowerCase())
+          Object.values(perm).join(',').toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>

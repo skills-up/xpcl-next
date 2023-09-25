@@ -174,11 +174,7 @@ const Refunds = () => {
         columns={columns}
         data={refunds.filter(
           (perm) =>
-            perm?.booking_id
-              ?.toString()
-              ?.toLowerCase()
-              .includes(searchQuery.toLowerCase()) ||
-            perm?.number?.toLowerCase().includes(searchQuery.toLowerCase())
+          Object.values(perm).join(',').toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>

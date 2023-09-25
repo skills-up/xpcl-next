@@ -166,11 +166,8 @@ const Accounts = () => {
         downloadCSV
         CSVName='Accounts.csv'
         columns={columns}
-        data={accounts.filter(
-          (perm) =>
-            perm?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            perm?.year?.toString().toLowerCase().includes(searchQuery.toLowerCase()) ||
-            perm?.account_category_name?.toLowerCase().includes(searchQuery.toLowerCase())
+        data={accounts.filter((perm) =>
+          Object.values(perm).join(',').toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>

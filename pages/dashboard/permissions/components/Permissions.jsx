@@ -163,7 +163,7 @@ const Permissions = () => {
         CSVName='Permissions.csv'
         columns={columns}
         data={permissions.filter((perm) =>
-          perm?.slug?.toLowerCase().includes(searchQuery.toLowerCase())
+          Object.values(perm).join(',').toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>

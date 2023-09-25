@@ -42,22 +42,22 @@ const CommissionRules = () => {
     {
       Header: 'IATA Basic',
       accessor: 'iata_basic',
-      Cell: (data) => data.row?.original?.iata_basic ? 'Yes' : 'No',
+      Cell: (data) => (data.row?.original?.iata_basic ? 'Yes' : 'No'),
     },
     {
       Header: 'IATA YQ',
       accessor: 'iata_yq',
-      Cell: (data) => data.row?.original?.iata_yq ? 'Yes' : 'No',
+      Cell: (data) => (data.row?.original?.iata_yq ? 'Yes' : 'No'),
     },
     {
       Header: 'PLB Basic',
       accessor: 'plb_basic',
-      Cell: (data) => data.row?.original?.plb_basic ? 'Yes' : 'No',
+      Cell: (data) => (data.row?.original?.plb_basic ? 'Yes' : 'No'),
     },
     {
       Header: 'PLB YQ',
       accessor: 'plb_yq',
-      Cell: (data) => data.row?.original?.plb_yq ? 'Yes' : 'No',
+      Cell: (data) => (data.row?.original?.plb_yq ? 'Yes' : 'No'),
     },
     {
       Header: 'Last Updated At',
@@ -180,13 +180,8 @@ const CommissionRules = () => {
         downloadCSV
         CSVName='CommissionRules.csv'
         columns={columns}
-        data={commissionRules.filter(
-          (perm) =>
-            perm?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            perm?.iata_code?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            perm?.timezone?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            perm?.country_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            perm?.city?.toLowerCase().includes(searchQuery.toLowerCase())
+        data={commissionRules.filter((perm) =>
+          Object.values(perm).join(',').toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>
