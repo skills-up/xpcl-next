@@ -7,10 +7,29 @@ import { sendToast } from '../../utils/toastify';
 import ReactToPdf from 'react-to-pdf';
 import { createRef } from 'react';
 import { AiOutlinePrinter } from 'react-icons/ai';
+import { useRouter } from 'next/router';
 
 function LedgerTable({ data, accountID, accountName, dates }) {
   const [newData, setNewData] = useState(null);
   const pdfRef = createRef();
+  const router = useRouter();
+
+  const getDocViewPath = (ref, id) => {
+    switch (ref.charAt(1)) {
+      case 'S':
+        return '/dashboard/bookings/view/'+id;
+      case 'R':
+        return '/dashboard/refunds/view/'+id;
+      case 'P':
+        return '/dashboard/partial-refunds/view/'+id;
+      case 'Y':
+      case 'C':
+      case 'E':
+        return '/dashboard/payment-receitps/view/'+id;
+      default:
+        return '/';
+    }
+  };
 
   useEffect(() => {
     if (data) {
@@ -81,7 +100,9 @@ function LedgerTable({ data, accountID, accountName, dates }) {
                   ?.filter((element) => +element?.amount !== 0)
                   .map((element, index) => {
                     return (
-                      <tr key={index}>
+                      <tr key={index} onClick={() => {
+                        router.push(getDocViewPath(element?.reference, element?.id));
+                      }}>
                         <td>
                           {new Date(element?.date).toLocaleString('en-AE', {
                             dateStyle: 'medium',
