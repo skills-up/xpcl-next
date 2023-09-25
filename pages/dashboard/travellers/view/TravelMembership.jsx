@@ -180,12 +180,8 @@ const TravelMemberships = () => {
         downloadCSV
         CSVName='TravelMemberships.csv'
         columns={columns}
-        data={travelMemberships.filter(
-          (perm) =>
-            perm?.username?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            perm?.membership_type?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            perm?.provider?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            perm?.number?.toLowerCase().includes(searchQuery.toLowerCase())
+        data={travelMemberships.filter((perm) =>
+          Object.values(perm).join(',').toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>

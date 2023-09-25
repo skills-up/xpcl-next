@@ -10,14 +10,14 @@ import { BsTrash3 } from 'react-icons/bs';
 import { IoCopyOutline } from 'react-icons/io5';
 import { useRouter } from 'next/router';
 
-const ClosingBalances = ({accountClosingBalances = []}) => {
+const ClosingBalances = ({ accountClosingBalances = [] }) => {
   const [closingBalances, setClosingBalances] = useState(accountClosingBalances);
   const [searchQuery, setSearchQuery] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
   const router = useRouter();
 
- /*  useEffect(() => {
+  /*  useEffect(() => {
     getClosingBalances();
   }, [router.isReady]);
 
@@ -105,7 +105,7 @@ const ClosingBalances = ({accountClosingBalances = []}) => {
         CSVName='ClosingBalances.csv'
         columns={columns}
         data={closingBalances.filter((perm) =>
-          perm?.amount?.toLowerCase().includes(searchQuery.toLowerCase())
+          Object.values(perm).join(',').toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>

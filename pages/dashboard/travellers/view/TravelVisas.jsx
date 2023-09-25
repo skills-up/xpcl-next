@@ -192,10 +192,8 @@ const TravelVisas = () => {
         downloadCSV
         CSVName='TravelVisas.csv'
         columns={columns}
-        data={travelVisas.filter(
-          (perm) =>
-            perm?.visa_number?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            perm?.issue_place?.toLowerCase().includes(searchQuery.toLowerCase())
+        data={travelVisas.filter((perm) =>
+          Object.values(perm).join(',').toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>

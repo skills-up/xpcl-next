@@ -181,7 +181,7 @@ const CreditCards = () => {
         CSVName='CreditCards.csv'
         columns={columns}
         data={creditCards.filter((perm) =>
-          perm?.name_on_card?.toLowerCase().includes(searchQuery.toLowerCase())
+          Object.values(perm).join(',').toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>

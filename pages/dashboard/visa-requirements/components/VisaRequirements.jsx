@@ -169,16 +169,8 @@ const VisaRequirements = () => {
         downloadCSV
         CSVName='VisaRequirements.csv'
         columns={columns}
-        data={visaRequirements.filter(
-          (perm) =>
-            perm?.country_name
-              ?.toString()
-              ?.toLowerCase()
-              ?.includes(searchQuery.toLowerCase()) ||
-            perm?.consulate_city
-              ?.toString()
-              ?.toLowerCase()
-              ?.includes(searchQuery.toLowerCase())
+        data={visaRequirements.filter((perm) =>
+          Object.values(perm).join(',').toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>

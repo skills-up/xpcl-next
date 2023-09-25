@@ -162,10 +162,8 @@ const Countries = () => {
         downloadCSV
         CSVName='Countries.csv'
         columns={columns}
-        data={countries.filter(
-          (perm) =>
-            perm?.code?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            perm?.name?.toLowerCase().includes(searchQuery.toLowerCase())
+        data={countries.filter((perm) =>
+          Object.values(perm).join(',').toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>

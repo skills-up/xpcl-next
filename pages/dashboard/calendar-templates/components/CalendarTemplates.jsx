@@ -169,7 +169,7 @@ const CalendarTemplates = () => {
         CSVName='CalendarTemplates.csv'
         columns={columns}
         data={calendarTemplates.filter((perm) =>
-          perm?.name?.toLowerCase().includes(searchQuery.toLowerCase())
+          Object.values(perm).join(',').toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>

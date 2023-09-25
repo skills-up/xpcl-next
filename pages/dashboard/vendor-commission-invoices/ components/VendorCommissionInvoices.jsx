@@ -184,11 +184,8 @@ const VendorCommissionInvoices = () => {
         downloadCSV
         CSVName='VendorCommissionInvoices.csv'
         columns={columns}
-        data={vendorCommissionInvoices.filter(
-          (perm) =>
-            perm?.vendor_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            perm?.number?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            perm?.gstn?.toLowerCase().includes(searchQuery.toLowerCase())
+        data={vendorCommissionInvoices.filter((perm) =>
+          Object.values(perm).join(',').toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>

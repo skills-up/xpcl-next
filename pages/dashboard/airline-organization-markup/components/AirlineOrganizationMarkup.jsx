@@ -177,11 +177,8 @@ const AirlineOrganizationMarkup = () => {
         downloadCSV
         CSVName='AirlineOrganizationMarkup.csv'
         columns={columns}
-        data={airlineOrganizationMarkup.filter(
-          (perm) =>
-            perm?.markup_percent?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            perm?.markup_amount?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            perm?.airline_name?.toLowerCase().includes(searchQuery.toLowerCase())
+        data={airlineOrganizationMarkup.filter((perm) =>
+          Object.values(perm).join(',').toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>

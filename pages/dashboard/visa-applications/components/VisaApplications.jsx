@@ -189,14 +189,10 @@ const VisaApplications = () => {
         data={visaApplications.filter(
           (perm) =>
             (!status?.value || perm?.status == status.value) &&
-            (perm?.visa_requirement?.country_name
-              ?.toString()
-              ?.toLowerCase()
-              ?.includes(searchQuery.toLowerCase()) ||
-              perm?.status
-                ?.toString()
-                ?.toLowerCase()
-                ?.includes(searchQuery.toLowerCase()))
+            Object.values(perm)
+              .join(',')
+              .toLowerCase()
+              .includes(searchQuery.toLowerCase())
         )}
       />
     </div>

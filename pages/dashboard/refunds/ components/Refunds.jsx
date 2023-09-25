@@ -172,13 +172,8 @@ const Refunds = () => {
         downloadCSV
         CSVName='Refunds.csv'
         columns={columns}
-        data={refunds.filter(
-          (perm) =>
-            perm?.booking_id
-              ?.toString()
-              ?.toLowerCase()
-              .includes(searchQuery.toLowerCase()) ||
-            perm?.number?.toLowerCase().includes(searchQuery.toLowerCase())
+        data={refunds.filter((perm) =>
+          Object.values(perm).join(',').toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>

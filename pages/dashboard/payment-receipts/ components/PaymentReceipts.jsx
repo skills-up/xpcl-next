@@ -251,10 +251,11 @@ const PaymentReceipts = () => {
               return perm;
             }
           })
-          .filter(
-            (perm) =>
-              perm?.type?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              perm?.number?.toLowerCase().includes(searchQuery.toLowerCase())
+          .filter((perm) =>
+            Object.values(perm)
+              .join(',')
+              .toLowerCase()
+              .includes(searchQuery.toLowerCase())
           )}
       />
     </div>

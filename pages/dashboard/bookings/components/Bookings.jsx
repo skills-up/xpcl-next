@@ -244,14 +244,8 @@ const Bookings = () => {
         downloadCSV
         CSVName='Invoices.csv'
         columns={columns}
-        data={bookings.filter(
-          (perm) =>
-            perm?.booking_type?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            perm?.status?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            perm?.payment_account_name
-              ?.toLowerCase()
-              .includes(searchQuery.toLowerCase()) ||
-            perm?.number?.toLowerCase().includes(searchQuery.toLowerCase())
+        data={bookings.filter((perm) =>
+          Object.values(perm).join(',').toLowerCase().includes(searchQuery.toLowerCase())
         )}
       />
     </div>

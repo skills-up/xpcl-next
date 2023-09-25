@@ -54,6 +54,7 @@ function LedgerTable({ data, accountID, accountName, dates }) {
               <thead>
                 <tr>
                   <th>Date</th>
+                  <th>Doc. No.</th>
                   <th>Narration</th>
                   <th className='number-col'>Dr</th>
                   <th className='number-col'>Cr</th>
@@ -62,6 +63,7 @@ function LedgerTable({ data, accountID, accountName, dates }) {
               </thead>
               <tbody>
                 <tr className='balance-display-row'>
+                  <th></th>
                   <th></th>
                   <th>Opening Balance</th>
                   <th className='number-col'></th>
@@ -85,6 +87,7 @@ function LedgerTable({ data, accountID, accountName, dates }) {
                             dateStyle: 'medium',
                           })}
                         </td>
+                        <td className='reference'>{element?.reference}</td>
                         <td className='narration'>{element?.narration}</td>
                         <td className='number-col'>
                           {accountID === element.dr_account_id &&
@@ -114,6 +117,7 @@ function LedgerTable({ data, accountID, accountName, dates }) {
                     );
                   })}
                 <tr className='balance-display-row'>
+                  <th></th>
                   <th></th>
                   <th>Closing Balance</th>
                   <th></th>
@@ -145,6 +149,7 @@ function LedgerTable({ data, accountID, accountName, dates }) {
                 // Adding Opening Balance
                 temp.push({
                   date: '',
+                  reference: '',
                   narration: 'Opening Balance',
                   dr: '',
                   cr: '',
@@ -157,7 +162,8 @@ function LedgerTable({ data, accountID, accountName, dates }) {
                       date: entry?.date,
                       format: 'YYYY-MM-DD',
                     }).format('DD-MMMM-YYYY'),
-                    narration: 'Opening Balance',
+                    reference: entry?.reference,
+                    narration: entry?.narration,
                     dr:
                       +entry?.dr_account_id === +accountID
                         ? Math.abs(entry?.amount).toLocaleString('en-IN', {
@@ -180,6 +186,7 @@ function LedgerTable({ data, accountID, accountName, dates }) {
                 // Adding Closing Balance
                 temp.push({
                   date: '',
+                  reference: '',
                   narration: 'Closing Balance',
                   dr: '',
                   cr: '',
