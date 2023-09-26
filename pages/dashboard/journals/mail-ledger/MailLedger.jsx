@@ -20,7 +20,8 @@ const MailLedger = () => {
   const [subject, setSubject] = useState(null);
   const [body, setBody] = useState(null);
   const [references, setReferences] = useState([]);
-  const [ledgerUrl, setLedgerUrl] = useState(null);
+  const [ledgerPDFUrl, setLedgerPDFUrl] = useState(null);
+  const [ledgerCSVUrl, setLedgerCSVUrl] = useState(null);
   const [files, setFiles] = useState([]);
 
   const router = useRouter();
@@ -74,7 +75,8 @@ const MailLedger = () => {
         )}\n\nKindly process the statement at the earliest and oblige.\n\nThank You\n\nRegards\nNarayan.`
       );
       setReferences(response.data?.references.map((e) => ({ value: e, include: true })));
-      setLedgerUrl(response.data?.ledger_url);
+      setLedgerPDFUrl(response.data?.ledger_pdf_url);
+      setLedgerCSVUrl(response.data?.ledger_csv_url);
     } else {
       sendToast(
         'error',
@@ -93,7 +95,8 @@ const MailLedger = () => {
     formData.append('email', email);
     formData.append('subject', subject);
     formData.append('body', body.replaceAll('\n', '<br/>'));
-    formData.append('ledger_url', encodeURI(ledgerUrl));
+    formData.append('ledger_pdf_url', encodeURI(ledgerPDFUrl));
+    formData.append('ledger_csv_url', encodeURI(ledgerCSVUrl));
     for (let ref of references) {
       if (ref.include) {
         formData.append('references[]', ref.value);
@@ -188,14 +191,25 @@ const MailLedger = () => {
             </label>
           </div>
           <h6 className='mt-20'>Ledger Attachments</h6>
-          <div className='d-flex items-center gap-3 mt-10'>
+          <div className='d-flex col-lg-4 items-center gap-3 mt-10'>
             <ReactSwitch
-              onChange={() => setLedgerUrl((prev) => (prev ? '' : ledgerData.ledger_url))}
-              checked={!!ledgerUrl}
+              onChange={() => setLedgerPDFUrl((prev) => (prev ? '' : ledgerData.ledger_pdf_url))}
+              checked={!!ledgerPDFUrl}
             />
             <label>
-              <a href={ledgerData.ledger_url} className='btn-link' target='_blank'>
-                Ledger Statement
+              <a href={ledgerData.ledger_pdf_url} className='btn-link' target='_blank'>
+                Ledger Statement - PDF
+              </a>
+            </label>
+          </div>
+          <div className='d-flex col-lg-4 items-center gap-3 mt-10'>
+            <ReactSwitch
+              onChange={() => setLedgerCSVUrl((prev) => (prev ? '' : ledgerData.ledger_csv_url))}
+              checked={!!ledgerCSVUrl}
+            />
+            <label>
+              <a href={ledgerData.ledger_csv_url} className='btn-link' target='_blank'>
+                Ledger Statement - CSV
               </a>
             </label>
           </div>
