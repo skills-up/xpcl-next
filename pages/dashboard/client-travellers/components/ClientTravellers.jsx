@@ -38,6 +38,10 @@ const ClientTravellers = () => {
       accessor: 'traveller_name',
     },
     {
+      Header: 'Client Name',
+      accessor: 'client_name',
+    },
+    {
       Header: 'Actions',
       disableSortBy: true,
       alignRight: true,
