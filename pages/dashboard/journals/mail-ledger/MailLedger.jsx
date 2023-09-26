@@ -95,8 +95,12 @@ const MailLedger = () => {
     formData.append('email', email);
     formData.append('subject', subject);
     formData.append('body', body.replaceAll('\n', '<br/>'));
-    formData.append('ledger_pdf_url', encodeURI(ledgerPDFUrl));
-    formData.append('ledger_csv_url', encodeURI(ledgerCSVUrl));
+    if (ledgerPDFUrl?.length) {
+      formData.append('ledger_pdf_url', encodeURI(ledgerPDFUrl));
+    }
+    if (ledgerCSVUrl?.length) {
+      formData.append('ledger_csv_url', encodeURI(ledgerCSVUrl));
+    }
     for (let ref of references) {
       if (ref.include) {
         formData.append('references[]', ref.value);
