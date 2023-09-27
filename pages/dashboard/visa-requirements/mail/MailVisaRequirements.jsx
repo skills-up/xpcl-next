@@ -105,7 +105,7 @@ const MailVisaRequirements = () => {
         </label>
       </div>
       <h6 className='mt-10'>Attachments</h6>
-      <div className='col-12 form-input'>
+      <div className='row form-input'>
         {files.map(url => <div className='col-12 col-lg-6'>
           <IoDocumentAttachOutline/>
           <a href={url} target='_blank' className='btn btn-link'>{url.split('/').at(-1)}</a>
