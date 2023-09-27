@@ -67,6 +67,10 @@ const Organizations = () => {
       accessor: 'contact_email',
     },
     {
+      Header: 'Contact Phone',
+      accessor: 'contact_phone',
+    },
+    {
       Header: 'GSTN',
       accessor: 'gstn',
     },
