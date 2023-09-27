@@ -4,7 +4,7 @@ import ActionsButton from '../../../../components/actions-button/ActionsButton';
 import Datatable from '../../../../components/datatable/Datatable';
 import { sendToast } from '../../../../utils/toastify';
 import ConfirmationModal from '../../../../components/confirm-modal';
-import { AiOutlineEye } from 'react-icons/ai';
+import { AiOutlineEye, AiOutlineMail } from 'react-icons/ai';
 import { HiOutlinePencilAlt } from 'react-icons/hi';
 import { BsTrash3 } from 'react-icons/bs';
 import { IoCopyOutline } from 'react-icons/io5';
@@ -97,6 +97,14 @@ const VisaRequirements = () => {
                       '/dashboard/visa-requirements/clone/' + data.row.original.id
                     ),
                   icon: <IoCopyOutline />,
+                },
+                {
+                  label: 'Email',
+                  onClick: () =>
+                    window.location.assign(
+                      '/dashboard/visa-requirements/mail/' + data.row.original.id
+                    ),
+                  icon: <AiOutlineMail />,
                 },
                 {
                   label: 'Delete',
