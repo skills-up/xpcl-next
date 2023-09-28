@@ -11,6 +11,7 @@ import { deleteItem, getItem } from '../../../../api/xplorzApi';
 import ViewTable from '../../../../components/view-table';
 import Audit from '../../../../components/audits';
 import { BsDashSquare, BsPlusSquare } from 'react-icons/bs';
+import { AiOutlineFilePdf } from 'react-icons/ai';
 
 const ViewVendorCommissionInvoices = () => {
   const [vendorCommissionInvoice, setVendorCommissionInvoice] = useState([]);
@@ -162,6 +163,15 @@ const ViewVendorCommissionInvoices = () => {
                     setIdToDelete(router.query.view);
                     setConfirmDelete(true);
                   }}
+                  extraButtons={[
+                    {
+                      onClick: (e) => window.open(vendorCommissionInvoice?.pdf_path, '_blank'),
+                      text: 'View PDF',
+                      icon: <AiOutlineFilePdf/>,
+                      classNames: 'btn btn-secondary d-flex items-center gap-1',
+                    }
+                  ]}
+
                 />
                 <hr className='my-4' />
                 <div>
