@@ -9,6 +9,7 @@ import { sendToast } from '../../../../utils/toastify';
 import { useEffect, useState } from 'react';
 import { deleteItem, getItem } from '../../../../api/xplorzApi';
 import ViewTable from '../../../../components/view-table';
+import { AiOutlineMail } from 'react-icons/ai';
 
 const ViewVisaRequirements = () => {
   const [visaRequirements, setVisaRequirements] = useState([]);
@@ -182,6 +183,14 @@ const ViewVisaRequirements = () => {
                     setIdToDelete(router.query.view);
                     setConfirmDelete(true);
                   }}
+                  extraButtons={[
+                    {
+                      onClick: (e) => router.push('/dashboard/visa-requirements/mail/' + router.query.view),
+                      text: 'Send as Email',
+                      icon: <AiOutlineMail/>,
+                      classNames: 'btn btn-secondary d-flex items-center gap-1',
+                    }
+                  ]}
                 />
               </div>
             </div>

@@ -116,7 +116,7 @@ const MailVisaRequirements = () => {
           <i className='icon-email-2 p-1'></i>
           Send Mail
         </button>
-        <button type='reset' className='button btn btn-danger'>
+        <button type='reset' className='button btn btn-danger' onClick={() => window.history.back(-1)}>
           <i className='icon-close p-1'></i>
           Cancel
         </button>
