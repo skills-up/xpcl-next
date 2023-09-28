@@ -17,6 +17,7 @@ const AddNewOrganization = () => {
   const [code, setCode] = useState('');
   const [contactName, setContactName] = useState('');
   const [contactEmail, setContactEmail] = useState('');
+  const [contactPhone, setContactPhone] = useState('');
   const [address, setAddress] = useState('');
   const [gstn, setGstn] = useState('');
   const [useGstn, setUseGstn] = useState(false);
@@ -76,6 +77,7 @@ const AddNewOrganization = () => {
       code,
       contact_name: contactName,
       contact_email: contactEmail,
+      contact_phone: contactPhone,
       address,
       gstn,
       use_gstn: useGstn,
@@ -131,7 +133,7 @@ const AddNewOrganization = () => {
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
-                    <div className='form-input-select'>
+                    <div className='form-input-select col-12 col-lg-6'>
                       <label>
                         Select Organization Type<span className='text-danger'>*</span>
                       </label>
@@ -142,7 +144,7 @@ const AddNewOrganization = () => {
                         onChange={(id) => setType(id)}
                       />
                     </div>
-                    <div className='form-input-select'>
+                    <div className='form-input-select col-12 col-lg-6'>
                       <label>Select Calendar Template</label>
                       <Select
                         isClearable
@@ -152,7 +154,7 @@ const AddNewOrganization = () => {
                         onChange={(id) => setCalenderTemplateID(id)}
                       />
                     </div>
-                    <div className='col-12'>
+                    <div className='col-12 col-lg-9'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setName(e.target.value)}
@@ -166,7 +168,7 @@ const AddNewOrganization = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <div className='col-12 col-lg-3'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setCode(e.target.value)}
@@ -177,29 +179,7 @@ const AddNewOrganization = () => {
                         <label className='lh-1 text-16 text-light-1'>Code</label>
                       </div>
                     </div>
-                    <div className='col-12'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setContactName(e.target.value)}
-                          value={contactName}
-                          placeholder=' '
-                          type='text'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>Contact Name</label>
-                      </div>
-                    </div>
-                    <div className='col-12'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setContactEmail(e.target.value)}
-                          value={contactEmail}
-                          placeholder=' '
-                          type='email'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>Contact Email</label>
-                      </div>
-                    </div>
-                    <div className='col-12'>
+                    <div className='col-12 col-lg-9'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setAddress(e.target.value)}
@@ -210,7 +190,7 @@ const AddNewOrganization = () => {
                         <label className='lh-1 text-16 text-light-1'>Address</label>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <div className='col-12 col-lg-3'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setGstn(e.target.value)}
@@ -222,7 +202,41 @@ const AddNewOrganization = () => {
                         <label className='lh-1 text-16 text-light-1'>GSTN</label>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <div className='col-12 col-lg-4'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setContactName(e.target.value)}
+                          value={contactName}
+                          placeholder=' '
+                          type='text'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>Contact Name</label>
+                      </div>
+                    </div>
+                    <div className='col-12 col-lg-4'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setContactEmail(e.target.value)}
+                          value={contactEmail}
+                          placeholder=' '
+                          type='email'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>Contact Email</label>
+                      </div>
+                    </div>
+                    <div className='col-12 col-lg-4'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setContactPhone(e.target.value)}
+                          value={contactPhone}
+                          placeholder=' '
+                          pattern='\d{10,12}'
+                          title='10-12 digit phone number'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>Contact Phone (with Country Code)</label>
+                      </div>
+                    </div>
+                    <div className='col-12 col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setFarePercent(e.target.value)}
@@ -236,7 +250,7 @@ const AddNewOrganization = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <div className='col-12 col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setVendorServicePercent(e.target.value)}
@@ -250,7 +264,7 @@ const AddNewOrganization = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-12'>
+                    <div className='col-12 col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setVendorTDSPercent(e.target.value)}

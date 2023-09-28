@@ -38,6 +38,10 @@ const Bookings = () => {
 
   const columns = [
     {
+      Header: 'Booking Date',
+      accessor: 'booking_date',
+    },
+    {
       Header: 'Invoice Number',
       accessor: 'number',
     },
@@ -68,19 +72,6 @@ const Bookings = () => {
     {
       Header: 'Airline / Type',
       accessor: 'airline_name',
-    },
-    {
-      Header: 'Booking Date',
-      Cell: (data) => {
-        return (
-          <span>
-            {data.row?.original?.booking_date?.toLocaleString('en-IN', {
-              dateStyle: 'medium',
-              timeStyle: 'short',
-            })}
-          </span>
-        );
-      },
     },
     {
       Header: 'Payment Account Name',
@@ -240,7 +231,6 @@ const Bookings = () => {
       </div>
       {/* Data Table */}
       <Datatable
-        viewLink={'/dashboard/bookings'}
         downloadCSV
         CSVName='Invoices.csv'
         columns={columns}

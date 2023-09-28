@@ -41,6 +41,10 @@ const PartialRefunds = () => {
 
   const columns = [
     {
+      Header: 'Refund Date',
+      accessor: 'refund_date',
+    },
+    {
       Header: 'Number',
       accessor: 'number',
     },
@@ -77,10 +81,6 @@ const PartialRefunds = () => {
           </span>
         );
       },
-    },
-    {
-      Header: 'Refund Date',
-      accessor: 'refund_date',
     },
     {
       Header: 'Client Total',
