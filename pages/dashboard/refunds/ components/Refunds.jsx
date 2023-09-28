@@ -7,7 +7,6 @@ import ConfirmationModal from '../../../../components/confirm-modal';
 import { AiOutlineEye } from 'react-icons/ai';
 import { HiOutlinePencilAlt } from 'react-icons/hi';
 import { BsTrash3 } from 'react-icons/bs';
-import { IoCopyOutline } from 'react-icons/io5';
 import { useRouter } from 'next/router';
 
 const Refunds = () => {
@@ -15,7 +14,6 @@ const Refunds = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
-  const [orgs, setOrgs] = useState([]);
 
   const router = useRouter();
   useEffect(() => {
@@ -24,11 +22,9 @@ const Refunds = () => {
 
   const getRefunds = async () => {
     const response = await getList('refunds');
-    const orgs = await getList('organizations');
 
-    if (response?.success && orgs?.success) {
+    if (response?.success) {
       setRefunds(response.data.reverse());
-      setOrgs(orgs.data);
     } else {
       sendToast(
         'error',
@@ -40,50 +36,25 @@ const Refunds = () => {
 
   const columns = [
     {
+      Header: 'Refund Date',
+      accessor: 'refund_date',
+    },
+    {
       Header: 'Number',
       accessor: 'number',
-    },
-    {
-      Header: 'Comment',
-      accessor: 'reason',
-    },
-    {
-      Header: 'Booking ID',
-      accessor: 'booking_id',
     },
     {
       Header: 'Sector',
       accessor: 'booking.sector',
     },
     {
-      Header: 'Refund Amount',
-      Cell: (data) => {
-        return (
-          <span>
-            {(+data.row.original.refund_amount)?.toLocaleString('en-AE', {
-              maximumFractionDigits: 2,
-              style: 'currency',
-              currency: 'AED',
-            })}
-          </span>
-        );
-      },
-    },
-    {
       Header: 'Client Name',
-      Cell: (data) => {
-        return (
-          <span>
-            {orgs
-              ?.filter((el) => el.id === data.row.original.booking.client_id)
-              ?.map((el) => `${el.name}`)}
-          </span>
-        );
-      },
+      accessor: 'booking.client_name',
     },
     {
-      Header: 'Refund Date',
-      accessor: 'refund_date',
+      Header: 'Traveller Name',
+      accessor: 'booking.client_traveller_name',
+
     },
     {
       Header: 'Actions',

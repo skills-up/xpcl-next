@@ -7,7 +7,6 @@ import ConfirmationModal from '../../../../components/confirm-modal';
 import { AiOutlineEye } from 'react-icons/ai';
 import { HiOutlinePencilAlt } from 'react-icons/hi';
 import { BsTrash3 } from 'react-icons/bs';
-import { IoCopyOutline } from 'react-icons/io5';
 import { useRouter } from 'next/router';
 
 const PartialRefunds = () => {
@@ -15,7 +14,6 @@ const PartialRefunds = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
-  const [orgs, setOrgs] = useState([]);
 
   const router = useRouter();
   useEffect(() => {
@@ -24,10 +22,8 @@ const PartialRefunds = () => {
 
   const getPartialRefunds = async () => {
     const response = await getList('partial-refunds');
-    const orgs = await getList('organizations');
-    if (response?.success && orgs?.success) {
+    if (response?.success) {
       setPartialRefunds(response.data.reverse());
-      setOrgs(orgs.data);
     } else {
       sendToast(
         'error',
@@ -41,28 +37,25 @@ const PartialRefunds = () => {
 
   const columns = [
     {
+      Header: 'Refund Date',
+      accessor: 'refund_date',
+    },
+    {
       Header: 'Number',
       accessor: 'number',
     },
-    {
-      Header: 'Comment',
-      accessor: 'reason',
-    },
+
     {
       Header: 'Sector',
       accessor: 'booking.sector',
     },
     {
       Header: 'Client Name',
-      Cell: (data) => {
-        return (
-          <span>
-            {orgs
-              ?.filter((el) => el.id === data.row.original.booking.client_id)
-              ?.map((el) => `${el.name}`)}
-          </span>
-        );
-      },
+      accessor: 'booking.client_name',
+    },
+    {
+      Header: 'Traveller Name',
+      accessor: 'booking.client_traveller_name',
     },
     {
       Header: 'Refund Amount',
@@ -77,10 +70,6 @@ const PartialRefunds = () => {
           </span>
         );
       },
-    },
-    {
-      Header: 'Refund Date',
-      accessor: 'refund_date',
     },
     {
       Header: 'Client Total',
