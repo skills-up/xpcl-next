@@ -52,7 +52,7 @@ const MailVisaRequirements = () => {
     const response = await createItem(`visa-requirements/${vid}/email`, {
       to: email.split(',').map(x => x.trim()),
       subject,
-      body,
+      body: body.replaceAll('\n', '<br/>'),
     });
     if (response?.success) {
       sendToast('success', 'Mail Sent Successfully.', 4000);
