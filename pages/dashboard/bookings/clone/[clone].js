@@ -529,7 +529,7 @@ const AddNewBooking = () => {
               booking_class: element['booking_class']?.value,
             })),
       enable_inr: enableINR,
-      sector: bookingType.value === 'Miscellaneous' ? sector : undefined,
+      sector,//: bookingType.value === 'Miscellaneous' ? sector : undefined,
     });
     if (response?.success) {
       sendToast('success', 'Created Invoice Successfully.', 4000);
@@ -604,12 +604,12 @@ const AddNewBooking = () => {
   // Booking Type Changes
   useEffect(() => {
     // Client Service Charge Percent
-    if (bookingType?.value)
-      if (bookingType.value === 'Domestic Flight Ticket') {
-        setClientServiceChargePercent(0.9);
-      } else {
-        setClientServiceChargePercent(1.8);
-      }
+    // if (bookingType?.value)
+    //   if (bookingType.value === 'Domestic Flight Ticket') {
+    //     setClientServiceChargePercent(0.9);
+    //   } else {
+    //     setClientServiceChargePercent(1.8);
+    //   }
     // If misc remove booking sectors
     // If not remove misc type
     if (bookingType?.value === 'Miscellaneous') setBookingSectors([]);
@@ -987,24 +987,22 @@ const AddNewBooking = () => {
                         </label>
                       </div>
                     </div>
-                    {bookingType?.value === 'Miscellaneous' && (
-                      <div className='col-lg-4'>
-                        <div className='form-input'>
-                          <input
-                            onChange={(e) => setSector(e.target.value)}
-                            value={sector}
-                            placeholder=' '
-                            type='text'
-                          />
-                          <label className='lh-1 text-16 text-light-1'>
-                            {bookingType?.value !== 'Miscellaneous'
-                              ? 'Sector'
-                              : 'Narration Line 2'}
-                          </label>
-                        </div>
+                    <div className={bookingType?.value !== 'Miscellaneous' ? 'col-lg-2' : 'col-lg-4'}>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setSector(e.target.value)}
+                          value={sector}
+                          placeholder=' '
+                          type='text'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          {bookingType?.value !== 'Miscellaneous'
+                            ? 'Sector'
+                            : 'Narration Line 2'}
+                        </label>
                       </div>
-                    )}
-                    <div className='col-lg-4'>
+                    </div>
+                    <div className={bookingType?.value !== 'Miscellaneous' ? 'col-lg-2' : 'col-lg-4'}>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setPNR(e.target.value)}

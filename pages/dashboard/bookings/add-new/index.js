@@ -286,7 +286,7 @@ const AddNewBooking = () => {
               booking_class: element['booking_class']?.value,
             })),
       enable_inr: enableINR,
-      sector: bookingType.value === 'Miscellaneous' ? sector : undefined,
+      sector, //: bookingType.value === 'Miscellaneous' ? sector : undefined,
     });
     if (response?.success) {
       sendToast('success', 'Created Invoice Successfully.', 4000);
@@ -735,24 +735,22 @@ const AddNewBooking = () => {
                         </label>
                       </div>
                     </div>
-                    {bookingType?.value === 'Miscellaneous' && (
-                      <div className='col-lg-4'>
-                        <div className='form-input'>
-                          <input
-                            onChange={(e) => setSector(e.target.value)}
-                            value={sector}
-                            placeholder=' '
-                            type='text'
-                          />
-                          <label className='lh-1 text-16 text-light-1'>
-                            {bookingType?.value !== 'Miscellaneous'
-                              ? 'Sector'
-                              : 'Narration Line 2'}
-                          </label>
-                        </div>
+                    <div className={bookingType?.value !== 'Miscellaneous' ? 'col-lg-2' : 'col-lg-4'}>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setSector(e.target.value)}
+                          value={sector}
+                          placeholder=' '
+                          type='text'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          {bookingType?.value !== 'Miscellaneous'
+                            ? 'Sector'
+                            : 'Narration Line 2'}
+                        </label>
                       </div>
-                    )}
-                    <div className='col-lg-4'>
+                    </div>
+                    <div className={bookingType?.value !== 'Miscellaneous' ? 'col-lg-2' : 'col-lg-4'}>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setPNR(e.target.value)}
