@@ -199,6 +199,10 @@ const Sidebar = () => {
           href: '/dashboard/reports/gst-mis',
         },
         {
+          title: 'Bill-Wise Profit',
+          href: '/dashboard/reports/bill-wise-profit',
+        },
+        {
           title: 'Close Accounts',
           href: '/dashboard/reports/close-books',
         },
