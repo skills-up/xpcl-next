@@ -8,16 +8,19 @@ function ContactHero() {
       title: 'Corporate Travel Management Redefined',
       subtitle:
         'We understand how business travel works and have perfected every process involved in managing travel for large companies across India. With our 24/7 Service, Xplorz will always be there for you.',
+      image: 'slide_1.jpg',
     },
     {
       title: 'Unparalleled Technology',
       subtitle:
         'Efficiency and Perfection in every thing we do. We build our own technologies with the ever changing needs of our clients and empower our customers to do much more than just book travel.',
+      image: 'slide_2.jpg',
     },
     {
       title: 'Clear and Efficient MIS and Billing',
       subtitle:
         'Access your weekly, monthly billing and travel reports along with GST ledgers at your fingertips. Transparency at its best.',
+      image: 'slide_3.jpg',
     },
   ];
   const [currentTab, setCurrentTab] = useState(0);
@@ -80,7 +83,7 @@ function ContactHero() {
                 </div>
                 {/* Right */}
                 <div className='col-lg-6 d-flex justify-center'>
-                  <img src='/img/backgrounds/5.png' className=' hero-image' />
+                  <img src={`/img/backgrounds/${list[currentTab].image || '5.png'}`} className=' hero-image' />
                 </div>
               </div>
             </div>
