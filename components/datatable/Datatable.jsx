@@ -213,7 +213,9 @@ const Datatable = ({
                           viewLink && cell.column.Header !== 'Actions'
                             ? 'cursor-pointer'
                             : ''
-                        } max-w-xs break-all text-xs`}
+                        } max-w-xs break-all text-xs ${
+                          cell.column.alignRight ? 'text-right' : ''
+                        }`}
                       >
                         {cell.render('Cell')}
                       </td>
