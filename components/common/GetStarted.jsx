@@ -121,7 +121,7 @@ function ContactGetStarted () {
                 <div key={index} className='px-30 py-40 bg-white contact-card'>
                   <div className='mb-20 mt-10'>{element.icon}</div>
                   <h2>{element.title}</h2>
-                  <span className='subtitle mt-10 d-block'>{element.subtitle}</span>
+                  <span className='mt-10 d-block text-14'>{element.subtitle}</span>
                   {/* {element.points.map((point, pointIndex) => (
                     <span
                       className='d-flex gap-2 text-light-4 points mt-30'
