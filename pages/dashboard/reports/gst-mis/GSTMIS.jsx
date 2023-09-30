@@ -28,6 +28,23 @@ const Journals = () => {
     }
   };
 
+  const downloadCSVFiles = async () => {
+    const response = await getList('reports/gst-mis-files', {
+      end_date: dates.format('YYYY-MM-DD'),
+    });
+    if (response?.success && response.data?.urls) {
+      response.data.urls.forEach(url => {
+        window.open(url, '_blank');
+      });
+    } else {
+      sendToast(
+        'error',
+        response?.data?.message || response?.data?.error || 'Error getting GST MIS Files',
+        4000
+      );
+    }
+  }
+
   const manipulateData = async (data, checkZero = false) => {
     // Data total
     let commissionArr = Object.values(data.commissions).map((el) => el);
@@ -166,7 +183,7 @@ const Journals = () => {
     <div className='col-12'>
       {/* Date Picker */}
       <div className='row mb-3 items-center justify-between mr-4'>
-        <div className='col-lg-9 col-12 d-block ml-3 form-datepicker'>
+        <div className='col-lg-6 col-12 d-block ml-3 form-datepicker'>
           <label>Select End Date</label>
           <DatePicker
             onlyMonthPicker
@@ -190,6 +207,14 @@ const Journals = () => {
             }}
           >
             {removeZeros ? 'Return Zero Rows' : 'Remove Zero Rows'}
+          </button>
+        </div>
+        <div className='col-lg-3 col-12 lg:mt-20'>
+          <button
+            className='btn btn-primary w-100'
+            onClick={downloadCSVFiles}
+          >
+            Download CSV Files
           </button>
         </div>
       </div>
