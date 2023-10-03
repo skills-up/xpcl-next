@@ -162,7 +162,20 @@ const ViewAccounts = () => {
                 />
                 <hr className='my-4' />
                 <div>
-                  <h2 className='mb-3'>Closing Balances</h2>
+                  <div className='mb-3 d-flex items-center justify-between'>
+                    <h2>Closing Balances</h2>
+                    <button
+                      className='btn btn-primary col-lg-2 col-5'
+                      onClick={() =>
+                        router.push({
+                          pathname: '/dashboard/accounts/closing-balances/add-new',
+                          query: { account_id: router.query.view },
+                        })
+                      }
+                    >
+                      Add New
+                    </button>
+                  </div>
                   <ClosingBalances accountClosingBalances={accountClosingBalances} />
                 </div>
               </div>
