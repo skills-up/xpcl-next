@@ -457,7 +457,8 @@ const ReissueBooking = () => {
     if (bookingType?.value && !isOffshore) {
       if (bookingType.value === 'Domestic Flight Ticket')
         setClientServiceChargePercent(0.9);
-      else setClientServiceChargePercent(1.8);
+      else if (bookingType.value === 'International Flight Ticket')
+        setClientServiceChargePercent(1.8);
     }
     // If misc remove booking sectors
     // If not remove misc type
@@ -1551,7 +1552,7 @@ const ReissueBooking = () => {
                     {!isOffshore && (
                       <div className='col-lg-4 pr-0'>
                         <div className='row'>
-                          <label className='col-12 fw-500 mb-4'>Xplorz GST Amount</label>
+                          <label className='col-12 fw-500 mb-4'>{bookingType?.value !== 'Miscellaneous' ? 'Xplorz GST Amount' : 'Client Service Charges'}</label>
                           <div className='form-input col-4'>
                             <input
                               onChange={(e) => {
