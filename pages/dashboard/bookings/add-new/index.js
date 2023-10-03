@@ -1026,10 +1026,10 @@ const AddNewBooking = () => {
                           placeholder=' '
                           type='number'
                           onWheel={(e) => e.target.blur()}
-                          required
+                          required={bookingType?.value !== 'Miscellaneous'}
                         />
                         <label className='lh-1 text-16 text-light-1'>
-                          Vendor Tax Amount<span className='text-danger'>*</span>
+                          Vendor Tax Amount
                         </label>
                       </div>
                     </div>
@@ -1049,10 +1049,10 @@ const AddNewBooking = () => {
                           placeholder=' '
                           type='number'
                           onWheel={(e) => e.target.blur()}
-                          required
+                          required={bookingType?.value !== 'Miscellaneous'}
                         />
                         <label className='lh-1 text-16 text-light-1'>
-                          Vendor GST Amount<span className='text-danger'>*</span>
+                          Vendor GST
                         </label>
                       </div>
                     </div>
