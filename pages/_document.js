@@ -4,7 +4,7 @@ export default function Document() {
   return (
     <Html lang='en'>
       <Head>
-        <meta name='description' content='Leading Corporate Travel Company based in Mumbai. Established in 2005, with offices in Mumbai and Dubai, Xplorz is the leading Travel management company for the Top 10 Private Equity and Financial Services companies in India. When it comes to Corporate Travel, the best businesses choose Xplorz for servicing their needs.' />
+        <meta name='description' content="Tripcentral is Dubai's leading corporate travel management Company with offices in Dubai and Mumbai. Leading Middle East businesses choose Tripcentral for their business travel needs." />
         {/* <!-- Google fonts --> */}
         <link rel='preconnect' href='https://fonts.googleapis.com' />
         <link rel='preconnect' href='https://fonts.gstatic.com' crossOrigin='true' />
