@@ -522,7 +522,7 @@ const UpdateBooking = () => {
     if (bookingType?.value)
       if (bookingType?.value === 'Domestic Flight Ticket') {
         setClientServiceChargePercent(0.9);
-      } else {
+      } else if (bookingType?.value === 'International Flight Ticket') {
         setClientServiceChargePercent(1.8);
       }
     // If misc remove booking sectors
@@ -1206,10 +1206,10 @@ const UpdateBooking = () => {
                           placeholder=' '
                           type='number'
                           onWheel={(e) => e.target.blur()}
-                          required
+                          required={bookingType?.value !== 'Miscellaneous'}
                         />
                         <label className='lh-1 text-16 text-light-1'>
-                          Vendor Tax Amount<span className='text-danger'>*</span>
+                          Vendor Tax Amount
                         </label>
                       </div>
                     </div>
@@ -1229,10 +1229,10 @@ const UpdateBooking = () => {
                           placeholder=' '
                           type='number'
                           onWheel={(e) => e.target.blur()}
-                          required
+                          required={bookingType?.value !== 'Miscellaneous'}
                         />
                         <label className='lh-1 text-16 text-light-1'>
-                          Vendor GST Amount<span className='text-danger'>*</span>
+                          Vendor GST Amount
                         </label>
                       </div>
                     </div>
@@ -1646,7 +1646,7 @@ const UpdateBooking = () => {
                     {!isOffshore && (
                       <div className='col-lg-4 pr-0'>
                         <div className='row'>
-                          <label className='col-12 fw-500 mb-4'>Xplorz GST Amount</label>
+                          <label className='col-12 fw-500 mb-4'>{bookingType?.value !== 'Miscellaneous' ? 'Xplorz GST Amount' : 'Client Service Charges'}</label>
                           <div className='form-input col-4'>
                             <input
                               onChange={(e) => {
