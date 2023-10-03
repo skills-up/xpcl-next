@@ -28,9 +28,8 @@ const AddNewClosingBalance = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    const response = await createItem('closing-balances', {
-      account_id: router.query.account_id,
-      closing_date: day.format('YYYY-MM-DD'),
+    const response = await createItem(`accounts/${router.query.account_id}/close`, {
+      date: day.format('YYYY-MM-DD'),
       amount,
     });
     if (response?.success) {
@@ -109,6 +108,7 @@ const AddNewClosingBalance = () => {
                         numberOfMonths={1}
                         offsetY={10}
                         format='DD MMMM YYYY'
+                        required
                       />
                     </div>
                     <div className='d-inline-block'>
