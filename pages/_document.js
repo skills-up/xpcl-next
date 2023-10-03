@@ -4,7 +4,7 @@ export default function Document() {
   return (
     <Html lang='en'>
       <Head>
-        <meta name='description' content='GoTrip - Tour & Travel React NextJS Template' />
+        <meta name='description' content='Leading Corporate Travel Company based in Mumbai. Established in 2005, with offices in Mumbai and Dubai, Xplorz is the leading Travel management company for the Top 10 Private Equity and Financial Services companies in India. When it comes to Corporate Travel, the best businesses choose Xplorz for servicing their needs.' />
         {/* <!-- Google fonts --> */}
         <link rel='preconnect' href='https://fonts.googleapis.com' />
         <link rel='preconnect' href='https://fonts.gstatic.com' crossOrigin='true' />
@@ -15,7 +15,7 @@ export default function Document() {
 
         <meta
           name='keywords'
-          content='	booking, car rental, cruise, destination, experiences, flight, holiday, hotel, real estate, resort, tour, travel, travel agency, trip, vacation'
+          content='Corporate travel, flight booking, car rentals, hotel bookings , visa services, Forex, business travel, business class , first class'
         />
 
         <link rel='icon' href='/favicon.png' />
