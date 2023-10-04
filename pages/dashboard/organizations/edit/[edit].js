@@ -269,7 +269,7 @@ const UpdateOrganization = () => {
                           onChange={(e) => setContactEmail(e.target.value)}
                           value={contactEmail}
                           placeholder=' '
-                          type='email'
+                          type='text'
                         />
                         <label className='lh-1 text-16 text-light-1'>Contact Email</label>
                       </div>

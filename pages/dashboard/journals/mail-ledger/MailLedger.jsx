@@ -9,9 +9,10 @@ import { sendToast } from '../../../../utils/toastify';
 
 const MailLedger = () => {
   const [ledgerData, setLedgerData] = useState(null);
+  const date = new DateObject();
 
   const [dates, setDates] = useState([
-    new DateObject().setMonth('4').setDay('1'),
+    new DateObject().setMonth(date.year < 2024 ? 10 : 4).setDay('1'),
     new DateObject(),
   ]);
   const [clients, setClients] = useState([]);
@@ -150,6 +151,7 @@ const MailLedger = () => {
             range
             rangeHover
             format='DD MMMM YYYY'
+            minDate='2023-10-01'
           />
         </div>
       </div>
