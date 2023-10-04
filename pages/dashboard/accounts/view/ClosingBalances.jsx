@@ -1,44 +1,16 @@
-import { useState, useEffect } from 'react';
-import { deleteItem, getList } from '../../../../api/xplorzApi';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { BsTrash3 } from 'react-icons/bs';
+import { deleteItem } from '../../../../api/xplorzApi';
 import ActionsButton from '../../../../components/actions-button/ActionsButton';
+import ConfirmationModal from '../../../../components/confirm-modal';
 import Datatable from '../../../../components/datatable/Datatable';
 import { sendToast } from '../../../../utils/toastify';
-import ConfirmationModal from '../../../../components/confirm-modal';
-import { AiOutlineEye } from 'react-icons/ai';
-import { HiOutlinePencilAlt } from 'react-icons/hi';
-import { BsTrash3 } from 'react-icons/bs';
-import { IoCopyOutline } from 'react-icons/io5';
-import { useRouter } from 'next/router';
 
 const ClosingBalances = ({ accountClosingBalances = [] }) => {
-  const [closingBalances, setClosingBalances] = useState(accountClosingBalances);
-  const [searchQuery, setSearchQuery] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
   const router = useRouter();
-
-  /*  useEffect(() => {
-    getClosingBalances();
-  }, [router.isReady]);
-
-  const getClosingBalances = async () => {
-    if (router.query.view) {
-      const response = await getList('closing-balances', {
-        account_id: router.query.view,
-      });
-      if (response?.success) {
-        setClosingBalances(response.data);
-      } else {
-        sendToast(
-          'error',
-          response?.data?.message ||
-            response?.data?.error ||
-            'Error getting closing balances',
-          4000
-        );
-      }
-    }
-  }; */
 
   const columns = [
     {
@@ -48,6 +20,9 @@ const ClosingBalances = ({ accountClosingBalances = [] }) => {
     {
       Header: 'Amount',
       accessor: 'amount',
+      Cell: (data) => (<div>
+        {Math.abs(Number(data.row.original.amount)).toLocaleString('en-IN')} {data.row.original.amount < 0 ? 'Cr' : 'Dr'}
+      </div>)
     },
     {
       Header: 'Last Updated At',
@@ -65,6 +40,30 @@ const ClosingBalances = ({ accountClosingBalances = [] }) => {
         );
       },
     },
+    {
+      Header: 'Actions',
+      disableSortBy: true,
+      alignRight: true,
+      // cell: () => <Button variant="danger" data-tag="allowRowEvents" data-action="delete"><FontAwesomeIcon icon={faTrash} /></Button>,
+      Cell: (data) => {
+        return (
+          <div className='d-flex justify-end'>
+            <ActionsButton
+              options={[
+                {
+                  label: 'Delete',
+                  onClick: () => {
+                    setIdToDelete(data.row.original.id);
+                    setConfirmDelete(true);
+                  },
+                  icon: <BsTrash3 />,
+                },
+              ]}
+            />
+          </div>
+        );
+      },
+    },
   ];
 
   const onCancel = async () => {
@@ -75,7 +74,8 @@ const ClosingBalances = ({ accountClosingBalances = [] }) => {
     const response = await deleteItem('closing-balances', idToDelete);
     if (response?.success) {
       sendToast('success', 'Deleted successfully', 4000);
-      getClosingBalances();
+      router.reload();
+      // getClosingBalances();
     } else {
       sendToast(
         'error',
@@ -104,9 +104,7 @@ const ClosingBalances = ({ accountClosingBalances = [] }) => {
         downloadCSV
         CSVName='ClosingBalances.csv'
         columns={columns}
-        data={closingBalances.filter((perm) =>
-          Object.values(perm).join(',').toLowerCase().includes(searchQuery.toLowerCase())
-        )}
+        data={accountClosingBalances}
       />
     </div>
   );
