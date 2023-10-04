@@ -12,9 +12,10 @@ import { useRouter } from 'next/router';
 
 const Ledger = () => {
   const [ledger, setLedger] = useState(null);
+  const date = new DateObject();
 
   const [dates, setDates] = useState([
-    new DateObject().setMonth('4').setDay('1'),
+    new DateObject().setMonth(date.year < 2024 ? 10 : 4).setDay('1'),
     new DateObject(),
   ]);
   const [modalOpen, setModalOpen] = useState(false);
@@ -165,6 +166,7 @@ const Ledger = () => {
             range
             rangeHover
             format='DD MMMM YYYY'
+            minDate='2023-10-01'
           />
         </div>
         <div className='col-lg-6 col-12 pr-0 form-input-select'>
