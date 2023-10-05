@@ -183,7 +183,6 @@ const TravelInsurances = () => {
       </div>
       {/* Data Table */}
       <Datatable
-        viewLink={'/dashboard/travellers/travel-insurances'}
         dataFiltering
         downloadCSV
         CSVName='TravelInsurances.csv'

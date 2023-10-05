@@ -187,7 +187,6 @@ const TravelVisas = () => {
       </div>
       {/* Data Table */}
       <Datatable
-        viewLink={'/dashboard/travellers/travel-visas'}
         dataFiltering
         downloadCSV
         CSVName='TravelVisas.csv'
