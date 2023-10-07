@@ -34,12 +34,8 @@ function LedgerTable({ data, accountID, accountName, dates }) {
 
   useEffect(() => {
     if (data) {
-      if (data?.entries?.length === 0) {
-        setNewData(null);
-        return;
-      }
       let balance = +data?.opening_balance;
-      if (balance !== undefined && balance !== null && data?.entries?.length > 0) {
+      if (balance !== undefined && balance !== null) {
         // Sorting By Date
         data.entries.sort((a, b) => {
           return new Date(a.date).getTime() - new Date(b.date).getTime();
@@ -101,15 +97,15 @@ function LedgerTable({ data, accountID, accountName, dates }) {
                   ?.filter((element) => +element?.amount !== 0)
                   .map((element, index) => {
                     return (
-                      <tr key={index} onClick={() => {
-                        openDocument(element?.document);
-                      }}>
+                      <tr key={index}>
                         <td>
                           {new Date(element?.date).toLocaleString('en-IN', {
                             dateStyle: 'medium',
                           })}
                         </td>
-                        <td className='reference'>{element?.reference}</td>
+                        <td className='reference' onClick={() => {
+                          openDocument(element?.document);
+                        }}>{element?.reference}</td>
                         <td className='narration'>{element?.narration}</td>
                         <td className='number-col'>
                           {accountID === element.dr_account_id &&
