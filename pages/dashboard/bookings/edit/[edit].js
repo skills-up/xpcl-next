@@ -653,7 +653,7 @@ const UpdateBooking = () => {
         (+vendorGSTAmount || 0) +
         (+reissuePenalty || 0) +
         (+vendorMiscCharges || 0)
-    ).toFixed(0);
+    ).toFixed(2).replace(/[.,]00$/, '');
     setVendorTotal(vendorTotal);
     // Updating
     updatePaymentAmount(paymentAccountID, vendorTotal, vendorMiscCharges);
