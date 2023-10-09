@@ -59,10 +59,11 @@ function ContactPage({ isSignUp = false }) {
                 <h1 className='mb-20'>Why Choose Us</h1>
                 <div style={{ textAlign: 'justify' }}>
                   <p className=' sectionTitle__text text-18 mt-5 sm:mt-0'>
-                    Corporate Travel Management is now efficient and super awesome. Trust
-                    the industry experts to help make complex business travel simple.The
+                    Corporate Travel Management is now efficient and backed by advanced
+                    technologies to make the process seamless. Trust
+                    the industry experts to help make complex business travel simple. The
                     best businesses across India trust the best in the business - Xplorz,
-                    for all their travel needs. It’s about time you should do the same.
+                    for all their travel needs.
                   </p>
                 </div>
               </div>
