@@ -20,6 +20,7 @@ const TravelList = () => {
 
   const reformatData = (data) => {
     const formattedData = [];
+    const keyValues = [];
     for (let bookingData of data) {
       // Pick only the required fields from bookingData
       const booking = (({
@@ -35,8 +36,24 @@ const TravelList = () => {
         ticket_number,
         pnr,
       }))(bookingData);
+      const prefix = bookingData.booking_date + '|' + bookingData.client_traveller_name;
       for (let sector of bookingData.sectors) {
-        formattedData.push({ ...booking, ...sector });
+        let isDuplicate = false;
+        let key = `${prefix}|${sector.from_airport}|`;
+        let idx = keyValues.indexOf(key);
+        if (idx >= 0) {
+          isDuplicate = true;
+          formattedData[Math.floor(idx/2)].isDuplicate = true;
+        }
+        keyValues.push(key);
+        key = `${prefix}||${sector.to_airport}`;
+        idx = keyValues.indexOf(key);
+        if (idx >= 0) {
+          isDuplicate = true;
+          formattedData[Math.floor(idx/2)].isDuplicate = true;
+        }
+        keyValues.push(key);
+        formattedData.push({ ...booking, ...sector, isDuplicate });
       }
     }
     return formattedData;
@@ -155,7 +172,7 @@ const TravelList = () => {
           CSVName='TravelList.csv'
           columns={columns}
           data={travelSectors}
-          getRowClassName={(row) => row.original.boarding_pass ? 'row-disabled' : ''}
+          getRowClassName={(row) => row.original.isDuplicate ? 'row-duplicate' : (row.original.boarding_pass ? 'row-disabled' : '')}
         />
       </div>
     </div>
