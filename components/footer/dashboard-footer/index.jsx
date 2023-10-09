@@ -2,8 +2,8 @@ import React from 'react';
 
 function Footer() {
   const linksData = [
-    { label: 'Privacy', url: '#' },
-    { label: 'Terms', url: '#' },
+    // { label: 'Privacy', url: '#' },
+    // { label: 'Terms', url: '#' },
     // { label: 'Site Map', url: '#' },
   ];
 
