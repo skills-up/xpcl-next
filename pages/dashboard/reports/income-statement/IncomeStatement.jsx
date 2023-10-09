@@ -72,6 +72,10 @@ const Journals = () => {
     if (dates && dates.length === 2) getBalanceSheet();
   }, [dates]);
 
+  useEffect(() => {
+    document.body.classList.add('-is-sidebar-open');
+  });
+
   const RecursiveComponent = ({ data, level }) => {
     const colorLevels = {
       1: '(0,0,0)',
@@ -109,8 +113,8 @@ const Journals = () => {
                         }
                         className='d-flex justify-between cursor-pointer'
                       >
-                        <span>{element}</span>
-                        <span>
+                        <span style={{paddingRight: '1em',maxWidth: '60%'}}>{element}</span>
+                        <span style={{whiteSpace: 'nowrap'}}>
                           {Math.abs(+data[element]['_']).toLocaleString('en-IN', {
                             maximumFractionDigits: 2,
                             style: 'currency',
@@ -136,8 +140,8 @@ const Journals = () => {
                       }
                       target='_blank'
                     >
-                      <span>{element.split('|')[1]}</span>
-                      <span>
+                      <span style={{paddingRight: '1em',maxWidth: '60%'}}>{element.split('|')[1]}</span>
+                      <span style={{whiteSpace: 'nowrap'}}>
                         {Math.abs(+data[element]).toLocaleString('en-IN', {
                           maximumFractionDigits: 2,
                           style: 'currency',

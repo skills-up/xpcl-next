@@ -89,7 +89,7 @@ function ContactWhyUs() {
     <div id='contact-why'>
       <div className='section-bg layout-pb-xl'>
         <div className='container mt-20'>
-          <h1 className='fw-500 text-40 lh-1'>Here’s what people say about us</h1>
+          <h1 className='fw-500 text-40 lh-1'>Corporate Reviews</h1>
           {/* Testimonials */}
           <div className='testimonials-container'>
             <Slider

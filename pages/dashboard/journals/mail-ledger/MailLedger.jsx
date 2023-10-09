@@ -93,7 +93,12 @@ const MailLedger = () => {
 
   const sendClientMail = async (e) => {
     let formData = new FormData();
-    formData.append('email', email);
+    for (let e in email.split(',')) {
+      const mail = e.trim();
+      if (mail.length) {
+        formData.append('email[]', mail);
+      }
+    }
     formData.append('subject', subject);
     formData.append('body', body.replaceAll('\n', '<br/>'));
     if (ledgerPDFUrl?.length) {
@@ -163,7 +168,6 @@ const MailLedger = () => {
             <input
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              type='email'
               placeholder='Enter email'
               required
             />

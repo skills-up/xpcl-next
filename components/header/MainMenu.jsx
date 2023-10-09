@@ -124,9 +124,9 @@ const MainMenu = ({ style = '' }) => {
           </ul>
         </li> */}
 
-        <li className={router.pathname === '/about' ? 'current' : ''}>
+        {/* <li className={router.pathname === '/about' ? 'current' : ''}>
           <Link href='/about'>About</Link>
-        </li>
+        </li> */}
         {token !== '' && (
           <li
             className={

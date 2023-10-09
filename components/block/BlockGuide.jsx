@@ -10,7 +10,7 @@ const BlockGuide = () => {
     {
       id: 2,
       icon: '/img/featureIcons/1/2.svg',
-      title: 'Super efficient Web and Mobile App Booking Tool',
+      title: 'Advanced Web Booking Tool',
       text: ``,
       delayAnim: '200',
     },

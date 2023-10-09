@@ -104,7 +104,7 @@ function ContactGetStarted () {
       <div className='section-bg layout-pt-lg bg-light started-title'>
         <div className='container'>
           <div className='col-lg-6 pr-20 lg:pr-0'>
-            <h1 className='text-light-4'>Our Super Features</h1>
+            <h1 className='text-light-4'>Our Technologies</h1>
             {/* <h5 className='mt-20 text-light-4'>
               Our features and benefits are curated to suit the needs of every employee
               using myBiz.
