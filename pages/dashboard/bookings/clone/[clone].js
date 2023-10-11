@@ -130,7 +130,7 @@ const AddNewBooking = () => {
         setVendorGSTAmount((+response.data.vendor_gst_amount || 0).toFixed(0));
         setVendorMiscChargers((+response.data.vendor_misc_charges || 0).toFixed(0));
         setVendorYQAmount((+response.data.vendor_yq_amount || 0).toFixed(0));
-        setVendorTotal((+response.data.vendor_total || 0).toFixed(0));
+        setVendorTotal((+response.data.vendor_total || 0).toFixed(2).replace(/[.,]00$/, ''));
         setIATACommissionPercent(response.data.iata_commission_percent);
         setPLBCommissionPercent(response.data.plb_commission_percent);
         setVendorServiceCharges((+response.data.vendor_service_charges || 0).toFixed(0));
