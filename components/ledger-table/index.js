@@ -83,7 +83,7 @@ function LedgerTable({ data, accountID, accountName, dates }) {
                   <th className='number-col'></th>
                   <th className='number-col'></th>
                   <th className='number-col'>
-                    {(+newData?.opening_balance).toLocaleString('en-IN', {
+                    {Math.abs(newData?.opening_balance).toLocaleString('en-IN', {
                       maximumFractionDigits: 2,
                       style: 'currency',
                       currency: 'INR',
