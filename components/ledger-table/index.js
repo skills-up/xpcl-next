@@ -42,7 +42,7 @@ function LedgerTable({ data, accountID, accountName, dates }) {
         });
         // Balance
         for (let i = 0; i < data.entries.length; i++) {
-          balance = +data.entries[i].amount;
+          balance += +data.entries[i].amount;
           data.entries[i]['total'] = balance;
         }
         data['total'] = balance;
