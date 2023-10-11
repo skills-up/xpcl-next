@@ -38,14 +38,14 @@ const TravelList = () => {
       }))(bookingData);
       for (let sector of bookingData.sectors) {
         let isDuplicate = false;
-        let key = `${bookingData.booking_date}|${sector.travel_date}|${sector.from_airport}|`;
+        let key = `${bookingData.booking_date}|${bookingData.client_traveller_name}|${sector.travel_date}|${sector.from_airport}|`;
         let idx = keyValues.indexOf(key);
         if (idx >= 0) {
           isDuplicate = true;
           formattedData[Math.floor(idx/2)].isDuplicate = true;
         }
         keyValues.push(key);
-        key = `${bookingData.booking_date}|${sector.travel_date}||${sector.to_airport}`;
+        key = `${bookingData.booking_date}|${bookingData.client_traveller_name}|${sector.travel_date}||${sector.to_airport}`;
         idx = keyValues.indexOf(key);
         if (idx >= 0) {
           isDuplicate = true;
