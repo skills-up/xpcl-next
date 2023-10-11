@@ -42,9 +42,7 @@ function LedgerTable({ data, accountID, accountName, dates }) {
         });
         // Balance
         for (let i = 0; i < data.entries.length; i++) {
-          let amount = +data.entries[i].amount;
-          if (data.entries[i].dr_account_id === accountID) balance += amount;
-          else balance -= amount;
+          balance = +data.entries[i].amount;
           data.entries[i]['total'] = balance;
         }
         data['total'] = balance;
@@ -108,16 +106,16 @@ function LedgerTable({ data, accountID, accountName, dates }) {
                         }}>{element?.reference}</td>
                         <td className='narration'>{element?.narration}</td>
                         <td className='number-col'>
-                          {accountID === element.dr_account_id &&
-                            `${(+element.amount).toLocaleString('en-IN', {
+                          {+(element?.amount) > 0 &&
+                            `${Math.abs(element.amount).toLocaleString('en-IN', {
                               maximumFractionDigits: 2,
                               style: 'currency',
                               currency: 'INR',
                             })}`}
                         </td>
                         <td className='number-col'>
-                          {accountID === element.cr_account_id &&
-                            `${(+element.amount).toLocaleString('en-IN', {
+                          {+(element?.amount) < 0 &&
+                            `${Math.abs(element.amount).toLocaleString('en-IN', {
                               maximumFractionDigits: 2,
                               style: 'currency',
                               currency: 'INR',
@@ -183,7 +181,7 @@ function LedgerTable({ data, accountID, accountName, dates }) {
                     reference: entry?.reference,
                     narration: entry?.narration,
                     dr:
-                      +entry?.dr_account_id === +accountID
+                      +entry?.amount > 0
                         ? Math.abs(entry?.amount).toLocaleString('en-IN', {
                             maximumFractionDigits: 2,
                             style: 'currency',
@@ -191,7 +189,7 @@ function LedgerTable({ data, accountID, accountName, dates }) {
                           })
                         : '',
                     cr:
-                      +entry?.cr_account_id === +accountID
+                      +entry?.amount < 0
                         ? Math.abs(entry?.amount).toLocaleString('en-IN', {
                             maximumFractionDigits: 2,
                             style: 'currency',
