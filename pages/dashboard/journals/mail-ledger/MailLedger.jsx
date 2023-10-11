@@ -78,6 +78,7 @@ const MailLedger = () => {
       setReferences(response.data?.references.map((e) => ({ value: e, include: true })));
       setLedgerPDFUrl(response.data?.ledger_pdf_url);
       setLedgerCSVUrl(response.data?.ledger_csv_url);
+      setFiles([]);
     } else {
       sendToast(
         'error',
