@@ -94,7 +94,7 @@ const MailLedger = () => {
 
   const sendClientMail = async (e) => {
     let formData = new FormData();
-    for (let e in email.split(',')) {
+    for (let e of email.split(',')) {
       const mail = e.trim();
       if (mail.length) {
         formData.append('email[]', mail);
