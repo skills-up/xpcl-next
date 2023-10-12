@@ -47,6 +47,7 @@ const AddNewTravellers = () => {
   const [vaccinationCertificateFile, setVaccinationCertificateFile] = useState(null);
   const [panCardScanFile, setPanCardScanFile] = useState(null);
   const [aadhaarCardScanFile, setAadhaarCardScanFile] = useState(null);
+  const [photoScanFile, setPhotoScanFile] = useState(null);
   const [aliases, setAliases] = useState([{ value: '' }]);
   const [vaccinationDates, setVaccinationDates] = useState([]);
   const [passportScanFiles, setPassportScanFiles] = useState([]);
@@ -326,6 +327,7 @@ const AddNewTravellers = () => {
     );
     passportFormData.append('pan_card_scan_file', panCardScanFile ?? '');
     passportFormData.append('aadhaar_card_scan_file', aadhaarCardScanFile ?? '');
+    passportFormData.append('photo_scan_file', photoScanFile ?? '');
     // Country
     if (countryCodeID?.value)
       passportFormData.append('passport_country_code', countryCodeID.value);
@@ -789,6 +791,11 @@ const AddNewTravellers = () => {
                         offsetY={10}
                         format='DD MMMM YYYY'
                       />
+                    </div>
+                    {/* Photo Scan File Upload */}
+                    <div className='col-lg-4'>
+                      <label>Photo Scan File</label>
+                      <NewFileUploads multiple={false} setUploads={setPhotoScanFile} />
                     </div>
                     {/* Pan Card Scan File Upload */}
                     <div className='col-lg-4'>
