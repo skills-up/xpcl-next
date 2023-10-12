@@ -50,6 +50,7 @@ const UpdateTravellers = () => {
   const [vaccinationCertificateFile, setVaccinationCertificateFile] = useState(null);
   const [panCardScanFile, setPanCardScanFile] = useState(null);
   const [aadhaarCardScanFile, setAadhaarCardScanFile] = useState(null);
+  const [photoScanFile, setPhotoScanFile] = useState(null);
   const [aliases, setAliases] = useState([{ value: '' }]);
   const [vaccinationDates, setVaccinationDates] = useState([]);
   const [passportScanFiles, setPassportScanFiles] = useState([]);
@@ -57,6 +58,7 @@ const UpdateTravellers = () => {
     useState('');
   const [previousPanCardScan, setPreviousPanCardScan] = useState('');
   const [previousAadhaarCardScan, setPreviousAadhaarCardScan] = useState('');
+  const [previousPhotoScan, setPreviousPhotoScan] = useState('');
   const [previousPassportScanFiles, setPreviousPassportScanFiles] = useState([]);
   const [countries, setCountries] = useState([]);
   const [countryCodeID, setCountryCodeID] = useState(null);
@@ -193,6 +195,7 @@ const UpdateTravellers = () => {
         setPreviousVaccinationCertificate(response.data?.vaccination_certificate);
         setPreviousPanCardScan(response.data?.pan_card_scan);
         setPreviousAadhaarCardScan(response.data?.aadhaar_card_scan);
+        setPreviousPhotoScan(response.data?.photo_scan);
         if (response.data?.passport_scans)
           setPreviousPassportScanFiles(response.data?.passport_scans);
         // Countries
@@ -339,8 +342,10 @@ const UpdateTravellers = () => {
     );
     passportFormData.append('pan_card_scan_file', panCardScanFile ?? '');
     passportFormData.append('aadhaar_card_scan_file', aadhaarCardScanFile ?? '');
+    passportFormData.append('photo_scan_file', photoScanFile ?? '');
     passportFormData.append('pan_card_scan', previousPanCardScan ?? '');
     passportFormData.append('aadhaar_card_scan', previousAadhaarCardScan ?? '');
+    passportFormData.append('photo_scan', previousPhotoScan ?? '');
     passportFormData.append(
       'vaccination_certificate',
       previousVaccinationCertificate ?? ''
@@ -815,6 +820,19 @@ const UpdateTravellers = () => {
                         offsetY={10}
                         format='DD MMMM YYYY'
                       />
+                    </div>
+                    {/* Photo Scan File Upload */}
+                    <div className='col-lg-4'>
+                      <label>Photo Scan File</label>
+                      {previousPhotoScan && (
+                        <PreviousUploadPictures
+                          data={[previousPhotoScan]}
+                          onDeleteClick={() => {
+                            setPreviousPhotoScan('');
+                          }}
+                        />
+                      )}
+                      <NewFileUploads multiple={false} setUploads={setPhotoScanFile} />
                     </div>
                     {/* PanCard Scan File Upload */}
                     <div className='col-lg-4'>
