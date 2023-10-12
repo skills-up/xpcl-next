@@ -659,37 +659,37 @@ const AddNewTravellers = () => {
                         format='DD MMM YYYY'
                       />
                     </div>
+                    {/* Passport Scan Files Upload */}
+                    <div className='col-12'>
+                      <label>Passport</label>
+                      <NewFileUploads multiple={true} setUploads={setPassportScanFiles} />
+                    </div>
                     {/* Photo Scan File Upload */}
-                    <div className='col-lg-4'>
-                      <label>Photo Scan File</label>
+                    <div className='col-12'>
+                      <label>Digital Photograph</label>
                       <NewFileUploads multiple={false} setUploads={setPhotoScanFile} />
                     </div>
                     {/* Pan Card Scan File Upload */}
-                    <div className='col-lg-4'>
-                      <label>PAN Card Scan File</label>
+                    <div className='col-12'>
+                      <label>PAN Card</label>
                       <NewFileUploads multiple={false} setUploads={setPanCardScanFile} />
                     </div>
                     {/* Aadhaar Card Scan File Upload */}
-                    <div className='col-lg-4'>
-                      <label>Aadhaar Card Scan Certificate File</label>
+                    <div className='col-12'>
+                      <label>Aadhaar Card</label>
                       <NewFileUploads
                         multiple={false}
                         setUploads={setAadhaarCardScanFile}
                       />
                     </div>
                     {/* Vaccination Certificate File Upload */}
-                    <div className='col-lg-4'>
-                      <label>Vaccination Certificate File</label>
+                    <div className='col-12'>
+                      <label>Vaccination Certificate</label>
                       <NewFileUploads
                         fileTypes={['PDF']}
                         multiple={false}
                         setUploads={setVaccinationCertificateFile}
                       />
-                    </div>
-                    {/* Passport Scan Files Upload */}
-                    <div className='col-lg-4'>
-                      <label>Passport Scan Files</label>
-                      <NewFileUploads multiple={true} setUploads={setPassportScanFiles} />
                     </div>
                     <div className='d-inline-block'>
                       <button
