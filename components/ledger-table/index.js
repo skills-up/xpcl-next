@@ -182,20 +182,10 @@ function LedgerTable({ data, accountID, accountName, dates }) {
                     narration: entry?.narration,
                     dr:
                       +entry?.amount > 0
-                        ? Math.abs(entry?.amount).toLocaleString('en-IN', {
-                            maximumFractionDigits: 2,
-                            style: 'currency',
-                            currency: 'INR',
-                          })
-                        : '',
+                        ? Math.abs(entry?.amount) : '',
                     cr:
                       +entry?.amount < 0
-                        ? Math.abs(entry?.amount).toLocaleString('en-IN', {
-                            maximumFractionDigits: 2,
-                            style: 'currency',
-                            currency: 'INR',
-                          })
-                        : '',
+                        ? Math.abs(entry?.amount) : '',
                     balance: entry?.total,
                   });
                 }
