@@ -48,42 +48,17 @@ const Refunds = () => {
       accessor: 'number',
     },
     {
-      Header: 'Comment',
-      accessor: 'reason',
-    },
-    {
-      Header: 'Booking ID',
-      accessor: 'booking_id',
-    },
-    {
       Header: 'Sector',
       accessor: 'booking.sector',
     },
     {
-      Header: 'Refund Amount',
-      Cell: (data) => {
-        return (
-          <span>
-            {(+data.row.original.refund_amount)?.toLocaleString('en-IN', {
-              maximumFractionDigits: 2,
-              style: 'currency',
-              currency: 'INR',
-            })}
-          </span>
-        );
-      },
+      Header: 'Client Name',
+      accessor: 'booking.client_name',
     },
     {
-      Header: 'Client Name',
-      Cell: (data) => {
-        return (
-          <span>
-            {orgs
-              ?.filter((el) => el.id === data.row.original.booking.client_id)
-              ?.map((el) => `${el.name}`)}
-          </span>
-        );
-      },
+      Header: 'Traveller Name',
+      accessor: 'booking.client_traveller_name',
+
     },
     {
       Header: 'Actions',
