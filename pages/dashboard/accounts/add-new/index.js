@@ -14,16 +14,18 @@ const AddNewAccounts = () => {
   const [accountCategories, setAccountCategories] = useState([]);
   const [accountCategoryID, setAccountCategoryID] = useState(null);
   const [name, setName] = useState('');
-  const [year, setYear] = useState({ label: 'None', value: '' });
   const [isBankCash, setIsBankCash] = useState(false);
 
-  const yearOptions = [
-    { label: 'None', value: '' },
-    { label: '2022', value: '2022' },
-    { label: '2023', value: '2023' },
-    { label: '2024', value: '2024' },
-  ];
+  const date = new Date();
+  const baseYear = date.getFullYear() - (date.getMonth() < 4 ? 1 : 0);
+  const [year, setYear] = useState({ label: baseYear, value: baseYear });
 
+  const yearOptions = [
+    { label: baseYear - 1, value: baseYear - 1 },
+    { label: baseYear, value: baseYear },
+    { label: baseYear + 1, value: baseYear + 1 },
+  ];
+  
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
 
@@ -38,6 +40,7 @@ const AddNewAccounts = () => {
         accountCategories.data.map((element) => ({
           value: element.id,
           label: element.name,
+          pnl: !element.is_balance_sheet_category,
         }))
       );
     } else {
@@ -122,15 +125,34 @@ const AddNewAccounts = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='form-input-select'>
-                      <label>Year</label>
-                      <Select
-                        isClearable
-                        options={yearOptions}
-                        value={year}
-                        onChange={(id) => setYear(id)}
-                      />
-                    </div>
+                    {accountCategoryID?.pnl && (
+                      <div className='col-12'>
+                        <div className='form-input-select'>
+                          <label>Year</label>
+                          <Select
+                            options={yearOptions}
+                            value={year}
+                            onChange={(id) => setYear(id)}
+                          />
+                        </div>
+                      </div>
+                    )}
+                    {accountCategoryID?.label === 'Credit Cards' && (
+                      <div className='col-12'>
+                        <div className='form-input'>
+                          <input
+                            onChange={(e) => setCode(e.target.value)}
+                            value={code}
+                            placeholder=' '
+                            type='text'
+                            required
+                          />
+                          <label className='lh-1 text-16 text-light-1'>
+                            Code<span className='text-danger'>*</span>
+                          </label>
+                        </div>
+                      </div>
+                    )}
                     <div className='d-flex items-center gap-3'>
                       <ReactSwitch
                         onChange={() => setIsBankCash((prev) => !prev)}

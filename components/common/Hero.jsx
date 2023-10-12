@@ -43,11 +43,11 @@ function ContactHero() {
     <div id='contact-hero'>
       <Parallax
         strength={1000}
-        bgImage='/img/backgrounds/12.png'
+        bgImage={`/img/backgrounds/${list[currentTab].image || '12.png'}`}
         bgImageAlt='amazing place'
         bgClassName='object-fit-cover'
       >
-        <div className='section-bg pt-50 layout-pb-lg'>
+        <div className='section-bg pt-50 layout-pb-lg' style={{background: 'rgba(0,0,0,0.75)'}}>
           <div className='container'>
             <div className='row'>
               {/* Row */}

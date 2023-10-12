@@ -231,7 +231,6 @@ const Bookings = () => {
       </div>
       {/* Data Table */}
       <Datatable
-        viewLink={'/dashboard/bookings'}
         downloadCSV
         CSVName='Invoices.csv'
         columns={columns}

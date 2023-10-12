@@ -21,8 +21,8 @@ const Copyright = () => {
 
       <div className='col-auto'>
         <div className='d-flex x-gap-50'>
-          <a href='#'>Privacy</a>
-          <a href='#'>Terms</a>
+          {/* <a href='#'>Privacy</a> */}
+          {/* <a href='#'>Terms</a> */}
           {/* <a href="#">Site Map</a> */}
         </div>
       </div>

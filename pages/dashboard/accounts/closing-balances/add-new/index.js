@@ -108,6 +108,7 @@ const AddNewClosingBalance = () => {
                         numberOfMonths={1}
                         offsetY={10}
                         format='DD MMMM YYYY'
+                        required
                       />
                     </div>
                     <div className='d-inline-block'>

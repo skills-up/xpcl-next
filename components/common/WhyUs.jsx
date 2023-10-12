@@ -89,7 +89,7 @@ function ContactWhyUs() {
     <div id='contact-why'>
       <div className='section-bg layout-pb-xl'>
         <div className='container mt-20'>
-          <h1 className='fw-500 text-40 lh-1'>Here’s what people say about us</h1>
+          <h1 className='fw-500 text-40 lh-1'>Corporate Reviews</h1>
           {/* Testimonials */}
           <div className='testimonials-container'>
             <Slider
@@ -113,7 +113,7 @@ function ContactWhyUs() {
               {testimonials.map((element, index) => (
                 <div className='testimonial'>
                   <img src={element.icon} className='icon' />
-                  <p className='text-light-4 mt-20'>{element.text}</p>
+                  <p className='text-light-4 mt-20 text-14'>{element.text}</p>
                   <div className='d-flex flex-column mt-30'>
                     <h3 className='text-dark-2'>{element.by}</h3>
                     <span className='text-14 fw-200 text-light-1'>{element.desig}</span>

@@ -1,16 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { AiOutlinePrinter } from 'react-icons/ai';
 import { FiDownload } from 'react-icons/fi';
 import { DateObject } from 'react-multi-date-picker';
 import { jsonToCSV } from 'react-papaparse';
+import { createItem } from '../../api/xplorzApi';
 import { downloadCSV as CSVDownloader } from '../../utils/fileDownloader';
 import { sendToast } from '../../utils/toastify';
-import ReactToPdf from 'react-to-pdf';
-import { createRef } from 'react';
-import { AiOutlinePrinter } from 'react-icons/ai';
 
 function LedgerTable({ data, accountID, accountName, dates }) {
   const [newData, setNewData] = useState(null);
-  const pdfRef = createRef();
 
   const openDocument = (doc) => {
     if (doc) {
@@ -18,6 +16,21 @@ function LedgerTable({ data, accountID, accountName, dates }) {
       window.open(ref, '_blank');
     }
   };
+
+  const toPdf = async (filename) => {
+    const styles = '<style>table{border:1px solid;max-width:80%}th:nth-child(n+4),td:nth-child(n+4){text-align:right;white-space:nowrap}td:nth-child(1){word-break:none}td:nth-child(3n){max-width:30vw;word-wrap:break-word;word-break:break-all}td{padding:6px}tr,td,th{border:1px solid #999}</style>';
+    const html = document.querySelector('#pdf-content').innerHTML.replaceAll('₹', '').replaceAll('⟶','->');
+    const response = await createItem('/utilities/generate-pdf', {
+      html: styles+html,
+      filename: filename,
+      landscape: true
+    });
+    if (response?.success && response?.data?.url) {
+      window.open(response?.data?.url, '_blank');
+    } else {
+      sendToast('error', 'Failed to create Ledger PDF', 4000);
+    }
+  }
 
   useEffect(() => {
     if (data) {
@@ -29,9 +42,7 @@ function LedgerTable({ data, accountID, accountName, dates }) {
         });
         // Balance
         for (let i = 0; i < data.entries.length; i++) {
-          let amount = +data.entries[i].amount;
-          if (data.entries[i].dr_account_id === accountID) balance += amount;
-          else balance -= amount;
+          balance += +data.entries[i].amount;
           data.entries[i]['total'] = balance;
         }
         data['total'] = balance;
@@ -42,8 +53,8 @@ function LedgerTable({ data, accountID, accountName, dates }) {
 
   return (
     <div className='ledger-table mt-50'>
-      <div ref={pdfRef}>
-        {accountName && <h1>{accountName}</h1>}
+      <div id='pdf-content'>
+        {accountName && <h1>Ledger: {accountName}</h1>}
         {dates && dates?.length === 2 ? (
           <h2>
             From {dates[0].format('DD-MMMM-YYYY')} To {dates[1].format('DD-MMMM-YYYY')}
@@ -72,7 +83,7 @@ function LedgerTable({ data, accountID, accountName, dates }) {
                   <th className='number-col'></th>
                   <th className='number-col'></th>
                   <th className='number-col'>
-                    {(+newData?.opening_balance).toLocaleString('en-AE', {
+                    {Math.abs(newData?.opening_balance).toLocaleString('en-AE', {
                       maximumFractionDigits: 2,
                       style: 'currency',
                       currency: 'AED',
@@ -95,16 +106,16 @@ function LedgerTable({ data, accountID, accountName, dates }) {
                         }}>{element?.reference}</td>
                         <td className='narration'>{element?.narration}</td>
                         <td className='number-col'>
-                          {accountID === element.dr_account_id &&
-                            `${(+element.amount).toLocaleString('en-AE', {
+                          {+(element?.amount) > 0 &&
+                            `${Math.abs(element.amount).toLocaleString('en-AE', {
                               maximumFractionDigits: 2,
                               style: 'currency',
                               currency: 'AED',
                             })}`}
                         </td>
                         <td className='number-col'>
-                          {accountID === element.cr_account_id &&
-                            `${(+element.amount).toLocaleString('en-AE', {
+                          {+(element?.amount) < 0 &&
+                            `${Math.abs(element.amount).toLocaleString('en-AE', {
                               maximumFractionDigits: 2,
                               style: 'currency',
                               currency: 'AED',
@@ -158,7 +169,7 @@ function LedgerTable({ data, accountID, accountName, dates }) {
                   narration: 'Opening Balance',
                   dr: '',
                   cr: '',
-                  balance: newData?.opening_balance?.toFixed(2),
+                  balance: newData?.opening_balance,
                 });
                 // Adding Entries
                 for (let entry of newData?.entries) {
@@ -170,14 +181,12 @@ function LedgerTable({ data, accountID, accountName, dates }) {
                     reference: entry?.reference,
                     narration: entry?.narration,
                     dr:
-                      +entry?.dr_account_id === +accountID
-                        ? Math.abs(entry?.amount).toFixed(2)
-                        : '',
+                      +entry?.amount > 0
+                        ? Math.abs(entry?.amount) : '',
                     cr:
-                      +entry?.cr_account_id === +accountID
-                        ? Math.abs(entry?.amount).toFixed(2)
-                        : '',
-                    balance: entry?.total?.toFixed(2),
+                      +entry?.amount < 0
+                        ? Math.abs(entry?.amount) : '',
+                    balance: entry?.total,
                   });
                 }
                 // Adding Closing Balance
@@ -187,7 +196,7 @@ function LedgerTable({ data, accountID, accountName, dates }) {
                   narration: 'Closing Balance',
                   dr: '',
                   cr: '',
-                  balance: newData?.total?.toFixed(2),
+                  balance: newData?.total,
                 });
                 CSVDownloader(jsonToCSV(temp), 'Ledger.csv');
               } catch (err) {
@@ -202,13 +211,9 @@ function LedgerTable({ data, accountID, accountName, dates }) {
             <FiDownload className='text-20' />
             Download CSV
           </button>
-          <ReactToPdf targetRef={pdfRef} scale={0.55} y={30} filename='div-blue.pdf'>
-            {({ toPdf }) => (
-              <button className='btn btn-info ml-20 text-white' onClick={toPdf}>
-                <AiOutlinePrinter className='text-22' /> Generate PDF
-              </button>
-            )}
-          </ReactToPdf>
+          <button className='btn btn-info ml-20 text-white' onClick={() => toPdf(`Ledger-${accountName}-${dates[0].format('DD-MMMM-YYYY')}-to-${dates[1].format('DD-MMMM-YYYY')}.pdf`)}>
+            <AiOutlinePrinter className='text-22' /> Generate PDF
+          </button>
         </div>
       )}
     </div>

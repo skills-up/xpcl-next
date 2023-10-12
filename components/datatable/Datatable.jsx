@@ -46,6 +46,8 @@ const Datatable = ({
   _pageIndex = 0,
   dataFiltering = false,
   viewLink = null,
+  getRowStyle = undefined,
+  getRowClassName = undefined,
 }) => {
   const [totalItems, SetTotalItems] = useState(0);
   let {
@@ -188,7 +190,7 @@ const Datatable = ({
             {page.map((row, i) => {
               prepareRow(row);
               return (
-                <tr key={i} {...row.getRowProps()}>
+                <tr key={i} {...row.getRowProps()} style={getRowStyle ? getRowStyle(row) : undefined} className={getRowClassName ? getRowClassName(row) : undefined}>
                   {row.cells.map((cell, index) => {
                     return (
                       <td
