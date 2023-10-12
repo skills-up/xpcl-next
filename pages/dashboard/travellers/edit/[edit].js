@@ -821,9 +821,25 @@ const UpdateTravellers = () => {
                         format='DD MMMM YYYY'
                       />
                     </div>
+                    {/* Passport Scan Files Upload */}
+                    <div className='col-12'>
+                      <label>Passport</label>
+                      {previousPassportScanFiles?.length > 0 && (
+                        <PreviousUploadPictures
+                          data={previousPassportScanFiles}
+                          onDeleteClick={(element, index) => {
+                            setPreviousPassportScanFiles((prev) => {
+                              prev.splice(index, 1);
+                              return [...prev];
+                            });
+                          }}
+                        />
+                      )}
+                      <NewFileUploads multiple={true} setUploads={setPassportScanFiles} />
+                    </div>
                     {/* Photo Scan File Upload */}
-                    <div className='col-lg-4'>
-                      <label>Photo Scan File</label>
+                    <div className='col-12'>
+                      <label>Digital Photograph</label>
                       {previousPhotoScan && (
                         <PreviousUploadPictures
                           data={[previousPhotoScan]}
@@ -835,8 +851,8 @@ const UpdateTravellers = () => {
                       <NewFileUploads multiple={false} setUploads={setPhotoScanFile} />
                     </div>
                     {/* PanCard Scan File Upload */}
-                    <div className='col-lg-4'>
-                      <label>PAN Card Scan File</label>
+                    <div className='col-12'>
+                      <label>PAN Card</label>
                       {previousPanCardScan && (
                         <PreviousUploadPictures
                           data={[previousPanCardScan]}
@@ -848,8 +864,8 @@ const UpdateTravellers = () => {
                       <NewFileUploads multiple={false} setUploads={setPanCardScanFile} />
                     </div>
                     {/* Aadhaar Card Scan File Upload */}
-                    <div className='col-lg-4'>
-                      <label>Aadhaar Card Scan Certificate File</label>
+                    <div className='col-12'>
+                      <label>Aadhaar Card</label>
                       {previousAadhaarCardScan && (
                         <PreviousUploadPictures
                           data={[previousAadhaarCardScan]}
@@ -861,8 +877,8 @@ const UpdateTravellers = () => {
                       <NewFileUploads setUploads={setAadhaarCardScanFile} />
                     </div>
                     {/* Vaccination Certificate File Upload */}
-                    <div className='col-lg-4'>
-                      <label>Vaccination Certificate File</label>
+                    <div className='col-12'>
+                      <label>Vaccination Certificate</label>
                       {previousVaccinationCertificate && (
                         <PreviousUploadPictures
                           data={[previousVaccinationCertificate]}
@@ -876,23 +892,6 @@ const UpdateTravellers = () => {
                         multiple={false}
                         setUploads={setVaccinationCertificateFile}
                       />
-                    </div>
-                    {/* Passport Scan Files Upload */}
-
-                    <div className='col-lg-4'>
-                      <label>Passport Scan Files</label>
-                      {previousPassportScanFiles?.length > 0 && (
-                        <PreviousUploadPictures
-                          data={previousPassportScanFiles}
-                          onDeleteClick={(element, index) => {
-                            setPreviousPassportScanFiles((prev) => {
-                              prev.splice(index, 1);
-                              return [...prev];
-                            });
-                          }}
-                        />
-                      )}
-                      <NewFileUploads multiple={true} setUploads={setPassportScanFiles} />
                     </div>
                     <div className='d-inline-block'>
                       <button
