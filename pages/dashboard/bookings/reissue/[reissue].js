@@ -135,9 +135,9 @@ const ReissueBooking = () => {
         // setClientServicesCharges(response.data.client_service_charges);
         // setClientTotal(response.data.client_total);
         setSector(response.data.sector);
-        setBookingDate(
-          new DateObject({ date: response.data.booking_date, format: 'YYYY-MM-DD' })
-        );
+        // setBookingDate(
+        //   new DateObject({ date: response.data.booking_date, format: 'YYYY-MM-DD' })
+        // );
         setIsOffshore(response.data?.is_offshore);
         // setClientQuotedAmount(
         //   +response.data.client_base_amount +
