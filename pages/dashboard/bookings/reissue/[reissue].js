@@ -136,9 +136,9 @@ const ReissueBooking = () => {
         // setClientServicesCharges(response.data.currency_conversion_charges);
         // setClientTotal(response.data.client_total);
         setSector(response.data.sector);
-        setBookingDate(
-          new DateObject({ date: response.data.booking_date, format: 'YYYY-MM-DD' })
-        );
+        // setBookingDate(
+        //   new DateObject({ date: response.data.booking_date, format: 'YYYY-MM-DD' })
+        // );
         setEnableINR(response.data.enable_inr);
         setExchangeRate(Number((+response.data.exchange_rate).toFixed(2)));
         // setClientQuotedAmount(
