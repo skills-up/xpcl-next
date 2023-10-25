@@ -375,7 +375,7 @@ const ReissueBooking = () => {
       airline_id: airlineID?.value,
       miscellaneous_type: miscellaneousType?.value,
       payment_account_id: paymentAccountID?.value,
-      payment_amount: +paymentAmount ? paymentAmount || undefined : undefined,
+      payment_amount: paymentAmount || null,
       client_referrer_id: clientReferrerID?.value,
       client_referral_fee: +clientReferralFee
         ? clientReferralFee || undefined
@@ -403,7 +403,7 @@ const ReissueBooking = () => {
               booking_class: element['booking_class']?.value,
             })),
       is_offshore: isOffshore,
-      sector: bookingType.value === 'Miscellaneous' ? sector : undefined,
+      sector: sector || undefined,
     });
     if (response?.success) {
       sendToast('success', 'Reissued Invoice Successfully.', 4000);
