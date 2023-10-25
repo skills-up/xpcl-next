@@ -413,7 +413,7 @@ const UpdateBooking = () => {
       airline_id: airlineID?.value,
       miscellaneous_type: miscellaneousType?.value,
       payment_account_id: paymentAccountID?.value,
-      payment_amount: paymentAmount || null,
+      payment_amount: +paymentAmount || 0,
       client_referrer_id: clientReferrerID?.value,
       client_referral_fee: +clientReferralFee
         ? clientReferralFee || undefined
