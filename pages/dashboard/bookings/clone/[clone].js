@@ -510,7 +510,7 @@ const AddNewBooking = () => {
       client_base_amount: (clientBaseAmount || 0) / (exchangeRate || 1),
       client_tax_amount: (clientTaxAmount || 0) / (exchangeRate || 1),
       client_gst_amount: (clientGSTAmount || 0) / (exchangeRate || 1),
-      currency_conversion_charges: currencyConversionCharges,
+      currency_conversion_charges: (currencyConversionCharges || 0) / (exchangeRate || 1),
       client_total: (clientTotal || 0) / (exchangeRate || 1),
       client_traveller_id: clientTravellerID?.value,
       exchange_rate: exchangeRate || 1,
