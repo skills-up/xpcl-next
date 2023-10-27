@@ -36,167 +36,137 @@ const ViewBooking = () => {
     if (router.query.view) {
       const response = await getItem('bookings', router.query.view);
       if (response?.success) {
-        let data = response.data;
-        // Converting time columns
-        delete data['id'];
-        if (data.created_by) {
-          data.created_by = (
-            <a
-              className='text-15 cursor-pointer'
-              href={'/dashboard/users/view/' + data.created_by}
-            >
-              <strong>User #{data.created_by} </strong>[
-              {new Date(data.created_at).toLocaleString('en-IN', {
-                dateStyle: 'medium',
-                timeStyle: 'short',
-              })}
-              ]
+        const res = response.data || {};
+        const inrFormat = Intl.NumberFormat('en-IN', {
+          style: 'currency',
+          currency: 'INR',
+        });
+        const data = {
+          number: res.number,
+          booking_type: res.booking_type,
+          booking_date: new Date(res.booking_date).toLocaleDateString('en-IN', {
+            dateStyle: 'medium',
+          }),
+          client_name: (
+            <a href={'/dashboard/organizations/view/' + res.client_id}>
+              {res.client_name}
             </a>
-          );
-        }
-        if (data.updated_by) {
-          data.updated_by = (
-            <a
-              className='text-15 cursor-pointer'
-              href={'/dashboard/users/view/' + data.updated_by}
-            >
-              <strong>User #{data.updated_by} </strong>[
-              {new Date(data.updated_at).toLocaleString('en-IN', {
-                dateStyle: 'medium',
-                timeStyle: 'short',
-              })}
-              ]
+          ),
+          end_client_name: res.end_client_name ? (
+            <a href={'/dashboard/organizations/view/' + res.end_client_id}>
+              {res.end_client_name}
             </a>
-          );
-        }
-        if (data?.client_service_charges)
-          data['xplorz_gst_amount'] = data['client_service_charges'];
-        delete data['client_service_charges'];
-        delete data['created_at'];
-        delete data['updated_at'];
-        if (data?.client_name && data?.client_id) {
-          data.client_name = (
-            <a href={'/dashboard/organizations/view/' + data.client_id}>
-              {data.client_name}
-            </a>
-          );
-        }
-        delete data['client_id'];
-        if (
-          data?.client_traveller_name &&
-          data?.client_traveller_id &&
-          data?.client_traveller
-        ) {
-          data.client_traveller_name = (
+          ) : undefined,
+          client_traveller_name: res.client_traveller_name ? (
             <a
               href={
                 '/dashboard/travellers/client-travellers/view?traveller_id=' +
-                data.client_traveller.traveller_id +
+                res.client_traveller.traveller_id +
                 '&view=' +
-                data.client_traveller_id
+                res.client_traveller_id
               }
             >
-              {data.client_traveller_name}
+              {res.client_traveller_name}
             </a>
-          );
-        }
-        delete data['client_traveller'];
-        delete data['client_traveller_id'];
-        if (data?.vendor_name && data?.vendor_id) {
-          data.vendor_name = (
-            <a href={'/dashboard/organizations/view/' + data.vendor_id}>
-              {data.vendor_name}
+          ) : undefined,
+          vendor_name: (
+            <a href={'/dashboard/organizations/view/' + res.vendor_id}>
+              {res.vendor_name}
             </a>
-          );
-        }
-        delete data['vendor_id'];
-        if (data?.airline_name && data?.airline_id) {
-          data.airline_name = (
-            <a href={'/dashboard/organizations/view/' + data.airline_id}>
-              {data.airline_name}
+          ),
+          airline_name: res.airline_name ? (
+            <a href={'/dashboard/organizations/view/' + res.airline_id}>
+              {res.airline_name}
             </a>
-          );
-        }
-        delete data['airline_id'];
-        if (data?.payment_account_name && data?.payment_account_id) {
-          data.payment_account_name = (
-            <a href={'/dashboard/accounts/view/' + data.payment_account_id}>
-              {data.payment_account_name}
+          ) : null,
+          ticket_number: res.ticket_number,
+          pnr: res.pnr || null,
+          sector: res.sector || null,
+          vendor_base_amount: inrFormat.format(res.vendor_base_amount),
+          vendor_yq_amount: inrFormat.format(res.vendor_yq_amount),
+          vendor_tax_amount: inrFormat.format(res.vendor_tax_amount),
+          vendor_gst_amount: inrFormat.format(res.vendor_gst_amount),
+          reissue_penalty: inrFormat.format(res.reissue_penalty),
+          vendor_misc_charges: inrFormat.format(res.vendor_misc_charges),
+          vendor_total: inrFormat.format(res.vendor_total),
+          commission_rule_name: res.commission_rule_name ? (
+            <a href={'/dashboard/commission-rules/view/' + res.commission_rule_id}>
+              {res.commission_rule_name}
             </a>
-          );
-        }
-        delete data['payment_account_id'];
-        if (data?.client_referrer_name && data?.client_referrer_id) {
-          data.client_referrer_name = (
-            <a href={'/dashboard/accounts/view/' + data.client_referrer_id}>
-              {data.client_referrer_name}
+          ) : undefined,
+          iata_commission_percent: res.iata_commission_percent,
+          plb_commission_percent: res.plb_commission_percent,
+          vendor_service_charges: inrFormat.format(res.vendor_service_charges),
+          vendor_tds: inrFormat.format(res.vendor_tds),
+          commission_receivable: inrFormat.format(res.commission_receivable),
+          payment_account_name: res.payment_account_name ? (
+            <a href={'/dashboard/accounts/view/' + res.payment_account_id}>
+              {res.payment_account_name}
             </a>
-          );
-        }
-        delete data['client_referrer_id'];
-        if (data?.reissued_booking) {
-          const id = data.reissued_booking.id;
+          ) : undefined,
+          payment_amount: inrFormat.format(res.payment_amount),
+          client_base_amount: inrFormat.format(res.client_base_amount),
+          client_tax_amount: inrFormat.format(res.client_tax_amount),
+          client_gst_amount: inrFormat.format(res.client_gst_amount),
+          xplorz_gst_amount: inrFormat.format(res.client_service_charges),
+          client_total: inrFormat.format(res.client_total),
+          client_referral_fee: inrFormat.format(res.client_referral_fee),
+          client_referrer_name: res.client_referrer_name ? (
+            <a href={'/dashboard/accounts/view/' + res.client_referrer_id}>
+              {res.client_referrer_name}
+            </a>
+          ) : undefined,
+          updated_by: res.updated_by ? (
+            <a href={'/dashboard/users/view/' + res.updated_by}>
+              <strong>User #{res.updated_by} </strong>[
+              {new Date(res.updated_at).toLocaleString('en-IN', {
+                dateStyle: 'medium',
+                timeStyle: 'short',
+              })}
+              ]
+            </a>
+          ) : undefined,
+          status: <span className='text-success fw-600'>Active</span>,
+          miscellaneous_type: res.miscellaneous_type,
+          is_offshore: res.is_offshore,
+          is_auto_invoiced: res.is_auto_invoiced,
+        };
+        if (res?.reissued_booking) {
           data.status = (
-            <span
-              className='rounded-100 cursor-pointer d-inline-block mt-1 py-4 px-10 text-center text-14 fw-500 bg-blue-1-05 text-blue-1'
-              onClick={() => window.location.assign('/dashboard/bookings/view/' + id)}
+            <a
+              href={'/dashboard/bookings/view/' + res.reissued_booking.id}
+              className='text-blue-1 fw-600'
             >
               Reissued Booking
-            </span>
+            </a>
           );
         }
         if (data?.partial_refund) {
-          const id = data.partial_refund.id;
           data.status = (
-            <span
-              className='rounded-100 cursor-pointer d-inline-block mt-1 py-4 px-10 text-center text-14 fw-500'
-              style={{ backgroundColor: 'orange', color: 'white' }}
-              onClick={() =>
-                window.location.assign('/dashboard/partial-refunds/view/' + id)
-              }
+            <a
+              href={'/dashboard/partial-refunds/view/' + res.partial_refund.id}
+              className='text-yellow-3 fw-600'
             >
               Partially Refunded
-            </span>
+            </a>
           );
         }
         if (data?.refund) {
-          const id = data.refund.id;
           data.status = (
-            <span
-              className='rounded-100 cursor-pointer d-inline-block mt-1 py-4 px-10 text-center text-14 fw-500 bg-red-3 text-red-2'
-              onClick={() => window.location.assign('/dashboard/refunds/view/' + id)}
-            >
+            <a href={'/dashboard/refunds/view/' + res.refund.id} className='text-red-2 fw-600'>
               Refunded
-            </span>
-          );
-        }
-        if (data?.booking_sectors)
-          if (data?.booking_sectors.length > 0) setBookingSectors(data.booking_sectors.slice(0));
-        if (data?.original_booking_id && data?.original_booking_number) {
-          data['reissued_for'] = (
-            <a
-              className='text-15 cursor-pointer'
-              href={'/dashboard/bookings/view/' + data.original_booking_id}
-            >
-              {data.original_booking_number}
             </a>
           );
         }
-        if (data?.commission_rule_name && data?.commission_rule_id) {
-          data.commission_rule_name = (
-            <a href={'/dashboard/commission-rules/view/' + data.commission_rule_id}>
-              {data.commission_rule_name}
+        if (res?.original_booking_id && res?.original_booking_number) {
+          data.reissued_for = (
+            <a href={'/dashboard/bookings/view/' + data.original_booking_id}>
+              {res.original_booking_number}
             </a>
           );
         }
-        delete data['commission_rule_id'];
-        delete data['original_booking_number'];
-        delete data['original_booking_id'];
-        delete data['sectors'];
-        delete data['booking_sectors'];
-        delete data['reissued_booking'];
-        delete data['partial_refund'];
-        delete data['refund'];
+        if (res?.booking_sectors?.length > 0)
+          setBookingSectors(res.booking_sectors.slice(0));
         setBooking(data);
       } else {
         sendToast(
