@@ -224,6 +224,10 @@ const ViewBooking = () => {
       accessor: 'to_airport',
     },
     {
+      Header: 'Flight Details',
+      accessor: 'details',
+    },
+    {
       Header: 'Travel Date',
       accessor: 'travel_date',
       Cell: (data) => {
