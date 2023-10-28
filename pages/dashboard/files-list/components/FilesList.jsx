@@ -28,7 +28,7 @@ const FilesGrid = ({ prefixes, searches, filesList }) => {
           const pos = filepath.indexOf('.');
           const isDir = pos < 0 || filepath.length > pos + 4;
           let fullPath = searchActive ? filepath : prefix + '/' + filepath;
-          if (!isDir) fullPath = '/storage/' + fullPath;
+          if (!isDir) fullPath = 'https://api.xplorz.com/storage/' + fullPath;
           return isDir ? (
             <div
               key={i}
