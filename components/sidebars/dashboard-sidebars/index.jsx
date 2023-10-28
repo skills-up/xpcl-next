@@ -271,6 +271,10 @@ const Sidebar = () => {
           title: 'Visa Requirement Docs',
           href: '/dashboard/visa-requirement-documents',
         },
+        {
+          title: 'Files List',
+          href: '/dashboard/files-list',
+        },
       ],
     },
     // {
