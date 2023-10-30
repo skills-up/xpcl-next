@@ -37,33 +37,21 @@ function ContactWhyUs() {
   const testimonials = [
     {
       icon: '/img/backgrounds/testimonial.png',
-      text: 'As a result of corporate coding with airlines, 200+ bookings were cancelled with zero cancellation penalty, leading to savings for the company. Not only this, we also received discounts worth almost 20 Lacs— saving almost 15% on overall hotel bookings',
-      by: 'Surender Jaglan',
-      desig: 'Head-Administration, Blackberrys',
+      text: 'We\'ve been working with Xplorz for over 15 years now and not once has the experience been less than exceptional. The Team at Xplorz understands our complex business travel requirements and makes the process smooth and seamless. Their customer support for changes and cancellations is just brilliant.',
+      by: 'Santush Thakur',
+      desig: 'Lighthouse Funds',
+    },
+    {
+      icon: '/img/backgrounds/testimonial.png',
+      text: 'Vikram and his team\'s unwavering dedication to providing the best possible experience is evident in every interaction. They prioritize their clients\' satisfaction above all else, leaving no stone unturned in their pursuit of excellence. Their commitment to delivering exceptional service is truly commendable.\nIn conclusion, working with Vikram and his team has been an absolute pleasure. Their unwavering commitment to excellence, efficiency, and effortless execution make them the best travel agency I have ever had the privilege of working with. I highly recommend their services to anyone seeking a truly exceptional travel experience.',
+      by: 'Rama Padgaonkar',
+      desig: 'True North Funds',
     },
     {
       icon: '/img/backgrounds/testimonial.png',
       text: 'As a result of corporate coding with airlines, 200+ bookings were cancelled with zero cancellation penalty, leading to savings for the company. Not only this, we also received discounts worth almost 20 Lacs— saving almost 15% on overall hotel bookings',
-      by: 'Surender Jaglan',
-      desig: 'Head-Administration, Blackberrys',
-    },
-    {
-      icon: '/img/backgrounds/testimonial.png',
-      text: 'As a result of corporate coding with airlines, 200+ bookings were cancelled with zero cancellation penalty, leading to savings for the company. Not only this, we also received discounts worth almost 20 Lacs— saving almost 15% on overall hotel bookings',
-      by: 'Surender Jaglan',
-      desig: 'Head-Administration, Blackberrys',
-    },
-    {
-      icon: '/img/backgrounds/testimonial.png',
-      text: 'As a result of corporate coding with airlines, 200+ bookings were cancelled with zero cancellation penalty, leading to savings for the company. Not only this, we also received discounts worth almost 20 Lacs— saving almost 15% on overall hotel bookings',
-      by: 'Surender Jaglan',
-      desig: 'Head-Administration, Blackberrys',
-    },
-    {
-      icon: '/img/backgrounds/testimonial.png',
-      text: 'As a result of corporate coding with airlines, 200+ bookings were cancelled with zero cancellation penalty, leading to savings for the company. Not only this, we also received discounts worth almost 20 Lacs— saving almost 15% on overall hotel bookings',
-      by: 'Surender Jaglan',
-      desig: 'Head-Administration, Blackberrys',
+      by: 'Priti Soochak',
+      desig: 'Chrys Capital',
     },
   ];
 
