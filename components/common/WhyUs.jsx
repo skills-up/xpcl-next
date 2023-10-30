@@ -100,8 +100,8 @@ function ContactWhyUs() {
             >
               {testimonials.map((element, index) => (
                 <div className='testimonial'>
-                  <img src={element.icon} className='icon' />
-                  <div className='text-light-4 mt-20 text-14'>{element.text}</div>
+                  {/* <img src={element.icon} className='icon' /> */}
+                  <div className='text-light-4 mt-20 text-14 text-justify'>{element.text}</div>
                   <div className='d-flex flex-column mt-30'>
                     <h3 className='text-dark-2'>{element.by}</h3>
                     <span className='text-14 fw-200 text-light-1'>{element.desig}</span>
