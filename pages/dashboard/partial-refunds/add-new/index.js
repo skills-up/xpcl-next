@@ -10,6 +10,7 @@ import { createItem, getItem, getList } from '../../../../api/xplorzApi';
 import ReactSwitch from 'react-switch';
 import Select from 'react-select';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
+import { capitalize } from '../../../../utils/text-utils';
 
 const AddNewPartialRefund = () => {
   const [vendorBaseAmount, setVendorBaseAmount] = useState(0);
@@ -352,7 +353,7 @@ const AddNewPartialRefund = () => {
       refund_amount: +refundAmount === 0 ? undefined : refundAmount || undefined,
       payment_account_id: accountID?.value || undefined,
       refund_to_account_id: clientAccountID?.value || undefined,
-      reason,
+      reason: capitalize(reason),
       is_offshore: isOffshore,
     });
     if (response?.success) {
@@ -1299,6 +1300,7 @@ const AddNewPartialRefund = () => {
                           value={reason}
                           placeholder=' '
                           type='text'
+                          className='capitalize'
                         />
                         <label className='lh-1 text-16 text-light-1'>Comment</label>
                       </div>
