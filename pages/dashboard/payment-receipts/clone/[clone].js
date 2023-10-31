@@ -10,6 +10,7 @@ import { createItem, getItem, getList } from '../../../../api/xplorzApi';
 import ReactSwitch from 'react-switch';
 import Select from 'react-select';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
+import { capitalize } from '../../../../utils/text-utils';
 
 const AddNewPaymentReceipt = () => {
   const [type, setType] = useState(null);
@@ -177,7 +178,7 @@ const AddNewPaymentReceipt = () => {
       cr_account_id: crAccountID.value,
       date: date.format('YYYY-MM-DD'),
       amount,
-      narration,
+      narration: capitalize(narration),
       itc:
         type.value === 'Payment'
           ? itc
@@ -339,6 +340,7 @@ const AddNewPaymentReceipt = () => {
                           placeholder=' '
                           type='text'
                           required
+                          className='capitalize'
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Narration<span className='text-danger'>*</span>
