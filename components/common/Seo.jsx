@@ -3,7 +3,7 @@ import Head from 'next/head';
 const Seo = ({ pageTitle }) => (
   <>
     <Head>
-      <title>{pageTitle && `${pageTitle} | Xplorz.Com`}</title>
+      <title>{pageTitle && `${pageTitle} | TripCentral.in`}</title>
       <meta name='viewport' content='width=device-width, initial-scale=1' />
     </Head>
   </>
