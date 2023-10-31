@@ -10,6 +10,7 @@ import { createItem, getItem, getList } from '../../../../api/xplorzApi';
 import ReactSwitch from 'react-switch';
 import Select from 'react-select';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
+import { capitalize } from '../../../../utils/text-utils';
 
 const AddNewRefund = () => {
   const [refundDate, setRefundDate] = useState(new DateObject());
@@ -106,7 +107,7 @@ const AddNewRefund = () => {
           ? undefined
           : refundAmount / (bookingData?.enable_inr ? bookingData.exchange_rate : 1) ||
             undefined,
-      reason,
+      reason: capitalize(reason),
     });
     if (response?.success) {
       sendToast('success', 'Created Refund Successfully.', 4000);
@@ -270,6 +271,7 @@ const AddNewRefund = () => {
                           value={reason}
                           placeholder=' '
                           type='text'
+                          className='capitalize'
                         />
                         <label className='lh-1 text-16 text-light-1'>Comment</label>
                       </div>

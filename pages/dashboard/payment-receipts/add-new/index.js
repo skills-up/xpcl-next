@@ -9,6 +9,7 @@ import Footer from '../../../../components/footer/dashboard-footer';
 import Header from '../../../../components/header/dashboard-header';
 import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
 import { sendToast } from '../../../../utils/toastify';
+import { capitalize } from '../../../../utils/text-utils';
 
 const AddNewPaymentReceipt = () => {
   const [type, setType] = useState(null);
@@ -84,7 +85,7 @@ const AddNewPaymentReceipt = () => {
       cr_account_id: crAccountID.value,
       date: date.format('YYYY-MM-DD'),
       amount,
-      narration,
+      narration: capitalize(narration),
     });
     if (response?.success) {
       sendToast('success', 'Created ' + router.query.type + ' Successfully.', 4000);
@@ -239,6 +240,7 @@ const AddNewPaymentReceipt = () => {
                           placeholder=' '
                           type='text'
                           required
+                          className='capitalize'
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Narration<span className='text-danger'>*</span>
