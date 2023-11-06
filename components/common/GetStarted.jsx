@@ -11,7 +11,7 @@ function ContactGetStarted () {
       icon: <HiOutlineComputerDesktop className='text-blue-1 icon' />,
       title: 'Corporate Booking Tool',
       subtitle:
-        'Our online corporate booking tool is perfect for booking flights, hotels, and chauffeur driver cars all over the world. With a user-friendly interface and easy navigation, you can book your travel arrangements hassle-free. Our advanced technology ensures that you get the best prices available in the market, saving you both time and money.',
+        'Our online corporate booking tool is perfect for booking flights, hotels, and chauffeur driven cars all over the world. With a user-friendly interface and easy navigation, you can book your travel arrangements hassle-free. Our advanced technology ensures that you get the best prices available in the market, saving you both time and money.',
       points: [
         'Lorem ipsum dolor sit amet, consectetur adi piscing elit, sed do eiusmod',
         'Lorem ipsum dolor sit amet, consectetur adi piscing elit, sed do eiusmod',

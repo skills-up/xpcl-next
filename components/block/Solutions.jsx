@@ -11,7 +11,7 @@ const Solutions = () => {
       id: 1,
       icon: <HiOutlineComputerDesktop className='text-blue-1 text-60' />,
       title: 'Online Corporate Booking Tool and Mobile App ',
-      text: `Perfect for booking flights, hotels and chauffeur driver cars all over the world`,
+      text: `Perfect for booking flights, hotels and chauffeur driven cars all over the world`,
       delayAnim: '100',
     },
     {
