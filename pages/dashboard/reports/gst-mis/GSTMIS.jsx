@@ -6,19 +6,21 @@ import { sendToast } from '../../../../utils/toastify';
 import { BsTrash3 } from 'react-icons/bs';
 
 const Journals = () => {
+  const date = new DateObject();
   const [gSTMIS, setGSTMIS] = useState(null);
-  const [dates, setDates] = useState(new DateObject());
-  const [removeZeros, setRemoveZeros] = useState(false);
+  const [dates, setDates] = useState(date.setMonth(date.month - 1));
+  const [removeZeros, setRemoveZeros] = useState(true);
   const [tempZeroObj, setTempZeroObj] = useState(null);
 
   const router = useRouter();
 
   const getGSTMIS = async () => {
+    setGSTMIS(null);
     const response = await getList('reports/gst-mis', {
       end_date: dates.format('YYYY-MM-DD'),
     });
     if (response?.success) {
-      await manipulateData(response.data);
+      await manipulateData(response.data, removeZeros);
     } else {
       sendToast(
         'error',
@@ -47,13 +49,14 @@ const Journals = () => {
 
   const manipulateData = async (data, checkZero = false) => {
     // Data total
-    let commissionArr = Object.values(data.commissions).map((el) => el);
+    let commissionArr = Object.values(data?.commissions).map((el) => el);
     if (data?.gst_invoices?.length > 0)
       commissionArr = [...data.gst_invoices, ...commissionArr];
     if (checkZero) {
       setTempZeroObj(structuredClone(gSTMIS));
       // commissionArr
-      commissionArr = commissionArr.filter((prev) => {
+      commissionArr = commissionArr.filter(x => +(x.cgst) && +(x.sgst) && (x.pdf_path ? +(x.commission) : +(x.amount)));
+      /* commissionArr = commissionArr.filter((prev) => {
         if (prev?.pdf_path) {
           if (+prev.commission !== 0 && +prev.cgst !== 0 && +prev.sgst !== 0) {
             return prev;
@@ -63,9 +66,10 @@ const Journals = () => {
             return prev;
           }
         }
-      });
+      }); */
       // itc
-      data.itc = data.itc.filter((prev) => {
+      data.itc = data.itc.filter(x => +(x.base_amount) && (+(x.cgst) || +(x.sgst) || +(x.igst))); 
+      /* data.itc = data.itc.filter((prev) => {
         if (
           +prev.base_amount !== 0 &&
           +prev.cgst !== 0 &&
@@ -74,9 +78,10 @@ const Journals = () => {
         ) {
           return prev;
         }
-      });
+      }); */
       // transaction fees
-      data.transaction_fees = data.transaction_fees.filter((prev) => {
+      data.transaction_fees = data.transaction_fees.filter(x => +(x.commission) && (+(x.cgst) || +(x.sgst) || +(x.igst))); 
+      /* data.transaction_fees = data.transaction_fees.filter((prev) => {
         if (
           +prev.commission !== 0 &&
           +prev.cgst !== 0 &&
@@ -85,7 +90,7 @@ const Journals = () => {
         ) {
           return prev;
         }
-      });
+      }); */
       // services
       for (let service of Object.keys(data.services)) {
         if (
@@ -228,7 +233,7 @@ const Journals = () => {
           </ul>
         </div>
       )}
-      <div className='gst-mis'>
+      {gSTMIS ? <div className='gst-mis'>
         {/* GST COMMISSION */}
         <div className='gst-services mt-30'>
           <h3 className='text-center'>
@@ -988,7 +993,7 @@ const Journals = () => {
             </table>
           </div>
         </div>
-      </div>
+      </div> : <p className='text-center'>Loading...</p>}
     </div>
   );
 };
