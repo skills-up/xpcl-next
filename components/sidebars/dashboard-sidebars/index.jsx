@@ -207,6 +207,10 @@ const Sidebar = () => {
           href: '/dashboard/reports/bill-wise-profit',
         },
         {
+          title: 'Sales Analysis',
+          href: '/dashboard/reports/sales-analysis',
+        },
+        {
           title: 'Close Accounts',
           href: '/dashboard/reports/close-books',
         },
