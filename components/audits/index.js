@@ -86,6 +86,7 @@ const Audit = ({ data = undefined, url }) => {
               </h5>
               <span>
                 <em>
+                  {element?.updated_by_name} @
                   {new Date(element?.created_at).toLocaleString('en-IN', {
                     dateStyle: 'medium',
                     timeStyle: 'short',

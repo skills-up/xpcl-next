@@ -38,14 +38,14 @@ const TravelList = () => {
       }))(bookingData);
       for (let sector of bookingData.sectors) {
         let isDuplicate = false;
-        let key = `${bookingData.booking_date}|${bookingData.client_traveller_name}|${sector.travel_date}|${sector.from_airport}|`;
+        let key = `${bookingData.client_traveller_name}|${sector.travel_date}|${sector.from_airport}|`;
         let idx = keyValues.indexOf(key);
         if (idx >= 0) {
           isDuplicate = true;
           formattedData[Math.floor(idx/2)].isDuplicate = true;
         }
         keyValues.push(key);
-        key = `${bookingData.booking_date}|${bookingData.client_traveller_name}|${sector.travel_date}||${sector.to_airport}`;
+        key = `${bookingData.client_traveller_name}|${sector.travel_date}||${sector.to_airport}`;
         idx = keyValues.indexOf(key);
         if (idx >= 0) {
           isDuplicate = true;
@@ -54,6 +54,10 @@ const TravelList = () => {
         keyValues.push(key);
         formattedData.push({ ...booking, ...sector, isDuplicate });
       }
+      console.log('Key Values')
+      console.table(keyValues);
+      console.log('Formatted Data')
+      console.table(formattedData);
     }
     return formattedData;
   };

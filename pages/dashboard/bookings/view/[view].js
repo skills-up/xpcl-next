@@ -141,7 +141,7 @@ const ViewBooking = () => {
             </a>
           );
         }
-        if (data?.partial_refund) {
+        if (res?.partial_refund) {
           data.status = (
             <a
               href={'/dashboard/partial-refunds/view/' + res.partial_refund.id}
@@ -151,7 +151,7 @@ const ViewBooking = () => {
             </a>
           );
         }
-        if (data?.refund) {
+        if (res?.refund) {
           data.status = (
             <a href={'/dashboard/refunds/view/' + res.refund.id} className='text-red-2 fw-600'>
               Refunded
