@@ -1,14 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { AiOutlineEye } from 'react-icons/ai';
+import { BsTrash3 } from 'react-icons/bs';
+import { HiOutlinePencilAlt } from 'react-icons/hi';
 import { deleteItem, getList } from '../../../../api/xplorzApi';
 import ActionsButton from '../../../../components/actions-button/ActionsButton';
-import Datatable from '../../../../components/datatable/Datatable';
-import { sendToast } from '../../../../utils/toastify';
 import ConfirmationModal from '../../../../components/confirm-modal';
-import { AiOutlineEye } from 'react-icons/ai';
-import { HiOutlinePencilAlt } from 'react-icons/hi';
-import { BsTrash3 } from 'react-icons/bs';
-import { IoCopyOutline } from 'react-icons/io5';
-import { useRouter } from 'next/router';
+import Datatable from '../../../../components/datatable/ServerDatatable';
+import { sendToast } from '../../../../utils/toastify';
 
 const PartialRefunds = () => {
   const [partialRefunds, setPartialRefunds] = useState([]);
@@ -19,15 +18,38 @@ const PartialRefunds = () => {
 
   const router = useRouter();
   useEffect(() => {
-    if (router.isReady) getPartialRefunds();
+    if (router.isReady) getOrganizations();
   }, []);
 
+  useEffect(() => {
+    getPartialRefunds();
+  }, [pageSize]);
+
+  const getOrganizations = async () => {
+    const response = await getList('organizations');
+    if (response?.success) {
+      setOrgs(response.data);
+    } else {
+      sendToast(
+        'error',
+        response?.data?.message ||
+          response?.data?.error ||
+          'Error getting organiztions list',
+        4000
+      );
+    }
+  };
+
   const getPartialRefunds = async () => {
-    const response = await getList('partial-refunds');
-    const orgs = await getList('organizations');
-    if (response?.success && orgs?.success) {
-      setPartialRefunds(response.data.reverse());
-      setOrgs(orgs.data);
+    const data = {
+      paginate: pageSize,
+    };
+    if (paginate) {
+      data.page = pageNumber;
+    }
+    const response = await getList('partial-refunds', data);
+    if (response?.success) {
+      setPartialRefunds(response.data);
     } else {
       sendToast(
         'error',
@@ -183,13 +205,21 @@ const PartialRefunds = () => {
       </div>
       {/* Data Table */}
       <Datatable
+        onPageSizeChange={(size) => setPageSize(size)}
         viewLink={'/dashboard/partial-refunds'}
         downloadCSV
         CSVName='PartialRefunds.csv'
         columns={columns}
-        data={partialRefunds.filter((perm) =>
-          Object.values(perm).join(',').toLowerCase().includes(searchQuery.toLowerCase())
-        )}
+        onPaginate={getPartialRefunds}
+        fullData={partialRefunds}
+        data={
+          partialRefunds?.data?.filter((perm) =>
+            Object.values(perm)
+              .join(',')
+              .toLowerCase()
+              .includes(searchQuery.toLowerCase())
+          ) || []
+        }
       />
     </div>
   );

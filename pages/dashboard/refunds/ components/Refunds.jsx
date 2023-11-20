@@ -1,34 +1,37 @@
-import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { AiOutlineEye } from 'react-icons/ai';
+import { BsTrash3 } from 'react-icons/bs';
+import { HiOutlinePencilAlt } from 'react-icons/hi';
 import { deleteItem, getList } from '../../../../api/xplorzApi';
 import ActionsButton from '../../../../components/actions-button/ActionsButton';
-import Datatable from '../../../../components/datatable/Datatable';
-import { sendToast } from '../../../../utils/toastify';
 import ConfirmationModal from '../../../../components/confirm-modal';
-import { AiOutlineEye } from 'react-icons/ai';
-import { HiOutlinePencilAlt } from 'react-icons/hi';
-import { BsTrash3 } from 'react-icons/bs';
-import { IoCopyOutline } from 'react-icons/io5';
-import { useRouter } from 'next/router';
+import Datatable from '../../../../components/datatable/ServerDatatable';
+import { sendToast } from '../../../../utils/toastify';
 
 const Refunds = () => {
   const [refunds, setRefunds] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
-  const [orgs, setOrgs] = useState([]);
+  const [pageSize, setPageSize] = useState(10);
 
   const router = useRouter();
+
   useEffect(() => {
     getRefunds();
-  }, []);
+  }, [pageSize]);
 
-  const getRefunds = async () => {
-    const response = await getList('refunds');
-    const orgs = await getList('organizations');
-
-    if (response?.success && orgs?.success) {
-      setRefunds(response.data.reverse());
-      setOrgs(orgs.data);
+  const getRefunds = async (paginate = false, pageNumber) => {
+    const data = {
+      paginate: pageSize,
+    };
+    if (paginate) {
+      data.page = pageNumber;
+    }
+    const response = await getList('refunds', data);
+    if (response?.success) {
+      setRefunds(response.data);
     } else {
       sendToast(
         'error',
@@ -58,7 +61,6 @@ const Refunds = () => {
     {
       Header: 'Traveller Name',
       accessor: 'booking.client_traveller_name',
-
     },
     {
       Header: 'Actions',
@@ -143,13 +145,21 @@ const Refunds = () => {
       </div>
       {/* Data Table */}
       <Datatable
+        onPageSizeChange={(size) => setPageSize(size)}
         viewLink={'/dashboard/refunds'}
         downloadCSV
         CSVName='Refunds.csv'
         columns={columns}
-        data={refunds.filter((perm) =>
-          Object.values(perm).join(',').toLowerCase().includes(searchQuery.toLowerCase())
-        )}
+        onPaginate={getRefunds}
+        fullData={refunds}
+        data={
+          refunds?.data?.filter((perm) =>
+            Object.values(perm)
+              .join(',')
+              .toLowerCase()
+              .includes(searchQuery.toLowerCase())
+          ) || []
+        }
       />
     </div>
   );

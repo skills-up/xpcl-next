@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { AiOutlineEye } from 'react-icons/ai';
+import { BsTrash3 } from 'react-icons/bs';
+import { HiOutlinePencilAlt } from 'react-icons/hi';
+import { IoCopyOutline } from 'react-icons/io5';
 import { deleteItem, getList } from '../../../../api/xplorzApi';
 import ActionsButton from '../../../../components/actions-button/ActionsButton';
-import Datatable from '../../../../components/datatable/Datatable';
-import { sendToast } from '../../../../utils/toastify';
 import ConfirmationModal from '../../../../components/confirm-modal';
-import { AiOutlineEye } from 'react-icons/ai';
-import { HiOutlinePencilAlt } from 'react-icons/hi';
-import { BsTrash3 } from 'react-icons/bs';
-import { IoCopyOutline } from 'react-icons/io5';
-import { useRouter } from 'next/router';
+import Datatable from '../../../../components/datatable/ServerDatatable';
+import { sendToast } from '../../../../utils/toastify';
 
 const Bookings = () => {
   const [bookings, setBookings] = useState([]);
@@ -16,17 +16,41 @@ const Bookings = () => {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
   const [orgs, setOrgs] = useState([]);
+  const [pageSize, setPageSize] = useState(10);
+
+  useEffect(() => {
+    getOrganizations();
+  }, []);
 
   useEffect(() => {
     getBookings();
-  }, []);
+  }, [pageSize]);
 
-  const getBookings = async () => {
-    const orgs = await getList('organizations');
-    const response = await getList('bookings');
-    if (response?.success && orgs?.success) {
-      setBookings(response.data?.reverse());
-      setOrgs(orgs.data);
+  const getOrganizations = async () => {
+    const response = await getList('organizations');
+    if (response?.success) {
+      setOrgs(response.data);
+    } else {
+      sendToast(
+        'error',
+        response?.data?.message ||
+          response?.data?.error ||
+          'Error getting organiztions list',
+        4000
+      );
+    }
+  };
+
+  const getBookings = async (paginate = false, pageNumber) => {
+    const data = {
+      paginate: pageSize,
+    };
+    if (paginate) {
+      data.page = pageNumber;
+    }
+    const response = await getList('bookings', data);
+    if (response?.success) {
+      setBookings(response.data);
     } else {
       sendToast(
         'error',
@@ -231,12 +255,20 @@ const Bookings = () => {
       </div>
       {/* Data Table */}
       <Datatable
+        onPageSizeChange={(size) => setPageSize(size)}
         downloadCSV
         CSVName='Invoices.csv'
         columns={columns}
-        data={bookings.filter((perm) =>
-          Object.values(perm).join(',').toLowerCase().includes(searchQuery.toLowerCase())
-        )}
+        onPaginate={getBookings}
+        fullData={bookings}
+        data={
+          bookings?.data?.filter((perm) =>
+            Object.values(perm)
+              .join(',')
+              .toLowerCase()
+              .includes(searchQuery.toLowerCase())
+          ) || []
+        }
       />
     </div>
   );

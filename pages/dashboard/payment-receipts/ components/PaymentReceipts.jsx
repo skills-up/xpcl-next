@@ -1,27 +1,27 @@
-import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { AiOutlineEye } from 'react-icons/ai';
+import { BsTrash3 } from 'react-icons/bs';
+import { HiOutlinePencilAlt } from 'react-icons/hi';
+import { IoCopyOutline } from 'react-icons/io5';
+import Select from 'react-select';
 import { deleteItem, getList } from '../../../../api/xplorzApi';
 import ActionsButton from '../../../../components/actions-button/ActionsButton';
-import Datatable from '../../../../components/datatable/Datatable';
-import { sendToast } from '../../../../utils/toastify';
 import ConfirmationModal from '../../../../components/confirm-modal';
-import { AiOutlineEye } from 'react-icons/ai';
-import { HiOutlinePencilAlt } from 'react-icons/hi';
-import { BsTrash3 } from 'react-icons/bs';
-import { IoCopyOutline } from 'react-icons/io5';
-import { useRouter } from 'next/router';
-import { DateObject } from 'react-multi-date-picker';
-import Select from 'react-select';
+import Datatable from '../../../../components/datatable/ServerDatatable';
+import { sendToast } from '../../../../utils/toastify';
 
 const PaymentReceipts = () => {
   const [paymentReceipts, setPaymentReceipts] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
-  const [typeID, setTypeID] = useState({ label: 'All', value: 'all' });
+  const [typeID, setTypeID] = useState({ label: 'All', value: '' });
+  const [pageSize, setPageSize] = useState(10);
 
   const router = useRouter();
   const typeOptions = [
-    { label: 'All', value: 'All' },
+    { label: 'All', value: '' },
     { label: 'Voucher', value: 'Voucher' },
     { label: 'Receipt', value: 'Receipt' },
     { label: 'Payment', value: 'Payment' },
@@ -29,12 +29,21 @@ const PaymentReceipts = () => {
 
   useEffect(() => {
     getPaymentReceipts();
-  }, []);
+  }, [pageSize, typeID]);
 
-  const getPaymentReceipts = async () => {
-    const response = await getList('payment-receipts');
+  const getPaymentReceipts = async (paginate = false, pageNumber) => {
+    const data = {
+      paginate: pageSize,
+    };
+    if (paginate) {
+      data.page = pageNumber;
+    }
+    if (typeID.value) {
+      data.type = typeID.value;
+    }
+    const response = await getList('payment-receipts', data);
     if (response?.success) {
-      setPaymentReceipts(response.data?.reverse());
+      setPaymentReceipts(response.data);
     } else {
       sendToast(
         'error',
@@ -233,30 +242,14 @@ const PaymentReceipts = () => {
       </div>
       {/* Data Table */}
       <Datatable
+        onPageSizeChange={(size) => setPageSize(size)}
         viewLink={'/dashboard/payment-receipts'}
         downloadCSV
         CSVName='PaymentReceipts.csv'
         columns={columns}
-        data={paymentReceipts
-          .filter((perm) => {
-            if (typeID?.value) {
-              if (typeID.label !== 'All') {
-                if (perm.type === typeID.label) {
-                  return perm;
-                }
-              } else {
-                return perm;
-              }
-            } else {
-              return perm;
-            }
-          })
-          .filter((perm) =>
-            Object.values(perm)
-              .join(',')
-              .toLowerCase()
-              .includes(searchQuery.toLowerCase())
-          )}
+        onPaginate={getPaymentReceipts}
+        fullData={paymentReceipts}
+        data={paymentReceipts?.data || []}
       />
     </div>
   );
