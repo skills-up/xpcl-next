@@ -1,30 +1,43 @@
-import { useState, useEffect } from 'react';
-import { deleteItem, getList } from '../../../../api/xplorzApi';
-import ActionsButton from '../../../../components/actions-button/ActionsButton';
-import Datatable from '../../../../components/datatable/Datatable';
-import { sendToast } from '../../../../utils/toastify';
-import ConfirmationModal from '../../../../components/confirm-modal';
-import { AiOutlineEye } from 'react-icons/ai';
-import { HiOutlinePencilAlt } from 'react-icons/hi';
-import { BsTrash3 } from 'react-icons/bs';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { AiOutlineEye } from 'react-icons/ai';
+import { BsTrash3 } from 'react-icons/bs';
+import { HiOutlinePencilAlt } from 'react-icons/hi';
+import { createItem, deleteItem, getList } from '../../../../api/xplorzApi';
+import ActionsButton from '../../../../components/actions-button/ActionsButton';
+import SearchParams from '../../../../components/common/SearchParams';
+import ConfirmationModal from '../../../../components/confirm-modal';
+import Datatable from '../../../../components/datatable/ServerDatatable';
+import { sendToast } from '../../../../utils/toastify';
 
 const Refunds = () => {
   const [refunds, setRefunds] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
+  const [pageSize, setPageSize] = useState(10);
+  const [params, setParams] = useState([]);
 
   const router = useRouter();
   useEffect(() => {
     getRefunds();
-  }, []);
+  }, [pageSize, params]);
 
-  const getRefunds = async () => {
-    const response = await getList('refunds');
-
+  const getRefunds = async (paginate = false, pageNumber) => {
+    const data = {
+      paginate: pageSize,
+    };
+    if (paginate) {
+      data.page = pageNumber;
+    }
+    let response = null;
+    if (params.length) {
+      data.search = params.filter((x) => x.value);
+      response = await createItem('search/refunds', data);
+    } else {
+      response = await getList('refunds', data);
+    }
     if (response?.success) {
-      setRefunds(response.data.reverse());
+      setRefunds(response.data);
     } else {
       sendToast(
         'error',
@@ -54,7 +67,6 @@ const Refunds = () => {
     {
       Header: 'Traveller Name',
       accessor: 'booking.client_traveller_name',
-
     },
     {
       Header: 'Actions',
@@ -125,28 +137,18 @@ const Refunds = () => {
           content='This will permanently delete the refund. Press OK to confirm.'
         />
       )}
-      {/* Search Bar + Add New */}
-      <div className='row mb-3 items-center justify-between mr-4'>
-        <div className='col-12'>
-          <input
-            type='text'
-            className='d-block form-control'
-            placeholder='Search'
-            onChange={(e) => setSearchQuery(e.target.value)}
-            value={searchQuery}
-          />
-        </div>
-      </div>
+      {/* Search Box */}
+      <SearchParams paramsState={[params, setParams]} entity={'refunds'} />
       {/* Data Table */}
       <Datatable
+        onPageSizeChange={(size) => setPageSize(size)}
         viewLink={'/dashboard/refunds'}
         downloadCSV
         CSVName='Refunds.csv'
         columns={columns}
-        data={refunds.filter(
-          (perm) =>
-          Object.values(perm).join(',').toLowerCase().includes(searchQuery.toLowerCase())
-        )}
+        onPaginate={getRefunds}
+        fullData={refunds}
+        data={refunds?.data || []}
       />
     </div>
   );

@@ -1,32 +1,63 @@
-import { useState, useEffect } from 'react';
-import { deleteItem, getList } from '../../../../api/xplorzApi';
-import ActionsButton from '../../../../components/actions-button/ActionsButton';
-import Datatable from '../../../../components/datatable/Datatable';
-import { sendToast } from '../../../../utils/toastify';
-import ConfirmationModal from '../../../../components/confirm-modal';
-import { AiOutlineEye } from 'react-icons/ai';
-import { HiOutlinePencilAlt } from 'react-icons/hi';
-import { BsTrash3 } from 'react-icons/bs';
-import { IoCopyOutline } from 'react-icons/io5';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { AiOutlineEye } from 'react-icons/ai';
+import { BsTrash3 } from 'react-icons/bs';
+import { HiOutlinePencilAlt } from 'react-icons/hi';
+import { IoCopyOutline } from 'react-icons/io5';
+import { createItem, deleteItem, getList } from '../../../../api/xplorzApi';
+import ActionsButton from '../../../../components/actions-button/ActionsButton';
+import SearchParams from '../../../../components/common/SearchParams';
+import ConfirmationModal from '../../../../components/confirm-modal';
+import Datatable from '../../../../components/datatable/ServerDatatable';
+import { sendToast } from '../../../../utils/toastify';
 
 const Bookings = () => {
   const [bookings, setBookings] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
   const [orgs, setOrgs] = useState([]);
+  const [pageSize, setPageSize] = useState(10);
+  const [params, setParams] = useState([]);
+
+  useEffect(() => {
+    getOrganizations();
+  }, []);
 
   useEffect(() => {
     getBookings();
-  }, []);
+  }, [pageSize, params]);
 
-  const getBookings = async () => {
-    const orgs = await getList('organizations');
-    const response = await getList('bookings');
-    if (response?.success && orgs?.success) {
-      setBookings(response.data?.reverse());
-      setOrgs(orgs.data);
+  const getOrganizations = async () => {
+    const response = await getList('organizations');
+    if (response?.success) {
+      setOrgs(response.data);
+    } else {
+      sendToast(
+        'error',
+        response?.data?.message ||
+          response?.data?.error ||
+          'Error getting organiztions list',
+        4000
+      );
+    }
+  };
+
+  const getBookings = async (paginate = false, pageNumber) => {
+    const data = {
+      paginate: pageSize,
+    };
+    if (paginate) {
+      data.page = pageNumber;
+    }
+    let response = null;
+    if (params.length) {
+      data.search = params.filter((x) => x.value);
+      response = await createItem('search/bookings', data);
+    } else {
+      response = await getList('bookings', data);
+    }
+    if (response?.success) {
+      setBookings(response.data);
     } else {
       sendToast(
         'error',
@@ -180,15 +211,7 @@ const Bookings = () => {
       )}
       {/* Search Bar + Add New */}
       <div className='row mb-3 y-gap-10 items-center justify-between mr-4 lg:pr-0 lg:mr-0'>
-        <div className='col-lg-3'>
-          <input
-            type='text'
-            className='d-block form-control'
-            placeholder='Search'
-            onChange={(e) => setSearchQuery(e.target.value)}
-            value={searchQuery}
-          />
-        </div>
+        <div className='col-lg-3'></div>
         <div className='col-lg-3'>
           <button
             className='btn btn-primary col-12'
@@ -229,14 +252,17 @@ const Bookings = () => {
           </button>
         </div>{' '}
       </div>
+      {/* Search Box */}
+      <SearchParams paramsState={[params, setParams]} entity={'bookings'} />
       {/* Data Table */}
       <Datatable
+        onPageSizeChange={(size) => setPageSize(size)}
         downloadCSV
         CSVName='Invoices.csv'
         columns={columns}
-        data={bookings.filter((perm) =>
-          Object.values(perm).join(',').toLowerCase().includes(searchQuery.toLowerCase())
-        )}
+        onPaginate={getBookings}
+        fullData={bookings}
+        data={bookings?.data || []}
       />
     </div>
   );
