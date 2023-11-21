@@ -1,30 +1,70 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { AiOutlineEye } from 'react-icons/ai';
-import { BsTrash3 } from 'react-icons/bs';
+import { BsDashSquare, BsPlusSquare, BsTrash3 } from 'react-icons/bs';
 import { HiOutlinePencilAlt } from 'react-icons/hi';
 import { IoCopyOutline } from 'react-icons/io5';
-import { deleteItem, getList } from '../../../../api/xplorzApi';
+import { createItem, deleteItem, getList } from '../../../../api/xplorzApi';
 import ActionsButton from '../../../../components/actions-button/ActionsButton';
+import SearchParams from '../../../../components/common/SearchParams';
 import ConfirmationModal from '../../../../components/confirm-modal';
 import Datatable from '../../../../components/datatable/ServerDatatable';
 import { sendToast } from '../../../../utils/toastify';
 
 const Bookings = () => {
   const [bookings, setBookings] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
   const [orgs, setOrgs] = useState([]);
   const [pageSize, setPageSize] = useState(10);
+  const [formOpen, setFormOpen] = useState(false);
+  const [params, setParams] = useState([]);
+  const [queries, setQueries] = useState([]);
+  const [searchableColumns, setSearchableColumns] = useState({
+    booking_date: 'Booking Date (YYYY-MM-DD)',
+    number: 'Number',
+    ticket_number: 'Ticket Number',
+    pnr: 'PNR',
+    sector: 'Sector',
+    miscellaneous_type: 'Misc. Type',
+    status: 'Status',
+    'airline.name': 'Airline Name',
+    'originalBooking.number': 'Original Booking Number',
+  });
 
   useEffect(() => {
     getOrganizations();
+    getSearchableColumns();
   }, []);
 
   useEffect(() => {
     getBookings();
-  }, [pageSize]);
+  }, [pageSize, params]);
+
+  useEffect(() => {
+    const searchableColumnNames = Object.keys(searchableColumns);
+    const queries = Array(searchableColumnNames.length).fill('');
+    params.forEach(({ col, value }) => {
+      const idx = searchableColumnNames.indexOf(col);
+      queries[idx] = value;
+    });
+    setQueries(queries);
+  }, [searchableColumns]);
+
+  const getSearchableColumns = async () => {
+    const response = await getList('searchable-columns/bookings');
+    if (response?.success) {
+      setSearchableColumns(response.data);
+    } else {
+      sendToast(
+        'error',
+        response?.data?.message ||
+          response?.data?.error ||
+          'Error getting searchable columns list',
+        4000
+      );
+    }
+  };
 
   const getOrganizations = async () => {
     const response = await getList('organizations');
@@ -48,7 +88,13 @@ const Bookings = () => {
     if (paginate) {
       data.page = pageNumber;
     }
-    const response = await getList('bookings', data);
+    let response = null;
+    if (params.length) {
+      data.search = params.filter((x) => x.value);
+      response = await createItem('search/bookings', data);
+    } else {
+      response = await getList('bookings', data);
+    }
     if (response?.success) {
       setBookings(response.data);
     } else {
@@ -204,15 +250,7 @@ const Bookings = () => {
       )}
       {/* Search Bar + Add New */}
       <div className='row mb-3 y-gap-10 items-center justify-between mr-4 lg:pr-0 lg:mr-0'>
-        <div className='col-lg-3'>
-          <input
-            type='text'
-            className='d-block form-control'
-            placeholder='Search'
-            onChange={(e) => setSearchQuery(e.target.value)}
-            value={searchQuery}
-          />
-        </div>
+        <div className='col-lg-3'></div>
         <div className='col-lg-3'>
           <button
             className='btn btn-primary col-12'
@@ -253,6 +291,33 @@ const Bookings = () => {
           </button>
         </div>{' '}
       </div>
+      <div className='my-3 col-12 pr-0'>
+        <h6 className='mb-3 d-flex justify-between items-center'>
+          <span>Search Columns</span>
+          {formOpen ? (
+            <BsDashSquare
+              className='cursor-pointer text-blue-1'
+              onClick={() => {
+                setFormOpen((prev) => !prev);
+              }}
+            />
+          ) : (
+            <BsPlusSquare
+              className='cursor-pointer text-blue-1'
+              onClick={() => {
+                setFormOpen((prev) => !prev);
+              }}
+            />
+          )}
+        </h6>
+        {formOpen && (
+          <SearchParams
+            queriesState={[queries, setQueries]}
+            columns={searchableColumns}
+            setParams={setParams}
+          />
+        )}
+      </div>
       {/* Data Table */}
       <Datatable
         onPageSizeChange={(size) => setPageSize(size)}
@@ -262,12 +327,7 @@ const Bookings = () => {
         onPaginate={getBookings}
         fullData={bookings}
         data={
-          bookings?.data?.filter((perm) =>
-            Object.values(perm)
-              .join(',')
-              .toLowerCase()
-              .includes(searchQuery.toLowerCase())
-          ) || []
+          bookings?.data || []
         }
       />
     </div>

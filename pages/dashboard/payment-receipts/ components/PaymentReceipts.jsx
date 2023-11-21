@@ -1,23 +1,30 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { AiOutlineEye } from 'react-icons/ai';
-import { BsTrash3 } from 'react-icons/bs';
+import { BsDashSquare, BsPlusSquare, BsTrash3 } from 'react-icons/bs';
 import { HiOutlinePencilAlt } from 'react-icons/hi';
 import { IoCopyOutline } from 'react-icons/io5';
 import Select from 'react-select';
-import { deleteItem, getList } from '../../../../api/xplorzApi';
+import { createItem, deleteItem, getList } from '../../../../api/xplorzApi';
 import ActionsButton from '../../../../components/actions-button/ActionsButton';
+import SearchParams from '../../../../components/common/SearchParams';
 import ConfirmationModal from '../../../../components/confirm-modal';
 import Datatable from '../../../../components/datatable/ServerDatatable';
 import { sendToast } from '../../../../utils/toastify';
 
 const PaymentReceipts = () => {
   const [paymentReceipts, setPaymentReceipts] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
   const [typeID, setTypeID] = useState({ label: 'All', value: '' });
   const [pageSize, setPageSize] = useState(10);
+  const [formOpen, setFormOpen] = useState(false);
+  const [params, setParams] = useState([]);
+  const [queries, setQueries] = useState([]);
+  const [searchableColumns, setSearchableColumns] = useState({
+    date: 'Date',
+    number: 'Number',
+  });
 
   const router = useRouter();
   const typeOptions = [
@@ -28,8 +35,37 @@ const PaymentReceipts = () => {
   ];
 
   useEffect(() => {
+    if (router.isReady) getSearchableColumns();
+  }, []);
+
+  useEffect(() => {
     getPaymentReceipts();
-  }, [pageSize, typeID]);
+  }, [pageSize, typeID, params]);
+
+  useEffect(() => {
+    const searchableColumnNames = Object.keys(searchableColumns);
+    const queries = Array(searchableColumnNames.length).fill('');
+    params.forEach(({ col, value }) => {
+      const idx = searchableColumnNames.indexOf(col);
+      queries[idx] = value;
+    });
+    setQueries(queries);
+  }, [searchableColumns]);
+
+  const getSearchableColumns = async () => {
+    const response = await getList('searchable-columns/payment-receipts');
+    if (response?.success) {
+      setSearchableColumns(response.data);
+    } else {
+      sendToast(
+        'error',
+        response?.data?.message ||
+          response?.data?.error ||
+          'Error getting searchable columns list',
+        4000
+      );
+    }
+  };
 
   const getPaymentReceipts = async (paginate = false, pageNumber) => {
     const data = {
@@ -41,7 +77,13 @@ const PaymentReceipts = () => {
     if (typeID.value) {
       data.type = typeID.value;
     }
-    const response = await getList('payment-receipts', data);
+    let response = null;
+    if (params.length) {
+      data.search = params.filter((x) => x.value);
+      response = await createItem('search/payment-receipts', data);
+    } else {
+      response = await getList('payment-receipts', data);
+    }
     if (response?.success) {
       setPaymentReceipts(response.data);
     } else {
@@ -186,15 +228,7 @@ const PaymentReceipts = () => {
       )}
       {/* Search Bar + Add New */}
       <div className='row mb-3 items-center justify-between mr-4'>
-        <div className='col-lg-5 col-7'>
-          <input
-            type='text'
-            className='d-block form-control'
-            placeholder='Search'
-            onChange={(e) => setSearchQuery(e.target.value)}
-            value={searchQuery}
-          />
-        </div>
+        <div className='col-lg-5 col-7'></div>
         <button
           className='btn btn-primary col-lg-2 col-12 my-2'
           onClick={() =>
@@ -240,6 +274,34 @@ const PaymentReceipts = () => {
           />
         </div>
       </div>
+      <div className='my-3 col-12 pr-0'>
+        <h6 className='mb-3 d-flex justify-between items-center'>
+          <span>Search Columns</span>
+          {formOpen ? (
+            <BsDashSquare
+              className='cursor-pointer text-blue-1'
+              onClick={() => {
+                setFormOpen((prev) => !prev);
+              }}
+            />
+          ) : (
+            <BsPlusSquare
+              className='cursor-pointer text-blue-1'
+              onClick={() => {
+                setFormOpen((prev) => !prev);
+              }}
+            />
+          )}
+        </h6>
+        {formOpen && (
+          <SearchParams
+            queriesState={[queries, setQueries]}
+            columns={searchableColumns}
+            setParams={setParams}
+          />
+        )}
+      </div>
+
       {/* Data Table */}
       <Datatable
         onPageSizeChange={(size) => setPageSize(size)}

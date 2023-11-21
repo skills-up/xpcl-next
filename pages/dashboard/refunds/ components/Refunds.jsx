@@ -1,26 +1,64 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { AiOutlineEye } from 'react-icons/ai';
-import { BsTrash3 } from 'react-icons/bs';
+import { BsDashSquare, BsPlusSquare, BsTrash3 } from 'react-icons/bs';
 import { HiOutlinePencilAlt } from 'react-icons/hi';
-import { deleteItem, getList } from '../../../../api/xplorzApi';
+import { createItem, deleteItem, getList } from '../../../../api/xplorzApi';
 import ActionsButton from '../../../../components/actions-button/ActionsButton';
+import SearchParams from '../../../../components/common/SearchParams';
 import ConfirmationModal from '../../../../components/confirm-modal';
 import Datatable from '../../../../components/datatable/ServerDatatable';
 import { sendToast } from '../../../../utils/toastify';
 
 const Refunds = () => {
   const [refunds, setRefunds] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
   const [pageSize, setPageSize] = useState(10);
+  const [formOpen, setFormOpen] = useState(false);
+  const [params, setParams] = useState([]);
+  const [queries, setQueries] = useState([]);
+  const [searchableColumns, setSearchableColumns] = useState({
+    refund_date: 'Refund Date (YYYY-MM-DD)',
+    number: 'Number',
+  });
 
   const router = useRouter();
 
   useEffect(() => {
+    if (router.isReady) {
+      getSearchableColumns();
+    }
+  }, []);
+
+  useEffect(() => {
     getRefunds();
-  }, [pageSize]);
+  }, [pageSize, params]);
+
+  useEffect(() => {
+    const searchableColumnNames = Object.keys(searchableColumns);
+    const queries = Array(searchableColumnNames.length).fill('');
+    params.forEach(({ col, value }) => {
+      const idx = searchableColumnNames.indexOf(col);
+      queries[idx] = value;
+    });
+    setQueries(queries);
+  }, [searchableColumns]);
+
+  const getSearchableColumns = async () => {
+    const response = await getList('searchable-columns/refunds');
+    if (response?.success) {
+      setSearchableColumns(response.data);
+    } else {
+      sendToast(
+        'error',
+        response?.data?.message ||
+          response?.data?.error ||
+          'Error getting searchable columns list',
+        4000
+      );
+    }
+  };
 
   const getRefunds = async (paginate = false, pageNumber) => {
     const data = {
@@ -29,7 +67,13 @@ const Refunds = () => {
     if (paginate) {
       data.page = pageNumber;
     }
-    const response = await getList('refunds', data);
+    let response = null;
+    if (params.length) {
+      data.search = params.filter((x) => x.value);
+      response = await createItem('search/refunds', data);
+    } else {
+      response = await getList('refunds', data);
+    }
     if (response?.success) {
       setRefunds(response.data);
     } else {
@@ -132,16 +176,32 @@ const Refunds = () => {
         />
       )}
       {/* Search Bar + Add New */}
-      <div className='row mb-3 items-center justify-between mr-4'>
-        <div className='col-12'>
-          <input
-            type='text'
-            className='d-block form-control'
-            placeholder='Search'
-            onChange={(e) => setSearchQuery(e.target.value)}
-            value={searchQuery}
+      <div className='my-3 col-12 pr-0'>
+        <h6 className='mb-3 d-flex justify-between items-center'>
+          <span>Search Columns</span>
+          {formOpen ? (
+            <BsDashSquare
+              className='cursor-pointer text-blue-1'
+              onClick={() => {
+                setFormOpen((prev) => !prev);
+              }}
+            />
+          ) : (
+            <BsPlusSquare
+              className='cursor-pointer text-blue-1'
+              onClick={() => {
+                setFormOpen((prev) => !prev);
+              }}
+            />
+          )}
+        </h6>
+        {formOpen && (
+          <SearchParams
+            queriesState={[queries, setQueries]}
+            columns={searchableColumns}
+            setParams={setParams}
           />
-        </div>
+        )}
       </div>
       {/* Data Table */}
       <Datatable
@@ -152,14 +212,7 @@ const Refunds = () => {
         columns={columns}
         onPaginate={getRefunds}
         fullData={refunds}
-        data={
-          refunds?.data?.filter((perm) =>
-            Object.values(perm)
-              .join(',')
-              .toLowerCase()
-              .includes(searchQuery.toLowerCase())
-          ) || []
-        }
+        data={refunds?.data || []}
       />
     </div>
   );
