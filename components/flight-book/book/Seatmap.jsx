@@ -487,6 +487,9 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
             const client_traveller = clientTravellers.filter(ct => ct.traveller_id === traveller.id)[0];
             if (!client_traveller) {
               sendToast('error', 'Failed to locate client traveller id for traveller' + traveller.passport_name, 4000);
+              console.log('Traveller', traveller);
+              console.table(clientTravellers);
+              throw new Error('Cannot make booking');
             } else {
               tempObj['client_traveller_id'] = client_traveller.id;
             }
