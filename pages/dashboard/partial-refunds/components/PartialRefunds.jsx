@@ -3,27 +3,31 @@ import { useEffect, useState } from 'react';
 import { AiOutlineEye } from 'react-icons/ai';
 import { BsTrash3 } from 'react-icons/bs';
 import { HiOutlinePencilAlt } from 'react-icons/hi';
-import { deleteItem, getList } from '../../../../api/xplorzApi';
+import { createItem, deleteItem, getList } from '../../../../api/xplorzApi';
 import ActionsButton from '../../../../components/actions-button/ActionsButton';
+import SearchParams from '../../../../components/common/SearchParams';
 import ConfirmationModal from '../../../../components/confirm-modal';
 import Datatable from '../../../../components/datatable/ServerDatatable';
 import { sendToast } from '../../../../utils/toastify';
 
 const PartialRefunds = () => {
   const [partialRefunds, setPartialRefunds] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
   const [orgs, setOrgs] = useState([]);
+  const [pageSize, setPageSize] = useState(10);
+  const [params, setParams] = useState([]);
 
   const router = useRouter();
   useEffect(() => {
-    if (router.isReady) getOrganizations();
+    if (router.isReady) {
+      getOrganizations();
+    }
   }, []);
 
   useEffect(() => {
     getPartialRefunds();
-  }, [pageSize]);
+  }, [pageSize, params]);
 
   const getOrganizations = async () => {
     const response = await getList('organizations');
@@ -40,14 +44,20 @@ const PartialRefunds = () => {
     }
   };
 
-  const getPartialRefunds = async () => {
+  const getPartialRefunds = async (paginate = false, pageNumber) => {
     const data = {
       paginate: pageSize,
     };
     if (paginate) {
       data.page = pageNumber;
     }
-    const response = await getList('partial-refunds', data);
+    let response = null;
+    if (params.length) {
+      data.search = params.filter((x) => x.value);
+      response = await createItem('search/partial-refunds', data);
+    } else {
+      response = await getList('partial-refunds', data);
+    }
     if (response?.success) {
       setPartialRefunds(response.data);
     } else {
@@ -191,18 +201,11 @@ const PartialRefunds = () => {
           content='This will permanently delete the partial refund. Press OK to confirm.'
         />
       )}
-      {/* Search Bar + Add New */}
-      <div className='row mb-3 items-center justify-between mr-4'>
-        <div className='col-12'>
-          <input
-            type='text'
-            className='d-block form-control'
-            placeholder='Search'
-            onChange={(e) => setSearchQuery(e.target.value)}
-            value={searchQuery}
-          />
-        </div>
-      </div>
+      {/* Search Box */}
+      <SearchParams
+        paramsState={[params, setParams]}
+        entity={'partial-refunds'}
+      />
       {/* Data Table */}
       <Datatable
         onPageSizeChange={(size) => setPageSize(size)}
@@ -212,14 +215,7 @@ const PartialRefunds = () => {
         columns={columns}
         onPaginate={getPartialRefunds}
         fullData={partialRefunds}
-        data={
-          partialRefunds?.data?.filter((perm) =>
-            Object.values(perm)
-              .join(',')
-              .toLowerCase()
-              .includes(searchQuery.toLowerCase())
-          ) || []
-        }
+        data={partialRefunds?.data || []}
       />
     </div>
   );
