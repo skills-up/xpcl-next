@@ -605,7 +605,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                   if (client.traveller_id === traveller.id) {
                     tempTravellers.push({
                       passengerKey: inf ? 'INFANT' : pax.key,
-                      client_traveller_id: client.id,
+                      client_traveller_id: traveller.id,
                       quoted_amount: inf
                         ? undefined
                         : traveller?.quoted_amount[key] || undefined,
