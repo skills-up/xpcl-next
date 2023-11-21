@@ -506,7 +506,7 @@ const AddNewPartialRefund = () => {
       setVendorTDSPercent(
         Number(
           (100 * vendorTDS) / ((+grossCommission || 0) - (+vendorServiceCharges || 0))
-        ).toFixed(2)
+        )//.toFixed(2)
       );
   };
 
@@ -525,7 +525,7 @@ const AddNewPartialRefund = () => {
     console.log('gross', vendorServiceCharges, grossCommission);
     if (!vendorGSTFocused)
       setVendorServiceChargePercent(
-        Number((100 * (+vendorServiceCharges || 0)) / (+grossCommission || 0)).toFixed(2)
+        Number((100 * (+vendorServiceCharges || 0)) / (+grossCommission || 0))//.toFixed(2)
       );
   };
 
@@ -633,7 +633,7 @@ const AddNewPartialRefund = () => {
       Number(
         (100 * (+currencyConversionCharges || 0)) /
           ((+clientBaseAmount || 0) + (+clientReferralFee || 0))
-      ).toFixed(2)
+      )//.toFixed(2)
     );
   };
 
