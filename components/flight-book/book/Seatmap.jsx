@@ -484,10 +484,19 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
               }
             }
             if (meals.length > 0) tempObj['meals'] = meals;
-            for (let client of clientTravellers) {
+            const client_traveller = clientTravellers.filter(ct => ct.traveller_id === traveller.id)[0];
+            if (!client_traveller) {
+              sendToast('error', 'Failed to locate client traveller id for traveller' + traveller.passport_name, 4000);
+              console.log('Traveller', traveller);
+              console.table(clientTravellers);
+              throw new Error('Cannot make booking');
+            } else {
+              tempObj['client_traveller_id'] = client_traveller.id;
+            }
+            /* for (let client of clientTravellers) {
               if (client.traveller_id === traveller.id)
                 tempObj['client_traveller_id'] = client.id;
-            }
+            } */
             if (tempObj['code'] !== 'INF') {
               tempObj['quoted_amount'] = traveller?.quoted_amount[key] || undefined;
               if (value?.via_intermediary)
@@ -605,7 +614,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                   if (client.traveller_id === traveller.id) {
                     tempTravellers.push({
                       passengerKey: inf ? 'INFANT' : pax.key,
-                      client_traveller_id: traveller.id,
+                      client_traveller_id: client.id,
                       quoted_amount: inf
                         ? undefined
                         : traveller?.quoted_amount[key] || undefined,
