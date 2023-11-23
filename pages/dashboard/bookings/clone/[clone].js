@@ -130,37 +130,37 @@ const AddNewBooking = () => {
           (
             +response.data.vendor_base_amount *
               (response.data.enable_inr ? response.data.exchange_rate : 1) || 0
-          ).toFixed(2)
+          ).toFixed(2).replace(/[.,]00$/, '')
         );
         setVendorTaxAmount(
           (
             +response.data.vendor_tax_amount *
               (response.data.enable_inr ? response.data.exchange_rate : 1) || 0
-          ).toFixed(2)
+          ).toFixed(2).replace(/[.,]00$/, '')
         );
         setVendorGSTAmount(
           (
             +response.data.vendor_gst_amount *
               (response.data.enable_inr ? response.data.exchange_rate : 1) || 0
-          ).toFixed(2)
+          ).toFixed(2).replace(/[.,]00$/, '')
         );
         setVendorMiscChargers(
           (
             +response.data.vendor_misc_charges *
               (response.data.enable_inr ? response.data.exchange_rate : 1) || 0
-          ).toFixed(2)
+          ).toFixed(2).replace(/[.,]00$/, '')
         );
         setVendorYQAmount(
           (
             +response.data.vendor_yq_amount *
               (response.data.enable_inr ? response.data.exchange_rate : 1) || 0
-          ).toFixed(2)
+          ).toFixed(2).replace(/[.,]00$/, '')
         );
         setVendorTotal(
           (
             +response.data.vendor_total *
               (response.data.enable_inr ? response.data.exchange_rate : 1) || 0
-          ).toFixed(2)
+          ).toFixed(2).replace(/[.,]00$/, '')
         );
         setIATACommissionPercent(response.data.iata_commission_percent);
         setPLBCommissionPercent(response.data.plb_commission_percent);
@@ -211,7 +211,7 @@ const AddNewBooking = () => {
           (
             +response.data.payment_amount *
               (response.data.enable_inr ? response.data.exchange_rate : 1) || 0
-          ).toFixed(2)
+          ).toFixed(2).replace(/[.,]00$/, '')
         );
         setClientTaxAmount(
           (response.data.exchange_rate * +response.data.client_tax_amount || 0).toFixed(0)
