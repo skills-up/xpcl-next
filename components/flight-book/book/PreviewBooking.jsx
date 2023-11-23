@@ -557,11 +557,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                       key={index}
                       className=''
                       options={travellers
-                        .filter((el) => {
-                          for (let sel of selectedTravellers)
-                            if (el?.value?.id === sel?.value?.id) return false;
-                          return true;
-                        })
+                        .filter((el) => !(selectedTravellers.map(st => st?.value?.id).includes(el?.value?.id)))
                         .map((el) => el)}
                       value={selectedTravellers[index]}
                       onChange={(id) =>
