@@ -391,7 +391,7 @@ const ReissueBooking = () => {
       client_base_amount: (clientBaseAmount || 0) / (exchangeRate || 1),
       client_tax_amount: (clientTaxAmount || 0) / (exchangeRate || 1),
       client_gst_amount: (clientGSTAmount || 0) / (exchangeRate || 1),
-      currency_conversion_charges: currencyConversionCharges || 0,
+      currency_conversion_charges: (currencyConversionCharges || 0) / (exchangeRate || 1),
       client_total: (clientTotal || 0) / (exchangeRate || 1),
       original_booking_id: router.query.reissue,
       reissue_penalty: reissuePenalty ? reissuePenalty / (exchangeRate || 1) : 0,
