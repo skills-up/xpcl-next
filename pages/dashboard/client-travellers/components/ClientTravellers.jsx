@@ -42,6 +42,10 @@ const ClientTravellers = () => {
       accessor: 'client_name',
     },
     {
+      Header: 'Client Code',
+      accessor: 'client_code',
+    },
+    {
       Header: 'Actions',
       disableSortBy: true,
       alignRight: true,
