@@ -6,11 +6,12 @@ import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { sendToast } from '../../../../utils/toastify';
 import { useEffect, useState } from 'react';
-import { createItem, getItem, getList, updateItem } from '../../../../api/xplorzApi';
+import { createItem, getItem, getList } from '../../../../api/xplorzApi';
 import ReactSwitch from 'react-switch';
 import Select from 'react-select';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 import { capitalize } from '../../../../utils/text-utils';
+import PreviousUploadPictures from '../../../../components/previous-file-uploads';
 
 const UpdatePaymentReceipt = () => {
   const [type, setType] = useState(null);
@@ -20,6 +21,8 @@ const UpdatePaymentReceipt = () => {
   const [date, setDate] = useState(new DateObject());
   const [amount, setAmount] = useState('');
   const [narration, setNarration] = useState('');
+  const [imageFile, setImageFile] = useState(null);
+  const [previousImageFile, setPreviousImageFile] = useState('');
   const [accounts, setAccounts] = useState([]);
   const [organizations, setOrganizations] = useState([]);
   const [bankCashAccounts, setBankCashAccounts] = useState([]);
@@ -132,6 +135,9 @@ const UpdatePaymentReceipt = () => {
                   tempTDSObj['account_id'] = { value: account.id, label: account.name };
               setTdsObj(tempTDSObj);
             }
+            if (response.data?.file_url) {
+              setPreviousImageFile(response.data?.file_url);
+            }
           }
         } else {
           sendToast('error', 'Unable to fetch required data', 4000);
@@ -172,28 +178,37 @@ const UpdatePaymentReceipt = () => {
     const tempTDSObj = tdsObj;
     if (tempTDSObj['account_id']?.value)
       tempTDSObj['account_id'] = tempTDSObj['account_id']?.value;
-    const response = await updateItem('payment-receipts', router.query.edit, {
-      // organization_id: organizationID?.value,
-      dr_account_id: drAccountID.value,
-      cr_account_id: crAccountID.value,
-      date: date.format('YYYY-MM-DD'),
-      amount,
-      narration: capitalize(narration),
-      itc:
-        type.value === 'Payment'
-          ? itc
-            ? {
-                ...itcObj,
-                ...{
-                  igst: itcObj?.igst || 0,
-                  cgst: itcObj?.cgst || 0,
-                  sgst: itcObj?.sgst || 0,
-                },
-              }
-            : null
-          : null,
-      tds: type.value === 'Payment' ? (tds ? tempTDSObj : null) : null,
-    });
+    let formData = new FormData();
+    formData.append('type', type.value);
+    formData.append('dr_account_id', drAccountID.value);
+    formData.append('cr_account_id', crAccountID.value);
+    formData.append('date', date.format('YYYY-MM-DD'));
+    formData.append('amount', amount);
+    formData.append('narration', capitalize(narration));
+    if (type.value === 'Payment') {
+      if (itc) {
+        formData.append(
+          'itc',
+          JSON.stringify({
+            ...itcObj,
+            ...{
+              igst: itcObj?.igst || 0,
+              cgst: itcObj?.cgst || 0,
+              sgst: itcObj?.sgst || 0,
+            },
+          })
+        );
+      }
+      if (tds) {
+        formData.append('tds', JSON.stringify(tempTDSObj));
+      }
+      if (imageFile) {
+        formData.append('file', imageFile);
+      }
+      formData.append('file_url', previousImageFile ?? '');
+    }
+    formData.append('_method', 'PUT');
+    const response = await createItem('payment-receipts/' + router.query.edit, formData);
     if (response?.success) {
       sendToast('success', 'Updated ' + type?.value + ' Successfully.', 4000);
       router.push('/dashboard/payment-receipts');
@@ -386,7 +401,7 @@ const UpdatePaymentReceipt = () => {
                               placeholder=' '
                               type='text'
                               pattern='^\d{2}[A-Za-z]{5}\d{4}[A-Za-z]\wZ\w$'
-                              />
+                            />
                             <label className='lh-1 text-16 text-light-1'>
                               GSTN<span className='text-danger'>*</span>
                             </label>
@@ -531,6 +546,24 @@ const UpdatePaymentReceipt = () => {
                             </label>
                           </div>
                         </div>
+                      </div>
+                    )}
+                    {type?.value === 'Payment' && (
+                      <div className='col-12'>
+                        <label>Upload File</label>
+                        {previousImageFile && (
+                          <PreviousUploadPictures
+                            data={[previousImageFile]}
+                            onDeleteClick={() => {
+                              setPreviousImageFile('');
+                            }}
+                          />
+                        )}
+                        <NewFileUploads
+                          multiple={false}
+                          fileTypes={['PNG', 'JPG', 'JPEG', 'PDF']}
+                          setUploads={setImageFile}
+                        />
                       </div>
                     )}
                     <div className='d-inline-block'>

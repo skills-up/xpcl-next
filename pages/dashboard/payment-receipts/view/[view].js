@@ -92,6 +92,11 @@ const ViewPaymentReceipts = () => {
           );
         }
         delete data['cr_account_id'];
+        if (data?.file_url) {
+          data.file_url = (
+            <a href={data.file_url} target='_blank' download={true}>Download</a>
+          );
+        }
         setPaymentReceipt(data);
       } else {
         sendToast(

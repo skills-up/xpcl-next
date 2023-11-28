@@ -11,6 +11,7 @@ import ReactSwitch from 'react-switch';
 import Select from 'react-select';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 import { capitalize } from '../../../../utils/text-utils';
+import NewFileUploads from '../../../../components/new-file-uploads';
 
 const AddNewPaymentReceipt = () => {
   const [type, setType] = useState(null);
@@ -20,6 +21,7 @@ const AddNewPaymentReceipt = () => {
   const [date, setDate] = useState(new DateObject());
   const [amount, setAmount] = useState('');
   const [narration, setNarration] = useState('');
+  const [imageFile, setImageFile] = useState(null);
   const [accounts, setAccounts] = useState([]);
   const [bankCashAccounts, setBankCashAccounts] = useState([]);
   const [tdsAccounts, setTDSAccounts] = useState([]);
@@ -126,29 +128,35 @@ const AddNewPaymentReceipt = () => {
     if (tempTDSObj['account_id']?.value)
       tempTDSObj['account_id'] = tempTDSObj['account_id']?.value;
 
-    const response = await createItem('payment-receipts', {
-      type: type.value,
-      // organization_id: organizationID?.value,
-      dr_account_id: drAccountID.value,
-      cr_account_id: crAccountID.value,
-      date: date.format('YYYY-MM-DD'),
-      amount,
-      narration: capitalize(narration),
-      itc:
-        type.value === 'Payment'
-          ? itc
-            ? {
-                ...itcObj,
-                ...{
-                  igst: itcObj?.igst || 0,
-                  cgst: itcObj?.cgst || 0,
-                  sgst: itcObj?.sgst || 0,
-                },
-              }
-            : null
-          : null,
-      tds: type.value === 'Payment' ? (tds ? tempTDSObj : null) : null,
-    });
+    let formData = new FormData();
+    formData.append('type', type.value);
+    formData.append('dr_account_id', drAccountID.value);
+    formData.append('cr_account_id', crAccountID.value);
+    formData.append('date', date.format('YYYY-MM-DD'));
+    formData.append('amount', amount);
+    formData.append('narration', capitalize(narration));
+    if (type.value === 'Payment') {
+      if (itc) {
+        formData.append(
+          'itc',
+          JSON.stringify({
+            ...itcObj,
+            ...{
+              igst: itcObj?.igst || 0,
+              cgst: itcObj?.cgst || 0,
+              sgst: itcObj?.sgst || 0,
+            },
+          })
+        );
+      }
+      if (tds) {
+        formData.append('tds', JSON.stringify(tempTDSObj));
+      }
+      if (imageFile) {
+        formData.append('file', imageFile);
+      }
+    }
+    const response = await createItem('payment-receipts', formData);
     if (response?.success) {
       sendToast('success', 'Created ' + router.query.type + ' Successfully.', 4000);
       router.push('/dashboard/payment-receipts');
@@ -346,7 +354,7 @@ const AddNewPaymentReceipt = () => {
                               placeholder=' '
                               type='text'
                               pattern='^\d{2}[A-Za-z]{5}\d{4}[A-Za-z]\wZ\w$'
-                              />
+                            />
                             <label className='lh-1 text-16 text-light-1'>
                               GSTN<span className='text-danger'>*</span>
                             </label>
@@ -490,6 +498,16 @@ const AddNewPaymentReceipt = () => {
                             </label>
                           </div>
                         </div>
+                      </div>
+                    )}
+                    {type?.value === 'Payment' && (
+                      <div className='col-12'>
+                        <label>Upload File</label>
+                        <NewFileUploads
+                          multiple={false}
+                          fileTypes={['PNG', 'JPG', 'JPEG', 'PDF']}
+                          setUploads={setImageFile}
+                        />
                       </div>
                     )}
                     <div className='d-inline-block'>
