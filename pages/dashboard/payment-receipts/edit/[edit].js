@@ -12,6 +12,7 @@ import Select from 'react-select';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 import { capitalize } from '../../../../utils/text-utils';
 import PreviousUploadPictures from '../../../../components/previous-file-uploads';
+import NewFileUploads from '../../../../components/new-file-uploads';
 
 const UpdatePaymentReceipt = () => {
   const [type, setType] = useState(null);
