@@ -92,27 +92,40 @@ const FlightProperties = () => {
             if (secondValue && secondValue?.length > 0) {
               for (let val of secondValue) {
                 // Pricing
-                let total = 0;
+                let total = 0, minTotal = Number.MAX_VALUE, maxTotal = 0;
                 let infantPrice = 0;
                 let childPrice = 0;
                 let adultPrice = 0;
+                let prices = {};
                 if (key === 'aa') {
                   // infantPrice = val.prices.prices?.CHD?.fare * travellerDOBS.INF;
-                  infantPrice = 1500 * travellerDOBS.INF;
-                  childPrice = val.prices.prices?.CHD * travellerDOBS.CHD;
-                  adultPrice = val.prices.prices?.ADT * travellerDOBS.ADT;
-                  total =
-                    (infantPrice > 0 ? infantPrice : 0) +
-                    (childPrice > 0 ? childPrice : 0) +
-                    (adultPrice > 0 ? adultPrice : 0);
+                  infantPrice = 1500 * (travellerDOBS.INF || 0);
+                  for (let [k, v] of Object.entries(val.prices)) {
+                    childPrice = (v.prices?.CHD || 0) * (travellerDOBS.CHD || 0);
+                    adultPrice = (v.prices?.ADT || 0) * (travellerDOBS.ADT || 0);
+                    total = infantPrice + childPrice + adultPrice;
+                    prices[k] = {infantPrice, childPrice, adultPrice, total, ...v};
+                    if (total < minTotal) {
+                      minTotal = total;
+                    }
+                    if (total > maxTotal) {
+                      maxTotal = total;
+                    }
+                  }
                 } else if (key === 'tj') {
-                  infantPrice = val.prices.prices?.INFANT?.fare * travellerDOBS.INF;
-                  childPrice = val.prices.prices?.CHILD?.fare * travellerDOBS.CHD;
-                  adultPrice = val.prices.prices?.ADULT?.fare * travellerDOBS.ADT;
-                  total =
-                    (infantPrice > 0 ? infantPrice : 0) +
-                    (childPrice > 0 ? childPrice : 0) +
-                    (adultPrice > 0 ? adultPrice : 0);
+                  for (let [k, v] of Object.entries(val.prices)) {
+                    infantPrice = (v.prices?.INFANT?.fare || 0) * (travellerDOBS.INF || 0);
+                    childPrice = (v.prices?.CHILD?.fare || 0) * (travellerDOBS.CHD || 0);
+                    adultPrice = (v.prices?.ADULT?.fare || 0) * (travellerDOBS.ADT || 0);
+                    total = infantPrice + childPrice + adultPrice;
+                    prices[k] = {infantPrice, childPrice, adultPrice, total, ...v};
+                    if (total < minTotal) {
+                      minTotal = total;
+                    }
+                    if (total > maxTotal) {
+                      maxTotal = total;
+                    }
+                  }
                 }
                 // Overall Duration + Day Difference
                 let totalDuration = 0;
@@ -254,20 +267,23 @@ const FlightProperties = () => {
                   }
                 }
                 // Cabin
+                let cabinClass = 'Economy';
                 if (key === 'aa') {
-                  if (val.prices.prices.ADT.cabinClass === 'EC')
-                    cabins['Economy']
-                      ? (cabins['Economy'] += 1)
-                      : (cabins['Economy'] = 1);
+                  // if (val.prices.prices.ADT.cabinClass === 'EC')
+                  //   cabins['Economy']
+                  //     ? (cabins['Economy'] += 1)
+                  //     : (cabins['Economy'] = 1);
+                  cabins.Economy = (cabins.Economy || 0) + 1;
                 } else if (key === 'tj') {
-                  if (val.prices.prices.ADULT.cabinClass === 'PREMIUM_ECONOMY')
+                  cabinClass = Object.values(val.prices)[0].cabinClass;
+                  if (cabinClass === 'PREMIUM_ECONOMY')
                     cabins['Premium Economy']
                       ? (cabins['Premium Economy'] += 1)
                       : (cabins['Premium Economy'] = 1);
                   else {
                     let tempClass =
-                      val.prices.prices.ADULT.cabinClass.charAt(0).toUpperCase() +
-                      val.prices.prices.ADULT.cabinClass.slice(1).toLowerCase();
+                      cabinClass.charAt(0).toUpperCase() +
+                      cabinClass.slice(1).toLowerCase();
                     cabins[tempClass]
                       ? (cabins[tempClass] += 1)
                       : (cabins[tempClass] = 1);
@@ -301,7 +317,7 @@ const FlightProperties = () => {
                     arriveTimes[key].number += 1;
                 }
                 // Pricing
-                if (total > maxPrice) maxPrice = total;
+                if (maxTotal > maxPrice) maxPrice = maxTotal;
                 // Departing From
                 departingFrom[val.segments[0].departure.airport.code]
                   ? (departingFrom[val.segments[0].departure.airport.code] += 1)
@@ -333,13 +349,15 @@ const FlightProperties = () => {
                     legOneDayDifference,
                     legTwoDayDifference,
                     total,
-                    childPrice,
-                    infantPrice,
+                    minTotal,
+                    maxTotal,
+                    prices,
                     firstLegDuration,
                     secondLegDuration,
                     adultPrice,
                     totalDuration,
                     overallDayDifference,
+                    cabinClass,
                   },
                 });
                 counter += 1;
@@ -523,15 +541,15 @@ const FlightProperties = () => {
       }
       // Filter By Cabin
       if (el.provider === 'aa') {
-        if (el.prices.prices.ADT.cabinClass === 'EC')
+        // if (el.prices.prices.ADT.cabinClass === 'EC')
           if (!cabins['Economy']?.value) return false;
       } else if (el.provider === 'tj') {
-        if (el.prices.prices.ADULT.cabinClass === 'PREMIUM_ECONOMY') {
+        if (el.cabinClass === 'PREMIUM_ECONOMY') {
           if (!cabins['Premium Economy']?.value) return false;
         } else {
           let tempClass =
-            el.prices.prices.ADULT.cabinClass.charAt(0).toUpperCase() +
-            el.prices.prices.ADULT.cabinClass.slice(1).toLowerCase();
+            el.cabinClass.charAt(0).toUpperCase() +
+            el.cabinClass.slice(1).toLowerCase();
           if (!cabins[tempClass]?.value) return false;
         }
       }
@@ -559,7 +577,7 @@ const FlightProperties = () => {
           if (!value.value) return false;
       }
       // Filter By Price Slider
-      if (!(el.total >= price.value.min && el.total <= price.value.max)) return false;
+      if (!(el.minTotal >= price.value.min && el.maxTotal <= price.value.max)) return false;
       // Filter By Departing From & Arriving At
       let departValueCheck = el.segments[0].departure.airport.code;
       for (let dep of Object.values(departingFrom)) {

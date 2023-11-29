@@ -137,20 +137,14 @@ const AddNewPaymentReceipt = () => {
     formData.append('narration', capitalize(narration));
     if (type.value === 'Payment') {
       if (itc) {
-        formData.append(
-          'itc',
-          JSON.stringify({
-            ...itcObj,
-            ...{
-              igst: itcObj?.igst || 0,
-              cgst: itcObj?.cgst || 0,
-              sgst: itcObj?.sgst || 0,
-            },
-          })
-        );
+        for (let [k, v] of Object.entries(itcObj || {})) {
+          formData.append(`itc[${k}]`, v || 0);
+        }
       }
       if (tds) {
-        formData.append('tds', JSON.stringify(tempTDSObj));
+        for (let [k, v] of Object.entries(tempTDSObj ?? {})) {
+          formData.append(`tds[${k}]`, v);
+        }
       }
       if (imageFile) {
         formData.append('file', imageFile);
