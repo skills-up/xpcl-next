@@ -21,7 +21,7 @@ function EmailClients() {
   );
   const airlines = useSelector((state) => state.flightSearch.value.airlineOrgs);
   const airports = useSelector((state) => state.apis.value.airports);
-  const cabinOptions = ['Economy', 'Premium Economy', 'Business', 'First'];
+  const cabinOptions = ['Any', 'Economy', 'Premium Economy', 'Business', 'First'];
   const travellers = useSelector((state) => state.flightSearch.value.travellers);
   const emailClients = useSelector((state) => state.flightSearch.value.emailClients);
   const destinations = useSelector((state) => state.flightSearch.value.destinations);

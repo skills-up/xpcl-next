@@ -535,7 +535,7 @@ function FlightProperty({
                                 currency: 'INR',
                               })}`
                             : ''
-                        }${
+                        }`/* ${
                           element.provider === 'tj'
                             ? `\n\n- Additional Adult Details -\nMax Check-In Baggage - ${
                                 element.prices.prices.ADULT.baggage.checkIn || 'NA'
@@ -575,7 +575,7 @@ function FlightProperty({
                                   : ''
                               }`
                             : ''
-                        }`}
+                        } */}
                         data-tooltip-place='top'
                       >
                         {element.total.toLocaleString('en-IN', {

@@ -1,9 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { store } from '../../../app/store';
-import { setTravellerDOBS } from '../../../features/flightSearch/flightSearchSlice';
+import React, { useState } from 'react';
 import Pluralize from '../../../utils/pluralChecker';
-import { FaUserTie } from 'react-icons/fa';
 
 const counters = [
   { name: 'Adults', defaultValue: 1 },
@@ -11,7 +7,7 @@ const counters = [
   { name: 'Infants', defaultValue: 0 },
 ];
 
-const cabinOptions = ['Economy', 'Premium Economy', 'Business', 'First'];
+const cabinOptions = ['Any', 'Economy', 'Premium Economy', 'Business', 'First'];
 
 const Counter = ({ name, defaultValue, onCounterChange }) => {
   const [count, setCount] = useState(defaultValue);
