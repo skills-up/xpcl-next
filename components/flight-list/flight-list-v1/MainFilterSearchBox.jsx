@@ -53,6 +53,9 @@ const MainFilterSearchBox = () => {
   const client_id = useSelector((state) => state.auth.value.currentOrganization);
   // const travellerDOBS = useSelector((state) => state.flightSearch.value.travellerDOBS);
 
+  // Preferred Carriers for TJ
+  const preferredCarriersTJ = ['6E', 'SG'];
+
   useEffect(() => {
     if (to && from && router.query?.data && !autoSearch) {
       search();
@@ -119,6 +122,43 @@ const MainFilterSearchBox = () => {
     setIsSearched(false);
   };
 
+  const amadeusDataManipulation = async (data) => {
+    const finalRecos = [];
+    for (let [k, v] of Object.entries(data.recommendations)) {
+      const segs = [];
+      let prices = [];
+      const segments = data.segments[k];
+      // Segments
+      for (let flight of segments?.flights) {
+        let tempSeg = {
+          flight: {
+            airline: flight.carrier,
+            number: flight.flight,
+            equipment: flight.equipment,
+          },
+          departure: {
+            timeUtc: flight.depart.date + 'T' + flight.depart.time,
+            airport: { code: flight.depart.location, terminal: flight.depart.terminal },
+          },
+          arrival: {
+            timeUtc: flight.arrive.date + 'T' + flight.arrive.time,
+            airport: { code: flight.arrive.location, terminal: flight.arrive.terminal },
+          },
+        };
+        segs.push(tempSeg);
+      }
+      // Prices
+      for (let [ffRef, vData] of Object.entries(v)) {
+        const ffData = ffRef !== '_' ? data.fareFamilies[ffRef] : {};
+        const baggage = data.baggages[vData.bagRef];
+        prices.push({ ...vData, ...ffData, ...baggage });
+      }
+      finalRecos.push({ segments: segs, prices });
+    }
+    console.log('finalRecos', finalRecos);
+    return finalRecos;
+  };
+
   const search = async () => {
     setIsSearched(true);
     // Checking if all mandatory fields are filled
@@ -152,6 +192,7 @@ const MainFilterSearchBox = () => {
       searchF();
       return;
     }
+
     // Getting Traveller DOBS
     let pax = {
       ADT: guestCounts.Adults,
@@ -284,7 +325,13 @@ const MainFilterSearchBox = () => {
       .catch((err) => console.error(err))
       .then(() => dispatchCalls(tempSearchData, callsCounter, (currentCalls += 1)));
     // Tripjack
-    customAPICall('tj/v1/search', 'post', request, {}, true)
+    customAPICall(
+      'tj/v1/search',
+      'post',
+      { ...request, preferredCarriers: preferredCarriersTJ },
+      {},
+      true
+    )
       .then(async (res) => {
         if (res?.success) {
           if (returnFlight && domestic) {
@@ -302,12 +349,19 @@ const MainFilterSearchBox = () => {
     customAPICall('flights/search', 'post', request, {}, false)
       .then(async (res) => {
         if (res?.success) {
+          res.data = await amadeusDataManipulation(res.data);
+          let body = { to: null, from: null, combined: null };
+          if (domestic) {
+            body.to = res.data;
+          } else {
+            body.combined = res.data;
+          }
           if (returnFlight && domestic) {
             if (tempSearchData?.ad?.from) {
-              res.data.from = tempSearchData.ad.from;
+              body.from = tempSearchData.ad.from;
             }
           }
-          tempSearchData = { ...tempSearchData, ad: res.data };
+          tempSearchData = { ...tempSearchData, ad: body };
           updateSEO();
         }
       })
@@ -331,7 +385,13 @@ const MainFilterSearchBox = () => {
         .catch((err) => console.error(err))
         .then(() => dispatchCalls(tempSearchData, callsCounter, (currentCalls += 1)));
       // TripJack
-      customAPICall('tj/v1/search', 'post', returnRequest, {}, true)
+      customAPICall(
+        'tj/v1/search',
+        'post',
+        { ...returnRequest, preferredCarriers: preferredCarriersTJ },
+        {},
+        true
+      )
         .then(async (res) => {
           if (res?.success) {
             res.data.from = res.data.to;
@@ -349,12 +409,13 @@ const MainFilterSearchBox = () => {
       customAPICall('flights/search', 'post', returnRequest, {}, false)
         .then(async (res) => {
           if (res?.success) {
-            res.data.from = res.data.to;
-            res.data.to = null;
+            res.data = await amadeusDataManipulation(res.data);
+            let body = { to: null, from: null, combined: null };
+            body.from = res.data;
             if (tempSearchData?.ad?.to) {
-              res.data.to = tempSearchData.ad.to;
+              body.to = tempSearchData.ad.to;
             }
-            tempSearchData = { ...tempSearchData, ad: res.data };
+            tempSearchData = { ...tempSearchData, ad: body };
             updateSEO();
           }
         })
@@ -365,6 +426,7 @@ const MainFilterSearchBox = () => {
 
   const dispatchCalls = async (searchData, callsCounter, currentCalls) => {
     dispatch(setSearchData(searchData));
+    console.log('searchData', searchData);
     let percentage = (currentCalls / callsCounter) * 100;
     if (percentage === 100) {
       searchF();
