@@ -16,7 +16,7 @@ import NewFileUploads from '../../../../components/new-file-uploads';
 
 const UpdatePaymentReceipt = () => {
   const [type, setType] = useState(null);
-  const [organizationID, setOrganizationID] = useState(null);
+  // const [organizationID, setOrganizationID] = useState(null);
   const [drAccountID, setDrAccountID] = useState(null);
   const [crAccountID, setCrAccountID] = useState(null);
   const [date, setDate] = useState(new DateObject());
@@ -25,7 +25,7 @@ const UpdatePaymentReceipt = () => {
   const [imageFile, setImageFile] = useState(null);
   const [previousImageFile, setPreviousImageFile] = useState('');
   const [accounts, setAccounts] = useState([]);
-  const [organizations, setOrganizations] = useState([]);
+  // const [organizations, setOrganizations] = useState([]);
   const [bankCashAccounts, setBankCashAccounts] = useState([]);
   const [tdsAccounts, setTDSAccounts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -78,18 +78,18 @@ const UpdatePaymentReceipt = () => {
         setDate(new DateObject({ date: response.data.date, format: 'YYYY-MM-DD' }));
         setNumber(response.data.number);
 
-        const organizations = await getList('organizations');
+        // const organizations = await getList('organizations');
         const accounts = await getList('accounts');
         const tdsAccounts = await getList('accounts', { category: 'TDS Deductions' });
         const bankCashAccounts = await getList('accounts', { is_bank_cash: 1 });
         if (
           accounts?.success &&
-          organizations?.success &&
+          // organizations?.success &&
           tdsAccounts?.success &&
           bankCashAccounts?.success
         ) {
           setAccounts(
-            accounts.data.map((element) => ({ value: element.id, label: element.name }))
+            accounts.data.map((element) => ({ value: element.id, label: `${element.name} (${element.org_code})` }))
           );
           setBankCashAccounts(
             bankCashAccounts.data.map((element) => ({
@@ -97,12 +97,12 @@ const UpdatePaymentReceipt = () => {
               label: element.name,
             }))
           );
-          setOrganizations(
-            organizations.data.map((element) => ({
-              value: element.id,
-              label: element.name,
-            }))
-          );
+          // setOrganizations(
+          //   organizations.data.map((element) => ({
+          //     value: element.id,
+          //     label: element.name,
+          //   }))
+          // );
           setTDSAccounts(
             tdsAccounts.data.map((element) => ({
               value: element.id,
@@ -113,9 +113,9 @@ const UpdatePaymentReceipt = () => {
           for (let type of typeOptions)
             if (type.value === response.data.type) setType(type);
           // Setting Organization ID
-          for (let org of organizations.data)
-            if (org.id === response.data.organization_id)
-              setOrganizationID({ value: org.id, label: org.name });
+          // for (let org of organizations.data)
+          //   if (org.id === response.data.organization_id)
+          //     setOrganizationID({ value: org.id, label: org.name });
           // Setting Debit Account ID
           for (let account of accounts.data)
             if (account.id === response.data.dr_account_id)
@@ -219,19 +219,19 @@ const UpdatePaymentReceipt = () => {
   };
 
   // Auto Assigning Credit Acc
-  useEffect(() => {
-    if (organizationID && accounts.length > 0) {
-      if (loading) setLoading(false);
-      else {
-        for (let acc of accounts) {
-          if (acc.label === organizationID.label) {
-            if (type?.value === 'Payment') setCrAccountID(acc);
-            else if (type?.value === 'Receipt') setDrAccountID(acc);
-          }
-        }
-      }
-    }
-  }, [organizationID]);
+  // useEffect(() => {
+  //   if (organizationID && accounts.length > 0) {
+  //     if (loading) setLoading(false);
+  //     else {
+  //       for (let acc of accounts) {
+  //         if (acc.label === organizationID.label) {
+  //           if (type?.value === 'Payment') setCrAccountID(acc);
+  //           else if (type?.value === 'Receipt') setDrAccountID(acc);
+  //         }
+  //       }
+  //     }
+  //   }
+  // }, [organizationID]);
 
   return (
     <>
@@ -335,9 +335,9 @@ const UpdatePaymentReceipt = () => {
                         options={
                           type?.value === 'Payment'
                             ? bankCashAccounts.filter(
-                                (acc) => acc?.value !== crAccountID?.value
+                                (acc) => acc?.value !== drAccountID?.value
                               )
-                            : accounts.filter((acc) => acc?.value !== crAccountID?.value)
+                            : accounts.filter((acc) => acc?.value !== drAccountID?.value)
                         }
                         value={crAccountID}
                         placeholder='Search & Select Credit Account (required)'

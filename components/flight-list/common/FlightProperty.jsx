@@ -147,7 +147,7 @@ function FlightProperty({
                         <div className='lh-15 fw-500'>
                           {element.provider === 'aa' &&
                             element.segments[0].departure.time.slice(-8, -3)}
-                          {element.provider === 'tj' &&
+                          {(element.provider === 'tj' || element.provider === 'ad') &&
                             element.segments[0].departure.time.slice(-5)}
                         </div>
                         <div className='text-15 lh-15 text-light-1'>
@@ -201,12 +201,19 @@ function FlightProperty({
                         <div className='lh-15 fw-500' style={{ width: '77px' }}>
                           {element.provider === 'aa' &&
                             element.segments.at(-1).arrival.time.slice(-8, -3)}
-                          {element.provider === 'tj' &&
-                            (element.type === 'combined' && layoffSegment
-                              ? element.segments[layoffSegment - 1]?.arrival?.time?.slice(
-                                  -5
-                                )
-                              : element.segments.at(-1).arrival.time.slice(-5))}{' '}
+                          {element.provider === 'ad' &&
+                            console.log(
+                              'ad',
+                              element,
+                              element.segments.at(-1).arrival.time.slice(-5)
+                            )}
+                          {(element.provider === 'tj' || element.provider === 'ad') &&
+                          element.type === 'combined' &&
+                          layoffSegment
+                            ? element.segments[layoffSegment - 1]?.arrival?.time?.slice(
+                                -5
+                              )
+                            : element.segments.at(-1).arrival.time.slice(-5)}{' '}
                           {element.type === 'combined' ? (
                             element.legOneDayDifference > 0 ? (
                               <span className='text-secondary text-14'>
@@ -287,7 +294,7 @@ function FlightProperty({
                           <div className='lh-15 fw-500'>
                             {element.provider === 'aa' &&
                               element.segments[0].departure.time.slice(-8, -3)}
-                            {element.provider === 'tj' &&
+                            {(element.provider === 'tj' || element.provider === 'ad') &&
                               (element.type === 'combined' && layoffSegment
                                 ? element.segments[layoffSegment]?.departure?.time?.slice(
                                     -5
@@ -349,7 +356,7 @@ function FlightProperty({
                           <div className='lh-15 fw-500' style={{ width: '77px' }}>
                             {element.provider === 'aa' &&
                               element.segments.at(-1).arrival.time.slice(-8, -3)}
-                            {element.provider === 'tj' &&
+                            {(element.provider === 'tj' || element.provider === 'ad') &&
                               element.segments.at(-1).arrival.time.slice(-5)}{' '}
                             {element.type === 'combined' ? (
                               element.legTwoDayDifference > 0 ? (
@@ -505,37 +512,41 @@ function FlightProperty({
                     <div className='text-18 lh-16 fw-500'>
                       <a
                         data-tooltip-id={'x_' + element.selectId}
-                        data-tooltip-content={`${
-                          element.adultPrice > 0
-                            ? `${
-                                travellerDOBS.ADT
-                              }x Adult @ ${element.adultPrice.toLocaleString('en-IN', {
-                                maximumFractionDigits: 0,
-                                style: 'currency',
-                                currency: 'INR',
-                              })}`
-                            : ''
-                        }${
-                          element.childPrice > 0
-                            ? `\n${
-                                travellerDOBS.CHD
-                              }x Child @ ${element.childPrice.toLocaleString('en-IN', {
-                                maximumFractionDigits: 0,
-                                style: 'currency',
-                                currency: 'INR',
-                              })}`
-                            : ''
-                        }${
-                          element.infantPrice > 0
-                            ? `\n${
-                                travellerDOBS.INF
-                              }x Infant @ ${element.infantPrice.toLocaleString('en-IN', {
-                                maximumFractionDigits: 0,
-                                style: 'currency',
-                                currency: 'INR',
-                              })}`
-                            : ''
-                        }${
+                        data-tooltip-content={
+                          `${
+                            element.adultPrice > 0
+                              ? `${
+                                  travellerDOBS.ADT
+                                }x Adult @ ${element.adultPrice.toLocaleString('en-IN', {
+                                  maximumFractionDigits: 0,
+                                  style: 'currency',
+                                  currency: 'INR',
+                                })}`
+                              : ''
+                          }${
+                            element.childPrice > 0
+                              ? `\n${
+                                  travellerDOBS.CHD
+                                }x Child @ ${element.childPrice.toLocaleString('en-IN', {
+                                  maximumFractionDigits: 0,
+                                  style: 'currency',
+                                  currency: 'INR',
+                                })}`
+                              : ''
+                          }${
+                            element.infantPrice > 0
+                              ? `\n${
+                                  travellerDOBS.INF
+                                }x Infant @ ${element.infantPrice.toLocaleString(
+                                  'en-IN',
+                                  {
+                                    maximumFractionDigits: 0,
+                                    style: 'currency',
+                                    currency: 'INR',
+                                  }
+                                )}`
+                              : ''
+                          }` /* ${
                           element.provider === 'tj'
                             ? `\n\n- Additional Adult Details -\nMax Check-In Baggage - ${
                                 element.prices.prices.ADULT.baggage.checkIn || 'NA'
@@ -575,7 +586,8 @@ function FlightProperty({
                                   : ''
                               }`
                             : ''
-                        }`}
+                        } */
+                        }
                         data-tooltip-place='top'
                       >
                         {element.total.toLocaleString('en-IN', {
@@ -615,6 +627,11 @@ function FlightProperty({
                 duration =
                   (new Date(segment.arrival.timeUtc).getTime() -
                     new Date(segment.departure.timeUtc).getTime()) /
+                  60000;
+              else if (element.provider === 'ad')
+                duration =
+                  (new Date(segment.arrival.time).getTime() -
+                    new Date(segment.departure.time).getTime()) /
                   60000;
               else if (element.provider === 'tj') duration = segment.journey.duration;
 
@@ -658,14 +675,21 @@ function FlightProperty({
               // Business Class
               let businessClass;
               if (element.provider === 'aa') {
-                if (element.prices?.type === 'EC') businessClass = 'Economy';
-              } else if (element.provider === 'tj') {
-                if (element.prices.prices.ADULT.cabinClass === 'PREMIUM_ECONOMY')
-                  businessClass = 'Premium Economy';
+                businessClass = 'Economy';
+              } else if (element.provider === 'ad') {
+                const cabinClass = element.selectedFF.majCabin;
+                if (cabinClass === 'PREMIUM_ECONOMY') businessClass = 'Premium Economy';
                 else
                   businessClass =
-                    element.prices.prices.ADULT.cabinClass.charAt(0).toUpperCase() +
-                    element.prices.prices.ADULT.cabinClass.slice(1).toLowerCase();
+                    cabinClass.charAt(0).toUpperCase() +
+                    cabinClass.slice(1).toLowerCase();
+              } else if (element.provider === 'tj') {
+                const cabinClass = Object.values(element.selectedFF)?.at(0)?.cabinClass;
+                if (cabinClass === 'PREMIUM_ECONOMY') businessClass = 'Premium Economy';
+                else
+                  businessClass =
+                    cabinClass.charAt(0).toUpperCase() +
+                    cabinClass.slice(1).toLowerCase();
               }
 
               // Segment Day Difference
@@ -737,7 +761,8 @@ function FlightProperty({
                                   <div className='lh-14 fw-500'>
                                     {element.provider === 'aa' &&
                                       segment.departure.time.slice(-8, -3)}
-                                    {element.provider === 'tj' &&
+                                    {(element.provider === 'tj' ||
+                                      element.provider === 'ad') &&
                                       segment.departure.time.slice(-5)}
                                   </div>
                                 </div>
@@ -773,7 +798,8 @@ function FlightProperty({
                                   <div className='lh-14 fw-500'>
                                     {element.provider === 'aa' &&
                                       segment.arrival.time.slice(-8, -3)}
-                                    {element.provider === 'tj' &&
+                                    {(element.provider === 'tj' ||
+                                      element.provider === 'ad') &&
                                       segment.arrival.time.slice(-5)}{' '}
                                     {segmentDayDifference > 0 ? (
                                       <span className='text-secondary text-14'>

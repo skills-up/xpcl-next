@@ -24,7 +24,7 @@ import { GiForkKnifeSpoon } from 'react-icons/gi';
 import { ImManWoman } from 'react-icons/im';
 import { BiSolidCabinet } from 'react-icons/bi';
 
-function Seatmap({ seatMaps, PNRS, travellerInfos }) {
+function Seatmap ({ seatMaps, PNRS, travellerInfos }) {
   const [SEO, setSEO] = useState('');
   const [PNR, setPNR] = PNRS;
   const [seatMap, setSeatMap] = seatMaps;
@@ -417,56 +417,18 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
         // TJ
         if (value.provider === 'tj') {
           // PAX
-          let pax = [];
+          let travellers = [];
           let seatCost = 0;
           let mealCost = 0;
           for (let traveller of travellerInfo) {
             let tempObj = {};
-            // Age
-            const age = (
-              (Date.now() -
-                +new DateObject({
-                  date: traveller?.passport_dob,
-                  format: 'YYYY-MM-DD',
-                })
-                  .toDate()
-                  .getTime()) /
-              31536000000
-            ).toFixed(2);
-            // If below 2 years of age, infant
-            if (age < 2) tempObj['code'] = 'INF';
-            // If above 2 but below 12, child
-            if (age >= 2 && age < 12) tempObj['code'] = 'CHD';
-            // If above 12 years, consider adult
-            if (age >= 12) tempObj['code'] = 'ADT';
-            // Name
-            tempObj['name'] = {
-              title: traveller?.prefix?.value
-                ? traveller.prefix.value !== 'MSTR'
-                  ? traveller.prefix.value
-                  : 'MASTER'
-                : traveller?.prefix,
-              first: traveller?.first_name,
-              last: traveller?.last_name,
-              middle: traveller?.middle_name || undefined,
-            };
-            // DOB
-            tempObj['dob'] = traveller?.passport_dob;
-            // // Passport
-            // if(traveller.passport_number && traveller.)
-            // tempObj['passport'] = {
-            //   number: traveller?.passport_number || undefined,
-            //   countryCode: ,
-            //   issueDate: ,
-            //   expiryDate: ,
-            // }
             // Seats
             let seats = [];
             for (let [k, v] of Object.entries(seatMap[key]?.data?.seatMap)) {
               if (v.travellers && v.travellers.length > 0) {
                 for (let trav of v.travellers) {
-                  if (trav.id === traveller.id && tempObj['code'] !== 'INF') {
-                    seats.push({ key: k, code: trav.seatNo });
+                  if (trav.id === traveller.id) {
+                    seats.push({ key: k, code: trav.seatNo, price: trav.amount });
                     seatCost += trav.amount;
                   }
                 }
@@ -477,16 +439,27 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
             let meals = [];
             if (traveller.trip_meals[key]) {
               for (let meal of traveller.trip_meals[key]) {
-                if (meal.value.id && meal.value.code && tempObj['code'] !== 'INF') {
-                  meals.push({ key: meal.value.id, code: meal.value.code });
+                if (meal.value.id && meal.value.code) {
+                  meals.push({
+                    key: meal.value.id,
+                    code: meal.value.code,
+                    price: meal.value?.amount || 0,
+                  });
                   mealCost += meal.value?.amount || 0;
                 }
               }
             }
             if (meals.length > 0) tempObj['meals'] = meals;
-            const client_traveller = clientTravellers.filter(ct => ct.traveller_id === traveller.id)[0];
+            const client_traveller = clientTravellers.filter(
+              (ct) => ct.traveller_id === traveller.id
+            )[0];
             if (!client_traveller) {
-              sendToast('error', 'Failed to locate client traveller id for traveller ' + traveller.passport_name, 4000);
+              sendToast(
+                'error',
+                'Failed to locate client traveller id for traveller ' +
+                  traveller.passport_name,
+                4000
+              );
               console.log('Traveller', traveller);
               console.log('Client Travellers');
               console.dir(clientTravellers);
@@ -494,35 +467,23 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
             } else {
               tempObj['client_traveller_id'] = client_traveller.id;
             }
-            /* for (let client of clientTravellers) {
-              if (client.traveller_id === traveller.id)
-                tempObj['client_traveller_id'] = client.id;
-            } */
-            if (tempObj['code'] !== 'INF') {
-              tempObj['quoted_amount'] = traveller?.quoted_amount[key] || undefined;
-              if (value?.via_intermediary)
-                tempObj['intermediary_quoted'] = traveller?.intermediary_quoted[key] || 0;
-            }
-            pax.push(tempObj);
+            travellers.push(tempObj);
           }
           // Total  Amount (base amt + seats cost + meals cost)
-          const totalCost = selectedBookings[key].total + seatCost + mealCost;
-          const response = await customAPICall(
-            'tj/v1/book',
-            'post',
-            {
-              pax,
-              bookingId: value.data?.bookingId,
-              amount: totalCost,
-              client_id,
-              client_code,
-              via_intermediary: value?.via_intermediary,
-              hide_fare: value.hide_fare,
-              email_travellers: value.email_travellers,
-            },
-            {},
-            true
-          );
+          const quoted_amount = selectedBookings[key].total + seatCost + mealCost;
+          const response = await createItem('send/slack', {
+            travellers,
+            quoted_amount,
+            sectors: Object.entries(value?.data?.segments).map((el) => ({
+              airline: el.companyCode,
+              flight: el.flightNumber,
+              from: el.from,
+              to: el.to,
+              date: el.departureDate.split(' ')[0],
+              time: el.departureDate.split(' ')[1],
+              class: el.bookingClass,
+            })),
+          });
           if (response?.success) {
             totalSuccess += 1;
             bookingTemp[key] = response.data;
@@ -611,9 +572,16 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                   31536000000
                 ).toFixed(2);
                 if (age < 2) inf = true;
-                const clientTraveller = clientTravellers.filter(ct => ct.traveller_id === traveller.id)[0];
-                if (! clientTraveller) {
-                  sendToast('error', 'Failed to locate client traveller id for traveller ' + traveller.passport_name, 4000);
+                const clientTraveller = clientTravellers.filter(
+                  (ct) => ct.traveller_id === traveller.id
+                )[0];
+                if (!clientTraveller) {
+                  sendToast(
+                    'error',
+                    'Failed to locate client traveller id for traveller ' +
+                      traveller.passport_name,
+                    4000
+                  );
                   console.log('Traveller', traveller);
                   console.log('Client Travellers');
                   console.dir(clientTravellers);
@@ -750,16 +718,25 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
           const travellers = [];
           for (let traveller of travellerInfo) {
             // Getting PAX
-            const paxRef = value.data.travellers.filter(trav => trav.id === traveller.id)[0]?.paxRef;
+            const paxRef = value.data.travellers.filter(
+              (trav) => trav.id === traveller.id
+            )[0]?.paxRef;
             /* for (let trav of value.data.travellers) {
               if (traveller.id === trav.id) {
                 paxRef = trav.paxRef;
               }
             } */
             if (paxRef) {
-              const clientTraveller = clientTravellers.filter(ct => ct.traveller_id === traveller.id)[0];
-              if (! clientTraveller) {
-                sendToast('error', 'Failed to locate client traveller id for traveller ' + traveller.passport_name, 4000);
+              const clientTraveller = clientTravellers.filter(
+                (ct) => ct.traveller_id === traveller.id
+              )[0];
+              if (!clientTraveller) {
+                sendToast(
+                  'error',
+                  'Failed to locate client traveller id for traveller ' +
+                    traveller.passport_name,
+                  4000
+                );
                 console.log('Traveller', traveller);
                 console.log('Client Travellers');
                 console.dir(clientTravellers);
@@ -787,7 +764,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                 });
               }
             }
-              /* for (let client of clientTravellers) {
+            /* for (let client of clientTravellers) {
                 if (client.traveller_id === traveller.id) {
                   const age = (
                     (Date.now() -
@@ -1778,7 +1755,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
           let rows = seatmap.row;
           var currRow = 0;
           let html = '';
-          function getLocation(loc, spacers) {
+          function getLocation (loc, spacers) {
             if (loc.length < 2) return loc;
             return loc.charAt(spacers < 2 ? 0 : 1);
           }
@@ -3353,7 +3330,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                   let bookingStatus;
                   let tempObj = { 'Base Fare': 0, 'Taxes & Fee': 0 };
                   if (PNR[key] && value !== 'Failed') {
-                    if (PNR[key].provider === 'tj') {
+                    /* if (PNR[key].provider === 'tj') {
                       bookingID = value.data.order.bookingId;
                       totalAmount = value.data.order.amount;
                       bookingStatus =
@@ -3368,7 +3345,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                       tempObj['Taxes & Fee'] =
                         value.data.itemInfos.AIR.totalPriceInfo.totalFareDetail.fC?.TAF ||
                         undefined;
-                    } else if (PNR[key].provider === 'aa') {
+                    } else */ if (PNR[key].provider === 'aa') {
                       bookingID = value.recordLocator;
                       totalAmount = value.payments[0].amounts.amount;
                       if (value.info.status === 2) bookingStatus = 'CONFIRMED';
@@ -3425,7 +3402,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                             </div>
                           </div>
                         </div>
-                      ) : (
+                      ) : seatMap[key].provider !== 'tj' ? (
                         <div className='row y-gap-20'>
                           <div className='col-md-4 text-center'>
                             <div className='text-15'>Booking ID</div>
@@ -3447,6 +3424,11 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                             </div>
                           </div>
                         </div>
+                      ) : (
+                        <p className='y-gap-20'>
+                          We've received your booking request. You'll receive booking
+                          details shortly.
+                        </p>
                       )}
                       <div className='mb-20 border-light mt-20'>
                         <FlightProperty
@@ -3456,7 +3438,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                           showPrice={false}
                         />
                       </div>
-                      {value !== 'Failed' && (
+                      {value !== 'Failed' && seatMap[key].provider !== 'tj' && (
                         <div className='row mt-8 y-gap-20 mb-20'>
                           <div>
                             <div className='text-15'>Price Breakdown</div>
@@ -3499,7 +3481,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                       }
                                     }
                                     if (seatMap[key]) {
-                                      if (seatMap[key].provider === 'tj') {
+                                      /* if (seatMap[key].provider === 'tj') {
                                         for (let travl of value.data.itemInfos.AIR
                                           .travellerInfos) {
                                           if (
@@ -3524,7 +3506,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                               }
                                           }
                                         }
-                                      } else if (seatMap[key].provider === 'aa') {
+                                      } else */ if (seatMap[key].provider === 'aa') {
                                         // Traveller Key
                                         let p;
                                         for (let pax of PNR[key].data.pax) {

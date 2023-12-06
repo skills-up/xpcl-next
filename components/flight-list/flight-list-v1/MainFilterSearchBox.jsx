@@ -1,8 +1,5 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { MdFlightLand, MdFlightTakeoff } from 'react-icons/md';
-import { RiArrowLeftRightFill, RiArrowRightLine } from 'react-icons/ri';
-import { SlCalender } from 'react-icons/sl';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 import { useDispatch, useSelector } from 'react-redux';
 import LoadingBar from 'react-top-loading-bar';
@@ -16,7 +13,6 @@ import {
   setReturnFlight as setReturnFlightRedux,
   setSearchData,
   setTravellerDOBS,
-  setTravellers as setTravellersRedux,
 } from '../../../features/flightSearch/flightSearchSlice';
 import checkAirportCache from '../../../utils/airportCacheValidity';
 import { checkUser } from '../../../utils/checkTokenValidity';
@@ -26,17 +22,17 @@ import AirportSearch from '../common/AirportSearch';
 import GuestSearch from './GuestSearch';
 
 const MainFilterSearchBox = () => {
-  const [directFlight, setDirectFlight] = useState(false);
+  // const [directFlight, setDirectFlight] = useState(false);
   const [from, setFrom] = useState(null);
   const [to, setTo] = useState(null);
-  const [preferredCabin, setPrefferedCabin] = useState({ value: 'Economy' });
-  const [travellers, setTravellers] = useState([]);
-  const [preferredAirlines, setPreferredAirlines] = useState([]);
+  const [preferredCabin, setPrefferedCabin] = useState({ value: 'Any' });
+  // const [travellers, setTravellers] = useState([]);
+  // const [preferredAirlines, setPreferredAirlines] = useState([]);
   const [departDate, setDepartDate] = useState(new DateObject());
   const [returnDate, setReturnDate] = useState(new DateObject());
   const [returnFlight, setReturnFlight] = useState(true);
-  const [clientTravellers, setClientTravellers] = useState([]);
-  const [airlines, setAirlines] = useState([]);
+  // const [clientTravellers, setClientTravellers] = useState([]);
+  // const [airlines, setAirlines] = useState([]);
   const [airportOptions, setAirportOptions] = useState([]);
   const [progress, setProgress] = useState(0);
   const [isSearched, setIsSearched] = useState(false);
@@ -49,13 +45,16 @@ const MainFilterSearchBox = () => {
 
   const [autoSearch, setAutoSearch] = useState(false);
 
-  const destinations = useSelector((state) => state.flightSearch.value.destinations);
+  // const destinations = useSelector((state) => state.flightSearch.value.destinations);
   const dispatch = useDispatch();
   const router = useRouter();
   const token = useSelector((state) => state.auth.value.token);
   const airports = useSelector((state) => state.apis.value.airports);
   const client_id = useSelector((state) => state.auth.value.currentOrganization);
-  const travellerDOBS = useSelector((state) => state.flightSearch.value.travellerDOBS);
+  // const travellerDOBS = useSelector((state) => state.flightSearch.value.travellerDOBS);
+
+  // Preferred Carriers for TJ
+  const preferredCarriersTJ = ['6E', 'SG'];
 
   useEffect(() => {
     if (to && from && router.query?.data && !autoSearch) {
@@ -94,13 +93,13 @@ const MainFilterSearchBox = () => {
       //     traveller_id: element.traveller_id,
       //   }))
       // );
-      setAirlines(
-        airlines.data.map((element) => ({
-          value: element.id,
-          label: element.name,
-          code: element.code,
-        }))
-      );
+      // setAirlines(
+      //   airlines.data.map((element) => ({
+      //     value: element.id,
+      //     label: element.name,
+      //     code: element.code,
+      //   }))
+      // );
       if (router.query?.data) {
         try {
           const data = await JSON.parse(decodeURIComponent(router.query.data));
@@ -121,6 +120,43 @@ const MainFilterSearchBox = () => {
 
   const searchF = () => {
     setIsSearched(false);
+  };
+
+  const amadeusDataManipulation = async (data) => {
+    const finalRecos = [];
+    for (let [k, v] of Object.entries(data.recommendations)) {
+      const segs = [];
+      let prices = [];
+      const segments = data.segments[k];
+      // Segments
+      for (let flight of segments?.flights) {
+        let tempSeg = {
+          flight: {
+            airline: flight.carrier,
+            number: flight.flight,
+            equipment: flight.equipment,
+          },
+          departure: {
+            time: flight.depart.date + 'T' + flight.depart.time,
+            airport: { code: flight.depart.location, terminal: flight.depart.terminal },
+          },
+          arrival: {
+            time: flight.arrive.date + 'T' + flight.arrive.time,
+            airport: { code: flight.arrive.location, terminal: flight.arrive.terminal },
+          },
+        };
+        segs.push(tempSeg);
+      }
+      // Prices
+      for (let [ffRef, vData] of Object.entries(v)) {
+        const ffData = ffRef !== '_' ? data.fareFamilies[ffRef] : {};
+        const baggage = data.baggages[vData.bagRef];
+        prices.push({ ...vData, ...ffData, ...baggage });
+      }
+      finalRecos.push({ segments: segs, prices });
+    }
+    console.log('finalRecos', finalRecos);
+    return finalRecos;
   };
 
   const search = async () => {
@@ -156,6 +192,7 @@ const MainFilterSearchBox = () => {
       searchF();
       return;
     }
+
     // Getting Traveller DOBS
     let pax = {
       ADT: guestCounts.Adults,
@@ -216,8 +253,8 @@ const MainFilterSearchBox = () => {
     // Formulating Request
     let request = {
       pax,
-      directOnly: directFlight,
-      preferredCarriers: preferredAirlines.map((el) => el?.code).filter((el) => el),
+      // directOnly: directFlight,
+      // preferredCarriers: preferredAirlines.map((el) => el?.code).filter((el) => el),
       sectors: [
         {
           from: from?.value,
@@ -226,10 +263,8 @@ const MainFilterSearchBox = () => {
         },
       ],
     };
-    if (preferredCabin?.value) {
-      if (preferredCabin.value === 'Premium Economy')
-        request['cabinType'] = 'PREMIUM_ECONOMY';
-      else request['cabinType'] = preferredCabin.value.toUpperCase();
+    if ((preferredCabin?.value || 'Any') !== 'Any') {
+      request['cabinType'] = preferredCabin.value.toUpperCase().replaceAll(' ', '_');
     }
     if (returnFlight && !domestic) {
       request.sectors.push({
@@ -250,9 +285,9 @@ const MainFilterSearchBox = () => {
       ],
     };
     let tempSearchData = { aa: null, tj: null, ad: null };
-    let callsCounter = 2;
+    let callsCounter = 3;
     if (returnFlight && domestic) {
-      callsCounter = 4;
+      callsCounter = 6;
     }
     let currentCalls = 0;
     // Redux Values Update
@@ -264,7 +299,7 @@ const MainFilterSearchBox = () => {
       })
     );
     dispatch(setReturnFlightRedux({ returnFlight }));
-    dispatch(setTravellersRedux({ travellers }));
+    // dispatch(setTravellersRedux({ travellers }));
     dispatch(
       setDestinations({
         to,
@@ -273,8 +308,8 @@ const MainFilterSearchBox = () => {
         returnDate: returnFlight ? returnDate.format('YYYY-MM-DD') : null,
       })
     );
-    // Akasa
     // To
+    // Akasa
     customAPICall('aa/v1/search', 'post', request, {}, true)
       .then(async (res) => {
         if (res?.success) {
@@ -289,8 +324,52 @@ const MainFilterSearchBox = () => {
       })
       .catch((err) => console.error(err))
       .then(() => dispatchCalls(tempSearchData, callsCounter, (currentCalls += 1)));
+    // Tripjack
+    customAPICall(
+      'tj/v1/search',
+      'post',
+      { ...request, preferredCarriers: preferredCarriersTJ },
+      {},
+      true
+    )
+      .then(async (res) => {
+        if (res?.success) {
+          if (returnFlight && domestic) {
+            if (tempSearchData?.tj?.from) {
+              res.data.from = tempSearchData.tj.from;
+            }
+          }
+          tempSearchData = { ...tempSearchData, tj: res.data };
+          updateSEO();
+        }
+      })
+      .catch((err) => console.error(err))
+      .then(() => dispatchCalls(tempSearchData, callsCounter, (currentCalls += 1)));
+    // Amadeus
+    customAPICall('flights/search', 'post', request, {}, false)
+      .then(async (res) => {
+        if (res?.success) {
+          res.data = await amadeusDataManipulation(res.data);
+          let body = { to: null, from: null, combined: null };
+          if (domestic) {
+            body.to = res.data;
+          } else {
+            body.combined = res.data;
+          }
+          if (returnFlight && domestic) {
+            if (tempSearchData?.ad?.from) {
+              body.from = tempSearchData.ad.from;
+            }
+          }
+          tempSearchData = { ...tempSearchData, ad: body };
+          updateSEO();
+        }
+      })
+      .catch((err) => console.error(err))
+      .then(() => dispatchCalls(tempSearchData, callsCounter, (currentCalls += 1)));
     // From
     if (returnFlight && domestic) {
+      // Akasa
       customAPICall('aa/v1/search', 'post', returnRequest, {}, true)
         .then(async (res) => {
           if (res?.success) {
@@ -305,26 +384,14 @@ const MainFilterSearchBox = () => {
         })
         .catch((err) => console.error(err))
         .then(() => dispatchCalls(tempSearchData, callsCounter, (currentCalls += 1)));
-    }
-    // Tripjack
-    // To
-    customAPICall('tj/v1/search', 'post', request, {}, true)
-      .then(async (res) => {
-        if (res?.success) {
-          if (returnFlight && domestic) {
-            if (tempSearchData?.tj?.from) {
-              res.data.from = tempSearchData.tj.from;
-            }
-          }
-          tempSearchData = { ...tempSearchData, tj: res.data };
-          updateSEO();
-        }
-      })
-      .catch((err) => console.error(err))
-      .then(() => dispatchCalls(tempSearchData, callsCounter, (currentCalls += 1)));
-    // From
-    if (returnFlight && domestic) {
-      customAPICall('tj/v1/search', 'post', returnRequest, {}, true)
+      // TripJack
+      customAPICall(
+        'tj/v1/search',
+        'post',
+        { ...returnRequest, preferredCarriers: preferredCarriersTJ },
+        {},
+        true
+      )
         .then(async (res) => {
           if (res?.success) {
             res.data.from = res.data.to;
@@ -338,11 +405,28 @@ const MainFilterSearchBox = () => {
         })
         .catch((err) => console.error(err))
         .then(() => dispatchCalls(tempSearchData, callsCounter, (currentCalls += 1)));
+      // Amadeus
+      customAPICall('flights/search', 'post', returnRequest, {}, false)
+        .then(async (res) => {
+          if (res?.success) {
+            res.data = await amadeusDataManipulation(res.data);
+            let body = { to: null, from: null, combined: null };
+            body.from = res.data;
+            if (tempSearchData?.ad?.to) {
+              body.to = tempSearchData.ad.to;
+            }
+            tempSearchData = { ...tempSearchData, ad: body };
+            updateSEO();
+          }
+        })
+        .catch((err) => console.error(err))
+        .then(() => dispatchCalls(tempSearchData, callsCounter, (currentCalls += 1)));
     }
   };
 
   const dispatchCalls = async (searchData, callsCounter, currentCalls) => {
     dispatch(setSearchData(searchData));
+    console.log('searchData', searchData);
     let percentage = (currentCalls / callsCounter) * 100;
     if (percentage === 100) {
       searchF();
@@ -373,7 +457,7 @@ const MainFilterSearchBox = () => {
     );
   };
 
-  const searchData = useSelector((state) => state.flightSearch.value.searchData);
+  // const searchData = useSelector((state) => state.flightSearch.value.searchData);
 
   return (
     <div className=''>

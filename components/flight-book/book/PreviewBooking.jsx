@@ -25,7 +25,8 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
     (state) => state.flightSearch.value.clientTravellers
   );
   const [selectedTravellers, setSelectedTravellers] = useState([]);
-  const lowCostBookings = ['IX', '6E', 'SG', 'G8', 'I5', 'QP', 'AI'];
+  // const lowCostBookings = ['IX', '6E', 'SG', 'G8', 'I5', 'QP', 'AI'];
+  const lowCostBookings = ['6E', 'SG'];
   // const travellers = useSelector((state) => state.flightSearch.value.travellers);
   const travellerDOBS = useSelector((state) => state.flightSearch.value.travellerDOBS);
   const [travellers, setTravellers] = useState([]);
