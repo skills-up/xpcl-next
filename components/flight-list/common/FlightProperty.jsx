@@ -201,19 +201,13 @@ function FlightProperty({
                         <div className='lh-15 fw-500' style={{ width: '77px' }}>
                           {element.provider === 'aa' &&
                             element.segments.at(-1).arrival.time.slice(-8, -3)}
-                          {element.provider === 'ad' &&
-                            console.log(
-                              'ad',
-                              element,
-                              element.segments.at(-1).arrival.time.slice(-5)
-                            )}
+                          {console.log(element.provider, element)}
                           {(element.provider === 'tj' || element.provider === 'ad') &&
-                          element.type === 'combined' &&
-                          layoffSegment
-                            ? element.segments[layoffSegment - 1]?.arrival?.time?.slice(
-                                -5
-                              )
-                            : element.segments.at(-1).arrival.time.slice(-5)}{' '}
+                            (element.type === 'combined' && layoffSegment
+                              ? element.segments[layoffSegment - 1]?.arrival?.time?.slice(
+                                  -5
+                                )
+                              : element.segments.at(-1).arrival.time.slice(-5))}{' '}
                           {element.type === 'combined' ? (
                             element.legOneDayDifference > 0 ? (
                               <span className='text-secondary text-14'>
@@ -514,30 +508,78 @@ function FlightProperty({
                         data-tooltip-id={'x_' + element.selectId}
                         data-tooltip-content={
                           `${
-                            element.adultPrice > 0
+                            element?.selectedFF?.prices?.ADULT?.fare > 0
                               ? `${
                                   travellerDOBS.ADT
-                                }x Adult @ ${element.adultPrice.toLocaleString('en-IN', {
-                                  maximumFractionDigits: 0,
-                                  style: 'currency',
-                                  currency: 'INR',
-                                })}`
+                                }x Adult @ ${element.selectedFF.prices.ADULT.fare.toLocaleString(
+                                  'en-IN',
+                                  {
+                                    maximumFractionDigits: 0,
+                                    style: 'currency',
+                                    currency: 'INR',
+                                  }
+                                )}`
+                              : element?.selectedFF?.prices?.ADT > 0
+                              ? `${
+                                  travellerDOBS.ADT
+                                }x Adult @ ${element.selectedFF.prices.ADT.toLocaleString(
+                                  'en-IN',
+                                  {
+                                    maximumFractionDigits: 0,
+                                    style: 'currency',
+                                    currency: 'INR',
+                                  }
+                                )}`
                               : ''
                           }${
-                            element.childPrice > 0
+                            element?.selectedFF?.prices?.CHILD?.fare > 0
                               ? `\n${
                                   travellerDOBS.CHD
-                                }x Child @ ${element.childPrice.toLocaleString('en-IN', {
-                                  maximumFractionDigits: 0,
-                                  style: 'currency',
-                                  currency: 'INR',
-                                })}`
+                                }x Child @ ${element.selectedFF.prices.CHILD.fare.toLocaleString(
+                                  'en-IN',
+                                  {
+                                    maximumFractionDigits: 0,
+                                    style: 'currency',
+                                    currency: 'INR',
+                                  }
+                                )}`
+                              : element?.selectedFF?.prices?.CHD > 0
+                              ? `\n${
+                                  travellerDOBS.CHD
+                                }x Child @ ${element.selectedFF.prices.CHD.toLocaleString(
+                                  'en-IN',
+                                  {
+                                    maximumFractionDigits: 0,
+                                    style: 'currency',
+                                    currency: 'INR',
+                                  }
+                                )}`
                               : ''
                           }${
-                            element.infantPrice > 0
+                            element?.selectedFF?.prices?.INFANT?.fare > 0
                               ? `\n${
                                   travellerDOBS.INF
-                                }x Infant @ ${element.infantPrice.toLocaleString(
+                                }x Infant @ ${element.selectedFF.prices.INFANT.fare.toLocaleString(
+                                  'en-IN',
+                                  {
+                                    maximumFractionDigits: 0,
+                                    style: 'currency',
+                                    currency: 'INR',
+                                  }
+                                )}`
+                              : element?.selectedFF?.prices?.INF > 0
+                              ? `\n${
+                                  travellerDOBS.INF
+                                }x Infant @ ${element.selectedFF.prices.INF.toLocaleString(
+                                  'en-IN',
+                                  {
+                                    maximumFractionDigits: 0,
+                                    style: 'currency',
+                                    currency: 'INR',
+                                  }
+                                )}`
+                              : element?.provider === 'aa' && travellerDOBS?.INF
+                              ? `\n${travellerDOBS.INF}x Infant @ ${(1500).toLocaleString(
                                   'en-IN',
                                   {
                                     maximumFractionDigits: 0,
@@ -684,7 +726,7 @@ function FlightProperty({
                     cabinClass.charAt(0).toUpperCase() +
                     cabinClass.slice(1).toLowerCase();
               } else if (element.provider === 'tj') {
-                const cabinClass = Object.values(element.selectedFF)?.at(0)?.cabinClass;
+                const cabinClass = element.selectedFF?.cabinClass;
                 if (cabinClass === 'PREMIUM_ECONOMY') businessClass = 'Premium Economy';
                 else
                   businessClass =
@@ -826,9 +868,9 @@ function FlightProperty({
                         <div className='col-auto text-right md:text-left'>
                           <div className='text-14 text-light-1'>{businessClass}</div>
                           <div className='text-14 mt-15 md:mt-5'>
-                            {segment.flight.equipment.charAt(0) === '7' &&
+                            {segment?.flight?.equipment?.charAt(0) === '7' &&
                               'Boeing ' + segment.flight.equipment}
-                            {segment.flight.equipment.charAt(0) === '3' &&
+                            {segment?.flight?.equipment?.charAt(0) === '3' &&
                               'Airbus A' + segment.flight.equipment}
                             {/* <br />
                       Wi-Fi available
