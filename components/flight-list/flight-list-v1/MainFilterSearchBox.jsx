@@ -190,7 +190,6 @@ const MainFilterSearchBox = () => {
       }
       finalRecos.push({ segments: segs, prices });
     }
-    console.log('finalRecos', finalRecos);
     return finalRecos;
   };
 

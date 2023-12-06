@@ -254,7 +254,7 @@ const FlightProperties = () => {
                       if (key === 'tj')
                         firstLegDuration +=
                           seg.journey.duration + (seg.journey?.layoverMins || 0);
-                      if (key === 'ad')
+                      else if (key === 'ad')
                         firstLegDuration +=
                           (new Date(seg.arrival.time).getTime() -
                             new Date(seg.departure.time).getTime()) /
@@ -264,8 +264,8 @@ const FlightProperties = () => {
                       if (key === 'tj')
                         secondLegDuration +=
                           seg.journey.duration + (seg.journey?.layoverMins || 0);
-                      if (key === 'ad')
-                        firstLegDuration +=
+                      else if (key === 'ad')
+                        secondLegDuration +=
                           (new Date(seg.arrival.time).getTime() -
                             new Date(seg.departure.time).getTime()) /
                             60000 +
@@ -507,6 +507,7 @@ const FlightProperties = () => {
       setFromCount(fromCount);
       setCombinedCount(combinedCount);
       setManip(temp);
+      console.log('manip', temp);
       if (toCount > 0) {
         setCurrentTab('to');
       } else if (fromCount > 0) {

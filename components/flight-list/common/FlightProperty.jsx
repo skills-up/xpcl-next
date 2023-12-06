@@ -201,7 +201,6 @@ function FlightProperty({
                         <div className='lh-15 fw-500' style={{ width: '77px' }}>
                           {element.provider === 'aa' &&
                             element.segments.at(-1).arrival.time.slice(-8, -3)}
-                          {console.log(element.provider, element)}
                           {(element.provider === 'tj' || element.provider === 'ad') &&
                             (element.type === 'combined' && layoffSegment
                               ? element.segments[layoffSegment - 1]?.arrival?.time?.slice(
