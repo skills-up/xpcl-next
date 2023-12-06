@@ -137,11 +137,11 @@ const MainFilterSearchBox = () => {
             equipment: flight.equipment,
           },
           departure: {
-            timeUtc: flight.depart.date + 'T' + flight.depart.time,
+            time: flight.depart.date + 'T' + flight.depart.time,
             airport: { code: flight.depart.location, terminal: flight.depart.terminal },
           },
           arrival: {
-            timeUtc: flight.arrive.date + 'T' + flight.arrive.time,
+            time: flight.arrive.date + 'T' + flight.arrive.time,
             airport: { code: flight.arrive.location, terminal: flight.arrive.terminal },
           },
         };
