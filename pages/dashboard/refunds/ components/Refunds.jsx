@@ -62,7 +62,7 @@ const Refunds = () => {
     },
     {
       Header: 'Client Name',
-      accessor: 'booking.client_name',
+      accessor: 'client.name',
     },
     {
       Header: 'Traveller Name',
