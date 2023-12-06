@@ -80,7 +80,10 @@ const AddNewPaymentReceipt = () => {
       bankCashAccounts?.success
     ) {
       setAccounts(
-        accounts.data.map((element) => ({ value: element.id, label: `${element.name} (${element.org_code})` }))
+        accounts.data.map((element) => ({
+          value: element.id,
+          label: `${element.name}${element.org_code ? ` (${element.org_code})` : ''}`,
+        }))
       );
       setBankCashAccounts(
         bankCashAccounts.data.map((element) => ({
