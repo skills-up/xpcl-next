@@ -85,7 +85,10 @@ const AddNewPaymentReceipt = () => {
           bankCashAccounts?.success
         ) {
           setAccounts(
-            accounts.data.map((element) => ({ value: element.id, label: `${element.name} (${element.org_code})` }))
+            accounts.data.map((element) => ({
+              value: element.id,
+              label: `${element.name}${element.org_code ? ` (${element.org_code})` : ''}`,
+            }))
           );
           // setOrganizations(
           //   organizations.data.map((element) => ({
@@ -386,7 +389,7 @@ const AddNewPaymentReceipt = () => {
                               placeholder=' '
                               type='text'
                               pattern='^\d{2}[A-Za-z]{5}\d{4}[A-Za-z]\wZ\w$'
-                              />
+                            />
                             <label className='lh-1 text-16 text-light-1'>
                               GSTN<span className='text-danger'>*</span>
                             </label>
