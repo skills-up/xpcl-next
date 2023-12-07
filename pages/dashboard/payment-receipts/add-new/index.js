@@ -2,7 +2,6 @@ import Seo from '../../../../components/common/Seo';
 import Footer from '../../../../components/footer/dashboard-footer';
 import Header from '../../../../components/header/dashboard-header';
 import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
-import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { sendToast } from '../../../../utils/toastify';
 import { useEffect, useState } from 'react';
@@ -25,11 +24,11 @@ const AddNewPaymentReceipt = () => {
   const [accounts, setAccounts] = useState([]);
   const [bankCashAccounts, setBankCashAccounts] = useState([]);
   const [tdsAccounts, setTDSAccounts] = useState([]);
-  // const [organizations, setOrganizations] = useState([]);
+  const [organizations, setOrganizations] = useState([]);
+  const [selectedOrganization, setSelectedOrganization] = useState(null);
   const [itc, setItc] = useState(false);
   const [itcObj, setItcObj] = useState({
-    name: '',
-    gstn: '',
+    org_id: null,
     igst: '',
     cgst: '',
     sgst: '',
@@ -42,7 +41,6 @@ const AddNewPaymentReceipt = () => {
     amount: '',
   });
 
-  const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
 
   useEffect(() => {
@@ -50,14 +48,19 @@ const AddNewPaymentReceipt = () => {
   }, [router.isReady]);
 
   useEffect(() => {
-    if (itcObj?.gstn) {
-      if (itcObj.gstn.slice(0, 2) === '27') {
-        setItcObj((prev) => ({ ...prev, igst: '' }));
+    if (selectedOrganization) {
+      if (selectedOrganization.gstn?.slice(0, 2) === '27') {
+        setItcObj((prev) => ({ ...prev, org_id: selectedOrganization.value, igst: '' }));
       } else {
-        setItcObj((prev) => ({ ...prev, ...{ cgst: '', sgst: '' } }));
+        setItcObj((prev) => ({
+          ...prev,
+          org_id: selectedOrganization.value,
+          cgst: '',
+          sgst: '',
+        }));
       }
     }
-  }, [itcObj.gstn]);
+  }, [selectedOrganization]);
 
   useEffect(() => {
     if (itcObj.cgst && itc) setItcObj((prev) => ({ ...prev, sgst: prev.cgst }));
@@ -69,13 +72,13 @@ const AddNewPaymentReceipt = () => {
 
   const getData = async () => {
     setType({ value: router.query.type });
-    // const organizations = await getList('organizations');
+    const miscOrgs = await getList('organizations', { is_misc: 1 });
     const accounts = await getList('accounts');
     const bankCashAccounts = await getList('accounts', { is_bank_cash: 1 });
     const tdsAccounts = await getList('accounts', { category: 'TDS Deductions' });
     if (
       accounts?.success &&
-      // organizations?.success &&
+      miscOrgs?.success &&
       tdsAccounts?.success &&
       bankCashAccounts?.success
     ) {
@@ -94,12 +97,13 @@ const AddNewPaymentReceipt = () => {
       setTDSAccounts(
         tdsAccounts.data.map((element) => ({ value: element.id, label: element.name }))
       );
-      // setOrganizations(
-      //   organizations.data.map((element) => ({
-      //     value: element.id,
-      //     label: element.name,
-      //   }))
-      // );
+      setOrganizations(
+        miscOrgs.data.map((element) => ({
+          value: element.id,
+          label: `${element.name}${element.gstn ? ` (${element.gstn})` : ''}`,
+          gstn: element.gstn,
+        }))
+      );
     } else {
       sendToast('error', 'Unable to fetch required data', 4000);
       router.push('/dashboard/payment-receipts');
@@ -120,11 +124,8 @@ const AddNewPaymentReceipt = () => {
       sendToast('error', 'PAN format is invalid', 4000);
       return;
     }
-    if (
-      itc &&
-      !itcObj.gstn.match(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/)
-    ) {
-      sendToast('error', 'GSTN format is invalid', 4000);
+    if (itc && !itcObj?.org_id) {
+      sendToast('error', 'You must select a Payment ITC Organization', 4000);
       return;
     }
     const tempTDSObj = tdsObj;
@@ -326,35 +327,17 @@ const AddNewPaymentReceipt = () => {
                     )}
                     {itc && type?.value === 'Payment' && (
                       <div className='row pr-0'>
-                        <div className='col-3 pr-0'>
-                          <div className='form-input'>
-                            <input
-                              onChange={(e) =>
-                                setItcObj((prev) => ({ ...prev, name: e.target.value }))
-                              }
-                              value={itcObj.name}
-                              placeholder=' '
-                              type='text'
-                            />
+                        <div className='col-6 pr-0'>
+                          <div className='form-input-select'>
                             <label className='lh-1 text-16 text-light-1'>
-                              Name<span className='text-danger'>*</span>
+                              Vendor<span className='text-danger'>*</span>
                             </label>
-                          </div>
-                        </div>
-                        <div className='col-3 pr-0'>
-                          <div className='form-input'>
-                            <input
-                              onChange={(e) =>
-                                setItcObj((prev) => ({ ...prev, gstn: e.target.value }))
-                              }
-                              value={itcObj.gstn}
-                              placeholder=' '
-                              type='text'
-                              pattern='^\d{2}[A-Za-z]{5}\d{4}[A-Za-z]\wZ\w$'
-                            />
-                            <label className='lh-1 text-16 text-light-1'>
-                              GSTN<span className='text-danger'>*</span>
-                            </label>
+                            <Select
+                              options={organizations}
+                              value={selectedOrganization}
+                              placeholder='Select Vendor'
+                              onChange={setSelectedOrganization}
+                            />{' '}
                           </div>
                         </div>
                         <div className='col-2 pr-0'>

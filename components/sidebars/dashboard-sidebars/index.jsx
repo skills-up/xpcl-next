@@ -2,7 +2,6 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { customAPICall, getList } from '../../../api/xplorzApi';
-import { store } from '../../../app/store';
 import Select from 'react-select';
 import {
   setCurrentOrganization,
@@ -155,6 +154,10 @@ const Sidebar = () => {
         {
           title: 'Vendor Invoicing',
           href: '/dashboard/vendor-commission-invoices',
+        },
+        {
+          title: 'GST ITC Report',
+          href: '/dashboard/gst-itcs',
         },
       ],
     },

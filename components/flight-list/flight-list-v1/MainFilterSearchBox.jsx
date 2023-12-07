@@ -129,23 +129,58 @@ const MainFilterSearchBox = () => {
       let prices = [];
       const segments = data.segments[k];
       // Segments
-      for (let flight of segments?.flights) {
-        let tempSeg = {
-          flight: {
-            airline: flight.carrier,
-            number: flight.flight,
-            equipment: flight.equipment,
-          },
-          departure: {
-            time: flight.depart.date + 'T' + flight.depart.time,
-            airport: { code: flight.depart.location, terminal: flight.depart.terminal },
-          },
-          arrival: {
-            time: flight.arrive.date + 'T' + flight.arrive.time,
-            airport: { code: flight.arrive.location, terminal: flight.arrive.terminal },
-          },
-        };
-        segs.push(tempSeg);
+      for (let leg of segments) {
+        let counter = 0;
+        for (let flight of leg?.flights) {
+          let layover = flight?.layover;
+          let layoverInMinutes = 0;
+          if (layover) {
+            let splitArr = layover.split(' ');
+            let size = splitArr.length;
+            if (size === 1) {
+              splitArr[0] = splitArr[0].replace('m', '');
+              layoverInMinutes += +splitArr[0];
+            } else if (size === 2) {
+              splitArr[0] = splitArr[0].replace('h', '');
+              layoverInMinutes += +splitArr[0] * 60;
+              splitArr[1] = splitArr[1].replace('m', '');
+              layoverInMinutes += +splitArr[1];
+            } else if (size === 3) {
+              splitArr[0] = splitArr[0].replace('d', '');
+              layoverInMinutes += +splitArr[0] * 60 * 24;
+              splitArr[1] = splitArr[1].replace('h', '');
+              layoverInMinutes += +splitArr[1] * 60;
+              splitArr[2] = splitArr[2].replace('m', '');
+              layoverInMinutes += +splitArr[2];
+            }
+          }
+          let tempSeg = {
+            flight: {
+              airline: flight.carrier,
+              number: flight.flight,
+              equipment: flight.equipment,
+            },
+            departure: {
+              time: flight.depart.date + 'T' + flight.depart.time,
+              airport: {
+                code: flight.depart.location,
+                terminal: flight.depart.terminal,
+              },
+            },
+            arrival: {
+              time: flight.arrive.date + 'T' + flight.arrive.time,
+              airport: {
+                code: flight.arrive.location,
+                terminal: flight.arrive.terminal,
+              },
+            },
+            segmentNo: counter++,
+            journey: {
+              layoverMins: layoverInMinutes,
+            },
+          };
+          segs.push(tempSeg);
+        }
       }
       // Prices
       for (let [ffRef, vData] of Object.entries(v)) {
@@ -155,7 +190,6 @@ const MainFilterSearchBox = () => {
       }
       finalRecos.push({ segments: segs, prices });
     }
-    console.log('finalRecos', finalRecos);
     return finalRecos;
   };
 

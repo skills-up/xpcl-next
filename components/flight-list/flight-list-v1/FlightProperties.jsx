@@ -107,10 +107,17 @@ const FlightProperties = () => {
                     childPrice = (v?.prices?.CHD || 0) * (travellerDOBS.CHD || 0);
                     adultPrice = (v?.prices?.ADT || 0) * (travellerDOBS.ADT || 0);
                     total = infantPrice + childPrice + adultPrice;
-                    prices[k] = { infantPrice, childPrice, adultPrice, total, ...v };
+                    prices[k] = {
+                      infantPrice,
+                      childPrice,
+                      adultPrice,
+                      total,
+                      name: k,
+                      ...v,
+                    };
                     if (total < minTotal) {
                       minTotal = total;
-                      selectedFF = { [k]: v };
+                      selectedFF = prices[k];
                     }
                     if (total > maxTotal) {
                       maxTotal = total;
@@ -127,7 +134,7 @@ const FlightProperties = () => {
                     prices[v.name] = { infantPrice, childPrice, adultPrice, total, ...v };
                     if (total < minTotal) {
                       minTotal = total;
-                      selectedFF = v;
+                      selectedFF = prices[v.name];
                     }
                     if (total > maxTotal) {
                       maxTotal = total;
@@ -140,13 +147,19 @@ const FlightProperties = () => {
                       (v?.prices?.INFANT?.fare || 0) * (travellerDOBS.INF || 0);
                     childPrice = (v?.prices?.CHILD?.fare || 0) * (travellerDOBS.CHD || 0);
                     adultPrice = (v?.prices?.ADULT?.fare || 0) * (travellerDOBS.ADT || 0);
-                    console.log('fare', infantPrice, childPrice, adultPrice);
                     total = infantPrice + childPrice + adultPrice;
 
-                    prices[k] = { infantPrice, childPrice, adultPrice, total, ...v };
+                    prices[k] = {
+                      infantPrice,
+                      childPrice,
+                      adultPrice,
+                      total,
+                      name: k,
+                      ...v,
+                    };
                     if (total < minTotal) {
                       minTotal = total;
-                      selectedFF = { [k]: v };
+                      selectedFF = prices[k];
                     }
                     if (total > maxTotal) {
                       maxTotal = total;
@@ -238,11 +251,25 @@ const FlightProperties = () => {
                       }
                     }
                     if (counter < 2) {
-                      firstLegDuration +=
-                        seg.journey.duration + (seg.journey?.layoverMins || 0);
+                      if (key === 'tj')
+                        firstLegDuration +=
+                          seg.journey.duration + (seg.journey?.layoverMins || 0);
+                      else if (key === 'ad')
+                        firstLegDuration +=
+                          (new Date(seg.arrival.time).getTime() -
+                            new Date(seg.departure.time).getTime()) /
+                            60000 +
+                          (seg.journey?.layoverMins || 0);
                     } else {
-                      secondLegDuration +=
-                        seg.journey.duration + (seg.journey?.layoverMins || 0);
+                      if (key === 'tj')
+                        secondLegDuration +=
+                          seg.journey.duration + (seg.journey?.layoverMins || 0);
+                      else if (key === 'ad')
+                        secondLegDuration +=
+                          (new Date(seg.arrival.time).getTime() -
+                            new Date(seg.departure.time).getTime()) /
+                            60000 +
+                          (seg.journey?.layoverMins || 0);
                     }
                     segCounter += 1;
                   }
@@ -321,8 +348,7 @@ const FlightProperties = () => {
                       : (cabins[tempClass] = 1);
                   }
                 } else if (key === 'tj') {
-                  cabinClass = Object.values(selectedFF)?.at(0)?.cabinClass;
-                  console.log('cabin', selectedFF);
+                  cabinClass = selectedFF.cabinClass;
                   if (cabinClass === 'PREMIUM_ECONOMY')
                     cabins['Premium Economy']
                       ? (cabins['Premium Economy'] += 1)
@@ -401,7 +427,6 @@ const FlightProperties = () => {
                     prices,
                     firstLegDuration,
                     secondLegDuration,
-                    adultPrice,
                     totalDuration,
                     selectedFF,
                     overallDayDifference,
@@ -481,8 +506,8 @@ const FlightProperties = () => {
       setToCount(toCount);
       setFromCount(fromCount);
       setCombinedCount(combinedCount);
-      console.log('temp', temp);
       setManip(temp);
+      console.log('manip', temp);
       if (toCount > 0) {
         setCurrentTab('to');
       } else if (fromCount > 0) {
