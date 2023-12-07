@@ -125,6 +125,7 @@ const GuestSearch = ({ guests, cabins }) => {
           <div className='row y-gap-20'>
             {cabinOptions.map((opt, optIn) => (
               <div
+                key={optIn}
                 className={`button -blue-1 bg-blue-1-05 mb-1 mx-1 col-auto text-blue-1 py-5 px-20 rounded-100  cursor-pointer ${
                   preferredCabin?.value === opt ? 'active' : ''
                 }`}
