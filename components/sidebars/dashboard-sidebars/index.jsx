@@ -155,10 +155,6 @@ const Sidebar = () => {
           title: 'Vendor Invoicing',
           href: '/dashboard/vendor-commission-invoices',
         },
-        {
-          title: 'GST ITC Report',
-          href: '/dashboard/gst-itcs',
-        },
       ],
     },
     {
@@ -204,6 +200,10 @@ const Sidebar = () => {
         {
           title: 'GST MIS',
           href: '/dashboard/reports/gst-mis',
+        },
+        {
+          title: 'GST ITC Report',
+          href: '/dashboard/gst-itcs',
         },
         {
           title: 'Bill-Wise Profit',
