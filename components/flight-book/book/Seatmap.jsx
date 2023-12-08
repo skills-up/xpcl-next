@@ -428,7 +428,7 @@ function Seatmap ({ seatMaps, PNRS, travellerInfos }) {
               if (v.travellers && v.travellers.length > 0) {
                 for (let trav of v.travellers) {
                   if (trav.id === traveller.id) {
-                    seats.push({ key: k, code: trav.seatNo, price: trav.amount });
+                    seats.push({ sector: seats.length+1, code: trav.seatNo, price: trav.amount });
                     seatCost += trav.amount;
                   }
                 }
@@ -441,7 +441,7 @@ function Seatmap ({ seatMaps, PNRS, travellerInfos }) {
               for (let meal of traveller.trip_meals[key]) {
                 if (meal.value.id && meal.value.code) {
                   meals.push({
-                    key: meal.value.id,
+                    sector: meals.length+1,
                     code: meal.value.code,
                     price: meal.value?.amount || 0,
                   });
@@ -470,18 +470,19 @@ function Seatmap ({ seatMaps, PNRS, travellerInfos }) {
             travellers.push(tempObj);
           }
           // Total  Amount (base amt + seats cost + meals cost)
-          const quoted_amount = selectedBookings[key].total + seatCost + mealCost;
+          const quoted_amount = Math.round(selectedBookings[key].total + seatCost + mealCost);
+          const cabinClass = selectedBookings[key].cabinClass;
           const response = await createItem('send/slack', {
             travellers,
             quoted_amount,
-            sectors: Object.entries(value?.data?.segments).map((el) => ({
-              airline: el.companyCode,
-              flight: el.flightNumber,
-              from: el.from,
-              to: el.to,
-              date: el.departureDate.split(' ')[0],
-              time: el.departureDate.split(' ')[1],
-              class: el.bookingClass,
+            sectors: selectedBookings[key].segments.map((el) => ({
+              airline: el.flight.airline,
+              flight: el.flight.number,
+              from: el.departure.airport.code,
+              to: el.arrival.airport.code,
+              date: el.departure.time.split('T')[0],
+              time: el.departure.time.split('T')[1]+':00',
+              class: cabinClass,
             })),
           });
           if (response?.success) {
@@ -3425,10 +3426,10 @@ function Seatmap ({ seatMaps, PNRS, travellerInfos }) {
                           </div>
                         </div>
                       ) : (
-                        <p className='y-gap-20'>
+                        <h6 className='mt-2 text-center'>
                           We've received your booking request. You'll receive booking
                           details shortly.
-                        </p>
+                        </h6>
                       )}
                       <div className='mb-20 border-light mt-20'>
                         <FlightProperty
