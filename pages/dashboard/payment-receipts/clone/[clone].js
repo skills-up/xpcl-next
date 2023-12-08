@@ -87,19 +87,18 @@ const AddNewPaymentReceipt = () => {
           tdsAccounts?.success &&
           bankCashAccounts?.success
         ) {
+          const orgData = miscOrgs.data.map((element) => ({
+            value: element.id,
+            label: `${element.name}${element.gstn ? ` (${element.gstn})` : ''}`,
+            gstn: element.gstn,
+          }));
           setAccounts(
             accounts.data.map((element) => ({
               value: element.id,
               label: `${element.name}${element.org_code ? ` (${element.org_code})` : ''}`,
             }))
           );
-          setOrganizations(
-            miscOrgs.data.map((element) => ({
-              value: element.id,
-              label: `${element.name}${element.gstn ? ` (${element.gstn})` : ''}`,
-              gstn: element.gstn,
-            }))
-          );
+          setOrganizations(orgData);
           setBankCashAccounts(
             bankCashAccounts.data.map((element) => ({
               value: element.id,
@@ -132,10 +131,10 @@ const AddNewPaymentReceipt = () => {
             setTds(response.data?.payment_tds ? true : false);
             setItc(response.data?.payment_itc ? true : false);
             if (response.data?.payment_itc) {
-              setItcObj((prev) => ({ ...prev, ...response.data?.payment_itc }));
+              setItcObj((prev) => ({ ...prev, ...response.data.payment_itc }));
               setSelectedOrganization(
-                organizations.filter(
-                  (org) => org.value === response.data?.payment_itc?.org_id
+                orgData.filter(
+                  (org) => org.value === response.data.payment_itc.org_id
                 )[0]
               );
             }
