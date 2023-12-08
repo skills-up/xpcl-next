@@ -64,7 +64,7 @@ const MainFilterSearchBox = () => {
   }, [to, from]);
 
   useEffect(() => {
-    dispatch(setInitialState());
+    // dispatch(setInitialState());
     if (router.isReady)
       if (token !== '') {
         checkUser(router, dispatch);
@@ -128,6 +128,10 @@ const MainFilterSearchBox = () => {
       const segs = [];
       let prices = [];
       const segments = data.segments[k];
+      if (!Array.isArray(segments)) {
+        continue;
+      }
+      console.log('Data', data, k, data.segments[k]);
       // Segments
       for (let leg of segments) {
         let counter = 0;
@@ -385,7 +389,7 @@ const MainFilterSearchBox = () => {
         if (res?.success) {
           res.data = await amadeusDataManipulation(res.data);
           let body = { to: null, from: null, combined: null };
-          if (domestic) {
+          if (domestic || (!domestic && !returnFlight)) {
             body.to = res.data;
           } else {
             body.combined = res.data;
