@@ -922,8 +922,8 @@ const Journals = () => {
                 {gSTMIS?.itc?.map((element, index) => {
                   return (
                     <tr key={index}>
-                      <td>{element.name}</td>
-                      <td>{element.gstn || '-'}</td>
+                      <td>{element.organization_name}</td>
+                      <td>{element.organization_gstn || '-'}</td>
                       <td className='text-right'>
                         {element.base_amount.toLocaleString('en-IN', {
                           maximumFractionDigits: 2,
