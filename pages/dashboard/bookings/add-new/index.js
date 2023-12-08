@@ -231,7 +231,7 @@ const AddNewBooking = () => {
       booking_type: bookingType.value,
       client_id: clientID?.value,
       booking_date: bookingDate.format('YYYY-MM-DD'),
-      ticket_number: ticketNumber,
+      ticket_number: ticketNumber.replace(/\W/g, ''),
       pnr,
       vendor_id: vendorID.value,
       vendor_base_amount: vendorBaseAmount || 0,
