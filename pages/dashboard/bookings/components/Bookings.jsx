@@ -123,6 +123,10 @@ const Bookings = () => {
       },
     },
     {
+      Header: 'Original Booking Number',
+      accessor: 'original_booking_number',
+    },
+    {
       Header: 'Status',
       accessor: 'status',
     },
