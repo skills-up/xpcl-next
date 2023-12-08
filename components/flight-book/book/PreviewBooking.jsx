@@ -53,7 +53,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
     { value: 'MS', label: 'Ms.' },
   ];
 
-  // console.log('sel', selectedBookings);
+  console.log('sel', selectedBookings);
 
   useEffect(() => {
     if (
@@ -251,7 +251,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
             arrivalDate: segment.arrival.time.replace('T', ' ') + ':00',
             companyCode: segment.flight.airline,
             flightNumber: segment.flight.number,
-            bookingClass: selectedBookings.combined.prices.prices.ADULT.bookingClass,
+            bookingClass: selectedBookings.combined.selectedFF.prices.ADULT.bookingClass,
           };
           if (!isFound) {
             toSector.push(dat);
@@ -297,7 +297,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
               arrivalDate: el.arrival.time.replace('T', ' ') + ':00',
               companyCode: el.flight.airline,
               flightNumber: el.flight.number,
-              bookingClass: selectedBookings.to.prices.prices.ADULT.bookingClass,
+              bookingClass: selectedBookings.to.selectedFF.prices.ADULT.bookingClass,
             })),
             selectedBookings.from.segments.map((el) => ({
               from: el.departure.airport.code,
@@ -306,7 +306,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
               arrivalDate: el.arrival.time.replace('T', ' ') + ':00',
               companyCode: el.flight.airline,
               flightNumber: el.flight.number,
-              bookingClass: selectedBookings.from.prices.prices.ADULT.bookingClass,
+              bookingClass: selectedBookings.from.selectedFF.prices.ADULT.bookingClass,
             })),
           ],
         });
@@ -393,7 +393,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
         response = await customAPICall(
           'aa/v1/review',
           'post',
-          { pax, priceIds: [value.prices.id], journeyIds: [value.journeyKey] },
+          { pax, priceIds: [value.selectedFF.key], journeyIds: [value.journeyKey] },
           {},
           true
         );
@@ -420,7 +420,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
           response = await customAPICall(
             'tj/v1/review',
             'post',
-            { priceIds: [value.prices.id] },
+            { priceIds: [value.selectedFF?.id] },
             {},
             true
           );
@@ -439,43 +439,44 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
             }));
             currentAPICalls += 1;
           }
-        } else {
-          // AD
-          let travellers = [];
-          for (let client of clientTravellers) {
-            for (let traveller of travellerInfo) {
-              if (client.traveller_id === traveller.id) travellers.push(client.id);
-            }
+        }
+      }
+      if (value?.provider === 'ad') {
+        // AD
+        let travellers = [];
+        for (let client of clientTravellers) {
+          for (let traveller of travellerInfo) {
+            if (client.traveller_id === traveller.id) travellers.push(client.id);
           }
-          response = await createItem('flights/book', {
-            travellers,
-            sectors: [
-              value.segments.map((el) => ({
-                from: el.departure.airport.code,
-                to: el.arrival.airport.code,
-                departureDate: el.departure.time.replace('T', ' ') + ':00',
-                arrivalDate: el.arrival.time.replace('T', ' ') + ':00',
-                companyCode: el.flight.airline,
-                flightNumber: el.flight.number,
-                bookingClass: value.prices.prices.ADULT.bookingClass,
-              })),
-            ],
-          });
-          if (response?.success) {
-            setPNR((prev) => ({
-              ...prev,
-              [key]: {
-                data: response.data,
-                ...{
-                  provider: 'ad',
-                  hide_fare: false,
-                  email_travellers: false,
-                  via_intermediary: false,
-                },
+        }
+        response = await createItem('flights/book', {
+          travellers,
+          sectors: [
+            value.segments.map((el, index) => ({
+              from: el.departure.airport.code,
+              to: el.arrival.airport.code,
+              departureDate: el.departure.time.replace('T', ' ') + ':00',
+              arrivalDate: el.arrival.time.replace('T', ' ') + ':00',
+              companyCode: el.flight.airline,
+              flightNumber: el.flight.number,
+              bookingClass: value.selectedFF.classes[index],
+            })),
+          ],
+        });
+        if (response?.success) {
+          setPNR((prev) => ({
+            ...prev,
+            [key]: {
+              data: response.data,
+              ...{
+                provider: 'ad',
+                hide_fare: false,
+                email_travellers: false,
+                via_intermediary: false,
               },
-            }));
-            currentAPICalls += 1;
-          }
+            },
+          }));
+          currentAPICalls += 1;
         }
       }
       setProgress(Math.floor((currentAPICalls / totalAPICalls) * 100));
@@ -558,7 +559,12 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
                       key={index}
                       className=''
                       options={travellers
-                        .filter((el) => !(selectedTravellers.map(st => st?.value?.id).includes(el?.value?.id)))
+                        .filter(
+                          (el) =>
+                            !selectedTravellers
+                              .map((st) => st?.value?.id)
+                              .includes(el?.value?.id)
+                        )
                         .map((el) => el)}
                       value={selectedTravellers[index]}
                       onChange={(id) =>
