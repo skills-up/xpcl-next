@@ -131,7 +131,6 @@ const MainFilterSearchBox = () => {
       if (!Array.isArray(segments)) {
         continue;
       }
-      console.log('Data', data, k, data.segments[k]);
       // Segments
       for (let leg of segments) {
         let counter = 0;
