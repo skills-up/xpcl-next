@@ -261,6 +261,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
           }
         }
         let response = await createItem('flights/book', {
+          fare_family: value.selectedFF.name || undefined,
           travellers,
           sectors: [toSector, fromSector],
         });
@@ -288,6 +289,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
         }
       } else {
         let response = await createItem('flights/book', {
+          fare_family: value.selectedFF.name || undefined,
           travellers,
           sectors: [
             selectedBookings.to.segments.map((el) => ({
@@ -450,6 +452,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
           }
         }
         response = await createItem('flights/book', {
+          fare_family: value.selectedFF.name || undefined,
           travellers,
           sectors: [
             value.segments.map((el, index) => ({
