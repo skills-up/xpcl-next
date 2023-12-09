@@ -64,7 +64,7 @@ const MainFilterSearchBox = () => {
   }, [to, from]);
 
   useEffect(() => {
-    // dispatch(setInitialState());
+    dispatch(setInitialState());
     if (router.isReady)
       if (token !== '') {
         checkUser(router, dispatch);
