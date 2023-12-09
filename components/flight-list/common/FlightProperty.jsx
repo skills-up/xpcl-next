@@ -1073,6 +1073,7 @@ function FlightProperty({
                       );
                     }
                   } else if (element.provider === 'ad') {
+                    usedName = price.description;
                     let inc = (
                       <>
                         <p>Inclusive:</p>
