@@ -532,7 +532,7 @@ const FlightProperties = () => {
       setFromCount(fromCount);
       setCombinedCount(combinedCount);
       setManip(temp);
-      console.log('manip', temp);
+      // console.log('manip', temp);
       if (toCount > 0) {
         setCurrentTab('to');
       } else if (fromCount > 0) {

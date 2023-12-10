@@ -890,7 +890,7 @@ function FlightProperty({
               </div>
             )}
             {selectFare && showFF && !element.isOnlyFF && (
-              <div className={`row pl-5 y-gap-20 ${showMore ? 'mt-20' : ''}`}>
+              <div className={`row pb-20 pl-5 y-gap-20 ${showMore ? 'mt-20' : ''}`}>
                 {getArray(element.prices).map((price, priceIndex) => {
                   let str = <></>;
                   let usedName = price.name;
@@ -1076,9 +1076,9 @@ function FlightProperty({
                     usedName = price.description;
                     let inc = (
                       <>
-                        <p>Inclusive:</p>
+                        <p>Includes:</p>
                         <ul className='list-disc'>
-                          {price?.INC && price.INC.map((i) => <li>{i}</li>)}
+                          {price?.INC && price.INC.map((i) => <li className='capitalize'>{i.toLowerCase()}</li>)}
                         </ul>
                       </>
                     );
@@ -1086,48 +1086,48 @@ function FlightProperty({
                       <>
                         <p>Chargeable:</p>
                         <ul className='list-disc'>
-                          {price?.CHA && price.CHA.map((i) => <li>{i}</li>)}
+                          {price?.CHA && price.CHA.map((i) => <li className='capitalize'>{i.toLowerCase()}</li>)}
                         </ul>
                       </>
                     );
                     str = (
                       <>
+                        <span className='d-block capitalize'>{price.majCabin?.replace('_', ' ') || ''}</span>
                         {inc}
                         {cha}
                       </>
                     );
                   }
                   return (
-                    <div className='fare-family-card col-lg-4 col-md-6'>
-                      <span className='d-block'>
+                    <div className={'fare-family-card col-lg-4 col-md-6 border-light' + (price === element.selectedFF ? ' bg-blue-1-05': '')}>
+                      <div className='fw-bold d-flex justify-content-between capitalize'>
                         {usedName.split('_').map((str) => (
-                          <>{str.toUpperCase()} </>
+                          <>{str.toLowerCase()} </>
                         ))}
-                      </span>
-                      <span className='d-block'>
-                        {price.total.toLocaleString('en-IN', {
-                          maximumFractionDigits: 0,
-                          style: 'currency',
-                          currency: 'INR',
-                        })}
-                      </span>
+                        <span>
+                          {price.total.toLocaleString('en-IN', {
+                            maximumFractionDigits: 0,
+                            style: 'currency',
+                            currency: 'INR',
+                          })}
+                        </span>
+                      </div>
                       <span>{str}</span>
-                      {price !== element.selectedFF && (
-                        <button
-                          onClick={async () => {
-                            if (setManip) {
-                              element.selectedFF = price;
-                              setManip((prev) => {
-                                prev[manipIndex].selectedFF = price;
-                                return [...prev];
-                              });
-                            }
-                          }}
-                          className='button -dark-1 px-30 h-40 bg-blue-1 text-white'
-                        >
-                          Select
-                        </button>
-                      )}
+                      <button
+                        onClick={async () => {
+                          if (setManip) {
+                            element.selectedFF = price;
+                            setManip((prev) => {
+                              prev[manipIndex].selectedFF = price;
+                              return [...prev];
+                            });
+                          }
+                        }}
+                        className='button -dark-1 px-30 h-40 bg-blue-1 text-white my-2'
+                        disabled={price === element.selectedFF}
+                      >
+                        Select
+                      </button>
                     </div>
                   );
                 })}

@@ -53,7 +53,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
     { value: 'MS', label: 'Ms.' },
   ];
 
-  console.log('sel', selectedBookings);
+  // console.log('sel', selectedBookings);
 
   useEffect(() => {
     if (
@@ -222,7 +222,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
       }
     }
     // Special Scenario Amadeus International Flight
-    if (
+    /* if (
       (!isDomestic &&
         totalAPICalls === 2 &&
         selectedBookings.from.provider === 'tj' &&
@@ -344,7 +344,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
           return;
         }
       }
-    }
+    } */
     //  else {
     //   console.log(
     //     isDomestic,

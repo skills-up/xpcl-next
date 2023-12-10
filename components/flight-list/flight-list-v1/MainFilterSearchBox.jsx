@@ -463,7 +463,7 @@ const MainFilterSearchBox = () => {
 
   const dispatchCalls = async (searchData, callsCounter, currentCalls) => {
     dispatch(setSearchData(searchData));
-    console.log('searchData', searchData);
+    // console.log('searchData', searchData);
     let percentage = (currentCalls / callsCounter) * 100;
     if (percentage === 100) {
       searchF();
