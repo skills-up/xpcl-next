@@ -24,7 +24,7 @@ import { GiForkKnifeSpoon } from 'react-icons/gi';
 import { ImManWoman } from 'react-icons/im';
 import { BiSolidCabinet } from 'react-icons/bi';
 
-function Seatmap ({ seatMaps, PNRS, travellerInfos }) {
+function Seatmap({ seatMaps, PNRS, travellerInfos }) {
   const [SEO, setSEO] = useState('');
   const [PNR, setPNR] = PNRS;
   const [seatMap, setSeatMap] = seatMaps;
@@ -297,7 +297,7 @@ function Seatmap ({ seatMaps, PNRS, travellerInfos }) {
           // AD
           if (value?.provider === 'ad') {
             let counter = 0;
-            for (let [segKey, segValue] of Object.entries(value?.data?.segments)) {
+            for (let [segKey, segValue] of Object.entries(value?.data?.segments || {})) {
               let travellersTemp = [];
               for (let traveller of travellerInfo) {
                 let tempObj = {};
@@ -415,40 +415,49 @@ function Seatmap ({ seatMaps, PNRS, travellerInfos }) {
     for (let [key, value] of Object.entries(PNR)) {
       if (value) {
         // TJ
-        if (value.provider === 'tj') {
+        if (value.provider === 'tj' || value.provider === 'aa') {
           // PAX
           let travellers = [];
           let seatCost = 0;
           let mealCost = 0;
           for (let traveller of travellerInfo) {
             let tempObj = {};
+            let sector = 0;
             // Seats
             let seats = [];
-            for (let [k, v] of Object.entries(seatMap[key]?.data?.seatMap)) {
-              if (v.travellers && v.travellers.length > 0) {
-                for (let trav of v.travellers) {
-                  if (trav.id === traveller.id) {
-                    seats.push({ key: k, code: trav.seatNo, price: trav.amount });
-                    seatCost += trav.amount;
+            if (value.provider === 'tj') {
+              for (let v of Object.values(seatMap[key]?.data?.seatMap || {})) {
+                ++sector;
+                if (v.travellers?.length > 0) {
+                  for (let trav of v.travellers) {
+                    if (trav.id === traveller.id) {
+                      seats.push({ sector, code: trav.seatNo, price: trav.amount });
+                      seatCost += trav.amount;
+                    }
+                  }
+                }
+              }
+            } else {
+              for (let v of (seatMap[key]?.data || [])) {
+                ++sector;
+                if (v.seatMap?.travellers?.length > 0) {
+                  for (let trav of v.seatMap.travellers) {
+                    if (trav.id === traveller.id) {
+                      seats.push({ sector, code: trav.designator, price: trav.amount });
+                      seatCost += trav.amount;
+                    }
                   }
                 }
               }
             }
             if (seats.length > 0) tempObj['seats'] = seats;
             // Meals
-            let meals = [];
-            if (traveller.trip_meals[key]) {
-              for (let meal of traveller.trip_meals[key]) {
-                if (meal.value.id && meal.value.code) {
-                  meals.push({
-                    key: meal.value.id,
-                    code: meal.value.code,
-                    price: meal.value?.amount || 0,
-                  });
-                  mealCost += meal.value?.amount || 0;
-                }
-              }
-            }
+            const meals = traveller.trip_meals[key]?.map((meal, idx) => ({
+              sector: idx+1,
+              label: meal.label,
+              cost: meal.value?.amount || (Object.values(meal.value?.passengersAvailability || {}).reduce((acc, cur) => acc + (cur.price || 0), 0)),
+            })) || [];
+            mealCost += meals.reduce((acc, cur) => acc + cur.cost, 0);
             if (meals.length > 0) tempObj['meals'] = meals;
             const client_traveller = clientTravellers.filter(
               (ct) => ct.traveller_id === traveller.id
@@ -460,37 +469,40 @@ function Seatmap ({ seatMaps, PNRS, travellerInfos }) {
                   traveller.passport_name,
                 4000
               );
-              console.log('Traveller', traveller);
-              console.log('Client Travellers');
-              console.dir(clientTravellers);
               throw new Error('Cannot make booking for TJ');
             } else {
               tempObj['client_traveller_id'] = client_traveller.id;
+              tempObj['traveller_id'] = client_traveller.traveller_id;
             }
             travellers.push(tempObj);
           }
           // Total  Amount (base amt + seats cost + meals cost)
-          const quoted_amount = selectedBookings[key].total + seatCost + mealCost;
+          const flightCost = selectedBookings[key].selectedFF.total;
+          const quoted_amount = flightCost + seatCost + mealCost;
           const response = await createItem('send/slack', {
             travellers,
             quoted_amount,
-            sectors: Object.entries(value?.data?.segments).map((el) => ({
-              airline: el.companyCode,
-              flight: el.flightNumber,
-              from: el.from,
-              to: el.to,
-              date: el.departureDate.split(' ')[0],
-              time: el.departureDate.split(' ')[1],
-              class: el.bookingClass,
+            flightCost,
+            seatCost,
+            mealCost,
+            sectors: selectedBookings[key].segments.map((el) => ({
+              airline: el.flight.airline,
+              flight: el.flight.number,
+              from: el.departure.airport.code,
+              to: el.arrival.airport.code,
+              date: el.departure.time.split('T')[0],
+              time: (el.departure.time.split('T')[1] + ':00').substring(0, 8),
+              class: (selectedBookings[key].selectedFF?.cabinClass || selectedBookings[key].cabinClass).toUpperCase(),
             })),
+            fare_family: selectedBookings[key].selectedFF?.name,
           });
           if (response?.success) {
             totalSuccess += 1;
-            bookingTemp[key] = response.data;
+            bookingTemp[key] = { flightCost, seatCost, mealCost, quoted_amount, travellers };
           }
         }
         // AA
-        if (value.provider === 'aa') {
+        /* if (value.provider === 'aa') {
           // SSR Bookings
           let ssrsTotal = 0;
           let ssrs = [];
@@ -582,9 +594,6 @@ function Seatmap ({ seatMaps, PNRS, travellerInfos }) {
                       traveller.passport_name,
                     4000
                   );
-                  console.log('Traveller', traveller);
-                  console.log('Client Travellers');
-                  console.dir(clientTravellers);
                   throw new Error('Cannot make booking for AA');
                 } else {
                   tempTravellers.push({
@@ -599,7 +608,7 @@ function Seatmap ({ seatMaps, PNRS, travellerInfos }) {
                         : traveller?.intermediary_quoted[key] || 0,
                   });
                 }
-                /* for (let client of clientTravellers) {
+                for (let client of clientTravellers) {
                   if (client.traveller_id === traveller.id) {
                     tempTravellers.push({
                       passengerKey: inf ? 'INFANT' : pax.key,
@@ -613,7 +622,7 @@ function Seatmap ({ seatMaps, PNRS, travellerInfos }) {
                           : traveller?.intermediary_quoted[key] || 0,
                     });
                   }
-                } */
+                }
               }
             }
             // Seat Reserve
@@ -681,7 +690,7 @@ function Seatmap ({ seatMaps, PNRS, travellerInfos }) {
             bookingTemp[key] = book.data;
             totalSuccess += 1;
           }
-        }
+        } */
         // AD
         // Reserving Seats
         if (value.provider === 'ad') {
@@ -737,9 +746,6 @@ function Seatmap ({ seatMaps, PNRS, travellerInfos }) {
                     traveller.passport_name,
                   4000
                 );
-                console.log('Traveller', traveller);
-                console.log('Client Travellers');
-                console.dir(clientTravellers);
                 throw new Error('Cannot make booking for AD');
               } else {
                 const age = (
@@ -1371,7 +1377,7 @@ function Seatmap ({ seatMaps, PNRS, travellerInfos }) {
   const TJSeatMapRender = ({ data, type }) => {
     return (
       <div className='row y-gap-10'>
-        {Object.entries(data?.seatMap).map(([key, value], index) => {
+        {Object.entries(data?.seatMap || {}).map(([key, value], index) => {
           // 3D Array
           let newArr = [];
           let aisleArr = [];
@@ -1755,7 +1761,7 @@ function Seatmap ({ seatMaps, PNRS, travellerInfos }) {
           let rows = seatmap.row;
           var currRow = 0;
           let html = '';
-          function getLocation (loc, spacers) {
+          function getLocation(loc, spacers) {
             if (loc.length < 2) return loc;
             return loc.charAt(spacers < 2 ? 0 : 1);
           }
@@ -3330,34 +3336,16 @@ function Seatmap ({ seatMaps, PNRS, travellerInfos }) {
                   let bookingStatus;
                   let tempObj = { 'Base Fare': 0, 'Taxes & Fee': 0 };
                   if (PNR[key] && value !== 'Failed') {
-                    /* if (PNR[key].provider === 'tj') {
-                      bookingID = value.data.order.bookingId;
-                      totalAmount = value.data.order.amount;
-                      bookingStatus =
-                        value.data.order.status === 'SUCCESS'
-                          ? 'CONFIRMED'
-                          : value.data.order.status;
-                      tempObj['Base Fare'] =
-                        value.data.itemInfos.AIR.totalPriceInfo.totalFareDetail.fC.BF;
-                      tempObj['Special Service Fee (Meals, Seats, etc.)'] =
-                        value.data.itemInfos.AIR.totalPriceInfo.totalFareDetail.fC
-                          ?.SSRP || undefined;
-                      tempObj['Taxes & Fee'] =
-                        value.data.itemInfos.AIR.totalPriceInfo.totalFareDetail.fC?.TAF ||
-                        undefined;
-                    } else */ if (PNR[key].provider === 'aa') {
-                      bookingID = value.recordLocator;
-                      totalAmount = value.payments[0].amounts.amount;
-                      if (value.info.status === 2) bookingStatus = 'CONFIRMED';
-                      tempObj['Base Fare'] = value.breakdown.journeyTotals.totalAmount;
-                      tempObj['Taxes & Fee'] = value.breakdown.journeyTotals.totalTax;
-                      tempObj['Special Service Fee (Meals, Seats, Infants, etc.)'] =
-                        (value.breakdown.passengerTotals?.infant?.total || 0) +
-                        (value.breakdown.passengerTotals?.infant?.taxes || 0) +
-                        (value.breakdown.passengerTotals?.specialServices?.taxes || 0) +
-                        (value.breakdown.passengerTotals?.specialServices?.total || 0) +
-                        (value.breakdown.passengerTotals?.seats?.taxes || 0) +
-                        (value.breakdown.passengerTotals?.seats?.total || 0);
+                    console.log('Booking Confirmation Value for', PNR[key].provider, value);
+                    if (PNR[key].provider === 'tj' || PNR[key].provider === 'aa') {
+                      bookingID = 'TBD';
+                      totalAmount = value?.quoted_amount;
+                      bookingStatus = 'RECEIVED';
+                      tempObj = {
+                        'Flights': value.flightCost,
+                        'Meals': value.mealCost,
+                        'Seats': value.seatCost,
+                      };
                     } else if (PNR[key].provider === 'ad') {
                       bookingID =
                         value.pnrHeader.reservationInfo.reservation.controlNumber;
@@ -3402,7 +3390,7 @@ function Seatmap ({ seatMaps, PNRS, travellerInfos }) {
                             </div>
                           </div>
                         </div>
-                      ) : seatMap[key].provider !== 'tj' ? (
+                      ) : (
                         <div className='row y-gap-20'>
                           <div className='col-md-4 text-center'>
                             <div className='text-15'>Booking ID</div>
@@ -3424,11 +3412,12 @@ function Seatmap ({ seatMaps, PNRS, travellerInfos }) {
                             </div>
                           </div>
                         </div>
-                      ) : (
-                        <p className='y-gap-20'>
+                      )}
+                      {PNR[key].provider !== 'ad' && (
+                        <h6 className='mt-2 text-center'>
                           We've received your booking request. You'll receive booking
                           details shortly.
-                        </p>
+                        </h6>
                       )}
                       <div className='mb-20 border-light mt-20'>
                         <FlightProperty
@@ -3438,31 +3427,32 @@ function Seatmap ({ seatMaps, PNRS, travellerInfos }) {
                           showPrice={false}
                         />
                       </div>
-                      {value !== 'Failed' && seatMap[key].provider !== 'tj' && (
+                      {value !== 'Failed' && (
                         <div className='row mt-8 y-gap-20 mb-20'>
                           <div>
                             <div className='text-15'>Price Breakdown</div>
+                            <div className="row">
                             {Object.entries(tempObj).map(([key, value], i) => (
                               <>
                                 {value && value > 0 ? (
-                                  <span className='d-block'>
+                                  <div className='col-md-2' key={i}>
                                     <span className='fw-500'>{key}</span>:{' '}
                                     {value?.toLocaleString('en-IN', {
                                       maximumFractionDigits: 0,
                                       style: 'currency',
                                       currency: 'INR',
                                     })}
-                                  </span>
+                                  </div>
                                 ) : (
                                   <></>
                                 )}
                               </>
                             ))}
+                            </div>
                             <div className='text-15'>Traveller Details</div>
                             <div className='overflow-scroll scroll-bar-1'>
                               <table className='table-3' style={{ minHeight: '100px' }}>
                                 <thead>
-                                  <th>Title</th>
                                   <th>Name</th>
                                   <th>Segment</th>
                                   <th>Meal Selected</th>
@@ -3506,7 +3496,7 @@ function Seatmap ({ seatMaps, PNRS, travellerInfos }) {
                                               }
                                           }
                                         }
-                                      } else */ if (seatMap[key].provider === 'aa') {
+                                      } else if (seatMap[key].provider === 'aa') {
                                         // Traveller Key
                                         let p;
                                         for (let pax of PNR[key].data.pax) {
@@ -3566,7 +3556,7 @@ function Seatmap ({ seatMaps, PNRS, travellerInfos }) {
                                             }
                                           }
                                         }
-                                      } else if (seatMap[key].provider === 'ad') {
+                                      } else */ if (seatMap[key].provider === 'ad') {
                                         // PAX
                                         let p;
                                         for (let trav of PNR[key].data.travellers) {
@@ -3638,13 +3628,23 @@ function Seatmap ({ seatMaps, PNRS, travellerInfos }) {
                                             }
                                           }
                                         }
+                                      } else {
+                                        segments.forEach((s, idx) => {
+                                          const m = traveller.trip_meals[key][idx]?.label;
+                                          if (m) {
+                                            meal.push({ [s]: m });
+                                          }
+                                          const st = value.travellers?.filter(x => x.traveller_id === traveller.id)[0]?.seats[idx]?.code;
+                                          if (st) {
+                                            seat.push({ [s]: st });
+                                          }
+                                        });
                                       }
                                     }
                                     return (
                                       <>
                                         {segments.map((seg, segIn) => (
                                           <tr key={segIn}>
-                                            <td>{traveller?.prefix?.label}</td>
                                             <td>
                                               {traveller.prefix?.label}{' '}
                                               {traveller.first_name} {traveller.last_name}
@@ -3657,8 +3657,8 @@ function Seatmap ({ seatMaps, PNRS, travellerInfos }) {
                                                     (m) => Object.keys(m)[0] === seg
                                                   )
                                                   .map((m) => {
-                                                    let [key, value] =
-                                                      Object.entries(m)[0];
+                                                    let value =
+                                                      Object.values(m)[0];
                                                     return <>{value}</>;
                                                   })}
                                               </td>
@@ -3672,8 +3672,8 @@ function Seatmap ({ seatMaps, PNRS, travellerInfos }) {
                                                     (s) => Object.keys(s)[0] === seg
                                                   )
                                                   .map((s) => {
-                                                    let [key, value] =
-                                                      Object.entries(s)[0];
+                                                    let value =
+                                                      Object.values(s)[0];
                                                     return <>{value}</>;
                                                   })}
                                               </td>

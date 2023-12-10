@@ -53,7 +53,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
     { value: 'MS', label: 'Ms.' },
   ];
 
-  console.log('sel', selectedBookings);
+  // console.log('sel', selectedBookings);
 
   useEffect(() => {
     if (
@@ -222,7 +222,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
       }
     }
     // Special Scenario Amadeus International Flight
-    if (
+    /* if (
       (!isDomestic &&
         totalAPICalls === 2 &&
         selectedBookings.from.provider === 'tj' &&
@@ -261,6 +261,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
           }
         }
         let response = await createItem('flights/book', {
+          fare_family: value.selectedFF.name || undefined,
           travellers,
           sectors: [toSector, fromSector],
         });
@@ -288,6 +289,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
         }
       } else {
         let response = await createItem('flights/book', {
+          fare_family: value.selectedFF.name || undefined,
           travellers,
           sectors: [
             selectedBookings.to.segments.map((el) => ({
@@ -342,7 +344,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
           return;
         }
       }
-    }
+    } */
     //  else {
     //   console.log(
     //     isDomestic,
@@ -450,6 +452,7 @@ function PreviewBooking({ setCurrentStep, setPNR, travellerInfos }) {
           }
         }
         response = await createItem('flights/book', {
+          fare_family: value.selectedFF.name || undefined,
           travellers,
           sectors: [
             value.segments.map((el, index) => ({

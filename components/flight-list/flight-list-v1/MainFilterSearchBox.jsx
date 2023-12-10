@@ -64,7 +64,7 @@ const MainFilterSearchBox = () => {
   }, [to, from]);
 
   useEffect(() => {
-    // dispatch(setInitialState());
+    dispatch(setInitialState());
     if (router.isReady)
       if (token !== '') {
         checkUser(router, dispatch);
@@ -131,7 +131,6 @@ const MainFilterSearchBox = () => {
       if (!Array.isArray(segments)) {
         continue;
       }
-      console.log('Data', data, k, data.segments[k]);
       // Segments
       for (let leg of segments) {
         let counter = 0;
@@ -464,7 +463,7 @@ const MainFilterSearchBox = () => {
 
   const dispatchCalls = async (searchData, callsCounter, currentCalls) => {
     dispatch(setSearchData(searchData));
-    console.log('searchData', searchData);
+    // console.log('searchData', searchData);
     let percentage = (currentCalls / callsCounter) * 100;
     if (percentage === 100) {
       searchF();

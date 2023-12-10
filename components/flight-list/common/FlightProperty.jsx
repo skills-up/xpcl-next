@@ -8,15 +8,21 @@ import {
 } from '../../../features/flightSearch/flightSearchSlice';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import Pluralize from '../../../utils/pluralChecker';
+import { FaChevronDown, FaF } from 'react-icons/fa6';
 
 function FlightProperty({
   element,
+  manip = [],
+  setManip = null,
+  manipIndex,
   isSelectedBooking = false,
   currentTab,
   showPrice = true,
   alreadyExpanded = false,
+  key,
+  showFF = false,
 }) {
-  const [expand, setExpand] = useState([]);
+  const [expand, setExpand] = useState(false);
   const returnFlight = useSelector((state) => state.flightSearch.value.returnFlight);
   const travellerDOBS = useSelector((state) => state.flightSearch.value.travellerDOBS);
   const airports = useSelector((state) => state.apis.value.airports);
@@ -30,19 +36,25 @@ function FlightProperty({
   const emailClientMode = useSelector(
     (state) => state.flightSearch.value.emailClientMode
   );
+  const [showMore, SetShowMore] = useState(false);
+  const [selectFare, SetSelectFare] = useState(false);
   const emailClients = useSelector((state) => state.flightSearch.value.emailClients);
   const router = useRouter();
   const destinations = useSelector((state) => state.flightSearch.value.destinations);
   const [combinedStops, setCombinedStops] = useState({ f: 0, s: 0 });
   useEffect(() => {
-    setExpand([]);
+    setExpand(false);
   }, [currentTab]);
 
   const [layoffSegment, setLayoffSegment] = useState(null);
 
+  let getArray = (x) => {
+    return x ? (Array.isArray(x) ? x : Object.values(x)) : [];
+  };
+
   useEffect(() => {
     if (alreadyExpanded) {
-      setExpand((prev) => [...prev, element.selectId]);
+      SetShowMore(true);
     }
   }, [alreadyExpanded]);
 
@@ -72,6 +84,14 @@ function FlightProperty({
   }, [element]);
 
   useEffect(() => {
+    if (showMore || selectFare) {
+      setExpand(true);
+    } else {
+      setExpand(false);
+    }
+  }, [showMore, selectFare]);
+
+  useEffect(() => {
     if (!isSelectedBooking) {
       if (emailClientMode) {
         for (let value of Object.values(emailClients)) {
@@ -95,7 +115,7 @@ function FlightProperty({
       setIsEmailSelected(false);
       setIsSelected(false);
     }
-  }, [selectedBookings, element, emailClients, emailClientMode, currentTab]);
+  }, [selectedBookings, element, emailClients, emailClientMode, currentTab, manip]);
 
   return (
     <div className='js-accordion'>
@@ -427,39 +447,11 @@ function FlightProperty({
               </div>
             </div>
             <div className='d-flex justify-start pb-5'>
-              {/* <FaChevronCircleDown
-                className='text-info text-25 cursor-pointer'
-                // data-bs-toggle='collapse'
-                // data-bs-target={`#${element.selectId}`}
-                onClick={() =>
-                  setExpand((prev) => {
-                    if (prev.includes(element.selectId)) {
-                      prev = prev.filter((e) => e !== element.selectId);
-                    } else {
-                      prev.push(element.selectId);
-                    }
-                    return [...prev];
-                  })
-                }
-                style={{
-                  transitionDuration: '0.1s',
-                  rotate: expand.includes(element.selectId) && '180deg',
-                }}
-              /> */}
               <span
                 className='text-14 text-blue-1 fw-500 underline cursor-pointer'
-                onClick={() =>
-                  setExpand((prev) => {
-                    if (prev.includes(element.selectId)) {
-                      prev = prev.filter((e) => e !== element.selectId);
-                    } else {
-                      prev.push(element.selectId);
-                    }
-                    return [...prev];
-                  })
-                }
+                onClick={() => SetShowMore((prev) => !prev)}
               >
-                {expand.includes(element?.selectId) ? 'Show Less' : 'Show More'}
+                {showMore ? 'Show Less' : 'Show More'}
               </span>
             </div>
           </div>
@@ -505,137 +497,115 @@ function FlightProperty({
                     <div className='text-18 lh-16 fw-500'>
                       <a
                         data-tooltip-id={'x_' + element.selectId}
-                        data-tooltip-content={
-                          `${
-                            element?.selectedFF?.prices?.ADULT?.fare > 0
-                              ? `${
-                                  travellerDOBS.ADT
-                                }x Adult @ ${element.selectedFF.prices.ADULT.fare.toLocaleString(
-                                  'en-IN',
-                                  {
-                                    maximumFractionDigits: 0,
-                                    style: 'currency',
-                                    currency: 'INR',
-                                  }
-                                )}`
-                              : element?.selectedFF?.prices?.ADT > 0
-                              ? `${
-                                  travellerDOBS.ADT
-                                }x Adult @ ${element.selectedFF.prices.ADT.toLocaleString(
-                                  'en-IN',
-                                  {
-                                    maximumFractionDigits: 0,
-                                    style: 'currency',
-                                    currency: 'INR',
-                                  }
-                                )}`
-                              : ''
-                          }${
-                            element?.selectedFF?.prices?.CHILD?.fare > 0
-                              ? `\n${
-                                  travellerDOBS.CHD
-                                }x Child @ ${element.selectedFF.prices.CHILD.fare.toLocaleString(
-                                  'en-IN',
-                                  {
-                                    maximumFractionDigits: 0,
-                                    style: 'currency',
-                                    currency: 'INR',
-                                  }
-                                )}`
-                              : element?.selectedFF?.prices?.CHD > 0
-                              ? `\n${
-                                  travellerDOBS.CHD
-                                }x Child @ ${element.selectedFF.prices.CHD.toLocaleString(
-                                  'en-IN',
-                                  {
-                                    maximumFractionDigits: 0,
-                                    style: 'currency',
-                                    currency: 'INR',
-                                  }
-                                )}`
-                              : ''
-                          }${
-                            element?.selectedFF?.prices?.INFANT?.fare > 0
-                              ? `\n${
-                                  travellerDOBS.INF
-                                }x Infant @ ${element.selectedFF.prices.INFANT.fare.toLocaleString(
-                                  'en-IN',
-                                  {
-                                    maximumFractionDigits: 0,
-                                    style: 'currency',
-                                    currency: 'INR',
-                                  }
-                                )}`
-                              : element?.selectedFF?.prices?.INF > 0
-                              ? `\n${
-                                  travellerDOBS.INF
-                                }x Infant @ ${element.selectedFF.prices.INF.toLocaleString(
-                                  'en-IN',
-                                  {
-                                    maximumFractionDigits: 0,
-                                    style: 'currency',
-                                    currency: 'INR',
-                                  }
-                                )}`
-                              : element?.provider === 'aa' && travellerDOBS?.INF
-                              ? `\n${travellerDOBS.INF}x Infant @ ${(1500).toLocaleString(
-                                  'en-IN',
-                                  {
-                                    maximumFractionDigits: 0,
-                                    style: 'currency',
-                                    currency: 'INR',
-                                  }
-                                )}`
-                              : ''
-                          }` /* ${
-                          element.provider === 'tj'
-                            ? `\n\n- Additional Adult Details -\nMax Check-In Baggage - ${
-                                element.prices.prices.ADULT.baggage.checkIn || 'NA'
-                              }\nMax Cabin Baggage - ${
-                                element.prices.prices.ADULT.baggage.cabin || 'NA'
-                              }\nFree Meal - ${
-                                element.prices.prices.ADULT.freeMeal ? 'Yes' : 'No'
-                              }\n  Refundable - ${
-                                element.prices.prices.ADULT.refundable ? 'Yes' : 'No'
-                              }${
-                                element?.prices?.prices?.CHILD
-                                  ? `\n- Additional Child Details -\nMax Check-In Baggage - ${
-                                      element.prices.prices.CHILD.baggage.checkIn || 'NA'
-                                    }\nMax Cabin Baggage - ${
-                                      element.prices.prices.CHILD.baggage.cabin || 'NA'
-                                    }\nFree Meal - ${
-                                      element.prices.prices.CHILD.freeMeal ? 'Yes' : 'No'
-                                    }\n  Refundable - ${
-                                      element.prices.prices.CHILD.refundable
-                                        ? 'Yes'
-                                        : 'No'
-                                    }`
-                                  : ''
-                              }${
-                                element?.prices?.prices?.INFANT
-                                  ? `\n- Additional Infant Details -\nMax Check-In Baggage - ${
-                                      element.prices.prices.INFANT.baggage.checkIn || 'NA'
-                                    }\nMax Cabin Baggage - ${
-                                      element.prices.prices.INFANT.baggage.cabin || 'NA'
-                                    }\nFree Meal - ${
-                                      element.prices.prices.INFANT.freeMeal ? 'Yes' : 'No'
-                                    }\n  Refundable - ${
-                                      element.prices.prices.INFANT.refundable
-                                        ? 'Yes'
-                                        : 'No'
-                                    }`
-                                  : ''
-                              }`
+                        data-tooltip-content={`${
+                          element?.selectedFF?.prices?.ADULT?.fare > 0
+                            ? `${
+                                travellerDOBS.ADT
+                              }x Adult @ ${element.selectedFF.prices.ADULT.fare.toLocaleString(
+                                'en-IN',
+                                {
+                                  maximumFractionDigits: 0,
+                                  style: 'currency',
+                                  currency: 'INR',
+                                }
+                              )}`
+                            : element?.selectedFF?.prices?.ADT > 0
+                            ? `${
+                                travellerDOBS.ADT
+                              }x Adult @ ${element.selectedFF.prices.ADT.toLocaleString(
+                                'en-IN',
+                                {
+                                  maximumFractionDigits: 0,
+                                  style: 'currency',
+                                  currency: 'INR',
+                                }
+                              )}`
                             : ''
-                        } */
-                        }
+                        }${
+                          element?.selectedFF?.prices?.CHILD?.fare > 0
+                            ? `\n${
+                                travellerDOBS.CHD
+                              }x Child @ ${element.selectedFF.prices.CHILD.fare.toLocaleString(
+                                'en-IN',
+                                {
+                                  maximumFractionDigits: 0,
+                                  style: 'currency',
+                                  currency: 'INR',
+                                }
+                              )}`
+                            : element?.selectedFF?.prices?.CHD > 0
+                            ? `\n${
+                                travellerDOBS.CHD
+                              }x Child @ ${element.selectedFF.prices.CHD.toLocaleString(
+                                'en-IN',
+                                {
+                                  maximumFractionDigits: 0,
+                                  style: 'currency',
+                                  currency: 'INR',
+                                }
+                              )}`
+                            : ''
+                        }${
+                          element?.selectedFF?.prices?.INFANT?.fare > 0
+                            ? `\n${
+                                travellerDOBS.INF
+                              }x Infant @ ${element.selectedFF.prices.INFANT.fare.toLocaleString(
+                                'en-IN',
+                                {
+                                  maximumFractionDigits: 0,
+                                  style: 'currency',
+                                  currency: 'INR',
+                                }
+                              )}`
+                            : element?.selectedFF?.prices?.INF > 0
+                            ? `\n${
+                                travellerDOBS.INF
+                              }x Infant @ ${element.selectedFF.prices.INF.toLocaleString(
+                                'en-IN',
+                                {
+                                  maximumFractionDigits: 0,
+                                  style: 'currency',
+                                  currency: 'INR',
+                                }
+                              )}`
+                            : element?.provider === 'aa' && travellerDOBS?.INF
+                            ? `\n${travellerDOBS.INF}x Infant @ ${(1500).toLocaleString(
+                                'en-IN',
+                                {
+                                  maximumFractionDigits: 0,
+                                  style: 'currency',
+                                  currency: 'INR',
+                                }
+                              )}`
+                            : ''
+                        }`}
                         data-tooltip-place='top'
+                        className={
+                          !element.isOnlyFF &&
+                          showFF &&
+                          `d-flex items-center justify-end x-gap-5 cursor-pointer`
+                        }
+                        onClick={() => {
+                          if (!element.isOnlyFF) SetSelectFare((prev) => !prev);
+                        }}
                       >
-                        {element.total.toLocaleString('en-IN', {
-                          maximumFractionDigits: 0,
-                          style: 'currency',
-                          currency: 'INR',
-                        })}
+                        <span>
+                          {element.selectedFF?.total?.toLocaleString('en-IN', {
+                            maximumFractionDigits: 0,
+                            style: 'currency',
+                            currency: 'INR',
+                          })}
+                        </span>
+                        {!element.isOnlyFF && showFF && (
+                          <span style={{ paddingBottom: '3px' }}>
+                            <FaChevronDown
+                              className='font-sm'
+                              style={{
+                                rotate: selectFare ? '180deg' : '0deg',
+                              }}
+                            />
+                          </span>
+                        )}
                       </a>
                       <ReactTooltip
                         id={'x_' + element.selectId}
@@ -659,165 +629,116 @@ function FlightProperty({
           {/* End .col-md-auto */}
         </div>
         {/* EXPAND */}
-        {expand && expand.includes(element.selectId) && (
-          <div>
-            {element.segments.map((segment, segmentIndex) => {
-              // Duration
-              let duration = 0;
-              if (element.provider === 'aa')
-                duration =
-                  (new Date(segment.arrival.timeUtc).getTime() -
-                    new Date(segment.departure.timeUtc).getTime()) /
-                  60000;
-              else if (element.provider === 'ad')
-                duration =
-                  (new Date(segment.arrival.time).getTime() -
-                    new Date(segment.departure.time).getTime()) /
-                  60000;
-              else if (element.provider === 'tj') duration = segment.journey.duration;
+        {expand && (
+          <>
+            {showMore && (
+              <div>
+                {element.segments.map((segment, segmentIndex) => {
+                  // Duration
+                  let duration = 0;
+                  if (element.provider === 'aa')
+                    duration =
+                      (new Date(segment.arrival.timeUtc).getTime() -
+                        new Date(segment.departure.timeUtc).getTime()) /
+                      60000;
+                  else if (element.provider === 'ad')
+                    duration =
+                      (new Date(segment.arrival.time).getTime() -
+                        new Date(segment.departure.time).getTime()) /
+                      60000;
+                  else if (element.provider === 'tj') duration = segment.journey.duration;
 
-              let days, hours, minutes;
-              if (duration >= 1440) {
-                days = Math.floor(duration / 24 / 60);
-                hours = Math.floor((duration / 60) % 24);
-                minutes = duration % 60;
-              } else {
-                hours = Math.floor(duration / 60);
-                minutes = duration % 60;
-              }
+                  let days, hours, minutes;
+                  if (duration >= 1440) {
+                    days = Math.floor(duration / 24 / 60);
+                    hours = Math.floor((duration / 60) % 24);
+                    minutes = duration % 60;
+                  } else {
+                    hours = Math.floor(duration / 60);
+                    minutes = duration % 60;
+                  }
 
-              // Layover Time
-              let layoverTime;
-              if (segmentIndex + 1 < element.segments.length) {
-                layoverTime =
-                  (new Date(element.segments[segmentIndex + 1].departure.time).getTime() -
-                    new Date(segment.arrival.time).getTime()) /
-                  60000;
-              }
+                  // Layover Time
+                  let layoverTime;
+                  if (segmentIndex + 1 < element.segments.length) {
+                    layoverTime =
+                      (new Date(
+                        element.segments[segmentIndex + 1].departure.time
+                      ).getTime() -
+                        new Date(segment.arrival.time).getTime()) /
+                      60000;
+                  }
 
-              const departureDate = new Date(segment.departure.time).toString();
+                  const departureDate = new Date(segment.departure.time).toString();
 
-              // Airport Name
-              let departureAirport;
-              let arrivalAirport;
-              for (let airport of airports) {
-                if (segment.departure.airport.code === airport.iata_code)
-                  departureAirport = airport.name;
-                if (segment.arrival.airport.code === airport.iata_code)
-                  arrivalAirport = airport.name;
-              }
+                  // Airport Name
+                  let departureAirport;
+                  let arrivalAirport;
+                  for (let airport of airports) {
+                    if (segment.departure.airport.code === airport.iata_code)
+                      departureAirport = airport.name;
+                    if (segment.arrival.airport.code === airport.iata_code)
+                      arrivalAirport = airport.name;
+                  }
 
-              // Airline Name
-              let airlineName = segment.flight.airline;
-              for (let airline of airlineOrgs) {
-                if (airline.code === segment.flight.airline) airlineName = airline.name;
-              }
+                  // Airline Name
+                  let airlineName = segment.flight.airline;
+                  for (let airline of airlineOrgs) {
+                    if (airline.code === segment.flight.airline)
+                      airlineName = airline.name;
+                  }
 
-              // Business Class
-              let businessClass;
-              if (element.provider === 'aa') {
-                businessClass = 'Economy';
-              } else if (element.provider === 'ad') {
-                const cabinClass = element.selectedFF.majCabin;
-                if (cabinClass === 'PREMIUM_ECONOMY') businessClass = 'Premium Economy';
-                else
-                  businessClass =
-                    cabinClass.charAt(0).toUpperCase() +
-                    cabinClass.slice(1).toLowerCase();
-              } else if (element.provider === 'tj') {
-                const cabinClass = element.selectedFF?.cabinClass;
-                if (cabinClass === 'PREMIUM_ECONOMY') businessClass = 'Premium Economy';
-                else
-                  businessClass =
-                    cabinClass.charAt(0).toUpperCase() +
-                    cabinClass.slice(1).toLowerCase();
-              }
+                  // Business Class
+                  let businessClass;
+                  if (element.provider === 'aa') {
+                    businessClass = 'Economy';
+                  } else if (element.provider === 'ad') {
+                    const cabinClass = element.selectedFF.majCabin;
+                    if (cabinClass === 'PREMIUM_ECONOMY')
+                      businessClass = 'Premium Economy';
+                    else
+                      businessClass =
+                        cabinClass.charAt(0).toUpperCase() +
+                        cabinClass.slice(1).toLowerCase();
+                  } else if (element.provider === 'tj') {
+                    const cabinClass = element.selectedFF?.cabinClass;
+                    if (cabinClass === 'PREMIUM_ECONOMY')
+                      businessClass = 'Premium Economy';
+                    else
+                      businessClass =
+                        cabinClass.charAt(0).toUpperCase() +
+                        cabinClass.slice(1).toLowerCase();
+                  }
 
-              // Segment Day Difference
-              let departureDay = new Date(segment.departure.time.slice(0, 10));
-              let arrivalDay = new Date(segment.arrival.time.slice(0, 10));
-              let segmentDayDifference = Math.floor(
-                (Date.UTC(
-                  arrivalDay.getFullYear(),
-                  arrivalDay.getMonth(),
-                  arrivalDay.getDate()
-                ) -
-                  Date.UTC(
-                    departureDay.getFullYear(),
-                    departureDay.getMonth(),
-                    departureDay.getDate()
-                  )) /
-                  (1000 * 60 * 60 * 24)
-              );
+                  // Segment Day Difference
+                  let departureDay = new Date(segment.departure.time.slice(0, 10));
+                  let arrivalDay = new Date(segment.arrival.time.slice(0, 10));
+                  let segmentDayDifference = Math.floor(
+                    (Date.UTC(
+                      arrivalDay.getFullYear(),
+                      arrivalDay.getMonth(),
+                      arrivalDay.getDate()
+                    ) -
+                      Date.UTC(
+                        departureDay.getFullYear(),
+                        departureDay.getMonth(),
+                        departureDay.getDate()
+                      )) /
+                      (1000 * 60 * 60 * 24)
+                  );
 
-              return (
-                <div key={segmentIndex}>
-                  <div className='border-light rounded-4 my-2'>
-                    <div className='py-5 px-30'>
-                      <div className='row justify-between items-center'>
-                        <div className='col-auto'>
-                          <div className='fw-500 text-dark-1'>
-                            Depart • {departureDate.slice(0, 3)},{' '}
-                            {departureDate.slice(3, 10)}
-                          </div>
-                        </div>
-                        <div className='col-auto'>
-                          <div className='text-14 text-light-1'>
-                            {days > 0 ? (
-                              <>
-                                {days}d {hours}h {minutes}m
-                              </>
-                            ) : (
-                              <>
-                                {hours > 0 ? <>{hours}h</> : <></>} {minutes}m
-                              </>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className='py-10 px-30 border-top-light'>
-                      <div className='row y-gap-10 justify-between'>
-                        <div className='col-auto'>
-                          <div className='d-flex items-center mb-5'>
-                            <div className='w-28 d-flex justify-center mr-15'>
-                              <img
-                                src={`/img/flights/${segment.flight.airline}.png`}
-                                alt='image'
-                              />
-                            </div>
-                            <div className='text-14 text-light-1'>
-                              {airlineName} - {segment.flight.airline}{' '}
-                              {segment.flight.number}
-                            </div>
-                          </div>
-                          <div className='relative z-0'>
-                            <div className='border-line-2' />
-                            <div className='d-flex items-center'>
-                              <div className='w-28 d-flex justify-center mr-15'>
-                                <div className='size-10 border-light rounded-full bg-white' />
-                              </div>
-                              <div className='row'>
-                                <div className='col-auto'>
-                                  <div className='lh-14 fw-500'>
-                                    {element.provider === 'aa' &&
-                                      segment.departure.time.slice(-8, -3)}
-                                    {(element.provider === 'tj' ||
-                                      element.provider === 'ad') &&
-                                      segment.departure.time.slice(-5)}
-                                  </div>
-                                </div>
-                                <div className='col-auto'>
-                                  <div className='lh-14 fw-500'>
-                                    {departureAirport} ({segment.departure.airport.code})
-                                  </div>
-                                </div>
+                  return (
+                    <div key={segmentIndex}>
+                      <div className='border-light rounded-4 my-2'>
+                        <div className='py-5 px-30'>
+                          <div className='row justify-between items-center'>
+                            <div className='col-auto'>
+                              <div className='fw-500 text-dark-1'>
+                                Depart • {departureDate.slice(0, 3)},{' '}
+                                {departureDate.slice(3, 10)}
                               </div>
                             </div>
-                            <div className='d-flex items-center mt-15'>
-                              <div className='w-28 d-flex justify-center mr-15'>
-                                <img src='/img/flights/plane.svg' alt='image' />
-                              </div>
+                            <div className='col-auto'>
                               <div className='text-14 text-light-1'>
                                 {days > 0 ? (
                                   <>
@@ -830,86 +751,389 @@ function FlightProperty({
                                 )}
                               </div>
                             </div>
-                            <div className='d-flex items-center mt-15'>
-                              <div className='w-28 d-flex justify-center mr-15'>
-                                <div className='size-10 border-light rounded-full bg-border' />
+                          </div>
+                        </div>
+                        <div className='py-10 px-30 border-top-light'>
+                          <div className='row y-gap-10 justify-between'>
+                            <div className='col-auto'>
+                              <div className='d-flex items-center mb-5'>
+                                <div className='w-28 d-flex justify-center mr-15'>
+                                  <img
+                                    src={`/img/flights/${segment.flight.airline}.png`}
+                                    alt='image'
+                                  />
+                                </div>
+                                <div className='text-14 text-light-1'>
+                                  {airlineName} - {segment.flight.airline}{' '}
+                                  {segment.flight.number}
+                                </div>
                               </div>
-                              <div className='row'>
-                                <div className='col-auto'>
-                                  <div className='lh-14 fw-500'>
-                                    {element.provider === 'aa' &&
-                                      segment.arrival.time.slice(-8, -3)}
-                                    {(element.provider === 'tj' ||
-                                      element.provider === 'ad') &&
-                                      segment.arrival.time.slice(-5)}{' '}
-                                    {segmentDayDifference > 0 ? (
-                                      <span className='text-secondary text-14'>
-                                        (
-                                        <span className='text-danger'>
-                                          +{segmentDayDifference}
-                                        </span>
-                                        )
-                                      </span>
+                              <div className='relative z-0'>
+                                <div className='border-line-2' />
+                                <div className='d-flex items-center'>
+                                  <div className='w-28 d-flex justify-center mr-15'>
+                                    <div className='size-10 border-light rounded-full bg-white' />
+                                  </div>
+                                  <div className='row'>
+                                    <div className='col-auto'>
+                                      <div className='lh-14 fw-500'>
+                                        {element.provider === 'aa' &&
+                                          segment.departure.time.slice(-8, -3)}
+                                        {(element.provider === 'tj' ||
+                                          element.provider === 'ad') &&
+                                          segment.departure.time.slice(-5)}
+                                      </div>
+                                    </div>
+                                    <div className='col-auto'>
+                                      <div className='lh-14 fw-500'>
+                                        {departureAirport} (
+                                        {segment.departure.airport.code})
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className='d-flex items-center mt-15'>
+                                  <div className='w-28 d-flex justify-center mr-15'>
+                                    <img src='/img/flights/plane.svg' alt='image' />
+                                  </div>
+                                  <div className='text-14 text-light-1'>
+                                    {days > 0 ? (
+                                      <>
+                                        {days}d {hours}h {minutes}m
+                                      </>
                                     ) : (
-                                      <></>
+                                      <>
+                                        {hours > 0 ? <>{hours}h</> : <></>} {minutes}m
+                                      </>
                                     )}
                                   </div>
                                 </div>
-                                <div className='col-auto'>
-                                  <div className='lh-14 fw-500'>
-                                    {arrivalAirport} ({segment.arrival.airport.code})
+                                <div className='d-flex items-center mt-15'>
+                                  <div className='w-28 d-flex justify-center mr-15'>
+                                    <div className='size-10 border-light rounded-full bg-border' />
+                                  </div>
+                                  <div className='row'>
+                                    <div className='col-auto'>
+                                      <div className='lh-14 fw-500'>
+                                        {element.provider === 'aa' &&
+                                          segment.arrival.time.slice(-8, -3)}
+                                        {(element.provider === 'tj' ||
+                                          element.provider === 'ad') &&
+                                          segment.arrival.time.slice(-5)}{' '}
+                                        {segmentDayDifference > 0 ? (
+                                          <span className='text-secondary text-14'>
+                                            (
+                                            <span className='text-danger'>
+                                              +{segmentDayDifference}
+                                            </span>
+                                            )
+                                          </span>
+                                        ) : (
+                                          <></>
+                                        )}
+                                      </div>
+                                    </div>
+                                    <div className='col-auto'>
+                                      <div className='lh-14 fw-500'>
+                                        {arrivalAirport} ({segment.arrival.airport.code})
+                                      </div>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
                             </div>
-                          </div>
-                        </div>
-                        <div className='col-auto text-right md:text-left'>
-                          <div className='text-14 text-light-1'>{businessClass}</div>
-                          <div className='text-14 mt-15 md:mt-5'>
-                            {segment?.flight?.equipment?.charAt(0) === '7' &&
-                              'Boeing ' + segment.flight.equipment}
-                            {segment?.flight?.equipment?.charAt(0) === '3' &&
-                              'Airbus A' + segment.flight.equipment}
-                            {/* <br />
+                            <div className='col-auto text-right md:text-left'>
+                              <div className='text-14 text-light-1'>{businessClass}</div>
+                              <div className='text-14 mt-15 md:mt-5'>
+                                {segment?.flight?.equipment?.charAt(0) === '7' &&
+                                  'Boeing ' + segment.flight.equipment}
+                                {segment?.flight?.equipment?.charAt(0) === '3' &&
+                                  'Airbus A' + segment.flight.equipment}
+                                {/* <br />
                       Wi-Fi available
                       <br />
                       USB outlet */}
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                  {segmentIndex + 1 < element.segments.length ? (
-                    segmentIndex !== layoffSegment - 1 ? (
-                      <span className='ml-10 d-flex items-center gap-2'>
-                        <FaRegClock className='text-danger text-20' /> Layover Time -{' '}
-                        {layoverTime >= 1440 ? (
-                          <>
-                            {Math.floor(layoverTime / 24 / 60)}d{' '}
-                            {Math.floor((layoverTime / 60) % 24)}h {layoverTime % 60}m
-                          </>
-                        ) : (
-                          <>
-                            {Math.floor(layoverTime / 60) > 0 ? (
-                              <>{Math.floor(layoverTime / 60)}h</>
+                      {segmentIndex + 1 < element.segments.length ? (
+                        segmentIndex !== layoffSegment - 1 ? (
+                          <span className='ml-10 d-flex items-center gap-2'>
+                            <FaRegClock className='text-danger text-20' /> Layover Time -{' '}
+                            {layoverTime >= 1440 ? (
+                              <>
+                                {Math.floor(layoverTime / 24 / 60)}d{' '}
+                                {Math.floor((layoverTime / 60) % 24)}h {layoverTime % 60}m
+                              </>
                             ) : (
-                              <></>
-                            )}{' '}
-                            {layoverTime % 60}m
-                          </>
-                        )}
-                      </span>
-                    ) : (
-                      <hr className='my-3 d-block' />
-                    )
-                  ) : (
-                    <></>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+                              <>
+                                {Math.floor(layoverTime / 60) > 0 ? (
+                                  <>{Math.floor(layoverTime / 60)}h</>
+                                ) : (
+                                  <></>
+                                )}{' '}
+                                {layoverTime % 60}m
+                              </>
+                            )}
+                          </span>
+                        ) : (
+                          <hr className='my-3 d-block' />
+                        )
+                      ) : (
+                        <></>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+            {selectFare && showFF && !element.isOnlyFF && (
+              <div className={`row pb-20 pl-5 y-gap-20 ${showMore ? 'mt-20' : ''}`}>
+                {getArray(element.prices).map((price, priceIndex) => {
+                  let str = <></>;
+                  let usedName = price.name;
+                  if (element.provider === 'aa') {
+                    if (price.name === 'EC') {
+                      usedName = 'SAVER';
+                      str = (
+                        <>
+                          <p>
+                            <span className='fw-bold'>Seating: </span>Chargeable
+                          </p>
+                          <p>
+                            <span className='fw-bold'>XL Seating: </span>Chargeable
+                          </p>
+                          <p>
+                            <span className='fw-bold'>Meals: </span>Chargeable
+                          </p>
+                          <p>
+                            <span className='fw-bold'>Changes: </span>{' '}
+                            {(3350).toLocaleString('en-IN', {
+                              maximumFractionDigits: 0,
+                              style: 'currency',
+                              currency: 'INR',
+                            })}{' '}
+                            + Tax
+                          </p>
+                          <p>
+                            <span className='fw-bold'>Cancellations: </span>{' '}
+                            {(3600).toLocaleString('en-IN', {
+                              maximumFractionDigits: 0,
+                              style: 'currency',
+                              currency: 'INR',
+                            })}{' '}
+                            + Tax
+                          </p>
+                          <p>
+                            <span className='fw-bold'>
+                              Priority Check In / Boarding:{' '}
+                            </span>
+                            NA
+                          </p>
+                          <p>
+                            <span className='fw-bold'>Baggage: </span>
+                            15KG
+                          </p>
+                        </>
+                      );
+                    } else if (price.name === 'AV') {
+                      usedName = 'FLEXI';
+                      str = (
+                        <>
+                          <p>
+                            <span className='fw-bold'>Seating: </span>Chargeable
+                          </p>
+                          <p>
+                            <span className='fw-bold'>XL Seating: </span>Chargeable
+                          </p>
+                          <p>
+                            <span className='fw-bold'>Meals: </span>Chargeable
+                          </p>
+                          <p>
+                            <span className='fw-bold'>Changes: </span> Free
+                          </p>
+                          <p>
+                            <span className='fw-bold'>Cancellations: </span>{' '}
+                            {(3600).toLocaleString('en-IN', {
+                              maximumFractionDigits: 0,
+                              style: 'currency',
+                              currency: 'INR',
+                            })}{' '}
+                            + Tax
+                          </p>
+                          <p>
+                            <span className='fw-bold'>
+                              Priority Check In / Boarding:{' '}
+                            </span>
+                            NA
+                          </p>
+                          <p>
+                            <span className='fw-bold'>Baggage: </span>
+                            15KG
+                          </p>
+                        </>
+                      );
+                    }
+                  } else if (element.provider === 'tj') {
+                    let carrier = element.segments[0].flight.airline; //SG 6E
+                    if (price.name === 'PUBLISHED') {
+                      usedName = 'SAVER';
+                      str = (
+                        <>
+                          <p>
+                            <span className='fw-bold'>Seating: </span>Chargeable
+                          </p>
+                          <p>
+                            <span className='fw-bold'>XL Seating: </span>Chargeable
+                          </p>
+                          <p>
+                            <span className='fw-bold'>Meals: </span>Chargeable
+                          </p>
+                          <p>
+                            <span className='fw-bold'>Changes: </span>{' '}
+                            {(3500).toLocaleString('en-IN', {
+                              maximumFractionDigits: 0,
+                              style: 'currency',
+                              currency: 'INR',
+                            })}{' '}
+                            + Tax
+                          </p>
+                          <p>
+                            <span className='fw-bold'>Cancellations: </span>{' '}
+                            {(3500).toLocaleString('en-IN', {
+                              maximumFractionDigits: 0,
+                              style: 'currency',
+                              currency: 'INR',
+                            })}{' '}
+                            + Tax
+                          </p>
+                          <p>
+                            <span className='fw-bold'>
+                              Priority Check In / Boarding:{' '}
+                            </span>
+                            Chargeable
+                          </p>
+                          <p>
+                            <span className='fw-bold'>Baggage: </span>
+                            15KG
+                          </p>
+                        </>
+                      );
+                    } else if (price.name === 'FLEXI_PLUS') {
+                      usedName = 'FLEXI PLUS';
+                      str = (
+                        <>
+                          <p>
+                            <span className='fw-bold'>Seating: </span>Included
+                          </p>
+                          <p>
+                            <span className='fw-bold'>XL Seating: </span>
+                            {carrier === 'SG' ? 'Included' : '50% Discount on Seat Fee'}
+                          </p>
+                          <p>
+                            <span className='fw-bold'>Meals: </span>Included
+                          </p>
+                          <p>
+                            <span className='fw-bold'>Changes: </span>
+                            {carrier === 'SG' ? (
+                              <>
+                                {(3500).toLocaleString('en-IN', {
+                                  maximumFractionDigits: 0,
+                                  style: 'currency',
+                                  currency: 'INR',
+                                })}{' '}
+                                + Tax
+                              </>
+                            ) : (
+                              'Free'
+                            )}
+                          </p>
+                          <p>
+                            <span className='fw-bold'>Cancellations: </span>{' '}
+                            {(3500).toLocaleString('en-IN', {
+                              maximumFractionDigits: 0,
+                              style: 'currency',
+                              currency: 'INR',
+                            })}{' '}
+                            + Tax
+                          </p>
+                          <p>
+                            <span className='fw-bold'>
+                              Priority Check In / Boarding:{' '}
+                            </span>
+                            {carrier === 'SG' ? 'Included' : 'Chargeable'}
+                          </p>
+                          <p>
+                            <span className='fw-bold'>Baggage: </span>
+                            15KG
+                          </p>
+                        </>
+                      );
+                    }
+                  } else if (element.provider === 'ad') {
+                    usedName = price.description;
+                    let inc = (
+                      <>
+                        <p>Includes:</p>
+                        <ul className='list-disc'>
+                          {price?.INC && price.INC.map((i) => <li className='capitalize'>{i.toLowerCase()}</li>)}
+                        </ul>
+                      </>
+                    );
+                    let cha = (
+                      <>
+                        <p>Chargeable:</p>
+                        <ul className='list-disc'>
+                          {price?.CHA && price.CHA.map((i) => <li className='capitalize'>{i.toLowerCase()}</li>)}
+                        </ul>
+                      </>
+                    );
+                    str = (
+                      <>
+                        <span className='d-block capitalize'>{price.majCabin?.replace('_', ' ') || ''}</span>
+                        {inc}
+                        {cha}
+                      </>
+                    );
+                  }
+                  return (
+                    <div className={'fare-family-card col-lg-4 col-md-6 border-light' + (price === element.selectedFF ? ' bg-blue-1-05': '')}>
+                      <div className='fw-bold d-flex justify-content-between capitalize'>
+                        {usedName.split('_').map((str) => (
+                          <>{str.toLowerCase()} </>
+                        ))}
+                        <span>
+                          {price.total.toLocaleString('en-IN', {
+                            maximumFractionDigits: 0,
+                            style: 'currency',
+                            currency: 'INR',
+                          })}
+                        </span>
+                      </div>
+                      <span>{str}</span>
+                      <button
+                        onClick={async () => {
+                          if (setManip) {
+                            element.selectedFF = price;
+                            setManip((prev) => {
+                              prev[manipIndex].selectedFF = price;
+                              return [...prev];
+                            });
+                          }
+                        }}
+                        className='button -dark-1 px-30 h-40 bg-blue-1 text-white my-2'
+                        disabled={price === element.selectedFF}
+                      >
+                        Select
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </>
         )}
         {/* End collapase content */}
       </div>
