@@ -1,13 +1,13 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { AiOutlineEye } from 'react-icons/ai';
+import { AiOutlinePrinter } from 'react-icons/ai';
 import { FiDownload } from 'react-icons/fi';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 import { createItem, getList } from '../../../../api/xplorzApi';
 import ActionsButton from '../../../../components/actions-button/ActionsButton';
 import { sendToast } from '../../../../utils/toastify';
 import { jsonToCSV } from 'react-papaparse';
-import { downloadCSV as CSVDownloader } from '../../../../utils/fileDownloader';
+import { downloadCSV as CSVDownloader, downloadApiPDF } from '../../../../utils/fileDownloader';
 
 const Journals = () => {
   const [balanceSheet, setBalanceSheet] = useState(null);
@@ -15,15 +15,20 @@ const Journals = () => {
 
   const router = useRouter();
 
-  const getBalanceSheet = async () => {
+  const getBalanceSheet = async (pdf = false) => {
     const response = await getList('reports/balance-sheet', {
       date: dates.format('YYYY-MM-DD'),
+      pdf: pdf ? 1 : 0,
     });
     if (response?.success) {
       let data = response.data;
-      // Calculating Totals
-      data = await recurseThroughout(data);
-      setBalanceSheet(data);
+      if (pdf) {
+        window.open().document.write(data);
+      } else {
+        // Calculating Totals
+        data = await recurseThroughout(data);
+        setBalanceSheet(data);
+      }
     } else {
       sendToast(
         'error',
@@ -160,26 +165,6 @@ const Journals = () => {
     }
   };
 
-  const toPdf = async (filename) => {
-    const styles =
-      // '<style>table{border:1px solid;max-width:80%}th:nth-child(n+4),td:nth-child(n+4){text-align:right;white-space:nowrap}td:nth-child(1){word-break:none}td:nth-child(3n){max-width:30vw;word-wrap:break-word;word-break:break-all}td{padding:6px}tr,td,th{border:1px solid #999}</style>';
-      //span:nth-child(2){position:relative;right:0}
-      '<style>.income-statement{display:table;width:100%;font-size:smaller}.assets,.liabilities{width:50%;display:table-cell;position:relative}.records,.title,.total{border:1px solid #d3d3d3;padding:6px 12px}a{display:block;text-decoration:none}.justify-between{display:flex;justify-content:space-between}.justify-between div{display:inline-block}.justify-between div:nth-child(2){position:relative;right:0}</style>';
-    const html = document
-      .querySelector('#pdf-content')
-      .innerHTML.replaceAll('₹', '');
-    const response = await createItem('/utilities/generate-pdf', {
-      html: styles + html,
-      filename: filename,
-      landscape: false,
-    });
-    if (response?.success && response?.data?.url) {
-      window.open(response?.data?.url, '_blank');
-    } else {
-      sendToast('error', 'Failed to create Ledger PDF', 4000);
-    }
-  };
-
   const recusivelyFill = (temp, obj, level) => {
     for (let [k, v] of Object.entries(obj || {})) {
       if (typeof v === 'object' && !Array.isArray(v)) {
@@ -190,10 +175,6 @@ const Journals = () => {
       }
     }
     return temp;
-  }
-
-  const formatTo2Decimal = (num) => {
-    return num.toLocaleString('en-IN', {maximumFractionDigits: 2});
   }
 
   const toCSV = (filename) => {
@@ -214,6 +195,10 @@ const Journals = () => {
         4000
       );
     }
+  }
+
+  const downloadPDF = async () => {
+    getBalanceSheet(1);
   }
 
   return (
@@ -366,16 +351,12 @@ const Journals = () => {
             <FiDownload className='text-20' />
             Download CSV
           </button>
-          {/* <button
+          <button
             className='btn btn-info ml-20 text-white'
-            onClick={() =>
-              toPdf(
-                `Balance-Sheet-${dates.format('DD-MMMM-YYYY')}.pdf`
-              )
-            }
+            onClick={downloadPDF}
           >
             <AiOutlinePrinter className='text-22' /> Generate PDF
-          </button> */}
+          </button>
         </div>
       )}
     </div>
