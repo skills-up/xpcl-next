@@ -21,6 +21,7 @@ function EmailClients() {
   );
   const airlines = useSelector((state) => state.flightSearch.value.airlineOrgs);
   const airports = useSelector((state) => state.apis.value.airports);
+  const [airportOptions, setAirportOptions] = useState(airports);
   const cabinOptions = ['Any', 'Economy', 'Premium Economy', 'Business', 'First'];
   const travellers = useSelector((state) => state.flightSearch.value.travellers);
   const emailClients = useSelector((state) => state.flightSearch.value.emailClients);
@@ -49,7 +50,7 @@ function EmailClients() {
       return;
     }
     if (email.trim().length === 0) {
-      sendToast('error', 'Please enter a Recipient Email', 4000);
+      sendToast('error', 'Please enter a Recipient Email/Phone', 4000);
       return;
     }
     if (markup === '') {
@@ -111,23 +112,14 @@ function EmailClients() {
     let tempTo = [];
     let tempFrom = [];
     let tempCombined = [];
+    console.log('Email Clients', emailClients);
+    console.log('Destinations', destinations);
     for (let opt of emailClients) {
       let airlineName;
       for (let airline of airlines) {
         if (airline.code === opt.segments[0].flight.airline) airlineName = airline.name;
       }
-      let cabin;
-      if (opt.provider === 'aa') {
-        if (opt.prices?.type === 'EC') cabin = 'Economy';
-      } else if (opt.provider === 'tj') {
-        if (opt.prices.prices.ADULT.cabinClass === 'PREMIUM_ECONOMY')
-          cabin = 'Premium Economy';
-        else {
-          cabin =
-            opt.prices.prices.ADULT.cabinClass.charAt(0).toUpperCase() +
-            opt.prices.prices.ADULT.cabinClass.slice(1).toLowerCase();
-        }
-      }
+      const cabin = opt.provider === 'aa'? 'Economy' : (opt.selectedFF.cabinClass || opt.selectedFF.majCabin || 'Economy').replace('_', ' ').toLowerCase().replace(/\b\w/g, s => s.toUpperCase());
       let data;
       if (opt.type === 'combined') {
         let firstSeg = [];
@@ -155,7 +147,7 @@ function EmailClients() {
           flight_one: `${firstSeg[0].flight.airline} ${firstSeg[0].flight.number}`,
           flight_two: `${secondSeg[0].flight.airline} ${firstSeg[0].flight.number}`,
           cabin,
-          price: +opt.total + +markup,
+          price: +opt.selectedFF.total + +markup,
         };
       } else
         data = {
@@ -167,7 +159,7 @@ function EmailClients() {
           arrival: new Date(opt.segments.at(-1).arrival.time).toString().slice(0, -31),
           flight: `${opt.segments[0].flight.airline} ${opt.segments[0].flight.number}`,
           cabin,
-          price: +opt.total + +markup,
+          price: +opt.selectedFF.total + +markup,
         };
       if (opt.type === 'to') {
         tempTo.push(data);
@@ -200,331 +192,311 @@ function EmailClients() {
       }
     }
     let manipData = { to: tempTo, from: tempFrom, combined: tempCombined };
-    // Form Data
-    let formData = new FormData();
-    formData.append(
-      'subject',
-      `Flight Options from ${destinations.from.value} to ${destinations.to.value} - ${dateDestination}`
-    );
-    let data = (
-      <div>
-        <p>Hi {name},</p>
-        <p>
-          Here are the options for {destinations.from.value} to {destinations.to.value} on{' '}
-          {dateDestination}
-        </p>
-        {Object.entries(manipData).map(([key, value], index) => {
-          // Traveller Names
-          let str = '';
-          for (let i = 0; i < travellers.length; i++) {
-            if (travellers.length > 1) {
-              if (i + 1 < travellers.length) {
-                if (i > 0) {
-                  str += ', ' + travellers[i].label;
-                } else {
-                  str += travellers[i].label;
-                }
-              } else {
-                str += ' and ' + travellers[i].label;
-              }
-            } else {
-              str += travellers[i].label;
-            }
-          }
-          if (value && value.length > 0) {
-            return (
-              <table width='100%' style={{ border: '0', marginBottom: '2rem' }}>
-                <thead>
-                  <tr style={{ borderBottom: '1px solid #ccc', paddingTop: '15px' }}>
-                    <th>S.No.</th>
-                    <th>Airline</th>
-                    <th>From</th>
-                    <th>To</th>
-                    <th>Departure</th>
-                    <th>Arrival</th>
-                    <th>Flight</th>
-                    <th>Cabin</th>
-                    {!withoutFares && <th>Price</th>}
-                    {/* <th></th> */}
-                  </tr>
-                </thead>
-                <tbody>
-                  {value.map((element, index) => {
-                    // Combined
-                    if (key === 'combined')
-                      return (
-                        <>
-                          <tr key={index}>
-                            <td colspan='10'>
-                              <hr />
-                            </td>
-                          </tr>
-                          <tr
-                            style={{ borderBottom: '1px solid #ccc', paddingTop: '15px' }}
-                          >
-                            <td rowspan='1' style={{ textAlign: 'center' }}>
-                              {index + 1}.
-                            </td>
-                            <td rowspan='1' style={{ textAlign: 'center' }}>
-                              <span
-                                class='proton-image-anchor'
-                                data-proton-remote='remote-1'
-                                style={{ maxWidth: '50px' }}
-                              >
-                                <img
-                                  src={`/img/flights/${element.airline_code}.png`}
-                                  loading='lazy'
-                                  style={{ maxWidth: '50px' }}
-                                />
-                              </span>
-                              <br />
-                              {element.airline}
-                            </td>
-                            <td style={{ textAlign: 'center' }}>
-                              <div
-                                style={{
-                                  display: 'flex',
-                                  flexDirection: 'column',
-                                  gap: '1rem',
-                                  justifyContent: 'center',
-                                  alignItems: 'center',
-                                }}
-                              >
-                                <span>{element.from_one}</span>
-                                <span>{element.from_two}</span>
-                              </div>
-                            </td>
-                            <td style={{ textAlign: 'center' }}>
-                              <div
-                                style={{
-                                  display: 'flex',
-                                  flexDirection: 'column',
-                                  gap: '1rem',
-                                  justifyContent: 'center',
-                                  alignItems: 'center',
-                                }}
-                              >
-                                <span>{element.to_one}</span>
-                                <span>{element.to_two}</span>
-                              </div>
-                            </td>
-                            <td style={{ textAlign: 'center' }}>
-                              <div
-                                style={{
-                                  display: 'flex',
-                                  flexDirection: 'column',
-                                  gap: '1rem',
-                                  justifyContent: 'center',
-                                  alignItems: 'center',
-                                }}
-                              >
-                                <span>{element.departure_one}</span>
-                                <span>{element.departure_two}</span>
-                              </div>
-                            </td>
-                            <td style={{ textAlign: 'center' }}>
-                              <div
-                                style={{
-                                  display: 'flex',
-                                  flexDirection: 'column',
-                                  gap: '1rem',
-                                  justifyContent: 'center',
-                                  alignItems: 'center',
-                                }}
-                              >
-                                <span>{element.arrival_one}</span>
-                                <span>{element.arrival_two}</span>
-                              </div>
-                            </td>
-                            <td style={{ textAlign: 'center' }}>
-                              <div
-                                style={{
-                                  display: 'flex',
-                                  flexDirection: 'column',
-                                  gap: '1rem',
-                                  justifyContent: 'center',
-                                  alignItems: 'center',
-                                }}
-                              >
-                                <span>{element.flight_one}</span>
-                                <span>{element.flight_two}</span>
-                              </div>
-                            </td>
-                            <td style={{ textAlign: 'center' }}>{element.cabin}</td>
-                            {!withoutFares && (
-                              <td rowspan='1' style={{ textAlign: 'center' }}>
-                                {(+element.price).toLocaleString('en-IN', {
-                                  maximumFractionDigits: 2,
-                                  style: 'currency',
-                                  currency: 'INR',
-                                })}
-                              </td>
-                            )}
-                            {/* Book Button */}
-                            {/* <td rowspan='1' style={{ textAlign: 'center' }}>
-                              <a
-                                target='_blank'
-                                href={`mailto:${
-                                  user?.email
-                                }?cc=support@xplorz.com&amp;subject=Selected flight option for ${str} from ${
-                                  element.from_one
-                                } to ${element.to_one} on ${
-                                  element.departure_one
-                                } and from ${element.from_two} to ${element.to_two} on ${
-                                  element.departure_two
-                                }&amp;body=Dear ${
-                                  user?.name
-                                },%0D%0A%0D%0AWe've selected the following flight option for ${str}:%0D%0A%0D%0A${
-                                  element.flight_one
-                                }: ${element.from_one} @ ${
-                                  element.departure_one
-                                } &rarr; ${element.to_one} @ ${element.arrival_one} and ${
-                                  element.flight_two
-                                }: ${element.from_two} @ ${
-                                  element.departure_two
-                                } &rarr; ${element.to_two} @ ${element.arrival_two} - ${
-                                  element.cabin
-                                } ${!withoutFares ? '%0D%0A%0D%0AFare per pax: ' : ''}${
-                                  !withoutFares
-                                    ? `${(+element.price).toLocaleString('en-IN', {
-                                        maximumFractionDigits: 2,
-                                        style: 'currency',
-                                        currency: 'INR',
-                                      })}/-`
-                                    : ''
-                                }%0D%0A%0D%0APlease book the same.%0D%0A%0D%0AThanks!`}
-                                style={{
-                                  background: '#f0ad4e',
-                                  color: '#fff',
-                                  borderColor: '#eea236',
-                                  fontWeight: 'bold',
-                                  padding: '1em',
-                                  textDecoration: 'none',
-                                  fontSize: '12px',
-                                  lineHeight: '1.5',
-                                  borderRadius: '3px',
-                                }}
-                                //  'background:#f0ad4e;color:#fff;border-color:#eea236;font-weight:bold;padding:1em;text-decoration:none;font-size:12px;line-height:1.5;border-radius:3px'
-                                rel='noreferrer nofollow noopener'
-                              >
-                                Book
-                              </a>
-                            </td> */}
-                          </tr>
-                        </>
-                      );
-                    // To / From
-                    else
-                      return (
-                        <>
-                          <tr key={index}>
-                            <td colspan='10'>
-                              <hr />
-                            </td>
-                          </tr>
-                          <tr
-                            style={{ borderBottom: '1px solid #ccc', paddingTop: '15px' }}
-                          >
-                            <td rowspan='1' style={{ textAlign: 'center' }}>
-                              {index + 1}.
-                            </td>
-                            <td rowspan='1' style={{ textAlign: 'center' }}>
-                              {/* <span
-                                class='proton-image-anchor'
-                                data-proton-remote='remote-1'
-                                style={{ maxWidth: '50px' }}
-                              >
-                                <img
-                                  src={`/img/flights/${element.airline_code}.png`}
-                                  loading='lazy'
-                                  style={{ maxWidth: '50px' }}
-                                />
-                              </span>
-                              <br /> */}
-                              {element.airline}
-                            </td>
-                            <td style={{ textAlign: 'center' }}>{element.from}</td>
-                            <td style={{ textAlign: 'center' }}>{element.to}</td>
-                            <td style={{ textAlign: 'center' }}>{element.departure}</td>
-                            <td style={{ textAlign: 'center' }}>{element.arrival}</td>
-                            <td style={{ textAlign: 'center' }}>{element.flight}</td>
-                            <td style={{ textAlign: 'center' }}>{element.cabin}</td>
-                            {!withoutFares && (
-                              <td rowspan='1' style={{ textAlign: 'center' }}>
-                                {(+element.price).toLocaleString('en-IN', {
-                                  maximumFractionDigits: 2,
-                                  style: 'currency',
-                                  currency: 'INR',
-                                })}
-                              </td>
-                            )}
-                            {/* Book Button*/}
-                            {/* <td rowspan='1' style={{ textAlign: 'center' }}>
-                              <a
-                                target='_blank'
-                                href={`mailto:${
-                                  user?.email
-                                }?cc=support@xplorz.com&amp;subject=Selected flight option for ${str} from ${
-                                  element.from
-                                } to ${element.to} on ${
-                                  element.departure
-                                }&amp;body=Dear ${
-                                  user?.name
-                                },%0D%0A%0D%0AWe've selected the following flight option for ${str}:%0D%0A%0D%0A${
-                                  element.flight
-                                }: ${element.from} @ ${element.departure} &rarr; ${
-                                  element.to
-                                } @ ${element.arrival} - ${element.cabin} ${
-                                  !withoutFares ? '%0D%0A%0D%0AFare per pax: ' : ''
-                                }${
-                                  !withoutFares
-                                    ? `${(+element.price).toLocaleString('en-IN', {
-                                        maximumFractionDigits: 2,
-                                        style: 'currency',
-                                        currency: 'INR',
-                                      })}/-`
-                                    : ''
-                                }%0D%0A%0D%0APlease book the same.%0D%0A%0D%0AThanks!`}
-                                style={{
-                                  background: '#f0ad4e',
-                                  color: '#fff',
-                                  borderColor: '#eea236',
-                                  fontWeight: 'bold',
-                                  padding: '1em',
-                                  textDecoration: 'none',
-                                  fontSize: '12px',
-                                  lineHeight: '1.5',
-                                  borderRadius: '3px',
-                                }}
-                                //  'background:#f0ad4e;color:#fff;border-color:#eea236;font-weight:bold;padding:1em;text-decoration:none;font-size:12px;line-height:1.5;border-radius:3px'
-                                rel='noreferrer nofollow noopener'
-                              >
-                                Book
-                              </a>
-                            </td> */}
-                          </tr>
-                        </>
-                      );
-                  })}
-                </tbody>
-              </table>
-            );
-          }
-        })}
-        <br />
-        <p>Please let us know which of the above work.</p>
-        <p>
-          Regards,
-          <br />
-          XCPL Support Team
-        </p>
-      </div>
-    );
-    formData.append('body', renderToStaticMarkup(data));
-    formData.append('to[]', email);
     // Email
     let response;
     if (type === 'email') {
+      // Form Data
+      let formData = new FormData();
+      formData.append(
+        'subject',
+        `Flight Options from ${destinations.from.value} to ${destinations.to.value} - ${dateDestination}`
+      );
+      let data = (
+        <div>
+          <p>Hi {name},</p>
+          <p>
+            Here are the options for {destinations.from.value} to {destinations.to.value} on{' '}
+            {dateDestination}
+          </p>
+          {Object.entries(manipData).map(([key, value], index) => {
+            // Traveller Names
+            let str = '';
+            for (let i = 0; i < travellers.length; i++) {
+              if (travellers.length > 1) {
+                if (i + 1 < travellers.length) {
+                  if (i > 0) {
+                    str += ', ' + travellers[i].label;
+                  } else {
+                    str += travellers[i].label;
+                  }
+                } else {
+                  str += ' and ' + travellers[i].label;
+                }
+              } else {
+                str += travellers[i].label;
+              }
+            }
+            if (value && value.length > 0) {
+              return (
+                <table width='100%' style={{ border: '0', marginBottom: '2rem' }}>
+                  <thead>
+                    <tr style={{ borderBottom: '1px solid #ccc', paddingTop: '15px' }}>
+                      <th>S.No.</th>
+                      <th>Airline</th>
+                      <th>From</th>
+                      <th>To</th>
+                      <th>Departure</th>
+                      <th>Arrival</th>
+                      <th>Flight</th>
+                      <th>Cabin</th>
+                      {!withoutFares && <th>Price</th>}
+                      {/* <th></th> */}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {value.map((element, index) => {
+                      // Combined
+                      if (key === 'combined')
+                        return (
+                          <>
+                            <tr key={index}>
+                              <td colspan='10'>
+                                <hr />
+                              </td>
+                            </tr>
+                            <tr
+                              style={{ borderBottom: '1px solid #ccc', paddingTop: '15px' }}
+                            >
+                              <td rowspan='1' style={{ textAlign: 'center' }}>
+                                {index + 1}.
+                              </td>
+                              <td rowspan='1' style={{ textAlign: 'center' }}>
+                                <span
+                                  class='proton-image-anchor'
+                                  data-proton-remote='remote-1'
+                                  style={{ maxWidth: '50px' }}
+                                >
+                                  <img
+                                    src={`https://api.xplorz.com/images/${element.airline_code}.png`}
+                                    loading='lazy'
+                                    style={{ maxWidth: '50px' }}
+                                  />
+                                </span>
+                                <br />
+                                {element.airline}
+                              </td>
+                              <td style={{ textAlign: 'center' }}>
+                                <div
+                                  style={{
+                                    alignItems: 'center',
+                                  }}
+                                >
+                                  <div>{element.from_one}</div>
+                                  <div>{element.from_two}</div>
+                                </div>
+                              </td>
+                              <td style={{ textAlign: 'center' }}>
+                                <div
+                                  style={{
+                                    alignItems: 'center',
+                                  }}
+                                >
+                                  <div>{element.to_one}</div>
+                                  <div>{element.to_two}</div>
+                                </div>
+                              </td>
+                              <td style={{ textAlign: 'center' }}>
+                                <div
+                                  style={{
+                                    alignItems: 'center',
+                                  }}
+                                >
+                                  <div>{element.departure_one}</div>
+                                  <div>{element.departure_two}</div>
+                                </div>
+                              </td>
+                              <td style={{ textAlign: 'center' }}>
+                                <div
+                                  style={{
+                                    alignItems: 'center',
+                                  }}
+                                >
+                                  <div>{element.arrival_one}</div>
+                                  <div>{element.arrival_two}</div>
+                                </div>
+                              </td>
+                              <td style={{ textAlign: 'center' }}>
+                                <div
+                                  style={{
+                                    alignItems: 'center',
+                                  }}
+                                >
+                                  <div>{element.flight_one}</div>
+                                  <div>{element.flight_two}</div>
+                                </div>
+                              </td>
+                              <td style={{ textAlign: 'center' }}>{element.cabin}</td>
+                              {!withoutFares && (
+                                <td rowspan='1' style={{ textAlign: 'center' }}>
+                                  {(+element.price).toLocaleString('en-IN', {
+                                    maximumFractionDigits: 2,
+                                    style: 'currency',
+                                    currency: 'INR',
+                                  })}
+                                </td>
+                              )}
+                              {/* Book Button */}
+                              {/* <td rowspan='1' style={{ textAlign: 'center' }}>
+                                <a
+                                  target='_blank'
+                                  href={`mailto:${
+                                    user?.email
+                                  }?cc=support@xplorz.com&amp;subject=Selected flight option for ${str} from ${
+                                    element.from_one
+                                  } to ${element.to_one} on ${
+                                    element.departure_one
+                                  } and from ${element.from_two} to ${element.to_two} on ${
+                                    element.departure_two
+                                  }&amp;body=Dear ${
+                                    user?.name
+                                  },%0D%0A%0D%0AWe've selected the following flight option for ${str}:%0D%0A%0D%0A${
+                                    element.flight_one
+                                  }: ${element.from_one} @ ${
+                                    element.departure_one
+                                  } &rarr; ${element.to_one} @ ${element.arrival_one} and ${
+                                    element.flight_two
+                                  }: ${element.from_two} @ ${
+                                    element.departure_two
+                                  } &rarr; ${element.to_two} @ ${element.arrival_two} - ${
+                                    element.cabin
+                                  } ${!withoutFares ? '%0D%0A%0D%0AFare per pax: ' : ''}${
+                                    !withoutFares
+                                      ? `${(+element.price).toLocaleString('en-IN', {
+                                          maximumFractionDigits: 2,
+                                          style: 'currency',
+                                          currency: 'INR',
+                                        })}/-`
+                                      : ''
+                                  }%0D%0A%0D%0APlease book the same.%0D%0A%0D%0AThanks!`}
+                                  style={{
+                                    background: '#f0ad4e',
+                                    color: '#fff',
+                                    borderColor: '#eea236',
+                                    fontWeight: 'bold',
+                                    padding: '1em',
+                                    textDecoration: 'none',
+                                    fontSize: '12px',
+                                    lineHeight: '1.5',
+                                    borderRadius: '3px',
+                                  }}
+                                  //  'background:#f0ad4e;color:#fff;border-color:#eea236;font-weight:bold;padding:1em;text-decoration:none;font-size:12px;line-height:1.5;border-radius:3px'
+                                  rel='noreferrer nofollow noopener'
+                                >
+                                  Book
+                                </a>
+                              </td> */}
+                            </tr>
+                          </>
+                        );
+                      // To / From
+                      else
+                        return (
+                          <>
+                            <tr key={index}>
+                              <td colspan='10'>
+                                <hr />
+                              </td>
+                            </tr>
+                            <tr
+                              style={{ borderBottom: '1px solid #ccc', paddingTop: '15px' }}
+                            >
+                              <td rowspan='1' style={{ textAlign: 'center' }}>
+                                {index + 1}.
+                              </td>
+                              <td rowspan='1' style={{ textAlign: 'center' }}>
+                                <span
+                                  class='proton-image-anchor'
+                                  data-proton-remote='remote-1'
+                                  style={{ maxWidth: '50px' }}
+                                >
+                                  <img
+                                    src={`https://api.xplorz.com/images/${element.airline_code}.png`}
+                                    loading='lazy'
+                                    style={{ maxWidth: '50px' }}
+                                  />
+                                </span>
+                                <br />
+                                {element.airline}
+                              </td>
+                              <td style={{ textAlign: 'center' }}>{element.from}</td>
+                              <td style={{ textAlign: 'center' }}>{element.to}</td>
+                              <td style={{ textAlign: 'center' }}>{element.departure}</td>
+                              <td style={{ textAlign: 'center' }}>{element.arrival}</td>
+                              <td style={{ textAlign: 'center' }}>{element.flight}</td>
+                              <td style={{ textAlign: 'center' }}>{element.cabin}</td>
+                              {!withoutFares && (
+                                <td rowspan='1' style={{ textAlign: 'center' }}>
+                                  {(+element.price).toLocaleString('en-IN', {
+                                    maximumFractionDigits: 2,
+                                    style: 'currency',
+                                    currency: 'INR',
+                                  })}
+                                </td>
+                              )}
+                              {/* Book Button*/}
+                              {/* <td rowspan='1' style={{ textAlign: 'center' }}>
+                                <a
+                                  target='_blank'
+                                  href={`mailto:${
+                                    user?.email
+                                  }?cc=support@xplorz.com&amp;subject=Selected flight option for ${str} from ${
+                                    element.from
+                                  } to ${element.to} on ${
+                                    element.departure
+                                  }&amp;body=Dear ${
+                                    user?.name
+                                  },%0D%0A%0D%0AWe've selected the following flight option for ${str}:%0D%0A%0D%0A${
+                                    element.flight
+                                  }: ${element.from} @ ${element.departure} &rarr; ${
+                                    element.to
+                                  } @ ${element.arrival} - ${element.cabin} ${
+                                    !withoutFares ? '%0D%0A%0D%0AFare per pax: ' : ''
+                                  }${
+                                    !withoutFares
+                                      ? `${(+element.price).toLocaleString('en-IN', {
+                                          maximumFractionDigits: 2,
+                                          style: 'currency',
+                                          currency: 'INR',
+                                        })}/-`
+                                      : ''
+                                  }%0D%0A%0D%0APlease book the same.%0D%0A%0D%0AThanks!`}
+                                  style={{
+                                    background: '#f0ad4e',
+                                    color: '#fff',
+                                    borderColor: '#eea236',
+                                    fontWeight: 'bold',
+                                    padding: '1em',
+                                    textDecoration: 'none',
+                                    fontSize: '12px',
+                                    lineHeight: '1.5',
+                                    borderRadius: '3px',
+                                  }}
+                                  //  'background:#f0ad4e;color:#fff;border-color:#eea236;font-weight:bold;padding:1em;text-decoration:none;font-size:12px;line-height:1.5;border-radius:3px'
+                                  rel='noreferrer nofollow noopener'
+                                >
+                                  Book
+                                </a>
+                              </td> */}
+                            </tr>
+                          </>
+                        );
+                    })}
+                  </tbody>
+                </table>
+              );
+            }
+          })}
+          <br />
+          <p>Please let us know which of the above work.</p>
+          <p>
+            Regards,
+            <br />
+            XCPL Support Team
+          </p>
+        </div>
+      );
+      formData.append('body', renderToStaticMarkup(data));
+      formData.append('to[]', email);
       response = await createItem('send/email', formData);
       if (response.success) {
         sendToast('success', 'Mail sent successfully', 4000);
@@ -538,6 +510,48 @@ function EmailClients() {
     }
     // Whatsapp
     else if (type === 'whatsapp') {
+      const [optType, option] = Object.entries(manipData).filter(([key, value]) => value && value.length > 0)[0];
+      if (optType === 'combined') {
+        sendToast('error', 'Whatsapp not supported for combined options', 4000);
+        return;
+      }
+      const origin = optType === 'from' ? destinations.to.value : destinations.from.value;
+      const destin = optType === 'from' ? destinations.from.value : destinations.to.value;
+      const depart = new DateObject({
+        date: optType === 'from' ? destinations.returnDate : destinations.departDate,
+        format: 'YYYY-MM-DD',
+      }).toDate().toDateString();
+      const text = [
+        'Flight Options',
+        `Here are your Flight Options from ${origin} to ${destin} on ${depart}`,
+        'Reply with Selected Option'
+      ];
+      for (let opt of option) {
+        text.push(
+          `${opt.flight}: ${opt.from}-${opt.to} ${opt.departure.slice(16,-3)} ${opt.cabin}${
+           !withoutFares
+             ? ` ${(+opt.price).toLocaleString('en-IN', {
+                  maximumFractionDigits: 2,
+                  style: 'currency',
+                  currency: 'INR',
+                })}/-`
+              : ''
+          }`
+        );
+      }
+      response = await createItem('send/whatsapp', {
+        text: text.join('\n###'),
+        to: email,
+      });
+      if (response.success) {
+        sendToast('success', 'WhatsApp sent successfully', 4000);
+      } else {
+        sendToast(
+          'error',
+          response?.data?.message || response?.data?.error || 'Error sending whatsapp',
+          4000
+        );
+      }
     }
   };
 
@@ -569,7 +583,7 @@ function EmailClients() {
                   type='email'
                 />
                 <label className='lh-1 text-16 text-light-1'>
-                  Recipient Email<span className='text-danger'>*</span>
+                  Recipient Email/Phone<span className='text-danger'>*</span>
                 </label>
               </div>
             </div>
@@ -968,7 +982,7 @@ function EmailClients() {
           <div className='col-md-6'>
             <button
               className='d-block mainSearch__submit button -blue-1 py-15 col-12 h-50 rounded-4 bg-dark-3 text-white'
-              onClick={submit}
+              onClick={() => submit('whatsapp')}
             >
               <BsWhatsapp className='icon-search text-20 mr-10' />
               Send Via Whatsapp
