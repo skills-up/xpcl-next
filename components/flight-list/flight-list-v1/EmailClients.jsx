@@ -267,7 +267,7 @@ function EmailClients() {
                                   style={{ maxWidth: '50px' }}
                                 >
                                   <img
-                                    src={`/img/flights/${element.airline_code}.png`}
+                                    src={`https://api.xplorz.com/images/${element.airline_code}.png`}
                                     loading='lazy'
                                     style={{ maxWidth: '50px' }}
                                   />
@@ -278,71 +278,51 @@ function EmailClients() {
                               <td style={{ textAlign: 'center' }}>
                                 <div
                                   style={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    gap: '1rem',
-                                    justifyContent: 'center',
                                     alignItems: 'center',
                                   }}
                                 >
-                                  <span>{element.from_one}</span>
-                                  <span>{element.from_two}</span>
+                                  <div>{element.from_one}</div>
+                                  <div>{element.from_two}</div>
                                 </div>
                               </td>
                               <td style={{ textAlign: 'center' }}>
                                 <div
                                   style={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    gap: '1rem',
-                                    justifyContent: 'center',
                                     alignItems: 'center',
                                   }}
                                 >
-                                  <span>{element.to_one}</span>
-                                  <span>{element.to_two}</span>
+                                  <div>{element.to_one}</div>
+                                  <div>{element.to_two}</div>
                                 </div>
                               </td>
                               <td style={{ textAlign: 'center' }}>
                                 <div
                                   style={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    gap: '1rem',
-                                    justifyContent: 'center',
                                     alignItems: 'center',
                                   }}
                                 >
-                                  <span>{element.departure_one}</span>
-                                  <span>{element.departure_two}</span>
+                                  <div>{element.departure_one}</div>
+                                  <div>{element.departure_two}</div>
                                 </div>
                               </td>
                               <td style={{ textAlign: 'center' }}>
                                 <div
                                   style={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    gap: '1rem',
-                                    justifyContent: 'center',
                                     alignItems: 'center',
                                   }}
                                 >
-                                  <span>{element.arrival_one}</span>
-                                  <span>{element.arrival_two}</span>
+                                  <div>{element.arrival_one}</div>
+                                  <div>{element.arrival_two}</div>
                                 </div>
                               </td>
                               <td style={{ textAlign: 'center' }}>
                                 <div
                                   style={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    gap: '1rem',
-                                    justifyContent: 'center',
                                     alignItems: 'center',
                                   }}
                                 >
-                                  <span>{element.flight_one}</span>
-                                  <span>{element.flight_two}</span>
+                                  <div>{element.flight_one}</div>
+                                  <div>{element.flight_two}</div>
                                 </div>
                               </td>
                               <td style={{ textAlign: 'center' }}>{element.cabin}</td>
@@ -424,18 +404,18 @@ function EmailClients() {
                                 {index + 1}.
                               </td>
                               <td rowspan='1' style={{ textAlign: 'center' }}>
-                                {/* <span
+                                <span
                                   class='proton-image-anchor'
                                   data-proton-remote='remote-1'
                                   style={{ maxWidth: '50px' }}
                                 >
                                   <img
-                                    src={`/img/flights/${element.airline_code}.png`}
+                                    src={`https://api.xplorz.com/images/${element.airline_code}.png`}
                                     loading='lazy'
                                     style={{ maxWidth: '50px' }}
                                   />
                                 </span>
-                                <br /> */}
+                                <br />
                                 {element.airline}
                               </td>
                               <td style={{ textAlign: 'center' }}>{element.from}</td>
