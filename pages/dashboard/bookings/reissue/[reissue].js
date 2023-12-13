@@ -357,7 +357,7 @@ const ReissueBooking = () => {
     const response = await createItem('bookings/' + router.query.reissue + '/reissue', {
       booking_type: bookingType.value,
       booking_date: bookingDate.format('YYYY-MM-DD'),
-      ticket_number: ticketNumber.replace(/\W/g, ''),
+      ticket_number: (bookingType.value === 'Miscellaneous' ? ticketNumber : ticketNumber.replace(/\W/g, '')),
       pnr,
       vendor_id: vendorID.value,
       vendor_base_amount: vendorBaseAmount || 0,
