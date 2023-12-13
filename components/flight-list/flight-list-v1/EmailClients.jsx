@@ -10,7 +10,7 @@ import WindowedSelect from 'react-windowed-select';
 import { createItem } from '../../../api/xplorzApi';
 import { sendToast } from '../../../utils/toastify';
 
-function EmailClients() {
+function EmailClients () {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [markup, setMarkup] = useState(0);
@@ -86,10 +86,6 @@ function EmailClients() {
         sendToast('error', 'Please Select a Cabin', 4000);
         return;
       }
-      if (!additionalFlight.class) {
-        sendToast('error', 'Please enter Class', 4000);
-        return;
-      }
       if (!additionalFlight.price) {
         sendToast('error', 'Please enter Price', 4000);
         return;
@@ -112,15 +108,24 @@ function EmailClients() {
     let tempTo = [];
     let tempFrom = [];
     let tempCombined = [];
-    console.log('Email Clients', emailClients);
-    console.log('Destinations', destinations);
     for (let opt of emailClients) {
       let airlineName;
       for (let airline of airlines) {
         if (airline.code === opt.segments[0].flight.airline) airlineName = airline.name;
       }
-      const cabin = opt.provider === 'aa'? 'Economy' : (opt.selectedFF.cabinClass || opt.selectedFF.majCabin || 'Economy').replace('_', ' ').toLowerCase().replace(/\b\w/g, s => s.toUpperCase());
+      const cabin =
+        opt.provider === 'aa'
+          ? 'Economy'
+          : (opt.selectedFF.cabinClass || opt.selectedFF.majCabin || 'Economy')
+              .replace('_', ' ')
+              .toLowerCase()
+              .replace(/\b\w/g, (s) => s.toUpperCase());
       let data;
+      let fromAirport = '';
+      let toAirport = '';
+      let stops = [];
+      let layover = 0;
+      let arriveAt = '';
       if (opt.type === 'combined') {
         let firstSeg = [];
         let secondSeg = [];
@@ -133,34 +138,37 @@ function EmailClients() {
             secondSeg.push(seg);
           }
         }
-        data = {
-          airline: airlineName,
-          airline_code: opt.segments[0].flight.airline,
-          from_one: firstSeg[0].departure.airport.code,
-          from_two: secondSeg[0].departure.airport.code,
-          to_one: firstSeg.at(-1).arrival.airport.code,
-          to_two: secondSeg.at(-1).arrival.airport.code,
-          departure_one: new Date(firstSeg[0].departure.time).toString().slice(0, -31),
-          departure_two: new Date(secondSeg[0].departure.time).toString().slice(0, -31),
-          arrival_one: new Date(firstSeg.at(-1).arrival.time).toString().slice(0, -31),
-          arrival_two: new Date(secondSeg.at(-1).arrival.time).toString().slice(0, -31),
-          flight_one: `${firstSeg[0].flight.airline} ${firstSeg[0].flight.number}`,
-          flight_two: `${secondSeg[0].flight.airline} ${firstSeg[0].flight.number}`,
-          cabin,
-          price: +opt.selectedFF.total + +markup,
-        };
-      } else
-        data = {
-          airline: airlineName,
-          airline_code: opt.segments[0].flight.airline,
-          from: opt.segments[0].departure.airport.code,
-          to: opt.segments.at(-1).arrival.airport.code,
-          departure: new Date(opt.segments[0].departure.time).toString().slice(0, -31),
-          arrival: new Date(opt.segments.at(-1).arrival.time).toString().slice(0, -31),
-          flight: `${opt.segments[0].flight.airline} ${opt.segments[0].flight.number}`,
-          cabin,
-          price: +opt.selectedFF.total + +markup,
-        };
+        fromAirport = firstSeg[0].departure.airport.code;
+        toAirport = firstSeg.at(-1).arrival.airport.code;
+        arriveAt = firstSeg.at(-1).arrival.time.split('T')[1].slice(0, 5);
+      } else {
+        fromAirport = opt.segments[0].departure.airport.code;
+        toAirport = opt.segments.at(-1).arrival.airport.code;
+        layover = opt.segments.reduce(
+          (acc, cur) => acc + (cur.journey?.layoverMins || 0),
+          0
+        );
+        arriveAt = opt.segments.at(-1).arrival.time.split('T')[1].slice(0, 5);
+        opt.segments.forEach((seg, index) => {
+          if (index > 0) {
+            stops.push(seg.departure.airport.code);
+          }
+        });
+      }
+      data = {
+        airline: airlineName,
+        airline_code: opt.segments[0].flight.airline,
+        fromAirport,
+        toAirport,
+        departAt: opt.segments[0].departure.time.split('T')[1].slice(0, 5),
+        arriveAt,
+        cabin,
+        price: Math.ceil(+opt.selectedFF.total + +markup),
+        segments: opt.segments,
+        stops,
+        layover,
+        flight: `${opt.segments[0].flight.airline} ${opt.segments[0].flight.number}`,
+      };
       if (opt.type === 'to') {
         tempTo.push(data);
       } else if (opt.type === 'from') {
@@ -173,17 +181,19 @@ function EmailClients() {
       let data = {
         airline: opt.airline.label,
         airline_code: opt.airline.code,
-        from: opt.from_airport.value,
-        to: opt.to_airport.value,
-        departure: new Date(opt.depart_date.format('YYYY-MM-DD') + 'T' + opt.depart_time)
-          .toString()
-          .slice(0, -31),
-        arrival: new Date(opt.arrival_date.format('YYYY-MM-DD') + 'T' + opt.arrival_time)
-          .toString()
-          .slice(0, -31),
+        fromAirport: opt.from_airport.iata,
+        toAirport: opt.to_airport.iata,
+        departAt: opt.depart_time.slice(0, 5),
+        arriveAt: opt.arrival_time.slice(0, 5),
+        // departure: new Date(opt.depart_date.format('YYYY-MM-DD') + 'T' + opt.depart_time)
+        //   .toString()
+        //   .slice(0, -31),
+        // arrival: new Date(opt.arrival_date.format('YYYY-MM-DD') + 'T' + opt.arrival_time)
+        //   .toString()
+        //   .slice(0, -31),
         flight: `${opt.airline.code} ${opt.flight}`,
         cabin: opt.cabin.value,
-        price: +opt.price + +markup,
+        price: Math.ceil(+opt.price + +markup),
       };
       if (opt.from_airport.value === destinations.to.value) {
         tempFrom.push(data);
@@ -205,12 +215,12 @@ function EmailClients() {
         <div>
           <p>Hi {name},</p>
           <p>
-            Here are the options for {destinations.from.value} to {destinations.to.value} on{' '}
-            {dateDestination}
+            Here are the options for {destinations.from.value} to {destinations.to.value}{' '}
+            on {dateDestination}
           </p>
           {Object.entries(manipData).map(([key, value], index) => {
             // Traveller Names
-            let str = '';
+            const items = [];
             for (let i = 0; i < travellers.length; i++) {
               if (travellers.length > 1) {
                 if (i + 1 < travellers.length) {
@@ -227,263 +237,292 @@ function EmailClients() {
               }
             }
             if (value && value.length > 0) {
-              return (
-                <table width='100%' style={{ border: '0', marginBottom: '2rem' }}>
-                  <thead>
-                    <tr style={{ borderBottom: '1px solid #ccc', paddingTop: '15px' }}>
-                      <th>S.No.</th>
-                      <th>Airline</th>
-                      <th>From</th>
-                      <th>To</th>
-                      <th>Departure</th>
-                      <th>Arrival</th>
-                      <th>Flight</th>
-                      <th>Cabin</th>
-                      {!withoutFares && <th>Price</th>}
-                      {/* <th></th> */}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {value.map((element, index) => {
-                      // Combined
-                      if (key === 'combined')
-                        return (
-                          <>
-                            <tr key={index}>
-                              <td colspan='10'>
-                                <hr />
-                              </td>
-                            </tr>
-                            <tr
-                              style={{ borderBottom: '1px solid #ccc', paddingTop: '15px' }}
-                            >
-                              <td rowspan='1' style={{ textAlign: 'center' }}>
-                                {index + 1}.
-                              </td>
-                              <td rowspan='1' style={{ textAlign: 'center' }}>
-                                <span
-                                  class='proton-image-anchor'
-                                  data-proton-remote='remote-1'
-                                  style={{ maxWidth: '50px' }}
-                                >
-                                  <img
-                                    src={`https://api.xplorz.com/images/${element.airline_code}.png`}
-                                    loading='lazy'
-                                    style={{ maxWidth: '50px' }}
-                                  />
-                                </span>
-                                <br />
-                                {element.airline}
-                              </td>
-                              <td style={{ textAlign: 'center' }}>
-                                <div
-                                  style={{
-                                    alignItems: 'center',
-                                  }}
-                                >
-                                  <div>{element.from_one}</div>
-                                  <div>{element.from_two}</div>
-                                </div>
-                              </td>
-                              <td style={{ textAlign: 'center' }}>
-                                <div
-                                  style={{
-                                    alignItems: 'center',
-                                  }}
-                                >
-                                  <div>{element.to_one}</div>
-                                  <div>{element.to_two}</div>
-                                </div>
-                              </td>
-                              <td style={{ textAlign: 'center' }}>
-                                <div
-                                  style={{
-                                    alignItems: 'center',
-                                  }}
-                                >
-                                  <div>{element.departure_one}</div>
-                                  <div>{element.departure_two}</div>
-                                </div>
-                              </td>
-                              <td style={{ textAlign: 'center' }}>
-                                <div
-                                  style={{
-                                    alignItems: 'center',
-                                  }}
-                                >
-                                  <div>{element.arrival_one}</div>
-                                  <div>{element.arrival_two}</div>
-                                </div>
-                              </td>
-                              <td style={{ textAlign: 'center' }}>
-                                <div
-                                  style={{
-                                    alignItems: 'center',
-                                  }}
-                                >
-                                  <div>{element.flight_one}</div>
-                                  <div>{element.flight_two}</div>
-                                </div>
-                              </td>
-                              <td style={{ textAlign: 'center' }}>{element.cabin}</td>
-                              {!withoutFares && (
-                                <td rowspan='1' style={{ textAlign: 'center' }}>
-                                  {(+element.price).toLocaleString('en-IN', {
-                                    maximumFractionDigits: 2,
-                                    style: 'currency',
-                                    currency: 'INR',
-                                  })}
-                                </td>
-                              )}
-                              {/* Book Button */}
-                              {/* <td rowspan='1' style={{ textAlign: 'center' }}>
-                                <a
-                                  target='_blank'
-                                  href={`mailto:${
-                                    user?.email
-                                  }?cc=support@xplorz.com&amp;subject=Selected flight option for ${str} from ${
-                                    element.from_one
-                                  } to ${element.to_one} on ${
-                                    element.departure_one
-                                  } and from ${element.from_two} to ${element.to_two} on ${
-                                    element.departure_two
-                                  }&amp;body=Dear ${
-                                    user?.name
-                                  },%0D%0A%0D%0AWe've selected the following flight option for ${str}:%0D%0A%0D%0A${
-                                    element.flight_one
-                                  }: ${element.from_one} @ ${
-                                    element.departure_one
-                                  } &rarr; ${element.to_one} @ ${element.arrival_one} and ${
-                                    element.flight_two
-                                  }: ${element.from_two} @ ${
-                                    element.departure_two
-                                  } &rarr; ${element.to_two} @ ${element.arrival_two} - ${
-                                    element.cabin
-                                  } ${!withoutFares ? '%0D%0A%0D%0AFare per pax: ' : ''}${
-                                    !withoutFares
-                                      ? `${(+element.price).toLocaleString('en-IN', {
-                                          maximumFractionDigits: 2,
-                                          style: 'currency',
-                                          currency: 'INR',
-                                        })}/-`
-                                      : ''
-                                  }%0D%0A%0D%0APlease book the same.%0D%0A%0D%0AThanks!`}
-                                  style={{
-                                    background: '#f0ad4e',
-                                    color: '#fff',
-                                    borderColor: '#eea236',
-                                    fontWeight: 'bold',
-                                    padding: '1em',
-                                    textDecoration: 'none',
-                                    fontSize: '12px',
-                                    lineHeight: '1.5',
-                                    borderRadius: '3px',
-                                  }}
-                                  //  'background:#f0ad4e;color:#fff;border-color:#eea236;font-weight:bold;padding:1em;text-decoration:none;font-size:12px;line-height:1.5;border-radius:3px'
-                                  rel='noreferrer nofollow noopener'
-                                >
-                                  Book
-                                </a>
-                              </td> */}
-                            </tr>
-                          </>
-                        );
-                      // To / From
-                      else
-                        return (
-                          <>
-                            <tr key={index}>
-                              <td colspan='10'>
-                                <hr />
-                              </td>
-                            </tr>
-                            <tr
-                              style={{ borderBottom: '1px solid #ccc', paddingTop: '15px' }}
-                            >
-                              <td rowspan='1' style={{ textAlign: 'center' }}>
-                                {index + 1}.
-                              </td>
-                              <td rowspan='1' style={{ textAlign: 'center' }}>
-                                <span
-                                  class='proton-image-anchor'
-                                  data-proton-remote='remote-1'
-                                  style={{ maxWidth: '50px' }}
-                                >
-                                  <img
-                                    src={`https://api.xplorz.com/images/${element.airline_code}.png`}
-                                    loading='lazy'
-                                    style={{ maxWidth: '50px' }}
-                                  />
-                                </span>
-                                <br />
-                                {element.airline}
-                              </td>
-                              <td style={{ textAlign: 'center' }}>{element.from}</td>
-                              <td style={{ textAlign: 'center' }}>{element.to}</td>
-                              <td style={{ textAlign: 'center' }}>{element.departure}</td>
-                              <td style={{ textAlign: 'center' }}>{element.arrival}</td>
-                              <td style={{ textAlign: 'center' }}>{element.flight}</td>
-                              <td style={{ textAlign: 'center' }}>{element.cabin}</td>
-                              {!withoutFares && (
-                                <td rowspan='1' style={{ textAlign: 'center' }}>
-                                  {(+element.price).toLocaleString('en-IN', {
-                                    maximumFractionDigits: 2,
-                                    style: 'currency',
-                                    currency: 'INR',
-                                  })}
-                                </td>
-                              )}
-                              {/* Book Button*/}
-                              {/* <td rowspan='1' style={{ textAlign: 'center' }}>
-                                <a
-                                  target='_blank'
-                                  href={`mailto:${
-                                    user?.email
-                                  }?cc=support@xplorz.com&amp;subject=Selected flight option for ${str} from ${
-                                    element.from
-                                  } to ${element.to} on ${
-                                    element.departure
-                                  }&amp;body=Dear ${
-                                    user?.name
-                                  },%0D%0A%0D%0AWe've selected the following flight option for ${str}:%0D%0A%0D%0A${
-                                    element.flight
-                                  }: ${element.from} @ ${element.departure} &rarr; ${
-                                    element.to
-                                  } @ ${element.arrival} - ${element.cabin} ${
-                                    !withoutFares ? '%0D%0A%0D%0AFare per pax: ' : ''
-                                  }${
-                                    !withoutFares
-                                      ? `${(+element.price).toLocaleString('en-IN', {
-                                          maximumFractionDigits: 2,
-                                          style: 'currency',
-                                          currency: 'INR',
-                                        })}/-`
-                                      : ''
-                                  }%0D%0A%0D%0APlease book the same.%0D%0A%0D%0AThanks!`}
-                                  style={{
-                                    background: '#f0ad4e',
-                                    color: '#fff',
-                                    borderColor: '#eea236',
-                                    fontWeight: 'bold',
-                                    padding: '1em',
-                                    textDecoration: 'none',
-                                    fontSize: '12px',
-                                    lineHeight: '1.5',
-                                    borderRadius: '3px',
-                                  }}
-                                  //  'background:#f0ad4e;color:#fff;border-color:#eea236;font-weight:bold;padding:1em;text-decoration:none;font-size:12px;line-height:1.5;border-radius:3px'
-                                  rel='noreferrer nofollow noopener'
-                                >
-                                  Book
-                                </a>
-                              </td> */}
-                            </tr>
-                          </>
-                        );
-                    })}
-                  </tbody>
-                </table>
-              );
+              value.sort((a, b) => a.airline_code.localeCompare(b.airline_code));
+              let currentAirline = value[0].airline;
+              items.push('<br/><b>' + currentAirline + '</b><hr/>');
+              for (let el of value) {
+                if (el.airline !== currentAirline) {
+                  currentAirline = el.airline;
+                  items.push('<br/><b>' + currentAirline + '</b><hr/>');
+                }
+                if (el.segments?.length > 0) {
+                  el.segments.forEach((s) => {
+                    const opt = `${s.flight?.airline} ${s.flight.number} ${
+                      s.departure.airport.code
+                    } ${s.arrival.airport.code} ${s.departure.time
+                      .split('T')[1]
+                      .slice(0, 5)} ${s.arrival.time.split('T')[1].slice(0, 5)}<br/>`;
+                    items.push(opt);
+                  });
+                } else {
+                  items.push(
+                    `${el.flight} ${el.fromAirport} ${el.toAirport} ${el.departAt} ${el.arriveAt}<br/>`
+                  );
+                }
+                items.push(
+                  `${withoutFares ? '' : `${el.price}/-`} in ${
+                    el.cabin
+                  }<p style="border-top: 1px dotted #ccc"/></p>`
+                );
+              }
+              return items.join('') + '<br/>';
+              // return (
+              //   <table width='100%' style={{ border: '0', marginBottom: '2rem' }}>
+              //     <thead>
+              //       <tr style={{ borderBottom: '1px solid #ccc', paddingTop: '15px' }}>
+              //         <th>S.No.</th>
+              //         <th>Airline</th>
+              //         <th>From</th>
+              //         <th>To</th>
+              //         <th>Departure</th>
+              //         <th>Arrival</th>
+              //         <th>Flight</th>
+              //         <th>Cabin</th>
+              //         {!withoutFares && <th>Price</th>}
+              //         {/* <th></th> */}
+              //       </tr>
+              //     </thead>
+              //     <tbody>
+              //       {value.map((element, index) => {
+              //         // Combined
+              //         if (key === 'combined')
+              //           return (
+              //             <>
+              //               <tr key={index}>
+              //                 <td colspan='10'>
+              //                   <hr />
+              //                 </td>
+              //               </tr>
+              //               <tr
+              //                 style={{ borderBottom: '1px solid #ccc', paddingTop: '15px' }}
+              //               >
+              //                 <td rowspan='1' style={{ textAlign: 'center' }}>
+              //                   {index + 1}.
+              //                 </td>
+              //                 <td rowspan='1' style={{ textAlign: 'center' }}>
+              //                   <span
+              //                     class='proton-image-anchor'
+              //                     data-proton-remote='remote-1'
+              //                     style={{ maxWidth: '50px' }}
+              //                   >
+              //                     <img
+              //                       src={`https://api.xplorz.com/images/${element.airline_code}.png`}
+              //                       loading='lazy'
+              //                       style={{ maxWidth: '50px' }}
+              //                     />
+              //                   </span>
+              //                   <br />
+              //                   {element.airline}
+              //                 </td>
+              //                 <td style={{ textAlign: 'center' }}>
+              //                   <div
+              //                     style={{
+              //                       alignItems: 'center',
+              //                     }}
+              //                   >
+              //                     <div>{element.from_one}</div>
+              //                     <div>{element.from_two}</div>
+              //                   </div>
+              //                 </td>
+              //                 <td style={{ textAlign: 'center' }}>
+              //                   <div
+              //                     style={{
+              //                       alignItems: 'center',
+              //                     }}
+              //                   >
+              //                     <div>{element.to_one}</div>
+              //                     <div>{element.to_two}</div>
+              //                   </div>
+              //                 </td>
+              //                 <td style={{ textAlign: 'center' }}>
+              //                   <div
+              //                     style={{
+              //                       alignItems: 'center',
+              //                     }}
+              //                   >
+              //                     <div>{element.departure_one}</div>
+              //                     <div>{element.departure_two}</div>
+              //                   </div>
+              //                 </td>
+              //                 <td style={{ textAlign: 'center' }}>
+              //                   <div
+              //                     style={{
+              //                       alignItems: 'center',
+              //                     }}
+              //                   >
+              //                     <div>{element.arrival_one}</div>
+              //                     <div>{element.arrival_two}</div>
+              //                   </div>
+              //                 </td>
+              //                 <td style={{ textAlign: 'center' }}>
+              //                   <div
+              //                     style={{
+              //                       alignItems: 'center',
+              //                     }}
+              //                   >
+              //                     <div>{element.flight_one}</div>
+              //                     <div>{element.flight_two}</div>
+              //                   </div>
+              //                 </td>
+              //                 <td style={{ textAlign: 'center' }}>{element.cabin}</td>
+              //                 {!withoutFares && (
+              //                   <td rowspan='1' style={{ textAlign: 'center' }}>
+              //                     {(+element.price).toLocaleString('en-IN', {
+              //                       maximumFractionDigits: 2,
+              //                       style: 'currency',
+              //                       currency: 'INR',
+              //                     })}
+              //                   </td>
+              //                 )}
+              //                 {/* Book Button */}
+              //                 {/* <td rowspan='1' style={{ textAlign: 'center' }}>
+              //                   <a
+              //                     target='_blank'
+              //                     href={`mailto:${
+              //                       user?.email
+              //                     }?cc=support@xplorz.com&amp;subject=Selected flight option for ${str} from ${
+              //                       element.from_one
+              //                     } to ${element.to_one} on ${
+              //                       element.departure_one
+              //                     } and from ${element.from_two} to ${element.to_two} on ${
+              //                       element.departure_two
+              //                     }&amp;body=Dear ${
+              //                       user?.name
+              //                     },%0D%0A%0D%0AWe've selected the following flight option for ${str}:%0D%0A%0D%0A${
+              //                       element.flight_one
+              //                     }: ${element.from_one} @ ${
+              //                       element.departure_one
+              //                     } &rarr; ${element.to_one} @ ${element.arrival_one} and ${
+              //                       element.flight_two
+              //                     }: ${element.from_two} @ ${
+              //                       element.departure_two
+              //                     } &rarr; ${element.to_two} @ ${element.arrival_two} - ${
+              //                       element.cabin
+              //                     } ${!withoutFares ? '%0D%0A%0D%0AFare per pax: ' : ''}${
+              //                       !withoutFares
+              //                         ? `${(+element.price).toLocaleString('en-IN', {
+              //                             maximumFractionDigits: 2,
+              //                             style: 'currency',
+              //                             currency: 'INR',
+              //                           })}/-`
+              //                         : ''
+              //                     }%0D%0A%0D%0APlease book the same.%0D%0A%0D%0AThanks!`}
+              //                     style={{
+              //                       background: '#f0ad4e',
+              //                       color: '#fff',
+              //                       borderColor: '#eea236',
+              //                       fontWeight: 'bold',
+              //                       padding: '1em',
+              //                       textDecoration: 'none',
+              //                       fontSize: '12px',
+              //                       lineHeight: '1.5',
+              //                       borderRadius: '3px',
+              //                     }}
+              //                     //  'background:#f0ad4e;color:#fff;border-color:#eea236;font-weight:bold;padding:1em;text-decoration:none;font-size:12px;line-height:1.5;border-radius:3px'
+              //                     rel='noreferrer nofollow noopener'
+              //                   >
+              //                     Book
+              //                   </a>
+              //                 </td> */}
+              //               </tr>
+              //             </>
+              //           );
+              //         // To / From
+              //         else
+              //           return (
+              //             <>
+              //               <tr key={index}>
+              //                 <td colspan='10'>
+              //                   <hr />
+              //                 </td>
+              //               </tr>
+              //               <tr
+              //                 style={{ borderBottom: '1px solid #ccc', paddingTop: '15px' }}
+              //               >
+              //                 <td rowspan='1' style={{ textAlign: 'center' }}>
+              //                   {index + 1}.
+              //                 </td>
+              //                 <td rowspan='1' style={{ textAlign: 'center' }}>
+              //                   <span
+              //                     class='proton-image-anchor'
+              //                     data-proton-remote='remote-1'
+              //                     style={{ maxWidth: '50px' }}
+              //                   >
+              //                     <img
+              //                       src={`https://api.xplorz.com/images/${element.airline_code}.png`}
+              //                       loading='lazy'
+              //                       style={{ maxWidth: '50px' }}
+              //                     />
+              //                   </span>
+              //                   <br />
+              //                   {element.airline}
+              //                 </td>
+              //                 <td style={{ textAlign: 'center' }}>{element.from}</td>
+              //                 <td style={{ textAlign: 'center' }}>{element.to}</td>
+              //                 <td style={{ textAlign: 'center' }}>{element.departure}</td>
+              //                 <td style={{ textAlign: 'center' }}>{element.arrival}</td>
+              //                 <td style={{ textAlign: 'center' }}>{element.flight}</td>
+              //                 <td style={{ textAlign: 'center' }}>{element.cabin}</td>
+              //                 {!withoutFares && (
+              //                   <td rowspan='1' style={{ textAlign: 'center' }}>
+              //                     {(+element.price).toLocaleString('en-IN', {
+              //                       maximumFractionDigits: 2,
+              //                       style: 'currency',
+              //                       currency: 'INR',
+              //                     })}
+              //                   </td>
+              //                 )}
+              //                 {/* Book Button*/}
+              //                 {/* <td rowspan='1' style={{ textAlign: 'center' }}>
+              //                   <a
+              //                     target='_blank'
+              //                     href={`mailto:${
+              //                       user?.email
+              //                     }?cc=support@xplorz.com&amp;subject=Selected flight option for ${str} from ${
+              //                       element.from
+              //                     } to ${element.to} on ${
+              //                       element.departure
+              //                     }&amp;body=Dear ${
+              //                       user?.name
+              //                     },%0D%0A%0D%0AWe've selected the following flight option for ${str}:%0D%0A%0D%0A${
+              //                       element.flight
+              //                     }: ${element.from} @ ${element.departure} &rarr; ${
+              //                       element.to
+              //                     } @ ${element.arrival} - ${element.cabin} ${
+              //                       !withoutFares ? '%0D%0A%0D%0AFare per pax: ' : ''
+              //                     }${
+              //                       !withoutFares
+              //                         ? `${(+element.price).toLocaleString('en-IN', {
+              //                             maximumFractionDigits: 2,
+              //                             style: 'currency',
+              //                             currency: 'INR',
+              //                           })}/-`
+              //                         : ''
+              //                     }%0D%0A%0D%0APlease book the same.%0D%0A%0D%0AThanks!`}
+              //                     style={{
+              //                       background: '#f0ad4e',
+              //                       color: '#fff',
+              //                       borderColor: '#eea236',
+              //                       fontWeight: 'bold',
+              //                       padding: '1em',
+              //                       textDecoration: 'none',
+              //                       fontSize: '12px',
+              //                       lineHeight: '1.5',
+              //                       borderRadius: '3px',
+              //                     }}
+              //                     //  'background:#f0ad4e;color:#fff;border-color:#eea236;font-weight:bold;padding:1em;text-decoration:none;font-size:12px;line-height:1.5;border-radius:3px'
+              //                     rel='noreferrer nofollow noopener'
+              //                   >
+              //                     Book
+              //                   </a>
+              //                 </td> */}
+              //               </tr>
+              //             </>
+              //           );
+              //       })}
+              //     </tbody>
+              //   </table>
+              // );
             }
           })}
           <br />
@@ -510,7 +549,9 @@ function EmailClients() {
     }
     // Whatsapp
     else if (type === 'whatsapp') {
-      const [optType, option] = Object.entries(manipData).filter(([key, value]) => value && value.length > 0)[0];
+      const [optType, option] = Object.entries(manipData).filter(
+        ([key, value]) => value && value.length > 0
+      )[0];
       if (optType === 'combined') {
         sendToast('error', 'Whatsapp not supported for combined options', 4000);
         return;
@@ -520,21 +561,25 @@ function EmailClients() {
       const depart = new DateObject({
         date: optType === 'from' ? destinations.returnDate : destinations.departDate,
         format: 'YYYY-MM-DD',
-      }).toDate().toDateString();
+      })
+        .toDate()
+        .toDateString();
       const text = [
         'Flight Options',
         `Here are your Flight Options from ${origin} to ${destin} on ${depart}`,
-        'Reply with Selected Option'
+        'Reply with Selected Option',
       ];
       for (let opt of option) {
         text.push(
-          `${opt.flight}: ${opt.from}-${opt.to} ${opt.departure.slice(16,-3)} ${opt.cabin}${
-           !withoutFares
-             ? ` ${(+opt.price).toLocaleString('en-IN', {
-                  maximumFractionDigits: 2,
-                  style: 'currency',
-                  currency: 'INR',
-                })}/-`
+          `${opt.flight.replace(' ', '')} ${opt.fromAirport}-${
+            opt.toAirport
+          } ${opt.departAt.replace(':', '')} ${opt.arriveAt.replace(':', '')} ${
+            opt.airline
+          } ${opt.cabin}${withoutFares ? '' : ` ${+opt.price}/-`}${
+            opt.stops?.length
+              ? ` ${opt.stops.length} Stop${
+                  opt.stops.length > 1 ? 's' : ''
+                }(${opt.stops.join(',')}) Layover ${opt.layover} mins`
               : ''
           }`
         );
@@ -692,7 +737,7 @@ function EmailClients() {
                           filterOption={(candidate, input) => {
                             if (input) {
                               return (
-                                candidate.data.value.toLowerCase() ===
+                                candidate.data.iata.toLowerCase() ===
                                   input.toLowerCase() ||
                                 candidate.label
                                   .toLowerCase()
@@ -748,7 +793,7 @@ function EmailClients() {
                           filterOption={(candidate, input) => {
                             if (input) {
                               return (
-                                candidate.data.value.toLowerCase() ===
+                                candidate.data.iata.toLowerCase() ===
                                   input.toLowerCase() ||
                                 candidate.label
                                   .toLowerCase()
@@ -889,27 +934,7 @@ function EmailClients() {
                           }
                         />
                       </div>
-                      <div className='col-md-3'>
-                        <div className='form-input bg-white'>
-                          <input
-                            onChange={(e) =>
-                              setAdditionalFlights((prev) => {
-                                prev[index]['class'] = e.target.value;
-                                return [...prev];
-                              })
-                            }
-                            value={element['class']}
-                            placeholder=' '
-                            minLength={1}
-                            maxLength={1}
-                            type='text'
-                          />
-                          <label className='lh-1 text-16 text-light-1'>
-                            Class<span className='text-danger'>*</span>
-                          </label>
-                        </div>
-                      </div>
-                      <div className='col-md-3'>
+                      <div className='col-md-6'>
                         <div className='form-input bg-white'>
                           <input
                             onChange={(e) =>
