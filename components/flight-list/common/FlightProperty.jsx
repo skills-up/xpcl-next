@@ -131,19 +131,6 @@ function FlightProperty({
             : 'white',
           cursor: emailClientMode ? 'pointer' : 'default',
         }}
-        onClick={() => {
-          if (emailClientMode) {
-            for (let i = 0; i < emailClients.length; i++) {
-              if (emailClients[i].selectId === element.selectId) {
-                const prev = emailClients.slice(0);
-                prev.splice(i, 1);
-                dispatch(setEmailClients(prev));
-                return;
-              }
-            }
-            dispatch(setEmailClients([...emailClients, element]));
-          }
-        }}
       >
         <div className='row y-gap-15 justify-between lg:pr-0'>
           <div
@@ -464,28 +451,43 @@ function FlightProperty({
                   {!isSelectedBooking && (
                     <button
                       onClick={async () => {
-                        if (element.type !== 'combined') {
-                          dispatch(
-                            setSelectedBookings({
-                              ...selectedBookings,
-                              ...{ [element.type]: element, combined: null },
-                            })
-                          );
-                          if (!returnFlight) router.push('/flight/book');
+                        if (emailClientMode) {
+                          for (let i = 0; i < emailClients.length; i++) {
+                            if (emailClients[i].selectId === element.selectId) {
+                              const prev = emailClients.slice(0);
+                              prev.splice(i, 1);
+                              dispatch(setEmailClients(prev));
+                              return;
+                            }
+                          }
+                          let tempObj = { ...element };
+                          dispatch(setEmailClients([...emailClients, tempObj]));
                         } else {
-                          dispatch(
-                            setSelectedBookings({
-                              to: null,
-                              from: null,
-                              combined: element,
-                            })
-                          );
-                          router.push('/flight/book');
+                          if (element.type !== 'combined') {
+                            dispatch(
+                              setSelectedBookings({
+                                ...selectedBookings,
+                                ...{ [element.type]: element, combined: null },
+                              })
+                            );
+                            if (!returnFlight) router.push('/flight/book');
+                          } else {
+                            dispatch(
+                              setSelectedBookings({
+                                to: null,
+                                from: null,
+                                combined: element,
+                              })
+                            );
+                            router.push('/flight/book');
+                          }
                         }
                       }}
                       className='button -dark-1 px-30 h-40 bg-blue-1 text-white'
                     >
-                      {element.type === 'combined'
+                      {emailClientMode
+                        ? 'Select'
+                        : element.type === 'combined'
                         ? 'Book Now'
                         : returnFlight
                         ? 'Select'
@@ -1078,7 +1080,10 @@ function FlightProperty({
                       <>
                         <p>Includes:</p>
                         <ul className='list-disc'>
-                          {price?.INC && price.INC.map((i) => <li className='capitalize'>{i.toLowerCase()}</li>)}
+                          {price?.INC &&
+                            price.INC.map((i) => (
+                              <li className='capitalize'>{i.toLowerCase()}</li>
+                            ))}
                         </ul>
                       </>
                     );
@@ -1086,20 +1091,30 @@ function FlightProperty({
                       <>
                         <p>Chargeable:</p>
                         <ul className='list-disc'>
-                          {price?.CHA && price.CHA.map((i) => <li className='capitalize'>{i.toLowerCase()}</li>)}
+                          {price?.CHA &&
+                            price.CHA.map((i) => (
+                              <li className='capitalize'>{i.toLowerCase()}</li>
+                            ))}
                         </ul>
                       </>
                     );
                     str = (
                       <>
-                        <span className='d-block capitalize'>{price.majCabin?.replace('_', ' ') || ''}</span>
+                        <span className='d-block capitalize'>
+                          {price.majCabin?.replace('_', ' ') || ''}
+                        </span>
                         {inc}
                         {cha}
                       </>
                     );
                   }
                   return (
-                    <div className={'fare-family-card col-lg-4 col-md-6 border-light' + (price === element.selectedFF ? ' bg-blue-1-05': '')}>
+                    <div
+                      className={
+                        'fare-family-card col-lg-4 col-md-6 border-light' +
+                        (price === element.selectedFF ? ' bg-blue-1-05' : '')
+                      }
+                    >
                       <div className='fw-bold d-flex justify-content-between capitalize'>
                         {usedName.split('_').map((str) => (
                           <>{str.toLowerCase()} </>
@@ -1117,6 +1132,14 @@ function FlightProperty({
                         onClick={async () => {
                           if (setManip) {
                             element.selectedFF = price;
+                            for (let i = 0; i < emailClients.length; i++) {
+                              if (emailClients[i].selectId === element.selectId) {
+                                const prev = emailClients.slice(0);
+                                prev.splice(i, 1);
+                                prev[i] = { ...element };
+                                dispatch(setEmailClients(prev));
+                              }
+                            }
                             setManip((prev) => {
                               prev[manipIndex].selectedFF = price;
                               return [...prev];
