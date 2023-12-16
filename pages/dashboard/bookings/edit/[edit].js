@@ -536,7 +536,7 @@ const UpdateBooking = () => {
               booking_class: element['booking_class']?.value,
             })),
       enable_inr: enableINR,
-      sector,//: bookingType.value === 'Miscellaneous' ? sector : undefined,
+      sector: sector || undefined,//: bookingType.value === 'Miscellaneous' ? sector : undefined,
     };
     if (originalBookingID) {
       editData['original_booking_id'] = originalBookingID;
