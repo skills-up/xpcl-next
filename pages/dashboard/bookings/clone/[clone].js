@@ -130,37 +130,37 @@ const AddNewBooking = () => {
           (
             +response.data.vendor_base_amount *
               (response.data.enable_inr ? response.data.exchange_rate : 1) || 0
-          ).toFixed(0)
+          ).toFixed(2).replace(/[.,]00$/, '')
         );
         setVendorTaxAmount(
           (
             +response.data.vendor_tax_amount *
               (response.data.enable_inr ? response.data.exchange_rate : 1) || 0
-          ).toFixed(0)
+          ).toFixed(2).replace(/[.,]00$/, '')
         );
         setVendorGSTAmount(
           (
             +response.data.vendor_gst_amount *
               (response.data.enable_inr ? response.data.exchange_rate : 1) || 0
-          ).toFixed(0)
+          ).toFixed(2).replace(/[.,]00$/, '')
         );
         setVendorMiscChargers(
           (
             +response.data.vendor_misc_charges *
               (response.data.enable_inr ? response.data.exchange_rate : 1) || 0
-          ).toFixed(0)
+          ).toFixed(2).replace(/[.,]00$/, '')
         );
         setVendorYQAmount(
           (
             +response.data.vendor_yq_amount *
               (response.data.enable_inr ? response.data.exchange_rate : 1) || 0
-          ).toFixed(0)
+          ).toFixed(2).replace(/[.,]00$/, '')
         );
         setVendorTotal(
           (
             +response.data.vendor_total *
               (response.data.enable_inr ? response.data.exchange_rate : 1) || 0
-          ).toFixed(0)
+          ).toFixed(2).replace(/[.,]00$/, '')
         );
         setIATACommissionPercent(response.data.iata_commission_percent);
         setPLBCommissionPercent(response.data.plb_commission_percent);
@@ -168,18 +168,18 @@ const AddNewBooking = () => {
           (
             +response.data.vendor_service_charges *
               (response.data.enable_inr ? response.data.exchange_rate : 1) || 0
-          ).toFixed(0)
+          ).toFixed(2).replace(/[.,]00$/, '')
         );
         setVendorTDS(
           (
             +response.data.vendor_tds *
               (response.data.enable_inr ? response.data.exchange_rate : 1) || 0
-          ).toFixed(0)
+          ).toFixed(2).replace(/[.,]00$/, '')
         );
         setCommissionReceivable(
           (
             response.data.exchange_rate * +response.data.commission_receivable || 0
-          ).toFixed(0)
+          ).toFixed(2).replace(/[.,]00$/, '')
         );
         setClientReferralFee(
           (response.data.exchange_rate * +response.data.client_referral_fee || 0).toFixed(
@@ -192,29 +192,29 @@ const AddNewBooking = () => {
           )
         );
         setClientGSTAmount(
-          (response.data.exchange_rate * +response.data.client_gst_amount || 0).toFixed(0)
+          (response.data.exchange_rate * +response.data.client_gst_amount || 0).toFixed(2).replace(/[.,]00$/, '')
         );
         setClientServicesCharges(
           (
             response.data.exchange_rate * +response.data.currency_conversion_charges || 0
-          ).toFixed(0)
+          ).toFixed(2).replace(/[.,]00$/, '')
         );
         setClientTotal(
-          (response.data.exchange_rate * +response.data.client_total || 0).toFixed(0)
+          (response.data.exchange_rate * +response.data.client_total || 0).toFixed(2).replace(/[.,]00$/, '')
         );
         setSector(response.data.sector);
         setOriginalBookingID(response.data?.original_booking_id);
         setReissuePenalty(
-          (response.data.exchange_rate * +response.data?.reissue_penalty || 0).toFixed(0)
+          (response.data.exchange_rate * +response.data?.reissue_penalty || 0).toFixed(2).replace(/[.,]00$/, '')
         );
         setPaymentAmount(
           (
             +response.data.payment_amount *
               (response.data.enable_inr ? response.data.exchange_rate : 1) || 0
-          ).toFixed(0)
+          ).toFixed(2).replace(/[.,]00$/, '')
         );
         setClientTaxAmount(
-          (response.data.exchange_rate * +response.data.client_tax_amount || 0).toFixed(0)
+          (response.data.exchange_rate * +response.data.client_tax_amount || 0).toFixed(2).replace(/[.,]00$/, '')
         );
         setBookingDate(
           new DateObject({ date: response.data.booking_date, format: 'YYYY-MM-DD' })
@@ -227,7 +227,7 @@ const AddNewBooking = () => {
             (+response.data.client_base_amount +
               +response.data.client_tax_amount +
               +response.data.client_gst_amount)
-          ).toFixed(0)
+          ).toFixed(2).replace(/[.,]00$/, '')
         );
 
         // Client GST Percent
@@ -649,7 +649,7 @@ const AddNewBooking = () => {
         (((+grossCommission || 0) - (+vendorServiceCharges || 0)) *
           (+vendorTDSPercent || 0)) /
           100
-      ).toFixed(0);
+      ).toFixed(2).replace(/[.,]00$/, '');
       setVendorTDS(vendorTDS);
     }
   };
@@ -667,7 +667,7 @@ const AddNewBooking = () => {
     if (vendorGSTFocused) {
       let vendorServiceCharges = Number(
         ((+grossCommission || 0) * (+vendorServiceChargePercent || 0)) / 100
-      ).toFixed(0);
+      ).toFixed(2).replace(/[.,]00$/, '');
       setVendorServiceCharges(vendorServiceCharges);
       // Update
       updateVendorTDS(grossCommission, vendorServiceCharges, vendorTDSPercent);
@@ -716,13 +716,13 @@ const AddNewBooking = () => {
         bookingType?.value === 'Miscellaneous'
           ? Number(
               ((+IATACommissionPercent || 0) * (+vendorBaseAmount || 0)) / 100
-            ).toFixed(0)
+            ).toFixed(2).replace(/[.,]00$/, '')
           : Number(
               ((+IATACommissionPercent || 0) *
                 ((+commissionRuleID.iata_basic || 0) * (+vendorBaseAmount || 0) +
                   (+commissionRuleID.iata_yq || 0) * (+vendorYQAmount || 0))) /
                 100
-            ).toFixed(0);
+            ).toFixed(2).replace(/[.,]00$/, '');
       const plb_comm =
         bookingType?.value === 'Miscellaneous'
           ? 0
@@ -732,7 +732,7 @@ const AddNewBooking = () => {
                   (+commissionRuleID.plb_yq || 0) * (+vendorYQAmount || 0) -
                   iata_comm)) /
                 100
-            ).toFixed(0);
+            ).toFixed(2).replace(/[.,]00$/, '');
       let grossCommission = Number((+plb_comm || 0) + (+iata_comm || 0));
       setGrossCommission(grossCommission);
       // Calls after gross commission is updated
@@ -775,7 +775,7 @@ const AddNewBooking = () => {
       (((+clientQuotedAmount || 0) + (+clientReferralFee || 0)) *
         (+clientServiceChargePercent || 0)) /
         100
-    ).toFixed(0);
+    ).toFixed(2).replace(/[.,]00$/, '');
     if (currencyConversionCharges && currencyConversionCharges !== 'NaN') {
       setClientServicesCharges(currencyConversionCharges);
     }
@@ -807,11 +807,11 @@ const AddNewBooking = () => {
         clientGSTAmount = +vendorGSTAmount;
       else if (clientGSTPercent?.label === '5% of Base') {
         clientGSTAmount = Number(
-          (((+clientQuotedAmount || 0) - (+clientTaxAmount || 0)) * (5 / 100)).toFixed(0)
+          (((+clientQuotedAmount || 0) - (+clientTaxAmount || 0)) * (5 / 100)).toFixed(2)
         );
       } else if (clientGSTPercent?.label === '12% of Base') {
         clientGSTAmount = Number(
-          (((+clientQuotedAmount || 0) - (+clientTaxAmount || 0)) * (12 / 100)).toFixed(0)
+          (((+clientQuotedAmount || 0) - (+clientTaxAmount || 0)) * (12 / 100)).toFixed(2)
         );
       }
       setClientGSTAmount(clientGSTAmount);
@@ -862,7 +862,7 @@ const AddNewBooking = () => {
           (+clientTaxAmount || 0) +
           (+currencyConversionCharges || 0) +
           (+clientReferralFee || 0)
-      ).toFixed(0)
+      ).toFixed(2).replace(/[.,]00$/, '')
     );
   };
 

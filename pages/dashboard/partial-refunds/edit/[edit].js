@@ -162,50 +162,50 @@ const AddNewPartialRefund = () => {
               ? +response.data.airline_cancellation_charges *
                 (bookingData?.data?.enable_inr ? bookingData?.data?.exchange_rate : 1)
               : 0
-            ).toFixed(0)
+            ).toFixed(2).replace(/[.,]00$/, '')
           );
-          setRefundAmount((+response.data.refund_amount || 0).toFixed(0));
+          setRefundAmount((+response.data.refund_amount || 0).toFixed(2).replace(/[.,]00$/, ''));
           setVendorServiceFee(
             (+response.data.vendor_service_fee
               ? +response.data.vendor_service_fee *
                 (bookingData?.data?.enable_inr ? bookingData?.data?.exchange_rate : 1)
               : 0
-            ).toFixed(0)
+            ).toFixed(2).replace(/[.,]00$/, '')
           );
           setClientCancellationCharges(
             (
               +response.data.client_cancellation_charges *
                 (bookingData?.data?.enable_inr ? bookingData?.data?.exchange_rate : 1) ||
               0
-            ).toFixed(0)
+            ).toFixed(2).replace(/[.,]00$/, '')
           );
           setVendorBaseAmount(
             (+response.data.vendor_base_amount
               ? +response.data.vendor_base_amount *
                 (bookingData?.data?.enable_inr ? bookingData?.data?.exchange_rate : 1)
               : 0
-            ).toFixed(0)
+            ).toFixed(2).replace(/[.,]00$/, '')
           );
           setVendorYQAmount(
             (+response.data.vendor_yq_amount
               ? +response.data.vendor_yq_amount *
                 (bookingData?.data?.enable_inr ? bookingData?.data?.exchange_rate : 1)
               : 0
-            ).toFixed(0)
+            ).toFixed(2).replace(/[.,]00$/, '')
           );
           setVendorTaxAmount(
             (+response.data.vendor_tax_amount
               ? +response.data.vendor_tax_amount *
                 (bookingData?.data?.enable_inr ? bookingData?.data?.exchange_rate : 1)
               : 0
-            ).toFixed(0)
+            ).toFixed(2).replace(/[.,]00$/, '')
           );
           setVendorGSTAmount(
             (+response.data.vendor_gst_amount
               ? +response.data.vendor_gst_amount *
                 (bookingData?.data?.enable_inr ? bookingData?.data?.exchange_rate : 1)
               : 0
-            ).toFixed(0)
+            ).toFixed(2).replace(/[.,]00$/, '')
           );
           setIATACommissionPercent(response.data.iata_commission_percent);
           setPLBCommissionPercent(response.data.plb_commission_percent);
@@ -214,21 +214,21 @@ const AddNewPartialRefund = () => {
               ? +response.data.vendor_service_charges *
                 (bookingData?.data?.enable_inr ? bookingData?.data?.exchange_rate : 1)
               : 0
-            ).toFixed(0)
+            ).toFixed(2).replace(/[.,]00$/, '')
           );
           setVendorTDS(
             (+response.data.vendor_tds
               ? +response.data.vendor_tds *
                 (bookingData?.data?.enable_inr ? bookingData?.data?.exchange_rate : 1)
               : 0
-            ).toFixed(0)
+            ).toFixed(2).replace(/[.,]00$/, '')
           );
           setClientReferralFee(
             (
               +response.data.client_referral_fee *
                 (bookingData?.data?.enable_inr ? bookingData?.data?.exchange_rate : 1) ||
               0
-            ).toFixed(0)
+            ).toFixed(2).replace(/[.,]00$/, '')
           );
           setReason(response.data.reason);
           setClientBaseAmount(
@@ -236,35 +236,35 @@ const AddNewPartialRefund = () => {
               +response.data.client_base_amount *
                 (bookingData?.data?.enable_inr ? bookingData?.data?.exchange_rate : 1) ||
               0
-            ).toFixed(0)
+            ).toFixed(2).replace(/[.,]00$/, '')
           );
           setClientGSTAmount(
             (
               +response.data.client_gst_amount *
                 (bookingData?.data?.enable_inr ? bookingData?.data?.exchange_rate : 1) ||
               0
-            ).toFixed(0)
+            ).toFixed(2).replace(/[.,]00$/, '')
           );
           setClientServicesCharges(
             (
               +response.data.currency_conversion_charges *
                 (bookingData?.data?.enable_inr ? bookingData?.data?.exchange_rate : 1) ||
               0
-            ).toFixed(0)
+            ).toFixed(2).replace(/[.,]00$/, '')
           );
           setClientTaxAmount(
             (
               +response.data.client_tax_amount *
                 (bookingData?.data?.enable_inr ? bookingData?.data?.exchange_rate : 1) ||
               0
-            ).toFixed(0)
+            ).toFixed(2).replace(/[.,]00$/, '')
           );
           setVendorTotal(
             (+response.data.vendor_total
               ? +response.data.vendor_total *
                 (bookingData?.data?.enable_inr ? bookingData?.data?.exchange_rate : 1)
               : 0
-            ).toFixed(0)
+            ).toFixed(2).replace(/[.,]00$/, '')
           );
           setClientQuotedAmount(
             (
@@ -272,7 +272,7 @@ const AddNewPartialRefund = () => {
                 +response.data.client_tax_amount +
                 +response.data.client_gst_amount) *
               (bookingData?.data?.enable_inr ? bookingData?.data?.exchange_rate : 1)
-            ).toFixed(0)
+            ).toFixed(2).replace(/[.,]00$/, '')
           );
           // Setting Client GST Percent
           if (
@@ -456,7 +456,7 @@ const AddNewPartialRefund = () => {
         (+clientTotal || 0) -
         (bookingType?.value === 'Domestic Flight Ticket' ? 1.009 : 1.018) *
           (+clientCancellationCharges || 0)
-      ).toFixed(0);
+      ).toFixed(2).replace(/[.,]00$/, '');
       if (payment) setClientRefundAmount(payment);
     }
   }, [clientTotal, clientCancellationCharges, bookingType]);
@@ -483,7 +483,7 @@ const AddNewPartialRefund = () => {
           (+vendorYQAmount || 0) +
           (+vendorTaxAmount || 0) +
           (+vendorGSTAmount || 0)
-      ).toFixed(0);
+      ).toFixed(2).replace(/[.,]00$/, '');
       setVendorTotal(vendorTotal);
     }
   };
@@ -494,7 +494,7 @@ const AddNewPartialRefund = () => {
         (((+grossCommission || 0) - (+vendorServiceCharges || 0)) *
           (+vendorTDSPercent || 0)) /
           100
-      ).toFixed(0);
+      ).toFixed(2).replace(/[.,]00$/, '');
       setVendorTDS(vendorTDS);
     }
   };
@@ -512,7 +512,7 @@ const AddNewPartialRefund = () => {
     if (vendorGSTFocused) {
       let vendorServiceCharges = Number(
         ((+grossCommission || 0) * (+vendorServiceChargePercent || 0)) / 100
-      ).toFixed(0);
+      ).toFixed(2).replace(/[.,]00$/, '');
       setVendorServiceCharges(vendorServiceCharges);
       // Update
       updateVendorTDS(grossCommission, vendorServiceCharges, vendorTDSPercent);
@@ -556,13 +556,13 @@ const AddNewPartialRefund = () => {
         bookingType?.value === 'Miscellaneous'
           ? Number(
               ((+IATACommissionPercent || 0) * (+vendorBaseAmount || 0)) / 100
-            ).toFixed(0)
+            ).toFixed(2).replace(/[.,]00$/, '')
           : Number(
               ((+IATACommissionPercent || 0) *
                 ((+commissionRuleID.iata_basic || 0) * (+vendorBaseAmount || 0) +
                   (+commissionRuleID.iata_yq || 0) * (+vendorYQAmount || 0))) /
                 100
-            ).toFixed(0);
+            ).toFixed(2).replace(/[.,]00$/, '');
       const plb_comm =
         bookingType?.value === 'Miscellaneous'
           ? 0
@@ -572,7 +572,7 @@ const AddNewPartialRefund = () => {
                   (+commissionRuleID.plb_yq || 0) * (+vendorYQAmount || 0) -
                   iata_comm)) /
                 100
-            ).toFixed(0);
+            ).toFixed(2).replace(/[.,]00$/, '');
       let grossCommission = Number((+plb_comm || 0) + (+iata_comm || 0));
       setGrossCommission(grossCommission);
       // Calls after gross commission is updated
@@ -615,7 +615,7 @@ const AddNewPartialRefund = () => {
       (((+clientBaseAmount || 0) + (+clientReferralFee || 0)) *
         (+clientServiceChargePercent || 0)) /
         100
-    ).toFixed(0);
+    ).toFixed(2).replace(/[.,]00$/, '');
     if (currencyConversionCharges && currencyConversionCharges !== 'NaN') {
       setClientServicesCharges(currencyConversionCharges);
     }
@@ -647,11 +647,11 @@ const AddNewPartialRefund = () => {
         clientGSTAmount = +vendorGSTAmount;
       else if (clientGSTPercent?.label === '5% of Base') {
         clientGSTAmount = Number(
-          (((+clientQuotedAmount || 0) - (+clientTaxAmount || 0)) * (5 / 100)).toFixed(0)
+          (((+clientQuotedAmount || 0) - (+clientTaxAmount || 0)) * (5 / 100)).toFixed(2)
         );
       } else if (clientGSTPercent?.label === '12% of Base') {
         clientGSTAmount = Number(
-          (((+clientQuotedAmount || 0) - (+clientTaxAmount || 0)) * (12 / 100)).toFixed(0)
+          (((+clientQuotedAmount || 0) - (+clientTaxAmount || 0)) * (12 / 100)).toFixed(2)
         );
       }
       setClientGSTAmount(clientGSTAmount);
@@ -703,7 +703,7 @@ const AddNewPartialRefund = () => {
           (+clientTaxAmount || 0) +
           (+currencyConversionCharges || 0) +
           (+clientReferralFee || 0)
-      ).toFixed(0)
+      ).toFixed(2).replace(/[.,]00$/, '')
     );
   };
 

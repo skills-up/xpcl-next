@@ -129,7 +129,7 @@ const AddNewRefund = () => {
           ((+bookingData?.payment_amount || 0) +
             (+refundBookingData?.payment_amount || 0)) *
             (bookingData?.enable_inr ? bookingData.exchange_rate : 1) || 0
-        ).toFixed(0)
+        ).toFixed(2)
       );
       if (payment) setRefundAmount((+payment || 0) - (+airlineCancellationCharges || 0));
     }

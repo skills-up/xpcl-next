@@ -62,25 +62,25 @@ const UpdateRefund = () => {
             (
               +response.data.airline_cancellation_charges *
                 (bookingData.data.enable_inr ? bookingData.data.exchange_rate : 1) || 0
-            ).toFixed(0)
+            ).toFixed(2).replace(/[.,]00$/, '')
           );
           setVendorServiceFee(
             (
               +response.data.vendor_service_fee *
                 (bookingData.data.enable_inr ? bookingData.data.exchange_rate : 1) || 0
-            ).toFixed(0)
+            ).toFixed(2).replace(/[.,]00$/, '')
           );
           setClientCancellationCharges(
             (
               +response.data.client_cancellation_charges *
                 (bookingData.data.enable_inr ? bookingData.data.exchange_rate : 1) || 0
-            ).toFixed(0)
+            ).toFixed(2).replace(/[.,]00$/, '')
           );
           setRefundAmount(
             (
               +response.data.refund_amount *
                 (bookingData.data.enable_inr ? bookingData.data.exchange_rate : 1) || 0
-            ).toFixed(0)
+            ).toFixed(2).replace(/[.,]00$/, '')
           );
           setReason(response.data?.reason);
           setNumber(response.data.number);
@@ -174,7 +174,7 @@ const UpdateRefund = () => {
             ((+bookingData?.payment_amount || 0) +
               (+refundBookingData?.payment_amount || 0)) *
               (bookingData?.enable_inr ? bookingData.exchange_rate : 1) || 0
-          ).toFixed(0)
+          ).toFixed(2)
         );
         if (payment)
           setRefundAmount((+payment || 0) - (+airlineCancellationCharges || 0));
