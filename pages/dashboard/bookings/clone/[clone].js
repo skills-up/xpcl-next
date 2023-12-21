@@ -412,9 +412,7 @@ const AddNewBooking = () => {
       payment_account_id: paymentAccountID?.value,
       payment_amount: +paymentAmount || 0,
       client_referrer_id: clientReferrerID?.value,
-      client_referral_fee: +clientReferralFee
-        ? clientReferralFee || undefined
-        : undefined,
+      client_referral_fee: +clientReferralFee || 0,
       client_base_amount: clientBaseAmount || 0,
       client_tax_amount: clientTaxAmount || 0,
       client_gst_amount: clientGSTAmount || 0,
