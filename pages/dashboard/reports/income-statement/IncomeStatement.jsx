@@ -8,9 +8,13 @@ import { sendToast } from '../../../../utils/toastify';
 import { downloadCSV as CSVDownloader } from '../../../../utils/fileDownloader';
 
 const Journals = () => {
+  const date = new DateObject();
   const [balanceSheet, setBalanceSheet] = useState(null);
   const [dates, setDates] = useState([
-    new DateObject().setMonth('4').setDay('1'),
+    new DateObject()
+      .setYear(date.year - (date.month.number < 4 ? 1 : 0))
+      .setMonth(date.year < 2024 || (date.year == 2024 && date.month.number < 4) ? 10 : 4)
+      .setDay('1'),
     new DateObject(),
   ]);
 
@@ -175,24 +179,24 @@ const Journals = () => {
   const recusivelyFill = (temp, obj, level) => {
     for (let [k, v] of Object.entries(obj || {})) {
       if (typeof v === 'object' && !Array.isArray(v)) {
-        temp.push({head: ' '.repeat(level)+k, amount: ''});
+        temp.push({ head: ' '.repeat(level) + k, amount: '' });
         temp = recusivelyFill(temp, v, level + 1);
       } else if (k.indexOf('|') > 0 && v !== 0) {
-        temp.push({head: ' '.repeat(level)+k.split('|')[1], amount: -v});
+        temp.push({ head: ' '.repeat(level) + k.split('|')[1], amount: -v });
       }
     }
     return temp;
-  }
+  };
 
   const toCSV = (filename) => {
     try {
       let temp = [];
-      temp.push({head: 'Incomes', amount: ''});
+      temp.push({ head: 'Incomes', amount: '' });
       temp = recusivelyFill(temp, balanceSheet?.Incomes, 0);
-      temp.push({head: 'Expenses', amount: ''});
+      temp.push({ head: 'Expenses', amount: '' });
       temp = recusivelyFill(temp, balanceSheet?.Expenses, 0);
       if (balanceSheet?._ !== 0) {
-        temp.push({head: 'Profit/(Loss)', amount: -balanceSheet?._});
+        temp.push({ head: 'Profit/(Loss)', amount: -balanceSheet?._ });
       }
       CSVDownloader(jsonToCSV(temp), filename);
     } catch (err) {
@@ -202,11 +206,11 @@ const Journals = () => {
         4000
       );
     }
-  }
+  };
 
   const downloadPDF = async () => {
     getBalanceSheet(1);
-  }
+  };
 
   return (
     <div className='col-12'>
@@ -268,7 +272,9 @@ const Journals = () => {
                       Cr
                     </span>
                   </div>
-                ) : <div> &nbsp; </div>}
+                ) : (
+                  <div> &nbsp; </div>
+                )}
               </div>
             </div>
             <div className='assets'>
@@ -283,7 +289,7 @@ const Journals = () => {
               <div className='records p-3'>
                 <RecursiveComponent data={balanceSheet?.Incomes} level={0} />
               </div>
-              <div className='total px-3' >
+              <div className='total px-3'>
                 {balanceSheet?._ >= 0 ? (
                   <div
                     className='d-flex justify-between items-center'
@@ -299,7 +305,9 @@ const Journals = () => {
                       Dr
                     </span>
                   </div>
-                ) : <div> &nbsp; </div>}
+                ) : (
+                  <div> &nbsp; </div>
+                )}
               </div>
             </div>
           </div>
@@ -320,10 +328,7 @@ const Journals = () => {
             <FiDownload className='text-20' />
             Download CSV
           </button>
-          <button
-            className='btn btn-info ml-20 text-white'
-            onClick={downloadPDF}
-          >
+          <button className='btn btn-info ml-20 text-white' onClick={downloadPDF}>
             <AiOutlinePrinter className='text-22' /> Generate PDF
           </button>
         </div>

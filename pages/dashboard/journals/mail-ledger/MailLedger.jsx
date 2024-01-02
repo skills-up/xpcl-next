@@ -12,7 +12,10 @@ const MailLedger = () => {
   const date = new DateObject();
 
   const [dates, setDates] = useState([
-    new DateObject().setMonth(date.year < 2024 ? 10 : 4).setDay('1'),
+    new DateObject()
+      .setYear(date.year - (date.month.number < 4 ? 1 : 0))
+      .setMonth(date.year < 2024 || (date.year == 2024 && date.month.number < 4) ? 10 : 4)
+      .setDay('1'),
     new DateObject(),
   ]);
   const [clients, setClients] = useState([]);
@@ -47,7 +50,9 @@ const MailLedger = () => {
     } else {
       sendToast(
         'error',
-        response?.data?.message || response?.data?.error || 'Error in fetching clients list',
+        response?.data?.message ||
+          response?.data?.error ||
+          'Error in fetching clients list',
         4000
       );
     }
@@ -204,7 +209,9 @@ const MailLedger = () => {
           <h6 className='mt-20'>Ledger Attachments</h6>
           <div className='d-flex col-lg-4 items-center gap-3 mt-10'>
             <ReactSwitch
-              onChange={() => setLedgerPDFUrl((prev) => (prev ? '' : ledgerData.ledger_pdf_url))}
+              onChange={() =>
+                setLedgerPDFUrl((prev) => (prev ? '' : ledgerData.ledger_pdf_url))
+              }
               checked={!!ledgerPDFUrl}
             />
             <label>
@@ -215,7 +222,9 @@ const MailLedger = () => {
           </div>
           <div className='d-flex col-lg-4 items-center gap-3 mt-10'>
             <ReactSwitch
-              onChange={() => setLedgerCSVUrl((prev) => (prev ? '' : ledgerData.ledger_csv_url))}
+              onChange={() =>
+                setLedgerCSVUrl((prev) => (prev ? '' : ledgerData.ledger_csv_url))
+              }
               checked={!!ledgerCSVUrl}
             />
             <label>
@@ -252,7 +261,10 @@ const MailLedger = () => {
               <i className='icon-email-2 p-1'></i>
               Send Mail
             </button>
-            <button className='button btn btn-danger' onClick={() => window.history.back(-1)}>
+            <button
+              className='button btn btn-danger'
+              onClick={() => window.history.back(-1)}
+            >
               <i className='icon-close p-1'></i>
               Cancel
             </button>

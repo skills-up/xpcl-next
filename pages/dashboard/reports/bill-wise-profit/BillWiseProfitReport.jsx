@@ -9,10 +9,14 @@ import { downloadCSV as CSVDownloader } from '../../../../utils/fileDownloader';
 import { sendToast } from '../../../../utils/toastify';
 
 const BillWiseProfitReport = () => {
+  const date = new DateObject();
   const [data, setData] = useState([]);
 
   const [dates, setDates] = useState([
-    new DateObject().setMonth('4').setDay('1'),
+    new DateObject()
+      .setYear(date.year - (date.month.number < 4 ? 1 : 0))
+      .setMonth(date.year < 2024 || (date.year == 2024 && date.month.number < 4) ? 10 : 4)
+      .setDay('1'),
     new DateObject(),
   ]);
 
@@ -63,9 +67,7 @@ const BillWiseProfitReport = () => {
       Header: 'Profit/Loss',
       accessor: 'profit',
       alignRight: true,
-      Cell: (data) => (
-        <span>{(+data.row.original.profit).toFixed(2)}</span>
-      ),
+      Cell: (data) => <span>{(+data.row.original.profit).toFixed(2)}</span>,
     },
   ];
 
@@ -122,7 +124,9 @@ const BillWiseProfitReport = () => {
           <FiDownload className='text-20' />
           Download CSV
         </button>
-      ) : ''}
+      ) : (
+        ''
+      )}
     </div>
   );
 };

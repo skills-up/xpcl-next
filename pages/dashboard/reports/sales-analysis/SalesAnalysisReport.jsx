@@ -5,10 +5,14 @@ import { getList } from '../../../../api/xplorzApi';
 import { sendToast } from '../../../../utils/toastify';
 
 const SalesAnalysisReport = () => {
+  const date = new DateObject();
   const [data, setData] = useState(null);
 
   const [dates, setDates] = useState([
-    new DateObject().setMonth('4').setDay('1'),
+    new DateObject()
+      .setYear(date.year - (date.month.number < 4 ? 1 : 0))
+      .setMonth(date.year < 2024 || (date.year == 2024 && date.month.number < 4) ? 10 : 4)
+      .setDay('1'),
     new DateObject(),
   ]);
 
@@ -250,7 +254,7 @@ const SalesAnalysisReport = () => {
             </tfoot>
           </table>
           <h5 className='mt-20'>Commission Turnover</h5>
-          <table className='table-3' style={{minHeight: 'auto'}}>
+          <table className='table-3' style={{ minHeight: 'auto' }}>
             <thead>
               <tr>
                 <th>Particulars</th>
@@ -295,7 +299,7 @@ const SalesAnalysisReport = () => {
               </tr>
             </tbody>
           </table>
-          <table className='table-3 mt-20' style={{minHeight: 'auto'}}>
+          <table className='table-3 mt-20' style={{ minHeight: 'auto' }}>
             <thead>
               <tr>
                 <th colSpan={2}>Turnover Report</th>
