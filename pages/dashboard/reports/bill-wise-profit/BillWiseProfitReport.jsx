@@ -11,10 +11,15 @@ import { sendToast } from '../../../../utils/toastify';
 const BillWiseProfitReport = () => {
   const [data, setData] = useState([]);
 
-  const [dates, setDates] = useState([
-    new DateObject().setMonth('4').setDay('1'),
-    new DateObject(),
-  ]);
+const date = new DateObject();
+
+const [dates, setDates] = useState([
+  new DateObject()
+    .setYear(date.year - (date.month.number < 4 ? 1 : 0))
+    .setMonth((date.year == 2024 && date.month.number < 4) ? 10 : 4)
+    .setDay('1'),
+  new DateObject(),
+]);
 
   const router = useRouter();
 

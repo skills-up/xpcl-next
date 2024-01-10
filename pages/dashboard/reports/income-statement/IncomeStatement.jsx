@@ -5,11 +5,16 @@ import { sendToast } from '../../../../utils/toastify';
 
 const Journals = () => {
   const [balanceSheet, setBalanceSheet] = useState(null);
+  const date = new DateObject();
+
   const [dates, setDates] = useState([
-    new DateObject().setMonth('4').setDay('1'),
+    new DateObject()
+      .setYear(date.year - (date.month.number < 4 ? 1 : 0))
+      .setMonth((date.year == 2024 && date.month.number < 4) ? 10 : 4)
+      .setDay('1'),
     new DateObject(),
   ]);
-
+  
   const getBalanceSheet = async () => {
     const response = await getList('reports/income-statement', {
       from_date: dates[0].format('YYYY-MM-DD'),

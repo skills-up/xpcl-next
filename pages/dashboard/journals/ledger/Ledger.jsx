@@ -15,7 +15,10 @@ const Ledger = () => {
   const date = new DateObject();
 
   const [dates, setDates] = useState([
-    new DateObject().setMonth(date.year < 2024 ? 8 : 4).setDay('1'),
+    new DateObject()
+      .setYear(date.year - (date.month.number < 4 ? 1 : 0))
+      .setMonth((date.year == 2024 && date.month.number < 4) ? 10 : 4)
+      .setDay('1'),
     new DateObject(),
   ]);
   const [modalOpen, setModalOpen] = useState(false);
