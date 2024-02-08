@@ -123,6 +123,20 @@ const Bookings = () => {
       },
     },
     {
+      Header: 'GST Charged',
+      Cell: (data) => {
+        return (
+          <span>
+            {(+data.row.original.client_service_charges).toLocaleString('en-IN', {
+              maximumFractionDigits: 2,
+              style: 'currency',
+              currency: 'INR',
+            })}
+          </span>
+        );
+      }
+    },
+    {
       Header: 'Original Booking Number',
       accessor: 'original_booking_number',
     },

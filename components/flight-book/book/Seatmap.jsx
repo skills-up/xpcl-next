@@ -1065,9 +1065,9 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                   //  If its seat type 1
                                   if (seat.type === 1) {
                                     // If seat row number is odd, making it even
-                                    if (seat.y % 2 !== 0) {
-                                      seat.y -= 1;
-                                    }
+                                    // if (seat.y % 2 !== 0) {
+                                    //   seat.y -= 1;
+                                    // }
                                     // Getting Y Start row
                                     if (yStart === 0) {
                                       yStart = seat.y / 2;
@@ -1094,9 +1094,15 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                   newArr.push(tempArr);
                                 }
                                 // Adding New Values ((seat.y / 2) - yStart )
+                                let prevY = 0, pad = 0;
                                 for (let seat of compVal.units) {
+                                  if (seat.y > prevY) {
+                                    pad = (seat.y - prevY) - 2;                                   
+                                    prevY = seat.y;
+                                  }
                                   if (seat.type === 1) {
-                                    newArr[seat.y / 2 - yStart][Math.floor(seat.x / 2)] =
+                                    seat.pad = pad;
+                                    newArr[Math.floor(seat.y / 2 - yStart)][Math.floor(seat.x / 2)] =
                                       seat;
                                   }
                                 }
@@ -1140,6 +1146,7 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                                         : undefined
                                                     }
                                                     data-tooltip-place='top'
+                                                    style={{paddingLeft: element.pad * 20}}
                                                   >
                                                     <Seat
                                                       key={index}
@@ -1346,9 +1353,9 @@ function Seatmap({ seatMaps, PNRS, travellerInfos }) {
                                                   )}
                                                 </>
                                               ) : emptyCol.includes(index) ? (
-                                                <span className='row-number'></span>
+                                                <span></span>
                                               ) : (
-                                                <span className='row-number' />
+                                                <span/>
                                               )}
                                             </>
                                           );
