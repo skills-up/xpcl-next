@@ -1,13 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { AiOutlineEye } from 'react-icons/ai';
+import { BsTrash3 } from 'react-icons/bs';
+import { HiOutlinePencilAlt } from 'react-icons/hi';
+import { IoCopyOutline } from 'react-icons/io5';
 import { deleteItem, getList } from '../../../../api/xplorzApi';
 import ActionsButton from '../../../../components/actions-button/ActionsButton';
-import Datatable from '../../../../components/datatable/Datatable';
-import { sendToast } from '../../../../utils/toastify';
 import ConfirmationModal from '../../../../components/confirm-modal';
-import { AiOutlineEye } from 'react-icons/ai';
-import { HiOutlinePencilAlt } from 'react-icons/hi';
-import { BsTrash3 } from 'react-icons/bs';
-import { IoCopyOutline } from 'react-icons/io5';
+import Datatable from '../../../../components/datatable/Datatable';
+import { filterAllowed, hasPermission } from '../../../../utils/permission-checker';
+import { sendToast } from '../../../../utils/toastify';
 
 const Roles = () => {
   const [roles, setRoles] = useState([]);
@@ -66,7 +67,7 @@ const Roles = () => {
         return (
           <div className='d-flex justify-end'>
             <ActionsButton
-              options={[
+              options={filterAllowed([
                 {
                   label: 'View',
                   onClick: () =>
@@ -74,6 +75,7 @@ const Roles = () => {
                       '/dashboard/roles/view/' + data.row.original.id
                     ),
                   icon: <AiOutlineEye />,
+                  permissions: ['roles.show'],
                 },
                 {
                   label: 'Edit',
@@ -82,6 +84,7 @@ const Roles = () => {
                       '/dashboard/roles/edit/' + data.row.original.id
                     ),
                   icon: <HiOutlinePencilAlt />,
+                  permissions: ['roles.update'],
                 },
                 {
                   label: 'Clone',
@@ -90,6 +93,7 @@ const Roles = () => {
                       '/dashboard/roles/clone/' + data.row.original.id
                     ),
                   icon: <IoCopyOutline />,
+                  permissions: ['roles.store'],
                 },
                 {
                   label: 'Delete',
@@ -98,8 +102,9 @@ const Roles = () => {
                     setConfirmDelete(true);
                   },
                   icon: <BsTrash3 />,
+                  permissions: ['roles.destroy'],
                 },
-              ]}
+              ])}
             />
           </div>
         );
@@ -149,12 +154,14 @@ const Roles = () => {
             value={searchQuery}
           />
         </div>
-        <button
-          className='btn btn-primary col-lg-2 col-5'
-          onClick={() => window.location.assign('/dashboard/roles/add-new')}
-        >
-          Add New
-        </button>
+        {hasPermission('roles.store') && (
+          <button
+            className='btn btn-primary col-lg-2 col-5'
+            onClick={() => window.location.assign('/dashboard/roles/add-new')}
+          >
+            Add New
+          </button>
+        )}
       </div>
       {/* Data Table */}
       <Datatable

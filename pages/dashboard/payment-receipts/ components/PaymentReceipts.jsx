@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { AiOutlineEye } from 'react-icons/ai';
-import { BsDashSquare, BsPlusSquare, BsTrash3 } from 'react-icons/bs';
+import { BsTrash3 } from 'react-icons/bs';
 import { HiOutlinePencilAlt } from 'react-icons/hi';
 import { IoCopyOutline } from 'react-icons/io5';
 import Select from 'react-select';
@@ -10,6 +10,7 @@ import ActionsButton from '../../../../components/actions-button/ActionsButton';
 import SearchParams from '../../../../components/common/SearchParams';
 import ConfirmationModal from '../../../../components/confirm-modal';
 import Datatable from '../../../../components/datatable/ServerDatatable';
+import { filterAllowed, hasPermission } from '../../../../utils/permission-checker';
 import { sendToast } from '../../../../utils/toastify';
 
 const PaymentReceipts = () => {
@@ -119,7 +120,7 @@ const PaymentReceipts = () => {
         return (
           <div className='d-flex justify-end'>
             <ActionsButton
-              options={[
+              options={filterAllowed([
                 {
                   label: 'View',
                   onClick: () =>
@@ -127,6 +128,7 @@ const PaymentReceipts = () => {
                       '/dashboard/payment-receipts/view/' + data.row.original.id
                     ),
                   icon: <AiOutlineEye />,
+                  permissions: ['payment-receipts.show'],
                 },
                 {
                   label: 'Edit',
@@ -135,6 +137,7 @@ const PaymentReceipts = () => {
                       '/dashboard/payment-receipts/edit/' + data.row.original.id
                     ),
                   icon: <HiOutlinePencilAlt />,
+                  permissions: ['payment-receipts.update'],
                 },
                 {
                   label: 'Clone',
@@ -143,6 +146,7 @@ const PaymentReceipts = () => {
                       '/dashboard/payment-receipts/clone/' + data.row.original.id
                     ),
                   icon: <IoCopyOutline />,
+                  permissions: ['payment-receipts.store'],
                 },
                 {
                   label: 'Delete',
@@ -151,8 +155,9 @@ const PaymentReceipts = () => {
                     setConfirmDelete(true);
                   },
                   icon: <BsTrash3 />,
+                  permissions: ['payment-receipts.destroy'],
                 },
-              ]}
+              ])}
             />
           </div>
         );
@@ -192,42 +197,44 @@ const PaymentReceipts = () => {
         />
       )}
       {/* Search Bar + Add New */}
-      <div className='row mb-3 items-center justify-between mr-4'>
-        <div className='col-lg-5 col-7'></div>
-        <button
-          className='btn btn-primary col-lg-2 col-12 my-2'
-          onClick={() =>
-            router.push({
-              pathname: '/dashboard/payment-receipts/add-new',
-              query: { type: 'Payment' },
-            })
-          }
-        >
-          Add New Payment
-        </button>
-        <button
-          className='btn btn-primary col-lg-2 col-12 my-2'
-          onClick={() =>
-            router.push({
-              pathname: '/dashboard/payment-receipts/add-new',
-              query: { type: 'Receipt' },
-            })
-          }
-        >
-          Add New Receipt
-        </button>
-        <button
-          className='btn btn-primary col-lg-2 col-12 my-2'
-          onClick={() =>
-            router.push({
-              pathname: '/dashboard/payment-receipts/add-new',
-              query: { type: 'Voucher' },
-            })
-          }
-        >
-          Add New Voucher
-        </button>
-      </div>
+      {hasPermission('payment-receipts.store') && (
+        <div className='row mb-3 items-center justify-between mr-4'>
+          <div className='col-lg-5 col-7'></div>
+          <button
+            className='btn btn-primary col-lg-2 col-12 my-2'
+            onClick={() =>
+              router.push({
+                pathname: '/dashboard/payment-receipts/add-new',
+                query: { type: 'Payment' },
+              })
+            }
+          >
+            Add New Payment
+          </button>
+          <button
+            className='btn btn-primary col-lg-2 col-12 my-2'
+            onClick={() =>
+              router.push({
+                pathname: '/dashboard/payment-receipts/add-new',
+                query: { type: 'Receipt' },
+              })
+            }
+          >
+            Add New Receipt
+          </button>
+          <button
+            className='btn btn-primary col-lg-2 col-12 my-2'
+            onClick={() =>
+              router.push({
+                pathname: '/dashboard/payment-receipts/add-new',
+                query: { type: 'Voucher' },
+              })
+            }
+          >
+            Add New Voucher
+          </button>
+        </div>
+      )}
       <div className='my-3 col-12 pr-0'>
         <div className='form-input-select'>
           <label>Filter Type</label>
@@ -240,10 +247,7 @@ const PaymentReceipts = () => {
         </div>
       </div>
       {/* Search Box */}
-      <SearchParams
-        paramsState={[params, setParams]}
-        entity={'payment-receipts'}
-      />
+      <SearchParams paramsState={[params, setParams]} entity={'payment-receipts'} />
       {/* Data Table */}
       <Datatable
         onPageSizeChange={(size) => setPageSize(size)}

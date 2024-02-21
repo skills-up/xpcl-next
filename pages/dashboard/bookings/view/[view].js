@@ -1,22 +1,23 @@
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { AiOutlinePrinter } from 'react-icons/ai';
+import { BsDashSquare, BsPlusSquare } from 'react-icons/bs';
+import { HiRefresh } from 'react-icons/hi';
+import { ImPagebreak } from 'react-icons/im';
+import { RiRefund2Fill } from 'react-icons/ri';
+import { useSelector } from 'react-redux';
+import { deleteItem, getItem } from '../../../../api/xplorzApi';
+import Audit from '../../../../components/audits';
 import Seo from '../../../../components/common/Seo';
+import ConfirmationModal from '../../../../components/confirm-modal';
+import Datatable from '../../../../components/datatable/Datatable';
 import Footer from '../../../../components/footer/dashboard-footer';
 import Header from '../../../../components/header/dashboard-header';
 import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
-import ConfirmationModal from '../../../../components/confirm-modal';
-import { useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
-import { sendToast } from '../../../../utils/toastify';
-import { useEffect, useState } from 'react';
-import { deleteItem, getItem } from '../../../../api/xplorzApi';
 import ViewTable from '../../../../components/view-table';
-import { HiRefresh } from 'react-icons/hi';
-import { RiRefund2Fill } from 'react-icons/ri';
-import { ImPagebreak } from 'react-icons/im';
-import Audit from '../../../../components/audits';
-import { AiOutlinePrinter } from 'react-icons/ai';
-import Datatable from '../../../../components/datatable/Datatable';
 import { downloadApiPDF } from '../../../../utils/fileDownloader';
-import { BsDashSquare, BsPlusSquare } from 'react-icons/bs';
+import { filterAllowed, hasPermission } from '../../../../utils/permission-checker';
+import { sendToast } from '../../../../utils/toastify';
 
 const ViewBooking = () => {
   const [booking, setBooking] = useState([]);
@@ -153,7 +154,10 @@ const ViewBooking = () => {
         }
         if (res?.refund) {
           data.status = (
-            <a href={'/dashboard/refunds/view/' + res.refund.id} className='text-red-2 fw-600'>
+            <a
+              href={'/dashboard/refunds/view/' + res.refund.id}
+              className='text-red-2 fw-600'
+            >
               Refunded
             </a>
           );
@@ -294,13 +298,15 @@ const ViewBooking = () => {
                     setIdToDelete(router.query.view);
                     setConfirmDelete(true);
                   }}
-                  extraButtons={[
+                  entitySlug={'bookings'}
+                  extraButtons={filterAllowed([
                     {
                       icon: <HiRefresh />,
                       text: 'Reissue',
                       onClick: () =>
                         router.push('/dashboard/bookings/reissue/' + router.query.view),
                       classNames: 'btn-success',
+                      permissions: ['bookings.reissue'],
                     },
                     {
                       icon: <RiRefund2Fill />,
@@ -311,6 +317,7 @@ const ViewBooking = () => {
                           query: { booking_id: router.query.view },
                         }),
                       style: { backgroundColor: 'brown', color: 'white' },
+                      permissions: ['refunds.store'],
                     },
                     {
                       icon: <ImPagebreak />,
@@ -321,6 +328,7 @@ const ViewBooking = () => {
                           query: { booking_id: router.query.view },
                         }),
                       style: { backgroundColor: 'orange' },
+                      permissions: ['partial-refunds.store'],
                     },
                     {
                       icon: <AiOutlinePrinter />,
@@ -332,8 +340,9 @@ const ViewBooking = () => {
                         );
                       },
                       classNames: 'btn-info text-white',
+                      permissions: ['bookings.pdf'],
                     },
-                  ]}
+                  ])}
                 />
                 {bookingSectors && (
                   <>
@@ -345,25 +354,27 @@ const ViewBooking = () => {
                   </>
                 )}
                 <hr className='my-4' />
-                <div>
-                  <h2 className='mb-3 d-flex justify-between items-center'>
-                    <span>Audit Log</span>
-                    {auditExpanded ? (
-                      <BsDashSquare
-                        className='cursor-pointer text-blue-1'
-                        onClick={() => setAuditExpanded((prev) => !prev)}
-                      />
-                    ) : (
-                      <BsPlusSquare
-                        className='cursor-pointer text-blue-1'
-                        onClick={() => setAuditExpanded((prev) => !prev)}
-                      />
+                {hasPermission('bookings.audit-trail') && (
+                  <div>
+                    <h2 className='mb-3 d-flex justify-between items-center'>
+                      <span>Audit Log</span>
+                      {auditExpanded ? (
+                        <BsDashSquare
+                          className='cursor-pointer text-blue-1'
+                          onClick={() => setAuditExpanded((prev) => !prev)}
+                        />
+                      ) : (
+                        <BsPlusSquare
+                          className='cursor-pointer text-blue-1'
+                          onClick={() => setAuditExpanded((prev) => !prev)}
+                        />
+                      )}
+                    </h2>
+                    {auditExpanded && (
+                      <Audit url={'bookings/' + router.query.view + '/audit-trail'} />
                     )}
-                  </h2>
-                  {auditExpanded && (
-                    <Audit url={'bookings/' + router.query.view + '/audit-trail'} />
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             </div>
 

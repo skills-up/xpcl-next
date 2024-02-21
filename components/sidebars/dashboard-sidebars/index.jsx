@@ -10,6 +10,7 @@ import {
   setCurrentOrganization,
   setInitialUserState,
 } from '../../../features/auth/authSlice';
+import { filterAllowed } from '../../../utils/permission-checker';
 import { sendToast } from '../../../utils/toastify';
 
 const Sidebar = () => {
@@ -70,17 +71,6 @@ const Sidebar = () => {
       }
     }
   };
-
-  const filterAllowed = (arr) =>
-    arr.filter((item) =>
-      item.permissions?.length
-        ? item.permissions.some((p) => permissions.includes(p))
-        : item.links
-        ? item.links.length > 0
-        : item.submenus
-        ? item.submenus.length > 0
-        : true
-    );
 
   const sidebarData = filterAllowed([
     {

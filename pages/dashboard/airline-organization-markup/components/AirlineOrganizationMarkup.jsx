@@ -1,13 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { AiOutlineEye } from 'react-icons/ai';
+import { BsTrash3 } from 'react-icons/bs';
+import { HiOutlinePencilAlt } from 'react-icons/hi';
+import { IoCopyOutline } from 'react-icons/io5';
 import { deleteItem, getList } from '../../../../api/xplorzApi';
 import ActionsButton from '../../../../components/actions-button/ActionsButton';
-import Datatable from '../../../../components/datatable/Datatable';
-import { sendToast } from '../../../../utils/toastify';
 import ConfirmationModal from '../../../../components/confirm-modal';
-import { AiOutlineEye } from 'react-icons/ai';
-import { HiOutlinePencilAlt } from 'react-icons/hi';
-import { BsTrash3 } from 'react-icons/bs';
-import { IoCopyOutline } from 'react-icons/io5';
+import Datatable from '../../../../components/datatable/Datatable';
+import { filterAllowed, hasPermission } from '../../../../utils/permission-checker';
+import { sendToast } from '../../../../utils/toastify';
 
 const AirlineOrganizationMarkup = () => {
   const [airlineOrganizationMarkup, setAirlineOrganizationMarkup] = useState([]);
@@ -76,7 +77,7 @@ const AirlineOrganizationMarkup = () => {
         return (
           <div className='d-flex justify-end'>
             <ActionsButton
-              options={[
+              options={filterAllowed([
                 {
                   label: 'View',
                   onClick: () =>
@@ -85,6 +86,7 @@ const AirlineOrganizationMarkup = () => {
                         data.row.original.id
                     ),
                   icon: <AiOutlineEye />,
+                  permissions: ['airline-organization-markup.show'],
                 },
                 {
                   label: 'Edit',
@@ -94,6 +96,7 @@ const AirlineOrganizationMarkup = () => {
                         data.row.original.id
                     ),
                   icon: <HiOutlinePencilAlt />,
+                  permissions: ['airline-organization-markup.update'],
                 },
                 {
                   label: 'Clone',
@@ -103,6 +106,7 @@ const AirlineOrganizationMarkup = () => {
                         data.row.original.id
                     ),
                   icon: <IoCopyOutline />,
+                  permissions: ['airline-organization-markup.store'],
                 },
                 {
                   label: 'Delete',
@@ -111,8 +115,9 @@ const AirlineOrganizationMarkup = () => {
                     setConfirmDelete(true);
                   },
                   icon: <BsTrash3 />,
+                  permissions: ['airline-organization-markup.destroy'],
                 },
-              ]}
+              ])}
             />
           </div>
         );
@@ -162,14 +167,16 @@ const AirlineOrganizationMarkup = () => {
             value={searchQuery}
           />
         </div>
-        <button
-          className='btn btn-primary col-lg-2 col-5'
-          onClick={() =>
-            window.location.assign('/dashboard/airline-organization-markup/add-new')
-          }
-        >
-          Add New
-        </button>
+        {hasPermission('airline-organization-markup.store') && (
+          <button
+            className='btn btn-primary col-lg-2 col-5'
+            onClick={() =>
+              window.location.assign('/dashboard/airline-organization-markup/add-new')
+            }
+          >
+            Add New
+          </button>
+        )}
       </div>
       {/* Data Table */}
       <Datatable

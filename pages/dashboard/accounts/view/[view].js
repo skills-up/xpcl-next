@@ -1,14 +1,15 @@
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { deleteItem, getItem } from '../../../../api/xplorzApi';
 import Seo from '../../../../components/common/Seo';
+import ConfirmationModal from '../../../../components/confirm-modal';
 import Footer from '../../../../components/footer/dashboard-footer';
 import Header from '../../../../components/header/dashboard-header';
 import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
-import ConfirmationModal from '../../../../components/confirm-modal';
-import { useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
-import { sendToast } from '../../../../utils/toastify';
-import { useEffect, useState } from 'react';
-import { deleteItem, getItem } from '../../../../api/xplorzApi';
 import ViewTable from '../../../../components/view-table';
+import { hasPermission } from '../../../../utils/permission-checker';
+import { sendToast } from '../../../../utils/toastify';
 import ClosingBalances from './ClosingBalances';
 
 const ViewAccounts = () => {
@@ -159,22 +160,25 @@ const ViewAccounts = () => {
                     setIdToDelete(router.query.view);
                     setConfirmDelete(true);
                   }}
+                  entitySlug={'accounts'}
                 />
                 <hr className='my-4' />
                 <div>
                   <div className='mb-3 d-flex items-center justify-between'>
                     <h2>Closing Balances</h2>
-                    <button
-                      className='btn btn-primary col-lg-2 col-5'
-                      onClick={() =>
-                        router.push({
-                          pathname: '/dashboard/accounts/closing-balances/add-new',
-                          query: { account_id: router.query.view },
-                        })
-                      }
-                    >
-                      Add New
-                    </button>
+                    {hasPermission('accounts.close') && (
+                      <button
+                        className='btn btn-primary col-lg-2 col-5'
+                        onClick={() =>
+                          router.push({
+                            pathname: '/dashboard/accounts/closing-balances/add-new',
+                            query: { account_id: router.query.view },
+                          })
+                        }
+                      >
+                        Add New
+                      </button>
+                    )}
                   </div>
                   <ClosingBalances accountClosingBalances={accountClosingBalances} />
                 </div>

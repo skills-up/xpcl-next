@@ -1,17 +1,18 @@
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { AiOutlineFilePdf } from 'react-icons/ai';
+import { BsDashSquare, BsPlusSquare } from 'react-icons/bs';
+import { useSelector } from 'react-redux';
+import { deleteItem, getItem } from '../../../../api/xplorzApi';
+import Audit from '../../../../components/audits';
 import Seo from '../../../../components/common/Seo';
+import ConfirmationModal from '../../../../components/confirm-modal';
 import Footer from '../../../../components/footer/dashboard-footer';
 import Header from '../../../../components/header/dashboard-header';
 import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
-import ConfirmationModal from '../../../../components/confirm-modal';
-import { useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
-import { sendToast } from '../../../../utils/toastify';
-import { useEffect, useState } from 'react';
-import { deleteItem, getItem } from '../../../../api/xplorzApi';
 import ViewTable from '../../../../components/view-table';
-import Audit from '../../../../components/audits';
-import { BsDashSquare, BsPlusSquare } from 'react-icons/bs';
-import { AiOutlineFilePdf } from 'react-icons/ai';
+import { filterAllowed, hasPermission } from '../../../../utils/permission-checker';
+import { sendToast } from '../../../../utils/toastify';
 
 const ViewVendorCommissionInvoices = () => {
   const [vendorCommissionInvoice, setVendorCommissionInvoice] = useState([]);
@@ -163,40 +164,46 @@ const ViewVendorCommissionInvoices = () => {
                     setIdToDelete(router.query.view);
                     setConfirmDelete(true);
                   }}
-                  extraButtons={[
+                  entitySlug={'vendor-commission-invoices'}
+                  extraButtons={filterAllowed([
                     {
-                      onClick: (e) => window.open(vendorCommissionInvoice?.pdf_path, '_blank'),
+                      onClick: (e) =>
+                        window.open(vendorCommissionInvoice?.pdf_path, '_blank'),
                       text: 'View PDF',
-                      icon: <AiOutlineFilePdf/>,
+                      icon: <AiOutlineFilePdf />,
                       classNames: 'btn btn-secondary d-flex items-center gap-1',
-                    }
-                  ]}
-
+                      permissions: ['vendor-commission-invoices.pdf'],
+                    },
+                  ])}
                 />
                 <hr className='my-4' />
-                <div>
-                  <h2 className='mb-3 d-flex justify-between items-center'>
-                    <span>Audit Log</span>
-                    {auditExpanded ? (
-                      <BsDashSquare
-                        className='cursor-pointer text-blue-1'
-                        onClick={() => setAuditExpanded((prev) => !prev)}
-                      />
-                    ) : (
-                      <BsPlusSquare
-                        className='cursor-pointer text-blue-1'
-                        onClick={() => setAuditExpanded((prev) => !prev)}
+                {hasPermission('vendor-commission-invoices.audit-trail') && (
+                  <div>
+                    <h2 className='mb-3 d-flex justify-between items-center'>
+                      <span>Audit Log</span>
+                      {auditExpanded ? (
+                        <BsDashSquare
+                          className='cursor-pointer text-blue-1'
+                          onClick={() => setAuditExpanded((prev) => !prev)}
+                        />
+                      ) : (
+                        <BsPlusSquare
+                          className='cursor-pointer text-blue-1'
+                          onClick={() => setAuditExpanded((prev) => !prev)}
+                        />
+                      )}
+                    </h2>
+                    {auditExpanded && (
+                      <Audit
+                        url={
+                          'vendor-commission-invoices/' +
+                          router.query.view +
+                          '/audit-trail'
+                        }
                       />
                     )}
-                  </h2>
-                  {auditExpanded && (
-                    <Audit
-                      url={
-                        'vendor-commission-invoices/' + router.query.view + '/audit-trail'
-                      }
-                    />
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             </div>
 

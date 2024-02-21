@@ -1,19 +1,19 @@
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { deleteItem, getItem } from '../../../../api/xplorzApi';
 import Seo from '../../../../components/common/Seo';
+import ConfirmationModal from '../../../../components/confirm-modal';
 import Footer from '../../../../components/footer/dashboard-footer';
 import Header from '../../../../components/header/dashboard-header';
 import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
-import ConfirmationModal from '../../../../components/confirm-modal';
-import { useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
-import { sendToast } from '../../../../utils/toastify';
-import { useEffect, useState } from 'react';
-import { deleteItem, getItem } from '../../../../api/xplorzApi';
 import ViewTable from '../../../../components/view-table';
-import TravelMemberships from './TravelMembership';
+import { sendToast } from '../../../../utils/toastify';
+import ClientTravellers from './ClientTravellers';
 import CreditCards from './CreditCard';
 import TravelInsurances from './TravelInsurance';
+import TravelMemberships from './TravelMembership';
 import TravelVisas from './TravelVisas';
-import ClientTravellers from './ClientTravellers';
 
 const ViewTravellers = () => {
   const [travellers, setTravellers] = useState([]);
@@ -262,6 +262,7 @@ const ViewTravellers = () => {
                     setIdToDelete(router.query.view);
                     setConfirmDelete(true);
                   }}
+                  entitySlug={'travellers'}
                 />
                 <hr className='my-4' />
                 <div>

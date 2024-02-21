@@ -5,6 +5,7 @@ import { getItem, getList } from '../../../../api/xplorzApi';
 import ActionsButton from '../../../../components/actions-button/ActionsButton';
 import CustomDataModal from '../../../../components/customDataModal';
 import Datatable from '../../../../components/datatable/ServerDatatable';
+import { filterAllowed } from '../../../../utils/permission-checker';
 import { sendToast } from '../../../../utils/toastify';
 
 const Journals = () => {
@@ -77,7 +78,7 @@ const Journals = () => {
         return (
           <div className='d-flex justify-end'>
             <ActionsButton
-              options={[
+              options={filterAllowed([
                 {
                   label: 'View',
                   onClick: async () => {
@@ -90,8 +91,9 @@ const Journals = () => {
                     }
                   },
                   icon: <AiOutlineEye />,
+                  permissions: ['journals.show'],
                 },
-              ]}
+              ])}
             />
           </div>
         );

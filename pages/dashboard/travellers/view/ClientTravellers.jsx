@@ -1,14 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { AiOutlineEye } from 'react-icons/ai';
+import { BsTrash3 } from 'react-icons/bs';
+import { HiOutlinePencilAlt } from 'react-icons/hi';
+import { IoCopyOutline } from 'react-icons/io5';
 import { deleteItem, getList } from '../../../../api/xplorzApi';
 import ActionsButton from '../../../../components/actions-button/ActionsButton';
-import Datatable from '../../../../components/datatable/Datatable';
-import { sendToast } from '../../../../utils/toastify';
 import ConfirmationModal from '../../../../components/confirm-modal';
-import { AiOutlineEye } from 'react-icons/ai';
-import { HiOutlinePencilAlt } from 'react-icons/hi';
-import { BsTrash3 } from 'react-icons/bs';
-import { IoCopyOutline } from 'react-icons/io5';
-import { useRouter } from 'next/router';
+import Datatable from '../../../../components/datatable/Datatable';
+import { filterAllowed, hasPermission } from '../../../../utils/permission-checker';
+import { sendToast } from '../../../../utils/toastify';
 
 const ClientTravellers = () => {
   const [clientTravellers, setClientTravellers] = useState([]);
@@ -58,7 +59,7 @@ const ClientTravellers = () => {
         return (
           <div className='d-flex justify-end'>
             <ActionsButton
-              options={[
+              options={filterAllowed([
                 {
                   label: 'View',
                   onClick: () =>
@@ -70,6 +71,7 @@ const ClientTravellers = () => {
                       },
                     }),
                   icon: <AiOutlineEye />,
+                  permissions: ['client-travellers.show'],
                 },
                 {
                   label: 'Edit',
@@ -82,6 +84,7 @@ const ClientTravellers = () => {
                       },
                     }),
                   icon: <HiOutlinePencilAlt />,
+                  permissions: ['client-travellers.update'],
                 },
                 {
                   label: 'Clone',
@@ -94,6 +97,7 @@ const ClientTravellers = () => {
                       },
                     }),
                   icon: <IoCopyOutline />,
+                  permissions: ['client-travellers.store'],
                 },
                 {
                   label: 'Delete',
@@ -102,8 +106,9 @@ const ClientTravellers = () => {
                     setConfirmDelete(true);
                   },
                   icon: <BsTrash3 />,
+                  permissions: ['client-travellers.destroy'],
                 },
-              ]}
+              ])}
             />
           </div>
         );
@@ -153,17 +158,19 @@ const ClientTravellers = () => {
             value={searchQuery}
           />
         </div>
-        <button
-          className='btn btn-primary col-lg-2 col-5'
-          onClick={() =>
-            router.push({
-              pathname: '/dashboard/travellers/client-travellers/add-new',
-              query: { traveller_id: router.query.view },
-            })
-          }
-        >
-          Link New
-        </button>
+        {hasPermission('client-travellers.store') && (
+          <button
+            className='btn btn-primary col-lg-2 col-5'
+            onClick={() =>
+              router.push({
+                pathname: '/dashboard/travellers/client-travellers/add-new',
+                query: { traveller_id: router.query.view },
+              })
+            }
+          >
+            Link New
+          </button>
+        )}
       </div>
       {/* Data Table */}
       <Datatable

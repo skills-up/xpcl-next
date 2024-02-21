@@ -1,16 +1,17 @@
-import { useState, useEffect } from 'react';
-import { deleteItem, getList } from '../../../../api/xplorzApi';
-import ActionsButton from '../../../../components/actions-button/ActionsButton';
-import Datatable from '../../../../components/datatable/Datatable';
-import { sendToast } from '../../../../utils/toastify';
-import ConfirmationModal from '../../../../components/confirm-modal';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
 import { AiOutlineEye } from 'react-icons/ai';
-import { HiOutlinePencilAlt } from 'react-icons/hi';
 import { BsTrash3 } from 'react-icons/bs';
+import { HiOutlinePencilAlt } from 'react-icons/hi';
 import { IoCopyOutline } from 'react-icons/io5';
 import { useDispatch, useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
+import { deleteItem } from '../../../../api/xplorzApi';
+import ActionsButton from '../../../../components/actions-button/ActionsButton';
+import ConfirmationModal from '../../../../components/confirm-modal';
+import Datatable from '../../../../components/datatable/Datatable';
 import { setInitialAirportsState } from '../../../../features/apis/apisSlice';
+import { filterAllowed, hasPermission } from '../../../../utils/permission-checker';
+import { sendToast } from '../../../../utils/toastify';
 
 const Airports = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -67,7 +68,7 @@ const Airports = () => {
         return (
           <div className='d-flex justify-end'>
             <ActionsButton
-              options={[
+              options={filterAllowed([
                 {
                   label: 'View',
                   onClick: () =>
@@ -75,6 +76,7 @@ const Airports = () => {
                       '/dashboard/airports/view/' + data.row.original.id
                     ),
                   icon: <AiOutlineEye />,
+                  permissions: ['airports.show'],
                 },
                 {
                   label: 'Edit',
@@ -83,6 +85,7 @@ const Airports = () => {
                       '/dashboard/airports/edit/' + data.row.original.id
                     ),
                   icon: <HiOutlinePencilAlt />,
+                  permissions: ['airports.update'],
                 },
                 {
                   label: 'Clone',
@@ -91,6 +94,7 @@ const Airports = () => {
                       '/dashboard/airports/clone/' + data.row.original.id
                     ),
                   icon: <IoCopyOutline />,
+                  permissions: ['airports.store'],
                 },
                 {
                   label: 'Delete',
@@ -99,8 +103,9 @@ const Airports = () => {
                     setConfirmDelete(true);
                   },
                   icon: <BsTrash3 />,
+                  permissions: ['airports.destroy'],
                 },
-              ]}
+              ])}
             />
           </div>
         );
@@ -152,12 +157,14 @@ const Airports = () => {
             value={searchQuery}
           />
         </div>
-        <button
-          className='btn btn-primary col-lg-2 col-5'
-          onClick={() => window.location.assign('/dashboard/airports/add-new')}
-        >
-          Add New
-        </button>
+        {hasPermission('airports.store') && (
+          <button
+            className='btn btn-primary col-lg-2 col-5'
+            onClick={() => window.location.assign('/dashboard/airports/add-new')}
+          >
+            Add New
+          </button>
+        )}
       </div>
       {/* Data Table */}
       <Datatable

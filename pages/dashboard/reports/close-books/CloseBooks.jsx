@@ -1,9 +1,7 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import { AiOutlineEye } from 'react-icons/ai';
+import { useState } from 'react';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
-import { createItem, getItem, getList } from '../../../../api/xplorzApi';
-import ActionsButton from '../../../../components/actions-button/ActionsButton';
+import { createItem } from '../../../../api/xplorzApi';
 import { sendToast } from '../../../../utils/toastify';
 
 const Journals = () => {

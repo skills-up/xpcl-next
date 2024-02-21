@@ -1,13 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { AiOutlineEye } from 'react-icons/ai';
+import { BsTrash3 } from 'react-icons/bs';
+import { HiOutlinePencilAlt } from 'react-icons/hi';
+import { IoCopyOutline } from 'react-icons/io5';
 import { deleteItem, getList } from '../../../../api/xplorzApi';
 import ActionsButton from '../../../../components/actions-button/ActionsButton';
-import Datatable from '../../../../components/datatable/Datatable';
-import { sendToast } from '../../../../utils/toastify';
 import ConfirmationModal from '../../../../components/confirm-modal';
-import { AiOutlineEye } from 'react-icons/ai';
-import { HiOutlinePencilAlt } from 'react-icons/hi';
-import { BsTrash3 } from 'react-icons/bs';
-import { IoCopyOutline } from 'react-icons/io5';
+import Datatable from '../../../../components/datatable/Datatable';
+import { filterAllowed, hasPermission } from '../../../../utils/permission-checker';
+import { sendToast } from '../../../../utils/toastify';
 
 const FrequentFlierProgram = () => {
   const [frequentFlierPrograms, setFrequestFlierPrograms] = useState([]);
@@ -72,7 +73,7 @@ const FrequentFlierProgram = () => {
         return (
           <div className='d-flex justify-end'>
             <ActionsButton
-              options={[
+              options={filterAllowed([
                 {
                   label: 'View',
                   onClick: () =>
@@ -80,6 +81,7 @@ const FrequentFlierProgram = () => {
                       '/dashboard/travel-membership-programs/view/' + data.row.original.id
                     ),
                   icon: <AiOutlineEye />,
+                  permissions: ['travel-membership-programs.show'],
                 },
                 {
                   label: 'Edit',
@@ -88,6 +90,7 @@ const FrequentFlierProgram = () => {
                       '/dashboard/travel-membership-programs/edit/' + data.row.original.id
                     ),
                   icon: <HiOutlinePencilAlt />,
+                  permissions: ['travel-membership-programs.update'],
                 },
                 {
                   label: 'Clone',
@@ -97,6 +100,7 @@ const FrequentFlierProgram = () => {
                         data.row.original.id
                     ),
                   icon: <IoCopyOutline />,
+                  permissions: ['travel-membership-programs.store'],
                 },
                 {
                   label: 'Delete',
@@ -105,8 +109,9 @@ const FrequentFlierProgram = () => {
                     setConfirmDelete(true);
                   },
                   icon: <BsTrash3 />,
+                  permissions: ['travel-membership-programs.destroy'],
                 },
-              ]}
+              ])}
             />
           </div>
         );
@@ -156,14 +161,16 @@ const FrequentFlierProgram = () => {
             value={searchQuery}
           />
         </div>
-        <button
-          className='btn btn-primary col-lg-2 col-5'
-          onClick={() =>
-            window.location.assign('/dashboard/travel-membership-programs/add-new')
-          }
-        >
-          Add New
-        </button>
+        {hasPermission('travel-membership-programs.store') && (
+          <button
+            className='btn btn-primary col-lg-2 col-5'
+            onClick={() =>
+              window.location.assign('/dashboard/travel-membership-programs/add-new')
+            }
+          >
+            Add New
+          </button>
+        )}
       </div>
       {/* Data Table */}
       <Datatable

@@ -2,8 +2,9 @@ import Seo from '../../components/common/Seo';
 import Footer from '../../components/footer/dashboard-footer';
 import Header from '../../components/header/dashboard-header';
 import Sidebar from '../../components/sidebars/dashboard-sidebars';
-import CountCard from './visa-applications/components/CountCard';
+import { hasPermission } from '../../utils/permission-checker';
 import TravelList from './components/TravelList';
+import CountCard from './visa-applications/components/CountCard';
 
 const index = () => {
   return (
@@ -35,20 +36,19 @@ const index = () => {
               {/* End .col-12 */}
             </div>
             {/* End .row */}
-
             <div className='row y-gap-30'>
               <CountCard />
             </div>
-
-            <div className='row y-gap-30 pt-20 chart_responsive'>
-              <div className=''>
-                <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
-                  <h2 className='text-18 lh-1 fw-500'>Travel List</h2>
-                  <TravelList />
+            {hasPermission('travel-list.index') && (
+              <div className='row y-gap-30 pt-20 chart_responsive'>
+                <div className=''>
+                  <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
+                    <h2 className='text-18 lh-1 fw-500'>Travel List</h2>
+                    <TravelList />
+                  </div>
                 </div>
               </div>
-            </div>
-
+            )}
             <Footer />
           </div>
           {/* End .dashboard__content */}

@@ -1,18 +1,19 @@
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { AiOutlinePrinter } from 'react-icons/ai';
+import { BsDashSquare, BsPlusSquare } from 'react-icons/bs';
+import { useSelector } from 'react-redux';
+import { deleteItem, getItem } from '../../../../api/xplorzApi';
+import Audit from '../../../../components/audits';
 import Seo from '../../../../components/common/Seo';
+import ConfirmationModal from '../../../../components/confirm-modal';
 import Footer from '../../../../components/footer/dashboard-footer';
 import Header from '../../../../components/header/dashboard-header';
 import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
-import ConfirmationModal from '../../../../components/confirm-modal';
-import { useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
-import { sendToast } from '../../../../utils/toastify';
-import { useEffect, useState } from 'react';
-import { deleteItem, getItem, customAPICall } from '../../../../api/xplorzApi';
 import ViewTable from '../../../../components/view-table';
-import Audit from '../../../../components/audits';
-import { AiOutlinePrinter } from 'react-icons/ai';
 import { downloadApiPDF } from '../../../../utils/fileDownloader';
-import { BsDashSquare, BsPlusSquare } from 'react-icons/bs';
+import { filterAllowed, hasPermission } from '../../../../utils/permission-checker';
+import { sendToast } from '../../../../utils/toastify';
 
 const ViewPaymentReceipts = () => {
   const [paymentReceipt, setPaymentReceipt] = useState([]);
@@ -94,7 +95,9 @@ const ViewPaymentReceipts = () => {
         delete data['cr_account_id'];
         if (data?.file_url) {
           data.file_url = (
-            <a href={data.file_url} target='_blank' download={true}>Download</a>
+            <a href={data.file_url} target='_blank' download={true}>
+              Download
+            </a>
           );
         }
         setPaymentReceipt(data);
@@ -188,7 +191,8 @@ const ViewPaymentReceipts = () => {
                     setIdToDelete(router.query.view);
                     setConfirmDelete(true);
                   }}
-                  extraButtons={[
+                  entitySlug={'payment-receipts'}
+                  extraButtons={filterAllowed([
                     {
                       icon: <AiOutlinePrinter />,
                       text: 'Print',
@@ -199,31 +203,34 @@ const ViewPaymentReceipts = () => {
                         );
                       },
                       classNames: 'btn-info text-white',
+                      permissions: ['payment-receipts.pdf'],
                     },
-                  ]}
+                  ])}
                 />
                 <hr className='my-4' />
-                <div>
-                  <h2 className='mb-3 d-flex justify-between items-center'>
-                    <span>Audit Log</span>
-                    {auditExpanded ? (
-                      <BsDashSquare
-                        className='cursor-pointer text-blue-1'
-                        onClick={() => setAuditExpanded((prev) => !prev)}
-                      />
-                    ) : (
-                      <BsPlusSquare
-                        className='cursor-pointer text-blue-1'
-                        onClick={() => setAuditExpanded((prev) => !prev)}
+                {hasPermission('payment-receipts.audit-trail') && (
+                  <div>
+                    <h2 className='mb-3 d-flex justify-between items-center'>
+                      <span>Audit Log</span>
+                      {auditExpanded ? (
+                        <BsDashSquare
+                          className='cursor-pointer text-blue-1'
+                          onClick={() => setAuditExpanded((prev) => !prev)}
+                        />
+                      ) : (
+                        <BsPlusSquare
+                          className='cursor-pointer text-blue-1'
+                          onClick={() => setAuditExpanded((prev) => !prev)}
+                        />
+                      )}
+                    </h2>
+                    {auditExpanded && (
+                      <Audit
+                        url={'payment-receipts/' + router.query.view + '/audit-trail'}
                       />
                     )}
-                  </h2>
-                  {auditExpanded && (
-                    <Audit
-                      url={'payment-receipts/' + router.query.view + '/audit-trail'}
-                    />
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             </div>
 

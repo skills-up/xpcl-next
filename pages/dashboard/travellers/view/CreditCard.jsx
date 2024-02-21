@@ -1,14 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { AiOutlineEye } from 'react-icons/ai';
+import { BsTrash3 } from 'react-icons/bs';
+import { HiOutlinePencilAlt } from 'react-icons/hi';
+import { IoCopyOutline } from 'react-icons/io5';
 import { deleteItem, getList } from '../../../../api/xplorzApi';
 import ActionsButton from '../../../../components/actions-button/ActionsButton';
-import Datatable from '../../../../components/datatable/Datatable';
-import { sendToast } from '../../../../utils/toastify';
 import ConfirmationModal from '../../../../components/confirm-modal';
-import { AiOutlineEye } from 'react-icons/ai';
-import { HiOutlinePencilAlt } from 'react-icons/hi';
-import { BsTrash3 } from 'react-icons/bs';
-import { IoCopyOutline } from 'react-icons/io5';
-import { useRouter } from 'next/router';
+import Datatable from '../../../../components/datatable/Datatable';
+import { filterAllowed, hasPermission } from '../../../../utils/permission-checker';
+import { sendToast } from '../../../../utils/toastify';
 
 const CreditCards = () => {
   const [creditCards, setCreditCards] = useState([]);
@@ -67,7 +68,7 @@ const CreditCards = () => {
         return (
           <div className='d-flex justify-end'>
             <ActionsButton
-              options={[
+              options={filterAllowed([
                 {
                   label: 'View',
                   onClick: () =>
@@ -79,6 +80,7 @@ const CreditCards = () => {
                       },
                     }),
                   icon: <AiOutlineEye />,
+                  permissions: ['credit-cards.show'],
                 },
                 {
                   label: 'Edit',
@@ -91,6 +93,7 @@ const CreditCards = () => {
                       },
                     }),
                   icon: <HiOutlinePencilAlt />,
+                  permissions: ['credit-cards.update'],
                 },
                 {
                   label: 'Clone',
@@ -103,6 +106,7 @@ const CreditCards = () => {
                       },
                     }),
                   icon: <IoCopyOutline />,
+                  permissions: ['credit-cards.store'],
                 },
                 {
                   label: 'Delete',
@@ -111,8 +115,9 @@ const CreditCards = () => {
                     setConfirmDelete(true);
                   },
                   icon: <BsTrash3 />,
+                  permissions: ['credit-cards.destroy'],
                 },
-              ]}
+              ])}
             />
           </div>
         );
@@ -162,17 +167,19 @@ const CreditCards = () => {
             value={searchQuery}
           />
         </div>
-        <button
-          className='btn btn-primary col-lg-2 col-5'
-          onClick={() =>
-            router.push({
-              pathname: '/dashboard/travellers/credit-cards/add-new',
-              query: { traveller_id: router.query.view },
-            })
-          }
-        >
-          Add New
-        </button>
+        {hasPermission('credit-cards.store') && (
+          <button
+            className='btn btn-primary col-lg-2 col-5'
+            onClick={() =>
+              router.push({
+                pathname: '/dashboard/travellers/credit-cards/add-new',
+                query: { traveller_id: router.query.view },
+              })
+            }
+          >
+            Add New
+          </button>
+        )}
       </div>
       {/* Data Table */}
       <Datatable

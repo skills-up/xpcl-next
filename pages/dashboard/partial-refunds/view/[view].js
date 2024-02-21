@@ -1,18 +1,19 @@
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { AiOutlinePrinter } from 'react-icons/ai';
+import { BsDashSquare, BsPlusSquare } from 'react-icons/bs';
+import { useSelector } from 'react-redux';
+import { deleteItem, getItem } from '../../../../api/xplorzApi';
+import Audit from '../../../../components/audits';
 import Seo from '../../../../components/common/Seo';
+import ConfirmationModal from '../../../../components/confirm-modal';
 import Footer from '../../../../components/footer/dashboard-footer';
 import Header from '../../../../components/header/dashboard-header';
 import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
-import ConfirmationModal from '../../../../components/confirm-modal';
-import { useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
-import { sendToast } from '../../../../utils/toastify';
-import { useEffect, useState } from 'react';
-import { deleteItem, getItem } from '../../../../api/xplorzApi';
 import ViewTable from '../../../../components/view-table';
-import Audit from '../../../../components/audits';
-import { AiOutlinePrinter } from 'react-icons/ai';
 import { downloadApiPDF } from '../../../../utils/fileDownloader';
-import { BsDashSquare, BsPlusSquare } from 'react-icons/bs';
+import { filterAllowed, hasPermission } from '../../../../utils/permission-checker';
+import { sendToast } from '../../../../utils/toastify';
 
 const ViewRefunds = () => {
   const [refund, setRefund] = useState([]);
@@ -207,7 +208,8 @@ const ViewRefunds = () => {
                     setIdToDelete(router.query.view);
                     setConfirmDelete(true);
                   }}
-                  extraButtons={[
+                  entitySlug={'partial-refunds'}
+                  extraButtons={filterAllowed([
                     {
                       icon: <AiOutlinePrinter />,
                       text: 'Print',
@@ -218,31 +220,34 @@ const ViewRefunds = () => {
                         );
                       },
                       classNames: 'btn-info text-white',
+                      permisssions: ['partial-refunds.pdf'],
                     },
-                  ]}
+                  ])}
                 />
                 <hr className='my-4' />
-                <div>
-                  <h2 className='mb-3 d-flex justify-between items-center'>
-                    <span>Audit Log</span>
-                    {auditExpanded ? (
-                      <BsDashSquare
-                        className='cursor-pointer text-blue-1'
-                        onClick={() => setAuditExpanded((prev) => !prev)}
-                      />
-                    ) : (
-                      <BsPlusSquare
-                        className='cursor-pointer text-blue-1'
-                        onClick={() => setAuditExpanded((prev) => !prev)}
+                {hasPermission('partial-refunds.audit-trail') && (
+                  <div>
+                    <h2 className='mb-3 d-flex justify-between items-center'>
+                      <span>Audit Log</span>
+                      {auditExpanded ? (
+                        <BsDashSquare
+                          className='cursor-pointer text-blue-1'
+                          onClick={() => setAuditExpanded((prev) => !prev)}
+                        />
+                      ) : (
+                        <BsPlusSquare
+                          className='cursor-pointer text-blue-1'
+                          onClick={() => setAuditExpanded((prev) => !prev)}
+                        />
+                      )}
+                    </h2>
+                    {auditExpanded && (
+                      <Audit
+                        url={'partial-refunds/' + router.query.view + '/audit-trail'}
                       />
                     )}
-                  </h2>
-                  {auditExpanded && (
-                    <Audit
-                      url={'partial-refunds/' + router.query.view + '/audit-trail'}
-                    />
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             </div>
 

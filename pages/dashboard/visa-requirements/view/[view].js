@@ -1,15 +1,16 @@
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { AiOutlineMail } from 'react-icons/ai';
+import { useSelector } from 'react-redux';
+import { deleteItem, getItem } from '../../../../api/xplorzApi';
 import Seo from '../../../../components/common/Seo';
+import ConfirmationModal from '../../../../components/confirm-modal';
 import Footer from '../../../../components/footer/dashboard-footer';
 import Header from '../../../../components/header/dashboard-header';
 import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
-import ConfirmationModal from '../../../../components/confirm-modal';
-import { useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
-import { sendToast } from '../../../../utils/toastify';
-import { useEffect, useState } from 'react';
-import { deleteItem, getItem } from '../../../../api/xplorzApi';
 import ViewTable from '../../../../components/view-table';
-import { AiOutlineMail } from 'react-icons/ai';
+import { filterAllowed } from '../../../../utils/permission-checker';
+import { sendToast } from '../../../../utils/toastify';
 
 const ViewVisaRequirements = () => {
   const [visaRequirements, setVisaRequirements] = useState([]);
@@ -183,14 +184,19 @@ const ViewVisaRequirements = () => {
                     setIdToDelete(router.query.view);
                     setConfirmDelete(true);
                   }}
-                  extraButtons={[
+                  entitySlug={'visa-requirements'}
+                  extraButtons={filterAllowed([
                     {
-                      onClick: (e) => router.push('/dashboard/visa-requirements/mail/' + router.query.view),
+                      onClick: (e) =>
+                        router.push(
+                          '/dashboard/visa-requirements/mail/' + router.query.view
+                        ),
                       text: 'Send as Email',
-                      icon: <AiOutlineMail/>,
+                      icon: <AiOutlineMail />,
                       classNames: 'btn btn-secondary d-flex items-center gap-1',
-                    }
-                  ]}
+                      permissions: ['visa-requirements.email'],
+                    },
+                  ])}
                 />
               </div>
             </div>

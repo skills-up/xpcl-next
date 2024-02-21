@@ -1,17 +1,17 @@
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { BsTrash3 } from 'react-icons/bs';
+import { useSelector } from 'react-redux';
+import Select from 'react-select';
+import { createItem, deleteItem, getItem } from '../../../../api/xplorzApi';
 import Seo from '../../../../components/common/Seo';
+import ConfirmationModal from '../../../../components/confirm-modal';
 import Footer from '../../../../components/footer/dashboard-footer';
 import Header from '../../../../components/header/dashboard-header';
-import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
-import ConfirmationModal from '../../../../components/confirm-modal';
-import { useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
-import { sendToast } from '../../../../utils/toastify';
-import { useEffect, useState } from 'react';
-import { createItem, deleteItem, getItem } from '../../../../api/xplorzApi';
-import ViewTable from '../../../../components/view-table';
-import Select from 'react-select';
 import NewFileUploads from '../../../../components/new-file-uploads';
-import { BsTrash3 } from 'react-icons/bs';
+import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
+import ViewTable from '../../../../components/view-table';
+import { sendToast } from '../../../../utils/toastify';
 
 const ViewVisaApplications = () => {
   const [visaApplications, setVisaApplications] = useState([]);
@@ -136,9 +136,9 @@ const ViewVisaApplications = () => {
             visa_forms: (
               <>
                 {data['visa_requirement']['visa_forms'].map((element) => (
-                    <a className='mr-10' href={element} target='_blank'>
-                      Download
-                    </a>
+                  <a className='mr-10' href={element} target='_blank'>
+                    Download
+                  </a>
                 ))}
               </>
             ),
@@ -278,6 +278,7 @@ const ViewVisaApplications = () => {
                     setIdToDelete(router.query.view);
                     setConfirmDelete(true);
                   }}
+                  entitySlug={'visa-applications'}
                 />
                 <h4 className='mt-10'>Traveller's Passport Details</h4>
                 <ViewTable
@@ -309,6 +310,7 @@ const ViewVisaApplications = () => {
                     setIdToDelete(router.query.view);
                     setConfirmDelete(true);
                   }}
+                  entitySlug={'visa-applications'}
                 />
                 {visaApplications?.personal_docs_scans && (
                   <>
@@ -325,6 +327,7 @@ const ViewVisaApplications = () => {
                         setIdToDelete(router.query.view);
                         setConfirmDelete(true);
                       }}
+                      entitySlug={'visa-applications'}
                     />
                   </>
                 )}
@@ -343,6 +346,7 @@ const ViewVisaApplications = () => {
                         setIdToDelete(router.query.view);
                         setConfirmDelete(true);
                       }}
+                      entitySlug={'visa-applications'}
                     />
                   </>
                 )}
@@ -360,6 +364,7 @@ const ViewVisaApplications = () => {
                         setIdToDelete(router.query.view);
                         setConfirmDelete(true);
                       }}
+                      entitySlug={'visa-applications'}
                     />
                   </>
                 )}
@@ -377,6 +382,7 @@ const ViewVisaApplications = () => {
                         setIdToDelete(router.query.view);
                         setConfirmDelete(true);
                       }}
+                      entitySlug={'visa-applications'}
                     />
                   </>
                 )}
@@ -390,14 +396,14 @@ const ViewVisaApplications = () => {
                       content='This will permanently delete the visa application note. Press OK to confirm.'
                     />
                   )}
-                  {visaApplications?.notes?.map(note => (
+                  {visaApplications?.notes?.map((note) => (
                     <div className='mt-20'>
                       <div className='d-flex justify-between'>
                         <a
                           className='text-12 cursor-pointer'
                           href={'/dashboard/users/view/' + note.created_by}
                         >
-                          <strong>User #{note.created_by} </strong> @ 
+                          <strong>User #{note.created_by} </strong> @
                           {new Date(note.created_at).toLocaleString('en-IN', {
                             dateStyle: 'medium',
                             timeStyle: 'short',
@@ -414,16 +420,24 @@ const ViewVisaApplications = () => {
                         </a>
                       </div>
                       <div className='d-flex flex-column bg-light-2 border-light rounded_4 p-2'>
-                        <div className='col-12'>
-                          {note.body}
-                        </div>
-                        {note.attachments?.length ? 
-                        <div className='text-12 mt-10'>
-                          <b>Attachments:</b>
-                          {note.attachments?.map(url => (
-                            <a className='btn-link ml-10' href={url} target='_blank' download>Download</a>
-                          ))}
-                        </div> : '' }
+                        <div className='col-12'>{note.body}</div>
+                        {note.attachments?.length ? (
+                          <div className='text-12 mt-10'>
+                            <b>Attachments:</b>
+                            {note.attachments?.map((url) => (
+                              <a
+                                className='btn-link ml-10'
+                                href={url}
+                                target='_blank'
+                                download
+                              >
+                                Download
+                              </a>
+                            ))}
+                          </div>
+                        ) : (
+                          ''
+                        )}
                       </div>
                     </div>
                   ))}

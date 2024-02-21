@@ -9,6 +9,7 @@ import ActionsButton from '../../../../components/actions-button/ActionsButton';
 import SearchParams from '../../../../components/common/SearchParams';
 import ConfirmationModal from '../../../../components/confirm-modal';
 import Datatable from '../../../../components/datatable/ServerDatatable';
+import { filterAllowed, hasPermission } from '../../../../utils/permission-checker';
 import { sendToast } from '../../../../utils/toastify';
 
 const Bookings = () => {
@@ -134,7 +135,7 @@ const Bookings = () => {
             })}
           </span>
         );
-      }
+      },
     },
     {
       Header: 'Original Booking Number',
@@ -153,7 +154,7 @@ const Bookings = () => {
         return (
           <div className='d-flex justify-end'>
             <ActionsButton
-              options={[
+              options={filterAllowed([
                 {
                   label: 'View',
                   onClick: () =>
@@ -161,6 +162,7 @@ const Bookings = () => {
                       '/dashboard/bookings/view/' + data.row.original.id
                     ),
                   icon: <AiOutlineEye />,
+                  permissions: ['bookings.show'],
                 },
                 {
                   label: 'Edit',
@@ -169,6 +171,7 @@ const Bookings = () => {
                       '/dashboard/bookings/edit/' + data.row.original.id
                     ),
                   icon: <HiOutlinePencilAlt />,
+                  permissions: ['bookings.update'],
                 },
                 {
                   label: 'Clone',
@@ -177,6 +180,7 @@ const Bookings = () => {
                       '/dashboard/bookings/clone/' + data.row.original.id
                     ),
                   icon: <IoCopyOutline />,
+                  permissions: ['bookings.store'],
                 },
                 {
                   label: 'Delete',
@@ -185,8 +189,9 @@ const Bookings = () => {
                     setConfirmDelete(true);
                   },
                   icon: <BsTrash3 />,
+                  permissions: ['bookings.destroy'],
                 },
-              ]}
+              ])}
             />
           </div>
         );
@@ -230,51 +235,46 @@ const Bookings = () => {
       {/* Search Bar + Add New */}
       <div className='row mb-3 y-gap-10 items-center justify-between mr-4 lg:pr-0 lg:mr-0'>
         <div className='col-lg-3'></div>
-        <div className='col-lg-3'>
-          <button
-            className='btn btn-primary col-12'
-            onClick={() =>
-              router.push({
-                pathname: '/dashboard/bookings/add-new',
-                query: { type: 'domestic' },
-              })
-            }
-          >
-            Add Domestic
-          </button>
-        </div>
-        <div className='col-lg-3'>
-          <button
-            className='btn btn-primary col-12'
-            onClick={() =>
-              router.push({
-                pathname: '/dashboard/bookings/add-new',
-                query: { type: 'international' },
-              })
-            }
-          >
-            Add International
-          </button>
-        </div>
-        <div className='col-lg-3'>
-          <button
-            className='btn btn-primary  col-12'
-            onClick={() =>
-              router.push({
-                pathname: '/dashboard/bookings/add-new',
-                query: { type: 'misc' },
-              })
-            }
-          >
-            Add Miscellaneous
-          </button>
-        </div>{' '}
+        {hasPermission('bookings.store') && (
+          <div className='col-lg-9'>
+            <button
+              className='btn btn-primary col-lg-4 col-12'
+              onClick={() =>
+                router.push({
+                  pathname: '/dashboard/bookings/add-new',
+                  query: { type: 'domestic' },
+                })
+              }
+            >
+              Add Domestic
+            </button>
+            <button
+              className='btn btn-primary col-lg-4 col-12'
+              onClick={() =>
+                router.push({
+                  pathname: '/dashboard/bookings/add-new',
+                  query: { type: 'international' },
+                })
+              }
+            >
+              Add International
+            </button>
+            <button
+              className='btn btn-primary col-lg-4 col-12'
+              onClick={() =>
+                router.push({
+                  pathname: '/dashboard/bookings/add-new',
+                  query: { type: 'misc' },
+                })
+              }
+            >
+              Add Miscellaneous
+            </button>
+          </div>
+        )}
       </div>
       {/* Search Box */}
-      <SearchParams
-        paramsState={[params, setParams]}
-        entity={'bookings'}
-      />
+      <SearchParams paramsState={[params, setParams]} entity={'bookings'} />
       {/* Data Table */}
       <Datatable
         onPageSizeChange={(size) => setPageSize(size)}
@@ -283,9 +283,7 @@ const Bookings = () => {
         columns={columns}
         onPaginate={getBookings}
         fullData={bookings}
-        data={
-          bookings?.data || []
-        }
+        data={bookings?.data || []}
       />
     </div>
   );

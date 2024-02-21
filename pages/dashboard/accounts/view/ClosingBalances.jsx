@@ -20,9 +20,12 @@ const ClosingBalances = ({ accountClosingBalances = [] }) => {
     {
       Header: 'Amount',
       accessor: 'amount',
-      Cell: (data) => (<div>
-        {Math.abs(Number(data.row.original.amount)).toLocaleString('en-IN')} {data.row.original.amount < 0 ? 'Cr' : 'Dr'}
-      </div>)
+      Cell: (data) => (
+        <div>
+          {Math.abs(Number(data.row.original.amount)).toLocaleString('en-IN')}{' '}
+          {data.row.original.amount < 0 ? 'Cr' : 'Dr'}
+        </div>
+      ),
     },
     {
       Header: 'Last Updated At',
