@@ -1,7 +1,8 @@
-import { useSelector } from 'react-redux';
+import { store } from '../app/store';
+
+const permissions = store.getState().auth.value.permissions;
 
 export const hasPermission = (permission) => {
-  const permissions = useSelector((state) => state.auth.value.permissions);
   return permissions.includes(permission);
 };
 

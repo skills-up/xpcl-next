@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { AiOutlineEye } from 'react-icons/ai';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
+import { useSelector } from 'react-redux';
 import Select from 'react-select';
 import { getList } from '../../../../api/xplorzApi';
 import ActionsButton from '../../../../components/actions-button/ActionsButton';
@@ -13,6 +14,8 @@ import { sendToast } from '../../../../utils/toastify';
 const Ledger = () => {
   const [ledger, setLedger] = useState(null);
   const date = new DateObject();
+
+  const client_id = useSelector((state) => state.auth.value.currentOrganization);
 
   const [dates, setDates] = useState([
     new DateObject()
@@ -28,7 +31,7 @@ const Ledger = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (router.isReady) getData();
+    if (router.isReady && client_id === 1) getData();
   }, [router.isReady]);
 
   const getData = async () => {
@@ -55,7 +58,7 @@ const Ledger = () => {
 
   const getLedger = async () => {
     const response = await getList('journals/ledger', {
-      account_id: accountID.value,
+      account_id: accountID?.value,
       from_date: dates[0].format('YYYY-MM-DD'),
       to_date: dates[1].format('YYYY-MM-DD'),
     });
@@ -71,7 +74,8 @@ const Ledger = () => {
   };
 
   useEffect(() => {
-    if (accountID?.value && dates && dates?.length === 2) getLedger();
+    if ((client_id !== 1 || accountID?.value) && dates && dates?.length === 2)
+      getLedger();
   }, [accountID, dates]);
 
   const columns = [
@@ -172,15 +176,17 @@ const Ledger = () => {
             minDate='2023-10-01'
           />
         </div>
-        <div className='col-lg-6 col-12 pr-0 form-input-select'>
-          <label>Select Account</label>
-          <Select
-            options={accounts}
-            value={accountID}
-            placeholder='Search & Select Account'
-            onChange={(id) => setAccountID(id)}
-          />
-        </div>
+        {client_id === 1 && (
+          <div className='col-lg-6 col-12 pr-0 form-input-select'>
+            <label>Select Account</label>
+            <Select
+              options={accounts}
+              value={accountID}
+              placeholder='Search & Select Account'
+              onChange={(id) => setAccountID(id)}
+            />
+          </div>
+        )}
       </div>
       {/* Data Table */}
       {/* <Datatable downloadCSV CSVName='Ledger.csv' columns={columns} data={ledger} /> */}

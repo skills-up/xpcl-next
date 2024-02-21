@@ -540,9 +540,9 @@ const Sidebar = () => {
                 const response = await customAPICall('auth/logout', 'post');
                 if (response?.success) {
                   dispatch(setInitialUserState());
-                  sendToast('success', 'Logged Out Successfully', 4000);
                   sessionStorage.removeItem('checking-user');
                   router.push('/');
+                  sendToast('success', 'Logged Out Successfully', 4000);
                 } else {
                   sendToast('error', 'Error Logging Out', 4000);
                 }
