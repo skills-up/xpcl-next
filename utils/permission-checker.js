@@ -1,9 +1,8 @@
 import { store } from '../app/store';
 
-const permissions = store.getState().auth.value.permissions;
-
 export const hasPermission = (permission) => {
-  return permissions.includes(permission);
+  const permissions = store.getState().auth.value.permissions;
+  return permissions?.includes(permission);
 };
 
 export const filterAllowed = (arr) =>
