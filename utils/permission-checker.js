@@ -1,8 +1,9 @@
 import { useSelector } from 'react-redux';
 
-const permissions = useSelector((state) => state.auth.value.permissions);
-
-export const hasPermission = (permission) => permissions.includes(permission);
+export const hasPermission = (permission) => {
+  const permissions = useSelector((state) => state.auth.value.permissions);
+  return permissions.includes(permission);
+};
 
 export const filterAllowed = (arr) =>
   arr.filter((item) =>
