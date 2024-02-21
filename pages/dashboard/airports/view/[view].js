@@ -1,15 +1,15 @@
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteItem, getItem } from '../../../../api/xplorzApi';
 import Seo from '../../../../components/common/Seo';
+import ConfirmationModal from '../../../../components/confirm-modal';
 import Footer from '../../../../components/footer/dashboard-footer';
 import Header from '../../../../components/header/dashboard-header';
 import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
-import ConfirmationModal from '../../../../components/confirm-modal';
-import { useDispatch, useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
-import { sendToast } from '../../../../utils/toastify';
-import { useEffect, useState } from 'react';
-import { deleteItem, getItem } from '../../../../api/xplorzApi';
 import ViewTable from '../../../../components/view-table';
 import { setInitialAirportsState } from '../../../../features/apis/apisSlice';
+import { sendToast } from '../../../../utils/toastify';
 
 const ViewAirports = () => {
   const [airport, setAirport] = useState([]);
@@ -155,6 +155,7 @@ const ViewAirports = () => {
                     setIdToDelete(router.query.view);
                     setConfirmDelete(true);
                   }}
+                  entitySlug={'airports'}
                 />
               </div>
             </div>

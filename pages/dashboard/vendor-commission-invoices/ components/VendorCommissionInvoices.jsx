@@ -1,15 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { AiOutlineEye } from 'react-icons/ai';
+import { BsTrash3 } from 'react-icons/bs';
+import { HiOutlinePencilAlt } from 'react-icons/hi';
+import { IoCopyOutline } from 'react-icons/io5';
 import { deleteItem, getList } from '../../../../api/xplorzApi';
 import ActionsButton from '../../../../components/actions-button/ActionsButton';
-import Datatable from '../../../../components/datatable/Datatable';
-import { sendToast } from '../../../../utils/toastify';
 import ConfirmationModal from '../../../../components/confirm-modal';
-import { AiOutlineEye } from 'react-icons/ai';
-import { HiOutlinePencilAlt } from 'react-icons/hi';
-import { BsTrash3 } from 'react-icons/bs';
-import { IoCopyOutline } from 'react-icons/io5';
-import { useRouter } from 'next/router';
-import { DateObject } from 'react-multi-date-picker';
+import Datatable from '../../../../components/datatable/Datatable';
+import { filterAllowed, hasPermission } from '../../../../utils/permission-checker';
+import { sendToast } from '../../../../utils/toastify';
 
 const VendorCommissionInvoices = () => {
   const [vendorCommissionInvoices, setVendorCommissionInvoices] = useState([]);
@@ -87,7 +87,7 @@ const VendorCommissionInvoices = () => {
         return (
           <div className='d-flex justify-end'>
             <ActionsButton
-              options={[
+              options={filterAllowed([
                 {
                   label: 'View',
                   onClick: () =>
@@ -95,6 +95,7 @@ const VendorCommissionInvoices = () => {
                       '/dashboard/vendor-commission-invoices/view/' + data.row.original.id
                     ),
                   icon: <AiOutlineEye />,
+                  permissions: ['vendor-commission-invoices.show'],
                 },
                 {
                   label: 'Edit',
@@ -103,6 +104,7 @@ const VendorCommissionInvoices = () => {
                       '/dashboard/vendor-commission-invoices/edit/' + data.row.original.id
                     ),
                   icon: <HiOutlinePencilAlt />,
+                  permissions: ['vendor-commission-invoices.update'],
                 },
                 {
                   label: 'Clone',
@@ -112,6 +114,7 @@ const VendorCommissionInvoices = () => {
                         data.row.original.id
                     ),
                   icon: <IoCopyOutline />,
+                  permissions: ['vendor-commission-invoices.store'],
                 },
                 {
                   label: 'Delete',
@@ -120,8 +123,9 @@ const VendorCommissionInvoices = () => {
                     setConfirmDelete(true);
                   },
                   icon: <BsTrash3 />,
+                  permissions: ['vendor-commission-invoices.destroy'],
                 },
-              ]}
+              ])}
             />
           </div>
         );
@@ -171,12 +175,14 @@ const VendorCommissionInvoices = () => {
             value={searchQuery}
           />
         </div>
-        <button
-          className='btn btn-primary col-lg-2 col-5'
-          onClick={() => router.push('/dashboard/vendor-commission-invoices/add-new')}
-        >
-          Add New
-        </button>
+        {hasPermission('vendor-commission-invoices.store') && (
+          <button
+            className='btn btn-primary col-lg-2 col-5'
+            onClick={() => router.push('/dashboard/vendor-commission-invoices/add-new')}
+          >
+            Add New
+          </button>
+        )}
       </div>
       {/* Data Table */}
       <Datatable

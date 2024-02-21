@@ -1,6 +1,7 @@
-import { isValidElement, useEffect } from 'react';
+import { isValidElement } from 'react';
 import { BsTrash3 } from 'react-icons/bs';
 import { HiOutlinePencilAlt } from 'react-icons/hi';
+import { hasPermission } from '../../utils/permission-checker';
 
 const ViewTable = ({
   data,
@@ -8,6 +9,7 @@ const ViewTable = ({
   onDelete,
   extraButtons = undefined,
   showButtons = true,
+  entitySlug = undefined,
 }) => {
   const wordsToUpperCase = [
     'GST',
@@ -31,20 +33,24 @@ const ViewTable = ({
     <div className='view-table'>
       {showButtons && (
         <div className='mb-15 d-flex gap-2'>
-          <button
-            className='btn btn-primary d-flex items-center gap-1'
-            type='button'
-            onClick={onEdit}
-          >
-            <HiOutlinePencilAlt /> Edit
-          </button>
-          <button
-            className='btn btn-danger d-flex items-center gap-1'
-            type='button'
-            onClick={onDelete}
-          >
-            <BsTrash3 /> Delete
-          </button>
+          {(!entitySlug || hasPermission(entitySlug + '.update')) && (
+            <button
+              className='btn btn-primary d-flex items-center gap-1'
+              type='button'
+              onClick={onEdit}
+            >
+              <HiOutlinePencilAlt /> Edit
+            </button>
+          )}
+          {(!entitySlug || hasPermission(entitySlug + '.destroy')) && (
+            <button
+              className='btn btn-danger d-flex items-center gap-1'
+              type='button'
+              onClick={onDelete}
+            >
+              <BsTrash3 /> Delete
+            </button>
+          )}
           {extraButtons &&
             extraButtons.map((element, index) => {
               return (

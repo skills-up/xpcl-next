@@ -1,14 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { AiOutlineEye } from 'react-icons/ai';
+import { BsTrash3 } from 'react-icons/bs';
+import { HiOutlinePencilAlt } from 'react-icons/hi';
+import { IoCopyOutline } from 'react-icons/io5';
 import { deleteItem, getList } from '../../../../api/xplorzApi';
 import ActionsButton from '../../../../components/actions-button/ActionsButton';
-import Datatable from '../../../../components/datatable/Datatable';
-import { sendToast } from '../../../../utils/toastify';
 import ConfirmationModal from '../../../../components/confirm-modal';
-import { AiOutlineEye } from 'react-icons/ai';
-import { HiOutlinePencilAlt } from 'react-icons/hi';
-import { BsTrash3 } from 'react-icons/bs';
-import { IoCopyOutline } from 'react-icons/io5';
-import { useRouter } from 'next/router';
+import Datatable from '../../../../components/datatable/Datatable';
+import { filterAllowed, hasPermission } from '../../../../utils/permission-checker';
+import { sendToast } from '../../../../utils/toastify';
 
 const TravelVisas = () => {
   const [travelVisas, setTravelVisas] = useState([]);
@@ -78,7 +79,7 @@ const TravelVisas = () => {
         return (
           <div className='d-flex justify-end'>
             <ActionsButton
-              options={[
+              options={filterAllowed([
                 {
                   label: 'View',
                   onClick: () =>
@@ -90,6 +91,7 @@ const TravelVisas = () => {
                       },
                     }),
                   icon: <AiOutlineEye />,
+                  permissions: ['travel-visas.show'],
                 },
                 {
                   label: 'Edit',
@@ -102,6 +104,7 @@ const TravelVisas = () => {
                       },
                     }),
                   icon: <HiOutlinePencilAlt />,
+                  permissions: ['travel-visas.update'],
                 },
                 {
                   label: 'Clone',
@@ -114,6 +117,7 @@ const TravelVisas = () => {
                       },
                     }),
                   icon: <IoCopyOutline />,
+                  permissions: ['travel-visas.store'],
                 },
                 {
                   label: 'Delete',
@@ -122,8 +126,9 @@ const TravelVisas = () => {
                     setConfirmDelete(true);
                   },
                   icon: <BsTrash3 />,
+                  permissions: ['travel-visas.destroy'],
                 },
-              ]}
+              ])}
             />
           </div>
         );
@@ -173,17 +178,19 @@ const TravelVisas = () => {
             value={searchQuery}
           />
         </div>
-        <button
-          className='btn btn-primary col-lg-2 col-5'
-          onClick={() =>
-            router.push({
-              pathname: '/dashboard/travellers/travel-visas/add-new',
-              query: { traveller_id: router.query.view },
-            })
-          }
-        >
-          Add New
-        </button>
+        {hasPermission('travel-visas.store') && (
+          <button
+            className='btn btn-primary col-lg-2 col-5'
+            onClick={() =>
+              router.push({
+                pathname: '/dashboard/travellers/travel-visas/add-new',
+                query: { traveller_id: router.query.view },
+              })
+            }
+          >
+            Add New
+          </button>
+        )}
       </div>
       {/* Data Table */}
       <Datatable

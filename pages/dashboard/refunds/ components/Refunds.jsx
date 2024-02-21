@@ -8,6 +8,7 @@ import ActionsButton from '../../../../components/actions-button/ActionsButton';
 import SearchParams from '../../../../components/common/SearchParams';
 import ConfirmationModal from '../../../../components/confirm-modal';
 import Datatable from '../../../../components/datatable/ServerDatatable';
+import { filterAllowed } from '../../../../utils/permission-checker';
 import { sendToast } from '../../../../utils/toastify';
 
 const Refunds = () => {
@@ -77,18 +78,20 @@ const Refunds = () => {
         return (
           <div className='d-flex justify-end'>
             <ActionsButton
-              options={[
+              options={filterAllowed([
                 {
                   label: 'View',
                   onClick: () =>
                     router.push('/dashboard/refunds/view/' + data.row.original.id),
                   icon: <AiOutlineEye />,
+                  permissions: ['refunds.show'],
                 },
                 {
                   label: 'Edit',
                   onClick: () =>
                     router.push('/dashboard/refunds/edit/' + data.row.original.id),
                   icon: <HiOutlinePencilAlt />,
+                  permissions: ['refunds.update'],
                 },
                 {
                   label: 'Delete',
@@ -97,8 +100,9 @@ const Refunds = () => {
                     setConfirmDelete(true);
                   },
                   icon: <BsTrash3 />,
+                  permissions: ['refunds.destroy'],
                 },
-              ]}
+              ])}
             />
           </div>
         );
@@ -138,10 +142,7 @@ const Refunds = () => {
         />
       )}
       {/* Search Box */}
-      <SearchParams
-        paramsState={[params, setParams]}
-        entity={'refunds'}
-      />
+      <SearchParams paramsState={[params, setParams]} entity={'refunds'} />
       {/* Data Table */}
       <Datatable
         onPageSizeChange={(size) => setPageSize(size)}

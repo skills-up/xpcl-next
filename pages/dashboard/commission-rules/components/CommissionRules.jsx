@@ -1,13 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { AiOutlineEye } from 'react-icons/ai';
+import { BsTrash3 } from 'react-icons/bs';
+import { HiOutlinePencilAlt } from 'react-icons/hi';
+import { IoCopyOutline } from 'react-icons/io5';
 import { deleteItem, getList } from '../../../../api/xplorzApi';
 import ActionsButton from '../../../../components/actions-button/ActionsButton';
-import Datatable from '../../../../components/datatable/Datatable';
-import { sendToast } from '../../../../utils/toastify';
 import ConfirmationModal from '../../../../components/confirm-modal';
-import { AiOutlineEye } from 'react-icons/ai';
-import { HiOutlinePencilAlt } from 'react-icons/hi';
-import { BsTrash3 } from 'react-icons/bs';
-import { IoCopyOutline } from 'react-icons/io5';
+import Datatable from '../../../../components/datatable/Datatable';
+import { filterAllowed, hasPermission } from '../../../../utils/permission-checker';
+import { sendToast } from '../../../../utils/toastify';
 
 const CommissionRules = () => {
   const [commissionRules, setCommissionRules] = useState([]);
@@ -84,7 +85,7 @@ const CommissionRules = () => {
         return (
           <div className='d-flex justify-end'>
             <ActionsButton
-              options={[
+              options={filterAllowed([
                 {
                   label: 'View',
                   onClick: () =>
@@ -92,6 +93,7 @@ const CommissionRules = () => {
                       '/dashboard/commission-rules/view/' + data.row.original.id
                     ),
                   icon: <AiOutlineEye />,
+                  permissions: ['commission-rules.show'],
                 },
                 {
                   label: 'Edit',
@@ -100,6 +102,7 @@ const CommissionRules = () => {
                       '/dashboard/commission-rules/edit/' + data.row.original.id
                     ),
                   icon: <HiOutlinePencilAlt />,
+                  permissions: ['commission-rules.update'],
                 },
                 {
                   label: 'Clone',
@@ -108,6 +111,7 @@ const CommissionRules = () => {
                       '/dashboard/commission-rules/clone/' + data.row.original.id
                     ),
                   icon: <IoCopyOutline />,
+                  permissions: ['commission-rules.store'],
                 },
                 {
                   label: 'Delete',
@@ -116,8 +120,9 @@ const CommissionRules = () => {
                     setConfirmDelete(true);
                   },
                   icon: <BsTrash3 />,
+                  permissions: ['commission-rules.destroy'],
                 },
-              ]}
+              ])}
             />
           </div>
         );
@@ -167,12 +172,14 @@ const CommissionRules = () => {
             value={searchQuery}
           />
         </div>
-        <button
-          className='btn btn-primary col-lg-2 col-5'
-          onClick={() => window.location.assign('/dashboard/commission-rules/add-new')}
-        >
-          Add New
-        </button>
+        {hasPermission('commission-rules.store') && (
+          <button
+            className='btn btn-primary col-lg-2 col-5'
+            onClick={() => window.location.assign('/dashboard/commission-rules/add-new')}
+          >
+            Add New
+          </button>
+        )}
       </div>
       {/* Data Table */}
       <Datatable

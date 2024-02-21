@@ -1,13 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { AiOutlineEye } from 'react-icons/ai';
+import { BsTrash3 } from 'react-icons/bs';
+import { HiOutlinePencilAlt } from 'react-icons/hi';
+import { IoCopyOutline } from 'react-icons/io5';
 import { deleteItem, getList } from '../../../../api/xplorzApi';
 import ActionsButton from '../../../../components/actions-button/ActionsButton';
-import Datatable from '../../../../components/datatable/Datatable';
-import { sendToast } from '../../../../utils/toastify';
 import ConfirmationModal from '../../../../components/confirm-modal';
-import { AiOutlineEye } from 'react-icons/ai';
-import { HiOutlinePencilAlt } from 'react-icons/hi';
-import { BsTrash3 } from 'react-icons/bs';
-import { IoCopyOutline } from 'react-icons/io5';
+import Datatable from '../../../../components/datatable/Datatable';
+import { filterAllowed, hasPermission } from '../../../../utils/permission-checker';
+import { sendToast } from '../../../../utils/toastify';
 
 const Travellers = () => {
   const [travellers, setTravellers] = useState([]);
@@ -70,7 +71,7 @@ const Travellers = () => {
         return (
           <div className='d-flex justify-end'>
             <ActionsButton
-              options={[
+              options={filterAllowed([
                 {
                   label: 'View',
                   onClick: () =>
@@ -78,6 +79,7 @@ const Travellers = () => {
                       '/dashboard/travellers/view/' + data.row.original.id
                     ),
                   icon: <AiOutlineEye />,
+                  permissions: ['travellers.show'],
                 },
                 {
                   label: 'Edit',
@@ -86,6 +88,7 @@ const Travellers = () => {
                       '/dashboard/travellers/edit/' + data.row.original.id
                     ),
                   icon: <HiOutlinePencilAlt />,
+                  permissions: ['travellers.update'],
                 },
                 {
                   label: 'Clone',
@@ -94,6 +97,7 @@ const Travellers = () => {
                       '/dashboard/travellers/clone/' + data.row.original.id
                     ),
                   icon: <IoCopyOutline />,
+                  permissions: ['travellers.store'],
                 },
                 {
                   label: 'Delete',
@@ -102,8 +106,9 @@ const Travellers = () => {
                     setConfirmDelete(true);
                   },
                   icon: <BsTrash3 />,
+                  permissions: ['travellers.destroy'],
                 },
-              ]}
+              ])}
             />
           </div>
         );
@@ -153,12 +158,14 @@ const Travellers = () => {
             value={searchQuery}
           />
         </div>
-        <button
-          className='btn btn-primary col-lg-2 col-5'
-          onClick={() => window.location.assign('/dashboard/travellers/add-new')}
-        >
-          Add New
-        </button>
+        {hasPermission('travellers.store') && (
+          <button
+            className='btn btn-primary col-lg-2 col-5'
+            onClick={() => window.location.assign('/dashboard/travellers/add-new')}
+          >
+            Add New
+          </button>
+        )}
       </div>
       {/* Data Table */}
       <Datatable

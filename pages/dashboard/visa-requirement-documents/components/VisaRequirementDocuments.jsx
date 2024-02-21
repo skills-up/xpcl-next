@@ -1,13 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { AiOutlineEye } from 'react-icons/ai';
+import { BsTrash3 } from 'react-icons/bs';
+import { HiOutlinePencilAlt } from 'react-icons/hi';
+import { IoCopyOutline } from 'react-icons/io5';
 import { deleteItem, getList } from '../../../../api/xplorzApi';
 import ActionsButton from '../../../../components/actions-button/ActionsButton';
-import Datatable from '../../../../components/datatable/Datatable';
-import { sendToast } from '../../../../utils/toastify';
 import ConfirmationModal from '../../../../components/confirm-modal';
-import { AiOutlineEye } from 'react-icons/ai';
-import { HiOutlinePencilAlt } from 'react-icons/hi';
-import { BsTrash3 } from 'react-icons/bs';
-import { IoCopyOutline } from 'react-icons/io5';
+import Datatable from '../../../../components/datatable/Datatable';
+import { filterAllowed, hasPermission } from '../../../../utils/permission-checker';
+import { sendToast } from '../../../../utils/toastify';
 
 const VisaRequirementDocuments = () => {
   const [visaRequirementDocuments, setVisaRequirementDocuments] = useState([]);
@@ -68,7 +69,7 @@ const VisaRequirementDocuments = () => {
         return (
           <div className='d-flex justify-end'>
             <ActionsButton
-              options={[
+              options={filterAllowed([
                 {
                   label: 'View',
                   onClick: () =>
@@ -76,6 +77,7 @@ const VisaRequirementDocuments = () => {
                       '/dashboard/visa-requirement-documents/view/' + data.row.original.id
                     ),
                   icon: <AiOutlineEye />,
+                  permissions: ['visa-requirement-documents.show'],
                 },
                 {
                   label: 'Edit',
@@ -84,6 +86,7 @@ const VisaRequirementDocuments = () => {
                       '/dashboard/visa-requirement-documents/edit/' + data.row.original.id
                     ),
                   icon: <HiOutlinePencilAlt />,
+                  permissions: ['visa-requirement-documents.update'],
                 },
                 {
                   label: 'Clone',
@@ -93,6 +96,7 @@ const VisaRequirementDocuments = () => {
                         data.row.original.id
                     ),
                   icon: <IoCopyOutline />,
+                  permissions: ['visa-requirement-documents.store'],
                 },
                 {
                   label: 'Delete',
@@ -101,8 +105,9 @@ const VisaRequirementDocuments = () => {
                     setConfirmDelete(true);
                   },
                   icon: <BsTrash3 />,
+                  permissions: ['visa-requirement-documents.destroy'],
                 },
-              ]}
+              ])}
             />
           </div>
         );
@@ -152,14 +157,16 @@ const VisaRequirementDocuments = () => {
             value={searchQuery}
           />
         </div>
-        <button
-          className='btn btn-primary col-lg-2 col-5'
-          onClick={() =>
-            window.location.assign('/dashboard/visa-requirement-documents/add-new')
-          }
-        >
-          Add New
-        </button>
+        {hasPermission('visa-requirement-documents.store') && (
+          <button
+            className='btn btn-primary col-lg-2 col-5'
+            onClick={() =>
+              window.location.assign('/dashboard/visa-requirement-documents/add-new')
+            }
+          >
+            Add New
+          </button>
+        )}
       </div>
       {/* Data Table */}
       <Datatable

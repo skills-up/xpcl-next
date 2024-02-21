@@ -1,16 +1,16 @@
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { BsEye } from 'react-icons/bs';
+import { DateObject } from 'react-multi-date-picker';
+import { useSelector } from 'react-redux';
+import { deleteItem, getItem } from '../../../../../api/xplorzApi';
 import Seo from '../../../../../components/common/Seo';
+import ConfirmationModal from '../../../../../components/confirm-modal';
 import Footer from '../../../../../components/footer/dashboard-footer';
 import Header from '../../../../../components/header/dashboard-header';
 import Sidebar from '../../../../../components/sidebars/dashboard-sidebars';
-import ConfirmationModal from '../../../../../components/confirm-modal';
-import { useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
-import { sendToast } from '../../../../../utils/toastify';
-import { useEffect, useState } from 'react';
-import { deleteItem, getItem } from '../../../../../api/xplorzApi';
 import ViewTable from '../../../../../components/view-table';
-import { BsEye } from 'react-icons/bs';
-import { DateObject } from 'react-multi-date-picker';
+import { sendToast } from '../../../../../utils/toastify';
 
 const ViewCreditCards = () => {
   const [creditCard, setCreditCard] = useState([]);
@@ -193,6 +193,7 @@ const ViewCreditCards = () => {
                     setIdToDelete(router.query.view);
                     setConfirmDelete(true);
                   }}
+                  entitySlug={'credit-cards'}
                 />
               </div>
             </div>

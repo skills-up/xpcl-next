@@ -8,6 +8,7 @@ import ActionsButton from '../../../../components/actions-button/ActionsButton';
 import SearchParams from '../../../../components/common/SearchParams';
 import ConfirmationModal from '../../../../components/confirm-modal';
 import Datatable from '../../../../components/datatable/ServerDatatable';
+import { filterAllowed } from '../../../../utils/permission-checker';
 import { sendToast } from '../../../../utils/toastify';
 
 const PartialRefunds = () => {
@@ -137,7 +138,7 @@ const PartialRefunds = () => {
         return (
           <div className='d-flex justify-end'>
             <ActionsButton
-              options={[
+              options={filterAllowed([
                 {
                   label: 'View',
                   onClick: () =>
@@ -145,6 +146,7 @@ const PartialRefunds = () => {
                       '/dashboard/partial-refunds/view/' + data.row.original.id
                     ),
                   icon: <AiOutlineEye />,
+                  permissions: ['partial-refunds.show'],
                 },
                 {
                   label: 'Edit',
@@ -153,6 +155,7 @@ const PartialRefunds = () => {
                       '/dashboard/partial-refunds/edit/' + data.row.original.id
                     ),
                   icon: <HiOutlinePencilAlt />,
+                  permissions: ['partial-refunds.update'],
                 },
                 {
                   label: 'Delete',
@@ -161,8 +164,9 @@ const PartialRefunds = () => {
                     setConfirmDelete(true);
                   },
                   icon: <BsTrash3 />,
+                  permissions: ['partial-refunds.destroy'],
                 },
-              ]}
+              ])}
             />
           </div>
         );
@@ -202,10 +206,7 @@ const PartialRefunds = () => {
         />
       )}
       {/* Search Box */}
-      <SearchParams
-        paramsState={[params, setParams]}
-        entity={'partial-refunds'}
-      />
+      <SearchParams paramsState={[params, setParams]} entity={'partial-refunds'} />
       {/* Data Table */}
       <Datatable
         onPageSizeChange={(size) => setPageSize(size)}

@@ -5,6 +5,7 @@ import DatePicker, { DateObject } from 'react-multi-date-picker';
 import { getList } from '../../../../api/xplorzApi';
 import ActionsButton from '../../../../components/actions-button/ActionsButton';
 import Datatable from '../../../../components/datatable/Datatable';
+import { filterAllowed } from '../../../../utils/permission-checker';
 import { sendToast } from '../../../../utils/toastify';
 
 const History = () => {
@@ -29,7 +30,9 @@ const History = () => {
     } else {
       sendToast(
         'error',
-        response?.data?.message || response?.data?.error || 'Error getting bookings history',
+        response?.data?.message ||
+          response?.data?.error ||
+          'Error getting bookings history',
         4000
       );
     }
@@ -96,7 +99,7 @@ const History = () => {
         return (
           <div className='d-flex justify-end'>
             <ActionsButton
-              options={[
+              options={filterAllowed([
                 {
                   label: 'View',
                   onClick: () =>
@@ -104,8 +107,9 @@ const History = () => {
                       '/dashboard/bookings/view/' + data.row.original.id
                     ),
                   icon: <AiOutlineEye />,
+                  permissions: ['bookings.show'],
                 },
-              ]}
+              ])}
             />
           </div>
         );
@@ -150,12 +154,7 @@ const History = () => {
           />
         </div>
         <div className='d-block ml-3 col-lg-4'>
-          <button
-            className='btn btn-primary col-12'
-            onClick={() =>
-              getBookings()
-            }
-          >
+          <button className='btn btn-primary col-12' onClick={() => getBookings()}>
             Get History
           </button>
         </div>

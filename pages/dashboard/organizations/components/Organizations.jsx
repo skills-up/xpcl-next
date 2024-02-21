@@ -1,15 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { AiOutlineEye } from 'react-icons/ai';
+import { BsTrash3 } from 'react-icons/bs';
+import { HiOutlinePencilAlt } from 'react-icons/hi';
+import { IoCopyOutline } from 'react-icons/io5';
+import Select from 'react-select';
 import { deleteItem, getList } from '../../../../api/xplorzApi';
 import ActionsButton from '../../../../components/actions-button/ActionsButton';
-import Datatable from '../../../../components/datatable/Datatable';
-import { sendToast } from '../../../../utils/toastify';
 import ConfirmationModal from '../../../../components/confirm-modal';
-import { AiOutlineEye } from 'react-icons/ai';
-import { HiOutlinePencilAlt } from 'react-icons/hi';
-import { BsTrash3 } from 'react-icons/bs';
-import { IoCopyOutline } from 'react-icons/io5';
-import { Router, useRouter } from 'next/router';
-import Select from 'react-select';
+import Datatable from '../../../../components/datatable/Datatable';
+import { filterAllowed, hasPermission } from '../../../../utils/permission-checker';
+import { sendToast } from '../../../../utils/toastify';
 
 const Organizations = () => {
   const [organizations, setOrganizations] = useState([]);
@@ -83,7 +84,7 @@ const Organizations = () => {
         return (
           <div className='d-flex justify-end'>
             <ActionsButton
-              options={[
+              options={filterAllowed([
                 {
                   label: 'View',
                   onClick: () =>
@@ -91,6 +92,7 @@ const Organizations = () => {
                       '/dashboard/organizations/view/' + data.row.original.id
                     ),
                   icon: <AiOutlineEye />,
+                  permissions: ['organizations.show'],
                 },
                 {
                   label: 'Edit',
@@ -99,6 +101,7 @@ const Organizations = () => {
                       '/dashboard/organizations/edit/' + data.row.original.id
                     ),
                   icon: <HiOutlinePencilAlt />,
+                  permissions: ['organizations.update'],
                 },
                 {
                   label: 'Clone',
@@ -107,6 +110,7 @@ const Organizations = () => {
                       '/dashboard/organizations/clone/' + data.row.original.id
                     ),
                   icon: <IoCopyOutline />,
+                  permissions: ['organizations.store'],
                 },
                 {
                   label: 'Delete',
@@ -115,8 +119,9 @@ const Organizations = () => {
                     setConfirmDelete(true);
                   },
                   icon: <BsTrash3 />,
+                  permissions: ['organizations.destroy'],
                 },
-              ]}
+              ])}
             />
           </div>
         );
@@ -167,12 +172,14 @@ const Organizations = () => {
             value={searchQuery}
           />
         </div>
-        <button
-          className='btn btn-primary col-lg-2 col-5'
-          onClick={() => window.location.assign('/dashboard/organizations/add-new')}
-        >
-          Add New
-        </button>
+        {hasPermission('organizations.store') && (
+          <button
+            className='btn btn-primary col-lg-2 col-5'
+            onClick={() => window.location.assign('/dashboard/organizations/add-new')}
+          >
+            Add New
+          </button>
+        )}
         <div className='col-lg-4 pr-0'>
           <div className='form-input-select'>
             <label>Filter Organization Type</label>

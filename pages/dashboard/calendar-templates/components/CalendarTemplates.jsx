@@ -1,13 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { AiOutlineEye } from 'react-icons/ai';
+import { BsTrash3 } from 'react-icons/bs';
+import { HiOutlinePencilAlt } from 'react-icons/hi';
+import { IoCopyOutline } from 'react-icons/io5';
 import { deleteItem, getList } from '../../../../api/xplorzApi';
 import ActionsButton from '../../../../components/actions-button/ActionsButton';
-import Datatable from '../../../../components/datatable/Datatable';
-import { sendToast } from '../../../../utils/toastify';
 import ConfirmationModal from '../../../../components/confirm-modal';
-import { AiOutlineEye } from 'react-icons/ai';
-import { HiOutlinePencilAlt } from 'react-icons/hi';
-import { BsTrash3 } from 'react-icons/bs';
-import { IoCopyOutline } from 'react-icons/io5';
+import Datatable from '../../../../components/datatable/Datatable';
+import { filterAllowed, hasPermission } from '../../../../utils/permission-checker';
+import { sendToast } from '../../../../utils/toastify';
 
 const CalendarTemplates = () => {
   const [calendarTemplates, setCalendarTemplates] = useState([]);
@@ -72,7 +73,7 @@ const CalendarTemplates = () => {
         return (
           <div className='d-flex justify-end'>
             <ActionsButton
-              options={[
+              options={filterAllowed([
                 {
                   label: 'View',
                   onClick: () =>
@@ -80,6 +81,7 @@ const CalendarTemplates = () => {
                       '/dashboard/calendar-templates/view/' + data.row.original.id
                     ),
                   icon: <AiOutlineEye />,
+                  permissions: ['calendar-templates.show'],
                 },
                 {
                   label: 'Edit',
@@ -88,6 +90,7 @@ const CalendarTemplates = () => {
                       '/dashboard/calendar-templates/edit/' + data.row.original.id
                     ),
                   icon: <HiOutlinePencilAlt />,
+                  permissions: ['calendar-templates.update'],
                 },
                 {
                   label: 'Clone',
@@ -96,6 +99,7 @@ const CalendarTemplates = () => {
                       '/dashboard/calendar-templates/clone/' + data.row.original.id
                     ),
                   icon: <IoCopyOutline />,
+                  permissions: ['calendar-templates.store'],
                 },
                 {
                   label: 'Delete',
@@ -104,8 +108,9 @@ const CalendarTemplates = () => {
                     setConfirmDelete(true);
                   },
                   icon: <BsTrash3 />,
+                  permissions: ['calendar-templates.destroy'],
                 },
-              ]}
+              ])}
             />
           </div>
         );
@@ -155,12 +160,16 @@ const CalendarTemplates = () => {
             value={searchQuery}
           />
         </div>
-        <button
-          className='btn btn-primary col-lg-2 col-5'
-          onClick={() => window.location.assign('/dashboard/calendar-templates/add-new')}
-        >
-          Add New
-        </button>
+        {hasPermission('calendar-templates.store') && (
+          <button
+            className='btn btn-primary col-lg-2 col-5'
+            onClick={() =>
+              window.location.assign('/dashboard/calendar-templates/add-new')
+            }
+          >
+            Add New
+          </button>
+        )}
       </div>
       {/* Data Table */}
       <Datatable

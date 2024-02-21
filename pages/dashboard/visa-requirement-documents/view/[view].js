@@ -1,14 +1,14 @@
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { deleteItem, getItem } from '../../../../api/xplorzApi';
 import Seo from '../../../../components/common/Seo';
+import ConfirmationModal from '../../../../components/confirm-modal';
 import Footer from '../../../../components/footer/dashboard-footer';
 import Header from '../../../../components/header/dashboard-header';
 import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
-import ConfirmationModal from '../../../../components/confirm-modal';
-import { useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
-import { sendToast } from '../../../../utils/toastify';
-import { useEffect, useState } from 'react';
-import { deleteItem, getItem } from '../../../../api/xplorzApi';
 import ViewTable from '../../../../components/view-table';
+import { sendToast } from '../../../../utils/toastify';
 
 const ViewVisaRequirementDocument = () => {
   const [visaRequirementDocument, setVisaRequirementDocument] = useState([]);
@@ -146,6 +146,7 @@ const ViewVisaRequirementDocument = () => {
                     setIdToDelete(router.query.view);
                     setConfirmDelete(true);
                   }}
+                  entitySlug={'visa-requirement-documents'}
                 />
               </div>
             </div>

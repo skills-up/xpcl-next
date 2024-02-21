@@ -1,15 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { AiOutlineEye } from 'react-icons/ai';
+import { BsTrash3 } from 'react-icons/bs';
+import { HiOutlinePencilAlt } from 'react-icons/hi';
+import Select from 'react-select';
 import { deleteItem, getList } from '../../../../api/xplorzApi';
 import ActionsButton from '../../../../components/actions-button/ActionsButton';
-import Datatable from '../../../../components/datatable/Datatable';
-import { sendToast } from '../../../../utils/toastify';
 import ConfirmationModal from '../../../../components/confirm-modal';
-import { AiOutlineEye } from 'react-icons/ai';
-import { HiOutlinePencilAlt } from 'react-icons/hi';
-import { BsTrash3 } from 'react-icons/bs';
-import { IoCopyOutline } from 'react-icons/io5';
-import Select from 'react-select';
-import { useSearchParams } from 'next/navigation';
+import Datatable from '../../../../components/datatable/Datatable';
+import { filterAllowed, hasPermission } from '../../../../utils/permission-checker';
+import { sendToast } from '../../../../utils/toastify';
 
 const VisaApplications = () => {
   const searchParams = useSearchParams();
@@ -93,7 +93,7 @@ const VisaApplications = () => {
         return (
           <div className='d-flex justify-end'>
             <ActionsButton
-              options={[
+              options={filterAllowed([
                 {
                   label: 'View',
                   onClick: () =>
@@ -101,6 +101,7 @@ const VisaApplications = () => {
                       '/dashboard/visa-applications/view/' + data.row.original.id
                     ),
                   icon: <AiOutlineEye />,
+                  permissions: ['visa-applications.show'],
                 },
                 {
                   label: 'Edit',
@@ -109,6 +110,7 @@ const VisaApplications = () => {
                       '/dashboard/visa-applications/edit/' + data.row.original.id
                     ),
                   icon: <HiOutlinePencilAlt />,
+                  permissions: ['visa-applications.update'],
                 },
                 {
                   label: 'Delete',
@@ -117,8 +119,9 @@ const VisaApplications = () => {
                     setConfirmDelete(true);
                   },
                   icon: <BsTrash3 />,
+                  permissions: ['visa-applications.destroy'],
                 },
-              ]}
+              ])}
             />
           </div>
         );
@@ -172,12 +175,16 @@ const VisaApplications = () => {
           <Select options={statusOptions} value={status} onChange={setStatus} />
         </div>
         <div className='col-lg-2'>
-          <button
-            className='btn btn-primary col-12 h-40'
-            onClick={() => window.location.assign('/dashboard/visa-applications/add-new')}
-          >
-            Add New
-          </button>
+          {hasPermission('visa-applications.store') && (
+            <button
+              className='btn btn-primary col-12 h-40'
+              onClick={() =>
+                window.location.assign('/dashboard/visa-applications/add-new')
+              }
+            >
+              Add New
+            </button>
+          )}
         </div>
       </div>
       {/* Data Table */}
