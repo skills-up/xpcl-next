@@ -217,7 +217,7 @@ const Sidebar = () => {
               title: 'Mail Client Ledgers',
               href: '/dashboard/journals/mail-ledger',
               icon: <AiOutlinePlus />,
-              permissions: ['journals.mail-ledger'],
+              permissions: ['journals.mail-client-ledger'],
             },
           ]),
         },
