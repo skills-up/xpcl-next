@@ -1,21 +1,19 @@
+import 'file-upload-with-preview/dist/style.css';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { AiOutlinePlus } from 'react-icons/ai';
+import { BsTrash3 } from 'react-icons/bs';
+import DatePicker, { DateObject } from 'react-multi-date-picker';
+import { useSelector } from 'react-redux';
+import Select from 'react-select';
+import { createItem, getItem, getList } from '../../../../api/xplorzApi';
 import Seo from '../../../../components/common/Seo';
 import Footer from '../../../../components/footer/dashboard-footer';
 import Header from '../../../../components/header/dashboard-header';
-import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
-import { useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
-import { sendToast } from '../../../../utils/toastify';
-import { useEffect, useState } from 'react';
-import { createItem, getItem, getList } from '../../../../api/xplorzApi';
-import ReactSwitch from 'react-switch';
-import Select from 'react-select';
-import { FileUploadWithPreview } from 'file-upload-with-preview';
-import 'file-upload-with-preview/dist/style.css';
-import DatePicker, { DateObject } from 'react-multi-date-picker';
-import { AiOutlinePlus } from 'react-icons/ai';
-import { BsTrash3 } from 'react-icons/bs';
-import PreviousUploadPictures from '../../../../components/previous-file-uploads';
 import NewFileUploads from '../../../../components/new-file-uploads';
+import PreviousUploadPictures from '../../../../components/previous-file-uploads';
+import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
+import { sendToast } from '../../../../utils/toastify';
 
 const UpdateTravellers = () => {
   const [prefix, setPrefix] = useState(null);
@@ -343,9 +341,18 @@ const UpdateTravellers = () => {
     passportFormData.append('pan_card_scan_file', panCardScanFile ?? '');
     passportFormData.append('aadhaar_card_scan_file', aadhaarCardScanFile ?? '');
     passportFormData.append('photo_scan_file', photoScanFile ?? '');
-    passportFormData.append('pan_card_scan', previousPanCardScan ?? '');
-    passportFormData.append('aadhaar_card_scan', previousAadhaarCardScan ?? '');
-    passportFormData.append('photo_scan', previousPhotoScan ?? '');
+    passportFormData.append(
+      'pan_card_scan',
+      previousPanCardScan?.replaceAll(' ', '%20') ?? ''
+    );
+    passportFormData.append(
+      'aadhaar_card_scan',
+      previousAadhaarCardScan?.replaceAll(' ', '%20') ?? ''
+    );
+    passportFormData.append(
+      'photo_scan',
+      previousPhotoScan?.replaceAll(' ', '%20') ?? ''
+    );
     passportFormData.append(
       'vaccination_certificate',
       previousVaccinationCertificate ?? ''
@@ -370,7 +377,7 @@ const UpdateTravellers = () => {
     for (let file of passportScanFiles)
       passportFormData.append('passport_scan_files[]', file);
     for (let file of previousPassportScanFiles) {
-      passportFormData.append('passport_scans[]', file);
+      passportFormData.append('passport_scans[]', file?.replaceAll(' ', '%20'));
     }
     passportFormData.append('_method', 'PUT');
     const response = await createItem(

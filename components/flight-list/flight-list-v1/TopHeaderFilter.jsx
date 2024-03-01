@@ -5,6 +5,7 @@ import {
   setEmailClientMode,
   setSort,
 } from '../../../features/flightSearch/flightSearchSlice';
+import { hasPermission } from '../../../utils/permission-checker';
 
 const TopHeaderFilter = () => {
   const dispatch = useDispatch();
@@ -22,7 +23,7 @@ const TopHeaderFilter = () => {
 
   useEffect(() => {
     if (wrapperRef && stopButtonRef) {
-      function handleClickOutside(event) {
+      function handleClickOutside (event) {
         if (
           wrapperRef.current &&
           !wrapperRef.current.contains(event.target) &&
@@ -121,7 +122,8 @@ const TopHeaderFilter = () => {
             </div>
             {/* End .col */}
 
-            {organization === 1 && (
+            {/* {organization === 1 && ( */}
+            {(hasPermission('send.email') || hasPermission('send.whatsapp')) && (
               <div className='col-auto flight-search-sort-container'>
                 <button
                   className='button -blue-1 h-40 px-20 rounded-100 bg-blue-1-05 text-15 text-blue-1'
@@ -134,10 +136,11 @@ const TopHeaderFilter = () => {
                   }}
                 >
                   <BsSend className='icon-up-down text-17 mr-10' />
-                  Send To Client
+                  Send Options
                 </button>
               </div>
             )}
+            {/* )} */}
             {/* End .col */}
           </div>
           {/* End .row */}

@@ -1,19 +1,18 @@
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { BiPlusMedical } from 'react-icons/bi';
+import { BsTrash3 } from 'react-icons/bs';
+import DatePicker, { DateObject } from 'react-multi-date-picker';
+import { useSelector } from 'react-redux';
+import Select from 'react-select';
+import ReactSwitch from 'react-switch';
+import { createItem, getItem, getList } from '../../../../api/xplorzApi';
 import Seo from '../../../../components/common/Seo';
+import AirportSearch from '../../../../components/flight-list/common/AirportSearch';
 import Footer from '../../../../components/footer/dashboard-footer';
 import Header from '../../../../components/header/dashboard-header';
 import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
-import { useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
 import { sendToast } from '../../../../utils/toastify';
-import { useEffect, useState } from 'react';
-import { createItem, getItem, getList } from '../../../../api/xplorzApi';
-import ReactSwitch from 'react-switch';
-import Select from 'react-select';
-import DatePicker, { DateObject } from 'react-multi-date-picker';
-import { BiPlusMedical } from 'react-icons/bi';
-import { store } from '../../../../app/store';
-import { BsTrash3 } from 'react-icons/bs';
-import AirportSearch from '../../../../components/flight-list/common/AirportSearch';
 
 const AddNewBooking = () => {
   const [ticketNumber, setTicketNumber] = useState('');
@@ -125,12 +124,24 @@ const AddNewBooking = () => {
       if (response?.success) {
         setTicketNumber(response.data.ticket_number);
         setPNR(response.data.pnr);
-        setVendorBaseAmount((+response.data.vendor_base_amount || 0).toFixed(2).replace(/[.,]00$/, ''));
-        setVendorTaxAmount((+response.data.vendor_tax_amount || 0).toFixed(2).replace(/[.,]00$/, ''));
-        setVendorGSTAmount((+response.data.vendor_gst_amount || 0).toFixed(2).replace(/[.,]00$/, ''));
-        setVendorMiscChargers((+response.data.vendor_misc_charges || 0).toFixed(2).replace(/[.,]00$/, ''));
-        setVendorYQAmount((+response.data.vendor_yq_amount || 0).toFixed(2).replace(/[.,]00$/, ''));
-        setVendorTotal((+response.data.vendor_total || 0).toFixed(2).replace(/[.,]00$/, ''));
+        setVendorBaseAmount(
+          (+response.data.vendor_base_amount || 0).toFixed(2).replace(/[.,]00$/, '')
+        );
+        setVendorTaxAmount(
+          (+response.data.vendor_tax_amount || 0).toFixed(2).replace(/[.,]00$/, '')
+        );
+        setVendorGSTAmount(
+          (+response.data.vendor_gst_amount || 0).toFixed(2).replace(/[.,]00$/, '')
+        );
+        setVendorMiscChargers(
+          (+response.data.vendor_misc_charges || 0).toFixed(2).replace(/[.,]00$/, '')
+        );
+        setVendorYQAmount(
+          (+response.data.vendor_yq_amount || 0).toFixed(2).replace(/[.,]00$/, '')
+        );
+        setVendorTotal(
+          (+response.data.vendor_total || 0).toFixed(2).replace(/[.,]00$/, '')
+        );
         setIATACommissionPercent(response.data.iata_commission_percent);
         setPLBCommissionPercent(response.data.plb_commission_percent);
         setVendorServiceCharges((+response.data.vendor_service_charges || 0).toFixed(0));
@@ -144,7 +155,9 @@ const AddNewBooking = () => {
         setSector(response.data.sector);
         setOriginalBookingID(response.data?.original_booking_id);
         setReissuePenalty((+response.data?.reissue_penalty || 0).toFixed(0));
-        setPaymentAmount((+response.data.payment_amount || 0).toFixed(2).replace(/[.,]00$/, ''));
+        setPaymentAmount(
+          (+response.data.payment_amount || 0).toFixed(2).replace(/[.,]00$/, '')
+        );
         setClientTaxAmount((+response.data.client_tax_amount || 0).toFixed(0));
         setBookingDate(
           new DateObject({ date: response.data.booking_date, format: 'YYYY-MM-DD' })
@@ -239,7 +252,7 @@ const AddNewBooking = () => {
           setClientOrgs(
             clientOrgs.data.map((element) => ({
               value: element.id,
-              label: element.name,
+              label: element.code ? `${element.name} (${element.code})` : element.name,
             }))
           );
           setClientTravellers(
@@ -392,7 +405,10 @@ const AddNewBooking = () => {
       booking_type: bookingType.value,
       client_id: clientID.value,
       booking_date: bookingDate.format('YYYY-MM-DD'),
-      ticket_number: (bookingType.value === 'Miscellaneous' ? ticketNumber : ticketNumber.replace(/\W/g, '')),
+      ticket_number:
+        bookingType.value === 'Miscellaneous'
+          ? ticketNumber
+          : ticketNumber.replace(/\W/g, ''),
       pnr,
       vendor_id: vendorID.value,
       vendor_base_amount: vendorBaseAmount || 0,
@@ -542,7 +558,9 @@ const AddNewBooking = () => {
         (+vendorTaxAmount || 0) +
         (+vendorGSTAmount || 0) +
         (+vendorMiscCharges || 0)
-    ).toFixed(2).replace(/[.,]00$/, '');
+    )
+      .toFixed(2)
+      .replace(/[.,]00$/, '');
     setVendorTotal(vendorTotal);
     // Updating
     updatePaymentAmount(paymentAccountID, vendorTotal, vendorMiscCharges);
@@ -564,7 +582,7 @@ const AddNewBooking = () => {
       setVendorTDSPercent(
         Number(
           (100 * vendorTDS) / ((+grossCommission || 0) - (+vendorServiceCharges || 0))
-        )//.toFixed(2)
+        ) //.toFixed(2)
       );
   };
 
@@ -582,7 +600,7 @@ const AddNewBooking = () => {
   const updateVendorServiceChargePercent = (vendorServiceCharges, grossCommission) => {
     if (!vendorGSTFocused)
       setVendorServiceChargePercent(
-        Number((100 * (+vendorServiceCharges || 0)) / (+grossCommission || 0))//.toFixed(2)
+        Number((100 * (+vendorServiceCharges || 0)) / (+grossCommission || 0)) //.toFixed(2)
       );
   };
 
@@ -695,7 +713,7 @@ const AddNewBooking = () => {
       Number(
         (100 * (+clientServiceCharges || 0)) /
           ((+clientBaseAmount || 0) + (+clientReferralFee || 0))
-      )//.toFixed(2)
+      ) //.toFixed(2)
     );
   };
 
@@ -1618,7 +1636,11 @@ const AddNewBooking = () => {
                     {!isOffshore && (
                       <div className='col-lg-4 pr-0'>
                         <div className='row'>
-                          <label className='col-12 fw-500 mb-4'>{bookingType?.value !== 'Miscellaneous' ? 'Xplorz GST Amount' : 'Client Service Charges'}</label>
+                          <label className='col-12 fw-500 mb-4'>
+                            {bookingType?.value !== 'Miscellaneous'
+                              ? 'Xplorz GST Amount'
+                              : 'Client Service Charges'}
+                          </label>
                           <div className='form-input col-4'>
                             <input
                               onChange={(e) => {
