@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
+import { AiFillFolder } from 'react-icons/ai';
 import { getList } from '../../../../api/xplorzApi';
 import { sendToast } from '../../../../utils/toastify';
-import { AiFillFolder } from 'react-icons/ai';
-import Image from 'next/image';
 
 const FilesGrid = ({ prefixes, searches, filesList }) => {
   const [prefix, setPrefix] = prefixes;
@@ -99,9 +99,9 @@ const FilesList = () => {
             className='d-block form-control'
             placeholder='Search'
             onChange={(e) => {
-              const q = e.target.value.trim().toLowerCase();
+              const q = e.target.value.toLowerCase();
               setSearchQuery(q);
-              setPrefix(q.length ? '' : 'XCPL');
+              setPrefix(q.trim().length ? '' : 'XCPL');
             }}
             value={searchQuery}
           />
@@ -122,7 +122,7 @@ const FilesList = () => {
       {/* Files Grid */}
       <FilesGrid
         prefixes={[prefix, setPrefix]}
-        searches={[searchQuery, setSearchQuery]}
+        searches={[searchQuery.trim(), setSearchQuery]}
         filesList={filesList}
       />
     </div>
