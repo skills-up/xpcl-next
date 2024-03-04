@@ -1,17 +1,16 @@
+import 'file-upload-with-preview/dist/style.css';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import Select from 'react-select';
+import ReactSwitch from 'react-switch';
+import { createItem, getItem, getList } from '../../../../api/xplorzApi';
 import Seo from '../../../../components/common/Seo';
 import Footer from '../../../../components/footer/dashboard-footer';
 import Header from '../../../../components/header/dashboard-header';
-import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
-import { useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
-import { sendToast } from '../../../../utils/toastify';
-import { useEffect, useState } from 'react';
-import { createItem, getItem, getList } from '../../../../api/xplorzApi';
-import ReactSwitch from 'react-switch';
-import Select from 'react-select';
-import { FileUploadWithPreview } from 'file-upload-with-preview';
-import 'file-upload-with-preview/dist/style.css';
 import NewFileUploads from '../../../../components/new-file-uploads';
+import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
+import { sendToast } from '../../../../utils/toastify';
 
 const AddNewVisaRequirements = () => {
   const [countries, setCountries] = useState([]);
@@ -393,7 +392,20 @@ const AddNewVisaRequirements = () => {
                       <label>
                         Visa Forms<span className='text-danger'>*</span>
                       </label>
-                      <NewFileUploads multiple setUploads={setVisaFormFiles} />
+                      <NewFileUploads
+                        multiple
+                        setUploads={setVisaFormFiles}
+                        fileTypes={[
+                          'JPG',
+                          'PNG',
+                          'PDF',
+                          'JPEG',
+                          'DOC',
+                          'DOCX',
+                          'XLS',
+                          'XLSX',
+                        ]}
+                      />
                     </div>
                     <div className='d-inline-block'>
                       <button
