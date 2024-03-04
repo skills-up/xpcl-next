@@ -39,7 +39,10 @@ const MailLedger = () => {
     const response = await getList('organizations', { is_client: 1 });
     if (response?.success) {
       setClients(
-        response.data.map((element) => ({ value: element.id, label: element.name }))
+        response.data.map((element) => ({
+          value: element.id,
+          label: element.code ? `${element.name} (${element.code})` : element.name,
+        }))
       );
       // Checking for query param
       if (router.query?.client_id) {
