@@ -41,7 +41,9 @@ const Ledger = () => {
       setAccounts(
         response.data.map((element) => ({
           value: element.id,
-          label: element.code ? `${element.name} (${element.code})` : element.name,
+          label: element.org_code
+            ? `${element.name} (${element.org_code})`
+            : element.name,
         }))
       );
       // Checking for query param
