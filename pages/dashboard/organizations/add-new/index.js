@@ -1,14 +1,14 @@
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import Select from 'react-select';
+import ReactSwitch from 'react-switch';
+import { createItem, getList } from '../../../../api/xplorzApi';
 import Seo from '../../../../components/common/Seo';
 import Footer from '../../../../components/footer/dashboard-footer';
 import Header from '../../../../components/header/dashboard-header';
 import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
-import { useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
 import { sendToast } from '../../../../utils/toastify';
-import { useEffect, useState } from 'react';
-import { createItem, getList } from '../../../../api/xplorzApi';
-import ReactSwitch from 'react-switch';
-import Select from 'react-select';
 
 const AddNewOrganization = () => {
   const [calenderTemplates, setCalenderTemplates] = useState([]);
@@ -21,6 +21,7 @@ const AddNewOrganization = () => {
   const [address, setAddress] = useState('');
   const [gstn, setGstn] = useState('');
   const [useGstn, setUseGstn] = useState(false);
+  const [commisionIncludesGst, setCommisionIncludesGst] = useState(false);
   const [type, setType] = useState(null);
   const [vendorServicePercent, setVendorServicePercent] = useState(0);
   const [vendorTDSPercent, setVendorTDSPercent] = useState(0);
@@ -85,6 +86,7 @@ const AddNewOrganization = () => {
       fare_percent: farePercent,
       vendor_service_charge_percentage: vendorServicePercent,
       vendor_tds_percentage: vendorTDSPercent,
+      commission_includes_gst: commisionIncludesGst,
     });
     if (response?.success) {
       sendToast('success', 'Created Organization Successfully.', 4000);
@@ -233,7 +235,9 @@ const AddNewOrganization = () => {
                           pattern='\d{10,12}'
                           title='10-12 digit phone number'
                         />
-                        <label className='lh-1 text-16 text-light-1'>Contact Phone (with Country Code)</label>
+                        <label className='lh-1 text-16 text-light-1'>
+                          Contact Phone (with Country Code)
+                        </label>
                       </div>
                     </div>
                     <div className='col-12 col-lg-4'>
@@ -285,6 +289,15 @@ const AddNewOrganization = () => {
                       />
                       <label>Use GSTN?</label>
                     </div>
+                    {type?.value !== 'Client' && (
+                      <div className='d-flex items-center gap-3'>
+                        <ReactSwitch
+                          onChange={() => setCommisionIncludesGst((prev) => !prev)}
+                          checked={commisionIncludesGst}
+                        />
+                        <label>Commission includes GST?</label>
+                      </div>
+                    )}
                     <div className='d-inline-block'>
                       <button
                         type='submit'
