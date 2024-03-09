@@ -56,7 +56,7 @@ const UpdateOrganization = () => {
         setFarePercent(response.data?.fare_percent);
         setVendorServicePercent(response.data?.vendor_service_charge_percentage);
         setVendorTDSPercent(response.data?.vendor_tds_percentage);
-        setCommisionIncludesGst(response.data?.commision_includes_gst);
+        setCommisionIncludesGst(response.data?.commission_includes_gst);
         const calenderTemplates = await getList('calendar-templates');
         if (calenderTemplates?.success) {
           setCalenderTemplates(
@@ -134,7 +134,7 @@ const UpdateOrganization = () => {
       fare_percent: farePercent,
       vendor_service_charge_percentage: vendorServicePercent,
       vendor_tds_percentage: vendorTDSPercent,
-      commision_includes_gst: commisionIncludesGst,
+      commission_includes_gst: commisionIncludesGst,
     });
     if (response?.success) {
       sendToast('success', 'Updated Organization Successfully.', 4000);
