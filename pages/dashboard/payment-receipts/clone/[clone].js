@@ -1,16 +1,16 @@
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import DatePicker, { DateObject } from 'react-multi-date-picker';
+import Select from 'react-select';
+import ReactSwitch from 'react-switch';
+import { createItem, getItem, getList } from '../../../../api/xplorzApi';
 import Seo from '../../../../components/common/Seo';
 import Footer from '../../../../components/footer/dashboard-footer';
 import Header from '../../../../components/header/dashboard-header';
-import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
-import { useRouter } from 'next/router';
-import { sendToast } from '../../../../utils/toastify';
-import { useEffect, useState } from 'react';
-import { createItem, getItem, getList } from '../../../../api/xplorzApi';
-import ReactSwitch from 'react-switch';
-import Select from 'react-select';
-import DatePicker, { DateObject } from 'react-multi-date-picker';
-import { capitalize } from '../../../../utils/text-utils';
 import NewFileUploads from '../../../../components/new-file-uploads';
+import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
+import { capitalize } from '../../../../utils/text-utils';
+import { sendToast } from '../../../../utils/toastify';
 
 const AddNewPaymentReceipt = () => {
   const [type, setType] = useState(null);
@@ -47,6 +47,7 @@ const AddNewPaymentReceipt = () => {
     { label: 'Receipt', value: 'Receipt' },
     { label: 'Voucher', value: 'Voucher' },
   ]);
+  const [disabled, setDisabled] = useState(false);
 
   const router = useRouter();
 
@@ -133,9 +134,7 @@ const AddNewPaymentReceipt = () => {
             if (response.data?.payment_itc) {
               setItcObj((prev) => ({ ...prev, ...response.data.payment_itc }));
               setSelectedOrganization(
-                orgData.filter(
-                  (org) => org.value === response.data.payment_itc.org_id
-                )[0]
+                orgData.filter((org) => org.value === response.data.payment_itc.org_id)[0]
               );
             }
             let tempTDSObj = response.data?.payment_tds;
@@ -205,7 +204,9 @@ const AddNewPaymentReceipt = () => {
         formData.append('file', imageFile);
       }
     }
+    setDisabled(true);
     const response = await createItem('payment-receipts', formData);
+    setDisabled(false);
     if (response?.success) {
       sendToast('success', 'Created ' + type?.value + ' Successfully.', 4000);
       router.push('/dashboard/payment-receipts');
@@ -539,6 +540,7 @@ const AddNewPaymentReceipt = () => {
                       <button
                         type='submit'
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
+                        disabled={disabled}
                       >
                         Add {type?.value}
                       </button>

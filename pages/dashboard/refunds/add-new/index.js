@@ -1,16 +1,15 @@
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import DatePicker, { DateObject } from 'react-multi-date-picker';
+import { useSelector } from 'react-redux';
+import Select from 'react-select';
+import { createItem, getItem, getList } from '../../../../api/xplorzApi';
 import Seo from '../../../../components/common/Seo';
 import Footer from '../../../../components/footer/dashboard-footer';
 import Header from '../../../../components/header/dashboard-header';
 import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
-import { useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
-import { sendToast } from '../../../../utils/toastify';
-import { useEffect, useState } from 'react';
-import { createItem, getItem, getList } from '../../../../api/xplorzApi';
-import ReactSwitch from 'react-switch';
-import Select from 'react-select';
-import DatePicker, { DateObject } from 'react-multi-date-picker';
 import { capitalize } from '../../../../utils/text-utils';
+import { sendToast } from '../../../../utils/toastify';
 
 const AddNewRefund = () => {
   const [refundDate, setRefundDate] = useState(new DateObject());
@@ -25,6 +24,7 @@ const AddNewRefund = () => {
   const [refundBookingData, setRefundBookingData] = useState(null);
   const [paymentAccounts, setPaymentAccounts] = useState([]);
   const [paymentAccountID, setPaymentAccountID] = useState(null);
+  const [disabled, setDisabled] = useState(false);
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -87,6 +87,7 @@ const AddNewRefund = () => {
       sendToast('error', 'You must select a Refund To Account', 4000);
       return;
     }
+    setDisabled(true);
     const response = await createItem('refunds', {
       booking_id: router.query.booking_id,
       refund_date: refundDate.format('YYYY-MM-DD'),
@@ -98,6 +99,7 @@ const AddNewRefund = () => {
       refund_amount: +refundAmount === 0 ? undefined : refundAmount || undefined,
       reason: capitalize(reason),
     });
+    setDisabled(false);
     if (response?.success) {
       sendToast('success', 'Created Refund Successfully.', 4000);
       router.push('/dashboard/refunds');
@@ -259,6 +261,7 @@ const AddNewRefund = () => {
                       <button
                         type='submit'
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
+                        disabled={disabled}
                       >
                         Add Refund
                       </button>

@@ -1,15 +1,15 @@
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import Select from 'react-select';
+import TimezoneSelect from 'react-timezone-select';
+import { getItem, getList, updateItem } from '../../../../api/xplorzApi';
 import Seo from '../../../../components/common/Seo';
 import Footer from '../../../../components/footer/dashboard-footer';
 import Header from '../../../../components/header/dashboard-header';
 import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
-import { useDispatch, useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
-import { sendToast } from '../../../../utils/toastify';
-import { useEffect, useState } from 'react';
-import { createItem, getItem, getList, updateItem } from '../../../../api/xplorzApi';
-import Select from 'react-select';
-import TimezoneSelect from 'react-timezone-select';
 import { setInitialAirportsState } from '../../../../features/apis/apisSlice';
+import { sendToast } from '../../../../utils/toastify';
 
 const UpdateAirports = () => {
   const [countries, setCountries] = useState([]);
@@ -35,7 +35,7 @@ const UpdateAirports = () => {
         setName(response.data?.name);
         setIataCode(response.data?.iata_code);
         setCity(response.data?.city);
-        setTimeZone(response.data?.timezone);
+        setTimeZone(response.data?.timezone ?? timezone);
         const countries = await getList('countries');
         if (countries?.success) {
           setCountries(

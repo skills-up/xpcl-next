@@ -98,6 +98,7 @@ const AddNewBooking = () => {
   const [clients, setClients] = useState([]);
   const [clientTravellers, setClientTravellers] = useState([]);
   const [airportOptions, setAirportOptions] = useState([]);
+  const [disabled, setDisabled] = useState(false);
 
   const [xplorzGSTFocused, setXplorzGSTFocused] = useState(false);
   const [vendorGSTFocused, setVendorGSTFocused] = useState(false);
@@ -401,6 +402,7 @@ const AddNewBooking = () => {
       }
     }
     // Adding response
+    setDisabled(true);
     const response = await createItem('bookings', {
       booking_type: bookingType.value,
       client_id: clientID.value,
@@ -452,6 +454,7 @@ const AddNewBooking = () => {
       is_offshore: isOffshore,
       sector: sector || undefined,
     });
+    setDisabled(false);
     if (response?.success) {
       sendToast('success', 'Created Invoice Successfully.', 4000);
       router.push('/dashboard/bookings');
@@ -1726,6 +1729,7 @@ const AddNewBooking = () => {
                       <button
                         type='submit'
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
+                        disabled={disabled}
                       >
                         Add Invoice
                       </button>

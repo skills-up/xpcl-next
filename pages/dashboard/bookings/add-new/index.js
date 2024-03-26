@@ -41,6 +41,7 @@ const AddNewBooking = () => {
   const [grossCommission, setGrossCommission] = useState(0);
   const [isOffshore, setIsOffshore] = useState(false);
   const [clientQuotedAmount, setClientQuotedAmount] = useState(0);
+  const [disabled, setDisabled] = useState(false);
 
   // Percentages
   const [vendorServiceChargePercent, setVendorServiceChargePercent] = useState(18);
@@ -227,6 +228,7 @@ const AddNewBooking = () => {
       }
     }
     // Adding response
+    setDisabled(true);
     const response = await createItem('bookings', {
       booking_type: bookingType.value,
       client_id: clientID?.value,
@@ -278,6 +280,7 @@ const AddNewBooking = () => {
       is_offshore: isOffshore,
       sector: bookingType.value === 'Miscellaneous' ? sector : undefined,
     });
+    setDisabled(false);
     if (response?.success) {
       sendToast('success', 'Created Invoice Successfully.', 4000);
       router.push('/dashboard/bookings');
@@ -640,6 +643,7 @@ const AddNewBooking = () => {
                   <form
                     onSubmit={onSubmit}
                     className='row col-12 y-gap-10 x-gap-10 lg:pr-0 lg:ml-0'
+                    disabled={disabled}
                   >
                     <h3>Basic Details</h3>
                     {/* <div className='form-input-select col-lg-12'>
