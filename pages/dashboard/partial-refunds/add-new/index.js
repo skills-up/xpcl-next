@@ -1,16 +1,16 @@
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import DatePicker, { DateObject } from 'react-multi-date-picker';
+import { useSelector } from 'react-redux';
+import Select from 'react-select';
+import ReactSwitch from 'react-switch';
+import { createItem, getItem, getList } from '../../../../api/xplorzApi';
 import Seo from '../../../../components/common/Seo';
 import Footer from '../../../../components/footer/dashboard-footer';
 import Header from '../../../../components/header/dashboard-header';
 import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
-import { useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
-import { sendToast } from '../../../../utils/toastify';
-import { useEffect, useState } from 'react';
-import { createItem, getItem, getList } from '../../../../api/xplorzApi';
-import ReactSwitch from 'react-switch';
-import Select from 'react-select';
-import DatePicker, { DateObject } from 'react-multi-date-picker';
 import { capitalize } from '../../../../utils/text-utils';
+import { sendToast } from '../../../../utils/toastify';
 
 const AddNewPartialRefund = () => {
   const [vendorBaseAmount, setVendorBaseAmount] = useState(0);
@@ -41,6 +41,7 @@ const AddNewPartialRefund = () => {
   const [isOffshore, setIsOffshore] = useState(false);
   const [bookingType, setBookingType] = useState(null);
   const [clientRefundAmount, setClientRefundAmount] = useState(0);
+  const [disabled, setDisabled] = useState(false);
 
   // Percentages
   const [vendorServiceChargePercent, setVendorServiceChargePercent] = useState(18);
@@ -325,6 +326,7 @@ const AddNewPartialRefund = () => {
       sendToast('error', 'You must select a Vendor', 4000);
       return;
     }
+    setDisabled(true);
     const response = await createItem('partial-refunds', {
       booking_id: router.query.booking_id,
       refund_date: refundDate.format('YYYY-MM-DD'),
@@ -356,6 +358,7 @@ const AddNewPartialRefund = () => {
       reason: capitalize(reason),
       is_offshore: isOffshore,
     });
+    setDisabled(false);
     if (response?.success) {
       sendToast('success', 'Created Partial Refund Successfully.', 4000);
       router.push('/dashboard/partial-refunds');
@@ -444,7 +447,7 @@ const AddNewPartialRefund = () => {
       setVendorTDSPercent(
         Number(
           (100 * vendorTDS) / ((+grossCommission || 0) - (+vendorServiceCharges || 0))
-        )//.toFixed(2)
+        ) //.toFixed(2)
       );
   };
 
@@ -462,7 +465,7 @@ const AddNewPartialRefund = () => {
   const updateVendorServiceChargePercent = (vendorServiceCharges, grossCommission) => {
     if (!vendorGSTFocused)
       setVendorServiceChargePercent(
-        Number((100 * (+vendorServiceCharges || 0)) / (+grossCommission || 0))//.toFixed(2)
+        Number((100 * (+vendorServiceCharges || 0)) / (+grossCommission || 0)) //.toFixed(2)
       );
   };
 
@@ -570,7 +573,7 @@ const AddNewPartialRefund = () => {
       Number(
         (100 * (+clientServiceCharges || 0)) /
           ((+clientBaseAmount || 0) + (+clientReferralFee || 0))
-      )//.toFixed(2)
+      ) //.toFixed(2)
     );
   };
 
@@ -1338,6 +1341,7 @@ const AddNewPartialRefund = () => {
                       <button
                         type='submit'
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
+                        disabled={disabled}
                       >
                         Add Partial Refund
                       </button>

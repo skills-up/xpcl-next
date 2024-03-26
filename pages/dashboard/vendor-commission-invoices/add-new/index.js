@@ -1,15 +1,15 @@
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import DatePicker, { DateObject } from 'react-multi-date-picker';
+import { useSelector } from 'react-redux';
+import Select from 'react-select';
+import ReactSwitch from 'react-switch';
+import { createItem, getList } from '../../../../api/xplorzApi';
 import Seo from '../../../../components/common/Seo';
 import Footer from '../../../../components/footer/dashboard-footer';
 import Header from '../../../../components/header/dashboard-header';
 import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
-import { useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
 import { sendToast } from '../../../../utils/toastify';
-import { useEffect, useState } from 'react';
-import { createItem, getList } from '../../../../api/xplorzApi';
-import ReactSwitch from 'react-switch';
-import Select from 'react-select';
-import DatePicker, { DateObject } from 'react-multi-date-picker';
 
 const AddNewVendorCommissionInvoice = () => {
   const [date, setDate] = useState(new DateObject());
@@ -24,6 +24,7 @@ const AddNewVendorCommissionInvoice = () => {
   const [cgst, setCgst] = useState('');
   const [sgst, setSgst] = useState('');
   const [tds, setTds] = useState('');
+  const [disabled, setDisabled] = useState(false);
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -55,6 +56,7 @@ const AddNewVendorCommissionInvoice = () => {
       return;
     }
 
+    setDisabled(true);
     const response = await createItem('vendor-commission-invoices', {
       date: date.format('YYYY-MM-DD'),
       previous_financial_year: previousFinancialYear,
@@ -68,6 +70,7 @@ const AddNewVendorCommissionInvoice = () => {
       sgst,
       tds: tds || 0,
     });
+    setDisabled(false);
     if (response?.success) {
       sendToast('success', 'Created Vendor Commission Invoice Successfully.', 4000);
       router.push('/dashboard/vendor-commission-invoices');
@@ -274,6 +277,7 @@ const AddNewVendorCommissionInvoice = () => {
                       <button
                         type='submit'
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
+                        disabled={disabled}
                       >
                         Add Vendor Commission Invoice
                       </button>

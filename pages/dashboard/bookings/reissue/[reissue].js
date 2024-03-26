@@ -1,18 +1,18 @@
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { BiPlusMedical } from 'react-icons/bi';
+import { BsTrash3 } from 'react-icons/bs';
+import DatePicker, { DateObject } from 'react-multi-date-picker';
+import { useSelector } from 'react-redux';
+import Select from 'react-select';
+import ReactSwitch from 'react-switch';
+import { createItem, getItem, getList } from '../../../../api/xplorzApi';
 import Seo from '../../../../components/common/Seo';
+import AirportSearch from '../../../../components/flight-list/common/AirportSearch';
 import Footer from '../../../../components/footer/dashboard-footer';
 import Header from '../../../../components/header/dashboard-header';
 import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
-import { useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
 import { sendToast } from '../../../../utils/toastify';
-import { useEffect, useState } from 'react';
-import { createItem, getItem, getList } from '../../../../api/xplorzApi';
-import ReactSwitch from 'react-switch';
-import Select from 'react-select';
-import DatePicker, { DateObject } from 'react-multi-date-picker';
-import { BiPlusMedical } from 'react-icons/bi';
-import { BsTrash3 } from 'react-icons/bs';
-import AirportSearch from '../../../../components/flight-list/common/AirportSearch';
 
 const ReissueBooking = () => {
   const [ticketNumber, setTicketNumber] = useState('');
@@ -41,6 +41,7 @@ const ReissueBooking = () => {
   const [isOffshore, setIsOffshore] = useState(false);
   const [grossCommission, setGrossCommission] = useState(0);
   const [clientQuotedAmount, setClientQuotedAmount] = useState(0);
+  const [disabled, setDisabled] = useState(false);
 
   // Percentages
   const [vendorServiceChargePercent, setVendorServiceChargePercent] = useState(18);
@@ -302,7 +303,7 @@ const ReissueBooking = () => {
                 date: bookSec.travel_date,
                 format: 'YYYY-MM-DD',
               }),
-              travel_time: bookSec?.travel_time?.substring(0,5),
+              travel_time: bookSec?.travel_time?.substring(0, 5),
               details: bookSec?.details,
               booking_class: tempBookingClass,
             });
@@ -354,10 +355,14 @@ const ReissueBooking = () => {
       }
     }
     // Adding response
+    setDisabled(true);
     const response = await createItem('bookings/' + router.query.reissue + '/reissue', {
       booking_type: bookingType.value,
       booking_date: bookingDate.format('YYYY-MM-DD'),
-      ticket_number: (bookingType.value === 'Miscellaneous' ? ticketNumber : ticketNumber.replace(/\W/g, '')),
+      ticket_number:
+        bookingType.value === 'Miscellaneous'
+          ? ticketNumber
+          : ticketNumber.replace(/\W/g, ''),
       pnr,
       vendor_id: vendorID.value,
       vendor_base_amount: vendorBaseAmount || 0,
@@ -403,6 +408,7 @@ const ReissueBooking = () => {
       is_offshore: isOffshore,
       sector: sector || undefined,
     });
+    setDisabled(false);
     if (response?.success) {
       sendToast('success', 'Reissued Invoice Successfully.', 4000);
       router.push('/dashboard/bookings');
@@ -487,7 +493,9 @@ const ReissueBooking = () => {
         (+vendorGSTAmount || 0) +
         (+reissuePenalty || 0) +
         (+vendorMiscCharges || 0)
-    ).toFixed(2).replace(/[.,]00$/, '');
+    )
+      .toFixed(2)
+      .replace(/[.,]00$/, '');
     setVendorTotal(vendorTotal);
     // Updating
     updatePaymentAmount(paymentAccountID, vendorTotal, vendorMiscCharges);
@@ -509,7 +517,7 @@ const ReissueBooking = () => {
       setVendorTDSPercent(
         Number(
           (100 * vendorTDS) / ((+grossCommission || 0) - (+vendorServiceCharges || 0))
-        )//.toFixed(2)
+        ) //.toFixed(2)
       );
   };
 
@@ -527,7 +535,7 @@ const ReissueBooking = () => {
   const updateVendorServiceChargePercent = (vendorServiceCharges, grossCommission) => {
     if (!vendorGSTFocused)
       setVendorServiceChargePercent(
-        Number((100 * (+vendorServiceCharges || 0)) / (+grossCommission || 0))//.toFixed(2)
+        Number((100 * (+vendorServiceCharges || 0)) / (+grossCommission || 0)) //.toFixed(2)
       );
   };
 
@@ -627,7 +635,7 @@ const ReissueBooking = () => {
       Number(
         (100 * (+clientServiceCharges || 0)) /
           ((+clientBaseAmount || 0) + (+clientReferralFee || 0))
-      )//.toFixed(2)
+      ) //.toFixed(2)
     );
   };
 
@@ -1550,7 +1558,11 @@ const ReissueBooking = () => {
                     {!isOffshore && (
                       <div className='col-lg-4 pr-0'>
                         <div className='row'>
-                          <label className='col-12 fw-500 mb-4'>{bookingType?.value !== 'Miscellaneous' ? 'Xplorz GST Amount' : 'Client Service Charges'}</label>
+                          <label className='col-12 fw-500 mb-4'>
+                            {bookingType?.value !== 'Miscellaneous'
+                              ? 'Xplorz GST Amount'
+                              : 'Client Service Charges'}
+                          </label>
                           <div className='form-input col-4'>
                             <input
                               onChange={(e) => {
@@ -1636,6 +1648,7 @@ const ReissueBooking = () => {
                       <button
                         type='submit'
                         className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
+                        disabled={disabled}
                       >
                         Reissue Invoice
                       </button>
