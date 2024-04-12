@@ -240,6 +240,20 @@ const Sidebar = () => {
           title: 'GST MIS',
           href: '/dashboard/reports/gst-mis',
           permissions: ['reports.gst-mis'],
+          submenus: filterAllowed([
+            {
+              title: 'Lock Entries',
+              href: '/dashboard/reports/lock-entries',
+              icon: <AiOutlinePlus />,
+              permissions: ['references.index'],
+            },
+            {
+              title: 'View Locked Updates',
+              href: '/dashboard/reports/locked-updates',
+              icon: <AiOutlinePlus />,
+              permissions: ['locked-updated.index'],
+            },
+          ]),
         },
         {
           title: 'GST ITC Report',

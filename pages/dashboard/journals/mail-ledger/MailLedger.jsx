@@ -10,14 +10,48 @@ import { sendToast } from '../../../../utils/toastify';
 const MailLedger = () => {
   const [ledgerData, setLedgerData] = useState(null);
   const date = new DateObject();
+  const monthStart = new DateObject().setDay(1);
+  const fyStart = new DateObject()
+    .setYear(date.year - (date.month.number < 4 ? 1 : 0))
+    .setMonth(4)
+    .setDay(1);
+  const prevFyStart = new DateObject()
+    .setYear(fyStart.year - 1)
+    .setMonth(4)
+    .setDay(1);
+  const prevFyEnd = new DateObject().setYear(fyStart.year).setMonth(3).setDay(31);
+  const less90d = new DateObject().subtract(90, 'days');
+  const rangeOptions = [
+    { value: 'current', label: 'Current FY' },
+    { value: 'previous', label: 'Previous FY' },
+    { value: '90days', label: 'Last 90 Days' },
+    { value: 'month', label: 'Current Month' },
+    { value: 'custom', label: 'Custom' },
+  ];
+  const [showDateSelector, setShowDateSelector] = useState(false);
 
-  const [dates, setDates] = useState([
-    new DateObject()
-      .setYear(date.year - (date.month.number < 4 ? 1 : 0))
-      .setMonth(date.year < 2024 || (date.year == 2024 && date.month.number < 4) ? 10 : 4)
-      .setDay('1'),
-    new DateObject(),
-  ]);
+  const setDateOptions = (value) => {
+    setShowDateSelector(false);
+    console.log('Selected', value);
+    switch (value.value) {
+      case 'current':
+        setDates([fyStart, date]);
+        break;
+      case 'previous':
+        setDates([prevFyStart, prevFyEnd]);
+        break;
+      case '90days':
+        setDates([less90d, date]);
+        break;
+      case 'month':
+        setDates([monthStart, date]);
+        break;
+      case 'custom':
+        setShowDateSelector(true);
+        break;
+    }
+  };
+  const [dates, setDates] = useState([fyStart, date]);
   const [clients, setClients] = useState([]);
   const [clientID, setClientID] = useState(null);
   const [email, setEmail] = useState(null);
@@ -143,7 +177,7 @@ const MailLedger = () => {
       {/* Search Form */}
       <h5>Select Client and Ledger Period</h5>
       <div className='row'>
-        <div className='col-lg-6 col-12 form-input-select'>
+        <div className='col-lg-5 col-12 form-input-select'>
           <label>Select Client</label>
           <Select
             options={clients}
@@ -152,22 +186,32 @@ const MailLedger = () => {
             onChange={(id) => setClientID(id)}
           />
         </div>
-        <div className='col-lg-6 col-12 form-datepicker'>
-          <label>Select Start & End Dates</label>
-          <DatePicker
-            style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
-            inputClass='custom_input-picker'
-            containerClassName='custom_container-picker'
-            value={dates}
-            onChange={setDates}
-            numberOfMonths={2}
-            offsetY={10}
-            range
-            rangeHover
-            format='DD MMMM YYYY'
-            minDate='2023-10-01'
+        <div className='col-lg-3 col-12 form-input-select'>
+          <label>Select Period</label>
+          <Select
+            options={rangeOptions}
+            defaultValue={rangeOptions[0]}
+            onChange={setDateOptions}
           />
         </div>
+        {showDateSelector && (
+          <div className='col-lg-4 col-12 form-datepicker'>
+            <label>Select Start & End Dates</label>
+            <DatePicker
+              style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
+              inputClass='custom_input-picker'
+              containerClassName='custom_container-picker'
+              value={dates}
+              onChange={setDates}
+              numberOfMonths={2}
+              offsetY={10}
+              range
+              rangeHover
+              format='DD MMMM YYYY'
+              minDate='2023-10-01'
+            />
+          </div>
+        )}
       </div>
       {/* Mail Form */}
       {ledgerData && (
