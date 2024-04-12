@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { AiOutlineEye } from 'react-icons/ai';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
+import Select from 'react-select';
 import { getItem, getList } from '../../../../api/xplorzApi';
 import ActionsButton from '../../../../components/actions-button/ActionsButton';
 import CustomDataModal from '../../../../components/customDataModal';
@@ -13,16 +14,51 @@ const Journals = () => {
   const [pageSize, setPageSize] = useState(10);
 
   const date = new DateObject();
+  const monthStart = new DateObject().setDay(1);
+  const fyStart = new DateObject()
+    .setYear(date.year - (date.month.number < 4 ? 1 : 0))
+    .setMonth(4)
+    .setDay(1);
+  const prevFyStart = new DateObject()
+    .setYear(fyStart.year - 1)
+    .setMonth(4)
+    .setDay(1);
+  const prevFyEnd = new DateObject().setYear(fyStart.year).setMonth(3).setDay(31);
+  const less90d = new DateObject().subtract(90, 'days');
+  const rangeOptions = [
+    { value: 'current', label: 'Current FY' },
+    { value: 'previous', label: 'Previous FY' },
+    { value: '90days', label: 'Last 90 Days' },
+    { value: 'month', label: 'Current Month' },
+    { value: 'custom', label: 'Custom' },
+  ];
+  const [showDateSelector, setShowDateSelector] = useState(false);
+  const [dates, setDates] = useState([fyStart, date]);
 
-  const [dates, setDates] = useState([
-    new DateObject()
-      .setYear(date.year - (date.month.number < 4 ? 1 : 0))
-      .setMonth((date.year == 2024 && date.month.number < 4) ? 10 : 4)
-      .setDay('1'),
-    new DateObject(),
-  ]);
   const [modalOpen, setModalOpen] = useState(false);
   const [journalView, setJournalView] = useState([]);
+
+  const setDateOptions = (value) => {
+    setShowDateSelector(false);
+    console.log('Selected', value);
+    switch (value.value) {
+      case 'current':
+        setDates([fyStart, date]);
+        break;
+      case 'previous':
+        setDates([prevFyStart, prevFyEnd]);
+        break;
+      case '90days':
+        setDates([less90d, date]);
+        break;
+      case 'month':
+        setDates([monthStart, date]);
+        break;
+      case 'custom':
+        setShowDateSelector(true);
+        break;
+    }
+  };
 
   const getJournals = async (paginate = false, pageNumber) => {
     let data = {
@@ -220,7 +256,7 @@ const Journals = () => {
       )}
       {/* Search Bar + Add New */}
       <div className='row mb-3 items-center justify-between mr-4'>
-        <div className='col-lg-7 col-12'>
+        <div className='col-lg-5 col-12'>
           <input
             type='text'
             className='d-block form-control'
@@ -229,21 +265,32 @@ const Journals = () => {
             value={searchQuery}
           />
         </div>
-        <div className='col-lg-4 col-12 d-block ml-3 form-datepicker pr-0'>
-          <label>Select Start & End Dates</label>
-          <DatePicker
-            style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
-            inputClass='custom_input-picker'
-            containerClassName='custom_container-picker'
-            value={dates}
-            onChange={setDates}
-            numberOfMonths={2}
-            offsetY={10}
-            range
-            rangeHover
-            format='DD MMMM YYYY'
+        <div className='col-lg-3 col-12 form-input-select'>
+          <label>Select Period</label>
+          <Select
+            options={rangeOptions}
+            defaultValue={rangeOptions[0]}
+            onChange={setDateOptions}
           />
         </div>
+        {showDateSelector && (
+          <div className='col-lg-4 col-12 form-datepicker'>
+            <label>Select Start & End Dates</label>
+            <DatePicker
+              style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
+              inputClass='custom_input-picker'
+              containerClassName='custom_container-picker'
+              value={dates}
+              onChange={setDates}
+              numberOfMonths={2}
+              offsetY={10}
+              range
+              rangeHover
+              format='DD MMMM YYYY'
+              minDate='2023-10-01'
+            />
+          </div>
+        )}
       </div>
       {/* Data Table */}
       <Datatable
