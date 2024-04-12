@@ -14,16 +14,51 @@ import { sendToast } from '../../../../utils/toastify';
 const Ledger = () => {
   const [ledger, setLedger] = useState(null);
   const date = new DateObject();
+  const monthStart = new DateObject().setDay(1);
+  const fyStart = new DateObject()
+    .setYear(date.year - (date.month.number < 4 ? 1 : 0))
+    .setMonth(4)
+    .setDay(1);
+  const prevFyStart = new DateObject()
+    .setYear(fyStart.year - 1)
+    .setMonth(4)
+    .setDay(1);
+  const prevFyEnd = new DateObject().setYear(fyStart.year).setMonth(3).setDay(31);
+  const less90d = new DateObject().subtract(90, 'days');
+  const rangeOptions = [
+    { value: 'current', label: 'Current FY' },
+    { value: 'previous', label: 'Previous FY' },
+    { value: '90days', label: 'Last 90 Days' },
+    { value: 'month', label: 'Current Month' },
+    { value: 'custom', label: 'Custom' },
+  ];
+  const [showDateSelector, setShowDateSelector] = useState(false);
+
+  const setDateOptions = (value) => {
+    setShowDateSelector(false);
+    console.log('Selected', value);
+    switch (value.value) {
+      case 'current':
+        setDates([fyStart, date]);
+        break;
+      case 'previous':
+        setDates([prevFyStart, prevFyEnd]);
+        break;
+      case '90days':
+        setDates([less90d, date]);
+        break;
+      case 'month':
+        setDates([monthStart, date]);
+        break;
+      case 'custom':
+        setShowDateSelector(true);
+        break;
+    }
+  };
 
   const client_id = useSelector((state) => state.auth.value.currentOrganization);
 
-  const [dates, setDates] = useState([
-    new DateObject()
-      .setYear(date.year - (date.month.number < 4 ? 1 : 0))
-      .setMonth(date.year < 2024 || (date.year == 2024 && date.month.number < 4) ? 10 : 4)
-      .setDay('1'),
-    new DateObject(),
-  ]);
+  const [dates, setDates] = useState([fyStart, date]);
   const [modalOpen, setModalOpen] = useState(false);
   const [accounts, setAccounts] = useState([]);
   const [accountID, setAccountID] = useState(null);
@@ -165,24 +200,34 @@ const Ledger = () => {
       )}
       {/* Search Bar + Add New */}
       <div className='row mb-3 pr-0 items-center justify-between mr-4'>
-        <div className='col-lg-5 col-12 d-block ml-3 form-datepicker'>
-          <label>Select Start & End Dates</label>
-          <DatePicker
-            style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
-            inputClass='custom_input-picker'
-            containerClassName='custom_container-picker'
-            value={dates}
-            onChange={setDates}
-            numberOfMonths={2}
-            offsetY={10}
-            range
-            rangeHover
-            format='DD MMMM YYYY'
-            minDate='2023-10-01'
+        <div className='col-lg-3 col-12 form-input-select'>
+          <label>Select Period</label>
+          <Select
+            options={rangeOptions}
+            defaultValue={rangeOptions[0]}
+            onChange={setDateOptions}
           />
         </div>
+        {showDateSelector && (
+          <div className='col-lg-4 col-12 form-datepicker'>
+            <label>Select Start & End Dates</label>
+            <DatePicker
+              style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
+              inputClass='custom_input-picker'
+              containerClassName='custom_container-picker'
+              value={dates}
+              onChange={setDates}
+              numberOfMonths={2}
+              offsetY={10}
+              range
+              rangeHover
+              format='DD MMMM YYYY'
+              minDate='2023-10-01'
+            />
+          </div>
+        )}
         {client_id === 1 && (
-          <div className='col-lg-6 col-12 pr-0 form-input-select'>
+          <div className='col-lg-5 col-12 pr-0 form-input-select'>
             <label>Select Account</label>
             <Select
               options={accounts}
