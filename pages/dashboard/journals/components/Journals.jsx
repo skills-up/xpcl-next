@@ -22,7 +22,7 @@ const Journals = () => {
     .setDay(1);
   const prevFyStart = new DateObject()
     .setYear(fyStart.year - 1)
-    .setMonth(4)
+    .setMonth(fyStart.year == 2024 ? 10 : 4)
     .setDay(1);
   const prevFyEnd = new DateObject().setYear(fyStart.year).setMonth(3).setDay(31);
   const less90d = new DateObject().subtract(90, 'days');
