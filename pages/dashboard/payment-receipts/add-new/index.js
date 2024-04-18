@@ -8,8 +8,8 @@ import Seo from '../../../../components/common/Seo';
 import Footer from '../../../../components/footer/dashboard-footer';
 import Header from '../../../../components/header/dashboard-header';
 import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
-import { sendToast } from '../../../../utils/toastify';
 import { capitalize } from '../../../../utils/text-utils';
+import { sendToast } from '../../../../utils/toastify';
 
 const AddNewPaymentReceipt = () => {
   const [type, setType] = useState(null);
@@ -23,6 +23,7 @@ const AddNewPaymentReceipt = () => {
   const [bankCashAccounts, setBankCashAccounts] = useState([]);
   const [tdsAccounts, setTDSAccounts] = useState([]);
   const [organizations, setOrganizations] = useState([]);
+  let prevDate = date.format('YYYY-MM-DD');
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -34,7 +35,7 @@ const AddNewPaymentReceipt = () => {
   const getData = async () => {
     setType({ value: router.query.type });
     const organizations = await getList('organizations');
-    const accounts = await getList('accounts');
+    const accounts = await getList('accounts', { date: prevDate });
     const bankCashAccounts = await getList('accounts', { is_bank_cash: 1 });
     const tdsAccounts = await getList('accounts', { category: 'TDS Deductions' });
     if (
@@ -111,7 +112,22 @@ const AddNewPaymentReceipt = () => {
         }
       }
     }
-  }, [organizationID]);
+  }, [organizationID, accounts]);
+
+  const fetchAccounts = async (date) => {
+    const newDate = date.format('YYYY-MM-DD');
+    if (newDate == prevDate) return;
+    const accounts = await getList('accounts', { date: newDate });
+    if (accounts?.success) {
+      prevDate = newDate;
+      const accountIDs = accounts.data.map((element) => element.id);
+      if (crAccountID && !accountIDs.includes(crAccountID.value)) setCrAccountID(null);
+      if (drAccountID && !accountIDs.includes(drAccountID.value)) setDrAccountID(null);
+      setAccounts(
+        accounts.data.map((element) => ({ value: element.id, label: element.name }))
+      );
+    }
+  };
 
   return (
     <>
@@ -167,7 +183,10 @@ const AddNewPaymentReceipt = () => {
                         inputClass='custom_input-picker'
                         containerClassName='custom_container-picker'
                         value={date}
-                        onChange={setDate}
+                        onChange={(date) => {
+                          setDate(date);
+                          if (date) fetchAccounts(date);
+                        }}
                         numberOfMonths={1}
                         offsetY={10}
                         format='DD MMMM YYYY'
