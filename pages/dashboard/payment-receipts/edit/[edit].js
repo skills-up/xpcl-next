@@ -1,17 +1,17 @@
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import DatePicker, { DateObject } from 'react-multi-date-picker';
+import Select from 'react-select';
+import ReactSwitch from 'react-switch';
+import { createItem, getItem, getList } from '../../../../api/xplorzApi';
 import Seo from '../../../../components/common/Seo';
 import Footer from '../../../../components/footer/dashboard-footer';
 import Header from '../../../../components/header/dashboard-header';
-import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
-import { useRouter } from 'next/router';
-import { sendToast } from '../../../../utils/toastify';
-import { useEffect, useState } from 'react';
-import { createItem, getItem, getList } from '../../../../api/xplorzApi';
-import ReactSwitch from 'react-switch';
-import Select from 'react-select';
-import DatePicker, { DateObject } from 'react-multi-date-picker';
-import { capitalize } from '../../../../utils/text-utils';
-import PreviousUploadPictures from '../../../../components/previous-file-uploads';
 import NewFileUploads from '../../../../components/new-file-uploads';
+import PreviousUploadPictures from '../../../../components/previous-file-uploads';
+import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
+import { capitalize } from '../../../../utils/text-utils';
+import { sendToast } from '../../../../utils/toastify';
 
 const UpdatePaymentReceipt = () => {
   const [type, setType] = useState(null);
@@ -49,6 +49,7 @@ const UpdatePaymentReceipt = () => {
     { label: 'Receipt', value: 'Receipt' },
     { label: 'Voucher', value: 'Voucher' },
   ]);
+  let prevDate = null;
 
   const router = useRouter();
 
@@ -75,13 +76,14 @@ const UpdatePaymentReceipt = () => {
     if (router.query.edit) {
       const response = await getItem('payment-receipts', router.query.edit);
       if (response?.success) {
+        prevDate = response.data.date;
         setNarration(response.data.narration);
         setAmount(response.data.amount);
-        setDate(new DateObject({ date: response.data.date, format: 'YYYY-MM-DD' }));
+        setDate(new DateObject({ date: prevDate, format: 'YYYY-MM-DD' }));
         setNumber(response.data.number);
 
         const miscOrgs = await getList('organizations', { is_misc: 1 });
-        const accounts = await getList('accounts');
+        const accounts = await getList('accounts', { date: prevDate });
         const tdsAccounts = await getList('accounts', { category: 'TDS Deductions' });
         const bankCashAccounts = await getList('accounts', { is_bank_cash: 1 });
         if (
@@ -136,9 +138,7 @@ const UpdatePaymentReceipt = () => {
             if (response.data?.payment_itc) {
               setItcObj((prev) => ({ ...prev, ...response.data.payment_itc }));
               setSelectedOrganization(
-                orgData.filter(
-                  (org) => org.value === response.data.payment_itc.org_id
-                )[0]
+                orgData.filter((org) => org.value === response.data.payment_itc.org_id)[0]
               );
             }
             let tempTDSObj = response.data?.payment_tds;
@@ -240,7 +240,21 @@ const UpdatePaymentReceipt = () => {
   //       }
   //     }
   //   }
-  // }, [organizationID]);
+  // }, [organizationID, accounts]);
+  const fetchAccounts = async (date) => {
+    const newDate = date.format('YYYY-MM-DD');
+    if (newDate == prevDate) return;
+    const accounts = await getList('accounts', { date: newDate });
+    if (accounts?.success) {
+      prevDate = newDate;
+      const accountIDs = accounts.data.map((element) => element.id);
+      if (crAccountID && !accountIDs.includes(crAccountID.value)) setCrAccountID(null);
+      if (drAccountID && !accountIDs.includes(drAccountID.value)) setDrAccountID(null);
+      setAccounts(
+        accounts.data.map((element) => ({ value: element.id, label: element.name }))
+      );
+    }
+  };
 
   return (
     <>
@@ -298,7 +312,10 @@ const UpdatePaymentReceipt = () => {
                         inputClass='custom_input-picker'
                         containerClassName='custom_container-picker'
                         value={date}
-                        onChange={setDate}
+                        onChange={(date) => {
+                          setDate(date);
+                          if (date) fetchAccounts(date);
+                        }}
                         numberOfMonths={1}
                         offsetY={10}
                         format='DD MMMM YYYY'

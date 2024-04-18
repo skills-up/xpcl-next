@@ -49,6 +49,7 @@ const AddNewPaymentReceipt = () => {
   ]);
   const [disabled, setDisabled] = useState(false);
 
+  let prevDate = null;
   const router = useRouter();
 
   useEffect(() => {
@@ -74,12 +75,13 @@ const AddNewPaymentReceipt = () => {
     if (router.query.clone) {
       const response = await getItem('payment-receipts', router.query.clone);
       if (response?.success) {
+        prevDate = response.data.date;
         setNarration(response.data.narration);
         setAmount(response.data.amount);
-        setDate(new DateObject({ date: response.data.date, format: 'YYYY-MM-DD' }));
+        setDate(new DateObject({ date: prevDate, format: 'YYYY-MM-DD' }));
 
         const miscOrgs = await getList('organizations', { is_misc: 1 });
-        const accounts = await getList('accounts');
+        const accounts = await getList('accounts', { date: prevDate });
         const tdsAccounts = await getList('accounts', { category: 'TDS Deductions' });
         const bankCashAccounts = await getList('accounts', { is_bank_cash: 1 });
         if (
@@ -234,7 +236,21 @@ const AddNewPaymentReceipt = () => {
   //       }
   //     }
   //   }
-  // }, [organizationID]);
+  // }, [organizationID, accounts]);
+  const fetchAccounts = async (date) => {
+    const newDate = date.format('YYYY-MM-DD');
+    if (newDate == prevDate) return;
+    const accounts = await getList('accounts', { date: newDate });
+    if (accounts?.success) {
+      prevDate = newDate;
+      const accountIDs = accounts.data.map((element) => element.id);
+      if (crAccountID && !accountIDs.includes(crAccountID.value)) setCrAccountID(null);
+      if (drAccountID && !accountIDs.includes(drAccountID.value)) setDrAccountID(null);
+      setAccounts(
+        accounts.data.map((element) => ({ value: element.id, label: element.name }))
+      );
+    }
+  };
 
   return (
     <>
@@ -290,7 +306,10 @@ const AddNewPaymentReceipt = () => {
                         inputClass='custom_input-picker'
                         containerClassName='custom_container-picker'
                         value={date}
-                        onChange={setDate}
+                        onChange={(date) => {
+                          setDate(date);
+                          if (date) fetchAccounts(date);
+                        }}
                         numberOfMonths={1}
                         offsetY={10}
                         format='DD MMMM YYYY'
