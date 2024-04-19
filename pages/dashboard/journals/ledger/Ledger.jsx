@@ -48,30 +48,37 @@ const Ledger = () => {
     console.log('Selected', value);
     switch (value.value) {
       case 'current':
-        setDates([fyStart, date]);
+        setDateValues([fyStart, date]);
         break;
       case 'previous':
-        setDates([prevFyStart, prevFyEnd]);
+        setDateValues([prevFyStart, prevFyEnd]);
         break;
       case '90days':
-        setDates([less90d, date]);
+        setDateValues([less90d, date]);
         break;
       case 'month':
-        setDates([monthStart, date]);
+        setDateValues([monthStart, date]);
         break;
       case 'custom':
         setShowDateSelector(true);
         break;
     }
   };
+  let currDate = fyStart,
+    prevDate = null;
 
   const getData = async () => {
     // Getting accounts
-    const response = await getList('accounts');
+    if (currDate == prevDate) return;
+    const response = await getList('accounts', { date: currDate.format('YYYY-MM-DD') });
     if (response?.success) {
+      prevDate = currDate;
       setAccounts(
         response.data.map((element) => ({ value: element.id, label: element.name }))
       );
+      if (!response.data.map((e) => e.id).includes(accountID?.value)) {
+        setAccountID(null);
+      }
       // Checking for query param
       if (router.query?.account_id) {
         for (let acc of response.data)
@@ -85,6 +92,12 @@ const Ledger = () => {
         4000
       );
     }
+  };
+
+  const setDateValues = (value) => {
+    currDate = value[0];
+    getData();
+    setDates(value);
   };
 
   const getLedger = async () => {
@@ -206,7 +219,7 @@ const Ledger = () => {
               inputClass='custom_input-picker'
               containerClassName='custom_container-picker'
               value={dates}
-              onChange={setDates}
+              onChange={setDateValues}
               numberOfMonths={2}
               offsetY={10}
               range
