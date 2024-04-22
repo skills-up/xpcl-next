@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { FaLock } from 'react-icons/fa';
+import { FaLock, FaUnlock } from 'react-icons/fa';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 import { createItem, getList } from '../../../../api/xplorzApi';
 import { sendToast } from '../../../../utils/toastify';
@@ -34,10 +34,11 @@ const LockEntries = () => {
 
   const lockEntries = async () => {
     const response = await createItem('reports/lock-references', {
-      references: data,
+      references: data.filter((d) => !d.locked).map((d) => d.reference),
     });
     if (response?.success) {
       sendToast('success', 'Entries locked successfully', 4000);
+      router.reload();
     } else {
       sendToast(
         'error',
@@ -66,8 +67,13 @@ const LockEntries = () => {
       <div className='row my-4'>
         {data.length
           ? data.map((d) => (
-              <div key={d} className='col-12 col-md-4 col-lg-3'>
-                {d}
+              <div key={d.reference} className='col-12 col-md-4 col-lg-3 align-middle'>
+                {d.locked ? (
+                  <FaLock className='text-danger text-12 me-2' />
+                ) : (
+                  <FaUnlock className='text-success text-12 me-2' />
+                )}
+                {d.reference}
               </div>
             ))
           : null}
