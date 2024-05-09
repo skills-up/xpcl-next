@@ -1,14 +1,14 @@
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import Select from 'react-select';
+import ReactSwitch from 'react-switch';
+import { createItem, getList } from '../../../../api/xplorzApi';
 import Seo from '../../../../components/common/Seo';
 import Footer from '../../../../components/footer/dashboard-footer';
 import Header from '../../../../components/header/dashboard-header';
 import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
-import { useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
 import { sendToast } from '../../../../utils/toastify';
-import { useEffect, useState } from 'react';
-import { createItem, getList } from '../../../../api/xplorzApi';
-import ReactSwitch from 'react-switch';
-import Select from 'react-select';
 
 const AddNewAccounts = () => {
   const [accountCategories, setAccountCategories] = useState([]);
@@ -17,7 +17,7 @@ const AddNewAccounts = () => {
   const [isBankCash, setIsBankCash] = useState(false);
 
   const date = new Date();
-  const baseYear = date.getFullYear() - (date.getMonth() < 4 ? 1 : 0);
+  const baseYear = date.getFullYear();
   const [year, setYear] = useState({ label: baseYear, value: baseYear });
 
   const yearOptions = [
@@ -25,7 +25,7 @@ const AddNewAccounts = () => {
     { label: baseYear, value: baseYear },
     { label: baseYear + 1, value: baseYear + 1 },
   ];
-  
+
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
 

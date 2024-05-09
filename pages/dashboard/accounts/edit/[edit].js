@@ -1,14 +1,14 @@
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import Select from 'react-select';
+import ReactSwitch from 'react-switch';
+import { getItem, getList, updateItem } from '../../../../api/xplorzApi';
 import Seo from '../../../../components/common/Seo';
 import Footer from '../../../../components/footer/dashboard-footer';
 import Header from '../../../../components/header/dashboard-header';
 import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
-import { useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
 import { sendToast } from '../../../../utils/toastify';
-import { useEffect, useState } from 'react';
-import { createItem, getItem, getList, updateItem } from '../../../../api/xplorzApi';
-import ReactSwitch from 'react-switch';
-import Select from 'react-select';
 
 const UpdateAccounts = () => {
   const [accountCategories, setAccountCategories] = useState([]);
@@ -17,7 +17,7 @@ const UpdateAccounts = () => {
   const [isBankCash, setIsBankCash] = useState(false);
 
   const date = new Date();
-  const baseYear = date.getFullYear() - (date.getMonth() < 4 ? 1 : 0);
+  const baseYear = date.getFullYear();
   const [year, setYear] = useState({ label: baseYear, value: baseYear });
 
   const yearOptions = [
@@ -51,7 +51,11 @@ const UpdateAccounts = () => {
           // Setting Account Categories
           for (let category of accountCategories.data) {
             if (category.id === response.data.account_category_id) {
-              setAccountCategoryID({ value: category.id, label: category.name, pnl: !category.is_balance_sheet_category });
+              setAccountCategoryID({
+                value: category.id,
+                label: category.name,
+                pnl: !category.is_balance_sheet_category,
+              });
             }
           }
           // Setting Year

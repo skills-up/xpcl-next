@@ -8,15 +8,15 @@ const Journals = () => {
   const [balanceSheet, setBalanceSheet] = useState(null);
   const date = new DateObject();
   const monthStart = new DateObject().setDay(1);
-  const fyStart = new DateObject()
-    .setYear(date.year - (date.month.number < 4 ? 1 : 0))
-    .setMonth(4)
-    .setDay(1);
+  const fyStart = new DateObject().setMonth(1).setDay(1);
   const prevFyStart = new DateObject()
     .setYear(fyStart.year - 1)
-    .setMonth(fyStart.year == 2024 ? 10 : 4)
+    .setMonth(fyStart.year == 2024 ? 10 : 1)
     .setDay(1);
-  const prevFyEnd = new DateObject().setYear(fyStart.year).setMonth(3).setDay(31);
+  const prevFyEnd = new DateObject()
+    .setYear(fyStart.year - 1)
+    .setMonth(12)
+    .setDay(31);
   const less90d = new DateObject().subtract(90, 'days');
   const rangeOptions = [
     { value: 'current', label: 'Current FY' },
