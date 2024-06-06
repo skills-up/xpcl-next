@@ -1,21 +1,30 @@
 import { useEffect, useState } from 'react';
+import { AiOutlinePrinter } from 'react-icons/ai';
+import { FiDownload } from 'react-icons/fi';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
+import { jsonToCSV } from 'react-papaparse';
 import { getList } from '../../../../api/xplorzApi';
+import { downloadCSV as CSVDownloader } from '../../../../utils/fileDownloader';
 import { sendToast } from '../../../../utils/toastify';
 
 const Journals = () => {
   const [balanceSheet, setBalanceSheet] = useState(null);
   const [dates, setDates] = useState(new DateObject());
 
-  const getBalanceSheet = async () => {
+  const getBalanceSheet = async (pdf = false) => {
     const response = await getList('reports/balance-sheet', {
       date: dates.format('YYYY-MM-DD'),
+      pdf: pdf ? 1 : 0,
     });
     if (response?.success) {
       let data = response.data;
-      // Calculating Totals
-      data = await recurseThroughout(data);
-      setBalanceSheet(data);
+      if (pdf) {
+        window.open().document.write(data);
+      } else {
+        // Calculating Totals
+        data = await recurseThroughout(data);
+        setBalanceSheet(data);
+      }
     } else {
       sendToast(
         'error',
@@ -105,8 +114,10 @@ const Journals = () => {
                         }
                         className='d-flex justify-between cursor-pointer'
                       >
-                        <span style={{paddingRight: '1em',maxWidth: '60%'}}>{element}</span>
-                        <span style={{whiteSpace: 'nowrap'}}>
+                        <span style={{ paddingRight: '1em', maxWidth: '60%' }}>
+                          {element}
+                        </span>
+                        <span style={{ whiteSpace: 'nowrap' }}>
                           {Math.abs(+data[element]['_']).toLocaleString('en-AE', {
                             maximumFractionDigits: 2,
                             style: 'currency',
@@ -123,7 +134,8 @@ const Journals = () => {
                     <></>
                   )
                 ) : (
-                  element !== '_' && Math.abs(+data[element]) !== 0 && (
+                  element !== '_' &&
+                  Math.abs(+data[element]) !== 0 && (
                     <a
                       className='d-flex justify-between cursor-pointer'
                       style={{ paddingLeft: `${level}rem`, color: 'blue' }}
@@ -132,8 +144,10 @@ const Journals = () => {
                       }
                       target='_blank'
                     >
-                      <span style={{paddingRight: '1em',maxWidth: '60%'}}>{element.split('|')[1]}</span>
-                      <span style={{whiteSpace: 'nowrap'}}>
+                      <span style={{ paddingRight: '1em', maxWidth: '60%' }}>
+                        {element.split('|')[1]}
+                      </span>
+                      <span style={{ whiteSpace: 'nowrap' }}>
                         {Math.abs(+data[element]).toLocaleString('en-AE', {
                           maximumFractionDigits: 2,
                           style: 'currency',
@@ -150,6 +164,42 @@ const Journals = () => {
         </div>
       );
     }
+  };
+
+  const recusivelyFill = (temp, obj, level) => {
+    for (let [k, v] of Object.entries(obj || {})) {
+      if (typeof v === 'object' && !Array.isArray(v)) {
+        temp.push({ head: ' '.repeat(level) + k, amount: '' });
+        temp = recusivelyFill(temp, v, level + 1);
+      } else if (k.indexOf('|') > 0 && v !== 0) {
+        temp.push({ head: ' '.repeat(level) + k.split('|')[1], amount: v });
+      }
+    }
+    return temp;
+  };
+
+  const toCSV = (filename) => {
+    try {
+      let temp = [];
+      temp.push({ head: 'Assets', amount: '' });
+      temp = recusivelyFill(temp, balanceSheet?.Assets, 0);
+      temp.push({ head: 'Liabilities', amount: '' });
+      temp = recusivelyFill(temp, balanceSheet?.Liabilities, 0);
+      if (balanceSheet?._ !== 0) {
+        temp.push({ head: 'Profit/(Loss)', amount: balanceSheet?._ });
+      }
+      CSVDownloader(jsonToCSV(temp), filename);
+    } catch (err) {
+      sendToast(
+        'error',
+        err?.message || err?.error || 'Error occurred while converting',
+        4000
+      );
+    }
+  };
+
+  const downloadPDF = async () => {
+    getBalanceSheet(1);
   };
 
   return (
@@ -289,6 +339,20 @@ const Journals = () => {
           </div>
         </div>
       </div>
+      {balanceSheet && (
+        <div className='my-4 d-flex justify-center'>
+          <button
+            className='btn btn-primary d-flex items-center justify-between gap-1'
+            onClick={() => toCSV(`Balance-Sheet-${dates.format('DD-MMMM-YYYY')}.csv`)}
+          >
+            <FiDownload className='text-20' />
+            Download CSV
+          </button>
+          <button className='btn btn-info ml-20 text-white' onClick={downloadPDF}>
+            <AiOutlinePrinter className='text-22' /> Generate PDF
+          </button>
+        </div>
+      )}
     </div>
   );
 };

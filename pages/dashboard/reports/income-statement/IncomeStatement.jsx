@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react';
+import { AiOutlinePrinter } from 'react-icons/ai';
+import { FiDownload } from 'react-icons/fi';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
+import { jsonToCSV } from 'react-papaparse';
 import Select from 'react-select';
 import { getList } from '../../../../api/xplorzApi';
+import { downloadCSV as CSVDownloader } from '../../../../utils/fileDownloader';
 import { sendToast } from '../../../../utils/toastify';
 
 const Journals = () => {
@@ -50,16 +54,21 @@ const Journals = () => {
     }
   };
 
-  const getBalanceSheet = async () => {
+  const getBalanceSheet = async (pdf = false) => {
     const response = await getList('reports/income-statement', {
       from_date: dates[0].format('YYYY-MM-DD'),
       to_date: dates[1].format('YYYY-MM-DD'),
+      pdf: pdf ? 1 : 0,
     });
     if (response?.success) {
       let data = response.data;
-      // Calculating Totals
-      data = await recurseThroughout(data);
-      setBalanceSheet(data);
+      if (pdf) {
+        window.open().document.write(data);
+      } else {
+        // Calculating Totals
+        data = await recurseThroughout(data);
+        setBalanceSheet(data);
+      }
     } else {
       sendToast(
         'error',
@@ -203,6 +212,42 @@ const Journals = () => {
     }
   };
 
+  const recusivelyFill = (temp, obj, level) => {
+    for (let [k, v] of Object.entries(obj || {})) {
+      if (typeof v === 'object' && !Array.isArray(v)) {
+        temp.push({ head: ' '.repeat(level) + k, amount: '' });
+        temp = recusivelyFill(temp, v, level + 1);
+      } else if (k.indexOf('|') > 0 && v !== 0) {
+        temp.push({ head: ' '.repeat(level) + k.split('|')[1], amount: -v });
+      }
+    }
+    return temp;
+  };
+
+  const toCSV = (filename) => {
+    try {
+      let temp = [];
+      temp.push({ head: 'Incomes', amount: '' });
+      temp = recusivelyFill(temp, balanceSheet?.Incomes, 0);
+      temp.push({ head: 'Expenses', amount: '' });
+      temp = recusivelyFill(temp, balanceSheet?.Expenses, 0);
+      if (balanceSheet?._ !== 0) {
+        temp.push({ head: 'Profit/(Loss)', amount: -balanceSheet?._ });
+      }
+      CSVDownloader(jsonToCSV(temp), filename);
+    } catch (err) {
+      sendToast(
+        'error',
+        err?.message || err?.error || 'Error occurred while converting',
+        4000
+      );
+    }
+  };
+
+  const downloadPDF = async () => {
+    getBalanceSheet(1);
+  };
+
   return (
     <div className='col-12'>
       {/* Date Picker */}
@@ -235,82 +280,114 @@ const Journals = () => {
         )}
       </div>
       {/* Generated Balance Sheet */}
-      <div className='income-statement'>
-        <div className='liabilities'>
-          <div
-            className='title px-3 py-2'
-            style={{
-              fontWeight: '700',
-            }}
-          >
-            Expenses
-          </div>
-          <div className='records p-3'>
-            {balanceSheet && (
-              <RecursiveComponent data={balanceSheet?.Expenses} level={0} />
-            )}
-          </div>
-          <div className='total px-3'>
-            {balanceSheet ? (
-              balanceSheet?._ < 0 && (
-                <div
-                  className='d-flex justify-between items-center'
-                  style={{ fontWeight: '700', width: '100%' }}
-                >
-                  <span>Profit</span>
-                  <span>
-                    {Math.abs(+balanceSheet?._).toLocaleString('en-AE', {
-                      maximumFractionDigits: 2,
-                      style: 'currency',
-                      currency: 'AED',
-                    })}{' '}
-                    Cr
-                  </span>
-                </div>
-              )
-            ) : (
-              <></>
-            )}
+      {balanceSheet && (
+        <div id='pdf-content'>
+          <h2 className='text-center'>Profit & Lost Statement</h2>
+          {dates && dates?.length === 2 ? (
+            <h4 className='text-center my-2'>
+              From {dates[0].format('DD-MMMM-YYYY')} To {dates[1].format('DD-MMMM-YYYY')}
+            </h4>
+          ) : (
+            <></>
+          )}
+          <div className='income-statement'>
+            <div className='liabilities'>
+              <div
+                className='title px-3 py-2'
+                style={{
+                  fontWeight: '700',
+                }}
+              >
+                Expenses
+              </div>
+              <div className='records p-3'>
+                {balanceSheet && (
+                  <RecursiveComponent data={balanceSheet?.Expenses} level={0} />
+                )}
+              </div>
+              <div className='total px-3'>
+                {balanceSheet ? (
+                  balanceSheet?._ < 0 && (
+                    <div
+                      className='d-flex justify-between items-center'
+                      style={{ fontWeight: '700', width: '100%' }}
+                    >
+                      <span>Profit</span>
+                      <span>
+                        {Math.abs(+balanceSheet?._).toLocaleString('en-AE', {
+                          maximumFractionDigits: 2,
+                          style: 'currency',
+                          currency: 'AED',
+                        })}{' '}
+                        Cr
+                      </span>
+                    </div>
+                  )
+                ) : (
+                  <></>
+                )}
+              </div>
+            </div>
+            <div className='assets'>
+              <div
+                className='title px-3 py-2'
+                style={{
+                  fontWeight: '700',
+                }}
+              >
+                Incomes
+              </div>
+              <div className='records p-3'>
+                {balanceSheet && (
+                  <RecursiveComponent data={balanceSheet?.Incomes} level={0} />
+                )}
+              </div>
+              <div className='total px-3'>
+                {balanceSheet ? (
+                  balanceSheet?._ >= 0 && (
+                    <div
+                      className='d-flex justify-between items-center'
+                      style={{ fontWeight: '700', width: '100%' }}
+                    >
+                      <span>Loss</span>
+                      <span>
+                        {Math.abs(+balanceSheet?._).toLocaleString('en-AE', {
+                          maximumFractionDigits: 2,
+                          style: 'currency',
+                          currency: 'AED',
+                        })}{' '}
+                        Dr
+                      </span>
+                    </div>
+                  )
+                ) : (
+                  <></>
+                )}
+              </div>
+            </div>
           </div>
         </div>
-        <div className='assets'>
-          <div
-            className='title px-3 py-2'
-            style={{
-              fontWeight: '700',
-            }}
-          >
-            Incomes
-          </div>
-          <div className='records p-3'>
-            {balanceSheet && (
-              <RecursiveComponent data={balanceSheet?.Incomes} level={0} />
-            )}
-          </div>
-          <div className='total px-3'>
-            {balanceSheet ? (
-              balanceSheet?._ >= 0 && (
-                <div
-                  className='d-flex justify-between items-center'
-                  style={{ fontWeight: '700', width: '100%' }}
-                >
-                  <span>Loss</span>
-                  <span>
-                    {Math.abs(+balanceSheet?._).toLocaleString('en-AE', {
-                      maximumFractionDigits: 2,
-                      style: 'currency',
-                      currency: 'AED',
-                    })}{' '}
-                    Dr
-                  </span>
-                </div>
+      )}
+      {balanceSheet && (
+        <div className='my-4 d-flex justify-center'>
+          <button
+            className='btn btn-primary d-flex items-center justify-between gap-1'
+            onClick={() =>
+              toCSV(
+                `PnL-${dates[0].format('DD-MMMM-YYYY')}-to-${dates[1].format(
+                  'DD-MMMM-YYYY'
+                )}.csv`
               )
-            ) : (
-              <></>
-            )}
-          </div>
+            }
+          >
+            <FiDownload className='text-20' />
+            Download CSV
+          </button>
+          <button className='btn btn-info ml-20 text-white' onClick={downloadPDF}>
+            <AiOutlinePrinter className='text-22' /> Generate PDF
+          </button>
         </div>
-      </div>
+      )}
     </div>
   );
 };
