@@ -110,7 +110,7 @@ const MailLedger = () => {
           response.data?.client?.contact_name?.split(' ')[0]
         },\n\nPlease find attached the Ledger Statement and Invoices for ${
           response.data?.client?.name
-        } from ${start_date} to ${end_date}.\n\nTotal Amount Due is: AED ${+(response.data?.balance).toFixed(
+        } from ${start_date} to ${end_date}.\n\nTotal Amount Due is: ${respose.data?.currency || 'AED'} ${+(response.data?.balance).toFixed(
           2
         )}\n\nKindly process the statement at the earliest and oblige.\n\nThank You\n\nRegards\nNarayan.`
       );

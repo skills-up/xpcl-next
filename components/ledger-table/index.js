@@ -86,7 +86,7 @@ function LedgerTable({ data, accountID, accountName, dates }) {
                     {Math.abs(newData?.opening_balance).toLocaleString('en-AE', {
                       maximumFractionDigits: 2,
                       style: 'currency',
-                      currency: 'AED',
+                      currency: newData?.currency || 'AED',
                     })}{' '}
                     {newData?.opening_balance >= 0 ? 'Dr' : 'Cr'}
                   </th>
@@ -110,7 +110,7 @@ function LedgerTable({ data, accountID, accountName, dates }) {
                             `${Math.abs(element.amount).toLocaleString('en-AE', {
                               maximumFractionDigits: 2,
                               style: 'currency',
-                              currency: 'AED',
+                              currency: newData?.currency || 'AED',
                             })}`}
                         </td>
                         <td className='number-col'>
@@ -118,14 +118,14 @@ function LedgerTable({ data, accountID, accountName, dates }) {
                             `${Math.abs(element.amount).toLocaleString('en-AE', {
                               maximumFractionDigits: 2,
                               style: 'currency',
-                              currency: 'AED',
+                              currency: newData?.currency || 'AED',
                             })}`}
                         </td>
                         <td className='number-col'>
                           {Math.abs(element?.total).toLocaleString('en-AE', {
                             maximumFractionDigits: 2,
                             style: 'currency',
-                            currency: 'AED',
+                            currency: newData?.currency || 'AED',
                           })}{' '}
                           {element?.total >= 0 ? 'Dr' : 'Cr'}
                         </td>
@@ -142,7 +142,7 @@ function LedgerTable({ data, accountID, accountName, dates }) {
                     {Math.abs(newData?.total).toLocaleString('en-AE', {
                       maximumFractionDigits: 2,
                       style: 'currency',
-                      currency: 'AED',
+                      currency: newData?.currency || 'AED',
                     })}{' '}
                     {newData?.total >= 0 ? 'Dr' : 'Cr'}
                   </th>

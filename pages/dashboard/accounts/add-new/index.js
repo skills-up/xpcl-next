@@ -26,6 +26,15 @@ const AddNewAccounts = () => {
     { label: baseYear + 1, value: baseYear + 1 },
   ];
 
+  const currencyOptions = [
+    { label: 'AED', value: null },
+    { label: 'USD', value: 'USD' },
+    { label: 'EUR', value: 'EUR' },
+    { label: 'GBP', value: 'GBP' },
+    { label: 'INR', value: 'INR' },
+  ]
+  const [currency, setCurrency] = useState(currencyOptions[0]);
+
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
 
@@ -57,6 +66,7 @@ const AddNewAccounts = () => {
       account_category_id: accountCategoryID?.value || null,
       year: year?.value,
       is_bank_cash: isBankCash,
+      currency: currency?.value || null,
     });
     if (response?.success) {
       sendToast('success', 'Created Account Successfully.', 4000);
@@ -153,6 +163,16 @@ const AddNewAccounts = () => {
                         </div>
                       </div>
                     )}
+                    <div className='col-12'>
+                      <div className='form-input-select'>
+                        <label>Select Currency</label>
+                        <Select
+                          options={currencyOptions}
+                          value={currency}
+                          onChange={(id) => setCurrency(id)}
+                        />
+                      </div>
+                    </div>
                     <div className='d-flex items-center gap-3'>
                       <ReactSwitch
                         onChange={() => setIsBankCash((prev) => !prev)}

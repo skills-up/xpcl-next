@@ -23,6 +23,8 @@ const AddNewPaymentReceipt = () => {
   const [bankCashAccounts, setBankCashAccounts] = useState([]);
   const [tdsAccounts, setTDSAccounts] = useState([]);
   const [organizations, setOrganizations] = useState([]);
+  const [currency, setCurrency] = useState(null);
+  const [currencyAmount, setCurrencyAmount] = useState(0);
   let prevDate = date.format('YYYY-MM-DD');
 
   const token = useSelector((state) => state.auth.value.token);
@@ -45,12 +47,17 @@ const AddNewPaymentReceipt = () => {
       bankCashAccounts?.success
     ) {
       setAccounts(
-        accounts.data.map((element) => ({ value: element.id, label: element.name }))
+        accounts.data.map((element) => ({
+          value: element.id,
+          label: element.name,
+          currency: element.currency,
+        }))
       );
       setBankCashAccounts(
         bankCashAccounts.data.map((element) => ({
           value: element.id,
           label: element.name,
+          currency: element.currency,
         }))
       );
       setTDSAccounts(
@@ -86,6 +93,8 @@ const AddNewPaymentReceipt = () => {
       cr_account_id: crAccountID.value,
       date: date.format('YYYY-MM-DD'),
       amount,
+      currency,
+      currency_amount: currency ? currencyAmount : null,
       narration: capitalize(narration),
     });
     if (response?.success) {
@@ -109,10 +118,19 @@ const AddNewPaymentReceipt = () => {
         if (acc.label === organizationID.label) {
           if (type?.value === 'Payment') setCrAccountID(acc);
           else if (type?.value === 'Receipt') setDrAccountID(acc);
+          if (acc.currency) setCurrency(acc.currency);
         }
       }
     }
   }, [organizationID, accounts]);
+
+  useEffect(() => {
+    if (crAccountID?.currency) {
+      setCurrency(crAccountID.currency);
+    } else {
+      setCurrency(drAccountID?.currency);
+    }
+  }, [crAccountID, drAccountID]);
 
   const fetchAccounts = async (date) => {
     const newDate = date.format('YYYY-MM-DD');
@@ -124,7 +142,11 @@ const AddNewPaymentReceipt = () => {
       if (crAccountID && !accountIDs.includes(crAccountID.value)) setCrAccountID(null);
       if (drAccountID && !accountIDs.includes(drAccountID.value)) setDrAccountID(null);
       setAccounts(
-        accounts.data.map((element) => ({ value: element.id, label: element.name }))
+        accounts.data.map((element) => ({
+          value: element.id,
+          label: element.name,
+          currency: element.currency,
+        }))
       );
     }
   };
@@ -207,6 +229,23 @@ const AddNewPaymentReceipt = () => {
                         </label>
                       </div>
                     </div>
+                    {currency && (
+                      <div className='col-12'>
+                        <div className='form-input'>
+                          <input
+                            onChange={(e) => setCurrencyAmount(e.target.value)}
+                            value={currencyAmount}
+                            placeholder=' '
+                            type='number'
+                            onWheel={(e) => e.target.blur()}
+                            required
+                          />
+                          <label className='lh-1 text-16 text-light-1'>
+                            {currency} Amount<span className='text-danger'>*</span>
+                          </label>
+                        </div>
+                      </div>
+                    )}
                     <div className='form-input-select'>
                       <label>
                         {type?.value === 'Payment'

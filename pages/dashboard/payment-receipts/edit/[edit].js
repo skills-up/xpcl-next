@@ -25,6 +25,8 @@ const UpdatePaymentReceipt = () => {
   const [tdsAccounts, setTDSAccounts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [number, setNumber] = useState('');
+  const [currency, setCurrency] = useState(null);
+  const [currencyAmount, setCurrencyAmount] = useState(0);
   let prevDate = null;
 
   const [typeOptions, setTypeOptions] = useState([
@@ -47,6 +49,8 @@ const UpdatePaymentReceipt = () => {
         prevDate = response.data.date;
         setNarration(response.data.narration);
         setAmount(response.data.amount);
+        setCurrency(response.data.currency);
+        setCurrencyAmount(response.data.currency_amount);
         setDate(new DateObject({ date: prevDate, format: 'YYYY-MM-DD' }));
         setNumber(response.data.number);
 
@@ -61,12 +65,17 @@ const UpdatePaymentReceipt = () => {
           bankCashAccounts?.success
         ) {
           setAccounts(
-            accounts.data.map((element) => ({ value: element.id, label: element.name }))
+            accounts.data.map((element) => ({
+              value: element.id,
+              label: element.name,
+              currency: element.currency,
+            }))
           );
           setBankCashAccounts(
             bankCashAccounts.data.map((element) => ({
               value: element.id,
               label: element.name,
+              currency: element.currency,
             }))
           );
           setOrganizations(
@@ -91,11 +100,19 @@ const UpdatePaymentReceipt = () => {
           // Setting Debit Account ID
           for (let account of accounts.data)
             if (account.id === response.data.dr_account_id)
-              setDrAccountID({ value: account.id, label: account.name });
+              setDrAccountID({
+                value: account.id,
+                label: account.name,
+                currency: account.currency,
+              });
           // Setting Credit Account ID
           for (let account of accounts.data)
             if (account.id === response.data.cr_account_id)
-              setCrAccountID({ value: account.id, label: account.name });
+              setCrAccountID({
+                value: account.id,
+                label: account.name,
+                currency: account.currency,
+              });
         } else {
           sendToast('error', 'Unable to fetch required data', 4000);
           router.push('/dashboard/payment-receipts');
@@ -127,6 +144,8 @@ const UpdatePaymentReceipt = () => {
       cr_account_id: crAccountID.value,
       date: date.format('YYYY-MM-DD'),
       amount,
+      currency,
+      currency_amount: currency ? currencyAmount : null,
       narration: capitalize(narration),
     });
     if (response?.success) {
@@ -152,11 +171,20 @@ const UpdatePaymentReceipt = () => {
           if (acc.label === organizationID.label) {
             if (type?.value === 'Payment') setCrAccountID(acc);
             else if (type?.value === 'Receipt') setDrAccountID(acc);
+            if (acc.currency) setCurrency(acc.currency);
           }
         }
       }
     }
   }, [organizationID, accounts]);
+
+  useEffect(() => {
+    if (crAccountID?.currency) {
+      setCurrency(crAccountID.currency);
+    } else {
+      setCurrency(drAccountID?.currency);
+    }
+  }, [crAccountID, drAccountID]);
 
   const fetchAccounts = async (date) => {
     const newDate = date.format('YYYY-MM-DD');
@@ -168,7 +196,11 @@ const UpdatePaymentReceipt = () => {
       if (crAccountID && !accountIDs.includes(crAccountID.value)) setCrAccountID(null);
       if (drAccountID && !accountIDs.includes(drAccountID.value)) setDrAccountID(null);
       setAccounts(
-        accounts.data.map((element) => ({ value: element.id, label: element.name }))
+        accounts.data.map((element) => ({
+          value: element.id,
+          label: element.name,
+          currency: element.currency,
+        }))
       );
     }
   };
@@ -253,6 +285,23 @@ const UpdatePaymentReceipt = () => {
                         </label>
                       </div>
                     </div>
+                    {currency && (
+                      <div className='col-12'>
+                        <div className='form-input'>
+                          <input
+                            onChange={(e) => setCurrencyAmount(e.target.value)}
+                            value={currencyAmount}
+                            placeholder=' '
+                            type='number'
+                            onWheel={(e) => e.target.blur()}
+                            required
+                          />
+                          <label className='lh-1 text-16 text-light-1'>
+                            {currency} Amount<span className='text-danger'>*</span>
+                          </label>
+                        </div>
+                      </div>
+                    )}
                     <div className='form-input-select'>
                       <label>
                         Debit Account<span className='text-danger'>*</span>

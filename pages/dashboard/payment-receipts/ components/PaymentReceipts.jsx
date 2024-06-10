@@ -101,10 +101,10 @@ const PaymentReceipts = () => {
       Cell: (data) => {
         return (
           <span>
-            {(+data.row.original.amount).toLocaleString('en-AE', {
+            {(data.row.original.currency ? +data.row.original.currency_amount : +data.row.original.amount).toLocaleString('en-AE', {
               maximumFractionDigits: 2,
               style: 'currency',
-              currency: 'AED',
+              currency: data.row.original.currency || 'AED',
             })}
           </span>
         );

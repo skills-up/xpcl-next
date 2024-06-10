@@ -1,13 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { AiOutlineEye } from 'react-icons/ai';
+import { BsTrash3 } from 'react-icons/bs';
+import { HiOutlinePencilAlt } from 'react-icons/hi';
+import { IoCopyOutline } from 'react-icons/io5';
 import { deleteItem, getList } from '../../../../api/xplorzApi';
 import ActionsButton from '../../../../components/actions-button/ActionsButton';
+import ConfirmationModal from '../../../../components/confirm-modal';
 import Datatable from '../../../../components/datatable/Datatable';
 import { sendToast } from '../../../../utils/toastify';
-import ConfirmationModal from '../../../../components/confirm-modal';
-import { AiOutlineEye } from 'react-icons/ai';
-import { HiOutlinePencilAlt } from 'react-icons/hi';
-import { BsTrash3 } from 'react-icons/bs';
-import { IoCopyOutline } from 'react-icons/io5';
 
 const Accounts = () => {
   const [accounts, setAccounts] = useState([]);
@@ -44,6 +44,13 @@ const Accounts = () => {
     {
       Header: 'Account Category',
       accessor: 'account_category_name',
+    },
+    {
+      Header: 'Currency',
+      accessor: 'currency',
+      Cell: (data) => {
+        return <span>{data.row.original.currency || 'AED'}</span>;
+      }
     },
     {
       Header: 'Last Updated At',
