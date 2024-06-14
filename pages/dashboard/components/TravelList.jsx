@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
-import Datatable from '../../../components/datatable/Datatable';
 import { getList } from '../../../api/xplorzApi';
-import BoardingPassUpload from './BoardingPassUpload';
+import Datatable from '../../../components/datatable/Datatable';
 import { sendToast } from '../../../utils/toastify';
+import BoardingPassUpload from './BoardingPassUpload';
 
 const TravelList = () => {
   const [travelSectors, setTravelSectors] = useState([]);
@@ -123,6 +123,10 @@ const TravelList = () => {
     {
       Header: 'Class',
       accessor: 'booking_class',
+    },
+    {
+      Header: 'Emission',
+      accessor: 'emission',
     },
     {
       Header: 'Boarding Pass',
