@@ -65,10 +65,6 @@ const History = () => {
       accessor: 'sector',
     },
     {
-      Header: 'Emission',
-      accessor: 'emission',
-    },
-    {
       Header: 'Passenger Name',
       accessor: 'client_traveller_name',
     },
