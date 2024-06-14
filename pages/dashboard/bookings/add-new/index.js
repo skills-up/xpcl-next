@@ -276,6 +276,7 @@ const AddNewBooking = () => {
               details:
                 element['details'].trim().length > 0 ? element['details'] : undefined,
               booking_class: element['booking_class']?.value,
+              emission: element['emission'] || undefined,
             })),
       is_offshore: isOffshore,
       sector: bookingType.value === 'Miscellaneous' ? sector : undefined,
@@ -859,7 +860,7 @@ const AddNewBooking = () => {
                                         </label>
                                       </div>
                                     </div>
-                                    <div className='col-md-2'>
+                                    <div className='col-md-1'>
                                       <div className='form-input bg-white'>
                                         <input
                                           onChange={(e) =>
@@ -889,6 +890,24 @@ const AddNewBooking = () => {
                                           })
                                         }
                                       />
+                                    </div>
+                                    <div className='col-md-1'>
+                                      <div className='form-input bg-white'>
+                                        <input
+                                          onChange={(e) =>
+                                            setBookingSectors((prev) => {
+                                              prev[index]['emission'] = e.target.value;
+                                              return [...prev];
+                                            })
+                                          }
+                                          value={element['emission']}
+                                          placeholder=' '
+                                          type='text'
+                                        />
+                                        <label className='lh-1 text-16 text-light-1'>
+                                          Emission
+                                        </label>
+                                      </div>
                                     </div>
                                   </div>
                                   <div>
@@ -933,6 +952,7 @@ const AddNewBooking = () => {
                                     travel_time: '',
                                     details: '',
                                     booking_class: null,
+                                    emission: '',
                                   },
                                 ];
                               });

@@ -224,6 +224,10 @@ const ViewBooking = () => {
       Header: 'Boarding Pass',
       accessor: 'boarding_pass',
     },
+    {
+      Header: 'Emission',
+      accessor: 'emission',
+    },
   ];
 
   const onCancel = async () => {
