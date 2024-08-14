@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import Seo from "../components/common/Seo";
-import DefaultFooter from "../components/footer/default";
+import DefaultFooter from '../components/footer/footer-2';
 import Header1 from "../components/header/header-1";
 
 const Terms = () => {
