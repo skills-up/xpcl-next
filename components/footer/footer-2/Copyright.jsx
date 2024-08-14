@@ -1,4 +1,4 @@
-import Social from '../../common/social/Social';
+import Link from "next/link";
 
 const Copyright = () => {
   return (
@@ -21,9 +21,8 @@ const Copyright = () => {
 
       <div className='col-auto'>
         <div className='d-flex x-gap-50'>
-          {/* <a href='#'>Privacy</a>
-          <a href='#'>Terms</a> */}
-          {/* <a href="#">Site Map</a> */}
+          <Link href='/terms' className='text-14 fw-500'>Terms & Conditions</Link>
+          <Link href='/privacy-policy' className='text-14 fw-500'>Privacy Policy</Link>
         </div>
       </div>
 
