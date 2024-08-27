@@ -21,7 +21,7 @@ const AddNewRefund = () => {
   const [refundAmount, setRefundAmount] = useState('');
   const [reason, setReason] = useState('');
   const [bookingData, setBookingData] = useState(null);
-  const [refundBookingData, setRefundBookingData] = useState(null);
+  const [refundBookingData, setRefundBookingData] = useState([]);
   const [paymentAccounts, setPaymentAccounts] = useState([]);
   const [paymentAccountID, setPaymentAccountID] = useState(null);
   const [disabled, setDisabled] = useState(false);
@@ -45,11 +45,15 @@ const AddNewRefund = () => {
     let refundData;
     if (accounts?.success && bookingData?.success && paymentAccounts?.success) {
       if (bookingData?.data?.original_booking_id) {
-        refundData = await getItem('bookings', bookingData.data.original_booking_id);
-        if (refundData?.success) {
-          setRefundBookingData(refundData.data);
-        } else {
-          sendToast('error');
+        let obData = bookingData.data;
+        while (obData.original_booking_id) {
+          const ob = await getItem('bookings', obData.original_booking_id);
+          if (ob?.success) {
+            obData = ob.data;
+            setRefundBookingData([...refundBookingData, obData]);
+          } else {
+            sendToast('error');
+          }
         }
       }
       setAccounts(
@@ -116,8 +120,8 @@ const AddNewRefund = () => {
   useEffect(() => {
     if (bookingData && paymentAccountID) {
       const payment =
-        (+bookingData?.payment_amount || 0) + (+refundBookingData?.payment_amount || 0);
-      if (payment) setRefundAmount((+payment || 0) - (+airlineCancellationCharges || 0));
+        (+bookingData?.payment_amount || 0) + refundBookingData.reduce((a, b) => a + (+b.payment_amount || 0), 0) - (+bookingData?.reissue_penalty || 0) - refundBookingData.reduce((a, b) => a + (+b.reissue_penalty || 0), 0);
+      if (payment > 0) setRefundAmount((+payment || 0) - (+airlineCancellationCharges || 0));
     }
   }, [bookingData, airlineCancellationCharges, paymentAccountID, refundBookingData]);
 
