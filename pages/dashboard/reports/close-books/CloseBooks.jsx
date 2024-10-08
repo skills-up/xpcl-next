@@ -13,6 +13,23 @@ const Journals = () => {
 
   const router = useRouter();
 
+  const getDepreciationAccounts = (obj) => {
+    let data = [];
+    for (let [key, values] of Object.entries(obj)) {
+      if (typeof values === 'object' && !Array.isArray(values)) {
+        data = [...data, ...getDepreciationAccounts(values)];
+      } else if (key.indexOf('|') > 0) {
+        data.push({
+          id: key.split('|')[0],
+          name: key.split('|')[1],
+          amount: '',
+          value: values,
+        });
+      }
+    }
+    return data;
+  }
+
   const generate = async () => {
     if (dates) {
       const response = await createItem('/reports/close-books', {
@@ -22,19 +39,7 @@ const Journals = () => {
         setClosingDate(
           new DateObject({ date: response.data.closing_date, format: 'YYYY-MM-DD' })
         );
-        let tempDepr = [];
-        for (let obj of Object.values(response.data.balances)) {
-          if (typeof obj === 'object' && !Array.isArray(obj)) {
-            for (let key of Object.keys(obj)) {
-              tempDepr.push({
-                id: key.split('|')[0],
-                name: key.split('|')[1],
-                amount: '',
-                value: obj[key],
-              });
-            }
-          }
-        }
+        let tempDepr = getDepreciationAccounts(response.data.balances);
         setDepreciations(tempDepr);
         setState(false);
       } else {
