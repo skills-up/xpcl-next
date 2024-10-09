@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { store } from '../app/store';
 import { setInitialUserState } from '../features/auth/authSlice';
-import { sendToast } from '../utils/toastify';
 
 const baseURL = process.env.NEXT_PUBLIC_API_URL;
 const travelURL = process.env.NEXT_PUBLIC_TRAVEL_URL;
@@ -77,7 +76,7 @@ export const customAPICall = async (
   } catch (err) {
     if (err?.response?.status === 401) {
       store.dispatch(setInitialUserState());
-      sendToast('error', 'Your current session has expired. Please login again.', 4000);
+      // sendToast('error', 'Your current session has expired. Please login again.', 4000);
       if (window.location.pathname !== '/') window.location.assign('/');
       return;
     }

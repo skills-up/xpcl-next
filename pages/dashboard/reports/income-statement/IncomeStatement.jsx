@@ -30,11 +30,11 @@ const Journals = () => {
     { value: 'custom', label: 'Custom' },
   ];
   const [showDateSelector, setShowDateSelector] = useState(false);
-  const [dates, setDates] = useState([fyStart, date]);
+  const [dates, setDates] = useState(null);
 
   const setDateOptions = (value) => {
     setShowDateSelector(false);
-    console.log('Selected', value);
+    // console.log('Selected', value);
     switch (value.value) {
       case 'current':
         setDates([fyStart, date]);
@@ -55,6 +55,7 @@ const Journals = () => {
   };
 
   const getBalanceSheet = async (pdf = false) => {
+    setBalanceSheet(null);
     const response = await getList('reports/income-statement', {
       from_date: dates[0].format('YYYY-MM-DD'),
       to_date: dates[1].format('YYYY-MM-DD'),
@@ -256,7 +257,7 @@ const Journals = () => {
           <label>Select Period</label>
           <Select
             options={rangeOptions}
-            defaultValue={rangeOptions[0]}
+            // defaultValue={rangeOptions[0]}
             onChange={setDateOptions}
           />
         </div>

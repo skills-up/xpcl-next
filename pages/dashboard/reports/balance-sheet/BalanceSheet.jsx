@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { AiOutlinePrinter } from 'react-icons/ai';
 import { FiDownload } from 'react-icons/fi';
-import DatePicker, { DateObject } from 'react-multi-date-picker';
+import DatePicker from 'react-multi-date-picker';
 import { jsonToCSV } from 'react-papaparse';
 import { getList } from '../../../../api/xplorzApi';
 import { downloadCSV as CSVDownloader } from '../../../../utils/fileDownloader';
@@ -10,11 +10,12 @@ import { sendToast } from '../../../../utils/toastify';
 
 const Journals = () => {
   const [balanceSheet, setBalanceSheet] = useState(null);
-  const [dates, setDates] = useState(new DateObject());
+  const [dates, setDates] = useState(null);
 
   const router = useRouter();
 
   const getBalanceSheet = async (pdf = false) => {
+    setBalanceSheet(null);
     const response = await getList('reports/balance-sheet', {
       date: dates.format('YYYY-MM-DD'),
       pdf: pdf ? 1 : 0,
@@ -219,6 +220,7 @@ const Journals = () => {
             onChange={setDates}
             numberOfMonths={1}
             offsetY={10}
+            onOpenPickNewDate={false}
             format='DD MMMM YYYY'
           />
         </div>
