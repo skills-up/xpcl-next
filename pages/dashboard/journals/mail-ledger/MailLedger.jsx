@@ -51,7 +51,7 @@ const MailLedger = () => {
         break;
     }
   };
-  const [dates, setDates] = useState([fyStart, date]);
+  const [dates, setDates] = useState(null);
   const [clients, setClients] = useState([]);
   const [clientID, setClientID] = useState(null);
   const [email, setEmail] = useState(null);
@@ -190,7 +190,7 @@ const MailLedger = () => {
           <label>Select Period</label>
           <Select
             options={rangeOptions}
-            defaultValue={rangeOptions[0]}
+            // defaultValue={rangeOptions[0]}
             onChange={setDateOptions}
           />
         </div>
