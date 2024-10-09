@@ -57,7 +57,7 @@ const Ledger = () => {
 
   const client_id = useSelector((state) => state.auth.value.currentOrganization);
 
-  const [dates, setDates] = useState([fyStart, date]);
+  const [dates, setDates] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [accounts, setAccounts] = useState([]);
   const [accountID, setAccountID] = useState(null);
@@ -66,9 +66,9 @@ const Ledger = () => {
 
   const router = useRouter();
 
-  useEffect(() => {
-    if (router.isReady && client_id === 1) getData();
-  }, [router.isReady]);
+  // useEffect(() => {
+  //   if (router.isReady && client_id === 1) getData();
+  // }, [router.isReady]);
 
   const getData = async () => {
     // Getting accounts
@@ -109,6 +109,7 @@ const Ledger = () => {
   };
 
   const getLedger = async () => {
+    setLedger(null);
     const response = await getList('journals/ledger', {
       account_id: accountID?.value,
       from_date: dates[0].format('YYYY-MM-DD'),
@@ -216,7 +217,7 @@ const Ledger = () => {
           <label>Select Period</label>
           <Select
             options={rangeOptions}
-            defaultValue={rangeOptions[0]}
+            // defaultValue={rangeOptions[0]}
             onChange={setDateOptions}
           />
         </div>
