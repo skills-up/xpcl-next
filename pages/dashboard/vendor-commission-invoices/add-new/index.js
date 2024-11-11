@@ -17,6 +17,7 @@ const AddNewVendorCommissionInvoice = () => {
   const [vendors, setVendors] = useState([]);
   const [vendorID, setVendorID] = useState(null);
   const [gstn, setGstn] = useState('');
+  const [tdsPct, setTdsPct] = useState(0);
   const [hsnCode, setHsnCode] = useState('');
   const [description, setDescription] = useState('');
   const [commission, setCommission] = useState('');
@@ -41,6 +42,7 @@ const AddNewVendorCommissionInvoice = () => {
           value: element.id,
           gstn: element.gstn,
           label: element.name,
+          tds_pct: element.vendor_tds_percentage,
         }))
       );
     } else {
@@ -87,12 +89,12 @@ const AddNewVendorCommissionInvoice = () => {
 
   useEffect(() => {
     if (commission) {
-      setTds((+commission * 0.05).toFixed(2));
+      setTds((+commission * tdsPct / 100).toFixed(2));
       setSgst((+commission * (gstn.startsWith('27') ? 0.09 : 0)).toFixed(2));
       setCgst((+commission * (gstn.startsWith('27') ? 0.09 : 0)).toFixed(2));
       setIgst((+commission * (gstn.startsWith('27') ? 0 : 0.18)).toFixed(2));
     }
-  }, [commission, gstn]);
+  }, [commission, gstn, tdsPct]);
 
   return (
     <>
@@ -166,6 +168,11 @@ const AddNewVendorCommissionInvoice = () => {
                             setGstn(id?.gstn);
                           } else {
                             setGstn('');
+                          }
+                          if (id?.tds_pct) {
+                            setTdsPct(id?.tds_pct);
+                          } else {
+                            setTdsPct(0);
                           }
                         }}
                       />

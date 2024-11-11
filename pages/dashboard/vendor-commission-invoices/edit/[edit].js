@@ -1,15 +1,15 @@
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import DatePicker, { DateObject } from 'react-multi-date-picker';
+import { useSelector } from 'react-redux';
+import Select from 'react-select';
+import ReactSwitch from 'react-switch';
+import { getItem, getList, updateItem } from '../../../../api/xplorzApi';
 import Seo from '../../../../components/common/Seo';
 import Footer from '../../../../components/footer/dashboard-footer';
 import Header from '../../../../components/header/dashboard-header';
 import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
-import { useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
 import { sendToast } from '../../../../utils/toastify';
-import { useEffect, useState } from 'react';
-import { createItem, getItem, getList, updateItem } from '../../../../api/xplorzApi';
-import ReactSwitch from 'react-switch';
-import Select from 'react-select';
-import DatePicker, { DateObject } from 'react-multi-date-picker';
 
 const UpdateVendorCommissionInvoice = () => {
   const [date, setDate] = useState(new DateObject());
@@ -17,6 +17,7 @@ const UpdateVendorCommissionInvoice = () => {
   const [vendors, setVendors] = useState([]);
   const [vendorID, setVendorID] = useState(null);
   const [gstn, setGstn] = useState('');
+  const [tdsPct, setTdsPct] = useState(0);
   const [hsnCode, setHsnCode] = useState('');
   const [description, setDescription] = useState('');
   const [commission, setCommission] = useState('');
@@ -36,12 +37,12 @@ const UpdateVendorCommissionInvoice = () => {
 
   useEffect(() => {
     if (commission && loaded) {
-      setTds((+commission * 0.05).toFixed(2));
+      setTds((+commission * tdsPct / 100).toFixed(2));
       setSgst((+commission * (gstn.startsWith('27') ? 0.09 : 0)).toFixed(2));
       setCgst((+commission * (gstn.startsWith('27') ? 0.09 : 0)).toFixed(2));
       setIgst((+commission * (gstn.startsWith('27') ? 0 : 0.18)).toFixed(2));
     }
-  }, [commission, gstn]);
+  }, [commission, gstn, tdsPct]);
 
   const getData = async () => {
     if (router.query.edit) {
@@ -57,6 +58,7 @@ const UpdateVendorCommissionInvoice = () => {
         setCgst((+response.data.cgst).toFixed(2));
         setSgst((+response.data.sgst).toFixed(2));
         setTds((+response.data.tds).toFixed(2));
+        setTdsPct((+response.data.tds)/(+response.data.commission));
         setNumber(response.data.number);
 
         const vendors = await getList('organizations', { is_vendor: 1 });
@@ -66,12 +68,13 @@ const UpdateVendorCommissionInvoice = () => {
               value: element.id,
               gstn: element.gstn,
               label: element.name,
+              tds_pct: element.vendor_tds_percentage,
             }))
           );
           // Setting Vendor
           for (let vendor of vendors.data)
             if (vendor.id === response.data.vendor_id)
-              setVendorID({ value: vendor.id, label: vendor.name, gstn: vendor.gstn });
+              setVendorID({ value: vendor.id, label: vendor.name, gstn: vendor.gstn, tds_pct: vendor.vendor_tds_percentage });
 
           setTimeout(() => setLoaded(true), 1000);
         } else {
@@ -196,6 +199,11 @@ const UpdateVendorCommissionInvoice = () => {
                             setGstn(id?.gstn);
                           } else {
                             setGstn('');
+                          }
+                          if (id?.tds_pct) {
+                            setTdsPct(id?.tds_pct);
+                          } else {
+                            setTdsPct(0);
                           }
                         }}
                       />
