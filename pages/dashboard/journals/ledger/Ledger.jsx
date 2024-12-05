@@ -17,7 +17,7 @@ const Ledger = () => {
   const fyStart = new DateObject().setMonth(1).setDay(1);
   const prevFyStart = new DateObject()
     .setYear(fyStart.year - 1)
-    .setMonth(fyStart.year == 2024 ? 10 : 1)
+    .setMonth(1)
     .setDay(1);
   const prevFyEnd = new DateObject()
     .setYear(fyStart.year - 1)
