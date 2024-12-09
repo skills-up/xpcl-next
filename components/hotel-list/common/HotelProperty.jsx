@@ -27,7 +27,7 @@ function HotelProperty({ item }) {
                     }}
                     navigation={true}
                   >
-                    {item?.img.map((slide, i) => {
+                    {item?.img?.map((slide, i) => {
                       if (slide?.url || slide?.tns)
                         return (
                           <SwiperSlide key={i}>
