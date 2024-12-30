@@ -283,7 +283,7 @@ const Journals = () => {
       {/* Generated Balance Sheet */}
       {balanceSheet && (
         <div id='pdf-content'>
-          <h2 className='text-center'>Profit & Lost Statement</h2>
+          <h2 className='text-center'>Profit & Loss Statement</h2>
           {dates && dates?.length === 2 ? (
             <h4 className='text-center my-2'>
               From {dates[0].format('DD-MMMM-YYYY')} To {dates[1].format('DD-MMMM-YYYY')}
