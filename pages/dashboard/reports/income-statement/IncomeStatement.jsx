@@ -274,7 +274,6 @@ const Journals = () => {
               range
               rangeHover
               format='DD MMMM YYYY'
-              minDate='2023-10-01'
             />
           </div>
         )}
