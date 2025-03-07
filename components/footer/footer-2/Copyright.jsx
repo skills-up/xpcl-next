@@ -7,7 +7,7 @@ const Copyright = () => {
         <div className='row x-gap-30 y-gap-10'>
           <div className='col-auto'>
             <div className='d-flex items-center'>
-              © {new Date().getFullYear()} Xplorz.Com Private Limited. All Rights
+              © {new Date().getFullYear()} TripCentral Corporate Travel Services LLP. All Rights
               Reserved.
             </div>
           </div>

@@ -14,7 +14,7 @@ function Footer() {
           <div className='row y-gap-20 items-center'>
             <div className='col-auto'>
               <div className='text-14 lh-14 mr-30'>
-                © {new Date().getFullYear()} Xplorz.Com Private Limited. All Rights
+                © {new Date().getFullYear()} TripCentral Corporate Travel Services LLP. All Rights
                 Reserved.
               </div>
             </div>

@@ -1,9 +1,6 @@
-import Link from 'next/link';
 import { AiOutlineMail } from 'react-icons/ai';
 import { BsTelephone } from 'react-icons/bs';
-import { HiOutlineMail } from 'react-icons/hi';
 import { IoLocationOutline } from 'react-icons/io5';
-import { MdOutlineEmail } from 'react-icons/md';
 
 const Address = ({ lighterHeading = false }) => {
   const addressContent = [
@@ -18,7 +15,7 @@ const Address = ({ lighterHeading = false }) => {
       ),
       content: (
         <>
-          <div className='text-20 mt-30 lg:mt-0'>Xplorz.Com Private Limited</div>
+          <div className='text-20 mt-30 lg:mt-0'>TripCentral Corporate Travel Services LLP</div>
         </>
       ),
     },
@@ -53,7 +50,7 @@ const Address = ({ lighterHeading = false }) => {
       title: <AiOutlineMail className='text-25 mb-5' />,
       content: (
         <>
-          <a href='mailto:support@xplorz.com'>support[at]xplorz.com</a>
+          <a href='mailto:support@tripcentral.in'>support[at]tripcentral.in</a>
         </>
       ),
     },
