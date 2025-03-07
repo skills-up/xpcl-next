@@ -61,6 +61,7 @@ const MailLedger = () => {
   const [ledgerPDFUrl, setLedgerPDFUrl] = useState(null);
   const [ledgerCSVUrl, setLedgerCSVUrl] = useState(null);
   const [files, setFiles] = useState([]);
+  const [breakdown, setBreakdown] = useState(false);
 
   const router = useRouter();
 
@@ -101,6 +102,7 @@ const MailLedger = () => {
       client_id: clientID.value,
       start_date: dates[0].format('YYYY-MM-DD'),
       end_date: dates[1].format('YYYY-MM-DD'),
+      breakdown: breakdown ? 1 : 0,
     });
     if (response?.success) {
       const start_date = dates[0].format('DD-MMM-YYYY');
@@ -177,14 +179,23 @@ const MailLedger = () => {
       {/* Search Form */}
       <h5>Select Client and Ledger Period</h5>
       <div className='row'>
-        <div className='col-lg-5 col-12 form-input-select'>
-          <label>Select Client</label>
-          <Select
-            options={clients}
-            value={clientID}
-            placeholder='Search & Select Client'
-            onChange={(id) => setClientID(id)}
-          />
+        <div className='col-lg-5 col-12'>
+          <div className='form-input-select'>
+            <label>Select Client</label>
+            <Select
+              options={clients}
+              value={clientID}
+              placeholder='Search & Select Client'
+              onChange={(id) => setClientID(id)}
+            />
+          </div>
+          <div className='d-flex items-center gap-3 my-2'>
+            <ReactSwitch
+              onChange={() => setBreakdown((prev) => !prev)}
+              checked={breakdown}
+            />
+            <label>Show break-up in CSV</label>
+          </div>
         </div>
         <div className='col-lg-3 col-12 form-input-select'>
           <label>Select Period</label>
