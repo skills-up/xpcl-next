@@ -112,7 +112,7 @@ const Terms = () => {
           TripCentral Corporate Travel Services LLP<br/>
           211-212 Jolly Bhavan No. 1, 10 New Marine Lines, Mumbai - 400020<br/>
           <Link href="tel:+912266121000">+91 22 66121000</Link><br/>
-          <Link href="mailto:support@xporz.com">support@xporz.com</Link></p>
+          <Link href="mailto:support@tripcentral.in">support@tripcentral.in</Link></p>
         </div>
       </section>
       {/* End terms section */}
