@@ -41,6 +41,13 @@ const Accounts = () => {
     {
       Header: 'Year',
       accessor: 'year',
+      Cell: (data) => {
+        return (
+          <div>
+            {data.row.original.year || 'N/A'}
+          </div>
+        );
+      }
     },
     {
       Header: 'Account Category',

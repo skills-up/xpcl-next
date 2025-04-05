@@ -63,6 +63,7 @@ const ViewAccounts = () => {
             </a>
           );
         }
+        data.year = data.year || 'N/A';
         delete data['created_at'];
         delete data['updated_at'];
         if (data?.account_category_name && data?.account_category_id) {
