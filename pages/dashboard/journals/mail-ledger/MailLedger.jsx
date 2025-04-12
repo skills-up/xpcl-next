@@ -61,7 +61,22 @@ const MailLedger = () => {
   const [ledgerPDFUrl, setLedgerPDFUrl] = useState(null);
   const [ledgerCSVUrl, setLedgerCSVUrl] = useState(null);
   const [files, setFiles] = useState([]);
-  const [breakdown, setBreakdown] = useState(false);
+  const [csvFormat, setCsvFormat] = useState(null);
+
+  const csvFormats = [
+    {
+      value: '',
+      label: 'Default',
+    },
+    {
+      value: 'csv-1',
+      label: 'CSV Format 1',
+    },
+    {
+      value: 'csv-2',
+      label: 'CSV Format 2',
+    },
+  ];
 
   const router = useRouter();
 
@@ -85,6 +100,7 @@ const MailLedger = () => {
           if (acc.id === +router.query.client_id)
             setClientID({ value: acc.id, label: acc.name });
       }
+      setCsvFormat(csvFormats[0]);
     } else {
       sendToast(
         'error',
@@ -102,7 +118,7 @@ const MailLedger = () => {
       client_id: clientID.value,
       start_date: dates[0].format('YYYY-MM-DD'),
       end_date: dates[1].format('YYYY-MM-DD'),
-      breakdown: breakdown ? 1 : 0,
+      csv_format: csvFormat?.value,
     });
     if (response?.success) {
       const start_date = dates[0].format('DD-MMM-YYYY');
@@ -134,7 +150,7 @@ const MailLedger = () => {
 
   useEffect(() => {
     if (clientID?.value && dates && dates?.length === 2) getLedgerData();
-  }, [clientID, dates]);
+  }, [clientID, dates, csvFormat]);
 
   const sendClientMail = async (e) => {
     let formData = new FormData();
@@ -189,13 +205,15 @@ const MailLedger = () => {
               onChange={(id) => setClientID(id)}
             />
           </div>
-          <div className='d-flex items-center gap-3 my-2'>
-            <ReactSwitch
-              onChange={() => setBreakdown((prev) => !prev)}
-              checked={breakdown}
+        </div>
+        <div className='col-lg-4 col-12 form-input-select'>
+            <label>CSV Format</label>
+            <Select
+              options={csvFormats}
+              value={csvFormat}
+              placeholder='Select CSV Format'
+              onChange={(format) => setCsvFormat(format)}
             />
-            <label>Show break-up in CSV</label>
-          </div>
         </div>
         <div className='col-lg-3 col-12 form-input-select'>
           <label>Select Period</label>
