@@ -348,6 +348,11 @@ const Sidebar = () => {
           href: '/dashboard/visa-requirement-documents',
           permissions: ['visa-requirement-documents.index'],
         },
+        {
+          title: 'Amex File',
+          href: '/dashboard/amex-grid',
+          permissions: ['bookings.amex-grid'],
+        },
       ]),
     },
     // {
