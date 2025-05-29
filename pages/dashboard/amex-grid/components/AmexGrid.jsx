@@ -17,9 +17,6 @@ const AmexGrid = () => {
   }, []);
 
   const getAmexGrids = async () => {
-    if (_document) {
-      _document.getElementById('amex-file-text').textContent = '';
-    }
     // Do not fetch data for an empty search query
     if (searchQuery?.trim().length === 0) {
       setAmexGrids(null);
@@ -53,27 +50,36 @@ const AmexGrid = () => {
 
   const Ymd = (date_str) => date_str.replace(/-/g, '');
 
-  const toWidth = (str, width, pad='') => {
+  const toWidth = (str, width, pad = '') => {
     const string = new String(str).substring(0, width);
     return pad == '' ? string.padEnd(width) : string.padStart(width, pad);
-  }
+  };
 
   const transactionCode = (str) => {
-    switch(str) {
-        case 'Car Rental':
-            return 'X3';
-        case 'Hotel Booking':
-            return 'X2';
-        case 'Foreign Exchange':
-            return 'X1';
-        case 'Insurance':
-            return 'I1';
-        case 'Visa Application':
-            return 'V9';
-        default:
-            return 'X0';
+    switch (str) {
+      case 'Car Rental':
+        return 'X3';
+      case 'Hotel Booking':
+        return 'X2';
+      case 'Foreign Exchange':
+        return 'X1';
+      case 'Insurance':
+        return 'I1';
+      case 'Visa Application':
+        return 'V9';
+      default:
+        return 'X0';
     }
-  }
+  };
+
+  const downloadTxtFile = (text) => {
+    const element = _document.createElement('a');
+    const file = new Blob([text], { type: 'text/plain' });
+    element.href = URL.createObjectURL(file);
+    element.download = `amex-file-${Date.now()}.txt`;
+    _document.body.appendChild(element); // Required for this to work in FireFox
+    element.click();
+  };
 
   const buildFile = () => {
     if (_document) {
@@ -109,43 +115,47 @@ const AmexGrid = () => {
           client_name_code = toWidth(cells[13].replace(/\s/g, ''), 6),
           airline_name = cells[14];
         text +=
-          ('5555' +
-          dmy(transaction_date) +
-          client_name_code +
-          ' '.repeat(4) +
-          toWidth(cells[3], 15) +
-          toWidth(cells[4], 3, '0') +
-          toWidth(cells[5].substring(-10), 11) +
-          '  ' +
-          toWidth(traveller_name, 20) +
-          toWidth(cells[6], 20) +
-          dmy(cells[7]) +
-          ' '.repeat(15) +
-          toWidth(cells[8], 1) +
-          ' '.repeat(6) +
-          'A' +
-          invoice_number.substring(3, 4) +
-          invoice_number.substring(9, 5) +
-          toWidth(cells[9], 2) +
-          toWidth(cells[10].replace(/\D/g, ''), 14, '0') +
-          toWidth(cells[11], 45) +
-          toWidth(invoice_number) +
-          toWidth(airline_name + ' Air Ticket for ' + traveller_name, 20) +
-          '0'.repeat(14) +
-          'N' +
-          'INR' +
-          Ymd(transaction_date) +
-          toWidth(invoice_number.charAt(1) == 'S' ? 'S' : 'SR', 2) +
-          ' '.repeat(9) +
-          '0'.repeat(36) +
-          '307' +
-          toWidth(invoice_number, 20) +
-          ' '.repeat(45) +
-          '0'.repeat(14) +
-          toWidth(cells[12], 11) +
-          invoice_number.charAt(0) +
-          'Y' +
-          ' '.repeat(96)).toUpperCase().padEnd(818) + '\n';
+          (
+            '5555' +
+            dmy(transaction_date) +
+            client_name_code +
+            ' '.repeat(4) +
+            toWidth(cells[3], 15) +
+            toWidth(cells[4], 3, '0') +
+            toWidth(cells[5].substring(-10), 11) +
+            '  ' +
+            toWidth(traveller_name, 20) +
+            toWidth(cells[6], 20) +
+            dmy(cells[7]) +
+            ' '.repeat(15) +
+            toWidth(cells[8], 1) +
+            ' '.repeat(6) +
+            'A' +
+            invoice_number.substring(3, 4) +
+            invoice_number.substring(9, 5) +
+            toWidth(cells[9], 2) +
+            toWidth(cells[10].replace(/\D/g, ''), 14, '0') +
+            toWidth(cells[11], 45) +
+            toWidth(invoice_number) +
+            toWidth(airline_name + ' Air Ticket for ' + traveller_name, 20) +
+            '0'.repeat(14) +
+            'N' +
+            'INR' +
+            Ymd(transaction_date) +
+            toWidth(invoice_number.charAt(1) == 'S' ? 'S' : 'SR', 2) +
+            ' '.repeat(9) +
+            '0'.repeat(36) +
+            '307' +
+            toWidth(invoice_number, 20) +
+            ' '.repeat(45) +
+            '0'.repeat(14) +
+            toWidth(cells[12], 11) +
+            invoice_number.charAt(0) +
+            'Y' +
+            ' '.repeat(96)
+          )
+            .toUpperCase()
+            .padEnd(818) + '\n';
         ++count5;
       });
       nonAirTable?.querySelectorAll('tbody > tr').forEach((row) => {
@@ -153,48 +163,52 @@ const AmexGrid = () => {
         const invoice_number = cells[0],
           transaction_date = cells[1],
           traveller_name = cells[2];
-        text += (
-          '4444'
-        + dmy(transaction_date)
-        + ' '.repeat(10)
-        + toWidth(cells[3], 15)
-        + ' '.repeat(3)
-        + toWidth(cells[7], 11)
-        + '  '
-        + toWidth(traveller_name, 20)
-        + toWidth('ID-' + invoice_number.replace(/-/g, ''), 20)
-        + dmy(transaction_date)
-        + ' '.repeat(15)
-        + toWidth(cells[5], 1)
-        + ' '.repeat(6)
-        + 'N'
-        + invoice_number.substring(3,4) + invoice_number.substring(9,5)
-        + toWidth(transactionCode(cells[4].trim(), 2))
-        + toWidth(cells[6].replace(/\D/g,''), 14, '0')
-        + toWidth(cells[7].trim() + ' ' + cells[8].trim() + ' ' + cells[9].trim(), 45)
-        + toWidth(invoice_number, 20)
-        + toWidth(cells[7], 20)
-        + '0'.repeat(14)
-        + 'N'
-        + 'INR'
-        + Ymd(transaction_date)
-        + toWidth(invoice_number.charAt(1) == 'S' ? 'S' : 'SR', 2)
-        + ' '.repeat(9)
-        + '0'.repeat(36)
-        + '399'
-        + toWidth(invoice_number, 20)
-        + ' '.repeat(24)
-        + toWidth(cells[7], 20)
-        + ' '
-        + '0'.repeat(14)
-        + ' '.repeat(11)
-        + 'I'
-        + 'Y'
-        + ' '.repeat(96)
-        + toWidth(cells[8], 20)
-        + ' '.repeat(61)
-        + toWidth(cells[9], 20)
-        ).toUpperCase().padEnd(818) + '\n'
+        text +=
+          (
+            '4444' +
+            dmy(transaction_date) +
+            ' '.repeat(10) +
+            toWidth(cells[3], 15) +
+            ' '.repeat(3) +
+            toWidth(cells[7], 11) +
+            '  ' +
+            toWidth(traveller_name, 20) +
+            toWidth('ID-' + invoice_number.replace(/-/g, ''), 20) +
+            dmy(transaction_date) +
+            ' '.repeat(15) +
+            toWidth(cells[5], 1) +
+            ' '.repeat(6) +
+            'N' +
+            invoice_number.substring(3, 4) +
+            invoice_number.substring(9, 5) +
+            toWidth(transactionCode(cells[4].trim(), 2)) +
+            toWidth(cells[6].replace(/\D/g, ''), 14, '0') +
+            toWidth(cells[7].trim() + ' ' + cells[8].trim() + ' ' + cells[9].trim(), 45) +
+            toWidth(invoice_number, 20) +
+            toWidth(cells[7], 20) +
+            '0'.repeat(14) +
+            'N' +
+            'INR' +
+            Ymd(transaction_date) +
+            toWidth(invoice_number.charAt(1) == 'S' ? 'S' : 'SR', 2) +
+            ' '.repeat(9) +
+            '0'.repeat(36) +
+            '399' +
+            toWidth(invoice_number, 20) +
+            ' '.repeat(24) +
+            toWidth(cells[7], 20) +
+            ' ' +
+            '0'.repeat(14) +
+            ' '.repeat(11) +
+            'I' +
+            'Y' +
+            ' '.repeat(96) +
+            toWidth(cells[8], 20) +
+            ' '.repeat(61) +
+            toWidth(cells[9], 20)
+          )
+            .toUpperCase()
+            .padEnd(818) + '\n';
         ++count4;
       });
 
@@ -207,7 +221,7 @@ const AmexGrid = () => {
           ('' + count5).padStart(6, '0')
         ).padEnd(818) + '\n';
 
-      _document.getElementById('amex-file-text').textContent = text;
+      downloadTxtFile(text);
     }
   };
 
@@ -440,11 +454,10 @@ const AmexGrid = () => {
             </div>
           )}
           <button className='btn btn-primary col-12' onClick={() => buildFile()}>
-            Generate File Contents
+            Generate File
           </button>
         </div>
       )}
-      <pre className='mt-10 bg-gray-300' id="amex-file-text" rows={10}></pre>
     </div>
   );
 };
