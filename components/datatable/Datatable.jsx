@@ -48,6 +48,7 @@ const Datatable = ({
   viewLink = null,
   getRowStyle = undefined,
   getRowClassName = undefined,
+  contentEditable = false,
 }) => {
   const [totalItems, SetTotalItems] = useState(0);
   let {
@@ -156,7 +157,7 @@ const Datatable = ({
         </div>
       )}
       <div className='overflow-scroll scroll-bar-1'>
-        <table {...getTableProps()} className='table-3'>
+        <table {...getTableProps()} className='table-3' contentEditable={contentEditable}>
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
