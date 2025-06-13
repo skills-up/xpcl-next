@@ -58,19 +58,20 @@ const UpdateRefund = () => {
         const paymentAccounts = await getList('accounts', { category: 'Credit Cards' });
         const accounts = await getList('organizations', { is_client: 1 });
         const bookingData = await getItem('bookings', response.data.booking_id);
-        let refundData;
         if (accounts?.success && bookingData?.success && paymentAccounts?.success) {
           if (bookingData?.data?.original_booking_id) {
             let obData = bookingData.data;
+            const originalBookings = [];
             while (obData.original_booking_id) {
               const ob = await getItem('bookings', obData.original_booking_id);
               if (ob?.success) {
                 obData = ob.data;
-                setRefundBookingData([...refundBookingData, obData]);
+                originalBookings.push(obData);
               } else {
                 sendToast('error');
               }
             }
+            setRefundBookingData(originalBookings);
           }
           setAccounts(
             accounts.data.map((element) => ({
