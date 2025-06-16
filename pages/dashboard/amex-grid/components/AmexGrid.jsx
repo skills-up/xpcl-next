@@ -43,7 +43,7 @@ const AmexGrid = () => {
 
   const dmy = (date) =>
     typeof date === 'string'
-      ? date.substring(8) + date.substring(5, 2) + date.substring(2, 2)
+      ? date.substring(8) + date.substring(5, 7) + date.substring(2, 4)
       : date
           .toLocaleString('en-IN', { day: '2-digit', month: '2-digit', year: '2-digit' })
           .replace(/\//g, '');
@@ -131,12 +131,12 @@ const AmexGrid = () => {
             toWidth(cells[8], 1) +
             ' '.repeat(6) +
             'A' +
-            invoice_number.substring(3, 4) +
-            invoice_number.substring(9, 5) +
+            invoice_number.substring(3, 7) +
+            invoice_number.substring(9, 14) +
             toWidth(cells[9], 2) +
             toWidth(cells[10].replace(/\D/g, ''), 14, '0') +
             toWidth(cells[11], 45) +
-            toWidth(invoice_number) +
+            toWidth(invoice_number, 20) +
             toWidth(airline_name + ' Air Ticket for ' + traveller_name, 20) +
             '0'.repeat(14) +
             'N' +
@@ -179,8 +179,8 @@ const AmexGrid = () => {
             toWidth(cells[5], 1) +
             ' '.repeat(6) +
             'N' +
-            invoice_number.substring(3, 4) +
-            invoice_number.substring(9, 5) +
+            invoice_number.substring(3, 7) +
+            invoice_number.substring(9, 14) +
             toWidth(transactionCode(cells[4].trim(), 2)) +
             toWidth(cells[6].replace(/\D/g, ''), 14, '0') +
             toWidth(cells[7].trim() + ' ' + cells[8].trim() + ' ' + cells[9].trim(), 45) +
