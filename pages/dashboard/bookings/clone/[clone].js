@@ -35,9 +35,7 @@ const AddNewBooking = () => {
   const [clientGSTAmount, setClientGSTAmount] = useState(0);
   const [clientServiceCharges, setClientServicesCharges] = useState(0);
   const [clientTotal, setClientTotal] = useState(0);
-  const [reissuePenalty, setReissuePenalty] = useState(0);
   const [sector, setSector] = useState('');
-  const [originalBookingID, setOriginalBookingID] = useState(null);
   const [bookingSectors, setBookingSectors] = useState([]);
   const [grossCommission, setGrossCommission] = useState(0);
   const [isOffshore, setIsOffshore] = useState(false);
@@ -154,8 +152,6 @@ const AddNewBooking = () => {
         setClientServicesCharges((+response.data.client_service_charges || 0).toFixed(0));
         setClientTotal((+response.data.client_total || 0).toFixed(0));
         setSector(response.data.sector);
-        setOriginalBookingID(response.data?.original_booking_id);
-        setReissuePenalty((+response.data?.reissue_penalty || 0).toFixed(0));
         setPaymentAmount(
           (+response.data.payment_amount || 0).toFixed(2).replace(/[.,]00$/, '')
         );
