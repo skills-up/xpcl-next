@@ -36,6 +36,7 @@ const ReissueBooking = () => {
   const [clientServiceCharges, setClientServicesCharges] = useState(0);
   const [clientTotal, setClientTotal] = useState(0);
   const [reissuePenalty, setReissuePenalty] = useState(0);
+  const [clientReissueFee, setClientReissueFee] = useState(0);
   const [sector, setSector] = useState('');
   const [bookingSectors, setBookingSectors] = useState([]);
   const [isOffshore, setIsOffshore] = useState(false);
@@ -391,6 +392,7 @@ const ReissueBooking = () => {
       client_total: clientTotal || 0,
       original_booking_id: router.query.reissue,
       reissue_penalty: reissuePenalty || 0,
+      client_reissue_fee: clientReissueFee || 0,
       client_traveller_id: clientTravellerID?.value,
       booking_sectors:
         bookingType.value === 'Miscellaneous'
@@ -699,6 +701,7 @@ const ReissueBooking = () => {
     clientTaxAmount,
     clientGSTAmount,
     clientReferralFee,
+    clientReissueFee,
     clientBaseAmount,
   ]);
 
@@ -709,6 +712,7 @@ const ReissueBooking = () => {
           (+clientGSTAmount || 0) +
           (+clientTaxAmount || 0) +
           (+clientServiceCharges || 0) +
+          (+clientReissueFee || 0) +
           (+clientReferralFee || 0)
       ).toFixed(0)
     );
@@ -1444,7 +1448,7 @@ const ReissueBooking = () => {
                       </div>
                     </div>
                     <h3>Client Details</h3>
-                    <div className='col-lg-4'>
+                    <div className='col-lg-3'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => {
@@ -1466,7 +1470,7 @@ const ReissueBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-lg-4'>
+                    <div className='col-lg-3'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => {
@@ -1506,7 +1510,7 @@ const ReissueBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-lg-4'>
+                    <div className='col-lg-3'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => {
@@ -1525,6 +1529,20 @@ const ReissueBooking = () => {
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Client Tax Amount<span className='text-danger'>*</span>
+                        </label>
+                      </div>
+                    </div>
+                    <div className='col-lg-3'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setClientReissueFee(e.target.value)}
+                          value={clientReissueFee}
+                          placeholder=' '
+                          type='number'
+                          onWheel={(e) => e.target.blur()}
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Client Reissue Fee
                         </label>
                       </div>
                     </div>

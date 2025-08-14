@@ -36,6 +36,8 @@ const UpdateBooking = () => {
   const [clientServiceCharges, setClientServicesCharges] = useState(0);
   const [clientTotal, setClientTotal] = useState(0);
   const [reissuePenalty, setReissuePenalty] = useState(0);
+  const [clientReissueFee, setClientReissueFee] = useState(0);
+  const [formInputClass, setFormInputClass] = useState('col-lg-4');
   const [sector, setSector] = useState('');
   const [originalBookingID, setOriginalBookingID] = useState(null);
   const [bookingSectors, setBookingSectors] = useState([]);
@@ -155,7 +157,9 @@ const UpdateBooking = () => {
         setClientTotal((+response.data.client_total || 0).toFixed(0));
         setSector(response.data.sector);
         setOriginalBookingID(response.data?.original_booking_id);
+        setFormInputClass(response.data?.original_booking_id ? 'col-lg-3' : 'col-lg-4');
         setReissuePenalty((+response.data?.reissue_penalty || 0).toFixed(0));
+        setClientReissueFee((+response.data?.client_reissue_fee || 0).toFixed(0));
         setPaymentAmount(
           (+response.data.payment_amount || 0).toFixed(2).replace(/[.,]00$/, '')
         );
@@ -460,6 +464,7 @@ const UpdateBooking = () => {
     if (originalBookingID) {
       editData['original_booking_id'] = originalBookingID;
       editData['reissue_penalty'] = reissuePenalty || 0;
+      editData['client_reissue_fee'] = clientReissueFee || 0;
     }
     const response = await updateItem('bookings', router.query.edit, editData);
     if (response?.success) {
@@ -787,6 +792,7 @@ const UpdateBooking = () => {
     clientTaxAmount,
     clientGSTAmount,
     clientReferralFee,
+    clientReissueFee,
     clientBaseAmount,
   ]);
 
@@ -797,6 +803,7 @@ const UpdateBooking = () => {
           (+clientGSTAmount || 0) +
           (+clientTaxAmount || 0) +
           (+clientServiceCharges || 0) +
+          (+clientReissueFee || 0) +
           (+clientReferralFee || 0)
       ).toFixed(0)
     );
@@ -1548,7 +1555,7 @@ const UpdateBooking = () => {
                       </div>
                     </div>
                     <h3>Client Details</h3>
-                    <div className='col-lg-4'>
+                    <div className={formInputClass}>
                       <div className='form-input'>
                         <input
                           onChange={(e) => {
@@ -1570,7 +1577,7 @@ const UpdateBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-lg-4'>
+                    <div className={formInputClass}>
                       <div className='form-input'>
                         <input
                           onChange={(e) => {
@@ -1610,7 +1617,7 @@ const UpdateBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-lg-4'>
+                    <div className={formInputClass}>
                       <div className='form-input'>
                         <input
                           onChange={(e) => {
@@ -1632,6 +1639,20 @@ const UpdateBooking = () => {
                         </label>
                       </div>
                     </div>
+                    {originalBookingID && <div className='col-lg-3'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setClientReissueFee(e.target.value)}
+                          value={clientReissueFee}
+                          placeholder=' '
+                          type='number'
+                          onWheel={(e) => e.target.blur()}
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Client Reissue Fee
+                        </label>
+                      </div>
+                    </div>}
                     <div className='col-lg-4 pr-0'>
                       <div className='row'>
                         <label className='col-12 fw-500 mb-4'>Client GST Amount</label>
