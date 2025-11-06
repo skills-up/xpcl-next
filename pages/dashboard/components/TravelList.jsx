@@ -21,7 +21,7 @@ const TravelList = () => {
   const reformatData = (data) => {
     const formattedData = [];
     const keyValues = [];
-    for (let bookingData of data) {
+    for (let sector of data) {
       // Pick only the required fields from bookingData
       const booking = (({
         number,
@@ -35,29 +35,25 @@ const TravelList = () => {
         client_traveller_name,
         ticket_number,
         pnr,
-      }))(bookingData);
-      for (let sector of bookingData.sectors) {
-        let isDuplicate = false;
-        let key = `${bookingData.client_traveller_name}|${sector.travel_date}|${sector.from_airport}|`;
-        let idx = keyValues.indexOf(key);
-        if (idx >= 0) {
-          isDuplicate = true;
-          formattedData[Math.floor(idx/2)].isDuplicate = true;
-        }
+      }))(sector.booking);
+      let isDuplicate = false;
+      let key = `${booking.client_traveller_name}|${sector.travel_date}|${sector.from_airport}|`;
+      let idx = keyValues.indexOf(key);
+      if (idx >= 0) {
+        isDuplicate = true;
+        formattedData[Math.floor(idx/2)].isDuplicate = true;
+      } else {
         keyValues.push(key);
-        key = `${bookingData.client_traveller_name}|${sector.travel_date}||${sector.to_airport}`;
-        idx = keyValues.indexOf(key);
-        if (idx >= 0) {
-          isDuplicate = true;
-          formattedData[Math.floor(idx/2)].isDuplicate = true;
-        }
-        keyValues.push(key);
-        formattedData.push({ ...booking, ...sector, isDuplicate });
       }
-      console.log('Key Values')
-      console.table(keyValues);
-      console.log('Formatted Data')
-      console.table(formattedData);
+      key = `${booking.client_traveller_name}|${sector.travel_date}||${sector.to_airport}`;
+      idx = keyValues.indexOf(key);
+      if (idx >= 0) {
+        isDuplicate = true;
+        formattedData[Math.floor(idx/2)].isDuplicate = true;
+      } else {
+        keyValues.push(key);
+      }
+      formattedData.push({ ...booking, ...sector, isDuplicate });
     }
     return formattedData;
   };
