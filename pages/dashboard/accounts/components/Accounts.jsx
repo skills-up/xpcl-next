@@ -6,7 +6,7 @@ import { IoCopyOutline } from 'react-icons/io5';
 import { deleteItem, getList } from '../../../../api/xplorzApi';
 import ActionsButton from '../../../../components/actions-button/ActionsButton';
 import ConfirmationModal from '../../../../components/confirm-modal';
-import Datatable from '../../../../components/datatable/Datatable';
+import Datatable from '../../../../components/datatable/ServerDatatable';
 import { filterAllowed, hasPermission } from '../../../../utils/permission-checker';
 import { sendToast } from '../../../../utils/toastify';
 
@@ -15,13 +15,38 @@ const Accounts = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
+  const [pageSize, setPageSize] = useState(10);
+  const [accountCategories, setAccountCategories] = useState([]);
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
 
   useEffect(() => {
     getAccounts();
-  }, []);
+  }, [debouncedSearchQuery, pageSize]);
+
+  useEffect(()=>{
+    const handler = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, 500); // delay in ms
+
+    return () => {
+      clearTimeout(handler); // cleanup when value changes
+    };
+  },[searchQuery])
 
   const getAccounts = async () => {
-    const response = await getList('accounts');
+    if (accountCategories.length === 0) {
+      const response = await getList('account-categories');
+      if (response?.success) {
+        setAccountCategories(response.data);
+      } else {
+        sendToast(
+          'error',
+          response?.data?.message || response?.data?.error || 'Error getting account categories',
+          4000
+        )
+      }
+    }
+    const response = await getList('accounts', {search: debouncedSearchQuery || null, paginate: pageSize, fields: ['name','year','account_category_id','updated_at']});
     if (response?.success) {
       setAccounts(response.data);
     } else {
@@ -51,7 +76,14 @@ const Accounts = () => {
     },
     {
       Header: 'Account Category',
-      accessor: 'account_category_name',
+      accessor: 'account_category_id',
+      Cell: (data) => {
+        return (
+          <div>
+            {accountCategories[data.row.original.account_category_id]?.name}
+          </div>
+        )
+      }
     },
     {
       Header: 'Last Updated At',
@@ -176,13 +208,15 @@ const Accounts = () => {
       </div>
       {/* Data Table */}
       <Datatable
+        onPageSizeChange={(size) => setPageSize(size)}
         viewLink={'/dashboard/accounts'}
         downloadCSV
         CSVName='Accounts.csv'
         columns={columns}
-        data={accounts.filter((perm) =>
+        fullData={accounts}
+        data={accounts?.data?.filter((perm) =>
           Object.values(perm).join(',').toLowerCase().includes(searchQuery.toLowerCase())
-        )}
+        ) || []}
       />
     </div>
   );
