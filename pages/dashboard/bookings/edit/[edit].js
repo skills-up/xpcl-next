@@ -37,6 +37,7 @@ const UpdateBooking = () => {
   const [clientTotal, setClientTotal] = useState(0);
   const [reissuePenalty, setReissuePenalty] = useState(0);
   const [clientReissueFee, setClientReissueFee] = useState(0);
+  const [clientReissueGST, setClientReissueGST] = useState(0);
   const [formInputClass, setFormInputClass] = useState('col-lg-4');
   const [sector, setSector] = useState('');
   const [originalBookingID, setOriginalBookingID] = useState(null);
@@ -160,6 +161,7 @@ const UpdateBooking = () => {
         setFormInputClass(response.data?.original_booking_id ? 'col-lg-3' : 'col-lg-4');
         setReissuePenalty((+response.data?.reissue_penalty || 0).toFixed(0));
         setClientReissueFee((+response.data?.client_reissue_fee || 0).toFixed(0));
+        setClientReissueGST((+response.data?.client_reissue_gst || 0).toFixed(0));
         setPaymentAmount(
           (+response.data.payment_amount || 0).toFixed(2).replace(/[.,]00$/, '')
         );
@@ -465,6 +467,7 @@ const UpdateBooking = () => {
       editData['original_booking_id'] = originalBookingID;
       editData['reissue_penalty'] = reissuePenalty || 0;
       editData['client_reissue_fee'] = clientReissueFee || 0;
+      editData['client_reissue_gst'] = clientReissueGST || 0;
     }
     const response = await updateItem('bookings', router.query.edit, editData);
     if (response?.success) {
@@ -793,6 +796,7 @@ const UpdateBooking = () => {
     clientGSTAmount,
     clientReferralFee,
     clientReissueFee,
+    clientReissueGST,
     clientBaseAmount,
   ]);
 
@@ -804,6 +808,7 @@ const UpdateBooking = () => {
           (+clientTaxAmount || 0) +
           (+clientServiceCharges || 0) +
           (+clientReissueFee || 0) +
+          (+clientReissueGST || 0) +
           (+clientReferralFee || 0)
       ).toFixed(0)
     );
@@ -1650,6 +1655,20 @@ const UpdateBooking = () => {
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Client Reissue Fee
+                        </label>
+                      </div>
+                    </div>}
+                    {originalBookingID && <div className='col-lg-3'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setClientReissueGST(e.target.value)}
+                          value={clientReissueGST}
+                          placeholder=' '
+                          type='number'
+                          onWheel={(e) => e.target.blur()}
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Client Reissue GST
                         </label>
                       </div>
                     </div>}

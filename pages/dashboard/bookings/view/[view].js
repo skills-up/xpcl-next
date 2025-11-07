@@ -107,9 +107,11 @@ const ViewBooking = () => {
           ) : undefined,
           payment_amount: inrFormat.format(res.payment_amount),
           client_base_amount: inrFormat.format(res.client_base_amount),
+          client_reissue_fee: inrFormat.format(res.client_reissue_fee),
           client_tax_amount: inrFormat.format(res.client_tax_amount),
           client_gst_amount: inrFormat.format(res.client_gst_amount),
           xplorz_gst_amount: inrFormat.format(res.client_service_charges),
+          client_reissue_gst: inrFormat.format(res.client_reissue_gst),
           client_total: inrFormat.format(res.client_total),
           client_referral_fee: inrFormat.format(res.client_referral_fee),
           client_referrer_name: res.client_referrer_name ? (

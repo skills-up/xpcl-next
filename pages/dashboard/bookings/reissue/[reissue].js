@@ -37,6 +37,7 @@ const ReissueBooking = () => {
   const [clientTotal, setClientTotal] = useState(0);
   const [reissuePenalty, setReissuePenalty] = useState(0);
   const [clientReissueFee, setClientReissueFee] = useState(0);
+  const [clientReissueGST, setClientReissueGST] = useState(0);
   const [sector, setSector] = useState('');
   const [bookingSectors, setBookingSectors] = useState([]);
   const [isOffshore, setIsOffshore] = useState(false);
@@ -393,6 +394,7 @@ const ReissueBooking = () => {
       original_booking_id: router.query.reissue,
       reissue_penalty: reissuePenalty || 0,
       client_reissue_fee: clientReissueFee || 0,
+      client_reissue_gst: clientReissueGST || 0,
       client_traveller_id: clientTravellerID?.value,
       booking_sectors:
         bookingType.value === 'Miscellaneous'
@@ -702,6 +704,7 @@ const ReissueBooking = () => {
     clientGSTAmount,
     clientReferralFee,
     clientReissueFee,
+    clientReissueGST,
     clientBaseAmount,
   ]);
 
@@ -713,6 +716,7 @@ const ReissueBooking = () => {
           (+clientTaxAmount || 0) +
           (+clientServiceCharges || 0) +
           (+clientReissueFee || 0) +
+          (+clientReissueGST || 0) +
           (+clientReferralFee || 0)
       ).toFixed(0)
     );
@@ -1543,6 +1547,20 @@ const ReissueBooking = () => {
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Client Reissue Fee
+                        </label>
+                      </div>
+                    </div>
+                    <div className='col-lg-3'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setClientReissueGST(e.target.value)}
+                          value={clientReissueGST}
+                          placeholder=' '
+                          type='number'
+                          onWheel={(e) => e.target.blur()}
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Client Reissue GST
                         </label>
                       </div>
                     </div>

@@ -128,7 +128,7 @@ const Bookings = () => {
       Cell: (data) => {
         return (
           <span>
-            {(+data.row.original.client_service_charges).toLocaleString('en-IN', {
+            {((+data.row.original.client_service_charges) + (+data.row.original.client_reissue_gst)).toLocaleString('en-IN', {
               maximumFractionDigits: 2,
               style: 'currency',
               currency: 'INR',
