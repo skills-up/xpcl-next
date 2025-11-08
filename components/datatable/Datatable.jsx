@@ -244,9 +244,9 @@ const Datatable = ({
                 color='text-default'
               >
                 <div className='mx-1'>
-                  <button className='button -blue-1 size-40 rounded-full border-light'>
+                  <span className='button -blue-1 size-40 rounded-full border-light'>
                     <BsChevronDoubleLeft className='text-lg' />
-                  </button>
+                  </span>
                 </div>
               </PageWithText>
             )}
@@ -265,9 +265,9 @@ const Datatable = ({
                 color='text-default'
               >
                 <div className='col-auto md:order-1 mx-1'>
-                  <button className='button -blue-1 size-40 rounded-full border-light'>
+                  <span className='button -blue-1 size-40 rounded-full border-light'>
                     <BsChevronLeft className='text-lg' />
-                  </button>
+                  </span>
                 </div>
               </PageWithText>
             )}
@@ -320,9 +320,9 @@ const Datatable = ({
                 color='text-default'
               >
                 <div className='col-auto md:order-1 mx-1'>
-                  <button className='button -blue-1 size-40 rounded-full border-light'>
+                  <span className='button -blue-1 size-40 rounded-full border-light'>
                     <BsChevronRight className='text-lg' />
-                  </button>
+                  </span>
                 </div>
               </PageWithText>
             )}
@@ -338,9 +338,9 @@ const Datatable = ({
                 color='text-default'
               >
                 <div className='col-auto md:order-1 mx-1'>
-                  <button className='button -blue-1 size-40 rounded-full border-light'>
+                  <span className='button -blue-1 size-40 rounded-full border-light'>
                     <BsChevronDoubleRight className='text-lg' />
-                  </button>
+                  </span>
                 </div>
               </PageWithText>
             )}
