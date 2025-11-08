@@ -40,14 +40,22 @@ export const customAPICall = async (
 ) => {
   try {
     const token = await store.getState().auth.value.token;
+    const isFormData =
+      typeof FormData !== 'undefined' && data instanceof FormData;
+
+    const defaultHeaders = {
+      accept: 'application/json',
+      authorization: 'Bearer ' + token,
+    };
+
+    if (!isFormData) {
+      defaultHeaders['Content-Type'] = 'application/json';
+    }
+
     const ax = axios.create({
       baseURL: airplaneCalls ? travelURL : baseURL,
       withCredentials: false,
-      headers: {
-        'Content-Type': 'application/json',
-        accept: 'application/json',
-        authorization: 'Bearer ' + token,
-      },
+      headers: defaultHeaders,
     });
     // Lower Case
     requestMethod = requestMethod.toLowerCase();
