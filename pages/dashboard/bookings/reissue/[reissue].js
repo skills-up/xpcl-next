@@ -43,6 +43,7 @@ const ReissueBooking = () => {
   const [isOffshore, setIsOffshore] = useState(false);
   const [grossCommission, setGrossCommission] = useState(0);
   const [clientQuotedAmount, setClientQuotedAmount] = useState(0);
+  const [number, setNumber] = useState('');
   const [disabled, setDisabled] = useState(false);
 
   // Percentages
@@ -138,6 +139,7 @@ const ReissueBooking = () => {
         // setClientServicesCharges(response.data.client_service_charges);
         // setClientTotal(response.data.client_total);
         setSector(response.data.sector);
+        setNumber(response.data.number);
         // setBookingDate(
         //   new DateObject({ date: response.data.booking_date, format: 'YYYY-MM-DD' })
         // );
@@ -694,6 +696,23 @@ const ReissueBooking = () => {
         clientServiceChargePercent
       );
     }
+  };
+
+  const calculateClientReissueGST = (fee) => {
+    const feeValue = Number(fee);
+    if (!Number.isFinite(feeValue)) return '';
+    const intermediatePercent = number?.toString()?.startsWith('D') ? 0.05 : 0.1;
+    const intermediateValue = feeValue * intermediatePercent;
+    return (intermediateValue * 0.18).toFixed(0);
+  };
+
+  const handleClientReissueFeeChange = (value) => {
+    setClientReissueFee(value);
+    if (value === '' || value === null) {
+      setClientReissueGST('');
+      return;
+    }
+    setClientReissueGST(calculateClientReissueGST(value));
   };
 
   useEffect(() => {
@@ -1539,7 +1558,7 @@ const ReissueBooking = () => {
                     <div className='col-lg-3'>
                       <div className='form-input'>
                         <input
-                          onChange={(e) => setClientReissueFee(e.target.value)}
+                          onChange={(e) => handleClientReissueFeeChange(e.target.value)}
                           value={clientReissueFee}
                           placeholder=' '
                           type='number'
@@ -1550,7 +1569,8 @@ const ReissueBooking = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-lg-3'>
+                    <div className='col-lg-4'>
+                      <label className='col-12 fw-500 mb-4'>Client Reiusse GST</label>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setClientReissueGST(e.target.value)}
@@ -1558,10 +1578,12 @@ const ReissueBooking = () => {
                           placeholder=' '
                           type='number'
                           onWheel={(e) => e.target.blur()}
+                          style={{
+                            height: '50px',
+                            minHeight: 'unset',
+                            paddingTop: 'unset',
+                          }}
                         />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Client Reissue GST
-                        </label>
                       </div>
                     </div>
                     <div className='col-lg-4 pr-0'>

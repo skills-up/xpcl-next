@@ -788,6 +788,23 @@ const UpdateBooking = () => {
     }
   };
 
+  const calculateClientReissueGST = (fee) => {
+    const feeValue = Number(fee);
+    if (!Number.isFinite(feeValue)) return '';
+    const intermediatePercent = number?.toString()?.startsWith('D') ? 0.05 : 0.1;
+    const intermediateValue = feeValue * intermediatePercent;
+    return (intermediateValue * 0.18).toFixed(0);
+  };
+
+  const handleClientReissueFeeChange = (value) => {
+    setClientReissueFee(value);
+    if (value === '' || value === null) {
+      setClientReissueGST('');
+      return;
+    }
+    setClientReissueGST(calculateClientReissueGST(value));
+  };
+
   useEffect(() => {
     updateClientTotal();
   }, [
@@ -1647,7 +1664,7 @@ const UpdateBooking = () => {
                     {originalBookingID && <div className='col-lg-3'>
                       <div className='form-input'>
                         <input
-                          onChange={(e) => setClientReissueFee(e.target.value)}
+                          onChange={(e) => handleClientReissueFeeChange(e.target.value)}
                           value={clientReissueFee}
                           placeholder=' '
                           type='number'
@@ -1658,18 +1675,22 @@ const UpdateBooking = () => {
                         </label>
                       </div>
                     </div>}
-                    {originalBookingID && <div className='col-lg-3'>
+                    {originalBookingID && <div className='col-lg-4 pr-0'>
+                      <label className='col-12 fw-500 mb-4'>Client Reissue GST</label>
                       <div className='form-input'>
+                        <label></label>
                         <input
                           onChange={(e) => setClientReissueGST(e.target.value)}
                           value={clientReissueGST}
                           placeholder=' '
                           type='number'
                           onWheel={(e) => e.target.blur()}
+                          style={{
+                            height: '50px',
+                            minHeight: 'unset',
+                            paddingTop: 'unset',
+                          }}
                         />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Client Reissue GST
-                        </label>
                       </div>
                     </div>}
                     <div className='col-lg-4 pr-0'>
