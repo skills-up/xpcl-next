@@ -5,7 +5,7 @@ import { sendToast } from '../../../utils/toastify';
 
 const supportedFileTypes = ['JPG', 'PNG', 'PDF', 'JPEG'];
 
-const BoardingPassUpload = ({ id }) => {
+const BoardingPassUpload = ({ id, onSuccess }) => {
   const [boardingPassFile, setBoardingPassFile] = useState(null);
 
   const uploadBordingPassFile = async () => {
@@ -17,6 +17,7 @@ const BoardingPassUpload = ({ id }) => {
       boardPassData
     );
     if (response?.success) {
+      onSuccess((response.data?.data || response.data)?.boarding_pass);
       sendToast('success', 'Boarding Pass uploaded successfully', 4000);
     } else {
       sendToast(

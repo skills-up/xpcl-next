@@ -148,7 +148,20 @@ const TravelList = () => {
     {
       Header: 'Upload Boarding Pass',
       removeMaxWidth: true,
-      Cell: (data) => <BoardingPassUpload id={data.row.original.id} />,
+      Cell: (data) => (
+        <BoardingPassUpload
+          id={data.row.original.id}
+          onSuccess={(url) => {
+            setTravelSectors((prev) =>
+              prev.map((sector) =>
+                sector.id === data.row.original.id
+                  ? { ...sector, boarding_pass: url }
+                  : sector
+              )
+            );
+          }}
+        />
+      ),
     },
   ];
 
