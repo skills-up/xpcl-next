@@ -100,6 +100,42 @@ const ViewTravellers = () => {
             </a>
           );
         }
+        if (
+          data?.fare_markup_percent !== null &&
+          data?.fare_markup_percent !== undefined
+        ) {
+          data.fare_markup_percent = `${data.fare_markup_percent}%`;
+        }
+        if (data?.airline_markup_overrides) {
+          let overrides = data.airline_markup_overrides;
+          if (typeof overrides === 'string') {
+            try {
+              overrides = JSON.parse(overrides);
+            } catch (error) {
+              overrides = null;
+            }
+          }
+          if (overrides && typeof overrides === 'object') {
+            data.airline_markup_overrides = (
+              <table className='table w-100 text-14'>
+                <thead>
+                  <tr>
+                    <th className='text-left'>Airline</th>
+                    <th className='text-left'>Markup (%)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Object.entries(overrides).map(([airline, markup]) => (
+                    <tr key={airline}>
+                      <td className='fw-500'>{airline}</td>
+                      <td>{markup}%</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            );
+          }
+        }
         if (data.passport_dob) {
           data.passport_dob = new Date(data.passport_dob).toLocaleString('en-IN', {
             dateStyle: 'medium',
