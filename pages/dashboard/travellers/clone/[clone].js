@@ -641,13 +641,12 @@ const AddNewTravellers = () => {
                                   />
                                 </td>
                                 <td className='text-right'>
-                                  <button
-                                    type='button'
-                                    className='button -outline-blue-1 text-13 px-10'
+                                  <span
+                                    className='pb-10'
                                     onClick={() => removeOverrideRow(index)}
                                   >
-                                    <BsTrash3 />
-                                  </button>
+                                    <BsTrash3 className='text-danger'/>
+                                  </span>
                                 </td>
                               </tr>
                             ))}
@@ -656,7 +655,7 @@ const AddNewTravellers = () => {
                       </div>
                       <button
                         type='button'
-                        className='button -outline-blue-1 text-13 mt-10'
+                        className='btn btn-success my-2 d-flex items-center gap-2'
                         onClick={addOverrideRow}
                       >
                         <AiOutlinePlus className='mr-5' /> Add Row
