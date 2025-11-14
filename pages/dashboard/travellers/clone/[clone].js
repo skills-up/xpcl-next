@@ -54,6 +54,11 @@ const AddNewTravellers = () => {
   const [countries, setCountries] = useState([]);
   const [countryCodeID, setCountryCodeID] = useState(null);
   const [airlines, setAirlines] = useState([]);
+  const [eaPhoneNumber, setEAPhoneNumber] = useState('');
+  const [fareMarkupPercent, setFareMarkupPercent] = useState('');
+  const [airlineMarkupOverrides, setAirlineMarkupOverrides] = useState([
+    { airline: '', markup: '' },
+  ]);
 
   // Options
   const passportPrefixOptions = [
@@ -101,6 +106,25 @@ const AddNewTravellers = () => {
       getData();
     }
   }, [router.isReady]);
+
+  const handleOverrideChange = (index, field, value) => {
+    setAirlineMarkupOverrides((prev) => {
+      const updated = [...prev];
+      updated[index] = { ...updated[index], [field]: value };
+      return updated;
+    });
+  };
+
+  const addOverrideRow = () => {
+    setAirlineMarkupOverrides((prev) => [...prev, { airline: '', markup: '' }]);
+  };
+
+  const removeOverrideRow = (index) => {
+    setAirlineMarkupOverrides((prev) => {
+      if (prev.length === 1) return [{ airline: '', markup: '' }];
+      return prev.filter((_, idx) => idx !== index);
+    });
+  };
 
   const getData = async () => {
     if (router.query.clone) {
@@ -156,6 +180,41 @@ const AddNewTravellers = () => {
         setPassportIssuePlace(response.data?.passport_issue_place ?? '');
         setMobilePhone(response.data?.mobile_phone ?? '');
         setEmail(response.data?.email_address ?? '');
+        setEAPhoneNumber(response.data?.ea_phone_number ?? '');
+        setFareMarkupPercent(
+          response.data?.fare_markup_percent !== null &&
+            response.data?.fare_markup_percent !== undefined
+            ? response.data?.fare_markup_percent.toString()
+            : ''
+        );
+        if (response.data?.airline_markup_overrides) {
+          let overrides = response.data.airline_markup_overrides;
+          if (typeof overrides === 'string') {
+            try {
+              overrides = JSON.parse(overrides);
+            } catch (error) {
+              overrides = {};
+            }
+          }
+          if (overrides && typeof overrides === 'object') {
+            const overrideRows = Object.entries(overrides).map(([airline, markup]) => ({
+              airline,
+              markup: markup === null || markup === undefined ? '' : markup,
+            }));
+            setAirlineMarkupOverrides(
+              overrideRows.length
+                ? overrideRows.map((row) => ({
+                    airline: row.airline,
+                    markup: row.markup?.toString?.() ?? '',
+                  }))
+                : [{ airline: '', markup: '' }]
+            );
+          } else {
+            setAirlineMarkupOverrides([{ airline: '', markup: '' }]);
+          }
+        } else {
+          setAirlineMarkupOverrides([{ airline: '', markup: '' }]);
+        }
         if (
           response.data?.domestic_airline_preference &&
           response.data?.domestic_airline_preference?.length > 0
@@ -276,6 +335,22 @@ const AddNewTravellers = () => {
     passportFormData.append('passport_issue_place', passportIssuePlace ?? '');
     passportFormData.append('mobile_phone', mobilePhone ?? '');
     passportFormData.append('email_address', email ?? '');
+    passportFormData.append('ea_phone_number', eaPhoneNumber.trim());
+    if (fareMarkupPercent !== '' && !Number.isNaN(Number(fareMarkupPercent)))
+      passportFormData.append('fare_markup_percent', fareMarkupPercent);
+    const cleanedOverrides = airlineMarkupOverrides
+      .map(({ airline, markup }) => ({
+        airline: airline?.trim().toUpperCase(),
+        markup: markup === '' ? '' : parseFloat(markup),
+      }))
+      .filter(({ airline, markup }) => airline && markup !== '' && !Number.isNaN(markup));
+    if (cleanedOverrides.length) {
+      const overridePayload = {};
+      cleanedOverrides.forEach(({ airline, markup }) => {
+        overridePayload[airline] = markup;
+      });
+      passportFormData.append('airline_markup_overrides', JSON.stringify(overridePayload));
+    }
     if (domesticAirlinePreference && domesticAirlinePreference.length > 0)
       for (let pref of domesticAirlinePreference)
         passportFormData.append('domestic_airline_preference[]', pref?.value ?? '');
@@ -449,7 +524,10 @@ const AddNewTravellers = () => {
                           onChange={(e) => setMobilePhone(e.target.value)}
                           value={mobilePhone}
                           placeholder=' '
-                          type='number'
+                          minLength={12}
+                          maxLength={12}
+                          pattern='[0-9]{12}'
+                          inputMode='numeric'
                           onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-15 text-light-1'>
@@ -468,6 +546,41 @@ const AddNewTravellers = () => {
                         <label className='lh-1 text-16 text-light-1'>Email Address</label>
                       </div>
                     </div>
+                    <div className='col-lg-3'>
+                      <div className='form-input'>
+                        <input
+                          value={eaPhoneNumber}
+                          inputMode='numeric'
+                          minLength={12}
+                          maxLength={12}
+                          pattern='[0-9]{12}'
+                          placeholder=' '
+                          onChange={(e) => {
+                            const digits = e.target.value.replace(/\D/g, '');
+                            if (digits.length <= 12) setEAPhoneNumber(digits);
+                          }}
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          EA Phone Number (12 digits)
+                        </label>
+                      </div>
+                    </div>
+                    <div className='col-lg-3'>
+                      <div className='form-input'>
+                        <input
+                          type='number'
+                          min='0'
+                          step='0.01'
+                          onChange={(e) => setFareMarkupPercent(e.target.value)}
+                          value={fareMarkupPercent}
+                          placeholder=' '
+                          onWheel={(e) => e.target.blur()}
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Fare Markup Percent (%)
+                        </label>
+                      </div>
+                    </div>
                     <div className='col-lg-6'>
                       <div className='form-input'>
                         <input
@@ -478,6 +591,79 @@ const AddNewTravellers = () => {
                         />
                         <label className='lh-1 text-16 text-light-1'>Address</label>
                       </div>
+                    </div>
+                    <div className='col-12'>
+                      <label className='lh-1 text-16 text-light-1 mb-10 d-block'>
+                        Airline Markup Overrides
+                      </label>
+                      <div
+                        className='overflow-auto rounded-4'
+                        style={{ border: '1px solid #e0e0e0' }}
+                      >
+                        <table className='table w-100 mb-0'>
+                          <thead>
+                            <tr>
+                              <th className='text-15 fw-600'>Airline Code</th>
+                              <th className='text-15 fw-600'>Markup (%)</th>
+                              <th></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {airlineMarkupOverrides.map((row, index) => (
+                              <tr key={index}>
+                                <td>
+                                  <input
+                                    type='text'
+                                    className='form-control'
+                                    maxLength={3}
+                                    value={row.airline}
+                                    placeholder='e.g. AI'
+                                    onChange={(e) =>
+                                      handleOverrideChange(
+                                        index,
+                                        'airline',
+                                        e.target.value.toUpperCase()
+                                      )
+                                    }
+                                  />
+                                </td>
+                                <td>
+                                  <input
+                                    type='number'
+                                    className='form-control'
+                                    min='0'
+                                    step='0.01'
+                                    value={row.markup}
+                                    placeholder='e.g. 5'
+                                    onChange={(e) =>
+                                      handleOverrideChange(index, 'markup', e.target.value)
+                                    }
+                                  />
+                                </td>
+                                <td className='text-right'>
+                                  <button
+                                    type='button'
+                                    className='button -outline-blue-1 text-13 px-10'
+                                    onClick={() => removeOverrideRow(index)}
+                                  >
+                                    <BsTrash3 />
+                                  </button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                      <button
+                        type='button'
+                        className='button -outline-blue-1 text-13 mt-10'
+                        onClick={addOverrideRow}
+                      >
+                        <AiOutlinePlus className='mr-5' /> Add Row
+                      </button>
+                      <p className='text-13 text-light-1 mt-5'>
+                        Leave blank to use the default markup settings.
+                      </p>
                     </div>
                     <h3>Passport Details</h3>
                     <div className='col-lg-3'>
