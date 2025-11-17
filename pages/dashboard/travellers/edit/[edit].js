@@ -66,7 +66,6 @@ const UpdateTravellers = () => {
   const [airlineMarkupOverrides, setAirlineMarkupOverrides] = useState([
     { airline: '', markup: '' },
   ]);
-  const [whatsappGroupURL, setWhatsappGroupURL] = useState('');
 
   // Options
   const passportPrefixOptions = [
@@ -195,7 +194,6 @@ const UpdateTravellers = () => {
             ? response.data?.fare_markup_percent.toString()
             : ''
         );
-        setWhatsappGroupURL(response.data?.whatsapp_group_url ?? '');
         if (response.data?.airline_markup_overrides) {
           let overrides = response.data.airline_markup_overrides;
           if (typeof overrides === 'string') {
@@ -616,19 +614,6 @@ const UpdateTravellers = () => {
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Fare Markup Percent (%)
-                        </label>
-                      </div>
-                    </div>
-                    <div className='col-lg-6'>
-                      <div className='form-input'>
-                        <input
-                          value={whatsappGroupURL}
-                          placeholder='Will be generated after linking'
-                          readOnly
-                          disabled
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          WhatsApp Group URL (view only)
                         </label>
                       </div>
                     </div>
