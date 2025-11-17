@@ -349,6 +349,11 @@ const Sidebar = () => {
           permissions: ['visa-requirement-documents.index'],
         },
         {
+          title: 'WhatsApp Groups',
+          href: '/dashboard/whats-app-groups',
+          permissions: ['whats-app-groups.index'],
+        },
+        {
           title: 'Amex File',
           href: '/dashboard/amex-grid',
           permissions: ['bookings.amex-grid'],

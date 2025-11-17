@@ -1,7 +1,8 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { deleteItem, getItem } from '../../../../api/xplorzApi';
+import Select from 'react-select';
+import { deleteItem, getItem, getList, createItem } from '../../../../api/xplorzApi';
 import Seo from '../../../../components/common/Seo';
 import ConfirmationModal from '../../../../components/confirm-modal';
 import Footer from '../../../../components/footer/dashboard-footer';
@@ -9,11 +10,35 @@ import Header from '../../../../components/header/dashboard-header';
 import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
 import ViewTable from '../../../../components/view-table';
 import { sendToast } from '../../../../utils/toastify';
+import { IoClose } from 'react-icons/io5';
+
+const ModalHeader = ({ onClick, title }) => (
+  <div className='d-flex justify-between items-center'>
+    <h3 className='text-xl font-semibold'>{title}</h3>
+    <button className='modal-close btn btn-transparent' onClick={onClick}>
+      <IoClose classes='text-secondary stroke-current inline-block h-5 w-5' />
+    </button>
+  </div>
+);
+
+const ModalFooter = ({ onClick, onSubmit, cancelButtonText, successButtonText }) => (
+  <div className='d-flex justify-end gap-2'>
+    <button className='btn btn-secondary' type='button' onClick={onClick}>
+      {cancelButtonText}
+    </button>
+    <button className='btn btn-danger' type='button' onClick={onSubmit}>
+      {successButtonText}
+    </button>
+  </div>
+);
 
 const ViewOrganization = () => {
   const [organization, setOrganization] = useState([]);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [idToDelete, setIdToDelete] = useState(-1);
+  const [showWhatsAppModal, setShowWhatsAppModal] = useState(false);
+  const [whatsAppGroupOptions, setWhatsAppGroupOptions] = useState([]);
+  const [whatsAppGroupId, setWhatsAppGroupId] = useState(null);
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -75,6 +100,11 @@ const ViewOrganization = () => {
           );
         }
         delete data['calendar_template_id'];
+        if (data?.type === 'Client' && !data?.whats_app_group_id) {
+          data.whats_app_group_id = (
+            <button className='btn btn-link' onClick={showWhatsAppForm}>Link</button>
+          )
+        }
         setOrganization(data);
       } else {
         sendToast(
@@ -86,6 +116,32 @@ const ViewOrganization = () => {
         router.push('/dashboard/organizations');
       }
     }
+  };
+
+  const getWhatsAppGroups = async () => {
+    const response = await getList('whats-app-groups', {group_for: 'organization'});
+    if (response?.success) {
+      setWhatsAppGroupOptions(
+        response.data.filter(x => x.group_for === 'organization').map((wag) => ({
+          value: wag.id,
+          label: wag.name
+        }))
+      )
+    } else {
+        sendToast(
+          'error',
+          response.data?.message ||
+            response.data?.error ||
+            'Could Not Fetch WhatsApp Groups List.'
+        );
+    }
+  }
+
+  const showWhatsAppForm = async () => {
+    if (!whatsAppGroupOptions.length) {
+      await getWhatsAppGroups();
+    }
+    setShowWhatsAppModal(true);
   };
 
   const onCancel = async () => {
@@ -109,6 +165,27 @@ const ViewOrganization = () => {
     }
     onCancel();
   };
+
+  const onCancelWA = async () => {
+    setShowWhatsAppModal(false);
+  }
+  const onSubmitWA = async () => {
+    if (! whatsAppGroupId) return;
+    const response = await createItem(`organizations/${router.query.view}/link-whats-app-group`, {
+      whats_app_group_id: whatsAppGroupId.value
+    });
+    if (response?.success) {
+      sendToast('success', 'WhatsApp Group Linked Successfully', 4000);
+    } else {
+      sendToast(
+        'error',
+        response.data?.message ||
+          response.data?.error ||
+          'Unexpected Error Occurred',
+        4000
+      )
+    }
+  }
 
   return (
     <>
@@ -161,6 +238,31 @@ const ViewOrganization = () => {
                   }}
                   entitySlug={'organizations'}
                 />
+                {showWhatsAppModal && (
+                  <div className='whats-app-modal-container pt-2'>
+                    <div className='backdrop fade-in fixed inset-0 z-40 bg-black'></div>
+                    <div className='modal-content'>
+                      <ModalHeader title='Link WhatsApp Group' onClick={() => onCancelWA()} />
+                      <div className='form-input-select col-12 col-lg-6 py-2'>
+                        <label>
+                          Select WhatsApp Group<span className='text-danger'>*</span>
+                        </label>
+                        <Select
+                          options={whatsAppGroupOptions}
+                          value={whatsAppGroupId}
+                          placeholder='Select WhatsApp Group to Link'
+                          onChange={(value) => setWhatsAppGroupId(value)}
+                        />
+                      </div>
+                      <ModalFooter
+                        onClick={() => onCancelWA()}
+                        onSubmit={() => onSubmitWA()}
+                        cancelButtonText='Cancel'
+                        successButtonText='Link'
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
