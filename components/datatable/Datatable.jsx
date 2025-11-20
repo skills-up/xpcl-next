@@ -210,6 +210,7 @@ const Datatable = ({
                             : {
                                 maxWidth: '12rem',
                                 verticalAlign: 'top',
+                                wordBreak: 'break-word',
                               }
                         }
                         className={`${
