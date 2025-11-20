@@ -55,7 +55,7 @@ const WhatsAppGroups = () => {
       accessor: 'invite_link',
       Cell: (data) =>
         data.row.original.invite_link ? (
-          <a href={data.row.original.invite_link} target='_blank' rel='noreferrer'>
+          <a href={data.row.original.invite_link} target='_blank' rel='noreferrer' className='break-all'>
             {data.row.original.invite_link}
           </a>
         ) : (
