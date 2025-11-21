@@ -560,9 +560,9 @@ const UpdateTravellers = () => {
                           onChange={(e) => setMobilePhone(e.target.value)}
                           value={mobilePhone}
                           placeholder=' '
-                          minLength={12}
+                          minLength={11}
                           maxLength={12}
-                          pattern='[0-9]{12}'
+                          pattern='[0-9]{11,12}'
                           inputMode='numeric'
                           onWheel={(e) => e.target.blur()}
                         />
@@ -587,9 +587,9 @@ const UpdateTravellers = () => {
                         <input
                           value={eaPhoneNumber}
                           inputMode='numeric'
-                          minLength={12}
+                          minLength={11}
                           maxLength={12}
-                          pattern='[0-9]{12}'
+                          pattern='[0-9]{11,12}'
                           placeholder=' '
                           onChange={(e) => {
                             const digits = e.target.value.replace(/\D/g, '');
