@@ -110,9 +110,9 @@ const AddNewWhatsAppGroup = () => {
       sendToast('error', 'Please provide at least one phone number', 4000);
       return;
     }
-    const invalid = cleanedNumbers.find((ph) => !/^\d{12}$/.test(ph));
+    const invalid = cleanedNumbers.find((ph) => !/^\d{11,12}$/.test(ph));
     if (invalid) {
-      sendToast('error', 'Phone numbers must be 12 digit numbers', 4000);
+      sendToast('error', 'Phone numbers must be 11-12 digit numbers', 4000);
       return;
     }
     const response = await createItem('whats-app-groups', {
