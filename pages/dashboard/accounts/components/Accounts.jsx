@@ -37,7 +37,11 @@ const Accounts = () => {
     if (accountCategories.length === 0) {
       const response = await getList('account-categories');
       if (response?.success) {
-        setAccountCategories(response.data);
+        const categories = response.data.reduce((accumulator, currentObject) => {
+          accumulator[currentObject.id] = currentObject;
+          return accumulator;
+        }, {});
+        setAccountCategories(categories);
       } else {
         sendToast(
           'error',
@@ -46,7 +50,7 @@ const Accounts = () => {
         )
       }
     }
-    const response = await getList('accounts', {search: debouncedSearchQuery || null, paginate: pageSize, fields: ['name','year','account_category_id','updated_at']});
+    const response = await getList('accounts', {search: debouncedSearchQuery || null, paginate: pageSize, fields: ['id','name','year','account_category_id','updated_at']});
     if (response?.success) {
       setAccounts(response.data);
     } else {
