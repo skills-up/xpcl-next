@@ -44,6 +44,7 @@ const UpdateBooking = () => {
   const [bookingSectors, setBookingSectors] = useState([]);
   const [grossCommission, setGrossCommission] = useState(0);
   const [isOffshore, setIsOffshore] = useState(false);
+  const [isPersonal, setIsPersonal] = useState(false);
   const [clientQuotedAmount, setClientQuotedAmount] = useState(0);
   const [number, setNumber] = useState('');
 
@@ -178,6 +179,7 @@ const UpdateBooking = () => {
           ).toFixed(0)
         );
         setNumber(response.data.number);
+        setIsPersonal(response.data?.is_personal || false);
 
         // Client GST Percent
         if (
@@ -371,8 +373,8 @@ const UpdateBooking = () => {
         sendToast(
           'error',
           response.data?.message ||
-            response.data?.error ||
-            'Unable to fetch required data',
+          response.data?.error ||
+          'Unable to fetch required data',
           4000
         );
         router.push('/dashboard/bookings');
@@ -449,18 +451,19 @@ const UpdateBooking = () => {
         bookingType.value === 'Miscellaneous'
           ? undefined
           : bookingSectors.map((element) => ({
-              from_airport: element['from_airport']?.value,
-              to_airport: element['to_airport']?.value,
-              travel_date: element['travel_date']?.format('YYYY-MM-DD'),
-              travel_time: element['travel_time']
-                ? element['travel_time'] + ':00'
-                : undefined,
-              details:
-                element['details'].trim().length > 0 ? element['details'] : undefined,
-              booking_class: element['booking_class']?.value,
-              emission: element['emission'] || undefined,
-            })),
+            from_airport: element['from_airport']?.value,
+            to_airport: element['to_airport']?.value,
+            travel_date: element['travel_date']?.format('YYYY-MM-DD'),
+            travel_time: element['travel_time']
+              ? element['travel_time'] + ':00'
+              : undefined,
+            details:
+              element['details'].trim().length > 0 ? element['details'] : undefined,
+            booking_class: element['booking_class']?.value,
+            emission: element['emission'] || undefined,
+          })),
       is_offshore: isOffshore,
+      is_personal: isPersonal,
       sector: sector || undefined,
     };
     if (originalBookingID) {
@@ -573,11 +576,11 @@ const UpdateBooking = () => {
   const updateVendorTotal = () => {
     let vendorTotal = Number(
       (+vendorBaseAmount || 0) +
-        (+vendorYQAmount || 0) +
-        (+vendorTaxAmount || 0) +
-        (+vendorGSTAmount || 0) +
-        (+reissuePenalty || 0) +
-        (+vendorMiscCharges || 0)
+      (+vendorYQAmount || 0) +
+      (+vendorTaxAmount || 0) +
+      (+vendorGSTAmount || 0) +
+      (+reissuePenalty || 0) +
+      (+vendorMiscCharges || 0)
     )
       .toFixed(2)
       .replace(/[.,]00$/, '');
@@ -591,7 +594,7 @@ const UpdateBooking = () => {
       let vendorTDS = Number(
         (((+grossCommission || 0) - (+vendorServiceCharges || 0)) *
           (+vendorTDSPercent || 0)) /
-          100
+        100
       ).toFixed(0);
       setVendorTDS(vendorTDS);
     }
@@ -658,24 +661,24 @@ const UpdateBooking = () => {
       const iata_comm =
         bookingType?.value === 'Miscellaneous'
           ? Number(
-              ((+IATACommissionPercent || 0) * (+vendorBaseAmount || 0)) / 100
-            ).toFixed(0)
+            ((+IATACommissionPercent || 0) * (+vendorBaseAmount || 0)) / 100
+          ).toFixed(0)
           : Number(
-              ((+IATACommissionPercent || 0) *
-                ((+commissionRuleID.iata_basic || 0) * (+vendorBaseAmount || 0) +
-                  (+commissionRuleID.iata_yq || 0) * (+vendorYQAmount || 0))) /
-                100
-            ).toFixed(0);
+            ((+IATACommissionPercent || 0) *
+              ((+commissionRuleID.iata_basic || 0) * (+vendorBaseAmount || 0) +
+                (+commissionRuleID.iata_yq || 0) * (+vendorYQAmount || 0))) /
+            100
+          ).toFixed(0);
       const plb_comm =
         bookingType?.value === 'Miscellaneous'
           ? 0
           : Number(
-              ((+plbCommissionPercent || 0) *
-                ((+commissionRuleID.plb_basic || 0) * (+vendorBaseAmount || 0) +
-                  (+commissionRuleID.plb_yq || 0) * (+vendorYQAmount || 0) -
-                  iata_comm)) /
-                100
-            ).toFixed(0);
+            ((+plbCommissionPercent || 0) *
+              ((+commissionRuleID.plb_basic || 0) * (+vendorBaseAmount || 0) +
+                (+commissionRuleID.plb_yq || 0) * (+vendorYQAmount || 0) -
+                iata_comm)) /
+            100
+          ).toFixed(0);
       let grossCommission = Number((+plb_comm || 0) + (+iata_comm || 0));
       setGrossCommission(grossCommission);
       // Calls after gross commission is updated
@@ -717,7 +720,7 @@ const UpdateBooking = () => {
     let clientServiceCharges = Number(
       (((+clientBaseAmount || 0) + (+clientReferralFee || 0)) *
         (+clientServiceChargePercent || 0)) /
-        100
+      100
     ).toFixed(0);
     if (clientServiceCharges && clientServiceCharges !== 'NaN') {
       setClientServicesCharges(clientServiceCharges);
@@ -732,7 +735,7 @@ const UpdateBooking = () => {
     setClientServiceChargePercent(
       Number(
         (100 * (+clientServiceCharges || 0)) /
-          ((+clientBaseAmount || 0) + (+clientReferralFee || 0))
+        ((+clientBaseAmount || 0) + (+clientReferralFee || 0))
       ) //.toFixed(2)
     );
   };
@@ -821,12 +824,12 @@ const UpdateBooking = () => {
     setClientTotal(
       Number(
         (+clientBaseAmount || 0) +
-          (+clientGSTAmount || 0) +
-          (+clientTaxAmount || 0) +
-          (+clientServiceCharges || 0) +
-          (+clientReissueFee || 0) +
-          (+clientReissueGST || 0) +
-          (+clientReferralFee || 0)
+        (+clientGSTAmount || 0) +
+        (+clientTaxAmount || 0) +
+        (+clientServiceCharges || 0) +
+        (+clientReissueFee || 0) +
+        (+clientReissueGST || 0) +
+        (+clientReferralFee || 0)
       ).toFixed(0)
     );
   };
@@ -1829,6 +1832,13 @@ const UpdateBooking = () => {
                         checked={isOffshore}
                       />
                       <label>Is Offshore</label>
+                    </div>
+                    <div className='d-flex items-center gap-3'>
+                      <ReactSwitch
+                        onChange={() => setIsPersonal((prev) => !prev)}
+                        checked={isPersonal}
+                      />
+                      <label>Is Personal</label>
                     </div>
                     <div className='d-inline-block'>
                       <button

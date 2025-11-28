@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import ReactSwitch from 'react-switch';
 import { getItem, updateItem } from '../../../../api/xplorzApi';
 import Seo from '../../../../components/common/Seo';
 import Footer from '../../../../components/footer/dashboard-footer';
@@ -13,6 +14,7 @@ const UpdateWhatsAppGroup = () => {
   const [phoneNumbers, setPhoneNumbers] = useState([]);
   const [phoneInput, setPhoneInput] = useState('');
   const [inviteLink, setInviteLink] = useState('');
+  const [isPersonal, setIsPersonal] = useState(false);
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -27,6 +29,7 @@ const UpdateWhatsAppGroup = () => {
     if (groupRes?.success) {
       setName(groupRes.data?.name ?? '');
       setInviteLink(groupRes.data?.invite_link || '');
+      setIsPersonal(groupRes.data?.is_personal || false);
       const numbers = Array.isArray(groupRes.data?.phone_numbers)
         ? groupRes.data.phone_numbers.map((num) => `${num}`)
         : [];
@@ -35,8 +38,8 @@ const UpdateWhatsAppGroup = () => {
       sendToast(
         'error',
         groupRes?.data?.message ||
-          groupRes?.data?.error ||
-          'Failed to fetch WhatsApp group data.',
+        groupRes?.data?.error ||
+        'Failed to fetch WhatsApp group data.',
         4000
       );
       router.push('/dashboard/whats-app-groups');
@@ -92,6 +95,7 @@ const UpdateWhatsAppGroup = () => {
     const response = await updateItem('whats-app-groups', router.query.edit, {
       name: trimmedName,
       phone_numbers: cleanedNumbers,
+      is_personal: isPersonal,
     });
     if (response?.success) {
       sendToast('success', 'Updated WhatsApp group successfully.', 4000);
@@ -100,8 +104,8 @@ const UpdateWhatsAppGroup = () => {
       sendToast(
         'error',
         response?.data?.message ||
-          response?.data?.error ||
-          'Failed to update WhatsApp group.',
+        response?.data?.error ||
+        'Failed to update WhatsApp group.',
         4000
       );
     }
@@ -193,6 +197,13 @@ const UpdateWhatsAppGroup = () => {
                           Invite Link (readonly)
                         </label>
                       </div>
+                    </div>
+                    <div className='d-flex items-center gap-3 mb-3'>
+                      <ReactSwitch
+                        onChange={() => setIsPersonal((prev) => !prev)}
+                        checked={isPersonal}
+                      />
+                      <label>Is Personal</label>
                     </div>
                     <div className='d-inline-block'>
                       <button

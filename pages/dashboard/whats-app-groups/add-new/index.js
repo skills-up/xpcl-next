@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Select from 'react-select';
+import ReactSwitch from 'react-switch';
 import { createItem, getList } from '../../../../api/xplorzApi';
 import Seo from '../../../../components/common/Seo';
 import Footer from '../../../../components/footer/dashboard-footer';
@@ -22,6 +23,7 @@ const AddNewWhatsAppGroup = () => {
   const [organizationOptions, setOrganizationOptions] = useState([]);
   const [phoneNumbers, setPhoneNumbers] = useState([]);
   const [phoneInput, setPhoneInput] = useState('');
+  const [isPersonal, setIsPersonal] = useState(false);
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -120,6 +122,7 @@ const AddNewWhatsAppGroup = () => {
       group_for: groupFor.value,
       groupable_id: groupableId.value,
       phone_numbers: cleanedNumbers,
+      is_personal: isPersonal,
     });
     if (response?.success) {
       sendToast('success', 'Created WhatsApp group successfully.', 4000);
@@ -268,6 +271,13 @@ const AddNewWhatsAppGroup = () => {
                           </span>
                         ))}
                       </div>
+                    </div>
+                    <div className='d-flex items-center gap-3 mb-3'>
+                      <ReactSwitch
+                        onChange={() => setIsPersonal((prev) => !prev)}
+                        checked={isPersonal}
+                      />
+                      <label>Is Personal</label>
                     </div>
                     <div className='d-inline-block'>
                       <button

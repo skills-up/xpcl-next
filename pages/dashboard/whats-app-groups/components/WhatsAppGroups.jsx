@@ -63,6 +63,13 @@ const WhatsAppGroups = () => {
         ),
     },
     {
+      Header: 'Is Personal',
+      accessor: 'is_personal',
+      Cell: (data) => {
+        return <div>{data.row.original.is_personal ? 'Yes' : 'No'}</div>;
+      },
+    },
+    {
       Header: 'Last Updated At',
       accessor: 'updated_at',
       Cell: (data) => {

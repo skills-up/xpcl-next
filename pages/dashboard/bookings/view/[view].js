@@ -132,6 +132,7 @@ const ViewBooking = () => {
           status: <span className='text-success fw-600'>Active</span>,
           miscellaneous_type: res.miscellaneous_type,
           is_offshore: res.is_offshore,
+          is_personal: res.is_personal,
           is_auto_invoiced: res.is_auto_invoiced,
         };
         if (res?.reissued_booking) {
@@ -178,8 +179,8 @@ const ViewBooking = () => {
         sendToast(
           'error',
           response.data?.message ||
-            response.data?.error ||
-            'Could Not Fetch The Requested Booking.'
+          response.data?.error ||
+          'Could Not Fetch The Requested Booking.'
         );
         router.push('/dashboard/bookings');
       }
@@ -207,8 +208,8 @@ const ViewBooking = () => {
           <div>
             {data.row.original.travel_date
               ? new Date(data.row.original.travel_date).toLocaleString('en-IN', {
-                  dateStyle: 'medium',
-                })
+                dateStyle: 'medium',
+              })
               : ''}
           </div>
         );
@@ -245,8 +246,8 @@ const ViewBooking = () => {
       sendToast(
         'error',
         response.data?.message ||
-          response.data?.error ||
-          'Unexpected Error Occurred While Trying to Delete this Invoice',
+        response.data?.error ||
+        'Unexpected Error Occurred While Trying to Delete this Invoice',
         4000
       );
     }
