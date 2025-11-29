@@ -1,12 +1,16 @@
 import { useEffect, useState } from 'react';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
-import { getList } from '../../../api/xplorzApi';
+import { getList, createItem } from '../../../api/xplorzApi';
 import Datatable from '../../../components/datatable/Datatable';
 import { sendToast } from '../../../utils/toastify';
 import BoardingPassUpload from './BoardingPassUpload';
+import CustomDataModal from '../../../components/customDataModal';
+import { BsPencil } from 'react-icons/bs';
 
 const TravelList = () => {
   const [travelSectors, setTravelSectors] = useState([]);
+  const [showTerminalModal, setShowTerminalModal] = useState(false);
+  const [selectedSector, setSelectedSector] = useState(null);
   const [dates, setDates] = useState([
     new DateObject(),
     new DateObject().add(2, 'days'),
@@ -75,6 +79,40 @@ const TravelList = () => {
     }
   };
 
+  const handleEditTerminals = (sector) => {
+    setSelectedSector(sector);
+    setShowTerminalModal(true);
+  };
+
+  const handleTerminalUpdate = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
+
+    const response = await createItem(
+      `travel-list/${selectedSector.id}/update-terminals`,
+      data
+    );
+
+    if (response?.success) {
+      sendToast('success', 'Terminals updated successfully', 4000);
+      setTravelSectors((prev) =>
+        prev.map((sector) =>
+          sector.id === selectedSector.id
+            ? { ...sector, ...data }
+            : sector
+        )
+      );
+      setShowTerminalModal(false);
+    } else {
+      sendToast(
+        'error',
+        response?.data?.message || response?.data?.error || 'Error updating terminals',
+        4000
+      );
+    }
+  };
+
   const columns = [
     {
       Header: 'Booking #',
@@ -99,10 +137,24 @@ const TravelList = () => {
     {
       Header: 'From',
       accessor: 'from_airport',
+      Cell: (data) => {
+        return (
+          <div>
+            {data.row.original.from_airport}{data.row.original.from_terminal ? ` (T${data.row.original.from_terminal})` : ''}
+          </div>
+        );
+      },
     },
     {
       Header: 'To',
       accessor: 'to_airport',
+      Cell: (data) => {
+        return (
+          <div>
+            {data.row.original.to_airport}{data.row.original.to_terminal ? ` (T${data.row.original.to_terminal})` : ''}
+          </div>
+        );
+      },
     },
     {
       Header: 'Ticket #',
@@ -163,6 +215,18 @@ const TravelList = () => {
         />
       ),
     },
+    {
+      Header: 'Actions',
+      accessor: 'actions',
+      Cell: (data) => (
+        <button
+          className='btn btn-primary'
+          onClick={() => handleEditTerminals(data.row.original)}
+        >
+          <BsPencil title='Edit Terminals' />
+        </button>
+      ),
+    },
   ];
 
   return (
@@ -191,6 +255,38 @@ const TravelList = () => {
           getRowClassName={(row) => row.original.isDuplicate ? 'row-duplicate' : (row.original.boarding_pass ? 'row-disabled' : '')}
         />
       </div>
+      {showTerminalModal && (
+        <CustomDataModal
+          title='Update Terminals'
+          onClose={() => setShowTerminalModal(false)}
+        >
+          <form onSubmit={handleTerminalUpdate}>
+            <div className='form-input'>
+              <input
+                type='text'
+                name='from_terminal'
+                defaultValue={selectedSector?.from_terminal}
+                className='form-control'
+              />
+              <label className='lh-1 text-16 text-light-1'>From Terminal</label>
+            </div>
+            <div className='form-input mt-2'>
+              <input
+                type='text'
+                name='to_terminal'
+                defaultValue={selectedSector?.to_terminal}
+                className='form-control'
+              />
+              <label className='lh-1 text-16 text-light-1'>To Terminal</label>
+            </div>
+            <div className='mt-3 text-end'>
+              <button type='submit' className='btn btn-primary'>
+                Update
+              </button>
+            </div>
+          </form>
+        </CustomDataModal>
+      )}
     </div>
   );
 };
