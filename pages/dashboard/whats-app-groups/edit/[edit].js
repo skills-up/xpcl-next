@@ -76,7 +76,7 @@ const UpdateWhatsAppGroup = () => {
         phones: groupForValue === 'traveller'
           ? [item.mobile_phone, item.ea_phone_number].filter(x => !!x)
           : [item.contact_phone].filter(x => !!x),
-        whats_app_group_id: item.whats_app_group_id, // Ensure this field is available
+        whats_app_group_id: isPersonal ? item.personal_whats_app_group_id : item.whats_app_group_id, // Ensure this field is available
       }));
 
       setOptions(formattedOptions);
@@ -179,7 +179,7 @@ const UpdateWhatsAppGroup = () => {
       group_for: groupFor,
       groupable_id: groupableIds.map(g => g.value),
       phone_numbers: cleanedNumbers,
-      is_personal: isPersonal,
+      // is_personal: isPersonal,
     });
     if (response?.success) {
       sendToast('success', 'Updated WhatsApp group successfully.', 4000);
@@ -298,13 +298,13 @@ const UpdateWhatsAppGroup = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='d-flex items-center gap-3 mb-3'>
+                    {/* <div className='d-flex items-center gap-3 mb-3'>
                       <ReactSwitch
                         onChange={() => setIsPersonal((prev) => !prev)}
                         checked={isPersonal}
                       />
                       <label>Is Personal</label>
-                    </div>
+                    </div> */}
                     <div className='d-inline-block'>
                       <button
                         type='submit'
