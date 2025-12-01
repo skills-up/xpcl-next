@@ -18,7 +18,7 @@ const groupForOptions = [
 const AddNewWhatsAppGroup = () => {
   const [name, setName] = useState('');
   const [groupFor, setGroupFor] = useState(groupForOptions[0]);
-  const [groupableId, setGroupableId] = useState(null);
+  const [groupableIds, setGroupableIds] = useState([]);
   const [travellerOptions, setTravellerOptions] = useState([]);
   const [organizationOptions, setOrganizationOptions] = useState([]);
   const [phoneNumbers, setPhoneNumbers] = useState([]);
@@ -60,8 +60,8 @@ const AddNewWhatsAppGroup = () => {
   const getOptions = async () => {
     const [travellers, organizations, defaultNumbers] = await Promise.all([
       getList('travellers'),
-      getList('organizations', {is_client: 1}),
-      getList('whats-app-groups', {default_numbers: 1}),
+      getList('organizations', { is_client: 1 }),
+      getList('whats-app-groups', { default_numbers: 1 }),
     ]);
     if (travellers?.success && organizations?.success && defaultNumbers.success) {
       setTravellerOptions(
@@ -78,7 +78,7 @@ const AddNewWhatsAppGroup = () => {
         organizations.data.map((org) => ({
           value: org.id,
           label: org.name || `Organization #${org.id}`,
-          phones:[org.contact_phone].filter(x => !!x)
+          phones: [org.contact_phone].filter(x => !!x)
         }))
       );
       syncPhoneNumbers(defaultNumbers.data || []);
@@ -103,8 +103,8 @@ const AddNewWhatsAppGroup = () => {
       sendToast('error', 'Please select a groupable type', 4000);
       return;
     }
-    if (!groupableId?.value) {
-      sendToast('error', 'Please select a traveller/organization', 4000);
+    if (!groupableIds?.length) {
+      sendToast('error', 'Please select at least one traveller/organization', 4000);
       return;
     }
     const cleanedNumbers = phoneNumbers;
@@ -120,7 +120,7 @@ const AddNewWhatsAppGroup = () => {
     const response = await createItem('whats-app-groups', {
       name: trimmedName,
       group_for: groupFor.value,
-      groupable_id: groupableId.value,
+      groupable_id: groupableIds.map(g => g.value),
       phone_numbers: cleanedNumbers,
       is_personal: isPersonal,
     });
@@ -131,8 +131,8 @@ const AddNewWhatsAppGroup = () => {
       sendToast(
         'error',
         response?.data?.message ||
-          response?.data?.error ||
-          'Failed to create WhatsApp group.',
+        response?.data?.error ||
+        'Failed to create WhatsApp group.',
         4000
       );
     }
@@ -144,24 +144,59 @@ const AddNewWhatsAppGroup = () => {
     [groupFor, organizationOptions, travellerOptions]
   );
 
-  const handleGroupableIdChange = (option) => {
-    const options = (groupFor?.value === 'traveller') ? travellerOptions : organizationOptions;
-    const value = option?.value;
+  const handleGroupableIdChange = (options) => {
+    const selectedOptions = options || [];
+
+    // Get currently selected values to identify removed ones
+    const currentValues = groupableIds.map(g => g.value);
+    const newValues = selectedOptions.map(g => g.value);
+
+    // Identify removed options
+    const removedValues = currentValues.filter(v => !newValues.includes(v));
+
+    // Get numbers to remove (from removed options)
+    const optionsSource = (groupFor?.value === 'traveller') ? travellerOptions : organizationOptions;
+    const removedNumbers = optionsSource
+      .filter(opt => removedValues.includes(opt.value))
+      .flatMap(opt => opt.phones || []);
+
+    // Update phone numbers: remove removedNumbers, add newNumbers, keep existing manual numbers
+    // Ideally we want to keep numbers that were manually added, but sync numbers from selections.
+    // A simple approach: 
+    // 1. Start with current phoneNumbers
+    // 2. Remove numbers associated with REMOVED options
+    // 3. Add numbers associated with NEWLY ADDED options (if not already present)
+
+    // Better approach matching previous logic but for multi-select:
+    // We can't easily distinguish manual vs auto numbers without more state.
+    // Let's stick to the previous logic's spirit:
+    // If an option is added, add its numbers.
+    // If an option is removed, remove its numbers.
+
     let updatedNumbers = [...phoneNumbers];
-    if (groupableId && value !== groupableId.value) {
-      const numbers = options.filter(option => option.value === groupableId?.value)?.[0]?.phones || [];
-      if (numbers.length){
-        updatedNumbers = updatedNumbers.filter(x => !numbers.includes(x));
-      }
+
+    // Remove numbers from removed options
+    if (removedNumbers.length) {
+      updatedNumbers = updatedNumbers.filter(num => !removedNumbers.includes(num));
     }
-    if (value) {
-      const numbers = options.filter(option => option.value === value)?.[0]?.phones || [];
-      if (numbers.length) {
-        updatedNumbers = [...updatedNumbers, ...numbers];
-      }
+
+    // Add numbers from new options (only the ones that are NOT already in the selected list - wait, 
+    // if we just add all numbers from current selection, we might duplicate or re-add removed ones if we are not careful.
+    // But `handleGroupableIdChange` gives us the NEW state of selections.
+
+    // Let's refine:
+    // Find added options
+    const addedValues = newValues.filter(v => !currentValues.includes(v));
+    const addedNumbers = optionsSource
+      .filter(opt => addedValues.includes(opt.value))
+      .flatMap(opt => opt.phones || []);
+
+    if (addedNumbers.length) {
+      updatedNumbers = [...updatedNumbers, ...addedNumbers];
     }
+
     syncPhoneNumbers(updatedNumbers);
-    setGroupableId(option);
+    setGroupableIds(selectedOptions);
   }
 
   return (
@@ -223,7 +258,7 @@ const AddNewWhatsAppGroup = () => {
                         placeholder='Search & Select Group For (required)'
                         onChange={(value) => {
                           setGroupFor(value);
-                          setGroupableId(null);
+                          setGroupableIds([]);
                         }}
                       />
                     </div>
@@ -232,12 +267,13 @@ const AddNewWhatsAppGroup = () => {
                         Select {groupFor?.value || 'Group For first'}<span className='text-danger'>*</span>
                       </label>
                       <Select
+                        isMulti
                         options={currentGroupableOptions}
-                        value={groupableId}
+                        value={groupableIds}
                         placeholder={
                           groupFor?.value === 'traveller'
-                            ? 'Search & Select Traveller (required)'
-                            : 'Search & Select Organization (required)'
+                            ? 'Search & Select Travellers (required)'
+                            : 'Search & Select Organizations (required)'
                         }
                         onChange={handleGroupableIdChange}
                       />

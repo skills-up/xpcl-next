@@ -2,7 +2,8 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import ReactSwitch from 'react-switch';
-import { getItem, updateItem } from '../../../../api/xplorzApi';
+import Select from 'react-select';
+import { getItem, updateItem, getList } from '../../../../api/xplorzApi';
 import Seo from '../../../../components/common/Seo';
 import Footer from '../../../../components/footer/dashboard-footer';
 import Header from '../../../../components/header/dashboard-header';
@@ -11,6 +12,9 @@ import { sendToast } from '../../../../utils/toastify';
 
 const UpdateWhatsAppGroup = () => {
   const [name, setName] = useState('');
+  const [groupFor, setGroupFor] = useState(null);
+  const [groupableIds, setGroupableIds] = useState([]);
+  const [options, setOptions] = useState([]);
   const [phoneNumbers, setPhoneNumbers] = useState([]);
   const [phoneInput, setPhoneInput] = useState('');
   const [inviteLink, setInviteLink] = useState('');
@@ -20,7 +24,9 @@ const UpdateWhatsAppGroup = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (router.isReady) getData();
+    if (router.isReady) {
+      getData();
+    }
   }, [router.isReady]);
 
   const getData = async () => {
@@ -30,10 +36,17 @@ const UpdateWhatsAppGroup = () => {
       setName(groupRes.data?.name ?? '');
       setInviteLink(groupRes.data?.invite_link || '');
       setIsPersonal(groupRes.data?.is_personal || false);
+      setGroupFor(groupRes.data?.group_for);
+
       const numbers = Array.isArray(groupRes.data?.phone_numbers)
         ? groupRes.data.phone_numbers.map((num) => `${num}`)
         : [];
       syncPhoneNumbers(numbers);
+
+      // Fetch options based on group_for
+      if (groupRes.data?.group_for) {
+        getOptions(groupRes.data.group_for);
+      }
     } else {
       sendToast(
         'error',
@@ -43,6 +56,37 @@ const UpdateWhatsAppGroup = () => {
         4000
       );
       router.push('/dashboard/whats-app-groups');
+    }
+  };
+
+  const getOptions = async (groupForValue) => {
+    let res;
+    if (groupForValue === 'traveller') {
+      res = await getList('travellers');
+    } else if (groupForValue === 'organization') {
+      res = await getList('organizations', { is_client: 1 });
+    }
+
+    if (res?.success) {
+      const formattedOptions = res.data.map((item) => ({
+        value: item.id,
+        label: groupForValue === 'traveller'
+          ? (item?.passport_name || `${item?.first_name ?? ''} ${item?.last_name ?? ''}`.trim() || `Traveller #${item.id}`)
+          : (item.name || `Organization #${item.id}`),
+        phones: groupForValue === 'traveller'
+          ? [item.mobile_phone, item.ea_phone_number].filter(x => !!x)
+          : [item.contact_phone].filter(x => !!x),
+        whats_app_group_id: item.whats_app_group_id, // Ensure this field is available
+      }));
+
+      setOptions(formattedOptions);
+
+      // Pre-select based on whats_app_group_id
+      const currentGroupId = parseInt(router.query.edit);
+      const selected = formattedOptions.filter(opt => opt.whats_app_group_id == currentGroupId);
+      setGroupableIds(selected);
+    } else {
+      sendToast('error', 'Unable to fetch options', 4000);
     }
   };
 
@@ -71,6 +115,36 @@ const UpdateWhatsAppGroup = () => {
     syncPhoneNumbers(phoneNumbers.filter((ph) => ph !== phone));
   };
 
+  const handleGroupableIdChange = (selectedOptions) => {
+    const selected = selectedOptions || [];
+
+    const currentValues = groupableIds.map(g => g.value);
+    const newValues = selected.map(g => g.value);
+
+    const removedValues = currentValues.filter(v => !newValues.includes(v));
+    const removedNumbers = options
+      .filter(opt => removedValues.includes(opt.value))
+      .flatMap(opt => opt.phones || []);
+
+    let updatedNumbers = [...phoneNumbers];
+
+    if (removedNumbers.length) {
+      updatedNumbers = updatedNumbers.filter(num => !removedNumbers.includes(num));
+    }
+
+    const addedValues = newValues.filter(v => !currentValues.includes(v));
+    const addedNumbers = options
+      .filter(opt => addedValues.includes(opt.value))
+      .flatMap(opt => opt.phones || []);
+
+    if (addedNumbers.length) {
+      updatedNumbers = [...updatedNumbers, ...addedNumbers];
+    }
+
+    syncPhoneNumbers(updatedNumbers);
+    setGroupableIds(selected);
+  }
+
   const onSubmit = async (e) => {
     e.preventDefault();
     const trimmedName = name.trim();
@@ -80,6 +154,14 @@ const UpdateWhatsAppGroup = () => {
     }
     if (trimmedName.length > 128) {
       sendToast('error', 'Name cannot exceed 128 characters', 4000);
+      return;
+    }
+    if (!groupFor) {
+      sendToast('error', 'Group type is missing', 4000);
+      return;
+    }
+    if (!groupableIds?.length) {
+      sendToast('error', 'Please select at least one member', 4000);
       return;
     }
     const cleanedNumbers = phoneNumbers;
@@ -94,6 +176,8 @@ const UpdateWhatsAppGroup = () => {
     }
     const response = await updateItem('whats-app-groups', router.query.edit, {
       name: trimmedName,
+      group_for: groupFor,
+      groupable_id: groupableIds.map(g => g.value),
       phone_numbers: cleanedNumbers,
       is_personal: isPersonal,
     });
@@ -159,6 +243,22 @@ const UpdateWhatsAppGroup = () => {
                           Name<span className='text-danger'>*</span>
                         </label>
                       </div>
+                    </div>
+                    <div className='form-input-select col-12 col-lg-6'>
+                      <label>
+                        Select {groupFor === 'traveller' ? 'Travellers' : 'Organizations'}<span className='text-danger'>*</span>
+                      </label>
+                      <Select
+                        isMulti
+                        options={options}
+                        value={groupableIds}
+                        placeholder={
+                          groupFor === 'traveller'
+                            ? 'Search & Select Travellers (required)'
+                            : 'Search & Select Organizations (required)'
+                        }
+                        onChange={handleGroupableIdChange}
+                      />
                     </div>
                     <div className='col-12'>
                       <label className='lh-1 text-16 text-light-1 mb-2 d-block'>
