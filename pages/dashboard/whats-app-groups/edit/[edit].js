@@ -1,7 +1,5 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import ReactSwitch from 'react-switch';
 import Select from 'react-select';
 import { getItem, updateItem, getList } from '../../../../api/xplorzApi';
 import Seo from '../../../../components/common/Seo';
@@ -20,7 +18,6 @@ const UpdateWhatsAppGroup = () => {
   const [inviteLink, setInviteLink] = useState('');
   const [isPersonal, setIsPersonal] = useState(false);
 
-  const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
 
   useEffect(() => {
