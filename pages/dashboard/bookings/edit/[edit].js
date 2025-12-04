@@ -532,7 +532,7 @@ const UpdateBooking = () => {
                 ? element['travel_time'] + ':00'
                 : undefined,
               details:
-                element['details'].trim().length > 0 ? element['details'] : undefined,
+                element['details']?.trim().length > 0 ? element['details'] : undefined,
               booking_class: element['booking_class']?.value,
             })),
       enable_inr: enableINR,
