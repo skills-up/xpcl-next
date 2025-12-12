@@ -7,6 +7,7 @@ import Footer from '../../../../components/footer/dashboard-footer';
 import Header from '../../../../components/header/dashboard-header';
 import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
 import { sendToast } from '../../../../utils/toastify';
+import ReactSwitch from 'react-switch';
 
 const UpdateWhatsAppGroup = () => {
   const [name, setName] = useState('');
@@ -42,7 +43,7 @@ const UpdateWhatsAppGroup = () => {
 
       // Fetch options based on group_for
       if (groupRes.data?.group_for) {
-        getOptions(groupRes.data.group_for);
+        getOptions(groupRes.data.group_for, groupRes.data.is_personal);
       }
     } else {
       sendToast(
@@ -56,7 +57,7 @@ const UpdateWhatsAppGroup = () => {
     }
   };
 
-  const getOptions = async (groupForValue) => {
+  const getOptions = async (groupForValue, is_personal) => {
     let res;
     if (groupForValue === 'traveller') {
       res = await getList('travellers');
@@ -73,7 +74,7 @@ const UpdateWhatsAppGroup = () => {
         phones: groupForValue === 'traveller'
           ? [item.mobile_phone, item.ea_phone_number].filter(x => !!x)
           : [item.contact_phone].filter(x => !!x),
-        whats_app_group_id: isPersonal ? item.personal_whats_app_group_id : item.whats_app_group_id, // Ensure this field is available
+        whats_app_group_id: is_personal ? item.personal_whats_app_group_id : item.whats_app_group_id, // Ensure this field is available
       }));
 
       setOptions(formattedOptions);
@@ -153,10 +154,10 @@ const UpdateWhatsAppGroup = () => {
       sendToast('error', 'Name cannot exceed 128 characters', 4000);
       return;
     }
-    if (!groupFor) {
-      sendToast('error', 'Group type is missing', 4000);
-      return;
-    }
+    // if (!groupFor) {
+    //   sendToast('error', 'Group type is missing', 4000);
+    //   return;
+    // }
     if (!groupableIds?.length) {
       sendToast('error', 'Please select at least one member', 4000);
       return;
@@ -173,10 +174,10 @@ const UpdateWhatsAppGroup = () => {
     }
     const response = await updateItem('whats-app-groups', router.query.edit, {
       name: trimmedName,
-      group_for: groupFor,
+      // group_for: groupFor,
       groupable_id: groupableIds.map(g => g.value),
       phone_numbers: cleanedNumbers,
-      // is_personal: isPersonal,
+      is_personal: isPersonal,
     });
     if (response?.success) {
       sendToast('success', 'Updated WhatsApp group successfully.', 4000);
@@ -295,13 +296,13 @@ const UpdateWhatsAppGroup = () => {
                         </label>
                       </div>
                     </div>
-                    {/* <div className='d-flex items-center gap-3 mb-3'>
+                    {groupFor === 'traveller' && <div className='d-flex items-center gap-3 mb-3'>
                       <ReactSwitch
                         onChange={() => setIsPersonal((prev) => !prev)}
                         checked={isPersonal}
                       />
                       <label>Is Personal</label>
-                    </div> */}
+                    </div>}
                     <div className='d-inline-block'>
                       <button
                         type='submit'
