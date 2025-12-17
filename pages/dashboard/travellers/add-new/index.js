@@ -59,6 +59,7 @@ const AddNewTravellers = () => {
   const [airlineMarkupOverrides, setAirlineMarkupOverrides] = useState([
     { airline: '', markup: '' },
   ]);
+  const [noBoardingPass, setNoBoardingPass] = useState(false);
 
   // Options
   const passportPrefixOptions = [
@@ -201,6 +202,7 @@ const AddNewTravellers = () => {
     passportFormData.append('seat_preference', seatPreference?.value ?? '');
     passportFormData.append('cabin_position', cabinPosition?.value ?? '');
     passportFormData.append('fare_preference', farePreference?.value ?? '');
+    passportFormData.append('no_bp', noBoardingPass ? 1 : 0);
     passportFormData.append('address', address ?? '');
     let meal_str = '';
     let seat_str = '';
@@ -477,7 +479,7 @@ const AddNewTravellers = () => {
                                     className='pb-10'
                                     onClick={() => removeOverrideRow(index)}
                                   >
-                                    <BsTrash3 className='text-danger'/>
+                                    <BsTrash3 className='text-danger' />
                                   </span>
                                 </td>
                               </tr>
@@ -766,6 +768,17 @@ const AddNewTravellers = () => {
                           type='text'
                         />
                         <label className='lh-1 text-16 text-light-1'>Seat Notes</label>
+                      </div>
+                    </div>
+                    <div className='col-12'>
+                      <div className='d-flex items-center'>
+                        <label className='lh-1 text-16 text-light-1 mr-10'>
+                          Don't Send Boarding Passes
+                        </label>
+                        <ReactSwitch
+                          onChange={setNoBoardingPass}
+                          checked={noBoardingPass}
+                        />
                       </div>
                     </div>
                     <h3>Documents</h3>

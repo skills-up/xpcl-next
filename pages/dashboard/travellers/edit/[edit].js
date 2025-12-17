@@ -6,6 +6,7 @@ import { BsTrash3 } from 'react-icons/bs';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 import { useSelector } from 'react-redux';
 import Select from 'react-select';
+import ReactSwitch from 'react-switch';
 import { createItem, getItem, getList } from '../../../../api/xplorzApi';
 import Seo from '../../../../components/common/Seo';
 import Footer from '../../../../components/footer/dashboard-footer';
@@ -66,6 +67,7 @@ const UpdateTravellers = () => {
   const [airlineMarkupOverrides, setAirlineMarkupOverrides] = useState([
     { airline: '', markup: '' },
   ]);
+  const [noBoardingPass, setNoBoardingPass] = useState(false);
 
   // Options
   const passportPrefixOptions = [
@@ -211,9 +213,9 @@ const UpdateTravellers = () => {
             setAirlineMarkupOverrides(
               overrideRows.length
                 ? overrideRows.map((row) => ({
-                    airline: row.airline,
-                    markup: row.markup?.toString?.() ?? '',
-                  }))
+                  airline: row.airline,
+                  markup: row.markup?.toString?.() ?? '',
+                }))
                 : [{ airline: '', markup: '' }]
             );
           } else {
@@ -304,12 +306,13 @@ const UpdateTravellers = () => {
           }
           setVaccinationDates(tempVaccinationDateArr);
         }
+        setNoBoardingPass(!!response.data?.no_bp);
       } else {
         sendToast(
           'error',
           response.data?.message ||
-            response.data?.error ||
-            'Unable to fetch required data',
+          response.data?.error ||
+          'Unable to fetch required data',
           4000
         );
         router.push('/dashboard/travellers');
@@ -382,6 +385,7 @@ const UpdateTravellers = () => {
     passportFormData.append('seat_preference', seatPreference?.value ?? '');
     passportFormData.append('cabin_position', cabinPosition?.value ?? '');
     passportFormData.append('fare_preference', farePreference?.value ?? '');
+    passportFormData.append('no_bp', noBoardingPass ? 1 : 0);
     passportFormData.append('address', address ?? '');
     let meal_str = '';
     let seat_str = '';
@@ -681,7 +685,7 @@ const UpdateTravellers = () => {
                                     className='pb-10'
                                     onClick={() => removeOverrideRow(index)}
                                   >
-                                    <BsTrash3 className='text-danger'/>
+                                    <BsTrash3 className='text-danger' />
                                   </span>
                                 </td>
                               </tr>
@@ -970,6 +974,17 @@ const UpdateTravellers = () => {
                           type='text'
                         />
                         <label className='lh-1 text-16 text-light-1'>Seat Notes</label>
+                      </div>
+                    </div>
+                    <div className='col-12'>
+                      <div className='d-flex items-center'>
+                        <label className='lh-1 text-16 text-light-1 mr-10'>
+                          Don't Send Boarding Passes
+                        </label>
+                        <ReactSwitch
+                          onChange={setNoBoardingPass}
+                          checked={noBoardingPass}
+                        />
                       </div>
                     </div>
                     <h3>Documents</h3>

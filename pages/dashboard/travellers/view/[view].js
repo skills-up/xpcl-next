@@ -205,6 +205,12 @@ const ViewTravellers = () => {
             </ul>
           );
         }
+        if (data.no_bp) {
+          data.send_boarding_pass = 'No';
+        } else {
+          data.send_boarding_pass = 'Yes';
+        }
+        delete data['no_bp'];
         if (data.client_travellers) {
           delete data['client_travellers'];
         }
@@ -220,8 +226,8 @@ const ViewTravellers = () => {
         sendToast(
           'error',
           response.data?.message ||
-            response.data?.error ||
-            'Could Not Fetch The Requested Traveller.'
+          response.data?.error ||
+          'Could Not Fetch The Requested Traveller.'
         );
         router.push('/dashboard/travellers');
       }
@@ -241,8 +247,8 @@ const ViewTravellers = () => {
       sendToast(
         'error',
         response.data?.message ||
-          response.data?.error ||
-          'Unexpected Error Occurred While Trying to Delete this Traveller',
+        response.data?.error ||
+        'Unexpected Error Occurred While Trying to Delete this Traveller',
         4000
       );
     }
