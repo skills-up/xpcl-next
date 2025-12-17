@@ -15,6 +15,12 @@ const groupForOptions = [
   { value: 'organization', label: 'Organization' },
 ];
 
+const fareTypeOptions = [
+  { value: 'flex', label: 'Flex' },
+  { value: 'saver', label: 'Saver' },
+  { value: 'both', label: 'Both' },
+];
+
 const AddNewWhatsAppGroup = () => {
   const [name, setName] = useState('');
   const [groupFor, setGroupFor] = useState(groupForOptions[0]);
@@ -24,6 +30,8 @@ const AddNewWhatsAppGroup = () => {
   const [phoneNumbers, setPhoneNumbers] = useState([]);
   const [phoneInput, setPhoneInput] = useState('');
   const [isPersonal, setIsPersonal] = useState(false);
+  const [fareType, setFareType] = useState(fareTypeOptions[0]);
+  const [flexFareMarkupPct, setFlexFareMarkupPct] = useState(0);
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -123,6 +131,8 @@ const AddNewWhatsAppGroup = () => {
       groupable_id: groupableIds.map(g => g.value),
       phone_numbers: cleanedNumbers,
       is_personal: isPersonal,
+      fare_type: fareType.value,
+      flex_fare_markup_pct: flexFareMarkupPct,
     });
     if (response?.success) {
       sendToast('success', 'Created WhatsApp group successfully.', 4000);
@@ -314,6 +324,35 @@ const AddNewWhatsAppGroup = () => {
                         checked={isPersonal}
                       />
                       <label>Is Personal</label>
+                    </div>
+
+                    <div className='col-12 col-lg-6'>
+                      <div className='form-input-select'>
+                        <label>
+                          Fare Type<span className='text-danger'>*</span>
+                        </label>
+                        <Select
+                          options={fareTypeOptions}
+                          value={fareType}
+                          onChange={(value) => setFareType(value)}
+                        />
+                      </div>
+                    </div>
+                    <div className='col-12 col-lg-6'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setFlexFareMarkupPct(e.target.value)}
+                          value={flexFareMarkupPct}
+                          placeholder=' '
+                          type='number'
+                          step='0.01'
+                          min='0'
+                          max='100'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Flex Fare Markup %
+                        </label>
+                      </div>
                     </div>
                     <div className='d-inline-block'>
                       <button
