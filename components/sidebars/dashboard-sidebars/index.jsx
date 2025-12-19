@@ -116,6 +116,11 @@ const Sidebar = () => {
           href: '/dashboard/files-list',
           permissions: ['utilities.files-list'],
         },
+        {
+          title: 'Xplorz Assist',
+          href: '/dashboard/chat',
+          permissions: ['flights.search'],
+        },
       ]),
     },
     {
