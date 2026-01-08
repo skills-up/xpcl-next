@@ -32,6 +32,7 @@ const AddNewWhatsAppGroup = () => {
   const [isPersonal, setIsPersonal] = useState(false);
   const [fareType, setFareType] = useState(fareTypeOptions[0]);
   const [flexFareMarkupPct, setFlexFareMarkupPct] = useState(0);
+  const [hotelMarkupPct, setHotelMarkupPct] = useState(0);
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -133,6 +134,7 @@ const AddNewWhatsAppGroup = () => {
       is_personal: isPersonal,
       fare_type: fareType.value,
       flex_fare_markup_pct: flexFareMarkupPct,
+      hotel_markup_pct: hotelMarkupPct,
     });
     if (response?.success) {
       sendToast('success', 'Created WhatsApp group successfully.', 4000);
@@ -326,7 +328,7 @@ const AddNewWhatsAppGroup = () => {
                       <label>Is Personal</label>
                     </div>
 
-                    <div className='col-12 col-lg-6'>
+                    <div className='col-12 col-lg-4'>
                       <div className='form-input-select'>
                         <label>
                           Fare Type<span className='text-danger'>*</span>
@@ -338,7 +340,7 @@ const AddNewWhatsAppGroup = () => {
                         />
                       </div>
                     </div>
-                    <div className='col-12 col-lg-6'>
+                    <div className='col-12 col-lg-4'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setFlexFareMarkupPct(e.target.value)}
@@ -351,6 +353,22 @@ const AddNewWhatsAppGroup = () => {
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Flex Fare Markup %
+                        </label>
+                      </div>
+                    </div>
+                    <div className='col-12 col-lg-4'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setHotelMarkupPct(e.target.value)}
+                          value={hotelMarkupPct}
+                          placeholder=' '
+                          type='number'
+                          step='0.01'
+                          min='0'
+                          max='100'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Hotel Markup %
                         </label>
                       </div>
                     </div>
