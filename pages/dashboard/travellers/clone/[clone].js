@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import { createItem, getItem, getList } from '../../../../api/xplorzApi';
 import ReactSwitch from 'react-switch';
 import Select from 'react-select';
+import WindowedSelect from 'react-windowed-select';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { BsTrash3 } from 'react-icons/bs';
@@ -54,6 +55,8 @@ const AddNewTravellers = () => {
   const [countries, setCountries] = useState([]);
   const [countryCodeID, setCountryCodeID] = useState(null);
   const [airlines, setAirlines] = useState([]);
+  const [airports, setAirports] = useState([]);
+  const [baseAirport, setBaseAirport] = useState(null);
   const [eaPhoneNumber, setEAPhoneNumber] = useState('');
   const [fareMarkupPercent, setFareMarkupPercent] = useState('');
   const [airlineMarkupOverrides, setAirlineMarkupOverrides] = useState([
@@ -134,9 +137,23 @@ const AddNewTravellers = () => {
         // Countries
         let countries = await getList('countries');
         let airlines = await getList('organizations', { is_airline: 1 });
-        if (countries?.success && airlines?.success) {
+        let airportsResponse = await getList('airports');
+        if (countries?.success && airlines?.success && airportsResponse?.success) {
           setCountries(countries.data);
           setAirlines(airlines.data.map((el) => ({ label: el.name, value: el.code })));
+          setAirports(airportsResponse.data);
+          // Set base airport if exists
+          if (response.data?.base_airport) {
+            const matchedAirport = airportsResponse.data.find(
+              (a) => a.iata_code === response.data.base_airport
+            );
+            if (matchedAirport) {
+              setBaseAirport({
+                value: matchedAirport.iata_code,
+                label: `${matchedAirport.iata_code}|${matchedAirport.city}|${matchedAirport.name}|${matchedAirport.country_name}`,
+              });
+            }
+          }
         } else {
           sendToast('error', 'Error Getting Data', 4000);
           router.back();
@@ -338,6 +355,7 @@ const AddNewTravellers = () => {
     passportFormData.append('mobile_phone', mobilePhone ?? '');
     passportFormData.append('email_address', email ?? '');
     passportFormData.append('ea_phone_number', eaPhoneNumber.trim());
+    passportFormData.append('base_airport', baseAirport?.value ?? '');
     if (fareMarkupPercent !== '' && !Number.isNaN(Number(fareMarkupPercent)))
       passportFormData.append('fare_markup_percent', fareMarkupPercent);
     const cleanedOverrides = airlineMarkupOverrides
@@ -534,7 +552,7 @@ const AddNewTravellers = () => {
                           onWheel={(e) => e.target.blur()}
                         />
                         <label className='lh-1 text-15 text-light-1'>
-                          Mobile Phone (with Country Code)
+                          Mobile Phone (12 digits)
                         </label>
                       </div>
                     </div>
@@ -584,7 +602,7 @@ const AddNewTravellers = () => {
                         </label>
                       </div>
                     </div>
-                    <div className='col-lg-6'>
+                    <div className='col-lg-3'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setAddress(e.target.value)}
@@ -594,6 +612,51 @@ const AddNewTravellers = () => {
                         />
                         <label className='lh-1 text-16 text-light-1'>Address</label>
                       </div>
+                    </div>
+                    <div className='col-lg-3 form-input-select'>
+                      <label>Base Location</label>
+                      <WindowedSelect
+                        isClearable
+                        filterOption={(candidate, input) =>
+                          !input || candidate.label.toLowerCase().includes(input.toLowerCase())
+                        }
+                        options={airports.map((airport) => ({
+                          value: airport.iata_code,
+                          label: `${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
+                        }))}
+                        formatOptionLabel={(opt, { context }) => {
+                          const [iata_code, city, name, country_name] = opt.label.split('|');
+                          return (
+                            <div key={iata_code}>
+                              <div
+                                className='d-flex justify-between align-items-center'
+                                style={{ fontSize: '1rem' }}
+                              >
+                                <span>
+                                  <strong>{iata_code}</strong> <small>({city})</small>
+                                </span>
+                                {context === 'value' ? (
+                                  ''
+                                ) : (
+                                  <div
+                                    style={{
+                                      fontSize: 'small',
+                                      fontStyle: 'italic',
+                                    }}
+                                    className='text-right'
+                                  >
+                                    {country_name}
+                                  </div>
+                                )}
+                              </div>
+                              {context === 'value' ? '' : <small>{name}</small>}
+                            </div>
+                          );
+                        }}
+                        value={baseAirport}
+                        onChange={(id) => setBaseAirport(id)}
+                        placeholder='Select Airport'
+                      />
                     </div>
                     <div className='col-12'>
                       <label className='lh-1 text-16 text-light-1 mb-10 d-block'>
