@@ -211,6 +211,11 @@ const ViewTravellers = () => {
           data.send_boarding_pass = 'Yes';
         }
         delete data['no_bp'];
+        // Rename base_airport to base_location for display
+        if (data.base_airport) {
+          data.base_location = data.base_airport;
+          delete data['base_airport'];
+        }
         if (data.client_travellers) {
           delete data['client_travellers'];
         }
