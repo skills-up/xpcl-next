@@ -1,0 +1,166 @@
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import ReactSwitch from 'react-switch';
+import { getItem, updateItem } from '../../../../api/xplorzApi';
+import Seo from '../../../../components/common/Seo';
+import Footer from '../../../../components/footer/dashboard-footer';
+import Header from '../../../../components/header/dashboard-header';
+import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
+import { sendToast } from '../../../../utils/toastify';
+
+// Convert camelCase to Title Case for display
+const toTitleCase = (str) => {
+  if (!str) return '';
+  return str
+    .replace(/([A-Z])/g, ' $1')
+    .replace(/^./, (char) => char.toUpperCase())
+    .trim();
+};
+
+const UpdateAgentFeatureFlag = () => {
+  const [name, setName] = useState('');
+  const [enabled, setEnabled] = useState(false);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (router.isReady) {
+      getData();
+    }
+  }, [router.isReady]);
+
+  const getData = async () => {
+    if (!router.query.edit) return;
+    const response = await getItem('agent-feature-flags', router.query.edit);
+    if (response?.success) {
+      setName(response.data?.name ?? '');
+      setEnabled(response.data?.enabled ?? false);
+    } else {
+      sendToast(
+        'error',
+        response?.data?.message ||
+        response?.data?.error ||
+        'Failed to fetch feature flag data.',
+        4000
+      );
+      router.push('/dashboard/agent-feature-flags');
+    }
+  };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    const trimmedName = name.trim();
+    if (!trimmedName) {
+      sendToast('error', 'Name is required', 4000);
+      return;
+    }
+    // Validate camelCase format (starts with lowercase, no spaces)
+    if (!/^[a-z][a-zA-Z0-9]*$/.test(trimmedName)) {
+      sendToast('error', 'Name must be in camelCase format (e.g., enableFlightSearch)', 4000);
+      return;
+    }
+    const response = await updateItem('agent-feature-flags', router.query.edit, {
+      name: trimmedName,
+      enabled,
+    });
+    if (response?.success) {
+      sendToast('success', 'Updated feature flag successfully.', 4000);
+      router.push('/dashboard/agent-feature-flags');
+    } else {
+      sendToast(
+        'error',
+        response?.data?.message ||
+        response?.data?.error ||
+        'Failed to update feature flag.',
+        4000
+      );
+    }
+  };
+
+  return (
+    <>
+      <Seo pageTitle='Update Agent Feature Flag' />
+      {/* End Page Title */}
+
+      <div className='header-margin'></div>
+
+      <Header />
+      {/* End dashboard-header */}
+
+      <div className='dashboard'>
+        <div className='dashboard__sidebar bg-white scroll-bar-1'>
+          <Sidebar />
+          {/* End sidebar */}
+        </div>
+        {/* End dashboard__sidebar */}
+
+        <div className='dashboard__main'>
+          <div className='dashboard__content d-flex flex-column justify-between bg-light-2'>
+            <div>
+              <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
+                <div className='col-12'>
+                  <h1 className='text-30 lh-14 fw-600'>Update Agent Feature Flag</h1>
+                  <div className='text-15 text-light-1'>
+                    Update an existing feature flag.
+                  </div>
+                </div>
+                {/* End .col-12 */}
+              </div>
+              {/* End .row */}
+
+              <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
+                <div>
+                  <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
+                    <div className='col-12 col-lg-6'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setName(e.target.value)}
+                          value={name}
+                          placeholder=' '
+                          type='text'
+                          required
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Name (camelCase)<span className='text-danger'>*</span>
+                        </label>
+                      </div>
+                      {name && (
+                        <div className='text-14 text-light-1 mt-1'>
+                          Display Label: <strong>{toTitleCase(name)}</strong>
+                        </div>
+                      )}
+                    </div>
+                    <div className='col-12'>
+                      <div className='d-flex items-center gap-3'>
+                        <ReactSwitch
+                          onChange={() => setEnabled((prev) => !prev)}
+                          checked={enabled}
+                        />
+                        <label>Enabled</label>
+                      </div>
+                    </div>
+                    <div className='d-inline-block'>
+                      <button
+                        type='submit'
+                        className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
+                      >
+                        Update Feature Flag
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <Footer />
+          </div>
+          {/* End .dashboard__content */}
+        </div>
+        {/* End dashbaord content */}
+      </div>
+      {/* End dashbaord content */}
+    </>
+  );
+};
+
+export default UpdateAgentFeatureFlag;

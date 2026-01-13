@@ -363,6 +363,11 @@ const Sidebar = () => {
           href: '/dashboard/amex-grid',
           permissions: ['bookings.amex-grid'],
         },
+        {
+          title: 'Agent Feature Flags',
+          href: '/dashboard/agent-feature-flags',
+          permissions: ['agent-feature-flags.index'],
+        },
       ]),
     },
     // {
