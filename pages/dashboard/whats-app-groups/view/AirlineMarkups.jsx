@@ -270,9 +270,10 @@ const AirlineMarkups = () => {
                   type='text'
                   className='form-control'
                   value={airlineCode}
+                  pattern='[A-Z0-9]{2}D?'
                   onChange={(e) => setAirlineCode(e.target.value.toUpperCase())}
                   maxLength={3}
-                  placeholder='e.g. 6E, AI, UK'
+                  placeholder='e.g. 6E, AI, UK, 6ED'
                   required
                 />
               </div>
@@ -358,7 +359,7 @@ const AirlineMarkups = () => {
             value={searchQuery}
           />
         </div>
-        {hasPermission('whats-app-groups.store') && (
+        {hasPermission('whats-app-groups.airline-markups.store') && (
           <button className='btn btn-primary col-lg-2 col-5' onClick={openAddModal}>
             Add New
           </button>
