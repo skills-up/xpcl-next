@@ -291,11 +291,6 @@ const Sidebar = () => {
           href: '/dashboard/organizations',
           permissions: ['organizations.index'],
         },
-        {
-          title: 'Airline Organization Markup',
-          href: '/dashboard/airline-organization-markup',
-          permissions: ['airline-organization-markup.index'],
-        },
       ]),
     },
     {

@@ -25,7 +25,7 @@ const AddNewOrganization = () => {
   const [type, setType] = useState(null);
   const [vendorServicePercent, setVendorServicePercent] = useState(0);
   const [vendorTDSPercent, setVendorTDSPercent] = useState(0);
-  const [farePercent, setFarePercent] = useState(0);
+
   const options = [
     { value: 'Client', label: 'Client' },
     { value: 'Airline', label: 'Airline' },
@@ -53,7 +53,7 @@ const AddNewOrganization = () => {
         setAddress(response.data?.address);
         setGstn(response.data?.gstn);
         setUseGstn(response.data?.use_gstn);
-        setFarePercent(response.data?.fare_percent);
+
         setVendorServicePercent(response.data?.vendor_service_charge_percentage);
         setVendorTDSPercent(response.data?.vendor_tds_percentage);
         setCommisionIncludesGst(response.data?.commission_includes_gst);
@@ -106,8 +106,8 @@ const AddNewOrganization = () => {
         sendToast(
           'error',
           response.data?.message ||
-            response.data?.error ||
-            'Could not fetch organization information',
+          response.data?.error ||
+          'Could not fetch organization information',
           4000
         );
         router.push('/dashboard/organizations');
@@ -133,7 +133,7 @@ const AddNewOrganization = () => {
       gstn,
       use_gstn: useGstn,
       type: type?.value,
-      fare_percent: farePercent,
+
       vendor_service_charge_percentage: vendorServicePercent,
       vendor_tds_percentage: vendorTDSPercent,
       commission_includes_gst: commisionIncludesGst,
@@ -146,8 +146,8 @@ const AddNewOrganization = () => {
       sendToast(
         'error',
         response.data?.message ||
-          response.data?.error ||
-          'Failed to Create Organization.',
+        response.data?.error ||
+        'Failed to Create Organization.',
         4000
       );
     }
@@ -185,28 +185,18 @@ const AddNewOrganization = () => {
               <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
                 <div>
                   <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
-                    <div className='form-input-select col-12 col-lg-6'>
+                    <div className='form-input-select col-12 col-lg-3'>
                       <label>
                         Select Organization Type<span className='text-danger'>*</span>
                       </label>
                       <Select
                         options={options}
                         value={type}
-                        placeholder='Search & Select Organization Type (required)'
+                        placeholder='Search'
                         onChange={(id) => setType(id)}
                       />
                     </div>
-                    <div className='form-input-select col-12 col-lg-6'>
-                      <label>Select Calendar Template</label>
-                      <Select
-                        isClearable
-                        options={calenderTemplates}
-                        value={calenderTemplateID}
-                        placeholder='Search & Select Calendar Template'
-                        onChange={(id) => setCalenderTemplateID(id)}
-                      />
-                    </div>
-                    <div className='col-12 col-lg-9'>
+                    <div className='col-12 col-lg-6'>
                       <div className='form-input'>
                         <input
                           onChange={(e) => setName(e.target.value)}
@@ -293,20 +283,6 @@ const AddNewOrganization = () => {
                     <div className='col-12 col-lg-4'>
                       <div className='form-input'>
                         <input
-                          onChange={(e) => setFarePercent(e.target.value)}
-                          value={farePercent}
-                          placeholder=' '
-                          type='number'
-                          onWheel={(e) => e.target.blur()}
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Markup Percent
-                        </label>
-                      </div>
-                    </div>
-                    <div className='col-12 col-lg-4'>
-                      <div className='form-input'>
-                        <input
                           onChange={(e) => setVendorServicePercent(e.target.value)}
                           value={vendorServicePercent}
                           placeholder=' '
@@ -331,6 +307,16 @@ const AddNewOrganization = () => {
                           Vendor TDS Percent
                         </label>
                       </div>
+                    </div>
+                    <div className='form-input-select col-12 col-lg-4'>
+                      <label>Select Calendar Template</label>
+                      <Select
+                        isClearable
+                        options={calenderTemplates}
+                        value={calenderTemplateID}
+                        placeholder='Select'
+                        onChange={(id) => setCalenderTemplateID(id)}
+                      />
                     </div>
                     <div className='d-flex items-center gap-3'>
                       <ReactSwitch
