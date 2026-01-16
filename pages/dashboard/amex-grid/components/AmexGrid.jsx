@@ -269,6 +269,7 @@ const AmexGrid = () => {
     {
       Header: 'Client Amount',
       accessor: 'client_amount',
+      Cell: ({row}) => row.original.client_amount.toFixed(2),
     },
     {
       Header: 'Narration',
@@ -400,6 +401,7 @@ const AmexGrid = () => {
     {
       Header: 'Client Amount',
       accessor: 'client_amount',
+      Cell: ({row}) => row.original.client_amount.toFixed(2),
     },
     {
       Header: 'Narration Line 1',
