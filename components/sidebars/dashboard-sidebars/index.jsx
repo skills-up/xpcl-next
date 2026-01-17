@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
@@ -486,7 +487,7 @@ const Sidebar = () => {
           </div>
         )}
         <div className='sidebar__item '>
-          <a
+          <Link
             href='/dashboard'
             className='sidebar__button d-flex items-center text-15 lh-1 fw-500'
           >
@@ -498,7 +499,7 @@ const Sidebar = () => {
               className='mr-15'
             />
             Dashboard
-          </a>
+          </Link>
         </div>
         {/* End accordion__item */}
 
@@ -533,20 +534,20 @@ const Sidebar = () => {
                   <ul className='list-disc pt-15 pb-5 pl-40'>
                     {item.links.map((link, linkIndex) => (
                       <li key={linkIndex}>
-                        <a href={link.href} className='text-15'>
+                        <Link href={link.href} className='text-15'>
                           {link.title}
-                        </a>
+                        </Link>
                         {link?.submenus && (
                           <ul className='ml-10'>
                             {link.submenus.map((sub, subIndex) => (
                               <li key={subIndex} style={{ listStyleType: 'unset' }}>
-                                <a
+                                <Link
                                   href={sub.href}
                                   className='text-14 d-flex gap-1 items-center'
                                 >
                                   <span className='pb-1'>{sub?.icon}</span>
                                   <span>{sub.title}</span>
-                                </a>
+                                </Link>
                               </li>
                             ))}
                           </ul>
