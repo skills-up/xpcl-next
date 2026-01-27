@@ -6,10 +6,8 @@ import { useSelector } from 'react-redux';
 import { deleteItem, getItem } from '../../../../api/xplorzApi';
 import Audit from '../../../../components/audits';
 import Seo from '../../../../components/common/Seo';
+import DashboardLayout from '../../../../components/layouts/DashboardLayout';
 import ConfirmationModal from '../../../../components/confirm-modal';
-import Footer from '../../../../components/footer/dashboard-footer';
-import Header from '../../../../components/header/dashboard-header';
-import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
 import ViewTable from '../../../../components/view-table';
 import { downloadApiPDF } from '../../../../utils/fileDownloader';
 import { filterAllowed, hasPermission } from '../../../../utils/permission-checker';
@@ -105,8 +103,8 @@ const ViewPaymentReceipts = () => {
         sendToast(
           'error',
           response.data?.message ||
-            response.data?.error ||
-            'Could Not Fetch The Requested Payment Receipt.'
+          response.data?.error ||
+          'Could Not Fetch The Requested Payment Receipt.'
         );
         router.push('/dashboard/payment-receipts');
       }
@@ -126,8 +124,8 @@ const ViewPaymentReceipts = () => {
       sendToast(
         'error',
         response.data?.message ||
-          response.data?.error ||
-          'Unexpected Error Occurred While Trying to Delete this ' + paymentReceipt?.type,
+        response.data?.error ||
+        'Unexpected Error Occurred While Trying to Delete this ' + paymentReceipt?.type,
         4000
       );
     }
@@ -139,110 +137,88 @@ const ViewPaymentReceipts = () => {
       <Seo pageTitle={'View ' + (paymentReceipt?.type || '')} />
       {/* End Page Title */}
 
-      <div className='header-margin'></div>
-
-      <Header />
-      {/* End dashboard-header */}
-
-      <div className='dashboard'>
-        <div className='dashboard__sidebar bg-white scroll-bar-1'>
-          <Sidebar />
-          {/* End sidebar */}
-        </div>
-        {/* End dashboard__sidebar */}
-
-        <div className='dashboard__main'>
-          <div className='dashboard__content d-flex flex-column justify-between bg-light-2'>
-            <div>
-              <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
-                <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>
-                    View {paymentReceipt?.type} - {paymentReceipt?.number}
-                  </h1>
-                  <div className='text-15 text-light-1'>
-                    Get extended details of a {paymentReceipt?.type?.toLowerCase()}.
-                  </div>
-                </div>
-                {/* End .col-12 */}
-              </div>
-              {/* End .row */}
-
-              <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
-                {confirmDelete && (
-                  <ConfirmationModal
-                    onCancel={onCancel}
-                    onSubmit={onSubmit}
-                    title={
-                      'Do you really want to delete this ' + paymentReceipt?.type + '?'
-                    }
-                    content={
-                      'This will permanently delete the ' +
-                      paymentReceipt?.type?.toLowerCase() +
-                      '. Press OK to confirm.'
-                    }
-                  />
-                )}
-                <ViewTable
-                  data={paymentReceipt}
-                  onEdit={() =>
-                    router.push('/dashboard/payment-receipts/edit/' + router.query.view)
-                  }
-                  onDelete={() => {
-                    setIdToDelete(router.query.view);
-                    setConfirmDelete(true);
-                  }}
-                  entitySlug={'payment-receipts'}
-                  extraButtons={filterAllowed([
-                    {
-                      icon: <AiOutlinePrinter />,
-                      text: 'Print',
-                      onClick: async () => {
-                        downloadApiPDF(
-                          'payment-receipts/' + router.query.view + '/pdf',
-                          `${paymentReceipt?.number ?? 'Unkown'}.pdf`
-                        );
-                      },
-                      classNames: 'btn-info text-white',
-                      permissions: ['payment-receipts.pdf'],
-                    },
-                  ])}
-                />
-                <hr className='my-4' />
-                {hasPermission('payment-receipts.audit-trail') && (
-                  <div>
-                    <h2 className='mb-3 d-flex justify-between items-center'>
-                      <span>Audit Log</span>
-                      {auditExpanded ? (
-                        <BsDashSquare
-                          className='cursor-pointer text-blue-1'
-                          onClick={() => setAuditExpanded((prev) => !prev)}
-                        />
-                      ) : (
-                        <BsPlusSquare
-                          className='cursor-pointer text-blue-1'
-                          onClick={() => setAuditExpanded((prev) => !prev)}
-                        />
-                      )}
-                    </h2>
-                    {auditExpanded && (
-                      <Audit
-                        url={'payment-receipts/' + router.query.view + '/audit-trail'}
-                      />
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <Footer />
+      <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
+        <div className='col-12'>
+          <h1 className='text-30 lh-14 fw-600'>
+            View {paymentReceipt?.type} - {paymentReceipt?.number}
+          </h1>
+          <div className='text-15 text-light-1'>
+            Get extended details of a {paymentReceipt?.type?.toLowerCase()}.
           </div>
-          {/* End .dashboard__content */}
         </div>
-        {/* End dashbaord content */}
+        {/* End .col-12 */}
       </div>
-      {/* End dashbaord content */}
+      {/* End .row */}
+
+      <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
+        {confirmDelete && (
+          <ConfirmationModal
+            onCancel={onCancel}
+            onSubmit={onSubmit}
+            title={
+              'Do you really want to delete this ' + paymentReceipt?.type + '?'
+            }
+            content={
+              'This will permanently delete the ' +
+              paymentReceipt?.type?.toLowerCase() +
+              '. Press OK to confirm.'
+            }
+          />
+        )}
+        <ViewTable
+          data={paymentReceipt}
+          onEdit={() =>
+            router.push('/dashboard/payment-receipts/edit/' + router.query.view)
+          }
+          onDelete={() => {
+            setIdToDelete(router.query.view);
+            setConfirmDelete(true);
+          }}
+          entitySlug={'payment-receipts'}
+          extraButtons={filterAllowed([
+            {
+              icon: <AiOutlinePrinter />,
+              text: 'Print',
+              onClick: async () => {
+                downloadApiPDF(
+                  'payment-receipts/' + router.query.view + '/pdf',
+                  `${paymentReceipt?.number ?? 'Unkown'}.pdf`
+                );
+              },
+              classNames: 'btn-info text-white',
+              permissions: ['payment-receipts.pdf'],
+            },
+          ])}
+        />
+        <hr className='my-4' />
+        {hasPermission('payment-receipts.audit-trail') && (
+          <div>
+            <h2 className='mb-3 d-flex justify-between items-center'>
+              <span>Audit Log</span>
+              {auditExpanded ? (
+                <BsDashSquare
+                  className='cursor-pointer text-blue-1'
+                  onClick={() => setAuditExpanded((prev) => !prev)}
+                />
+              ) : (
+                <BsPlusSquare
+                  className='cursor-pointer text-blue-1'
+                  onClick={() => setAuditExpanded((prev) => !prev)}
+                />
+              )}
+            </h2>
+            {auditExpanded && (
+              <Audit
+                url={'payment-receipts/' + router.query.view + '/audit-trail'}
+              />
+            )}
+          </div>
+        )}
+      </div>
     </>
   );
 };
+
+ViewPaymentReceipts.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default ViewPaymentReceipts;

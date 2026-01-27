@@ -1,7 +1,5 @@
 import Seo from '../../../../components/common/Seo';
-import Footer from '../../../../components/footer/dashboard-footer';
-import Header from '../../../../components/header/dashboard-header';
-import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
+import DashboardLayout from '../../../../components/layouts/DashboardLayout';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { sendToast } from '../../../../utils/toastify';
@@ -107,8 +105,6 @@ const AddNewTravellers = () => {
       getData();
     }
   }, [router.isReady]);
-
-
 
   const getData = async () => {
     if (router.query.clone) {
@@ -396,563 +392,541 @@ const AddNewTravellers = () => {
       <Seo pageTitle='Add New Traveller' />
       {/* End Page Title */}
 
-      <div className='header-margin'></div>
-
-      <Header />
-      {/* End dashboard-header */}
-
-      <div className='dashboard'>
-        <div className='dashboard__sidebar bg-white scroll-bar-1'>
-          <Sidebar />
-          {/* End sidebar */}
+      <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
+        <div className='col-12'>
+          <h1 className='text-30 lh-14 fw-600'>Add New Traveller</h1>
+          <div className='text-15 text-light-1'>Create a new traveller.</div>
         </div>
-        {/* End dashboard__sidebar */}
+        {/* End .col-12 */}
+      </div>
+      {/* End .row */}
 
-        <div className='dashboard__main'>
-          <div className='dashboard__content d-flex flex-column justify-between bg-light-2'>
-            <div>
-              <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
-                <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Add New Traveller</h1>
-                  <div className='text-15 text-light-1'>Create a new traveller.</div>
-                </div>
-                {/* End .col-12 */}
-              </div>
-              {/* End .row */}
-
-              <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
-                <div>
-                  <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
-                    <h3>Personal Details</h3>
-                    <div className='col-lg-2 form-input-select'>
-                      <label>Prefix</label>
-                      <Select
-                        isClearable
-                        options={passportPrefixOptions}
-                        value={prefix}
-                        onChange={(id) => setPrefix(id)}
-                      />
-                    </div>
-                    <div className='col-lg-4'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setFirstName(e.target.value)}
-                          value={firstName}
-                          placeholder=' '
-                          type='text'
-                          required
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          First Name<span className='text-danger'>*</span>
-                        </label>
-                      </div>
-                    </div>
-                    <div className='col-lg-2'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setMiddleName(e.target.value)}
-                          value={middleName}
-                          placeholder=' '
-                          type='text'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>Middle Name</label>
-                      </div>
-                    </div>
-                    <div className='col-lg-4'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setLastName(e.target.value)}
-                          value={lastName}
-                          placeholder=' '
-                          type='text'
-                          required
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Last Name<span className='text-danger'>*</span>
-                        </label>
-                      </div>
-                    </div>
-                    <div className='col-lg-3'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setMobilePhone(e.target.value)}
-                          value={mobilePhone}
-                          placeholder=' '
-                          minLength={11}
-                          maxLength={12}
-                          pattern='[0-9]{11,12}'
-                          inputMode='numeric'
-                          onWheel={(e) => e.target.blur()}
-                        />
-                        <label className='lh-1 text-15 text-light-1'>
-                          Mobile Phone (12 digits)
-                        </label>
-                      </div>
-                    </div>
-                    <div className='col-lg-3'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setEmail(e.target.value)}
-                          value={email}
-                          placeholder=' '
-                          type='email'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>Email Address</label>
-                      </div>
-                    </div>
-                    <div className='col-lg-3'>
-                      <div className='form-input'>
-                        <input
-                          value={eaPhoneNumber}
-                          inputMode='numeric'
-                          minLength={11}
-                          maxLength={12}
-                          pattern='[0-9]{11,12}'
-                          placeholder=' '
-                          onChange={(e) => {
-                            const digits = e.target.value.replace(/\D/g, '');
-                            if (digits.length <= 12) setEAPhoneNumber(digits);
-                          }}
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          EA Phone Number (12 digits)
-                        </label>
-                      </div>
-                    </div>
-                    <div className='col-lg-6'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setAddress(e.target.value)}
-                          value={address}
-                          placeholder=' '
-                          type='text'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>Address</label>
-                      </div>
-                    </div>
-                    <div className='col-lg-6 form-input-select'>
-                      <label>Base Location</label>
-                      <WindowedSelect
-                        isClearable
-                        filterOption={(candidate, input) =>
-                          !input || candidate.label.toLowerCase().includes(input.toLowerCase())
-                        }
-                        options={airports.map((airport) => ({
-                          value: airport.iata_code,
-                          label: `${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
-                        }))}
-                        formatOptionLabel={(opt, { context }) => {
-                          const [iata_code, city, name, country_name] = opt.label.split('|');
-                          return (
-                            <div key={iata_code}>
-                              <div
-                                className='d-flex justify-between align-items-center'
-                                style={{ fontSize: '1rem' }}
-                              >
-                                <span>
-                                  <strong>{iata_code}</strong> <small>({city})</small>
-                                </span>
-                                {context === 'value' ? (
-                                  ''
-                                ) : (
-                                  <div
-                                    style={{
-                                      fontSize: 'small',
-                                      fontStyle: 'italic',
-                                    }}
-                                    className='text-right'
-                                  >
-                                    {country_name}
-                                  </div>
-                                )}
-                              </div>
-                              {context === 'value' ? '' : <small>{name}</small>}
-                            </div>
-                          );
-                        }}
-                        value={baseAirport}
-                        onChange={(id) => setBaseAirport(id)}
-                        placeholder='Select Airport'
-                      />
-                    </div>
-                    <h3>Passport Details</h3>
-                    <div className='col-lg-3'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setPassportName(e.target.value)}
-                          value={passportName}
-                          placeholder=' '
-                          type='text'
-                          required
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Name (as on passport)<span className='text-danger'>*</span>
-                        </label>
-                      </div>
-                    </div>
-                    <div className='d-block ml-3 form-datepicker-alternate col-lg-3'>
-                      <label className='text-15'>
-                        Date Of Birth (as on passport)
-                        <span className='text-danger'>*</span>
-                      </label>
-                      <DatePicker
-                        style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
-                        inputClass='custom_input-picker'
-                        containerClassName='custom_container-picker'
-                        value={passportDOB}
-                        onChange={setPassportDOB}
-                        numberOfMonths={1}
-                        offsetY={10}
-                        format='DD MMMM YYYY'
-                      />
-                    </div>
-                    <div className='col-lg-3 form-input-select'>
-                      <label>Passport Gender</label>
-                      <Select
-                        isClearable
-                        options={passportGenderOptions}
-                        value={passportGender}
-                        onChange={(id) => setPassportGender(id)}
-                      />
-                    </div>
-                    <div className='col-lg-3 form-input-select'>
-                      <label>Passport Country</label>
-                      <Select
-                        isClearable
-                        options={countries.map((el) => ({
-                          value: el.code,
-                          label: `${el.name} (${el.code})`,
-                        }))}
-                        value={countryCodeID}
-                        onChange={(id) => setCountryCodeID(id)}
-                      />
-                    </div>
-                    <div className='col-lg-3'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setPassportNumber(e.target.value)}
-                          value={passportNumber}
-                          placeholder=' '
-                          type='text'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Passport Number
-                        </label>
-                      </div>
-                    </div>
-                    <div className='d-block ml-3 form-datepicker col-lg-3'>
-                      <label>Passport Issue Date</label>
-                      <DatePicker
-                        style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
-                        inputClass='custom_input-picker'
-                        containerClassName='custom_container-picker'
-                        value={passportIssueDate}
-                        onChange={(d) => {
-                          setPassportIssueDate(d);
-                          if (d)
-                            setPassportExpiryDate(
-                              new DateObject(d.toDate().getTime() + 315569260000)
-                            );
-                        }}
-                        numberOfMonths={1}
-                        offsetY={10}
-                        format='DD MMMM YYYY'
-                      />
-                    </div>
-                    <div className='d-block ml-3 form-datepicker col-lg-3'>
-                      <label>Passport Expiry Date</label>
-                      <DatePicker
-                        style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
-                        inputClass='custom_input-picker'
-                        containerClassName='custom_container-picker'
-                        value={passportExpiryDate}
-                        onChange={setPassportExpiryDate}
-                        numberOfMonths={1}
-                        offsetY={10}
-                        format='DD MMMM YYYY'
-                      />
-                    </div>
-                    <div className='col-lg-3'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setPassportIssuePlace(e.target.value)}
-                          value={passportIssuePlace}
-                          placeholder=' '
-                          type='text'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Passport Issue Place
-                        </label>
-                      </div>
-                    </div>
-                    <div className='d-block ml-3 form-datepicker col-lg-3'>
-                      <label>Last EU Biometrics</label>
-                      <DatePicker
-                        style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
-                        inputClass='custom_input-picker'
-                        containerClassName='custom_container-picker'
-                        value={euBiometrics}
-                        onChange={setEUBiometrics}
-                        numberOfMonths={1}
-                        offsetY={10}
-                        format='DD MMMM YYYY'
-                      />
-                    </div>
-                    {/* Aliases */}
-                    <div>
-                      <h3>Aliases</h3>
-                      <div>
-                        {aliases.map((element, index) => (
-                          <div key={index} className='d-flex my-2'>
-                            <div className='form-input'>
-                              <input
-                                value={aliases[index].value}
-                                onChange={(e) => {
-                                  setAliases((prev) => {
-                                    prev[index].value = e.target.value;
-                                    return [...prev];
-                                  });
-                                }}
-                                type='text'
-                                placeholder=' '
-                              />
-                              <label className='lh-1 text-16 text-light-1'>
-                                Add Alias {index + 1}
-                              </label>
-                            </div>
-                            {index !== 0 && (
-                              <button
-                                className='btn btn-outline-danger ml-10 px-20'
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  setAliases((prev) => {
-                                    prev.splice(index, 1);
-                                    return [...prev];
-                                  });
-                                }}
-                              >
-                                <BsTrash3 />
-                              </button>
-                            )}
-                            {index + 1 === aliases?.length && (
-                              <button
-                                className='btn btn-outline-success ml-10 px-20'
-                                onClick={() => {
-                                  setAliases((prev) => [...prev, { value: '' }]);
-                                }}
-                              >
-                                <AiOutlinePlus />
-                              </button>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                    <h3>Preferences</h3>
-                    <div className='form-input-select col-lg-3'>
-                      <label>Domestic Airline Preference</label>
-                      <Select
-                        isClearable
-                        isMulti
-                        options={airlines}
-                        value={domesticAirlinePreference}
-                        onChange={setDomesticAirlinePreference}
-                      />
-                    </div>
-                    <div className='form-input-select col-lg-3'>
-                      <label>International Airline Preference</label>
-                      <Select
-                        isClearable
-                        isMulti
-                        options={airlines}
-                        value={internationalAirlinePreference}
-                        onChange={setInternationalAirlinePreference}
-                      />
-                    </div>
-                    <div className='col-lg-3 form-input-select'>
-                      <label>Domestic Cabin Preference</label>
-                      <Select
-                        isClearable
-                        options={cabinPreferenceOptions}
-                        value={domesticCabinPreference}
-                        onChange={(id) => setDomesticCabinPreference(id)}
-                      />
-                    </div>
-                    <div className='col-lg-3 form-input-select'>
-                      <label>International Cabin Preference</label>
-                      <Select
-                        isClearable
-                        options={cabinPreferenceOptions}
-                        value={internationalCabinPreference}
-                        onChange={(id) => setInternationalCabinPreference(id)}
-                      />
-                    </div>
-                    <div className='col-lg-3 form-input-select'>
-                      <label>Meal Preference</label>
-                      <Select
-                        isClearable
-                        options={mealPreferenceOptions}
-                        value={mealPreference}
-                        onChange={(id) => setMealPreference(id)}
-                      />
-                    </div>
-                    <div className='col-lg-3 form-input-select'>
-                      <label>Seat Preference</label>
-                      <Select
-                        isClearable
-                        options={seatPreferenceOptions}
-                        value={seatPreference}
-                        onChange={(id) => setSeatPreference(id)}
-                      />
-                    </div>
-                    <div className='col-lg-3 form-input-select'>
-                      <label>Cabin Position</label>
-                      <Select
-                        isClearable
-                        options={cabinPositionOptions}
-                        value={cabinPosition}
-                        onChange={(id) => setCabinPosition(id)}
-                      />
-                    </div>
-                    <div className='col-lg-3 form-input-select'>
-                      <label>Fare Preference</label>
-                      <Select
-                        isClearable
-                        options={farePreferenceOptions}
-                        value={farePreference}
-                        onChange={(id) => setFarePreference(id)}
-                      />
-                    </div>
-                    <div className='col-lg-6'>
-                      <div className='form-input'>
-                        <input
-                          style={{ textTransform: 'capitalize' }}
-                          onChange={(e) => setMealNotes(e.target.value)}
-                          value={mealNotes}
-                          placeholder=' '
-                          type='text'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>Meal Notes</label>
-                      </div>
-                    </div>
-                    <div className='col-lg-6'>
-                      <div className='form-input'>
-                        <input
-                          style={{ textTransform: 'capitalize' }}
-                          onChange={(e) => setSeatNotes(e.target.value)}
-                          value={seatNotes}
-                          placeholder=' '
-                          type='text'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>Seat Notes</label>
-                      </div>
-                    </div>
-                    <div className='col-12'>
-                      <div className='d-flex items-center'>
-                        <label className='lh-1 text-16 text-light-1 mr-10'>
-                          Don't Send Boarding Passes
-                        </label>
-                        <ReactSwitch
-                          onChange={setNoBoardingPass}
-                          checked={noBoardingPass}
-                        />
-                      </div>
-                    </div>
-                    <h3>Documents</h3>
-                    <div className='col-lg-4'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setPanNumber(e.target.value)}
-                          value={panNumber}
-                          placeholder=' '
-                          type='text'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>PAN Number</label>
-                      </div>
-                    </div>
-                    <div className='col-lg-4'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setAadhaarNumber(e.target.value)}
-                          value={aadhaarNumber}
-                          placeholder=' '
-                          type='number'
-                          onWheel={(e) => e.target.blur()}
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Aadhaar Number
-                        </label>
-                      </div>
-                    </div>
-                    {/* Vaccination Dates */}
-                    <div className='d-block ml-3 form-datepicker col-lg-4'>
-                      <label>Vaccination Dates (Upto 3)</label>
-                      <DatePicker
-                        multiple
-                        style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
-                        inputClass='custom_input-picker'
-                        containerClassName='custom_container-picker'
-                        value={vaccinationDates}
-                        onChange={setVaccinationDates}
-                        numberOfMonths={1}
-                        offsetY={10}
-                        format='DD MMMM YYYY'
-                      />
-                    </div>
-                    {/* Passport Scan Files Upload */}
-                    <div className='col-12'>
-                      <label>Passport</label>
-                      <NewFileUploads multiple={true} setUploads={setPassportScanFiles} />
-                    </div>
-                    {/* Photo Scan File Upload */}
-                    <div className='col-12'>
-                      <label>Digital Photograph</label>
-                      <NewFileUploads multiple={false} setUploads={setPhotoScanFile} />
-                    </div>
-                    {/* Pan Card Scan File Upload */}
-                    <div className='col-12'>
-                      <label>PAN Card</label>
-                      <NewFileUploads multiple={false} setUploads={setPanCardScanFile} />
-                    </div>
-                    {/* Aadhaar Card Scan File Upload */}
-                    <div className='col-12'>
-                      <label>Aadhaar Card</label>
-                      <NewFileUploads
-                        multiple={false}
-                        setUploads={setAadhaarCardScanFile}
-                      />
-                    </div>
-                    {/* Vaccination Certificate File Upload */}
-                    <div className='col-12'>
-                      <label>Vaccination Certificate</label>
-                      <NewFileUploads
-                        fileTypes={['PDF']}
-                        multiple={false}
-                        setUploads={setVaccinationCertificateFile}
-                      />
-                    </div>
-                    <div className='d-inline-block'>
-                      <button
-                        type='submit'
-                        className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
-                      >
-                        Add Traveller
-                      </button>
-                    </div>
-                  </form>
-                </div>
+      <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
+        <div>
+          <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
+            <h3>Personal Details</h3>
+            <div className='col-lg-2 form-input-select'>
+              <label>Prefix</label>
+              <Select
+                isClearable
+                options={passportPrefixOptions}
+                value={prefix}
+                onChange={(id) => setPrefix(id)}
+              />
+            </div>
+            <div className='col-lg-4'>
+              <div className='form-input'>
+                <input
+                  onChange={(e) => setFirstName(e.target.value)}
+                  value={firstName}
+                  placeholder=' '
+                  type='text'
+                  required
+                />
+                <label className='lh-1 text-16 text-light-1'>
+                  First Name<span className='text-danger'>*</span>
+                </label>
               </div>
             </div>
-
-            <Footer />
-          </div>
-          {/* End .dashboard__content */}
+            <div className='col-lg-2'>
+              <div className='form-input'>
+                <input
+                  onChange={(e) => setMiddleName(e.target.value)}
+                  value={middleName}
+                  placeholder=' '
+                  type='text'
+                />
+                <label className='lh-1 text-16 text-light-1'>Middle Name</label>
+              </div>
+            </div>
+            <div className='col-lg-4'>
+              <div className='form-input'>
+                <input
+                  onChange={(e) => setLastName(e.target.value)}
+                  value={lastName}
+                  placeholder=' '
+                  type='text'
+                  required
+                />
+                <label className='lh-1 text-16 text-light-1'>
+                  Last Name<span className='text-danger'>*</span>
+                </label>
+              </div>
+            </div>
+            <div className='col-lg-3'>
+              <div className='form-input'>
+                <input
+                  onChange={(e) => setMobilePhone(e.target.value)}
+                  value={mobilePhone}
+                  placeholder=' '
+                  minLength={11}
+                  maxLength={12}
+                  pattern='[0-9]{11,12}'
+                  inputMode='numeric'
+                  onWheel={(e) => e.target.blur()}
+                />
+                <label className='lh-1 text-15 text-light-1'>
+                  Mobile Phone (12 digits)
+                </label>
+              </div>
+            </div>
+            <div className='col-lg-3'>
+              <div className='form-input'>
+                <input
+                  onChange={(e) => setEmail(e.target.value)}
+                  value={email}
+                  placeholder=' '
+                  type='email'
+                />
+                <label className='lh-1 text-16 text-light-1'>Email Address</label>
+              </div>
+            </div>
+            <div className='col-lg-3'>
+              <div className='form-input'>
+                <input
+                  value={eaPhoneNumber}
+                  inputMode='numeric'
+                  minLength={11}
+                  maxLength={12}
+                  pattern='[0-9]{11,12}'
+                  placeholder=' '
+                  onChange={(e) => {
+                    const digits = e.target.value.replace(/\D/g, '');
+                    if (digits.length <= 12) setEAPhoneNumber(digits);
+                  }}
+                />
+                <label className='lh-1 text-16 text-light-1'>
+                  EA Phone Number (12 digits)
+                </label>
+              </div>
+            </div>
+            <div className='col-lg-6'>
+              <div className='form-input'>
+                <input
+                  onChange={(e) => setAddress(e.target.value)}
+                  value={address}
+                  placeholder=' '
+                  type='text'
+                />
+                <label className='lh-1 text-16 text-light-1'>Address</label>
+              </div>
+            </div>
+            <div className='col-lg-6 form-input-select'>
+              <label>Base Location</label>
+              <WindowedSelect
+                isClearable
+                filterOption={(candidate, input) =>
+                  !input || candidate.label.toLowerCase().includes(input.toLowerCase())
+                }
+                options={airports.map((airport) => ({
+                  value: airport.iata_code,
+                  label: `${airport.iata_code}|${airport.city}|${airport.name}|${airport.country_name}`,
+                }))}
+                formatOptionLabel={(opt, { context }) => {
+                  const [iata_code, city, name, country_name] = opt.label.split('|');
+                  return (
+                    <div key={iata_code}>
+                      <div
+                        className='d-flex justify-between align-items-center'
+                        style={{ fontSize: '1rem' }}
+                      >
+                        <span>
+                          <strong>{iata_code}</strong> <small>({city})</small>
+                        </span>
+                        {context === 'value' ? (
+                          ''
+                        ) : (
+                          <div
+                            style={{
+                              fontSize: 'small',
+                              fontStyle: 'italic',
+                            }}
+                            className='text-right'
+                          >
+                            {country_name}
+                          </div>
+                        )}
+                      </div>
+                      {context === 'value' ? '' : <small>{name}</small>}
+                    </div>
+                  );
+                }}
+                value={baseAirport}
+                onChange={(id) => setBaseAirport(id)}
+                placeholder='Select Airport'
+              />
+            </div>
+            <h3>Passport Details</h3>
+            <div className='col-lg-3'>
+              <div className='form-input'>
+                <input
+                  onChange={(e) => setPassportName(e.target.value)}
+                  value={passportName}
+                  placeholder=' '
+                  type='text'
+                  required
+                />
+                <label className='lh-1 text-16 text-light-1'>
+                  Name (as on passport)<span className='text-danger'>*</span>
+                </label>
+              </div>
+            </div>
+            <div className='d-block ml-3 form-datepicker-alternate col-lg-3'>
+              <label className='text-15'>
+                Date Of Birth (as on passport)
+                <span className='text-danger'>*</span>
+              </label>
+              <DatePicker
+                style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
+                inputClass='custom_input-picker'
+                containerClassName='custom_container-picker'
+                value={passportDOB}
+                onChange={setPassportDOB}
+                numberOfMonths={1}
+                offsetY={10}
+                format='DD MMMM YYYY'
+              />
+            </div>
+            <div className='col-lg-3 form-input-select'>
+              <label>Passport Gender</label>
+              <Select
+                isClearable
+                options={passportGenderOptions}
+                value={passportGender}
+                onChange={(id) => setPassportGender(id)}
+              />
+            </div>
+            <div className='col-lg-3 form-input-select'>
+              <label>Passport Country</label>
+              <Select
+                isClearable
+                options={countries.map((el) => ({
+                  value: el.code,
+                  label: `${el.name} (${el.code})`,
+                }))}
+                value={countryCodeID}
+                onChange={(id) => setCountryCodeID(id)}
+              />
+            </div>
+            <div className='col-lg-3'>
+              <div className='form-input'>
+                <input
+                  onChange={(e) => setPassportNumber(e.target.value)}
+                  value={passportNumber}
+                  placeholder=' '
+                  type='text'
+                />
+                <label className='lh-1 text-16 text-light-1'>
+                  Passport Number
+                </label>
+              </div>
+            </div>
+            <div className='d-block ml-3 form-datepicker col-lg-3'>
+              <label>Passport Issue Date</label>
+              <DatePicker
+                style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
+                inputClass='custom_input-picker'
+                containerClassName='custom_container-picker'
+                value={passportIssueDate}
+                onChange={(d) => {
+                  setPassportIssueDate(d);
+                  if (d)
+                    setPassportExpiryDate(
+                      new DateObject(d.toDate().getTime() + 315569260000)
+                    );
+                }}
+                numberOfMonths={1}
+                offsetY={10}
+                format='DD MMMM YYYY'
+              />
+            </div>
+            <div className='d-block ml-3 form-datepicker col-lg-3'>
+              <label>Passport Expiry Date</label>
+              <DatePicker
+                style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
+                inputClass='custom_input-picker'
+                containerClassName='custom_container-picker'
+                value={passportExpiryDate}
+                onChange={setPassportExpiryDate}
+                numberOfMonths={1}
+                offsetY={10}
+                format='DD MMMM YYYY'
+              />
+            </div>
+            <div className='col-lg-3'>
+              <div className='form-input'>
+                <input
+                  onChange={(e) => setPassportIssuePlace(e.target.value)}
+                  value={passportIssuePlace}
+                  placeholder=' '
+                  type='text'
+                />
+                <label className='lh-1 text-16 text-light-1'>
+                  Passport Issue Place
+                </label>
+              </div>
+            </div>
+            <div className='d-block ml-3 form-datepicker col-lg-3'>
+              <label>Last EU Biometrics</label>
+              <DatePicker
+                style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
+                inputClass='custom_input-picker'
+                containerClassName='custom_container-picker'
+                value={euBiometrics}
+                onChange={setEUBiometrics}
+                numberOfMonths={1}
+                offsetY={10}
+                format='DD MMMM YYYY'
+              />
+            </div>
+            {/* Aliases */}
+            <div>
+              <h3>Aliases</h3>
+              <div>
+                {aliases.map((element, index) => (
+                  <div key={index} className='d-flex my-2'>
+                    <div className='form-input'>
+                      <input
+                        value={aliases[index].value}
+                        onChange={(e) => {
+                          setAliases((prev) => {
+                            prev[index].value = e.target.value;
+                            return [...prev];
+                          });
+                        }}
+                        type='text'
+                        placeholder=' '
+                      />
+                      <label className='lh-1 text-16 text-light-1'>
+                        Add Alias {index + 1}
+                      </label>
+                    </div>
+                    {index !== 0 && (
+                      <button
+                        className='btn btn-outline-danger ml-10 px-20'
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setAliases((prev) => {
+                            prev.splice(index, 1);
+                            return [...prev];
+                          });
+                        }}
+                      >
+                        <BsTrash3 />
+                      </button>
+                    )}
+                    {index + 1 === aliases?.length && (
+                      <button
+                        className='btn btn-outline-success ml-10 px-20'
+                        onClick={() => {
+                          setAliases((prev) => [...prev, { value: '' }]);
+                        }}
+                      >
+                        <AiOutlinePlus />
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <h3>Preferences</h3>
+            <div className='form-input-select col-lg-3'>
+              <label>Domestic Airline Preference</label>
+              <Select
+                isClearable
+                isMulti
+                options={airlines}
+                value={domesticAirlinePreference}
+                onChange={setDomesticAirlinePreference}
+              />
+            </div>
+            <div className='form-input-select col-lg-3'>
+              <label>International Airline Preference</label>
+              <Select
+                isClearable
+                isMulti
+                options={airlines}
+                value={internationalAirlinePreference}
+                onChange={setInternationalAirlinePreference}
+              />
+            </div>
+            <div className='col-lg-3 form-input-select'>
+              <label>Domestic Cabin Preference</label>
+              <Select
+                isClearable
+                options={cabinPreferenceOptions}
+                value={domesticCabinPreference}
+                onChange={(id) => setDomesticCabinPreference(id)}
+              />
+            </div>
+            <div className='col-lg-3 form-input-select'>
+              <label>International Cabin Preference</label>
+              <Select
+                isClearable
+                options={cabinPreferenceOptions}
+                value={internationalCabinPreference}
+                onChange={(id) => setInternationalCabinPreference(id)}
+              />
+            </div>
+            <div className='col-lg-3 form-input-select'>
+              <label>Meal Preference</label>
+              <Select
+                isClearable
+                options={mealPreferenceOptions}
+                value={mealPreference}
+                onChange={(id) => setMealPreference(id)}
+              />
+            </div>
+            <div className='col-lg-3 form-input-select'>
+              <label>Seat Preference</label>
+              <Select
+                isClearable
+                options={seatPreferenceOptions}
+                value={seatPreference}
+                onChange={(id) => setSeatPreference(id)}
+              />
+            </div>
+            <div className='col-lg-3 form-input-select'>
+              <label>Cabin Position</label>
+              <Select
+                isClearable
+                options={cabinPositionOptions}
+                value={cabinPosition}
+                onChange={(id) => setCabinPosition(id)}
+              />
+            </div>
+            <div className='col-lg-3 form-input-select'>
+              <label>Fare Preference</label>
+              <Select
+                isClearable
+                options={farePreferenceOptions}
+                value={farePreference}
+                onChange={(id) => setFarePreference(id)}
+              />
+            </div>
+            <div className='col-lg-6'>
+              <div className='form-input'>
+                <input
+                  style={{ textTransform: 'capitalize' }}
+                  onChange={(e) => setMealNotes(e.target.value)}
+                  value={mealNotes}
+                  placeholder=' '
+                  type='text'
+                />
+                <label className='lh-1 text-16 text-light-1'>Meal Notes</label>
+              </div>
+            </div>
+            <div className='col-lg-6'>
+              <div className='form-input'>
+                <input
+                  style={{ textTransform: 'capitalize' }}
+                  onChange={(e) => setSeatNotes(e.target.value)}
+                  value={seatNotes}
+                  placeholder=' '
+                  type='text'
+                />
+                <label className='lh-1 text-16 text-light-1'>Seat Notes</label>
+              </div>
+            </div>
+            <div className='col-12'>
+              <div className='d-flex items-center'>
+                <label className='lh-1 text-16 text-light-1 mr-10'>
+                  Don't Send Boarding Passes
+                </label>
+                <ReactSwitch
+                  onChange={setNoBoardingPass}
+                  checked={noBoardingPass}
+                />
+              </div>
+            </div>
+            <h3>Documents</h3>
+            <div className='col-lg-4'>
+              <div className='form-input'>
+                <input
+                  onChange={(e) => setPanNumber(e.target.value)}
+                  value={panNumber}
+                  placeholder=' '
+                  type='text'
+                />
+                <label className='lh-1 text-16 text-light-1'>PAN Number</label>
+              </div>
+            </div>
+            <div className='col-lg-4'>
+              <div className='form-input'>
+                <input
+                  onChange={(e) => setAadhaarNumber(e.target.value)}
+                  value={aadhaarNumber}
+                  placeholder=' '
+                  type='number'
+                  onWheel={(e) => e.target.blur()}
+                />
+                <label className='lh-1 text-16 text-light-1'>
+                  Aadhaar Number
+                </label>
+              </div>
+            </div>
+            {/* Vaccination Dates */}
+            <div className='d-block ml-3 form-datepicker col-lg-4'>
+              <label>Vaccination Dates (Upto 3)</label>
+              <DatePicker
+                multiple
+                style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
+                inputClass='custom_input-picker'
+                containerClassName='custom_container-picker'
+                value={vaccinationDates}
+                onChange={setVaccinationDates}
+                numberOfMonths={1}
+                offsetY={10}
+                format='DD MMMM YYYY'
+              />
+            </div>
+            {/* Passport Scan Files Upload */}
+            <div className='col-12'>
+              <label>Passport</label>
+              <NewFileUploads multiple={true} setUploads={setPassportScanFiles} />
+            </div>
+            {/* Photo Scan File Upload */}
+            <div className='col-12'>
+              <label>Digital Photograph</label>
+              <NewFileUploads multiple={false} setUploads={setPhotoScanFile} />
+            </div>
+            {/* Pan Card Scan File Upload */}
+            <div className='col-12'>
+              <label>PAN Card</label>
+              <NewFileUploads multiple={false} setUploads={setPanCardScanFile} />
+            </div>
+            {/* Aadhaar Card Scan File Upload */}
+            <div className='col-12'>
+              <label>Aadhaar Card</label>
+              <NewFileUploads
+                multiple={false}
+                setUploads={setAadhaarCardScanFile}
+              />
+            </div>
+            {/* Vaccination Certificate File Upload */}
+            <div className='col-12'>
+              <label>Vaccination Certificate</label>
+              <NewFileUploads
+                fileTypes={['PDF']}
+                multiple={false}
+                setUploads={setVaccinationCertificateFile}
+              />
+            </div>
+            <div className='d-inline-block'>
+              <button
+                type='submit'
+                className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
+              >
+                Add Traveller
+              </button>
+            </div>
+          </form>
         </div>
-        {/* End dashbaord content */}
       </div>
-      {/* End dashbaord content */}
     </>
   );
 };
+
+AddNewTravellers.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default AddNewTravellers;

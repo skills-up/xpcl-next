@@ -5,11 +5,9 @@ import { useSelector } from 'react-redux';
 import Select from 'react-select';
 import { createItem, deleteItem, getItem } from '../../../../api/xplorzApi';
 import Seo from '../../../../components/common/Seo';
+import DashboardLayout from '../../../../components/layouts/DashboardLayout';
 import ConfirmationModal from '../../../../components/confirm-modal';
-import Footer from '../../../../components/footer/dashboard-footer';
-import Header from '../../../../components/header/dashboard-header';
 import NewFileUploads from '../../../../components/new-file-uploads';
-import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
 import ViewTable from '../../../../components/view-table';
 import { sendToast } from '../../../../utils/toastify';
 
@@ -151,8 +149,8 @@ const ViewVisaApplications = () => {
         sendToast(
           'error',
           response.data?.message ||
-            response.data?.error ||
-            'Could Not Fetch The Requested Visa Application.'
+          response.data?.error ||
+          'Could Not Fetch The Requested Visa Application.'
         );
         router.push('/dashboard/visa-applications');
       }
@@ -176,8 +174,8 @@ const ViewVisaApplications = () => {
       sendToast(
         'error',
         response.data?.message ||
-          response.data?.error ||
-          'Unexpected Error Occurred While Trying to Delete this Visa Application',
+        response.data?.error ||
+        'Unexpected Error Occurred While Trying to Delete this Visa Application',
         4000
       );
     }
@@ -192,8 +190,8 @@ const ViewVisaApplications = () => {
       sendToast(
         'error',
         response.data?.message ||
-          response.data?.error ||
-          'Unexpected Error Occurred While Trying to Delete this Note',
+        response.data?.error ||
+        'Unexpected Error Occurred While Trying to Delete this Note',
         4000
       );
     }
@@ -225,234 +223,219 @@ const ViewVisaApplications = () => {
       <Seo pageTitle='Visa Application' />
       {/* End Page Title */}
 
-      <div className='header-margin'></div>
-
-      <Header />
-      {/* End dashboard-header */}
-
-      <div className='dashboard'>
-        <div className='dashboard__sidebar bg-white scroll-bar-1'>
-          <Sidebar />
-          {/* End sidebar */}
+      <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
+        <div className='col-12'>
+          <h1 className='text-30 lh-14 fw-600'>Visa Application</h1>
+          <div className='text-15 text-light-1'>
+            Get extended details of a visa application.
+          </div>
         </div>
-        {/* End dashboard__sidebar */}
+        {/* End .col-12 */}
+      </div>
+      {/* End .row */}
 
-        <div className='dashboard__main'>
-          <div className='dashboard__content d-flex flex-column justify-between bg-light-2'>
-            <div>
-              <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
-                <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Visa Application</h1>
-                  <div className='text-15 text-light-1'>
-                    Get extended details of a visa application.
-                  </div>
-                </div>
-                {/* End .col-12 */}
+      <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
+        {confirmDelete && (
+          <ConfirmationModal
+            onCancel={onCancel}
+            onSubmit={onSubmit}
+            title='Do you really want to delete this visa application?'
+            content='This will permanently delete the visa application. Press OK to confirm.'
+          />
+        )}
+        <h4>Visa Application</h4>
+        <ViewTable
+          showButtons={false}
+          data={{
+            country: visaApplications?.visa_requirement?.country_name,
+            purpose: visaApplications?.visa_requirement?.business_travel
+              ? 'Business Travel'
+              : 'Tourism',
+            traveller: visaApplications?.traveller?.passport_name,
+            status: visaApplications?.status,
+          }}
+          onEdit={() =>
+            router.push('/dashboard/visa-applications/edit/' + router.query.view)
+          }
+          onDelete={() => {
+            setIdToDelete(router.query.view);
+            setConfirmDelete(true);
+          }}
+          entitySlug={'visa-applications'}
+        />
+        <h4 className='mt-10'>Traveller's Passport Details</h4>
+        <ViewTable
+          showButtons={false}
+          data={{
+            name: visaApplications?.traveller?.passport_name,
+            date_of_birth: new Date(
+              visaApplications?.traveller?.passport_dob
+            ).toLocaleString('en-IN', {
+              dateStyle: 'medium',
+            }),
+            number: visaApplications?.traveller?.passport_number,
+            issue_date: new Date(
+              visaApplications?.traveller?.passport_issue_date
+            ).toLocaleString('en-IN', {
+              dateStyle: 'medium',
+            }),
+            expiry_date: new Date(
+              visaApplications?.traveller?.passport_expiry_date
+            ).toLocaleString('en-IN', {
+              dateStyle: 'medium',
+            }),
+            issue_place: visaApplications?.traveller?.passport_issue_place,
+          }}
+          onEdit={() =>
+            router.push('/dashboard/visa-applications/edit/' + router.query.view)
+          }
+          onDelete={() => {
+            setIdToDelete(router.query.view);
+            setConfirmDelete(true);
+          }}
+          entitySlug={'visa-applications'}
+        />
+        {visaApplications?.personal_docs_scans && (
+          <>
+            <h4 className='mt-10'>Personal Documents</h4>
+            <ViewTable
+              showButtons={false}
+              data={visaApplications?.personal_docs_scans}
+              onEdit={() =>
+                router.push(
+                  '/dashboard/visa-applications/edit/' + router.query.view
+                )
+              }
+              onDelete={() => {
+                setIdToDelete(router.query.view);
+                setConfirmDelete(true);
+              }}
+              entitySlug={'visa-applications'}
+            />
+          </>
+        )}
+        {visaApplications?.financial_docs_scans && (
+          <>
+            <h4 className='mt-10'>Financial Documents</h4>
+            <ViewTable
+              showButtons={false}
+              data={visaApplications?.financial_docs_scans}
+              onEdit={() =>
+                router.push(
+                  '/dashboard/visa-applications/edit/' + router.query.view
+                )
+              }
+              onDelete={() => {
+                setIdToDelete(router.query.view);
+                setConfirmDelete(true);
+              }}
+              entitySlug={'visa-applications'}
+            />
+          </>
+        )}
+        {visaApplications?.supporting_docs_scans && (
+          <>
+            <h4 className='mt-10'>Supporting Documents</h4>
+            <ViewTable
+              data={visaApplications?.supporting_docs_scans}
+              onEdit={() =>
+                router.push(
+                  '/dashboard/visa-applications/edit/' + router.query.view
+                )
+              }
+              onDelete={() => {
+                setIdToDelete(router.query.view);
+                setConfirmDelete(true);
+              }}
+              entitySlug={'visa-applications'}
+            />
+          </>
+        )}
+        {visaApplications?.visa_requirement?.visa_forms && (
+          <>
+            <h4 className='mt-10'>Visa Forms</h4>
+            <ViewTable
+              data={visaApplications?.visa_requirement?.visa_forms}
+              onEdit={() =>
+                router.push(
+                  '/dashboard/visa-applications/edit/' + router.query.view
+                )
+              }
+              onDelete={() => {
+                setIdToDelete(router.query.view);
+                setConfirmDelete(true);
+              }}
+              entitySlug={'visa-applications'}
+            />
+          </>
+        )}
+        <h4 className='mt-10'>Notes</h4>
+        <>
+          {confirmDeleteNote && (
+            <ConfirmationModal
+              onCancel={onNoteCancel}
+              onSubmit={onNoteSubmit}
+              title='Do you really want to delete this note?'
+              content='This will permanently delete the visa application note. Press OK to confirm.'
+            />
+          )}
+          {visaApplications?.notes?.map((note) => (
+            <div className='mt-20'>
+              <div className='d-flex justify-between'>
+                <a
+                  className='text-12 cursor-pointer'
+                  href={'/dashboard/users/view/' + note.created_by}
+                >
+                  <strong>User #{note.created_by} </strong> @
+                  {new Date(note.created_at).toLocaleString('en-IN', {
+                    dateStyle: 'medium',
+                    timeStyle: 'short',
+                  })}
+                </a>
+                <a
+                  className='gap-1 col-auto'
+                  onClick={() => {
+                    setIdToDelete(note.id);
+                    setConfirmDeleteNote(true);
+                  }}
+                >
+                  <BsTrash3 />
+                </a>
               </div>
-              {/* End .row */}
-
-              <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
-                {confirmDelete && (
-                  <ConfirmationModal
-                    onCancel={onCancel}
-                    onSubmit={onSubmit}
-                    title='Do you really want to delete this visa application?'
-                    content='This will permanently delete the visa application. Press OK to confirm.'
-                  />
+              <div className='d-flex flex-column bg-light-2 border-light rounded_4 p-2'>
+                <div className='col-12'>{note.body}</div>
+                {note.attachments?.length ? (
+                  <div className='text-12 mt-10'>
+                    <b>Attachments:</b>
+                    {note.attachments?.map((url) => (
+                      <a
+                        className='btn-link ml-10'
+                        href={url}
+                        target='_blank'
+                        download
+                      >
+                        Download
+                      </a>
+                    ))}
+                  </div>
+                ) : (
+                  ''
                 )}
-                <h4>Visa Application</h4>
-                <ViewTable
-                  showButtons={false}
-                  data={{
-                    country: visaApplications?.visa_requirement?.country_name,
-                    purpose: visaApplications?.visa_requirement?.business_travel
-                      ? 'Business Travel'
-                      : 'Tourism',
-                    traveller: visaApplications?.traveller?.passport_name,
-                    status: visaApplications?.status,
-                  }}
-                  onEdit={() =>
-                    router.push('/dashboard/visa-applications/edit/' + router.query.view)
-                  }
-                  onDelete={() => {
-                    setIdToDelete(router.query.view);
-                    setConfirmDelete(true);
-                  }}
-                  entitySlug={'visa-applications'}
-                />
-                <h4 className='mt-10'>Traveller's Passport Details</h4>
-                <ViewTable
-                  showButtons={false}
-                  data={{
-                    name: visaApplications?.traveller?.passport_name,
-                    date_of_birth: new Date(
-                      visaApplications?.traveller?.passport_dob
-                    ).toLocaleString('en-IN', {
-                      dateStyle: 'medium',
-                    }),
-                    number: visaApplications?.traveller?.passport_number,
-                    issue_date: new Date(
-                      visaApplications?.traveller?.passport_issue_date
-                    ).toLocaleString('en-IN', {
-                      dateStyle: 'medium',
-                    }),
-                    expiry_date: new Date(
-                      visaApplications?.traveller?.passport_expiry_date
-                    ).toLocaleString('en-IN', {
-                      dateStyle: 'medium',
-                    }),
-                    issue_place: visaApplications?.traveller?.passport_issue_place,
-                  }}
-                  onEdit={() =>
-                    router.push('/dashboard/visa-applications/edit/' + router.query.view)
-                  }
-                  onDelete={() => {
-                    setIdToDelete(router.query.view);
-                    setConfirmDelete(true);
-                  }}
-                  entitySlug={'visa-applications'}
-                />
-                {visaApplications?.personal_docs_scans && (
-                  <>
-                    <h4 className='mt-10'>Personal Documents</h4>
-                    <ViewTable
-                      showButtons={false}
-                      data={visaApplications?.personal_docs_scans}
-                      onEdit={() =>
-                        router.push(
-                          '/dashboard/visa-applications/edit/' + router.query.view
-                        )
-                      }
-                      onDelete={() => {
-                        setIdToDelete(router.query.view);
-                        setConfirmDelete(true);
-                      }}
-                      entitySlug={'visa-applications'}
-                    />
-                  </>
-                )}
-                {visaApplications?.financial_docs_scans && (
-                  <>
-                    <h4 className='mt-10'>Financial Documents</h4>
-                    <ViewTable
-                      showButtons={false}
-                      data={visaApplications?.financial_docs_scans}
-                      onEdit={() =>
-                        router.push(
-                          '/dashboard/visa-applications/edit/' + router.query.view
-                        )
-                      }
-                      onDelete={() => {
-                        setIdToDelete(router.query.view);
-                        setConfirmDelete(true);
-                      }}
-                      entitySlug={'visa-applications'}
-                    />
-                  </>
-                )}
-                {visaApplications?.supporting_docs_scans && (
-                  <>
-                    <h4 className='mt-10'>Supporting Documents</h4>
-                    <ViewTable
-                      data={visaApplications?.supporting_docs_scans}
-                      onEdit={() =>
-                        router.push(
-                          '/dashboard/visa-applications/edit/' + router.query.view
-                        )
-                      }
-                      onDelete={() => {
-                        setIdToDelete(router.query.view);
-                        setConfirmDelete(true);
-                      }}
-                      entitySlug={'visa-applications'}
-                    />
-                  </>
-                )}
-                {visaApplications?.visa_requirement?.visa_forms && (
-                  <>
-                    <h4 className='mt-10'>Visa Forms</h4>
-                    <ViewTable
-                      data={visaApplications?.visa_requirement?.visa_forms}
-                      onEdit={() =>
-                        router.push(
-                          '/dashboard/visa-applications/edit/' + router.query.view
-                        )
-                      }
-                      onDelete={() => {
-                        setIdToDelete(router.query.view);
-                        setConfirmDelete(true);
-                      }}
-                      entitySlug={'visa-applications'}
-                    />
-                  </>
-                )}
-                <h4 className='mt-10'>Notes</h4>
-                <>
-                  {confirmDeleteNote && (
-                    <ConfirmationModal
-                      onCancel={onNoteCancel}
-                      onSubmit={onNoteSubmit}
-                      title='Do you really want to delete this note?'
-                      content='This will permanently delete the visa application note. Press OK to confirm.'
-                    />
-                  )}
-                  {visaApplications?.notes?.map((note) => (
-                    <div className='mt-20'>
-                      <div className='d-flex justify-between'>
-                        <a
-                          className='text-12 cursor-pointer'
-                          href={'/dashboard/users/view/' + note.created_by}
-                        >
-                          <strong>User #{note.created_by} </strong> @
-                          {new Date(note.created_at).toLocaleString('en-IN', {
-                            dateStyle: 'medium',
-                            timeStyle: 'short',
-                          })}
-                        </a>
-                        <a
-                          className='gap-1 col-auto'
-                          onClick={() => {
-                            setIdToDelete(note.id);
-                            setConfirmDeleteNote(true);
-                          }}
-                        >
-                          <BsTrash3 />
-                        </a>
-                      </div>
-                      <div className='d-flex flex-column bg-light-2 border-light rounded_4 p-2'>
-                        <div className='col-12'>{note.body}</div>
-                        {note.attachments?.length ? (
-                          <div className='text-12 mt-10'>
-                            <b>Attachments:</b>
-                            {note.attachments?.map((url) => (
-                              <a
-                                className='btn-link ml-10'
-                                href={url}
-                                target='_blank'
-                                download
-                              >
-                                Download
-                              </a>
-                            ))}
-                          </div>
-                        ) : (
-                          ''
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </>
-                <h6 className='mt-20'>Add New</h6>
-                <div className='form-input my-2'>
-                  <textarea
-                    rows={4}
-                    value={note}
-                    onChange={(e) => setNote(e.target.value)}
-                  />
-                  <label className='lh-1 text-16 text-light-1'>Note Content</label>
-                </div>
-                <div className='col-12 mb-10'>
-                  {/* <label className='lh-1 text-16 text-light-1'>{key}</label>
+              </div>
+            </div>
+          ))}
+        </>
+        <h6 className='mt-20'>Add New</h6>
+        <div className='form-input my-2'>
+          <textarea
+            rows={4}
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+          />
+          <label className='lh-1 text-16 text-light-1'>Note Content</label>
+        </div>
+        <div className='col-12 mb-10'>
+          {/* <label className='lh-1 text-16 text-light-1'>{key}</label>
                   {previousSupportingDocReqs && (
                     <PreviousUploadPictures
                       data={[previousSupportingDocReqs[key]]}
@@ -464,61 +447,55 @@ const ViewVisaApplications = () => {
                       }}
                     />
                   )} */}
-                  <NewFileUploads multiple={true} setUploads={setNoteImage} />
-                </div>
-                <button
-                  onClick={submitNote}
-                  className='button h-40 px-24 -dark-1 bg-blue-1 text-white'
-                >
-                  Add Note
-                </button>
-                {/* Add Note */}
-                {client_id === 1 && (
-                  <>
-                    <h4 className='mt-10'>Update Status</h4>
-                    <div className='form-input-select mt-10'>
-                      <label>Status</label>
-                      <Select
-                        defaultValue={status}
-                        options={[
-                          'Pending',
-                          'Query',
-                          'Replied',
-                          'Processing',
-                          'Processed',
-                        ].map((el) => ({ label: el, value: el }))}
-                        value={status}
-                        onChange={(id) => setStatus(id)}
-                      />
-                    </div>
-                    <button
-                      onClick={async () => {
-                        if (status?.value) {
-                          const response = await createItem(
-                            'visa-applications/' + router.query.view + '/status',
-                            { status: status.value }
-                          );
-                          if (response?.success)
-                            sendToast('success', 'Status updated successfully', 4000);
-                        }
-                      }}
-                      className='button h-40 mt-10 px-24 -dark-1 bg-blue-1 text-white'
-                    >
-                      Update Status
-                    </button>
-                  </>
-                )}
-              </div>
-            </div>
-            <Footer />
-          </div>
-          {/* End .dashboard__content */}
+          <NewFileUploads multiple={true} setUploads={setNoteImage} />
         </div>
-        {/* End dashbaord content */}
+        <button
+          onClick={submitNote}
+          className='button h-40 px-24 -dark-1 bg-blue-1 text-white'
+        >
+          Add Note
+        </button>
+        {/* Add Note */}
+        {client_id === 1 && (
+          <>
+            <h4 className='mt-10'>Update Status</h4>
+            <div className='form-input-select mt-10'>
+              <label>Status</label>
+              <Select
+                defaultValue={status}
+                options={[
+                  'Pending',
+                  'Query',
+                  'Replied',
+                  'Processing',
+                  'Processed',
+                ].map((el) => ({ label: el, value: el }))}
+                value={status}
+                onChange={(id) => setStatus(id)}
+              />
+            </div>
+            <button
+              onClick={async () => {
+                if (status?.value) {
+                  const response = await createItem(
+                    'visa-applications/' + router.query.view + '/status',
+                    { status: status.value }
+                  );
+                  if (response?.success)
+                    sendToast('success', 'Status updated successfully', 4000);
+                }
+              }}
+              className='button h-40 mt-10 px-24 -dark-1 bg-blue-1 text-white'
+            >
+              Update Status
+            </button>
+          </>
+        )}
       </div>
-      {/* End dashbaord content */}
     </>
   );
 };
+
+ViewVisaApplications.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default ViewVisaApplications;

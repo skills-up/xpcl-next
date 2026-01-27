@@ -6,10 +6,8 @@ import { useSelector } from 'react-redux';
 import { deleteItem, getItem } from '../../../../api/xplorzApi';
 import Audit from '../../../../components/audits';
 import Seo from '../../../../components/common/Seo';
+import DashboardLayout from '../../../../components/layouts/DashboardLayout';
 import ConfirmationModal from '../../../../components/confirm-modal';
-import Footer from '../../../../components/footer/dashboard-footer';
-import Header from '../../../../components/header/dashboard-header';
-import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
 import ViewTable from '../../../../components/view-table';
 import { downloadApiPDF } from '../../../../utils/fileDownloader';
 import { filterAllowed, hasPermission } from '../../../../utils/permission-checker';
@@ -97,8 +95,8 @@ const ViewRefunds = () => {
         sendToast(
           'error',
           response.data?.message ||
-            response.data?.error ||
-            'Could Not Fetch The Requested Refund.'
+          response.data?.error ||
+          'Could Not Fetch The Requested Refund.'
         );
         router.push('/dashboard/refunds');
       }
@@ -118,8 +116,8 @@ const ViewRefunds = () => {
       sendToast(
         'error',
         response.data?.message ||
-          response.data?.error ||
-          'Unexpected Error Occurred While Trying to Delete this Refund',
+        response.data?.error ||
+        'Unexpected Error Occurred While Trying to Delete this Refund',
         4000
       );
     }
@@ -131,100 +129,78 @@ const ViewRefunds = () => {
       <Seo pageTitle='View Refund' />
       {/* End Page Title */}
 
-      <div className='header-margin'></div>
-
-      <Header />
-      {/* End dashboard-header */}
-
-      <div className='dashboard'>
-        <div className='dashboard__sidebar bg-white scroll-bar-1'>
-          <Sidebar />
-          {/* End sidebar */}
-        </div>
-        {/* End dashboard__sidebar */}
-
-        <div className='dashboard__main'>
-          <div className='dashboard__content d-flex flex-column justify-between bg-light-2'>
-            <div>
-              <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
-                <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>View Refund - {refund?.number}</h1>
-                  <div className='text-15 text-light-1'>
-                    Get extended details of a refund.
-                  </div>
-                </div>
-                {/* End .col-12 */}
-              </div>
-              {/* End .row */}
-
-              <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
-                {confirmDelete && (
-                  <ConfirmationModal
-                    onCancel={onCancel}
-                    onSubmit={onSubmit}
-                    title='Do you really want to delete this refund?'
-                    content='This will permanently delete the refund. Press OK to confirm.'
-                  />
-                )}
-                <ViewTable
-                  data={refund}
-                  onEdit={() =>
-                    router.push('/dashboard/refunds/edit/' + router.query.view)
-                  }
-                  onDelete={() => {
-                    setIdToDelete(router.query.view);
-                    setConfirmDelete(true);
-                  }}
-                  entitySlug={'refunds'}
-                  extraButtons={filterAllowed([
-                    {
-                      icon: <AiOutlinePrinter />,
-                      text: 'Print',
-                      onClick: async () => {
-                        downloadApiPDF(
-                          'refunds/' + router.query.view + '/pdf',
-                          `${refund?.number ?? 'Unkown'}.pdf`
-                        );
-                      },
-                      classNames: 'btn-info text-white',
-                      permissions: ['refunds.pdf'],
-                    },
-                  ])}
-                />
-                <hr className='my-4' />
-                {hasPermission('refunds.audit-trail') && (
-                  <div>
-                    <h2 className='mb-3 d-flex justify-between items-center'>
-                      <span>Audit Log</span>
-                      {auditExpanded ? (
-                        <BsDashSquare
-                          className='cursor-pointer text-blue-1'
-                          onClick={() => setAuditExpanded((prev) => !prev)}
-                        />
-                      ) : (
-                        <BsPlusSquare
-                          className='cursor-pointer text-blue-1'
-                          onClick={() => setAuditExpanded((prev) => !prev)}
-                        />
-                      )}
-                    </h2>
-                    {auditExpanded && (
-                      <Audit url={'refunds/' + router.query.view + '/audit-trail'} />
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <Footer />
+      <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
+        <div className='col-12'>
+          <h1 className='text-30 lh-14 fw-600'>View Refund - {refund?.number}</h1>
+          <div className='text-15 text-light-1'>
+            Get extended details of a refund.
           </div>
-          {/* End .dashboard__content */}
         </div>
-        {/* End dashbaord content */}
+        {/* End .col-12 */}
       </div>
-      {/* End dashbaord content */}
+      {/* End .row */}
+
+      <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
+        {confirmDelete && (
+          <ConfirmationModal
+            onCancel={onCancel}
+            onSubmit={onSubmit}
+            title='Do you really want to delete this refund?'
+            content='This will permanently delete the refund. Press OK to confirm.'
+          />
+        )}
+        <ViewTable
+          data={refund}
+          onEdit={() =>
+            router.push('/dashboard/refunds/edit/' + router.query.view)
+          }
+          onDelete={() => {
+            setIdToDelete(router.query.view);
+            setConfirmDelete(true);
+          }}
+          entitySlug={'refunds'}
+          extraButtons={filterAllowed([
+            {
+              icon: <AiOutlinePrinter />,
+              text: 'Print',
+              onClick: async () => {
+                downloadApiPDF(
+                  'refunds/' + router.query.view + '/pdf',
+                  `${refund?.number ?? 'Unkown'}.pdf`
+                );
+              },
+              classNames: 'btn-info text-white',
+              permissions: ['refunds.pdf'],
+            },
+          ])}
+        />
+        <hr className='my-4' />
+        {hasPermission('refunds.audit-trail') && (
+          <div>
+            <h2 className='mb-3 d-flex justify-between items-center'>
+              <span>Audit Log</span>
+              {auditExpanded ? (
+                <BsDashSquare
+                  className='cursor-pointer text-blue-1'
+                  onClick={() => setAuditExpanded((prev) => !prev)}
+                />
+              ) : (
+                <BsPlusSquare
+                  className='cursor-pointer text-blue-1'
+                  onClick={() => setAuditExpanded((prev) => !prev)}
+                />
+              )}
+            </h2>
+            {auditExpanded && (
+              <Audit url={'refunds/' + router.query.view + '/audit-trail'} />
+            )}
+          </div>
+        )}
+      </div>
     </>
   );
 };
+
+ViewRefunds.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default ViewRefunds;

@@ -9,11 +9,9 @@ import { useSelector } from 'react-redux';
 import { deleteItem, getItem } from '../../../../api/xplorzApi';
 import Audit from '../../../../components/audits';
 import Seo from '../../../../components/common/Seo';
+import DashboardLayout from '../../../../components/layouts/DashboardLayout';
 import ConfirmationModal from '../../../../components/confirm-modal';
 import Datatable from '../../../../components/datatable/Datatable';
-import Footer from '../../../../components/footer/dashboard-footer';
-import Header from '../../../../components/header/dashboard-header';
-import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
 import ViewTable from '../../../../components/view-table';
 import { downloadApiPDF } from '../../../../utils/fileDownloader';
 import { filterAllowed, hasPermission } from '../../../../utils/permission-checker';
@@ -259,141 +257,119 @@ const ViewBooking = () => {
       <Seo pageTitle='View Invoice' />
       {/* End Page Title */}
 
-      <div className='header-margin'></div>
-
-      <Header />
-      {/* End dashboard-header */}
-
-      <div className='dashboard'>
-        <div className='dashboard__sidebar bg-white scroll-bar-1'>
-          <Sidebar />
-          {/* End sidebar */}
-        </div>
-        {/* End dashboard__sidebar */}
-
-        <div className='dashboard__main'>
-          <div className='dashboard__content d-flex flex-column justify-between bg-light-2'>
-            <div>
-              <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
-                <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>
-                    View Invoice - {booking?.number}
-                  </h1>
-                  <div className='text-15 text-light-1'>
-                    Get extended details of an invoice.
-                  </div>
-                </div>
-                {/* End .col-12 */}
-              </div>
-              {/* End .row */}
-
-              <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
-                {confirmDelete && (
-                  <ConfirmationModal
-                    onCancel={onCancel}
-                    onSubmit={onSubmit}
-                    title='Do you really want to delete this invoice?'
-                    content='This will permanently delete the invoice. Press OK to confirm.'
-                  />
-                )}
-                <ViewTable
-                  data={booking}
-                  onEdit={() =>
-                    router.push('/dashboard/bookings/edit/' + router.query.view)
-                  }
-                  onDelete={() => {
-                    setIdToDelete(router.query.view);
-                    setConfirmDelete(true);
-                  }}
-                  entitySlug={'bookings'}
-                  extraButtons={filterAllowed([
-                    {
-                      icon: <HiRefresh />,
-                      text: 'Reissue',
-                      onClick: () =>
-                        router.push('/dashboard/bookings/reissue/' + router.query.view),
-                      classNames: 'btn-success',
-                      permissions: ['bookings.reissue'],
-                    },
-                    {
-                      icon: <RiRefund2Fill />,
-                      text: 'Refund',
-                      onClick: () =>
-                        router.push({
-                          pathname: '/dashboard/refunds/add-new',
-                          query: { booking_id: router.query.view },
-                        }),
-                      style: { backgroundColor: 'brown', color: 'white' },
-                      permissions: ['refunds.store'],
-                    },
-                    {
-                      icon: <ImPagebreak />,
-                      text: 'Partial Refund',
-                      onClick: () =>
-                        router.push({
-                          pathname: '/dashboard/partial-refunds/add-new',
-                          query: { booking_id: router.query.view },
-                        }),
-                      style: { backgroundColor: 'orange' },
-                      permissions: ['partial-refunds.store'],
-                    },
-                    {
-                      icon: <AiOutlinePrinter />,
-                      text: 'Print',
-                      onClick: async () => {
-                        downloadApiPDF(
-                          'bookings/' + router.query.view + '/pdf',
-                          `${booking?.number ?? 'Unkown'}.pdf`
-                        );
-                      },
-                      classNames: 'btn-info text-white',
-                      permissions: ['bookings.pdf'],
-                    },
-                  ])}
-                />
-                {bookingSectors && (
-                  <>
-                    <hr className='my-4' />
-                    <div>
-                      <h2 className='mb-3'>Booking Sectors</h2>
-                      <Datatable columns={columns} data={bookingSectors} />
-                    </div>
-                  </>
-                )}
-                <hr className='my-4' />
-                {hasPermission('bookings.audit-trail') && (
-                  <div>
-                    <h2 className='mb-3 d-flex justify-between items-center'>
-                      <span>Audit Log</span>
-                      {auditExpanded ? (
-                        <BsDashSquare
-                          className='cursor-pointer text-blue-1'
-                          onClick={() => setAuditExpanded((prev) => !prev)}
-                        />
-                      ) : (
-                        <BsPlusSquare
-                          className='cursor-pointer text-blue-1'
-                          onClick={() => setAuditExpanded((prev) => !prev)}
-                        />
-                      )}
-                    </h2>
-                    {auditExpanded && (
-                      <Audit url={'bookings/' + router.query.view + '/audit-trail'} />
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <Footer />
+      <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
+        <div className='col-12'>
+          <h1 className='text-30 lh-14 fw-600'>
+            View Invoice - {booking?.number}
+          </h1>
+          <div className='text-15 text-light-1'>
+            Get extended details of an invoice.
           </div>
-          {/* End .dashboard__content */}
         </div>
-        {/* End dashbaord content */}
+        {/* End .col-12 */}
       </div>
-      {/* End dashbaord content */}
+      {/* End .row */}
+
+      <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
+        {confirmDelete && (
+          <ConfirmationModal
+            onCancel={onCancel}
+            onSubmit={onSubmit}
+            title='Do you really want to delete this invoice?'
+            content='This will permanently delete the invoice. Press OK to confirm.'
+          />
+        )}
+        <ViewTable
+          data={booking}
+          onEdit={() =>
+            router.push('/dashboard/bookings/edit/' + router.query.view)
+          }
+          onDelete={() => {
+            setIdToDelete(router.query.view);
+            setConfirmDelete(true);
+          }}
+          entitySlug={'bookings'}
+          extraButtons={filterAllowed([
+            {
+              icon: <HiRefresh />,
+              text: 'Reissue',
+              onClick: () =>
+                router.push('/dashboard/bookings/reissue/' + router.query.view),
+              classNames: 'btn-success',
+              permissions: ['bookings.reissue'],
+            },
+            {
+              icon: <RiRefund2Fill />,
+              text: 'Refund',
+              onClick: () =>
+                router.push({
+                  pathname: '/dashboard/refunds/add-new',
+                  query: { booking_id: router.query.view },
+                }),
+              style: { backgroundColor: 'brown', color: 'white' },
+              permissions: ['refunds.store'],
+            },
+            {
+              icon: <ImPagebreak />,
+              text: 'Partial Refund',
+              onClick: () =>
+                router.push({
+                  pathname: '/dashboard/partial-refunds/add-new',
+                  query: { booking_id: router.query.view },
+                }),
+              style: { backgroundColor: 'orange' },
+              permissions: ['partial-refunds.store'],
+            },
+            {
+              icon: <AiOutlinePrinter />,
+              text: 'Print',
+              onClick: async () => {
+                downloadApiPDF(
+                  'bookings/' + router.query.view + '/pdf',
+                  `${booking?.number ?? 'Unkown'}.pdf`
+                );
+              },
+              classNames: 'btn-info text-white',
+              permissions: ['bookings.pdf'],
+            },
+          ])}
+        />
+        {bookingSectors && (
+          <>
+            <hr className='my-4' />
+            <div>
+              <h2 className='mb-3'>Booking Sectors</h2>
+              <Datatable columns={columns} data={bookingSectors} />
+            </div>
+          </>
+        )}
+        <hr className='my-4' />
+        {hasPermission('bookings.audit-trail') && (
+          <div>
+            <h2 className='mb-3 d-flex justify-between items-center'>
+              <span>Audit Log</span>
+              {auditExpanded ? (
+                <BsDashSquare
+                  className='cursor-pointer text-blue-1'
+                  onClick={() => setAuditExpanded((prev) => !prev)}
+                />
+              ) : (
+                <BsPlusSquare
+                  className='cursor-pointer text-blue-1'
+                  onClick={() => setAuditExpanded((prev) => !prev)}
+                />
+              )}
+            </h2>
+            {auditExpanded && (
+              <Audit url={'bookings/' + router.query.view + '/audit-trail'} />
+            )}
+          </div>
+        )}
+      </div>
     </>
   );
 };
+
+ViewBooking.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default ViewBooking;

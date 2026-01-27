@@ -48,12 +48,15 @@ export default function App({ Component, pageProps }) {
     };
   }, [router]);
 
+  // Support per-page layouts
+  const getLayout = Component.getLayout || ((page) => page);
+
   return (
     <main>
       <Provider store={store}>
         <PersistGate persistor={persistor}>
           <ToastContainer />
-          <Component {...pageProps} />
+          {getLayout(<Component {...pageProps} />)}
           <SrollTop />
         </PersistGate>
       </Provider>
