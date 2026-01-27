@@ -3,11 +3,9 @@ import { Fragment, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { createItem, getItem, getList } from '../../../../api/xplorzApi';
 import Seo from '../../../../components/common/Seo';
-import Footer from '../../../../components/footer/dashboard-footer';
-import Header from '../../../../components/header/dashboard-header';
+import DashboardLayout from '../../../../components/layouts/DashboardLayout';
 import NewFileUploads from '../../../../components/new-file-uploads';
 import PreviousUploadPictures from '../../../../components/previous-file-uploads';
-import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
 import { sendToast } from '../../../../utils/toastify';
 import { saveAs } from 'file-saver';
 
@@ -123,8 +121,8 @@ const UpdateVisaApplications = () => {
         sendToast(
           'error',
           response.data?.message ||
-            response.data?.error ||
-            'Unable to fetch required data',
+          response.data?.error ||
+          'Unable to fetch required data',
           4000
         );
         router.push('/dashboard/visa-applications');
@@ -202,203 +200,187 @@ const UpdateVisaApplications = () => {
       <Seo pageTitle='Update Visa Application' />
       {/* End Page Title */}
 
-      <div className='header-margin'></div>
-
-      <Header />
-      {/* End dashboard-header */}
-
-      <div className='dashboard'>
-        <div className='dashboard__sidebar bg-white scroll-bar-1'>
-          <Sidebar />
-          {/* End sidebar */}
+      <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
+        <div className='col-12'>
+          <h1 className='text-30 lh-14 fw-600'>Update Visa Application</h1>
+          <div className='text-15 text-light-1'>
+            Update an existing visa application.
+          </div>
         </div>
-        {/* End dashboard__sidebar */}
-
-        <div className='dashboard__main'>
-          <div className='dashboard__content d-flex flex-column justify-between bg-light-2'>
-            <div>
-              <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
-                <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Update Visa Application</h1>
-                  <div className='text-15 text-light-1'>
-                    Update an existing visa application.
-                  </div>
-                </div>
-                {/* End .col-12 */}
-              </div>
-              {/* End .row */}
-              <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
-                <div>
-                  <div className='row x-gap-20 y-gap-30 items-center'>
-                    {steps.map((step, index) => (
-                      <Fragment key={index}>
-                        <div className='col-auto'>
-                          <div
-                            className='d-flex items-center cursor-pointer transition'
-                            onClick={() => setCurrentStep(step)}
-                          >
-                            <div
-                              className={
-                                currentStep.step === step.step
-                                  ? 'active size-40 rounded-full flex-center bg-blue-1'
-                                  : 'size-40 rounded-full flex-center bg-blue-1-05 text-blue-1 fw-500'
-                              }
-                            >
-                              {currentStep.step === step.step ? (
-                                <>
-                                  <i className='icon-check text-16 text-white'></i>
-                                </>
-                              ) : (
-                                <>
-                                  <span>{step.step}</span>
-                                </>
-                              )}
-                            </div>
-
-                            <div className='text-15 fw-500 ml-10'> {step.name}</div>
-                          </div>
-                        </div>
-                        {/* End .col */}
-                        {index + 1 < steps.length && (
-                          <>
-                            <div className='col d-none d-sm-block'>
-                              <div className='w-full h-1 bg-border'></div>
-                            </div>
-                          </>
-                        )}
-                      </Fragment>
-                    ))}
-                  </div>
-                  <form
-                    onSubmit={onSubmit}
-                    className='row col-12 y-gap-20 mt-10 lg:mt-20'
+        {/* End .col-12 */}
+      </div>
+      {/* End .row */}
+      <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
+        <div className='row x-gap-20 y-gap-30 items-center'>
+          {steps.map((step, index) => (
+            <Fragment key={index}>
+              <div className='col-auto'>
+                <div
+                  className='d-flex items-center cursor-pointer transition'
+                  onClick={() => setCurrentStep(step)}
+                >
+                  <div
+                    className={
+                      currentStep.step === step.step
+                        ? 'active size-40 rounded-full flex-center bg-blue-1'
+                        : 'size-40 rounded-full flex-center bg-blue-1-05 text-blue-1 fw-500'
+                    }
                   >
-                    {/* Photo Sample Upload */}
-                    {currentStep?.step === 1 && (
-                      <div className='col-12'>
-                        <h3>Upload Traveller's Photo</h3>
-                        <label className='lh-1 text-16 text-light-1'>
-                          Traveller Photo
-                        </label>
-                        {previousPhotoSample && (
-                          <PreviousUploadPictures
-                            data={[previousPhotoSample]}
-                            onDeleteClick={() => {
-                              setPreviousPhotoSample('');
-                            }}
-                          />
-                        )}
-                        <NewFileUploads multiple={false} setUploads={setPhotoSample} />
-                      </div>
+                    {currentStep.step === step.step ? (
+                      <>
+                        <i className='icon-check text-16 text-white'></i>
+                      </>
+                    ) : (
+                      <>
+                        <span>{step.step}</span>
+                      </>
                     )}
-                    {/* Personal Docs */}
-                    {personalDocsReqs &&
-                      currentStep.name === 'Personal Required Documents' && (
-                        <div>
-                          <h3>Upload Personal Documents</h3>
-                          {Object.entries(personalDocsReqs).map(([key, value], index) => (
-                            <div className='col-12 mb-10'>
-                              <label className='lh-1 text-16 text-light-1'>{key}</label>
-                              {previousPersonalDocReqs && (
-                                <PreviousUploadPictures
-                                  data={[previousPersonalDocReqs[key]]}
-                                  onDeleteClick={() => {
-                                    setPreviousPersonalDocReqs((prev) => {
-                                      delete prev[key];
-                                      return { ...prev };
-                                    });
-                                  }}
-                                />
-                              )}
-                              <NewFileUploads
-                                multiple={false}
-                                setUploads={setPersonalDocsReqs}
-                                obj={key}
-                              />
-                            </div>
-                          ))}
-                        </div>
+                  </div>
+
+                  <div className='text-15 fw-500 ml-10'> {step.name}</div>
+                </div>
+              </div>
+              {/* End .col */}
+              {index + 1 < steps.length && (
+                <>
+                  <div className='col d-none d-sm-block'>
+                    <div className='w-full h-1 bg-border'></div>
+                  </div>
+                </>
+              )}
+            </Fragment>
+          ))}
+        </div>
+        <form
+          onSubmit={onSubmit}
+          className='row col-12 y-gap-20 mt-10 lg:mt-20'
+        >
+          {/* Photo Sample Upload */}
+          {currentStep?.step === 1 && (
+            <div className='col-12'>
+              <h3>Upload Traveller's Photo</h3>
+              <label className='lh-1 text-16 text-light-1'>
+                Traveller Photo
+              </label>
+              {previousPhotoSample && (
+                <PreviousUploadPictures
+                  data={[previousPhotoSample]}
+                  onDeleteClick={() => {
+                    setPreviousPhotoSample('');
+                  }}
+                />
+              )}
+              <NewFileUploads multiple={false} setUploads={setPhotoSample} />
+            </div>
+          )}
+          {/* Personal Docs */}
+          {personalDocsReqs &&
+            currentStep.name === 'Personal Required Documents' && (
+              <div>
+                <h3>Upload Personal Documents</h3>
+                {Object.entries(personalDocsReqs).map(([key, value], index) => (
+                  <div className='col-12 mb-10'>
+                    <label className='lh-1 text-16 text-light-1'>{key}</label>
+                    {previousPersonalDocReqs && (
+                      <PreviousUploadPictures
+                        data={[previousPersonalDocReqs[key]]}
+                        onDeleteClick={() => {
+                          setPreviousPersonalDocReqs((prev) => {
+                            delete prev[key];
+                            return { ...prev };
+                          });
+                        }}
+                      />
+                    )}
+                    <NewFileUploads
+                      multiple={false}
+                      setUploads={setPersonalDocsReqs}
+                      obj={key}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          {/* Supporting Docs */}
+          {supportingDocsReqs &&
+            currentStep.name === 'Supporting Required Documents' && (
+              <div>
+                <h3>Upload Supporting Documents</h3>
+                {Object.entries(supportingDocsReqs).map(
+                  ([key, value], index) => (
+                    <div className='col-12 mb-10'>
+                      <label className='lh-1 text-16 text-light-1'>{key}</label>
+                      {previousSupportingDocReqs && (
+                        <PreviousUploadPictures
+                          data={[previousSupportingDocReqs[key]]}
+                          onDeleteClick={() => {
+                            setPreviousSupportingDocReqs((prev) => {
+                              delete prev[key];
+                              return { ...prev };
+                            });
+                          }}
+                        />
                       )}
-                    {/* Supporting Docs */}
-                    {supportingDocsReqs &&
-                      currentStep.name === 'Supporting Required Documents' && (
-                        <div>
-                          <h3>Upload Supporting Documents</h3>
-                          {Object.entries(supportingDocsReqs).map(
-                            ([key, value], index) => (
-                              <div className='col-12 mb-10'>
-                                <label className='lh-1 text-16 text-light-1'>{key}</label>
-                                {previousSupportingDocReqs && (
-                                  <PreviousUploadPictures
-                                    data={[previousSupportingDocReqs[key]]}
-                                    onDeleteClick={() => {
-                                      setPreviousSupportingDocReqs((prev) => {
-                                        delete prev[key];
-                                        return { ...prev };
-                                      });
-                                    }}
-                                  />
-                                )}
-                                <NewFileUploads
-                                  multiple={false}
-                                  setUploads={setSupportingDocsReqs}
-                                  obj={key}
-                                />
-                              </div>
-                            )
-                          )}
-                        </div>
+                      <NewFileUploads
+                        multiple={false}
+                        setUploads={setSupportingDocsReqs}
+                        obj={key}
+                      />
+                    </div>
+                  )
+                )}
+              </div>
+            )}
+          {/* Financial Docs */}
+          {financialDocsReqs &&
+            currentStep.name === 'Financial Required Documents' && (
+              <div>
+                <h3>Upload Financial Documents</h3>
+                {Object.entries(financialDocsReqs).map(
+                  ([key, value], index) => (
+                    <div className='col-12 mb-10'>
+                      <label className='lh-1 text-16 text-light-1'>{key}</label>
+                      {previousFinancialDocReqs && (
+                        <PreviousUploadPictures
+                          data={[previousFinancialDocReqs[key]]}
+                          onDeleteClick={() => {
+                            setPreviousFinancialDocReqs((prev) => {
+                              delete prev[key];
+                              return { ...prev };
+                            });
+                          }}
+                        />
                       )}
-                    {/* Financial Docs */}
-                    {financialDocsReqs &&
-                      currentStep.name === 'Financial Required Documents' && (
-                        <div>
-                          <h3>Upload Financial Documents</h3>
-                          {Object.entries(financialDocsReqs).map(
-                            ([key, value], index) => (
-                              <div className='col-12 mb-10'>
-                                <label className='lh-1 text-16 text-light-1'>{key}</label>
-                                {previousFinancialDocReqs && (
-                                  <PreviousUploadPictures
-                                    data={[previousFinancialDocReqs[key]]}
-                                    onDeleteClick={() => {
-                                      setPreviousFinancialDocReqs((prev) => {
-                                        delete prev[key];
-                                        return { ...prev };
-                                      });
-                                    }}
-                                  />
-                                )}
-                                <NewFileUploads
-                                  multiple={false}
-                                  setUploads={setFinancialDocsReqs}
-                                  obj={key}
-                                />
-                              </div>
-                            )
-                          )}
-                        </div>
-                      )}
-                    {/* Visa Form Upload */}
-                    {currentStep.name === 'Visa Forms' && (
-                      <div>
-                        <h3>Upload Visa Forms</h3>
-                        <label>Visa Forms</label><br/>
-                        {visaFormUrls.map((url, idx) => (
-                          <a className='btn-link' href={url} key={`form-url-${idx}`} target='_blank' download>Download Form #{idx+1}</a>
-                        ))}
-                        {previousVisaFormFiles && (
-                          <PreviousUploadPictures
-                            data={previousVisaFormFiles}
-                            onDeleteClick={(element, index) => {
-                              setPreviousVisaFormFiles((prev) => {
-                                prev.splice(index, 1);
-                                return [...prev];
-                              });
-                            }}
-                          />
-                        )}
-                        {/* <button
+                      <NewFileUploads
+                        multiple={false}
+                        setUploads={setFinancialDocsReqs}
+                        obj={key}
+                      />
+                    </div>
+                  )
+                )}
+              </div>
+            )}
+          {/* Visa Form Upload */}
+          {currentStep.name === 'Visa Forms' && (
+            <div>
+              <h3>Upload Visa Forms</h3>
+              <label>Visa Forms</label><br />
+              {visaFormUrls.map((url, idx) => (
+                <a className='btn-link' href={url} key={`form-url-${idx}`} target='_blank' download>Download Form #{idx + 1}</a>
+              ))}
+              {previousVisaFormFiles && (
+                <PreviousUploadPictures
+                  data={previousVisaFormFiles}
+                  onDeleteClick={(element, index) => {
+                    setPreviousVisaFormFiles((prev) => {
+                      prev.splice(index, 1);
+                      return [...prev];
+                    });
+                  }}
+                />
+              )}
+              {/* <button
                           type='button'
                           onClick={() => {
                             for (let url of previousVisaFormFiles) {
@@ -407,67 +389,59 @@ const UpdateVisaApplications = () => {
                         >
                           Download
                         </button> */}
-                        <NewFileUploads multiple={true} setUploads={setVisaFormFiles} />
-                      </div>
-                    )}
-                    <div className='col-12 d-flex justify-between'>
-                      <div>
-                        {currentStep && currentStep.step !== 1 && (
-                          <button
-                            type='button'
-                            onClick={() =>
-                              setCurrentStep((prev) => {
-                                if (prev.step > 1) {
-                                  prev = steps[prev.step - 2];
-                                }
-                                return { ...prev };
-                              })
-                            }
-                            className='button h-50 px-24 -dark-1 bg-red-1 text-white'
-                          >
-                            Back
-                          </button>
-                        )}
-                      </div>
-                      {currentStep && currentStep.step < steps.length && (
-                        <button
-                          type='button'
-                          onClick={() =>
-                            setCurrentStep((prev) => {
-                              if (prev.step + 1 <= steps.length) {
-                                prev = steps[prev.step];
-                              }
-                              return { ...prev };
-                            })
-                          }
-                          className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
-                        >
-                          Next
-                        </button>
-                      )}
-                    </div>
-                    <div className='d-inline-block'>
-                      <button
-                        type='submit'
-                        className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
-                      >
-                        Update Visa Application
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              </div>
+              <NewFileUploads multiple={true} setUploads={setVisaFormFiles} />
             </div>
-
-            <Footer />
+          )}
+          <div className='col-12 d-flex justify-between'>
+            <div>
+              {currentStep && currentStep.step !== 1 && (
+                <button
+                  type='button'
+                  onClick={() =>
+                    setCurrentStep((prev) => {
+                      if (prev.step > 1) {
+                        prev = steps[prev.step - 2];
+                      }
+                      return { ...prev };
+                    })
+                  }
+                  className='button h-50 px-24 -dark-1 bg-red-1 text-white'
+                >
+                  Back
+                </button>
+              )}
+            </div>
+            {currentStep && currentStep.step < steps.length && (
+              <button
+                type='button'
+                onClick={() =>
+                  setCurrentStep((prev) => {
+                    if (prev.step + 1 <= steps.length) {
+                      prev = steps[prev.step];
+                    }
+                    return { ...prev };
+                  })
+                }
+                className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
+              >
+                Next
+              </button>
+            )}
           </div>
-          {/* End .dashboard__content */}
-        </div>
-        {/* End dashbaord content */}
+          <div className='d-inline-block'>
+            <button
+              type='submit'
+              className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
+            >
+              Update Visa Application
+            </button>
+          </div>
+        </form>
       </div>
-      {/* End dashbaord content */}
     </>
   );
 };
+
+UpdateVisaApplications.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default UpdateVisaApplications;

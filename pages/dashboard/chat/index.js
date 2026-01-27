@@ -4,9 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { customAPICall, getList } from '../../../api/xplorzApi';
 import Seo from '../../../components/common/Seo';
-import Footer from '../../../components/footer/dashboard-footer';
-import Header from '../../../components/header/dashboard-header';
-import Sidebar from '../../../components/sidebars/dashboard-sidebars';
+import DashboardLayout from '../../../components/layouts/DashboardLayout';
 import { sendToast } from '../../../utils/toastify';
 
 const ChatPage = () => {
@@ -423,190 +421,180 @@ const ChatPage = () => {
           text-decoration: underline;
         }
       `}</style>
-      <div className='header-margin'></div>
-      <Header />
 
-      <div className='dashboard'>
-        <div className='dashboard__sidebar bg-white scroll-bar-1'>
-          <Sidebar />
+      <div className='dashboard__content d-flex flex-column bg-light-2' style={{ minHeight: '100vh' }}>
+        <div className='row y-gap-20 justify-between items-end pb-20'>
+          <div className='col-12'>
+            <h1 className='text-30 lh-14 fw-600'>Xplorz Assist</h1>
+            <div className='text-15 text-light-1'>
+              Your AI-powered travel assistant
+            </div>
+          </div>
         </div>
 
-        <div className='dashboard__main'>
-          <div className='dashboard__content d-flex flex-column bg-light-2' style={{ minHeight: '100vh' }}>
-            <div className='row y-gap-20 justify-between items-end pb-20'>
-              <div className='col-12'>
-                <h1 className='text-30 lh-14 fw-600'>Xplorz Assist</h1>
-                <div className='text-15 text-light-1'>
-                  Your AI-powered travel assistant
-                </div>
-              </div>
+        {/* Chat Container */}
+        <div className='py-20 px-30 rounded-4 bg-white shadow-3' style={styles.chatContainer}>
+          {/* Traveller Selection */}
+          <div className='row x-gap-10 y-gap-10 pb-20 border-bottom-light'>
+            <div className='col-md-4'>
+              <label className='text-15 fw-500 mb-5'>Client Organization</label>
+              <Select
+                options={clientOrgs}
+                value={clientID}
+                onChange={(id) => {
+                  setClientID(id);
+                  handleNewConversation();
+                }}
+                placeholder='Select Client'
+                isClearable
+              />
             </div>
+            <div className='col-md-4'>
+              <label className='text-15 fw-500 mb-5'>Traveller</label>
+              <Select
+                options={clientTravellers}
+                value={selectedTraveller}
+                onChange={(id) => {
+                  setSelectedTraveller(id);
+                  handleNewConversation();
+                }}
+                placeholder='Select Traveller'
+                isDisabled={!clientID?.value}
+                isClearable
+              />
+            </div>
+            <div className='col-md-4 d-flex items-end'>
+              <button
+                className='button p-2 -dark-1 bg-blue-1 text-white h-50'
+                onClick={handleNewConversation}
+                disabled={!selectedTraveller?.value}
+              >
+                New Conversation
+              </button>
+            </div>
+          </div>
 
-            {/* Chat Container */}
-            <div className='py-20 px-30 rounded-4 bg-white shadow-3' style={styles.chatContainer}>
-              {/* Traveller Selection */}
-              <div className='row x-gap-10 y-gap-10 pb-20 border-bottom-light'>
-                <div className='col-md-4'>
-                  <label className='text-15 fw-500 mb-5'>Client Organization</label>
-                  <Select
-                    options={clientOrgs}
-                    value={clientID}
-                    onChange={(id) => {
-                      setClientID(id);
-                      handleNewConversation();
-                    }}
-                    placeholder='Select Client'
-                    isClearable
-                  />
-                </div>
-                <div className='col-md-4'>
-                  <label className='text-15 fw-500 mb-5'>Traveller</label>
-                  <Select
-                    options={clientTravellers}
-                    value={selectedTraveller}
-                    onChange={(id) => {
-                      setSelectedTraveller(id);
-                      handleNewConversation();
-                    }}
-                    placeholder='Select Traveller'
-                    isDisabled={!clientID?.value}
-                    isClearable
-                  />
-                </div>
-                <div className='col-md-4 d-flex items-end'>
-                  <button
-                    className='button p-2 -dark-1 bg-blue-1 text-white h-50'
-                    onClick={handleNewConversation}
-                    disabled={!selectedTraveller?.value}
-                  >
-                    New Conversation
-                  </button>
-                </div>
+          {/* Messages Area */}
+          <div className='py-20 scroll-bar-1' style={styles.messagesArea}>
+            {!selectedTraveller?.value ? (
+              <div style={styles.placeholder}>
+                <div className='text-60 mb-20'>💬</div>
+                <p className='text-18 fw-500 text-dark-1'>Select a traveller to start chatting</p>
+                <p className='text-15 text-light-1'>
+                  Choose a client organization and traveller from the dropdowns above
+                </p>
               </div>
-
-              {/* Messages Area */}
-              <div className='py-20 scroll-bar-1' style={styles.messagesArea}>
-                {!selectedTraveller?.value ? (
-                  <div style={styles.placeholder}>
-                    <div className='text-60 mb-20'>💬</div>
-                    <p className='text-18 fw-500 text-dark-1'>Select a traveller to start chatting</p>
-                    <p className='text-15 text-light-1'>
-                      Choose a client organization and traveller from the dropdowns above
-                    </p>
-                  </div>
-                ) : messages.length === 0 ? (
-                  <div style={styles.placeholder}>
-                    <div className='text-60 mb-20'>🌍</div>
-                    <p className='text-18 fw-500 text-dark-1'>Welcome to Xplorz Assist!</p>
-                    <p className='text-15 text-light-1'>
-                      Ask me anything about flights, hotels, or travel planning for {selectedTraveller.label}
-                    </p>
-                  </div>
-                ) : (
-                  <>
-                    {messages.map((msg, index) => (
+            ) : messages.length === 0 ? (
+              <div style={styles.placeholder}>
+                <div className='text-60 mb-20'>🌍</div>
+                <p className='text-18 fw-500 text-dark-1'>Welcome to Xplorz Assist!</p>
+                <p className='text-15 text-light-1'>
+                  Ask me anything about flights, hotels, or travel planning for {selectedTraveller.label}
+                </p>
+              </div>
+            ) : (
+              <>
+                {messages.map((msg, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      ...styles.messageRow,
+                      ...(msg.role === 'user' ? styles.messageRowUser : styles.messageRowAssistant),
+                    }}
+                  >
+                    <div
+                      style={{
+                        ...styles.avatar,
+                        ...(msg.role === 'user' ? styles.avatarUser : styles.avatarAssistant),
+                      }}
+                    >
+                      {msg.role === 'user' ? '👤' : '🤖'}
+                    </div>
+                    <div className='d-flex flex-column gap-1'>
                       <div
-                        key={index}
                         style={{
-                          ...styles.messageRow,
-                          ...(msg.role === 'user' ? styles.messageRowUser : styles.messageRowAssistant),
+                          ...styles.messageBubble,
+                          ...(msg.role === 'user' ? styles.messageBubbleUser : styles.messageBubbleAssistant),
+                          ...(msg.isError ? styles.messageBubbleError : {}),
                         }}
                       >
-                        <div
-                          style={{
-                            ...styles.avatar,
-                            ...(msg.role === 'user' ? styles.avatarUser : styles.avatarAssistant),
-                          }}
-                        >
-                          {msg.role === 'user' ? '👤' : '🤖'}
-                        </div>
-                        <div className='d-flex flex-column gap-1'>
-                          <div
-                            style={{
-                              ...styles.messageBubble,
-                              ...(msg.role === 'user' ? styles.messageBubbleUser : styles.messageBubbleAssistant),
-                              ...(msg.isError ? styles.messageBubbleError : {}),
-                            }}
-                          >
-                            {msg.role === 'assistant' ? (
-                              <div className='markdown-content'>
-                                <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
-                              </div>
-                            ) : (
-                              msg.content
-                            )}
+                        {msg.role === 'assistant' ? (
+                          <div className='markdown-content'>
+                            <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
                           </div>
-                          <div
-                            style={{
-                              ...styles.messageTime,
-                              textAlign: msg.role === 'user' ? 'right' : 'left',
-                            }}
-                          >
-                            {new Date(msg.timestamp).toLocaleTimeString([], {
-                              hour: '2-digit',
-                              minute: '2-digit',
-                            })}
-                          </div>
-                        </div>
+                        ) : (
+                          msg.content
+                        )}
                       </div>
-                    ))}
-                    {isLoading && (
-                      <div style={{ ...styles.messageRow, ...styles.messageRowAssistant }}>
-                        <div style={{ ...styles.avatar, ...styles.avatarAssistant }}>🤖</div>
-                        <div
-                          className='d-flex gap-1 items-center'
-                          style={{ ...styles.messageBubble, ...styles.messageBubbleAssistant }}
-                        >
-                          <span style={{ ...styles.typingDot, animationDelay: '0s' }}></span>
-                          <span style={{ ...styles.typingDot, animationDelay: '0.2s' }}></span>
-                          <span style={{ ...styles.typingDot, animationDelay: '0.4s' }}></span>
-                        </div>
+                      <div
+                        style={{
+                          ...styles.messageTime,
+                          textAlign: msg.role === 'user' ? 'right' : 'left',
+                        }}
+                      >
+                        {new Date(msg.timestamp).toLocaleTimeString([], {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })}
                       </div>
-                    )}
-                    <div ref={messagesEndRef} />
-                  </>
+                    </div>
+                  </div>
+                ))}
+                {isLoading && (
+                  <div style={{ ...styles.messageRow, ...styles.messageRowAssistant }}>
+                    <div style={{ ...styles.avatar, ...styles.avatarAssistant }}>🤖</div>
+                    <div
+                      className='d-flex gap-1 items-center'
+                      style={{ ...styles.messageBubble, ...styles.messageBubbleAssistant }}
+                    >
+                      <span style={{ ...styles.typingDot, animationDelay: '0s' }}></span>
+                      <span style={{ ...styles.typingDot, animationDelay: '0.2s' }}></span>
+                      <span style={{ ...styles.typingDot, animationDelay: '0.4s' }}></span>
+                    </div>
+                  </div>
                 )}
-              </div>
+                <div ref={messagesEndRef} />
+              </>
+            )}
+          </div>
 
-              {/* Input Area */}
-              <div className='pt-20 border-top-light' style={styles.inputContainer}>
-                <textarea
-                  ref={inputRef}
-                  className='chat-input'
-                  style={styles.textInput}
-                  placeholder={
-                    selectedTraveller?.value
-                      ? 'Type your message...'
-                      : 'Select a traveller to start chatting'
-                  }
-                  value={inputMessage}
-                  onChange={(e) => setInputMessage(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  disabled={!selectedTraveller?.value || isLoading}
-                  rows={1}
-                />
-                <button
-                  className='send-btn'
-                  style={{
-                    ...styles.sendButton,
-                    ...(!inputMessage.trim() || !selectedTraveller?.value || isLoading
-                      ? styles.sendButtonDisabled
-                      : {}),
-                  }}
-                  onClick={handleSendMessage}
-                  disabled={!inputMessage.trim() || !selectedTraveller?.value || isLoading}
-                >
-                  {isLoading ? '⏳' : '➤'}
-                </button>
-              </div>
-            </div>
-
-            <Footer />
+          {/* Input Area */}
+          <div className='pt-20 border-top-light' style={styles.inputContainer}>
+            <textarea
+              ref={inputRef}
+              className='chat-input'
+              style={styles.textInput}
+              placeholder={
+                selectedTraveller?.value
+                  ? 'Type your message...'
+                  : 'Select a traveller to start chatting'
+              }
+              value={inputMessage}
+              onChange={(e) => setInputMessage(e.target.value)}
+              onKeyDown={handleKeyDown}
+              disabled={!selectedTraveller?.value || isLoading}
+              rows={1}
+            />
+            <button
+              className='send-btn'
+              style={{
+                ...styles.sendButton,
+                ...(!inputMessage.trim() || !selectedTraveller?.value || isLoading
+                  ? styles.sendButtonDisabled
+                  : {}),
+              }}
+              onClick={handleSendMessage}
+              disabled={!inputMessage.trim() || !selectedTraveller?.value || isLoading}
+            >
+              {isLoading ? '⏳' : '➤'}
+            </button>
           </div>
         </div>
       </div>
     </>
   );
 };
+
+ChatPage.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default ChatPage;

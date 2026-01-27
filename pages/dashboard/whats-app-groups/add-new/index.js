@@ -5,9 +5,7 @@ import Select from 'react-select';
 import ReactSwitch from 'react-switch';
 import { createItem, getList } from '../../../../api/xplorzApi';
 import Seo from '../../../../components/common/Seo';
-import Footer from '../../../../components/footer/dashboard-footer';
-import Header from '../../../../components/header/dashboard-header';
-import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
+import DashboardLayout from '../../../../components/layouts/DashboardLayout';
 import { sendToast } from '../../../../utils/toastify';
 
 const groupForOptions = [
@@ -21,6 +19,12 @@ const fareTypeOptions = [
   { value: 'both', label: 'Both' },
 ];
 
+const insurancePlanOptions = [
+  { value: 'Platinum', label: 'Platinum' },
+  { value: 'Gold', label: 'Gold' },
+  { value: 'Silver', label: 'Silver' },
+];
+
 const AddNewWhatsAppGroup = () => {
   const [name, setName] = useState('');
   const [groupFor, setGroupFor] = useState(groupForOptions[0]);
@@ -31,6 +35,7 @@ const AddNewWhatsAppGroup = () => {
   const [phoneInput, setPhoneInput] = useState('');
   const [isPersonal, setIsPersonal] = useState(false);
   const [fareType, setFareType] = useState(fareTypeOptions[0]);
+  const [insurancePlanType, setInsurancePlanType] = useState(insurancePlanOptions[0]);
   const [flexFareMarkupPct, setFlexFareMarkupPct] = useState(0);
   const [hotelMarkupPct, setHotelMarkupPct] = useState(0);
 
@@ -133,6 +138,7 @@ const AddNewWhatsAppGroup = () => {
       phone_numbers: cleanedNumbers,
       is_personal: isPersonal,
       fare_type: fareType.value,
+      insurance_plan_type: insurancePlanType.value,
       flex_fare_markup_pct: flexFareMarkupPct,
       hotel_markup_pct: hotelMarkupPct,
     });
@@ -216,184 +222,174 @@ const AddNewWhatsAppGroup = () => {
       <Seo pageTitle='Add New WhatsApp Group' />
       {/* End Page Title */}
 
-      <div className='header-margin'></div>
-
-      <Header />
-      {/* End dashboard-header */}
-
-      <div className='dashboard'>
-        <div className='dashboard__sidebar bg-white scroll-bar-1'>
-          <Sidebar />
-          {/* End sidebar */}
+      <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
+        <div className='col-12'>
+          <h1 className='text-30 lh-14 fw-600'>Add New WhatsApp Group</h1>
+          <div className='text-15 text-light-1'>
+            Create a new WhatsApp group for travellers or organizations.
+          </div>
         </div>
-        {/* End dashboard__sidebar */}
+        {/* End .col-12 */}
+      </div>
+      {/* End .row */}
 
-        <div className='dashboard__main'>
-          <div className='dashboard__content d-flex flex-column justify-between bg-light-2'>
-            <div>
-              <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
-                <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Add New WhatsApp Group</h1>
-                  <div className='text-15 text-light-1'>
-                    Create a new WhatsApp group for travellers or organizations.
-                  </div>
-                </div>
-                {/* End .col-12 */}
-              </div>
-              {/* End .row */}
-
-              <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
-                <div>
-                  <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
-                    <div className='col-12'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setName(e.target.value)}
-                          value={name}
-                          placeholder=' '
-                          type='text'
-                          required
-                          maxLength={128}
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Name<span className='text-danger'>*</span>
-                        </label>
-                      </div>
-                    </div>
-                    <div className='form-input-select col-12 col-lg-6'>
-                      <label>
-                        Select Group For<span className='text-danger'>*</span>
-                      </label>
-                      <Select
-                        options={groupForOptions}
-                        value={groupFor}
-                        placeholder='Search & Select Group For (required)'
-                        onChange={(value) => {
-                          setGroupFor(value);
-                          setGroupableIds([]);
-                        }}
-                      />
-                    </div>
-                    <div className='form-input-select col-12 col-lg-6'>
-                      <label>
-                        Select {groupFor?.value || 'Group For first'}<span className='text-danger'>*</span>
-                      </label>
-                      <Select
-                        isMulti
-                        options={currentGroupableOptions}
-                        value={groupableIds}
-                        placeholder={
-                          groupFor?.value === 'traveller'
-                            ? 'Search & Select Travellers (required)'
-                            : 'Search & Select Organizations (required)'
-                        }
-                        onChange={handleGroupableIdChange}
-                      />
-                    </div>
-                    <div className='col-12'>
-                      <label className='lh-1 text-16 text-light-1 mb-2 d-block'>
-                        Phone Numbers<span className='text-danger'>*</span>
-                      </label>
-                      <textarea
-                        className='form-control'
-                        rows={3}
-                        placeholder='Enter 12 digit phone numbers separated by commas'
-                        value={phoneInput}
-                        onChange={(e) => handlePhoneInputChange(e.target.value)}
-                      />
-                      <div className='d-flex flex-wrap gap-2 mt-2'>
-                        {phoneNumbers.map((phone) => (
-                          <span
-                            key={phone}
-                            className='d-inline-flex align-items-center gap-2 px-3 py-2 rounded-4 bg-light'
-                          >
-                            {phone}
-                            <button
-                              type='button'
-                              className='btn btn-sm btn-light border-0 p-0 m-0 lh-1'
-                              onClick={() => handleRemovePhoneNumber(phone)}
-                              aria-label={`Remove ${phone}`}
-                            >
-                              ×
-                            </button>
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                    <div className='d-flex items-center gap-3 mb-3'>
-                      <ReactSwitch
-                        onChange={() => setIsPersonal((prev) => !prev)}
-                        checked={isPersonal}
-                      />
-                      <label>Is Personal</label>
-                    </div>
-
-                    <div className='col-12 col-lg-4'>
-                      <div className='form-input-select'>
-                        <label>
-                          Fare Type<span className='text-danger'>*</span>
-                        </label>
-                        <Select
-                          options={fareTypeOptions}
-                          value={fareType}
-                          onChange={(value) => setFareType(value)}
-                        />
-                      </div>
-                    </div>
-                    <div className='col-12 col-lg-4'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setFlexFareMarkupPct(e.target.value)}
-                          value={flexFareMarkupPct}
-                          placeholder=' '
-                          type='number'
-                          step='0.01'
-                          min='0'
-                          max='100'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Flex Fare Markup %
-                        </label>
-                      </div>
-                    </div>
-                    <div className='col-12 col-lg-4'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setHotelMarkupPct(e.target.value)}
-                          value={hotelMarkupPct}
-                          placeholder=' '
-                          type='number'
-                          step='0.01'
-                          min='0'
-                          max='100'
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Hotel Markup %
-                        </label>
-                      </div>
-                    </div>
-                    <div className='d-inline-block'>
-                      <button
-                        type='submit'
-                        className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
-                      >
-                        Add WhatsApp Group
-                      </button>
-                    </div>
-                  </form>
-                </div>
+      <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
+        <div>
+          <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
+            <div className='col-12'>
+              <div className='form-input'>
+                <input
+                  onChange={(e) => setName(e.target.value)}
+                  value={name}
+                  placeholder=' '
+                  type='text'
+                  required
+                  maxLength={128}
+                />
+                <label className='lh-1 text-16 text-light-1'>
+                  Name<span className='text-danger'>*</span>
+                </label>
               </div>
             </div>
+            <div className='form-input-select col-12 col-lg-6'>
+              <label>
+                Select Group For<span className='text-danger'>*</span>
+              </label>
+              <Select
+                options={groupForOptions}
+                value={groupFor}
+                placeholder='Search & Select Group For (required)'
+                onChange={(value) => {
+                  setGroupFor(value);
+                  setGroupableIds([]);
+                }}
+              />
+            </div>
+            <div className='form-input-select col-12 col-lg-6'>
+              <label>
+                Select {groupFor?.value || 'Group For first'}<span className='text-danger'>*</span>
+              </label>
+              <Select
+                isMulti
+                options={currentGroupableOptions}
+                value={groupableIds}
+                placeholder={
+                  groupFor?.value === 'traveller'
+                    ? 'Search & Select Travellers (required)'
+                    : 'Search & Select Organizations (required)'
+                }
+                onChange={handleGroupableIdChange}
+              />
+            </div>
+            <div className='col-12'>
+              <label className='lh-1 text-16 text-light-1 mb-2 d-block'>
+                Phone Numbers<span className='text-danger'>*</span>
+              </label>
+              <textarea
+                className='form-control'
+                rows={3}
+                placeholder='Enter 12 digit phone numbers separated by commas'
+                value={phoneInput}
+                onChange={(e) => handlePhoneInputChange(e.target.value)}
+              />
+              <div className='d-flex flex-wrap gap-2 mt-2'>
+                {phoneNumbers.map((phone) => (
+                  <span
+                    key={phone}
+                    className='d-inline-flex align-items-center gap-2 px-3 py-2 rounded-4 bg-light'
+                  >
+                    {phone}
+                    <button
+                      type='button'
+                      className='btn btn-sm btn-light border-0 p-0 m-0 lh-1'
+                      onClick={() => handleRemovePhoneNumber(phone)}
+                      aria-label={`Remove ${phone}`}
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className='d-flex items-center gap-3 mb-3'>
+              <ReactSwitch
+                onChange={() => setIsPersonal((prev) => !prev)}
+                checked={isPersonal}
+              />
+              <label>Is Personal</label>
+            </div>
 
-            <Footer />
-          </div>
-          {/* End .dashboard__content */}
+            <div className='col-12 col-lg-3'>
+              <div className='form-input-select'>
+                <label>
+                  Fare Type<span className='text-danger'>*</span>
+                </label>
+                <Select
+                  options={fareTypeOptions}
+                  value={fareType}
+                  onChange={(value) => setFareType(value)}
+                />
+              </div>
+            </div>
+            <div className='col-12 col-lg-3'>
+              <div className='form-input-select'>
+                <label>
+                  Insurance Plan Type<span className='text-danger'>*</span>
+                </label>
+                <Select
+                  options={insurancePlanOptions}
+                  value={insurancePlanType}
+                  onChange={(value) => setInsurancePlanType(value)}
+                />
+              </div>
+            </div>
+            <div className='col-12 col-lg-3'>
+              <div className='form-input'>
+                <input
+                  onChange={(e) => setFlexFareMarkupPct(e.target.value)}
+                  value={flexFareMarkupPct}
+                  placeholder=' '
+                  type='number'
+                  step='0.01'
+                  min='0'
+                  max='100'
+                />
+                <label className='lh-1 text-16 text-light-1'>
+                  Flex Fare Markup %
+                </label>
+              </div>
+            </div>
+            <div className='col-12 col-lg-3'>
+              <div className='form-input'>
+                <input
+                  onChange={(e) => setHotelMarkupPct(e.target.value)}
+                  value={hotelMarkupPct}
+                  placeholder=' '
+                  type='number'
+                  step='0.01'
+                  min='0'
+                  max='100'
+                />
+                <label className='lh-1 text-16 text-light-1'>
+                  Hotel Markup %
+                </label>
+              </div>
+            </div>
+            <div className='d-inline-block'>
+              <button
+                type='submit'
+                className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
+              >
+                Add WhatsApp Group
+              </button>
+            </div>
+          </form>
         </div>
-        {/* End dashbaord content */}
       </div>
-      {/* End dashbaord content */}
     </>
   );
 };
+
+AddNewWhatsAppGroup.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default AddNewWhatsAppGroup;

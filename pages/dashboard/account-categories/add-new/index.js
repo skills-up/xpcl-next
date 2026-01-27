@@ -1,7 +1,5 @@
 import Seo from '../../../../components/common/Seo';
-import Footer from '../../../../components/footer/dashboard-footer';
-import Header from '../../../../components/header/dashboard-header';
-import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
+import DashboardLayout from '../../../../components/layouts/DashboardLayout';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { sendToast } from '../../../../utils/toastify';
@@ -52,8 +50,8 @@ const AddNewAccountCategories = () => {
         sendToast(
           'error',
           response.data?.message ||
-            response.data?.error ||
-            'Failed to Create Account Category.',
+          response.data?.error ||
+          'Failed to Create Account Category.',
           4000
         );
       }
@@ -67,83 +65,61 @@ const AddNewAccountCategories = () => {
       <Seo pageTitle='Add New Account Category' />
       {/* End Page Title */}
 
-      <div className='header-margin'></div>
-
-      <Header />
-      {/* End dashboard-header */}
-
-      <div className='dashboard'>
-        <div className='dashboard__sidebar bg-white scroll-bar-1'>
-          <Sidebar />
-          {/* End sidebar */}
+      <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
+        <div className='col-12'>
+          <h1 className='text-30 lh-14 fw-600'>Add New Account Category</h1>
+          <div className='text-15 text-light-1'>
+            Create a new account category.
+          </div>
         </div>
-        {/* End dashboard__sidebar */}
+        {/* End .col-12 */}
+      </div>
+      {/* End .row */}
 
-        <div className='dashboard__main'>
-          <div className='dashboard__content d-flex flex-column justify-between bg-light-2'>
-            <div>
-              <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
-                <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Add New Account Category</h1>
-                  <div className='text-15 text-light-1'>
-                    Create a new account category.
-                  </div>
-                </div>
-                {/* End .col-12 */}
-              </div>
-              {/* End .row */}
-
-              <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
-                <div>
-                  <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
-                    <div className='form-input-select'>
-                      <label>
-                        Select Parent Category<span className='text-danger'>*</span>
-                      </label>
-                      <Select
-                        isClearable
-                        options={accountCategories}
-                        value={accountCategoryID}
-                        placeholder='Search & Select Parent Category (required)'
-                        onChange={(id) => setAccountCategoryID(id)}
-                      />
-                    </div>
-                    <div className='col-12'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setName(e.target.value)}
-                          value={name}
-                          placeholder=' '
-                          type='text'
-                          required
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Name<span className='text-danger'>*</span>
-                        </label>
-                      </div>
-                    </div>
-                    <div className='d-inline-block'>
-                      <button
-                        type='submit'
-                        className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
-                      >
-                        Add Account Category
-                      </button>
-                    </div>
-                  </form>
-                </div>
+      <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
+        <div>
+          <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
+            <div className='form-input-select'>
+              <label>
+                Select Parent Category<span className='text-danger'>*</span>
+              </label>
+              <Select
+                isClearable
+                options={accountCategories}
+                value={accountCategoryID}
+                placeholder='Search & Select Parent Category (required)'
+                onChange={(id) => setAccountCategoryID(id)}
+              />
+            </div>
+            <div className='col-12'>
+              <div className='form-input'>
+                <input
+                  onChange={(e) => setName(e.target.value)}
+                  value={name}
+                  placeholder=' '
+                  type='text'
+                  required
+                />
+                <label className='lh-1 text-16 text-light-1'>
+                  Name<span className='text-danger'>*</span>
+                </label>
               </div>
             </div>
-
-            <Footer />
-          </div>
-          {/* End .dashboard__content */}
+            <div className='d-inline-block'>
+              <button
+                type='submit'
+                className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
+              >
+                Add Account Category
+              </button>
+            </div>
+          </form>
         </div>
-        {/* End dashbaord content */}
       </div>
-      {/* End dashbaord content */}
     </>
   );
 };
+
+AddNewAccountCategories.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default AddNewAccountCategories;

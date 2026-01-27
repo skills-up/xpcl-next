@@ -5,9 +5,7 @@ import Select from 'react-select';
 import ReactSwitch from 'react-switch';
 import { createItem, getItem, getList } from '../../../../api/xplorzApi';
 import Seo from '../../../../components/common/Seo';
-import Footer from '../../../../components/footer/dashboard-footer';
-import Header from '../../../../components/header/dashboard-header';
-import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
+import DashboardLayout from '../../../../components/layouts/DashboardLayout';
 import { sendToast } from '../../../../utils/toastify';
 
 const AddNewOrganization = () => {
@@ -158,22 +156,7 @@ const AddNewOrganization = () => {
       <Seo pageTitle='Add New Organization' />
       {/* End Page Title */}
 
-      <div className='header-margin'></div>
-
-      <Header />
-      {/* End dashboard-header */}
-
-      <div className='dashboard'>
-        <div className='dashboard__sidebar bg-white scroll-bar-1'>
-          <Sidebar />
-          {/* End sidebar */}
-        </div>
-        {/* End dashboard__sidebar */}
-
-        <div className='dashboard__main'>
-          <div className='dashboard__content d-flex flex-column justify-between bg-light-2'>
-            <div>
-              <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
+      <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
                   <h1 className='text-30 lh-14 fw-600'>Add New Organization</h1>
                   <div className='text-15 text-light-1'>Create a new organization.</div>
@@ -344,18 +327,11 @@ const AddNewOrganization = () => {
                     </div>
                   </form>
                 </div>
-              </div>
-            </div>
-
-            <Footer />
-          </div>
-          {/* End .dashboard__content */}
-        </div>
-        {/* End dashbaord content */}
-      </div>
-      {/* End dashbaord content */}
-    </>
+                </div>
+                </>
   );
 };
+
+AddNewOrganization.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default AddNewOrganization;

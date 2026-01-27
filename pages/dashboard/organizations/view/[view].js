@@ -4,10 +4,8 @@ import { useSelector } from 'react-redux';
 import Select from 'react-select';
 import { deleteItem, getItem, getList, createItem } from '../../../../api/xplorzApi';
 import Seo from '../../../../components/common/Seo';
+import DashboardLayout from '../../../../components/layouts/DashboardLayout';
 import ConfirmationModal from '../../../../components/confirm-modal';
-import Footer from '../../../../components/footer/dashboard-footer';
-import Header from '../../../../components/header/dashboard-header';
-import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
 import ViewTable from '../../../../components/view-table';
 import { sendToast } from '../../../../utils/toastify';
 import { IoClose } from 'react-icons/io5';
@@ -192,22 +190,7 @@ const ViewOrganization = () => {
       <Seo pageTitle='View Organization' />
       {/* End Page Title */}
 
-      <div className='header-margin'></div>
-
-      <Header />
-      {/* End dashboard-header */}
-
-      <div className='dashboard'>
-        <div className='dashboard__sidebar bg-white scroll-bar-1'>
-          <Sidebar />
-          {/* End sidebar */}
-        </div>
-        {/* End dashboard__sidebar */}
-
-        <div className='dashboard__main'>
-          <div className='dashboard__content d-flex flex-column justify-between bg-light-2'>
-            <div>
-              <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
+      <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
                 <div className='col-12'>
                   <h1 className='text-30 lh-14 fw-600'>View Organization</h1>
                   <div className='text-15 text-light-1'>
@@ -264,17 +247,10 @@ const ViewOrganization = () => {
                   </div>
                 )}
               </div>
-            </div>
-
-            <Footer />
-          </div>
-          {/* End .dashboard__content */}
-        </div>
-        {/* End dashbaord content */}
-      </div>
-      {/* End dashbaord content */}
-    </>
+            </>
   );
 };
+
+ViewOrganization.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default ViewOrganization;

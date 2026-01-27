@@ -3,10 +3,8 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { deleteItem, getItem } from '../../../../api/xplorzApi';
 import Seo from '../../../../components/common/Seo';
+import DashboardLayout from '../../../../components/layouts/DashboardLayout';
 import ConfirmationModal from '../../../../components/confirm-modal';
-import Footer from '../../../../components/footer/dashboard-footer';
-import Header from '../../../../components/header/dashboard-header';
-import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
 import ViewTable from '../../../../components/view-table';
 import { sendToast } from '../../../../utils/toastify';
 import AirlineMarkups from './AirlineMarkups';
@@ -100,61 +98,46 @@ const ViewWhatsAppGroup = () => {
     <>
       <Seo pageTitle='View WhatsApp Group' />
 
-      <div className='header-margin'></div>
 
-      <Header />
-
-      <div className='dashboard'>
-        <div className='dashboard__sidebar bg-white scroll-bar-1'>
-          <Sidebar />
-        </div>
-
-        <div className='dashboard__main'>
-          <div className='dashboard__content d-flex flex-column justify-between bg-light-2'>
-            <div>
-              <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
-                <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>View WhatsApp Group</h1>
-                  <div className='text-15 text-light-1'>
-                    Get extended details of a WhatsApp group.
-                  </div>
-                </div>
-              </div>
-
-              <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
-                {confirmDelete && (
-                  <ConfirmationModal
-                    onCancel={onCancel}
-                    onSubmit={onSubmit}
-                    title='Do you really want to delete this WhatsApp Group?'
-                    content='This will permanently delete the WhatsApp group. Press OK to confirm.'
-                  />
-                )}
-                <ViewTable
-                  data={whatsAppGroup}
-                  onEdit={() =>
-                    router.push('/dashboard/whats-app-groups/edit/' + router.query.view)
-                  }
-                  onDelete={() => {
-                    setIdToDelete(router.query.view);
-                    setConfirmDelete(true);
-                  }}
-                  entitySlug={'whats-app-groups'}
-                />
-                <hr className='my-4' />
-                <div>
-                  <h2 className='mb-3'>Airline Markups</h2>
-                  <AirlineMarkups />
-                </div>
-              </div>
-            </div>
-
-            <Footer />
+      <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
+        <div className='col-12'>
+          <h1 className='text-30 lh-14 fw-600'>View WhatsApp Group</h1>
+          <div className='text-15 text-light-1'>
+            Get extended details of a WhatsApp group.
           </div>
+        </div>
+      </div>
+
+      <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
+        {confirmDelete && (
+          <ConfirmationModal
+            onCancel={onCancel}
+            onSubmit={onSubmit}
+            title='Do you really want to delete this WhatsApp Group?'
+            content='This will permanently delete the WhatsApp group. Press OK to confirm.'
+          />
+        )}
+        <ViewTable
+          data={whatsAppGroup}
+          onEdit={() =>
+            router.push('/dashboard/whats-app-groups/edit/' + router.query.view)
+          }
+          onDelete={() => {
+            setIdToDelete(router.query.view);
+            setConfirmDelete(true);
+          }}
+          entitySlug={'whats-app-groups'}
+        />
+        <hr className='my-4' />
+        <div>
+          <h2 className='mb-3'>Airline Markups</h2>
+          <AirlineMarkups />
         </div>
       </div>
     </>
   );
 };
+
+ViewWhatsAppGroup.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default ViewWhatsAppGroup;

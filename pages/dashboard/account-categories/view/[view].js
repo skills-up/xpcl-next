@@ -3,10 +3,8 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { deleteItem, getItem } from '../../../../api/xplorzApi';
 import Seo from '../../../../components/common/Seo';
+import DashboardLayout from '../../../../components/layouts/DashboardLayout';
 import ConfirmationModal from '../../../../components/confirm-modal';
-import Footer from '../../../../components/footer/dashboard-footer';
-import Header from '../../../../components/header/dashboard-header';
-import Sidebar from '../../../../components/sidebars/dashboard-sidebars';
 import ViewTable from '../../../../components/view-table';
 import { sendToast } from '../../../../utils/toastify';
 
@@ -102,8 +100,8 @@ const ViewAccountCategories = () => {
         sendToast(
           'error',
           response.data?.message ||
-            response.data?.error ||
-            'Could Not Fetch The Requested Account Category.'
+          response.data?.error ||
+          'Could Not Fetch The Requested Account Category.'
         );
         router.push('/dashboard/account-categories');
       }
@@ -123,8 +121,8 @@ const ViewAccountCategories = () => {
       sendToast(
         'error',
         response.data?.message ||
-          response.data?.error ||
-          'Unexpected Error Occurred While Trying to Delete this Account Category',
+        response.data?.error ||
+        'Unexpected Error Occurred While Trying to Delete this Account Category',
         4000
       );
     }
@@ -136,64 +134,42 @@ const ViewAccountCategories = () => {
       <Seo pageTitle='View Account Category' />
       {/* End Page Title */}
 
-      <div className='header-margin'></div>
-
-      <Header />
-      {/* End dashboard-header */}
-
-      <div className='dashboard'>
-        <div className='dashboard__sidebar bg-white scroll-bar-1'>
-          <Sidebar />
-          {/* End sidebar */}
-        </div>
-        {/* End dashboard__sidebar */}
-
-        <div className='dashboard__main'>
-          <div className='dashboard__content d-flex flex-column justify-between bg-light-2'>
-            <div>
-              <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
-                <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>View Account Category</h1>
-                  <div className='text-15 text-light-1'>
-                    Get extended details of an account category.
-                  </div>
-                </div>
-                {/* End .col-12 */}
-              </div>
-              {/* End .row */}
-
-              <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
-                {confirmDelete && (
-                  <ConfirmationModal
-                    onCancel={onCancel}
-                    onSubmit={onSubmit}
-                    title='Do you really want to delete this account category?'
-                    content='This will permanently delete the account category. Press OK to confirm.'
-                  />
-                )}
-                <ViewTable
-                  data={accountCategory}
-                  onEdit={() =>
-                    router.push('/dashboard/account-categories/edit/' + router.query.view)
-                  }
-                  onDelete={() => {
-                    setIdToDelete(router.query.view);
-                    setConfirmDelete(true);
-                  }}
-                  entitySlug={'account-categories'}
-                />
-              </div>
-            </div>
-
-            <Footer />
+      <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
+        <div className='col-12'>
+          <h1 className='text-30 lh-14 fw-600'>View Account Category</h1>
+          <div className='text-15 text-light-1'>
+            Get extended details of an account category.
           </div>
-          {/* End .dashboard__content */}
         </div>
-        {/* End dashbaord content */}
+        {/* End .col-12 */}
       </div>
-      {/* End dashbaord content */}
+      {/* End .row */}
+
+      <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
+        {confirmDelete && (
+          <ConfirmationModal
+            onCancel={onCancel}
+            onSubmit={onSubmit}
+            title='Do you really want to delete this account category?'
+            content='This will permanently delete the account category. Press OK to confirm.'
+          />
+        )}
+        <ViewTable
+          data={accountCategory}
+          onEdit={() =>
+            router.push('/dashboard/account-categories/edit/' + router.query.view)
+          }
+          onDelete={() => {
+            setIdToDelete(router.query.view);
+            setConfirmDelete(true);
+          }}
+          entitySlug={'account-categories'}
+        />
+      </div>
     </>
   );
 };
+
+ViewAccountCategories.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
 export default ViewAccountCategories;
