@@ -41,6 +41,10 @@ const WhatsAppGroups = () => {
       accessor: 'group_for',
     },
     {
+      Header: 'Insurance Plan',
+      accessor: 'insurance_plan_type',
+    },
+    {
       Header: 'Phone Numbers',
       accessor: 'phone_numbers',
       Cell: (data) => {
