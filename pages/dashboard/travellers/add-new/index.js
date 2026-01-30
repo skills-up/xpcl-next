@@ -57,6 +57,13 @@ const AddNewTravellers = () => {
   const [baseAirport, setBaseAirport] = useState(null);
   const [eaPhoneNumber, setEAPhoneNumber] = useState('');
 
+  const [nomineeName, setNomineeName] = useState('');
+  const [nomineeDOB, setNomineeDOB] = useState(null);
+  const [nomineeRelation, setNomineeRelation] = useState(null);
+  const [nomineeAddress, setNomineeAddress] = useState('');
+  const [appointeeName, setAppointeeName] = useState('');
+  const [appointeeAddress, setAppointeeAddress] = useState('');
+
   const [noBoardingPass, setNoBoardingPass] = useState(false);
 
   // Options
@@ -96,6 +103,36 @@ const AddNewTravellers = () => {
     { value: 'Refundable Fare', label: 'Refundable Fare' },
     { value: 'Non-Refundable Fare', label: 'Non-Refundable Fare' },
   ];
+  const nomineeRelationOptions = [
+    'Aunt',
+    'Brother',
+    'Brother in-Law',
+    'Daughter',
+    'Daughter in-Law',
+    'Employee',
+    'Employer',
+    'Friend',
+    'Father',
+    'Father in-Law',
+    'Grand Daughter',
+    'Grand Father (Maternal)',
+    'Grand Father (Paternal)',
+    'Grand Mother (Maternal)',
+    'Grand Mother (Paternal)',
+    'Grand Son',
+    'Legal Guardian',
+    'Legal Heir',
+    'Mother',
+    'Mother in-Law',
+    'Nephew',
+    'Niece',
+    'Sister',
+    'Sister in-Law',
+    'Son',
+    'Son in-Law',
+    'Spouse',
+    'Uncle',
+  ].map((el) => ({ label: el, value: el }));
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -225,6 +262,33 @@ const AddNewTravellers = () => {
     }
     for (let file of passportScanFiles)
       passportFormData.append('passport_scan_files[]', file);
+
+    // Nominee Details
+    if (nomineeName) {
+      if (!nomineeDOB || !nomineeRelation || !nomineeAddress) {
+        sendToast('error', 'Nominee DOB, Relation and Address are required if Nominee Name is provided', 4000);
+        return;
+      }
+      passportFormData.append('nominee_name', nomineeName);
+      passportFormData.append('nominee_dob', nomineeDOB.format('YYYY-MM-DD'));
+      passportFormData.append('nominee_relation', nomineeRelation.value);
+      passportFormData.append('nominee_address', nomineeAddress);
+
+      // Check if nominee is minor (18 years threshold)
+      const minorThreshold = new Date();
+      minorThreshold.setFullYear(minorThreshold.getFullYear() - 18);
+      if (nomineeDOB.toDate() > minorThreshold) {
+        if (!appointeeName || !appointeeAddress) {
+          sendToast('error', 'Appointee Name and Address are required as Nominee is a minor', 4000);
+          return;
+        }
+        passportFormData.append('appointee_name', appointeeName);
+        passportFormData.append('appointee_address', appointeeAddress);
+      } else {
+        if (appointeeName) passportFormData.append('appointee_name', appointeeName);
+        if (appointeeAddress) passportFormData.append('appointee_address', appointeeAddress);
+      }
+    }
 
     const response = await createItem('travellers', passportFormData);
     if (response?.success) {
@@ -763,6 +827,73 @@ const AddNewTravellers = () => {
                 multiple={false}
                 setUploads={setVaccinationCertificateFile}
               />
+            </div>
+            <h3>Nominee Details</h3>
+            <div className='col-lg-4'>
+              <div className='form-input'>
+                <input
+                  onChange={(e) => setNomineeName(e.target.value)}
+                  value={nomineeName}
+                  placeholder=' '
+                  type='text'
+                />
+                <label className='lh-1 text-16 text-light-1'>Nominee Name</label>
+              </div>
+            </div>
+            <div className='d-block ml-3 form-datepicker col-lg-4'>
+              <label>Nominee Date of Birth</label>
+              <DatePicker
+                style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
+                inputClass='custom_input-picker'
+                containerClassName='custom_container-picker'
+                value={nomineeDOB}
+                onChange={setNomineeDOB}
+                numberOfMonths={1}
+                offsetY={10}
+                format='DD MMMM YYYY'
+              />
+            </div>
+            <div className='col-lg-4 form-input-select'>
+              <label>Nominee Relation</label>
+              <Select
+                isClearable
+                options={nomineeRelationOptions}
+                value={nomineeRelation}
+                onChange={(id) => setNomineeRelation(id)}
+              />
+            </div>
+            <div className='col-lg-12'>
+              <div className='form-input'>
+                <input
+                  onChange={(e) => setNomineeAddress(e.target.value)}
+                  value={nomineeAddress}
+                  placeholder=' '
+                  type='text'
+                />
+                <label className='lh-1 text-16 text-light-1'>Nominee Address</label>
+              </div>
+            </div>
+            <div className='col-lg-6'>
+              <div className='form-input'>
+                <input
+                  onChange={(e) => setAppointeeName(e.target.value)}
+                  value={appointeeName}
+                  placeholder=' '
+                  type='text'
+                />
+                <label className='lh-1 text-16 text-light-1'>Appointee Name</label>
+              </div>
+            </div>
+            <div className='col-lg-6'>
+              <div className='form-input'>
+                <input
+                  onChange={(e) => setAppointeeAddress(e.target.value)}
+                  value={appointeeAddress}
+                  placeholder=' '
+                  type='text'
+                />
+                <label className='lh-1 text-16 text-light-1'>Appointee Address</label>
+              </div>
             </div>
             <div className='d-inline-block'>
               <button
