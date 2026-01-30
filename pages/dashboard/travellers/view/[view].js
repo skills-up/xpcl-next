@@ -146,6 +146,16 @@ const ViewTravellers = () => {
             </ul>
           );
         }
+        if (data.nominee_dob) {
+          data.nominee_dob = new Date(data.nominee_dob).toLocaleString('en-IN', {
+            dateStyle: 'medium',
+          });
+        }
+        if (data.nominee_relation) {
+          data.nominee_relation =
+            data.nominee_relation.charAt(0).toUpperCase() +
+            data.nominee_relation.slice(1).toLowerCase();
+        }
         if (data.domestic_airline_preference) {
           data.domestic_airline_preference = (
             <ul className='ml-20'>
