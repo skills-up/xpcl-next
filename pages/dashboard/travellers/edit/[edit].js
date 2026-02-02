@@ -14,6 +14,10 @@ import DashboardLayout from '../../../../components/layouts/DashboardLayout';
 import NewFileUploads from '../../../../components/new-file-uploads';
 import PreviousUploadPictures from '../../../../components/previous-file-uploads';
 import { sendToast } from '../../../../utils/toastify';
+import { getMealOptions } from '../../../../utils/mealOptions';
+import MealPriorityList from '../components/MealPriorityList';
+
+
 
 const UpdateTravellers = () => {
   const [prefix, setPrefix] = useState(null);
@@ -64,6 +68,11 @@ const UpdateTravellers = () => {
   const [airports, setAirports] = useState([]);
   const [baseAirport, setBaseAirport] = useState(null);
   const [eaPhoneNumber, setEAPhoneNumber] = useState('');
+
+  const [sixEMealPreferences, setSixEMealPreferences] = useState([]);
+  const [ixMealPreferences, setIxMealPreferences] = useState([]);
+  const [qpMealPreferences, setQpMealPreferences] = useState([]);
+
 
   const [nomineeName, setNomineeName] = useState('');
   const [nomineeDOB, setNomineeDOB] = useState(null);
@@ -141,6 +150,11 @@ const UpdateTravellers = () => {
     'Spouse',
     'Uncle',
   ].map((el) => ({ label: el, value: el }));
+
+  const sixEMealOptions = getMealOptions('6E');
+  const ixMealOptions = getMealOptions('IX');
+  const qpMealOptions = getMealOptions('QP');
+
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -305,7 +319,34 @@ const UpdateTravellers = () => {
         }
         setNoBoardingPass(!!response.data?.no_bp);
 
+        // Setting Meal Preferences
+        if (response.data?.['6e_meal_preferences']) {
+          setSixEMealPreferences(
+            response.data['6e_meal_preferences'].map((code) => ({
+              value: code,
+              label: sixEMealOptions.find((opt) => opt.value === code)?.label || code,
+            }))
+          );
+        }
+        if (response.data?.ix_meal_preferences) {
+          setIxMealPreferences(
+            response.data.ix_meal_preferences.map((code) => ({
+              value: code,
+              label: ixMealOptions.find((opt) => opt.value === code)?.label || code,
+            }))
+          );
+        }
+        if (response.data?.qp_meal_preferences) {
+          setQpMealPreferences(
+            response.data.qp_meal_preferences.map((code) => ({
+              value: code,
+              label: qpMealOptions.find((opt) => opt.value === code)?.label || code,
+            }))
+          );
+        }
+
         // Nominee Details
+
         setNomineeName(response.data?.nominee_name ?? '');
         if (response.data?.nominee_dob)
           setNomineeDOB(
@@ -383,7 +424,19 @@ const UpdateTravellers = () => {
     passportFormData.append('seat_preference', seatPreference?.value ?? '');
     passportFormData.append('cabin_position', cabinPosition?.value ?? '');
     passportFormData.append('fare_preference', farePreference?.value ?? '');
+
+    if (sixEMealPreferences && sixEMealPreferences.length > 0)
+      for (let pref of sixEMealPreferences)
+        passportFormData.append('6e_meal_preferences[]', pref?.value ?? '');
+    if (ixMealPreferences && ixMealPreferences.length > 0)
+      for (let pref of ixMealPreferences)
+        passportFormData.append('ix_meal_preferences[]', pref?.value ?? '');
+    if (qpMealPreferences && qpMealPreferences.length > 0)
+      for (let pref of qpMealPreferences)
+        passportFormData.append('qp_meal_preferences[]', pref?.value ?? '');
+
     passportFormData.append('no_bp', noBoardingPass ? 1 : 0);
+
     passportFormData.append('address', address ?? '');
     let meal_str = '';
     let seat_str = '';
@@ -927,6 +980,32 @@ const UpdateTravellers = () => {
                 onChange={(id) => setFarePreference(id)}
               />
             </div>
+            <div className='form-input-select col-lg-4'>
+              <MealPriorityList
+                label='IndiGo (6E) Meal Preference (Max 3)'
+                options={sixEMealOptions}
+                value={sixEMealPreferences}
+                onChange={setSixEMealPreferences}
+              />
+            </div>
+            <div className='form-input-select col-lg-4'>
+              <MealPriorityList
+                label='Air India Express (IX) Meal Preference (Max 3)'
+                options={ixMealOptions}
+                value={ixMealPreferences}
+                onChange={setIxMealPreferences}
+              />
+            </div>
+            <div className='form-input-select col-lg-4'>
+              <MealPriorityList
+                label='Akasa Air (QP) Meal Preference (Max 3)'
+                options={qpMealOptions}
+                value={qpMealPreferences}
+                onChange={setQpMealPreferences}
+              />
+            </div>
+
+
             <div className='col-lg-6'>
               <div className='form-input'>
                 <input

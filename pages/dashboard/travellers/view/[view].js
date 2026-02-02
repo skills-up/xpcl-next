@@ -12,6 +12,8 @@ import CreditCards from './CreditCard';
 import TravelInsurances from './TravelInsurance';
 import TravelMemberships from './TravelMembership';
 import TravelVisas from './TravelVisas';
+import { airlineMealOptions } from '../../../../utils/mealOptions';
+
 
 const ViewTravellers = () => {
   const [travellers, setTravellers] = useState([]);
@@ -178,6 +180,43 @@ const ViewTravellers = () => {
             </ul>
           );
         }
+        if (data['6e_meal_preferences']) {
+          data.indigo_6e_meal_preferences = (
+            <ol className='ml-20'>
+              {data['6e_meal_preferences'].map((code, index) => (
+                <li style={{ listStyleType: 'decimal' }} key={index}>
+                  {airlineMealOptions['6E']?.[code] || code}
+                </li>
+              ))}
+            </ol>
+          );
+          delete data['6e_meal_preferences'];
+        }
+        if (data.ix_meal_preferences) {
+          data.air_india_express_ix_meal_preferences = (
+            <ol className='ml-20'>
+              {data.ix_meal_preferences.map((code, index) => (
+                <li style={{ listStyleType: 'decimal' }} key={index}>
+                  {airlineMealOptions['IX']?.[code] || code}
+                </li>
+              ))}
+            </ol>
+          );
+          delete data.ix_meal_preferences;
+        }
+        if (data.qp_meal_preferences) {
+          data.akasa_air_qp_meal_preferences = (
+            <ol className='ml-20'>
+              {data.qp_meal_preferences.map((code, index) => (
+                <li style={{ listStyleType: 'decimal' }} key={index}>
+                  {airlineMealOptions['QP']?.[code] || code}
+                </li>
+              ))}
+            </ol>
+          );
+          delete data.qp_meal_preferences;
+        }
+
         if (data.no_bp) {
           data.send_boarding_pass = 'No';
         } else {
