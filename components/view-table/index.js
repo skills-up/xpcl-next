@@ -27,7 +27,11 @@ const ViewTable = ({
     'PDF',
     'HSN',
     'PNR',
+    'IX',
+    '6E',
+    'QP',
   ];
+
 
   return (
     <div className='view-table'>

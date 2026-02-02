@@ -12,6 +12,10 @@ import DatePicker, { DateObject } from 'react-multi-date-picker';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { BsTrash3 } from 'react-icons/bs';
 import NewFileUploads from '../../../../components/new-file-uploads';
+import { getMealOptions } from '../../../../utils/mealOptions';
+import MealPriorityList from '../components/MealPriorityList';
+
+
 
 const AddNewTravellers = () => {
   const [prefix, setPrefix] = useState(null);
@@ -56,6 +60,11 @@ const AddNewTravellers = () => {
   const [airports, setAirports] = useState([]);
   const [baseAirport, setBaseAirport] = useState(null);
   const [eaPhoneNumber, setEAPhoneNumber] = useState('');
+
+  const [sixEMealPreferences, setSixEMealPreferences] = useState([]);
+  const [ixMealPreferences, setIxMealPreferences] = useState([]);
+  const [qpMealPreferences, setQpMealPreferences] = useState([]);
+
 
   const [nomineeName, setNomineeName] = useState('');
   const [nomineeDOB, setNomineeDOB] = useState(null);
@@ -134,6 +143,11 @@ const AddNewTravellers = () => {
     'Uncle',
   ].map((el) => ({ label: el, value: el }));
 
+  const sixEMealOptions = getMealOptions('6E');
+  const ixMealOptions = getMealOptions('IX');
+  const qpMealOptions = getMealOptions('QP');
+
+
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
 
@@ -207,7 +221,19 @@ const AddNewTravellers = () => {
     passportFormData.append('seat_preference', seatPreference?.value ?? '');
     passportFormData.append('cabin_position', cabinPosition?.value ?? '');
     passportFormData.append('fare_preference', farePreference?.value ?? '');
+
+    if (sixEMealPreferences && sixEMealPreferences.length > 0)
+      for (let pref of sixEMealPreferences)
+        passportFormData.append('6e_meal_preferences[]', pref?.value ?? '');
+    if (ixMealPreferences && ixMealPreferences.length > 0)
+      for (let pref of ixMealPreferences)
+        passportFormData.append('ix_meal_preferences[]', pref?.value ?? '');
+    if (qpMealPreferences && qpMealPreferences.length > 0)
+      for (let pref of qpMealPreferences)
+        passportFormData.append('qp_meal_preferences[]', pref?.value ?? '');
+
     passportFormData.append('no_bp', noBoardingPass ? 1 : 0);
+
     passportFormData.append('address', address ?? '');
     let meal_str = '';
     let seat_str = '';
@@ -720,6 +746,32 @@ const AddNewTravellers = () => {
                 onChange={(id) => setFarePreference(id)}
               />
             </div>
+            <div className='form-input-select col-lg-4'>
+              <MealPriorityList
+                label='IndiGo (6E) Meal Preference (Max 3)'
+                options={sixEMealOptions}
+                value={sixEMealPreferences}
+                onChange={setSixEMealPreferences}
+              />
+            </div>
+            <div className='form-input-select col-lg-4'>
+              <MealPriorityList
+                label='Air India Express (IX) Meal Preference (Max 3)'
+                options={ixMealOptions}
+                value={ixMealPreferences}
+                onChange={setIxMealPreferences}
+              />
+            </div>
+            <div className='form-input-select col-lg-4'>
+              <MealPriorityList
+                label='Akasa Air (QP) Meal Preference (Max 3)'
+                options={qpMealOptions}
+                value={qpMealPreferences}
+                onChange={setQpMealPreferences}
+              />
+            </div>
+
+
             <div className='col-lg-6'>
               <div className='form-input'>
                 <input
