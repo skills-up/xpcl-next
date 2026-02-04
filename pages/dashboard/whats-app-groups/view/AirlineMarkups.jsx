@@ -216,7 +216,7 @@ const AirlineMarkups = () => {
               {
                 label: 'Delete',
                 onClick: () => {
-                  setIdToDelete(data.row.original.id);
+                  setIdToDelete(data.row.original.airline_code);
                   setConfirmDelete(true);
                 },
                 icon: <BsTrash3 />,
