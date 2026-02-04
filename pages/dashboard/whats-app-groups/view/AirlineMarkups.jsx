@@ -69,7 +69,7 @@ const AirlineMarkups = () => {
   };
 
   const openEditModal = (markup) => {
-    setEditingId(markup.id);
+    setEditingId(markup.airline_code);
     setAirlineCode(markup.airline_code || '');
     const foundType = markupTypeOptions.find((opt) => opt.value === markup.markup_type);
     setMarkupType(foundType || markupTypeOptions[0]);
