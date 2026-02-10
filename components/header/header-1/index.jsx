@@ -48,7 +48,7 @@ const Header1 = ({ permaOpaque = true }) => {
 
                 <div className='header-menu'>
                   <div className='header-menu__content'>
-                    <MainMenu style='text-dark-1' />
+                    {token !== '' && (<MainMenu style='text-dark-1' />)}
                   </div>
                 </div>
                 {/* End header-menu */}
