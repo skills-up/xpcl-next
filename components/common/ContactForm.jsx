@@ -41,7 +41,7 @@ const ContactForm = () => {
   const [signupClicked, setSignupClicked] = useState(false);
 
   return (
-    <div className='bg-light border-light rounded-4 px-30 py-30'>
+    <div className='px-40 py-40 bg-white rounded-16 shadow-1'>
       {resSuccess && (
         <div className='text-center'>
           <h4 className='text-blue-1 d-flex items-center gap-2 justify-center'>
@@ -67,7 +67,7 @@ const ContactForm = () => {
                   placeholder=' '
                 />
                 <label className='lh-1 text-16 text-light-1'>
-                  Name of the Company<span className='text-danger'>*</span>
+                  Company Name<span className='text-danger'>*</span>
                 </label>
               </div>
             </div>
@@ -107,7 +107,7 @@ const ContactForm = () => {
                   placeholder=' '
                 />
                 <label className='lh-1 text-16 text-light-1'>
-                  Contact Person's Name<span className='text-danger'>*</span>
+                  Contact Person<span className='text-danger'>*</span>
                 </label>
               </div>
             </div>
@@ -163,11 +163,11 @@ const ContactForm = () => {
                   }}
                 />
               </div>
-              <div className='col-lg-3 lg:pr-0'>
+              <div className='col-lg-5 lg:pr-0'>
                 <button
                   disabled={!siteKeyCorrect || signupClicked}
                   type='submit'
-                  className='button col-lg-10 col-12 px-24 h-50 -dark-1 bg-blue-1 text-white'
+                  className='button col-lg-10 col-12 px-24 h-50 -dark-1 bg-dark-1 text-white'
                 >
                   Sign-Up
                   <div className='icon-arrow-top-right ml-15'></div>
