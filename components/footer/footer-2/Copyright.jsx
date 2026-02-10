@@ -6,7 +6,7 @@ const Copyright = () => {
       <div className='col-auto'>
         <div className='row x-gap-30 y-gap-10'>
           <div className='col-auto'>
-            <div className='d-flex items-center'>
+            <div className='d-flex items-center text-14 fw-500'>
               © {new Date().getFullYear()} Xplorz.Com Private Limited. All Rights
               Reserved.
             </div>
@@ -20,7 +20,8 @@ const Copyright = () => {
       {/* End .col */}
 
       <div className='col-auto'>
-        <div className='d-flex x-gap-50'>
+        <div className='d-flex x-gap-40'>
+          <Link href='/contact' className='text-14 fw-500'>Contact Us</Link>
           <Link href='/terms' className='text-14 fw-500'>Terms & Conditions</Link>
           <Link href='/privacy-policy' className='text-14 fw-500'>Privacy Policy</Link>
         </div>
