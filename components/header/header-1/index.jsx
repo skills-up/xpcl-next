@@ -96,7 +96,7 @@ const Header1 = ({ permaOpaque = true }) => {
                         }
                       }
                     }}
-                    className='button px-30 fw-400 text-14 border-primary -outline-white h-50 text-blue-1 ml-20'
+                    className='button px-30 fw-400 text-14 border-blue-1 -outline-blue-1 h-50 text-blue-1 ml-20'
                   >
                     {token === '' ? 'Sign In' : 'Logout'}
                   </button>

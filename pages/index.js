@@ -1,10 +1,10 @@
 import Wrapper from './layout/wrapper';
-import Home1 from './home/home_1';
+import LandingPage from '../components/landing/LandingPage';
 
 const MainRoot = () => {
   return (
     <Wrapper>
-      <Home1 />
+      <LandingPage />
     </Wrapper>
   );
 };
