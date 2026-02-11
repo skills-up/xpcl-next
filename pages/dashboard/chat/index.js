@@ -8,15 +8,20 @@ import DashboardLayout from '../../../components/layouts/DashboardLayout';
 import { sendToast } from '../../../utils/toastify';
 
 const ChatPage = () => {
-  // Client traveller selection
-  const [clientID, setClientID] = useState(null);
-  const [clientOrgs, setClientOrgs] = useState([]);
-  const [clientTravellers, setClientTravellers] = useState([]);
-  const [selectedTraveller, setSelectedTraveller] = useState(null);
+  // WhatsApp Group selection
+  const [whatsappGroups, setWhatsappGroups] = useState([]);
+  const [selectedGroup, setSelectedGroup] = useState(null);
+  const [phoneNumbers, setPhoneNumbers] = useState([]);
+  const [selectedPhoneNumber, setSelectedPhoneNumber] = useState(null);
+  const [senderName, setSenderName] = useState('');
 
   // Chat state
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
+  // threadId might not be needed for web-chat if it's stateless per request, 
+  // but keeping it if the API returns it for continuity or future use.
+  // The requirement says "return response synchronously", implying stateless or context passed via headers/body.
+  // However, standard chat usually benefits from threadId. I'll keep it but it might be unused by the new endpoint.
   const [threadId, setThreadId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -33,51 +38,40 @@ const ChatPage = () => {
     scrollToBottom();
   }, [messages]);
 
-  // Fetch client organizations on mount
+  // Fetch WhatsApp Groups on mount
   useEffect(() => {
-    getClientOrgs();
+    getWhatsAppGroups();
   }, []);
 
-  const getClientOrgs = async () => {
-    const response = await getList('organizations', { is_client: 1 });
+  const getWhatsAppGroups = async () => {
+    const response = await getList('whats-app-groups');
     if (response?.success) {
-      setClientOrgs(
+      setWhatsappGroups(
         response.data.map((element) => ({
-          value: element.id,
-          label: element.code ? `${element.name} (${element.code})` : element.name,
+          value: element.group_id,
+          label: element.name,
+          phone_numbers: element.phone_numbers || [],
         }))
       );
     } else {
-      sendToast('error', 'Unable to fetch client organizations', 4000);
+      sendToast('error', 'Unable to fetch WhatsApp groups', 4000);
     }
   };
 
-  // Fetch client travellers when client changes
+  // Update phone numbers when group changes
   useEffect(() => {
-    if (clientID?.value) {
-      getClientTravellers();
+    if (selectedGroup) {
+      const numbers = selectedGroup.phone_numbers.map((num) => ({
+        value: num,
+        label: num,
+      }));
+      setPhoneNumbers(numbers);
+      setSelectedPhoneNumber(null);
     } else {
-      setClientTravellers([]);
-      setSelectedTraveller(null);
+      setPhoneNumbers([]);
+      setSelectedPhoneNumber(null);
     }
-  }, [clientID]);
-
-  const getClientTravellers = async () => {
-    const response = await getList('client-travellers', {
-      client_id: clientID?.value,
-    });
-    if (response?.success) {
-      setClientTravellers(
-        response.data.map((element) => ({
-          value: element.id,
-          label: element.traveller_name,
-        }))
-      );
-      setSelectedTraveller(null);
-    } else {
-      sendToast('error', 'Error getting client travellers', 4000);
-    }
-  };
+  }, [selectedGroup]);
 
   // Handle starting a new conversation
   const handleNewConversation = () => {
@@ -88,7 +82,7 @@ const ChatPage = () => {
 
   // Handle sending a message
   const handleSendMessage = async () => {
-    if (!inputMessage.trim() || !selectedTraveller?.value || isLoading) return;
+    if (!inputMessage.trim() || !selectedGroup?.value || !selectedPhoneNumber?.value || !senderName.trim() || isLoading) return;
 
     const userMessage = inputMessage.trim();
     setInputMessage('');
@@ -109,18 +103,14 @@ const ChatPage = () => {
       // Build request payload
       const payload = {
         message: userMessage,
+        from: selectedPhoneNumber.value,
+        wa_group_id: selectedGroup.value,
+        sender: senderName,
       };
 
-      // Add threadId if we have one (subsequent messages)
-      if (threadId) {
-        payload.threadId = threadId;
-      } else {
-        payload.client_traveller_id = selectedTraveller.value;
-      }
-
-      // Make API call to agent/v1/chat endpoint
+      // Make API call to agent/v1/web-chat endpoint
       const response = await customAPICall(
-        'agent/v1/chat',
+        'agent/v1/web-chat',
         'post',
         payload,
         {},
@@ -128,44 +118,32 @@ const ChatPage = () => {
       );
 
       if (response?.success) {
-        // Store threadId from response
-        if (response.data?.threadId) {
-          setThreadId(response.data.threadId);
+        // Add assistant message to chat
+        // The structure of response.data depends on the backend implementation of web-chat.
+        // Assuming it returns a standard response object similar to the previous chat endpoint
+        // or a direct message string/object.
+
+        const responseData = response.data;
+        let content = 'No response';
+
+        if (typeof responseData === 'string') {
+          content = responseData;
+        } else if (responseData?.message) {
+          content = responseData.message;
+        } else if (typeof responseData?.response === 'string') {
+          content = responseData.response;
+        } else if (responseData?.response?.content) {
+          content = responseData.response.content;
         }
 
-        // Add assistant message to chat
-        switch (response.data?.response?.type) {
-          case 'text':
-            setMessages((prev) => [
-              ...prev,
-              {
-                role: 'assistant',
-                content: response.data?.response?.content || response.data?.message || 'No response',
-                timestamp: new Date().toISOString(),
-              },
-            ]);
-            break;
-          case 'list':
-            setMessages((prev) => [
-              ...prev,
-              {
-                role: 'assistant',
-                content: response.data?.response?.items.join('\n* ') || response.data?.message || 'No response',
-                timestamp: new Date().toISOString(),
-              },
-            ]);
-            break;
-          case 'data':
-            setMessages((prev) => [
-              ...prev,
-              {
-                role: 'assistant',
-                content: JSON.stringify(response.data?.response?.data || response.data?.message || {}),
-                timestamp: new Date().toISOString(),
-              },
-            ]);
-            break;
-        }
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: 'assistant',
+            content: content,
+            timestamp: new Date().toISOString(),
+          },
+        ]);
       } else {
         sendToast(
           'error',
@@ -434,40 +412,50 @@ const ChatPage = () => {
 
         {/* Chat Container */}
         <div className='py-20 px-30 rounded-4 bg-white shadow-3' style={styles.chatContainer}>
-          {/* Traveller Selection */}
+          {/* Chat Configuration */}
           <div className='row x-gap-10 y-gap-10 pb-20 border-bottom-light'>
             <div className='col-md-4'>
-              <label className='text-15 fw-500 mb-5'>Client Organization</label>
+              <label className='text-15 fw-500 mb-5'>WhatsApp Group</label>
               <Select
-                options={clientOrgs}
-                value={clientID}
-                onChange={(id) => {
-                  setClientID(id);
+                options={whatsappGroups}
+                value={selectedGroup}
+                onChange={(group) => {
+                  setSelectedGroup(group);
                   handleNewConversation();
                 }}
-                placeholder='Select Client'
+                placeholder='Select Group'
                 isClearable
               />
             </div>
             <div className='col-md-4'>
-              <label className='text-15 fw-500 mb-5'>Traveller</label>
+              <label className='text-15 fw-500 mb-5'>Phone Number</label>
               <Select
-                options={clientTravellers}
-                value={selectedTraveller}
-                onChange={(id) => {
-                  setSelectedTraveller(id);
-                  handleNewConversation();
+                options={phoneNumbers}
+                value={selectedPhoneNumber}
+                onChange={(phone) => {
+                  setSelectedPhoneNumber(phone);
                 }}
-                placeholder='Select Traveller'
-                isDisabled={!clientID?.value}
+                placeholder='Select Number'
+                isDisabled={!selectedGroup?.value}
                 isClearable
               />
             </div>
-            <div className='col-md-4 d-flex items-end'>
+            <div className='col-md-4'>
+              <label className='text-15 fw-500 mb-5'>Sender Name</label>
+              <input
+                type='text'
+                className='form-control'
+                placeholder='Enter Sender Name'
+                value={senderName}
+                onChange={(e) => setSenderName(e.target.value)}
+                style={{ height: '38px', borderRadius: '4px', border: '1px solid #ccc' }}
+              />
+            </div>
+            <div className='col-12 mt-10 d-flex justify-end'>
               <button
-                className='button p-2 -dark-1 bg-blue-1 text-white h-50'
+                className='button p-2 -dark-1 bg-blue-1 text-white h-50 px-20'
                 onClick={handleNewConversation}
-                disabled={!selectedTraveller?.value}
+                disabled={!selectedGroup?.value || !selectedPhoneNumber?.value || !senderName.trim()}
               >
                 New Conversation
               </button>
@@ -476,12 +464,12 @@ const ChatPage = () => {
 
           {/* Messages Area */}
           <div className='py-20 scroll-bar-1' style={styles.messagesArea}>
-            {!selectedTraveller?.value ? (
+            {(!selectedGroup?.value || !selectedPhoneNumber?.value || !senderName.trim()) ? (
               <div style={styles.placeholder}>
                 <div className='text-60 mb-20'>💬</div>
-                <p className='text-18 fw-500 text-dark-1'>Select a traveller to start chatting</p>
+                <p className='text-18 fw-500 text-dark-1'>Select a group and sender to start chatting</p>
                 <p className='text-15 text-light-1'>
-                  Choose a client organization and traveller from the dropdowns above
+                  Choose a WhatsApp group, phone number, and enter a sender name above
                 </p>
               </div>
             ) : messages.length === 0 ? (
@@ -489,7 +477,7 @@ const ChatPage = () => {
                 <div className='text-60 mb-20'>🌍</div>
                 <p className='text-18 fw-500 text-dark-1'>Welcome to Xplorz Assist!</p>
                 <p className='text-15 text-light-1'>
-                  Ask me anything about flights, hotels, or travel planning for {selectedTraveller.label}
+                  Ask me anything about flights, hotels, or travel planning based on {selectedGroup.label}
                 </p>
               </div>
             ) : (
@@ -565,26 +553,26 @@ const ChatPage = () => {
               className='chat-input'
               style={styles.textInput}
               placeholder={
-                selectedTraveller?.value
+                (selectedGroup?.value && selectedPhoneNumber?.value && senderName.trim())
                   ? 'Type your message...'
-                  : 'Select a traveller to start chatting'
+                  : 'Complete setup above to start chatting'
               }
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyDown={handleKeyDown}
-              disabled={!selectedTraveller?.value || isLoading}
+              disabled={!selectedGroup?.value || !selectedPhoneNumber?.value || !senderName.trim() || isLoading}
               rows={1}
             />
             <button
               className='send-btn'
               style={{
                 ...styles.sendButton,
-                ...(!inputMessage.trim() || !selectedTraveller?.value || isLoading
+                ...(!inputMessage.trim() || !selectedGroup?.value || !selectedPhoneNumber?.value || !senderName.trim() || isLoading
                   ? styles.sendButtonDisabled
                   : {}),
               }}
               onClick={handleSendMessage}
-              disabled={!inputMessage.trim() || !selectedTraveller?.value || isLoading}
+              disabled={!inputMessage.trim() || !selectedGroup?.value || !selectedPhoneNumber?.value || !senderName.trim() || isLoading}
             >
               {isLoading ? '⏳' : '➤'}
             </button>

@@ -15,10 +15,13 @@ import {
   IconMoney,
   IconCheck,
 } from './Icons';
+import Seo from '../common/Seo';
 
 const LandingPage = () => {
   return (
     <>
+      <Seo pageTitle='Xplorz | Corporate Travel - Simplified. Controlled. Global.' />
+
       <style jsx>{`
         section {
           border-top: 1px solid #e5e7eb;
@@ -35,12 +38,11 @@ const LandingPage = () => {
           align-items: center;
           justify-content: center;
           border-radius: 50%;
-          background-color: #f0f7ff;
           font-size: 32px;
-          /* color: #3554d1; */
           color: #13357b;
           transition: all 0.3s ease;
           flex-shrink: 0;
+          border: 2px solid #ffc700;
         }
         .feature-card {
           transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
@@ -54,33 +56,37 @@ const LandingPage = () => {
         .section-bg-accent {
           background-color: #f8f9fa;
         }
-        .text-blue-1 {
-          color: #3554d1 !important;
+        .marker-stroke {
+          background-color: #ffc700;
+          display: inline-block;
+          padding: 0.2em 0.5em;
+          margin: 0.2em;
+          
+          /* Irregular radius creates the organic shape */
+          border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+                    
+          /* Box shadow adds 'bleeding' ink effect */
+          box-shadow: 2px 2px 0px rgba(255, 199, 0, 0.6);
         }
-        .bg-blue-1 {
-          background-color: #3554d1 !important;
-        }
-        .button.-outline-blue-1 {
-          color: #3554d1;
-          border-color: #3554d1;
-        }
-        .button.-outline-blue-1:hover {
-          background-color: #3554d1;
-          color: white;
+        .border-yellow-3 {
+          border: 1px solid var(--color-yellow-3);
         }
       `}</style>
       <Header1 />
 
       {/* Hero Section */}
-      <section className='hero-section layout-pt-xl layout-pb-xl bg-white relative'>
+      <section className='hero-section layout-pt-xl layout-pb-xl bg-white relative mt-50 lg:mt-20'>
         <div className='container relative z-2'>
           <div className='row justify-center text-center'>
             <div className='col-xl-9 col-lg-10'>
               <h1 className='text-60 lg:text-40 md:text-30 fw-700 text-dark-1 leading-tight mb-20'>
                 Corporate Travel.
-                <br />
-                <span className='text-blue-1'>Simplified. Controlled. Global.</span>
               </h1>
+              <h2 className='text-dark-2'>
+                <span className='marker-stroke'>Simplified.</span>
+                <span className='marker-stroke'>Controlled.</span>
+                <span className='marker-stroke'>Global.</span>
+              </h2>              
 
               <div className='mt-20 text-20 text-light-1 fw-400'>
                 <strong>Xplorz</strong> combines smart technology with expert human
@@ -90,12 +96,12 @@ const LandingPage = () => {
               </div>
 
               <div className='d-flex gap-2 justify-center mt-40 pt-20 sm:flex-column'>
-                <Link href='/contact' className='button -md -blue-1 bg-blue-1 text-white'>
+                <Link href='/contact' className='button -md -blue-1 bg-dark-1 text-white'>
                   Request a Demo
                 </Link>
                 <Link
                   href='/contact'
-                  className='button -md -outline-blue-1 text-blue-1 ml-20 sm:ml-0 sm:mt-10'
+                  className='button -md -outline-dark-1 text-dark-1 ml-20 sm:ml-0 sm:mt-10'
                 >
                   Talk to a Travel Expert
                 </Link>
@@ -349,7 +355,7 @@ const LandingPage = () => {
                   'Complex Itineraries',
                 ].map((item, index) => (
                   <div key={index} className='col-lg-auto col-md-6'>
-                    <p className='fw-600 text-blue-1 px-20 text-center bg-blue-2 rounded-8 py-10'>
+                    <p className='fw-600 text-blue-1 px-20 text-center border-yellow-3 rounded-8 py-10'>
                       <IconCheck className='mr-10 text-18' />
                       {item}
                     </p>
@@ -426,7 +432,7 @@ const LandingPage = () => {
                   'CXO-led programs',
                 ].map((item, index) => (
                   <div key={index} className='col-lg-auto col-md-6'>
-                    <p className='text-20 fw-600 text-dark-1 px-20 text-center bg-blue-2 rounded-8 py-10'>
+                    <p className='text-20 fw-600 text-dark-1 px-20 text-center border-yellow-3 rounded-8 py-10'>
                       {item}
                     </p>
                   </div>
@@ -448,12 +454,12 @@ const LandingPage = () => {
               </p>
 
               <div className='d-flex gap-2 justify-center pt-40 sm:flex-column'>
-                <Link href='/contact' className='button -md bg-blue-1 text-white'>
+                <Link href='/contact' className='button -md -blue-1 bg-dark-1 text-white'>
                   Request a Demo
                 </Link>
                 <Link
                   href='/contact'
-                  className='button -md -outline-blue-1 text-blue-1 ml-20 sm:ml-0 sm:mt-10'
+                  className='button -md -outline-dark-1 text-dark-1 ml-20 sm:ml-0 sm:mt-10'
                 >
                   Speak to Our Team
                 </Link>
