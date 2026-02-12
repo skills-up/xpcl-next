@@ -92,7 +92,7 @@ const LandingPage = () => {
                 <strong>Xplorz</strong> combines smart technology with expert human
                 support to help you
                 <br className='lg:d-none' />
-                <strong>book, manage, and optimize business travel</strong>—globally.
+                <strong className='ps-1'>book, manage, and optimize business travel</strong>—globally.
               </div>
 
               <div className='d-flex gap-2 justify-center mt-40 pt-20 sm:flex-column'>
