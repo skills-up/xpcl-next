@@ -154,6 +154,11 @@ const Sidebar = () => {
           ]),
         },
         {
+          title: 'Agent Bookings',
+          href: '/dashboard/agent-bookings',
+          permissions: ['agent-bookings.index'],
+        },
+        {
           title: 'Refunds',
           href: '/dashboard/refunds',
           permissions: ['refunds.index'],
