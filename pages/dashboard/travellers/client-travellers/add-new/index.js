@@ -11,6 +11,7 @@ import Select from 'react-select';
 const AddNewClientTraveller = () => {
   const [clientOrgs, setClientOrgs] = useState([]);
   const [clientID, setClientID] = useState(null);
+  const [defaultClientNickName, setDefaultClientNickName] = useState('');
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -43,6 +44,7 @@ const AddNewClientTraveller = () => {
       const response = await createItem('client-travellers', {
         traveller_id: parseInt(router.query.traveller_id),
         client_id: clientID.value,
+        default_client_nick_name: defaultClientNickName || undefined,
       });
       if (response?.success) {
         sendToast('success', 'Linked Client Successfully.', 4000);
@@ -86,6 +88,19 @@ const AddNewClientTraveller = () => {
                         placeholder='Search & Select Client (required)'
                         onChange={(id) => setClientID(id)}
                       />
+                    </div>
+                    <div className='col-12'>
+                      <div className='form-input'>
+                        <input
+                          type='text'
+                          required={false}
+                          value={defaultClientNickName}
+                          onChange={(e) => setDefaultClientNickName(e.target.value)}
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Default Client Nick Name
+                        </label>
+                      </div>
                     </div>
                     <div className='d-inline-block'>
                       <button
