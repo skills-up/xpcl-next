@@ -11,6 +11,8 @@ import Select from 'react-select';
 const AddNewClientTraveller = () => {
   const [clientOrgs, setClientOrgs] = useState([]);
   const [clientID, setClientID] = useState(null);
+  const [defaultClientNickName, setDefaultClientNickName] = useState('');
+  const [travellerName, setTravellerName] = useState('');
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -38,6 +40,12 @@ const AddNewClientTraveller = () => {
             if (clientOrg.id === response.data.client_id)
               setClientID({ label: clientOrg.name, value: clientOrg.id });
           }
+          if (response.data.default_client_nick_name) {
+            setDefaultClientNickName(response.data.default_client_nick_name);
+          }
+          if (response.data.traveller_name) {
+            setTravellerName(response.data.traveller_name);
+          }
         } else {
           sendToast('error', 'Error fetching required data.', 4000);
           router.push('/dashboard/travellers/view/' + router.query.traveller_id);
@@ -46,8 +54,8 @@ const AddNewClientTraveller = () => {
         sendToast(
           'error',
           response.data?.message ||
-            response.data?.error ||
-            'Failed to Fetch Client Traveller.',
+          response.data?.error ||
+          'Failed to Fetch Client Traveller.',
           4000
         );
         router.push('/dashboard/travellers/view/' + router.query.traveller_id);
@@ -62,6 +70,8 @@ const AddNewClientTraveller = () => {
       const response = await createItem('client-travellers', {
         traveller_id: parseInt(router.query.traveller_id),
         client_id: clientID.value,
+        default_client_nick_name: defaultClientNickName || undefined,
+        traveller_name: travellerName || undefined,
       });
       if (response?.success) {
         sendToast('success', 'Created Linked Client Successfully.', 4000);
@@ -84,40 +94,66 @@ const AddNewClientTraveller = () => {
       {/* End Page Title */}
 
       <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
-                <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Link New Client</h1>
-                  <div className='text-15 text-light-1'>Link a client.</div>
-                </div>
-                {/* End .col-12 */}
-              </div>
-              {/* End .row */}
+        <div className='col-12'>
+          <h1 className='text-30 lh-14 fw-600'>Link New Client</h1>
+          <div className='text-15 text-light-1'>Link a client.</div>
+        </div>
+        {/* End .col-12 */}
+      </div>
+      {/* End .row */}
 
-              <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
-                <div>
-                  <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
-                    <div className='form-input-select'>
-                      <label>
-                        Client<span className='text-danger'>*</span>
-                      </label>
-                      <Select
-                        options={clientOrgs}
-                        value={clientID}
-                        placeholder='Search & Select Client (required)'
-                        onChange={(id) => setClientID(id)}
-                      />
-                    </div>
-                    <div className='d-inline-block'>
-                      <button
-                        type='submit'
-                        className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
-                      >
-                        Link Client
-                      </button>
-                    </div>
-                  </form>
-                </div>
-                </div>
-                </>
+      <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
+        <div>
+          <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
+            <div className='form-input-select'>
+              <label>
+                Client<span className='text-danger'>*</span>
+              </label>
+              <Select
+                options={clientOrgs}
+                value={clientID}
+                placeholder='Search & Select Client (required)'
+                onChange={(id) => setClientID(id)}
+              />
+            </div>
+            <div className='col-12'>
+              <div className='form-input'>
+                <input
+                  type='text'
+                  required={false}
+                  value={travellerName}
+                  onChange={(e) => setTravellerName(e.target.value)}
+                />
+                <label className='lh-1 text-16 text-light-1'>
+                  Traveller Name
+                </label>
+              </div>
+            </div>
+            <div className='col-12'>
+              <div className='form-input'>
+                <input
+                  type='text'
+                  required={false}
+                  value={defaultClientNickName}
+                  onChange={(e) => setDefaultClientNickName(e.target.value)}
+                />
+                <label className='lh-1 text-16 text-light-1'>
+                  Default Client Nick Name
+                </label>
+              </div>
+            </div>
+            <div className='d-inline-block'>
+              <button
+                type='submit'
+                className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
+              >
+                Link Client
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </>
   );
 };
 
