@@ -12,6 +12,7 @@ const AddNewClientTraveller = () => {
   const [clientOrgs, setClientOrgs] = useState([]);
   const [clientID, setClientID] = useState(null);
   const [defaultClientNickName, setDefaultClientNickName] = useState('');
+  const [travellerName, setTravellerName] = useState('');
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -42,6 +43,9 @@ const AddNewClientTraveller = () => {
           if (response.data.default_client_nick_name) {
             setDefaultClientNickName(response.data.default_client_nick_name);
           }
+          if (response.data.traveller_name) {
+            setTravellerName(response.data.traveller_name);
+          }
         } else {
           sendToast('error', 'Error fetching required data.', 4000);
           router.push('/dashboard/travellers/view/' + router.query.traveller_id);
@@ -67,6 +71,7 @@ const AddNewClientTraveller = () => {
         traveller_id: parseInt(router.query.traveller_id),
         client_id: clientID.value,
         default_client_nick_name: defaultClientNickName || undefined,
+        traveller_name: travellerName || undefined,
       });
       if (response?.success) {
         sendToast('success', 'Created Linked Client Successfully.', 4000);
@@ -110,6 +115,19 @@ const AddNewClientTraveller = () => {
                 placeholder='Search & Select Client (required)'
                 onChange={(id) => setClientID(id)}
               />
+            </div>
+            <div className='col-12'>
+              <div className='form-input'>
+                <input
+                  type='text'
+                  required={false}
+                  value={travellerName}
+                  onChange={(e) => setTravellerName(e.target.value)}
+                />
+                <label className='lh-1 text-16 text-light-1'>
+                  Traveller Name
+                </label>
+              </div>
             </div>
             <div className='col-12'>
               <div className='form-input'>
