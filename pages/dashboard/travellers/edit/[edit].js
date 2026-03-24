@@ -50,6 +50,8 @@ const UpdateTravellers = () => {
   const [panNumber, setPanNumber] = useState('');
   const [aadhaarNumber, setAadhaarNumber] = useState('');
   const [vaccinationCertificateFile, setVaccinationCertificateFile] = useState(null);
+  const [birthCertificateFile, setBirthCertificateFile] = useState(null);
+  const [marriageCertificateFile, setMarriageCertificateFile] = useState(null);
   const [panCardScanFile, setPanCardScanFile] = useState(null);
   const [aadhaarCardScanFile, setAadhaarCardScanFile] = useState(null);
   const [photoScanFile, setPhotoScanFile] = useState(null);
@@ -57,6 +59,10 @@ const UpdateTravellers = () => {
   const [vaccinationDates, setVaccinationDates] = useState([]);
   const [passportScanFiles, setPassportScanFiles] = useState([]);
   const [previousVaccinationCertificate, setPreviousVaccinationCertificate] =
+    useState('');
+  const [previousBirthCertificate, setPreviousBirthCertificate] =
+    useState('');
+  const [previousMarriageCertificate, setPreviousMarriageCertificate] =
     useState('');
   const [previousPanCardScan, setPreviousPanCardScan] = useState('');
   const [previousAadhaarCardScan, setPreviousAadhaarCardScan] = useState('');
@@ -263,6 +269,8 @@ const UpdateTravellers = () => {
         setPanNumber(response.data?.pan_number ?? '');
         setAadhaarNumber(response.data?.aadhaar_number ?? '');
         setPreviousVaccinationCertificate(response.data?.vaccination_certificate);
+        setPreviousBirthCertificate(response.data?.birth_certificate);
+        setPreviousMarriageCertificate(response.data?.marriage_certificate);
         setPreviousPanCardScan(response.data?.pan_card_scan);
         setPreviousAadhaarCardScan(response.data?.aadhaar_card_scan);
         setPreviousPhotoScan(response.data?.photo_scan);
@@ -468,6 +476,14 @@ const UpdateTravellers = () => {
       'vaccination_certificate_file',
       vaccinationCertificateFile ?? ''
     );
+    passportFormData.append(
+      'birth_certificate_file',
+      birthCertificateFile ?? ''
+    );
+    passportFormData.append(
+      'marriage_certificate_file',
+      marriageCertificateFile ?? ''
+    );
     passportFormData.append('pan_card_scan_file', panCardScanFile ?? '');
     passportFormData.append('aadhaar_card_scan_file', aadhaarCardScanFile ?? '');
     passportFormData.append('photo_scan_file', photoScanFile ?? '');
@@ -486,6 +502,14 @@ const UpdateTravellers = () => {
     passportFormData.append(
       'vaccination_certificate',
       previousVaccinationCertificate ?? ''
+    );
+    passportFormData.append(
+      'birth_certificate',
+      previousBirthCertificate ?? ''
+    );
+    passportFormData.append(
+      'marriage_certificate',
+      previousMarriageCertificate ?? ''
     );
     // Country
     if (countryCodeID?.value)
@@ -526,7 +550,7 @@ const UpdateTravellers = () => {
       minorThreshold.setFullYear(minorThreshold.getFullYear() - 18);
       if (nomineeDOB.toDate() > minorThreshold) {
         if (!appointeeName || !appointeeAddress) {
-          sendToast('error', 'Appointee Name and Address are required as Nominee is a minor', 4000);
+          sendToast('error', 'Guradian Name and Address are required as Nominee is a minor', 4000);
           return;
         }
         passportFormData.append('appointee_name', appointeeName);
@@ -1154,6 +1178,38 @@ const UpdateTravellers = () => {
                 setUploads={setVaccinationCertificateFile}
               />
             </div>
+            {/* Birth Certificate File Upload */}
+            <div className='col-12'>
+              <label>Birth Certificate</label>
+              {previousBirthCertificate && (
+                <PreviousUploadPictures
+                  data={[previousBirthCertificate]}
+                  onDeleteClick={() => {
+                    setPreviousBirthCertificate('');
+                  }}
+                />
+              )}
+              <NewFileUploads
+                multiple={false}
+                setUploads={setBirthCertificateFile}
+              />
+            </div>
+            {/* Marriage Certificate File Upload */}
+            <div className='col-12'>
+              <label>Marriage Certificate</label>
+              {previousMarriageCertificate && (
+                <PreviousUploadPictures
+                  data={[previousMarriageCertificate]}
+                  onDeleteClick={() => {
+                    setPreviousMarriageCertificate('');
+                  }}
+                />
+              )}
+              <NewFileUploads
+                multiple={false}
+                setUploads={setMarriageCertificateFile}
+              />
+            </div>
             <h3>Nominee Details</h3>
             <div className='col-lg-4'>
               <div className='form-input'>
@@ -1207,7 +1263,7 @@ const UpdateTravellers = () => {
                   placeholder=' '
                   type='text'
                 />
-                <label className='lh-1 text-16 text-light-1'>Appointee Name</label>
+                <label className='lh-1 text-16 text-light-1'>Guradian Name</label>
               </div>
             </div>
             <div className='col-lg-6'>
@@ -1218,7 +1274,7 @@ const UpdateTravellers = () => {
                   placeholder=' '
                   type='text'
                 />
-                <label className='lh-1 text-16 text-light-1'>Appointee Address</label>
+                <label className='lh-1 text-16 text-light-1'>Guradian Address</label>
               </div>
             </div>
             <div className='d-inline-block'>

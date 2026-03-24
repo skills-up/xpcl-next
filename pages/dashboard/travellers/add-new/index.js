@@ -51,6 +51,8 @@ const AddNewTravellers = () => {
   const [panCardScanFile, setPanCardScanFile] = useState(null);
   const [aadhaarCardScanFile, setAadhaarCardScanFile] = useState(null);
   const [photoScanFile, setPhotoScanFile] = useState(null);
+  const [birthCertificateFile, setBirthCertificateFile] = useState(null);
+  const [marriageCertificateFile, setMarriageCertificateFile] = useState(null);
   const [aliases, setAliases] = useState([{ value: '' }]);
   const [vaccinationDates, setVaccinationDates] = useState([]);
   const [passportScanFiles, setPassportScanFiles] = useState([]);
@@ -268,6 +270,8 @@ const AddNewTravellers = () => {
     passportFormData.append('pan_card_scan_file', panCardScanFile ?? '');
     passportFormData.append('aadhaar_card_scan_file', aadhaarCardScanFile ?? '');
     passportFormData.append('photo_scan_file', photoScanFile ?? '');
+    passportFormData.append('birth_certificate_file', birthCertificateFile ?? '');
+    passportFormData.append('marriage_certificate_file', marriageCertificateFile ?? '');
     // Country
     if (countryCodeID?.value)
       passportFormData.append('passport_country_code', countryCodeID.value);
@@ -305,7 +309,7 @@ const AddNewTravellers = () => {
       minorThreshold.setFullYear(minorThreshold.getFullYear() - 18);
       if (nomineeDOB.toDate() > minorThreshold) {
         if (!appointeeName || !appointeeAddress) {
-          sendToast('error', 'Appointee Name and Address are required as Nominee is a minor', 4000);
+          sendToast('error', 'Guradian Name and Address are required as Nominee is a minor', 4000);
           return;
         }
         passportFormData.append('appointee_name', appointeeName);
@@ -880,6 +884,16 @@ const AddNewTravellers = () => {
                 setUploads={setVaccinationCertificateFile}
               />
             </div>
+            {/* Birth Certificate File Upload */}
+            <div className='col-12'>
+              <label>Birth Certificate</label>
+              <NewFileUploads multiple={false} setUploads={setBirthCertificateFile} />
+            </div>
+            {/* Marriage Certificate File Upload */}
+            <div className='col-12'>
+              <label>Marriage Certificate</label>
+              <NewFileUploads multiple={false} setUploads={setMarriageCertificateFile} />
+            </div>
             <h3>Nominee Details</h3>
             <div className='col-lg-4'>
               <div className='form-input'>
@@ -933,7 +947,7 @@ const AddNewTravellers = () => {
                   placeholder=' '
                   type='text'
                 />
-                <label className='lh-1 text-16 text-light-1'>Appointee Name</label>
+                <label className='lh-1 text-16 text-light-1'>Guardian Name</label>
               </div>
             </div>
             <div className='col-lg-6'>
@@ -944,7 +958,7 @@ const AddNewTravellers = () => {
                   placeholder=' '
                   type='text'
                 />
-                <label className='lh-1 text-16 text-light-1'>Appointee Address</label>
+                <label className='lh-1 text-16 text-light-1'>Guardian Address</label>
               </div>
             </div>
             <div className='d-inline-block'>

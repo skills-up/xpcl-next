@@ -86,6 +86,20 @@ const ViewTravellers = () => {
             </a>
           );
         }
+        if (data?.birth_certificate) {
+          data.birth_certificate = (
+            <a href={data.birth_certificate} target='_blank'>
+              Download
+            </a>
+          );
+        }
+        if (data?.marriage_certificate) {
+          data.marriage_certificate = (
+            <a href={data.marriage_certificate} target='_blank'>
+              Download
+            </a>
+          );
+        }
         if (data?.aadhaar_card_scan) {
           data.aadhaar_card_scan = (
             <a href={data.aadhaar_card_scan} target='_blank'>
