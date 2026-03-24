@@ -12,7 +12,7 @@ import NewFileUploads from '../../../../../components/new-file-uploads';
 const AddNewTravellerOtherDocument = () => {
   const [documentName, setDocumentName] = useState('');
   const [documentExpiryDate, setDocumentExpiryDate] = useState(null);
-  const [documentFiles, setDocumentFiles] = useState([]);
+  const [documentFile, setDocumentFile] = useState(null);
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -27,7 +27,7 @@ const AddNewTravellerOtherDocument = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    if (!documentFiles || documentFiles.length === 0) {
+    if (!documentFile) {
       sendToast('error', 'Document file is required.', 4000);
       return;
     }
@@ -37,8 +37,8 @@ const AddNewTravellerOtherDocument = () => {
     if (documentExpiryDate) {
       formData.append('document_expiry_date', documentExpiryDate.format('YYYY-MM-DD'));
     }
-    if (documentFiles.length > 0) {
-      formData.append('document_file_scan', documentFiles[0]); // Based on schema, single document file
+    if (documentFile) {
+      formData.append('document_file_scan', documentFile); // Based on schema, single document file
     }
 
     const response = await createItem('traveller-other-documents', formData);
@@ -107,7 +107,7 @@ const AddNewTravellerOtherDocument = () => {
             {/* Document File */}
             <div className='col-lg-6'>
               <label>Document File<span className='text-danger'>*</span></label>
-              <NewFileUploads multiple={false} setUploads={setDocumentFiles} />
+              <NewFileUploads multiple={false} setUploads={setDocumentFile} />
             </div>
             <div className='col-12 d-inline-block'>
               <button

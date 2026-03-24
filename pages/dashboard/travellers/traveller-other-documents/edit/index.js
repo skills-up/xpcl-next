@@ -13,8 +13,8 @@ import NewFileUploads from '../../../../../components/new-file-uploads';
 const UpdateTravellerOtherDocument = () => {
   const [documentName, setDocumentName] = useState('');
   const [documentExpiryDate, setDocumentExpiryDate] = useState(null);
-  const [documentFiles, setDocumentFiles] = useState([]);
-  const [previousDocuments, setPreviousDocuments] = useState([]);
+  const [documentFile, setDocumentFile] = useState(null);
+  const [previousDocument, setPreviousDocument] = useState(null);
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -39,7 +39,7 @@ const UpdateTravellerOtherDocument = () => {
             ? new DateObject({ date: response.data?.document_expiry_date, format: 'YYYY-MM-DD' })
             : null
         );
-        if (response.data?.document_file) setPreviousDocuments([response.data?.document_file]);
+        if (response.data?.document_file) setPreviousDocument(response.data?.document_file);
       } else {
         sendToast(
           'error',
@@ -55,7 +55,7 @@ const UpdateTravellerOtherDocument = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    if (documentFiles.length === 0 && previousDocuments.length === 0) {
+    if (!documentFile && !previousDocument) {
       sendToast('error', 'Document file is required.', 4000);
       return;
     }
@@ -69,15 +69,13 @@ const UpdateTravellerOtherDocument = () => {
     }
 
     // Send previous file path if not removed
-    if (previousDocuments.length > 0) {
-      formData.append('document_file', previousDocuments[0]);
-    } else {
-      formData.append('document_file', '');
+    if (previousDocument) {
+      formData.append('document_file', previousDocument);
     }
 
     // Send newly uploaded file if available (overrides previous)
-    if (documentFiles.length > 0) {
-      formData.append('document_file_scan', documentFiles[0]);
+    if (documentFile) {
+      formData.append('document_file_scan', documentFile);
     }
 
     formData.append('_method', 'PUT');
@@ -147,18 +145,18 @@ const UpdateTravellerOtherDocument = () => {
             {/* Document File */}
             <div className='col-lg-6'>
               <label>Document File<span className='text-danger'>*</span></label>{' '}
-              {previousDocuments?.length > 0 && (
+              {previousDocument && (
                 <PreviousUploadPictures
-                  data={previousDocuments}
+                  data={[previousDocument]}
                   onDeleteClick={() => {
-                    setPreviousDocuments((prev, index) => {
-                      prev.splice(index, 1);
-                      return [...prev];
-                    });
+                    setPreviousDocument(null);
                   }}
                 />
               )}
-              <NewFileUploads multiple={false} setUploads={setDocumentFiles} />
+              <NewFileUploads multiple={false} setUploads={(upload) => {
+                setPreviousDocument(null);
+                setDocumentFile(upload);
+              }} />
             </div>
 
             <div className='col-12 d-inline-block'>
