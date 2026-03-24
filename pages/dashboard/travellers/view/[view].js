@@ -12,6 +12,7 @@ import CreditCards from './CreditCard';
 import TravelInsurances from './TravelInsurance';
 import TravelMemberships from './TravelMembership';
 import TravelVisas from './TravelVisas';
+import TravellerOtherDocuments from './TravellerOtherDocument';
 import { airlineMealOptions } from '../../../../utils/mealOptions';
 
 
@@ -82,6 +83,20 @@ const ViewTravellers = () => {
         if (data?.vaccination_certificate) {
           data.vaccination_certificate = (
             <a href={data.vaccination_certificate} target='_blank'>
+              Download
+            </a>
+          );
+        }
+        if (data?.birth_certificate) {
+          data.birth_certificate = (
+            <a href={data.birth_certificate} target='_blank'>
+              Download
+            </a>
+          );
+        }
+        if (data?.marriage_certificate) {
+          data.marriage_certificate = (
+            <a href={data.marriage_certificate} target='_blank'>
               Download
             </a>
           );
@@ -332,6 +347,11 @@ const ViewTravellers = () => {
         <div>
           <h2 className='mb-3'>Credit Cards</h2>
           <CreditCards />
+        </div>
+        <hr className='my-4' />
+        <div>
+          <h2 className='mb-3'>Other Documents</h2>
+          <TravellerOtherDocuments />
         </div>
       </div>
     </>

@@ -88,8 +88,10 @@ const AgentBookings = () => {
       accessor: 'booking_type',
     },
     {
-      Header: 'Client Code',
-      accessor: 'client_code',
+      Header: 'Client',
+      Cell: (data) => {
+        return <span>{data.row.original.client_name} ({data.row.original.client_code})</span>
+      },
     },
     {
       Header: 'Traveller',
@@ -211,6 +213,10 @@ const AgentBookings = () => {
     setConfirmAction(null);
   };
 
+  const bookingRows = Array.isArray(agentBookings)
+    ? agentBookings
+    : agentBookings?.data || [];
+
   return (
     <div className='col-12'>
       {confirmAction && (
@@ -231,7 +237,7 @@ const AgentBookings = () => {
         columns={columns}
         onPaginate={getAgentBookings}
         fullData={agentBookings}
-        data={agentBookings?.data || []}
+        data={bookingRows}
       />
     </div>
   );
