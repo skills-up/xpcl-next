@@ -12,6 +12,7 @@ import CreditCards from './CreditCard';
 import TravelInsurances from './TravelInsurance';
 import TravelMemberships from './TravelMembership';
 import TravelVisas from './TravelVisas';
+import TravellerOtherDocuments from './TravellerOtherDocument';
 import { airlineMealOptions } from '../../../../utils/mealOptions';
 
 
@@ -346,6 +347,11 @@ const ViewTravellers = () => {
         <div>
           <h2 className='mb-3'>Credit Cards</h2>
           <CreditCards />
+        </div>
+        <hr className='my-4' />
+        <div>
+          <h2 className='mb-3'>Other Documents</h2>
+          <TravellerOtherDocuments />
         </div>
       </div>
     </>
