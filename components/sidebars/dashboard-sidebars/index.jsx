@@ -122,6 +122,11 @@ const Sidebar = () => {
           href: '/dashboard/chat',
           permissions: ['flights.search'],
         },
+        {
+          title: 'Cancel ACH PNR',
+          href: '/dashboard/flights-ach/cancel',
+          permissions: ['flights.search', 'flights.book'],
+        },
       ]),
     },
     {
