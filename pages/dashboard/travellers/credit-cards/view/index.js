@@ -1,9 +1,9 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { BsEye } from 'react-icons/bs';
+import { BsEye, BsShieldLock } from 'react-icons/bs';
 import { DateObject } from 'react-multi-date-picker';
 import { useSelector } from 'react-redux';
-import { deleteItem, getItem } from '../../../../../api/xplorzApi';
+import { deleteItem, getItem, createItem } from '../../../../../api/xplorzApi';
 import Seo from '../../../../../components/common/Seo';
 import DashboardLayout from '../../../../../components/layouts/DashboardLayout';
 import ConfirmationModal from '../../../../../components/confirm-modal';
@@ -16,6 +16,7 @@ const ViewCreditCards = () => {
   const [idToDelete, setIdToDelete] = useState(-1);
   const [isMasked, setIsMasked] = useState(true);
   const [originalCCNumber, setOriginalCCNumber] = useState('');
+  const [isTokenizing, setIsTokenizing] = useState(false);
   const permissions = useSelector((state) => state.auth.value.permissions);
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -136,6 +137,24 @@ const ViewCreditCards = () => {
     onCancel();
   };
 
+  const handleTokenize = async () => {
+    setIsTokenizing(true);
+    const response = await createItem('credit-cards/' + router.query.view + '/tokenize', {});
+    if (response?.success) {
+      sendToast('success', 'Card Tokenized Successfully', 4000);
+      getCreditCard();
+    } else {
+      sendToast(
+        'error',
+        response.data?.message ||
+          response.data?.error ||
+          'Unexpected Error Occurred While Trying to Tokenize this Credit Card',
+        4000
+      );
+    }
+    setIsTokenizing(false);
+  };
+
   return (
     <>
       <Seo pageTitle='View Credit Card' />
@@ -177,6 +196,14 @@ const ViewCreditCards = () => {
                     setConfirmDelete(true);
                   }}
                   entitySlug={'credit-cards'}
+                  extraButtons={[
+                    {
+                      text: isTokenizing ? 'Processing...' : 'Tokenize',
+                      icon: <BsShieldLock />,
+                      onClick: handleTokenize,
+                      classNames: 'btn-info text-white',
+                    },
+                  ]}
                 />
               </div>
               </>
