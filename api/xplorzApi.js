@@ -45,8 +45,12 @@ export const customAPICall = async (
 
     const defaultHeaders = {
       accept: 'application/json',
-      authorization: 'Bearer ' + token,
+      'X-Requested-With': 'XMLHttpRequest',
     };
+
+    if (token) {
+      defaultHeaders.authorization = 'Bearer ' + token;
+    }
 
     if (!isFormData) {
       defaultHeaders['Content-Type'] = 'application/json';
@@ -54,7 +58,7 @@ export const customAPICall = async (
 
     const ax = axios.create({
       baseURL: airplaneCalls ? travelURL : baseURL,
-      withCredentials: false,
+      withCredentials: true,
       headers: defaultHeaders,
     });
     // Lower Case
@@ -82,7 +86,7 @@ export const customAPICall = async (
       return { success: true, data: response.data };
     }
   } catch (err) {
-    if (err?.response?.status === 401) {
+    if (err?.response?.status === 401 && entity !== 'auth/login') {
       store.dispatch(setInitialUserState());
       // sendToast('error', 'Your current session has expired. Please login again.', 4000);
       if (window.location.pathname !== '/') window.location.assign('/');
