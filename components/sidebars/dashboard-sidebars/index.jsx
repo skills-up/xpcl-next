@@ -287,6 +287,11 @@ const Sidebar = () => {
           permissions: ['reports.sales-analysis'],
         },
         {
+          title: 'Spend Analysis',
+          href: '/dashboard/reports/spend-analysis',
+          permissions: ['reports.client-booking-analysis'],
+        },
+        {
           title: 'Close Accounts',
           href: '/dashboard/reports/close-books',
           permissions: ['reports.close-books'],

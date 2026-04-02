@@ -11,9 +11,32 @@ import storage from 'redux-persist-indexeddb-storage';
 
 const secretKey = process?.env?.NEXT_PUBLIC_REDUX_PERSIST_SECRET_KEY;
 
+const createNoopStorage = () => {
+  return {
+    getItem(_key) {
+      return Promise.resolve(null);
+    },
+    setItem(_key, value) {
+      return Promise.resolve(value);
+    },
+    removeItem(_key) {
+      return Promise.resolve();
+    },
+  };
+};
+
+const getStorage = () => {
+  if (typeof window !== 'undefined') {
+    return storage('xplorzDB');
+  }
+  return createNoopStorage();
+};
+
+const storage_ = getStorage();
+
 const persistConfig = {
   key: 'root',
-  storage: storage('xplorzDB'),
+  storage: storage_,
   whitelist: ['auth', 'apis'],
   transforms: [
     encryptTransform({
