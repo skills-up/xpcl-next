@@ -10,7 +10,10 @@ import { Doughnut } from 'react-chartjs-2';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 import Select from 'react-select';
 import { getList } from '../../../../api/xplorzApi';
+import { downloadCSV as CSVDownloader } from '../../../../utils/fileDownloader';
 import { sendToast } from '../../../../utils/toastify';
+import { FiDownload } from 'react-icons/fi';
+import { jsonToCSV } from 'react-papaparse';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -98,6 +101,38 @@ const SpendAnalysisReport = () => {
       style: 'currency',
       currency: 'INR',
     });
+
+  const downloadFlightsCSV = () => {
+    if (!data?.flights?.length) return;
+    const csvData = data.flights.map((f) => ({
+      Sector: f.sector || 'Unknown',
+      'Total Spend': f.total,
+    }));
+    const total = data.flights.reduce((sum, f) => sum + Number(f.total), 0);
+    csvData.push({ Sector: 'Total', 'Total Spend': total });
+    CSVDownloader(
+      jsonToCSV(csvData),
+      `Flights-Spend-${dates[0].format('DD-MMM-YYYY')}-to-${dates[1].format(
+        'DD-MMM-YYYY'
+      )}.csv`
+    );
+  };
+
+  const downloadMiscCSV = () => {
+    if (!data?.miscellaneous?.length) return;
+    const csvData = data.miscellaneous.map((m) => ({
+      Type: m.miscellaneous_type || 'Unknown',
+      'Total Spend': m.total,
+    }));
+    const total = data.miscellaneous.reduce((sum, m) => sum + Number(m.total), 0);
+    csvData.push({ Type: 'Total', 'Total Spend': total });
+    CSVDownloader(
+      jsonToCSV(csvData),
+      `Misc-Spend-${dates[0].format('DD-MMM-YYYY')}-to-${dates[1].format(
+        'DD-MMM-YYYY'
+      )}.csv`
+    );
+  };
 
   // Chart data generators
   const getChartData = (items, labelField, valueField, hoveredIndex) => {
@@ -246,7 +281,15 @@ const SpendAnalysisReport = () => {
           {/* Flights Section */}
           <div className='row y-gap-40 items-center'>
             <div className='col-lg-7 col-12'>
-              <h5 className='text-18 fw-600 mb-20 text-blue-1'>Flights Spend</h5>
+              <div className='d-flex justify-between items-center mb-20'>
+                <h5 className='text-18 fw-600 text-blue-1'>Flights Spend</h5>
+                <button
+                  className='btn btn-outline-primary btn-sm d-flex items-center gap-2 d-print-none'
+                  onClick={downloadFlightsCSV}
+                >
+                  <FiDownload /> Download CSV
+                </button>
+              </div>
               <div className='overflow-scroll border-light rounded-4 printable-overflow'>
                 <table className='table-3 -border-bottom col-12' style={{minHeight: 'unset'}}>
                   <thead className='bg-light-2'>
@@ -287,6 +330,16 @@ const SpendAnalysisReport = () => {
                         </td>
                       </tr>
                     )}
+                    {data.flights.length > 0 && (
+                      <tr className='bg-light-2'>
+                        <th className='fw-700'>Total</th>
+                        <th className='text-right fw-700'>
+                          {formatAsCurrency(
+                            data.flights.reduce((sum, f) => sum + Number(f.total), 0)
+                          )}
+                        </th>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -314,7 +367,15 @@ const SpendAnalysisReport = () => {
           {/* Miscellaneous Section */}
           <div className='row y-gap-40 mb-40 items-center section-break'>
             <div className='col-lg-7 col-12'>
-              <h5 className='text-18 fw-600 mb-20 text-blue-1'>Miscellaneous Spend</h5>
+              <div className='d-flex justify-between items-center mb-20'>
+                <h5 className='text-18 fw-600 text-blue-1'>Miscellaneous Spend</h5>
+                <button
+                  className='btn btn-outline-primary btn-sm d-flex items-center gap-2 d-print-none'
+                  onClick={downloadMiscCSV}
+                >
+                  <FiDownload /> Download CSV
+                </button>
+              </div>
               <div className='overflow-scroll border-light rounded-4 printable-overflow'>
                 <table className='table-3 -border-bottom col-12' style={{minHeight: 'unset'}}>
                   <thead className='bg-light-2'>
@@ -352,6 +413,16 @@ const SpendAnalysisReport = () => {
                         <td colSpan={2} className='text-center'>
                           No miscellaneous data found
                         </td>
+                      </tr>
+                    )}
+                    {data.miscellaneous.length > 0 && (
+                      <tr className='bg-light-2'>
+                        <th className='fw-700'>Total</th>
+                        <th className='text-right fw-700'>
+                          {formatAsCurrency(
+                            data.miscellaneous.reduce((sum, m) => sum + Number(m.total), 0)
+                          )}
+                        </th>
                       </tr>
                     )}
                   </tbody>
