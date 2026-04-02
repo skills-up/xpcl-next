@@ -182,6 +182,10 @@ const Sidebar = () => {
           href: '/dashboard/reports/bill-wise-profit',
         },
         {
+          title: 'Spend Analysis',
+          href: '/dashboard/reports/spend-analysis',
+        },
+        {
           title: 'Close Accounts',
           href: '/dashboard/reports/close-books',
         },
