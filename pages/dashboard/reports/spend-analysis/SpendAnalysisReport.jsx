@@ -170,6 +170,7 @@ const SpendAnalysisReport = () => {
     });
 
     const borderWidths = chartItems.map((_, index) => (hoveredIndex === index ? 4 : 1));
+    const offsets = chartItems.map((_, index) => (hoveredIndex === index ? 20 : 0));
 
     return {
       labels,
@@ -179,7 +180,8 @@ const SpendAnalysisReport = () => {
           backgroundColor: backgroundColors,
           borderColor: borderColors,
           borderWidth: borderWidths,
-          hoverOffset: 10,
+          offset: offsets,
+          hoverOffset: 30,
         },
       ],
     };

@@ -108,8 +108,8 @@ const ViewCreditCards = () => {
         sendToast(
           'error',
           response.data?.message ||
-            response.data?.error ||
-            'Could Not Fetch The Requested Credit Card.'
+          response.data?.error ||
+          'Could Not Fetch The Requested Credit Card.'
         );
         router.push('/dashboard/travellers/view/' + router.query.traveller_id);
       }
@@ -129,8 +129,8 @@ const ViewCreditCards = () => {
       sendToast(
         'error',
         response.data?.message ||
-          response.data?.error ||
-          'Unexpected Error Occurred While Trying to Delete this Credit Card',
+        response.data?.error ||
+        'Unexpected Error Occurred While Trying to Delete this Credit Card',
         4000
       );
     }
@@ -140,15 +140,80 @@ const ViewCreditCards = () => {
   const handleTokenize = async () => {
     setIsTokenizing(true);
     const response = await createItem('credit-cards/' + router.query.view + '/tokenize', {});
-    if (response?.success) {
-      sendToast('success', 'Card Tokenized Successfully', 4000);
-      getCreditCard();
+    if (response?.success && response.data?.success) {
+      const { customer_id, order_id, razorpay_key } = response.data;
+
+      // Load Razorpay Script
+      const loadScript = (src) => {
+        return new Promise((resolve) => {
+          if (window.Razorpay) {
+            resolve(true);
+            return;
+          }
+          const script = document.createElement('script');
+          script.src = src;
+          script.onload = () => resolve(true);
+          script.onerror = () => resolve(false);
+          document.body.appendChild(script);
+        });
+      };
+
+      const isScriptLoaded = await loadScript('https://checkout.razorpay.com/v1/checkout.js');
+
+      if (!isScriptLoaded) {
+        sendToast('error', 'Razorpay SDK failed to load. Are you online?', 4000);
+        setIsTokenizing(false);
+        return;
+      }
+
+      const options = {
+        key: razorpay_key,
+        amount: 200, // INR 2.00
+        currency: 'INR',
+        name: 'Xplorz',
+        description: 'Card Authorization',
+        order_id: order_id,
+        customer_id: customer_id,
+        recurring: true,
+        handler: async (response) => {
+          setIsTokenizing(true);
+          const callbackResponse = await createItem(
+            'credit-cards/' + router.query.view + '/callback',
+            {
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_signature: response.razorpay_signature,
+            }
+          );
+
+          if (callbackResponse?.success) {
+            sendToast('success', 'Card Tokenized Successfully', 4000);
+            getCreditCard();
+          } else {
+            sendToast(
+              'error',
+              callbackResponse.data?.message || 'Failed to finalize tokenization',
+              4000
+            );
+          }
+          setIsTokenizing(false);
+        },
+        theme: {
+          color: '#3554d1',
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.on('payment.failed', function (response) {
+        sendToast('error', response.error.description || 'Payment Failed', 4000);
+      });
+      rzp.open();
     } else {
       sendToast(
         'error',
         response.data?.message ||
-          response.data?.error ||
-          'Unexpected Error Occurred While Trying to Tokenize this Credit Card',
+        response.data?.error ||
+        'Unexpected Error Occurred While Trying to Tokenize this Credit Card',
         4000
       );
     }
@@ -161,52 +226,52 @@ const ViewCreditCards = () => {
       {/* End Page Title */}
 
       <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
-                <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>View Credit Card</h1>
-                  <div className='text-15 text-light-1'>
-                    Get extended details of a credit card.
-                  </div>
-                </div>
-                {/* End .col-12 */}
-              </div>
-              {/* End .row */}
+        <div className='col-12'>
+          <h1 className='text-30 lh-14 fw-600'>View Credit Card</h1>
+          <div className='text-15 text-light-1'>
+            Get extended details of a credit card.
+          </div>
+        </div>
+        {/* End .col-12 */}
+      </div>
+      {/* End .row */}
 
-              <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
-                {confirmDelete && (
-                  <ConfirmationModal
-                    onCancel={onCancel}
-                    onSubmit={onSubmit}
-                    title='Do you really want to delete this credit card?'
-                    content='This will permanently delete the credit card. Press OK to confirm.'
-                  />
-                )}
-                <ViewTable
-                  data={creditCard}
-                  onEdit={() =>
-                    router.push({
-                      pathname: '/dashboard/travellers/credit-cards/edit',
-                      query: {
-                        traveller_id: router.query.traveller_id,
-                        edit: router.query.view,
-                      },
-                    })
-                  }
-                  onDelete={() => {
-                    setIdToDelete(router.query.view);
-                    setConfirmDelete(true);
-                  }}
-                  entitySlug={'credit-cards'}
-                  extraButtons={[
-                    {
-                      text: isTokenizing ? 'Processing...' : 'Tokenize',
-                      icon: <BsShieldLock />,
-                      onClick: handleTokenize,
-                      classNames: 'btn-info text-white',
-                    },
-                  ]}
-                />
-              </div>
-              </>
+      <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
+        {confirmDelete && (
+          <ConfirmationModal
+            onCancel={onCancel}
+            onSubmit={onSubmit}
+            title='Do you really want to delete this credit card?'
+            content='This will permanently delete the credit card. Press OK to confirm.'
+          />
+        )}
+        <ViewTable
+          data={creditCard}
+          onEdit={() =>
+            router.push({
+              pathname: '/dashboard/travellers/credit-cards/edit',
+              query: {
+                traveller_id: router.query.traveller_id,
+                edit: router.query.view,
+              },
+            })
+          }
+          onDelete={() => {
+            setIdToDelete(router.query.view);
+            setConfirmDelete(true);
+          }}
+          entitySlug={'credit-cards'}
+          extraButtons={[
+            {
+              text: isTokenizing ? 'Processing...' : 'Tokenize',
+              icon: <BsShieldLock />,
+              onClick: handleTokenize,
+              classNames: 'btn-info text-white',
+            },
+          ]}
+        />
+      </div>
+    </>
   );
 };
 
