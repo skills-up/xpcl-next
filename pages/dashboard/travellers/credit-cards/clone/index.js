@@ -16,6 +16,7 @@ const AddNewCreditCard = () => {
   const [cardValid, setCardValid] = useState(true);
   const [name, setName] = useState('');
   const [expiryDate, setExpiryDate] = useState(new DateObject());
+  const [cvv, setCvv] = useState('');
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -62,6 +63,7 @@ const AddNewCreditCard = () => {
       card_number: number,
       name_on_card: name,
       expiry_date: expiryDate.format('YYYY-MM-DD'),
+      cvv: cvv,
     });
     if (response?.success) {
       sendToast('success', 'Created Credit Card Successfully.', 4000);
@@ -135,6 +137,23 @@ const AddNewCreditCard = () => {
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Name on Card<span className='text-danger'>*</span>
+                        </label>
+                      </div>
+                    </div>
+                    <div className='col-12'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setCvv(e.target.value)}
+                          value={cvv}
+                          placeholder=' '
+                          type='password'
+                          pattern='[0-9]{3,4}'
+                          inputMode='numeric'
+                          title='CVV should have 3 or 4 digits'
+                          required
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          CVV<span className='text-danger'>*</span>
                         </label>
                       </div>
                     </div>

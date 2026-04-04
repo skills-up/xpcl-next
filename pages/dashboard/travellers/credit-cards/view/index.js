@@ -16,7 +16,9 @@ const ViewCreditCards = () => {
   const [idToDelete, setIdToDelete] = useState(-1);
   const [isMasked, setIsMasked] = useState(true);
   const [originalCCNumber, setOriginalCCNumber] = useState('');
+  const [originalCVV, setOriginalCVV] = useState('');
   const [isTokenizing, setIsTokenizing] = useState(false);
+  // const [paymentId, setPaymentID] = useState('');
   const permissions = useSelector((state) => state.auth.value.permissions);
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -33,7 +35,10 @@ const ViewCreditCards = () => {
 
   const getOriginalCCNumber = async () => {
     const originalCC = await getItem('credit-cards', router.query.view + '/show-number');
-    if (originalCC?.success) setOriginalCCNumber(parseInt(atob(originalCC.data?.number)));
+    if (originalCC?.success) {
+      setOriginalCCNumber(parseInt(atob(originalCC.data?.number)));
+      if (originalCC.data?.cvv) setOriginalCVV(atob(originalCC.data?.cvv));
+    }
   };
 
   const getCreditCard = async () => {
@@ -57,6 +62,20 @@ const ViewCreditCards = () => {
             </span>
           );
         }
+        // if (data.cvv !== undefined) {
+          data.cvv = (
+            <span className='d-flex items-center gap-2'>
+              {isMasked ? '***' : originalCVV}{' '}
+              {permissions.includes('credit-cards.show-number') && (
+                <BsEye
+                  className='text-danger cursor-pointer'
+                  style={{ fontSize: '1.2rem' }}
+                  onClick={() => setIsMasked((prev) => !prev)}
+                />
+              )}
+            </span>
+          );
+        // }
         if (data.created_by) {
           data.created_by = (
             <a
@@ -141,73 +160,17 @@ const ViewCreditCards = () => {
     setIsTokenizing(true);
     const response = await createItem('credit-cards/' + router.query.view + '/tokenize', {});
     if (response?.success && response.data?.success) {
-      const { customer_id, order_id, razorpay_key } = response.data;
-
-      // Load Razorpay Script
-      const loadScript = (src) => {
-        return new Promise((resolve) => {
-          if (window.Razorpay) {
-            resolve(true);
-            return;
-          }
-          const script = document.createElement('script');
-          script.src = src;
-          script.onload = () => resolve(true);
-          script.onerror = () => resolve(false);
-          document.body.appendChild(script);
-        });
-      };
-
-      const isScriptLoaded = await loadScript('https://checkout.razorpay.com/v1/checkout.js');
-
-      if (!isScriptLoaded) {
-        sendToast('error', 'Razorpay SDK failed to load. Are you online?', 4000);
-        setIsTokenizing(false);
-        return;
-      }
-
-      const options = {
-        key: razorpay_key,
-        amount: 200, // INR 2.00
-        currency: 'INR',
-        name: 'Xplorz',
-        description: 'Card Authorization',
-        order_id: order_id,
-        customer_id: customer_id,
-        recurring: true,
-        handler: async (response) => {
-          setIsTokenizing(true);
-          const callbackResponse = await createItem(
-            'credit-cards/' + router.query.view + '/callback',
-            {
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_signature: response.razorpay_signature,
-            }
-          );
-
-          if (callbackResponse?.success) {
-            sendToast('success', 'Card Tokenized Successfully', 4000);
-            getCreditCard();
-          } else {
-            sendToast(
-              'error',
-              callbackResponse.data?.message || 'Failed to finalize tokenization',
-              4000
-            );
-          }
-          setIsTokenizing(false);
-        },
-        theme: {
-          color: '#3554d1',
-        },
-      };
-
-      const rzp = new window.Razorpay(options);
-      rzp.on('payment.failed', function (response) {
-        sendToast('error', response.error.description || 'Payment Failed', 4000);
-      });
-      rzp.open();
+      const { next, payment_id } = response.data.data;
+      setPaymentID(payment_id);
+      sendToast('success', 'Card Tokenization Initiated. Enter the OTP on Bank Payment Page', 4000);
+      const auth_url = next.filter(url => url.action === 'redirect')?.[0];
+      const otpWindow = window.open(auth_url.url, '_blank', 'popup,width=320,height=480');
+      const timer = setInterval(() => {
+        if (otpWindow.closed) {
+          clearInterval(timer);
+          window.location.reload();
+        }
+      }, 500);
     } else {
       sendToast(
         'error',
@@ -219,6 +182,21 @@ const ViewCreditCards = () => {
     }
     setIsTokenizing(false);
   };
+
+  /* const handlePaymentCompletion = async () => {
+    const response = await createItem('credit-cards/' + router.query.view + '/complete-tokenization', {payment_id: paymentId});
+    if (response?.success && response.data?.success) {
+      sendToast('success', 'Card has been tokenized succesfully', 4000);
+    } else {
+      sendToast(
+        'error',
+        response.data?.message ||
+        response.data?.error ||
+        'Failed to Tokenize this Credit Card',
+        4000
+      );
+    }
+  } */
 
   return (
     <>
@@ -268,6 +246,11 @@ const ViewCreditCards = () => {
               onClick: handleTokenize,
               classNames: 'btn-info text-white',
             },
+            // paymentId ? {
+            //   text: 'Mark Payment Completed',
+            //   onClick: handlePaymentCompletion,
+            //   classNames: 'btn-info text-white',
+            // } : {},
           ]}
         />
       </div>

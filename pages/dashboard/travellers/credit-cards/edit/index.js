@@ -19,6 +19,7 @@ const UpdateCreditCard = () => {
   const [name, setName] = useState('');
   const [expiryDate, setExpiryDate] = useState(new DateObject());
   const [isMasked, setIsMasked] = useState(true);
+  const [cvv, setCvv] = useState('');
 
   const token = useSelector((state) => state.auth.value.token);
   const router = useRouter();
@@ -51,8 +52,8 @@ const UpdateCreditCard = () => {
         sendToast(
           'error',
           response.data?.message ||
-            response.data?.error ||
-            'Unable to fetch required data',
+          response.data?.error ||
+          'Unable to fetch required data',
           4000
         );
         router.push('/dashboard/travellers/view/' + router.query.traveller_id);
@@ -72,6 +73,7 @@ const UpdateCreditCard = () => {
       card_number: number,
       name_on_card: name,
       expiry_date: expiryDate.format('YYYY-MM-DD'),
+      cvv: cvv || undefined,
     });
     if (response?.success) {
       sendToast('success', 'Updated Credit Card Successfully.', 4000);
@@ -91,120 +93,136 @@ const UpdateCreditCard = () => {
       {/* End Page Title */}
 
       <div className='row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32'>
-                <div className='col-12'>
-                  <h1 className='text-30 lh-14 fw-600'>Update Credit Card</h1>
-                  <div className='text-15 text-light-1'>
-                    Update an existing credit card.
+        <div className='col-12'>
+          <h1 className='text-30 lh-14 fw-600'>Update Credit Card</h1>
+          <div className='text-15 text-light-1'>
+            Update an existing credit card.
+          </div>
+        </div>
+        {/* End .col-12 */}
+      </div>
+      {/* End .row */}
+
+      <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
+        <div>
+          <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
+            {isMasked ? (
+              <div className='row pr-0'>
+                <div className='col-lg-11 col-10'>
+                  <div className='form-input'>
+                    <input
+                      onChange={(e) => setMaskedNumber(e.target.value)}
+                      value={maskedNumber}
+                      placeholder=' '
+                      type='text'
+                      required
+                      disabled
+                    />
+                    <label className='lh-1 text-16 text-light-1'>
+                      Masked Card Number<span className='text-danger'>*</span>
+                    </label>
                   </div>
                 </div>
-                {/* End .col-12 */}
+                <div
+                  className='col-lg-1 col-2 d-flex items-center justify-center btn btn-outline-success'
+                  onClick={() => setIsMasked(false)}
+                >
+                  <BsPencil style={{ fontSize: '2rem' }} />
+                </div>
               </div>
-              {/* End .row */}
-
-              <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
-                <div>
-                  <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
-                    {isMasked ? (
-                      <div className='row pr-0'>
-                        <div className='col-lg-11 col-10'>
-                          <div className='form-input'>
-                            <input
-                              onChange={(e) => setMaskedNumber(e.target.value)}
-                              value={maskedNumber}
-                              placeholder=' '
-                              type='text'
-                              required
-                              disabled
-                            />
-                            <label className='lh-1 text-16 text-light-1'>
-                              Masked Card Number<span className='text-danger'>*</span>
-                            </label>
-                          </div>
-                        </div>
-                        <div
-                          className='col-lg-1 col-2 d-flex items-center justify-center btn btn-outline-success'
-                          onClick={() => setIsMasked(false)}
-                        >
-                          <BsPencil style={{ fontSize: '2rem' }} />
-                        </div>
-                      </div>
-                    ) : (
-                      <div className='col-12'>
-                        <div className='form-input'>
-                          <input
-                            onChange={(e) => {
-                              const cardNumber = e.target.value.trim();
-                              setNumber(cardNumber);
-                              if (cardNumber) {
-                                const {valid, type} = validateCreditCard(cardNumber);
-                                setCardType(type || '');
-                                setCardValid(valid);
-                              } else {
-                                setCardType('');
-                                setCardValid(true);
-                              }
-                            }}
-                            type='tel'
-                            pattern='[0-9]{14,16}'
-                            inputMode='numeric'
-                            autoComplete='cc-number'
-                            title='Credit card number should have between 14 to 16 digits'
-                            value={number}
-                            placeholder='xxxxxxxxxxxxxxxx'
-                            className='cc-input'
-                            required
-                          />
-                          <small style={{position: 'absolute', right: '0.5em', bottom: '.25em'}}>{cardType && cardType}</small>
-                          <label className='lh-1 text-16 text-light-1'>
-                            Card Number<span className='text-danger'>*</span>
-                          </label>
-                        </div>
-                        <small className='text-danger'>{cardValid || 'Invalid Card Number'}</small>
-                      </div>
-                    )}
-                    <div className='col-12'>
-                      <div className='form-input'>
-                        <input
-                          onChange={(e) => setName(e.target.value)}
-                          value={name}
-                          placeholder=' '
-                          type='text'
-                          required
-                        />
-                        <label className='lh-1 text-16 text-light-1'>
-                          Name on Card<span className='text-danger'>*</span>
-                        </label>
-                      </div>
-                    </div>
-                    <div className='d-block ml-3 form-datepicker'>
-                      <label>
-                        Expiry Date<span className='text-danger'>*</span>
-                      </label>
-                      <DatePicker
-                        onlyMonthPicker
-                        style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
-                        inputClass='custom_input-picker'
-                        containerClassName='custom_container-picker'
-                        value={expiryDate}
-                        onChange={setExpiryDate}
-                        numberOfMonths={1}
-                        offsetY={10}
-                        format='MMMM YYYY'
-                      />
-                    </div>
-
-                    <div className='d-inline-block'>
-                      <button
-                        type='submit'
-                        className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
-                      >
-                        Update Credit Card
-                      </button>
-                    </div>
-                  </form>
+            ) : (
+              <div className='col-12'>
+                <div className='form-input'>
+                  <input
+                    onChange={(e) => {
+                      const cardNumber = e.target.value.trim();
+                      setNumber(cardNumber);
+                      if (cardNumber) {
+                        const { valid, type } = validateCreditCard(cardNumber);
+                        setCardType(type || '');
+                        setCardValid(valid);
+                      } else {
+                        setCardType('');
+                        setCardValid(true);
+                      }
+                    }}
+                    type='tel'
+                    pattern='[0-9]{14,16}'
+                    inputMode='numeric'
+                    autoComplete='cc-number'
+                    title='Credit card number should have between 14 to 16 digits'
+                    value={number}
+                    placeholder='xxxxxxxxxxxxxxxx'
+                    className='cc-input'
+                    required
+                  />
+                  <small style={{ position: 'absolute', right: '0.5em', bottom: '.25em' }}>{cardType && cardType}</small>
+                  <label className='lh-1 text-16 text-light-1'>
+                    Card Number<span className='text-danger'>*</span>
+                  </label>
                 </div>
-                </div>
-                </>
+                <small className='text-danger'>{cardValid || 'Invalid Card Number'}</small>
+              </div>
+            )}
+            <div className='col-12'>
+              <div className='form-input'>
+                <input
+                  onChange={(e) => setName(e.target.value)}
+                  value={name}
+                  placeholder=' '
+                  type='text'
+                  required
+                />
+                <label className='lh-1 text-16 text-light-1'>
+                  Name on Card<span className='text-danger'>*</span>
+                </label>
+              </div>
+            </div>
+            <div className='col-12'>
+              <div className='form-input'>
+                <input
+                  onChange={(e) => setCvv(e.target.value)}
+                  value={cvv}
+                  placeholder=' '
+                  type='password'
+                  pattern='[0-9]{3,4}'
+                  inputMode='numeric'
+                  title='CVV should have 3 or 4 digits'
+                />
+                <label className='lh-1 text-16 text-light-1'>
+                  CVV<span className='text-danger'></span>
+                </label>
+              </div>
+            </div>
+            <div className='d-block ml-3 form-datepicker'>
+              <label>
+                Expiry Date<span className='text-danger'>*</span>
+              </label>
+              <DatePicker
+                onlyMonthPicker
+                style={{ marginLeft: '0.5rem', fontSize: '1rem' }}
+                inputClass='custom_input-picker'
+                containerClassName='custom_container-picker'
+                value={expiryDate}
+                onChange={setExpiryDate}
+                numberOfMonths={1}
+                offsetY={10}
+                format='MMMM YYYY'
+              />
+            </div>
+
+            <div className='d-inline-block'>
+              <button
+                type='submit'
+                className='button h-50 px-24 -dark-1 bg-blue-1 text-white'
+              >
+                Update Credit Card
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </>
   );
 };
 
