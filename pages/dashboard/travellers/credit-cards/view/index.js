@@ -161,7 +161,7 @@ const ViewCreditCards = () => {
     const response = await createItem('credit-cards/' + router.query.view + '/tokenize', {});
     if (response?.success && response.data?.success) {
       const { next, payment_id } = response.data.data;
-      setPaymentID(payment_id);
+      // setPaymentID(payment_id);
       sendToast('success', 'Card Tokenization Initiated. Enter the OTP on Bank Payment Page', 4000);
       const auth_url = next.filter(url => url.action === 'redirect')?.[0];
       const otpWindow = window.open(auth_url.url, '_blank', 'popup,width=320,height=480');
