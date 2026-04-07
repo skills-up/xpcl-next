@@ -20,6 +20,8 @@ const AddNewVisaRequirements = () => {
   const [photoSpecifications, setPhotoSpecifications] = useState('');
   const [photoDimension, setPhotoDimension] = useState('');
   const [processingTime, setProcessingTime] = useState('');
+  const [visaFees, setVisaFees] = useState('');
+  const [visaProcessingFees, setVisaProcessingFees] = useState('');
   const [consulateDetails, setConsulateDetails] = useState('');
   const [additionalNotes, setAdditionalNotes] = useState('');
   const [personalDocsReqs, setPersonalDocsReqs] = useState([]);
@@ -80,6 +82,8 @@ const AddNewVisaRequirements = () => {
         visaFormData.append('photo_specifications', photoSpecifications ?? '');
         visaFormData.append('photo_sample_file', photoSample ?? '');
         visaFormData.append('processing_time', processingTime ?? '');
+        visaFormData.append('visa_fees', visaFees ?? '');
+        visaFormData.append('visa_processing_fees', visaProcessingFees ?? '');
         visaFormData.append('consulate_details', consulateDetails ?? '');
         visaFormData.append('additional_notes', additionalNotes ?? '');
         for (let personalDoc of personalDocsReqs)
@@ -221,6 +225,30 @@ const AddNewVisaRequirements = () => {
                         />
                         <label className='lh-1 text-16 text-light-1'>
                           Processing Time
+                        </label>
+                      </div>
+                    </div>
+                    <div className='col-12'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setVisaFees(e.target.value)}
+                          value={visaFees}
+                          placeholder=' '
+                          type='text'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>Visa Fees</label>
+                      </div>
+                    </div>
+                    <div className='col-12'>
+                      <div className='form-input'>
+                        <input
+                          onChange={(e) => setVisaProcessingFees(e.target.value)}
+                          value={visaProcessingFees}
+                          placeholder=' '
+                          type='text'
+                        />
+                        <label className='lh-1 text-16 text-light-1'>
+                          Visa Processing Fees
                         </label>
                       </div>
                     </div>
