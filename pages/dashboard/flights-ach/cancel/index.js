@@ -17,8 +17,7 @@ const CancelAchPnr = () => {
 
     setLoading(true);
     const response = await customAPICall('flights-ach/cancel', 'post', {
-      pnr: pnr,
-      version: 1,
+      universal_record_locator_code: pnr,
     });
     setLoading(false);
 
@@ -55,7 +54,7 @@ const CancelAchPnr = () => {
       <div className='py-30 px-30 rounded-4 bg-white shadow-3'>
         <div>
           <form onSubmit={onSubmit} className='row col-12 y-gap-20'>
-            <div className='col-12'>
+            <div className='col-6'>
               <div className='form-input'>
                 <input
                   onChange={(e) => setPnr(e.target.value)}
@@ -65,12 +64,12 @@ const CancelAchPnr = () => {
                   required
                 />
                 <label className='lh-1 text-16 text-light-1'>
-                  PNR<span className='text-danger'>*</span>
+                  Booking Reference<span className='text-danger'>*</span>
                 </label>
               </div>
             </div>
 
-            <div className='col-12 d-inline-block'>
+            <div className='col-6 d-inline-block'>
               <button
                 type='submit'
                 disabled={loading}
