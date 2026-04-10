@@ -86,6 +86,17 @@ const AddNewWhatsAppGroup = () => {
             `${traveller?.first_name ?? ''} ${traveller?.last_name ?? ''}`.trim() ||
             `Traveller #${traveller.id}`,
           phones: [traveller.mobile_phone, traveller.ea_phone_number].filter(x => !!x),
+          mobile_phone: traveller.mobile_phone,
+          meal_preference: traveller.meal_preference,
+          '6e_meal_preferences': traveller['6e_meal_preferences'],
+          'ix_meal_preferences': traveller['ix_meal_preferences'],
+          'qp_meal_preferences': traveller['qp_meal_preferences'],
+          base_airport: traveller.base_airport,
+          nominee_name: traveller.nominee_name,
+          nominee_dob: traveller.nominee_dob,
+          nominee_relation: traveller.nominee_relation,
+          nominee_address: traveller.nominee_address,
+          client_travellers: traveller.client_travellers,
         }))
       );
       setOrganizationOptions(
