@@ -16,6 +16,10 @@ import PreviousUploadPictures from '../../../../components/previous-file-uploads
 import { sendToast } from '../../../../utils/toastify';
 import { getMealOptions } from '../../../../utils/mealOptions';
 import MealPriorityList from '../components/MealPriorityList';
+import PreExistingDiseasesFields, {
+  appendPreExistingDiseases,
+  normalizePreExistingDiseases,
+} from '../components/PreExistingDiseasesFields';
 
 
 
@@ -345,7 +349,10 @@ const UpdateTravellers = () => {
         // Setting Pre-Existing Diseases
         if (response.data?.pre_existing_diseases) {
           setPreExistingDiseases(
-            response.data.pre_existing_diseases.map((el) => ({ label: el, value: el }))
+            normalizePreExistingDiseases(
+              response.data.pre_existing_diseases,
+              preExistingDiseasesOptions
+            )
           );
         }
 
@@ -467,9 +474,14 @@ const UpdateTravellers = () => {
 
     passportFormData.append('no_bp', noBoardingPass ? 1 : 0);
 
-    if (preExistingDiseases && preExistingDiseases.length > 0)
-      for (let pref of preExistingDiseases)
-        passportFormData.append('pre_existing_diseases[]', pref?.value ?? '');
+    const preExistingDiseasesError = appendPreExistingDiseases(
+      passportFormData,
+      preExistingDiseases
+    );
+    if (preExistingDiseasesError) {
+      sendToast('error', preExistingDiseasesError, 4000);
+      return;
+    }
 
     passportFormData.append('address', address ?? '');
     let meal_str = '';
@@ -782,16 +794,11 @@ const UpdateTravellers = () => {
                 placeholder='Select Airport'
               />
             </div>
-            <div className='form-input-select col-lg-6'>
-              <label>Pre-Existing Diseases</label>
-              <Select
-                isClearable
-                isMulti
-                options={preExistingDiseasesOptions}
-                value={preExistingDiseases}
-                onChange={setPreExistingDiseases}
-              />
-            </div>
+            <PreExistingDiseasesFields
+              preExistingDiseases={preExistingDiseases}
+              setPreExistingDiseases={setPreExistingDiseases}
+              preExistingDiseasesOptions={preExistingDiseasesOptions}
+            />
             <h3>Passport Details</h3>
             <div className='col-lg-3'>
               <div className='form-input'>

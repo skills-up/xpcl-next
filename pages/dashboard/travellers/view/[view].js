@@ -237,7 +237,9 @@ const ViewTravellers = () => {
             <ul className='ml-20'>
               {data.pre_existing_diseases.map((disease, index) => (
                 <li style={{ listStyleType: 'disc' }} key={index}>
-                  {disease}
+                  {disease?.name}
+                  {disease?.since ? ` (Since: ${disease.since})` : ''}
+                  {disease?.name === 'Others' && disease?.desc ? ` - ${disease.desc}` : ''}
                 </li>
               ))}
             </ul>
