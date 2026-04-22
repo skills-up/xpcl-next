@@ -232,6 +232,17 @@ const ViewTravellers = () => {
           delete data.qp_meal_preferences;
         }
 
+        if (data.pre_existing_diseases && data.pre_existing_diseases.length > 0) {
+          data.pre_existing_diseases = (
+            <ul className='ml-20'>
+              {data.pre_existing_diseases.map((disease, index) => (
+                <li style={{ listStyleType: 'disc' }} key={index}>
+                  {disease}
+                </li>
+              ))}
+            </ul>
+          );
+        }
         if (data.no_bp) {
           data.send_boarding_pass = 'No';
         } else {

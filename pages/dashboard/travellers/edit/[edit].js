@@ -88,6 +88,7 @@ const UpdateTravellers = () => {
   const [appointeeAddress, setAppointeeAddress] = useState('');
 
   const [noBoardingPass, setNoBoardingPass] = useState(false);
+  const [preExistingDiseases, setPreExistingDiseases] = useState([]);
 
   // Options
   const passportPrefixOptions = [
@@ -126,6 +127,20 @@ const UpdateTravellers = () => {
     { value: 'Refundable Fare', label: 'Refundable Fare' },
     { value: 'Non-Refundable Fare', label: 'Non-Refundable Fare' },
   ];
+  const preExistingDiseasesOptions = [
+    'Auto Immune Diseases',
+    'Cancer',
+    'Cerebrovascular Accident (Stroke)',
+    'Chronic Heart Disease',
+    'Chronic Kidney Disease',
+    'Chronic Liver Disease',
+    'Chronic Obstructive Pulmonary Disease (COPD)',
+    'Deep Vein Thrombosis (DVT)',
+    'Diabetic Neuropathy',
+    'Epilepsy & seizures',
+    'Others',
+    'Rheumatoid Arthritis',
+  ].map((el) => ({ label: el, value: el }));
   const nomineeRelationOptions = [
     'Aunt',
     'Brother',
@@ -327,6 +342,13 @@ const UpdateTravellers = () => {
         }
         setNoBoardingPass(!!response.data?.no_bp);
 
+        // Setting Pre-Existing Diseases
+        if (response.data?.pre_existing_diseases) {
+          setPreExistingDiseases(
+            response.data.pre_existing_diseases.map((el) => ({ label: el, value: el }))
+          );
+        }
+
         // Setting Meal Preferences
         if (response.data?.['6e_meal_preferences']) {
           setSixEMealPreferences(
@@ -444,6 +466,10 @@ const UpdateTravellers = () => {
         passportFormData.append('qp_meal_preferences[]', pref?.value ?? '');
 
     passportFormData.append('no_bp', noBoardingPass ? 1 : 0);
+
+    if (preExistingDiseases && preExistingDiseases.length > 0)
+      for (let pref of preExistingDiseases)
+        passportFormData.append('pre_existing_diseases[]', pref?.value ?? '');
 
     passportFormData.append('address', address ?? '');
     let meal_str = '';
@@ -754,6 +780,16 @@ const UpdateTravellers = () => {
                 value={baseAirport}
                 onChange={(id) => setBaseAirport(id)}
                 placeholder='Select Airport'
+              />
+            </div>
+            <div className='form-input-select col-lg-6'>
+              <label>Pre-Existing Diseases</label>
+              <Select
+                isClearable
+                isMulti
+                options={preExistingDiseasesOptions}
+                value={preExistingDiseases}
+                onChange={setPreExistingDiseases}
               />
             </div>
             <h3>Passport Details</h3>
