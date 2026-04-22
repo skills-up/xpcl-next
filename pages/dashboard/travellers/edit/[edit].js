@@ -16,6 +16,10 @@ import PreviousUploadPictures from '../../../../components/previous-file-uploads
 import { sendToast } from '../../../../utils/toastify';
 import { getMealOptions } from '../../../../utils/mealOptions';
 import MealPriorityList from '../components/MealPriorityList';
+import PreExistingDiseasesFields, {
+  appendPreExistingDiseases,
+  normalizePreExistingDiseases,
+} from '../components/PreExistingDiseasesFields';
 
 
 
@@ -88,6 +92,7 @@ const UpdateTravellers = () => {
   const [appointeeAddress, setAppointeeAddress] = useState('');
 
   const [noBoardingPass, setNoBoardingPass] = useState(false);
+  const [preExistingDiseases, setPreExistingDiseases] = useState([]);
 
   // Options
   const passportPrefixOptions = [
@@ -126,6 +131,20 @@ const UpdateTravellers = () => {
     { value: 'Refundable Fare', label: 'Refundable Fare' },
     { value: 'Non-Refundable Fare', label: 'Non-Refundable Fare' },
   ];
+  const preExistingDiseasesOptions = [
+    'Auto Immune Diseases',
+    'Cancer',
+    'Cerebrovascular Accident (Stroke)',
+    'Chronic Heart Disease',
+    'Chronic Kidney Disease',
+    'Chronic Liver Disease',
+    'Chronic Obstructive Pulmonary Disease (COPD)',
+    'Deep Vein Thrombosis (DVT)',
+    'Diabetic Neuropathy',
+    'Epilepsy & seizures',
+    'Others',
+    'Rheumatoid Arthritis',
+  ].map((el) => ({ label: el, value: el }));
   const nomineeRelationOptions = [
     'Aunt',
     'Brother',
@@ -327,6 +346,16 @@ const UpdateTravellers = () => {
         }
         setNoBoardingPass(!!response.data?.no_bp);
 
+        // Setting Pre-Existing Diseases
+        if (response.data?.pre_existing_diseases) {
+          setPreExistingDiseases(
+            normalizePreExistingDiseases(
+              response.data.pre_existing_diseases,
+              preExistingDiseasesOptions
+            )
+          );
+        }
+
         // Setting Meal Preferences
         if (response.data?.['6e_meal_preferences']) {
           setSixEMealPreferences(
@@ -444,6 +473,15 @@ const UpdateTravellers = () => {
         passportFormData.append('qp_meal_preferences[]', pref?.value ?? '');
 
     passportFormData.append('no_bp', noBoardingPass ? 1 : 0);
+
+    const preExistingDiseasesError = appendPreExistingDiseases(
+      passportFormData,
+      preExistingDiseases
+    );
+    if (preExistingDiseasesError) {
+      sendToast('error', preExistingDiseasesError, 4000);
+      return;
+    }
 
     passportFormData.append('address', address ?? '');
     let meal_str = '';
@@ -756,6 +794,11 @@ const UpdateTravellers = () => {
                 placeholder='Select Airport'
               />
             </div>
+            <PreExistingDiseasesFields
+              preExistingDiseases={preExistingDiseases}
+              setPreExistingDiseases={setPreExistingDiseases}
+              preExistingDiseasesOptions={preExistingDiseasesOptions}
+            />
             <h3>Passport Details</h3>
             <div className='col-lg-3'>
               <div className='form-input'>

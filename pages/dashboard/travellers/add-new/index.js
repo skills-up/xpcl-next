@@ -14,6 +14,9 @@ import { BsTrash3 } from 'react-icons/bs';
 import NewFileUploads from '../../../../components/new-file-uploads';
 import { getMealOptions } from '../../../../utils/mealOptions';
 import MealPriorityList from '../components/MealPriorityList';
+import PreExistingDiseasesFields, {
+  appendPreExistingDiseases,
+} from '../components/PreExistingDiseasesFields';
 
 
 
@@ -76,6 +79,7 @@ const AddNewTravellers = () => {
   const [appointeeAddress, setAppointeeAddress] = useState('');
 
   const [noBoardingPass, setNoBoardingPass] = useState(false);
+  const [preExistingDiseases, setPreExistingDiseases] = useState([]);
 
   // Options
   const passportPrefixOptions = [
@@ -114,6 +118,20 @@ const AddNewTravellers = () => {
     { value: 'Refundable Fare', label: 'Refundable Fare' },
     { value: 'Non-Refundable Fare', label: 'Non-Refundable Fare' },
   ];
+  const preExistingDiseasesOptions = [
+    'Auto Immune Diseases',
+    'Cancer',
+    'Cerebrovascular Accident (Stroke)',
+    'Chronic Heart Disease',
+    'Chronic Kidney Disease',
+    'Chronic Liver Disease',
+    'Chronic Obstructive Pulmonary Disease (COPD)',
+    'Deep Vein Thrombosis (DVT)',
+    'Diabetic Neuropathy',
+    'Epilepsy & seizures',
+    'Others',
+    'Rheumatoid Arthritis',
+  ].map((el) => ({ label: el, value: el }));
   const nomineeRelationOptions = [
     'Aunt',
     'Brother',
@@ -235,6 +253,15 @@ const AddNewTravellers = () => {
         passportFormData.append('qp_meal_preferences[]', pref?.value ?? '');
 
     passportFormData.append('no_bp', noBoardingPass ? 1 : 0);
+
+    const preExistingDiseasesError = appendPreExistingDiseases(
+      passportFormData,
+      preExistingDiseases
+    );
+    if (preExistingDiseasesError) {
+      sendToast('error', preExistingDiseasesError, 4000);
+      return;
+    }
 
     passportFormData.append('address', address ?? '');
     let meal_str = '';
@@ -502,6 +529,11 @@ const AddNewTravellers = () => {
                 placeholder='Select Airport'
               />
             </div>
+            <PreExistingDiseasesFields
+              preExistingDiseases={preExistingDiseases}
+              setPreExistingDiseases={setPreExistingDiseases}
+              preExistingDiseasesOptions={preExistingDiseasesOptions}
+            />
             <h3>Passport Details</h3>
             <div className='col-lg-3'>
               <div className='form-input'>
