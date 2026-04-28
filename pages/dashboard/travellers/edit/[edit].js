@@ -93,6 +93,7 @@ const UpdateTravellers = () => {
 
   const [noBoardingPass, setNoBoardingPass] = useState(false);
   const [preExistingDiseases, setPreExistingDiseases] = useState([]);
+  const [amtDays, setAmtDays] = useState({ value: 30, label: '30' });
 
   // Options
   const passportPrefixOptions = [
@@ -104,6 +105,10 @@ const UpdateTravellers = () => {
   const passportGenderOptions = [
     { value: 'Male', label: 'Male' },
     { value: 'Female', label: 'Female' },
+  ];
+  const amtDaysOptions = [
+    { value: 30, label: '30' },
+    { value: 45, label: '45' },
   ];
   const cabinPreferenceOptions = [
     { value: 'Business', label: 'Business' },
@@ -346,6 +351,12 @@ const UpdateTravellers = () => {
         }
         setNoBoardingPass(!!response.data?.no_bp);
 
+        // amt_days
+        if (response.data?.amt_days) {
+          for (let opt of amtDaysOptions)
+            if (response.data.amt_days == opt.value) setAmtDays(opt);
+        }
+
         // Setting Pre-Existing Diseases
         if (response.data?.pre_existing_diseases) {
           setPreExistingDiseases(
@@ -473,6 +484,7 @@ const UpdateTravellers = () => {
         passportFormData.append('qp_meal_preferences[]', pref?.value ?? '');
 
     passportFormData.append('no_bp', noBoardingPass ? 1 : 0);
+    passportFormData.append('amt_days', amtDays?.value ?? 30);
 
     const preExistingDiseasesError = appendPreExistingDiseases(
       passportFormData,
@@ -737,6 +749,14 @@ const UpdateTravellers = () => {
                   EA Phone Number (12 digits)
                 </label>
               </div>
+            </div>
+            <div className='col-lg-3 form-input-select'>
+              <label>Amount Days</label>
+              <Select
+                options={amtDaysOptions}
+                value={amtDays}
+                onChange={(id) => setAmtDays(id)}
+              />
             </div>
             <div className='col-lg-6'>
               <div className='form-input'>
