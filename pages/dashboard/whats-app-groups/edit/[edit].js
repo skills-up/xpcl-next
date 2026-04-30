@@ -157,31 +157,33 @@ const UpdateWhatsAppGroup = () => {
     const addedOptions = optionsSource.filter(opt => addedValues.includes(opt.value));
 
     // If any of the added option doesn't have the required fields populated then show an error and don't add the numbers
-    const validationValues = {
-      phones: 'Phone Numbers',
-      passport_name: 'Passport Name',
-      meal_preference: 'Meal Preference',
-      '6e_meal_preferences': 'IndiGo Meal Preferences',
-      'ix_meal_preferences': 'Air India Express Meal Preferences',
-      'qp_meal_preferences': 'Akasa Meal Preferences',
-      base_airport: 'Base Airport',
-      nominee_name: 'Nominee Name',
-      nominee_dob: 'Nominee Date of Birth',
-      nominee_relation: 'Nominee Relation',
-      nominee_address: 'Nominee Address',
-      client_travellers: 'Client Travellers',
-    }
-    for (let option of addedOptions) {
-      const errors = [];
-      const label = option.label;
-      for (let [key, value] of Object.entries(validationValues)) {
-        if (!option[key] || option[key].length === 0) {
-          errors.push(`${value} missing for ${label}`);
-        }
+    if (groupFor?.value === 'traveller') {
+      const validationValues = {
+        phones: 'Phone Numbers',
+        passport_name: 'Passport Name',
+        meal_preference: 'Meal Preference',
+        '6e_meal_preferences': 'IndiGo Meal Preferences',
+        'ix_meal_preferences': 'Air India Express Meal Preferences',
+        'qp_meal_preferences': 'Akasa Meal Preferences',
+        base_airport: 'Base Airport',
+        nominee_name: 'Nominee Name',
+        nominee_dob: 'Nominee Date of Birth',
+        nominee_relation: 'Nominee Relation',
+        nominee_address: 'Nominee Address',
+        client_travellers: 'Client Travellers',
       }
-      if (errors.length) {
-        sendToast('error', errors.join('\n'), 4000);
-        return;
+      for (let option of addedOptions) {
+        const errors = [];
+        const label = option.label;
+        for (let [key, value] of Object.entries(validationValues)) {
+          if (!option[key] || option[key].length === 0) {
+            errors.push(`${value} missing for ${label}`);
+          }
+        }
+        if (errors.length) {
+          sendToast('error', errors.join('\n'), 4000);
+          return;
+        }
       }
     }
 
